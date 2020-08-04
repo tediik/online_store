@@ -12,6 +12,9 @@ target/
 logs/**
 online_store.iml
 *.sql
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
 # Generated files
 .idea/**/contentModel.xml
