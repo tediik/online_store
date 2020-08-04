@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!--    link to a JS script file-->
+    <script src="/js/main.js"></script>
+
+
+</head>
+<body style="background-color: whitesmoke">
+<!--Display logged in user's name-->
+<h1 style="font-size: 38px; background-color: black; color: white">
+    <span sec:authentication="name"></span>
+    <a th:href="@{/logout}">
+        <button type="button" class="btn btn-outline-warning mb-3 btn-sm btn pull-right ">Logout</button>
+    </a>
+</h1>
+
+
+<!-- Sidebar -->
+<div class="w3-sidebar w3-white w3-bar-block" style="width:15%; color: white">
+
+    <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <a href="/admin/home" class="w3-bar-item w3-button w3-blue">Admin</a>
+        <a href="/user" class="w3-bar-item w3-button">User</a>
+    </div>
+    <div sec:authorize="hasRole('ROLE_USER')">
+        <a href="/user" class="w3-bar-item w3-button">User</a>
+    </div>
+</div>
+
+<!-- Page Content -->
+<div style="margin-left:15%">
+    <div class="w3-container">
+
+        <div class="page-header">
+            <h1>Admin Panel</h1>
+        </div>
+
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">Users Table</a></li>
+            <li><a data-toggle="tab" href="#menu1">New User</a></li>
+
+        </ul>
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <div class="panel panel-default">
+                    <div class="panel-heading">All Users</div>
+                    <div class="panel-body">Panel Content
+                        <table class="table table-active table-striped" id="user-table" style="background-color: white">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>EMAIL</th>
+                                <th>ROLES</th>
+                                <th>EDIT</th>
+                                <th>DELETE</th>
+                            </tr>
+                            </thead>
+
+                            <tbody ID="table-body">
+                            <tr id="table-row" class="table-info">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <div class="update-example">
+                                        <div class="modal fade" id="updateModal" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <h4 class="modal-title" id="updateModalLabel">Delete User</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <div class="form-group">
+                                                            <label for="updateId" class="form-control-label">Id:</label>
+                                                            <input type="text" name="ID" value="" class="form-control" placeholder="Id" id="updateId">
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="updateEmail" class="form-control-label">Email:</label>
+                                                            <input type="email" name="email" value="" class="form-control" placeholder="Email" id="updateEmail">
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="updatePassword" class="form-control-label">Password:</label>
+                                                            <input type="password" name="password" value="" class="form-control" placeholder="Password" id="updatePassword">
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>User Roles</label>
+                                                            <select id="updateRoles" name="roles" class="form-control" multiple="multiple">
+                                                                <option value="ROLE_USER">ROLE_USER</option>
+                                                                <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="button" id="updateSubmitBtn" class="btn btn-secondary " data-dismiss="modal">Edit</button>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </td>
+
+
+                                <td>
+                                    <div class="delete-example">
+                                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <h4 class="modal-title" id="deleteModalLabel">Delete User</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+
+
+                                                        <div class="form-group">
+                                                            <label for="deleteId" class="form-control-label">Id:</label>
+                                                            <input type="text" name="ID" value="" class="form-control" placeholder="Id" id="deleteId">
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="deleteEmail" class="form-control-label">Email:</label>
+                                                            <input type="email" name="email" value="" class="form-control" placeholder="Email" id="deleteEmail">
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="deletePassword" class="form-control-label">Password:</label>
+                                                            <input type="password" name="password" value="" class="form-control" placeholder="Password" id="deletePassword">
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>User Roles</label>
+                                                            <select id="deleteRoles" name="roles" class="form-control" multiple="multiple">
+                                                                <option value="ROLE_USER">ROLE_USER</option>
+                                                                <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <!--                                                            th:href="@{/admin/delete(userId=${user.id})}"-->
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="button" id="deleteSubmitBtn" class="btn btn-secondary" data-dismiss="modal">Delete</button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="menu1" class="tab-pane fade">
+                <div class="panel panel-default">
+                    <div class="panel-heading">New User</div>
+                    <div class="panel-body">
+                        <div class="form-group ">
+                            <label for="addEmail">Email:</label>
+                            <input type="text" id="addEmail" name="email" placeholder="E-mail" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="addPassword">Password:</label>
+                            <input type="password" id="addPassword" name="password" placeholder="Password" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Role</label>
+
+                            <select id="addRoles" name="roles" class="form-control" multiple="multiple">
+                                <option value="ROLE_USER">ROLE_USER</option>
+                                <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                            </select>
+                        </div>
+                        <button id="addBtn" type="button" class=" btn btn-success btn-md btn-block">Register</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+</body>
+
+
+</html>
