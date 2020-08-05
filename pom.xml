@@ -68,6 +68,34 @@
 <!--			<artifactId>spring-security-test</artifactId>-->
 <!--			<scope>test</scope>-->
 <!--		</dependency>-->
+
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>org.thymeleaf.extras</groupId>-->
+<!--			<artifactId>thymeleaf-extras-springsecurity5</artifactId>-->
+<!--			<version>3.0.4.RELEASE</version>-->
+<!--		</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/org.webjars/jquery -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>3.5.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.webjars/bootstrap -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>3.4.1</version>
+		</dependency>
+
+
+
+
+
+
+
+
 	</dependencies>
 
 	<build>
