@@ -32,7 +32,7 @@
 <div class="w3-sidebar w3-white w3-bar-block" style="width:15%; color: white">
 
     <div sec:authorize="hasRole('ROLE_ADMIN')">
-        <a href="/admin/home" class="w3-bar-item w3-button w3-blue">Admin</a>
+        <a href="/admin" class="w3-bar-item w3-button w3-blue">Admin</a>
         <a href="/user" class="w3-bar-item w3-button">User</a>
     </div>
     <div sec:authorize="hasRole('ROLE_USER')">

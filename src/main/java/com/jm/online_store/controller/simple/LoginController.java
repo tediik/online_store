@@ -13,6 +13,14 @@ public class LoginController {
         return "login";
     }
 
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public String userPage() {
+        return "userPage";
+    }
+
+
+
+
 
 
 

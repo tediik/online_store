@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <title>Welcome to your page</title>
+</head>
+
+<body style="background-color: whitesmoke">
+
+<h1 style="font-size: 38px; background-color: black; color: white">
+    <a th:href="@{/logout}"> <button type="button" class="btn btn-outline-warning mb-3 btn-sm btn pull-right "> Logout </button></a>
+    <span sec:authentication="name"></span>
+</h1>
+
+
+
+<h2>Welcome to Users page</h2>
+
+</body>
+</html>
+
+
+
+
