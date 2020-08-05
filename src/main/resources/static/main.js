@@ -142,9 +142,28 @@ $(document).ready(function () {
                 }
             });
         });
-
-
     });
+
+    $(function () {
+        $('#deleteSubmitBtn').on('click', function () {
+            var $deleteId = $('#deleteId').val();
+            $.ajax(
+                {
+                    type: 'DELETE',
+                    url: '/api/users/' + $deleteId,
+                    contentType: "application/json; charset=utf-8",
+                    success: function () {
+                        $('#userRowId' + $deleteId).remove();
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+
+        })
+    });
+
+
 
 
 });
