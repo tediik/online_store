@@ -39,7 +39,6 @@ $(document).ready(function () {
     });
 
 
-
     $(function () {
         const tableBody = document.querySelector("#user-table > tbody");
 
@@ -77,8 +76,6 @@ $(document).ready(function () {
                                 $('.delete-example #deletePassword').val(data.password);
                                 $('.delete-example #deleteModal').modal('show');
                             })));
-
-
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -88,8 +85,66 @@ $(document).ready(function () {
         });
     });
 
+    $(function () {
 
 
+        $('#updateSubmitBtn').on('click', function () {
+            var id = $('#updateId').val();
+            var email = $('#updateEmail').val();
+            var password = $('#updatePassword').val();
+            var roles = $('#updateRoles').val();
+
+            var user = {id, email, password, roles};
+
+            $.ajax({
+                type: 'PUT',
+                url: '/api/users/',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(user),
+                success: function (data) {
+                    console.log(data);
+
+
+
+
+                    $(function updateFunc() {
+                        $('#editBtn').on('click', function () {
+                            $('.update-example #updateId').val(data.id);
+                            $('.update-example #updateEmail').val(data.email);
+                            $('.update-example #updatePassword').val(data.password);
+                            $('.update-example #updateModal').modal('show');
+                        });
+                    });
+                    $(function deleteFunc() {
+                        $('#deleteBtn').on('click', function () {
+                            $('.delete-example #deleteId').val(data.id);
+                            $('.delete-example #deleteEmail').val(data.email);
+                            $('.delete-example #deletePassword').val(data.password);
+                            $('.delete-example #deleteModal').modal('show');
+                        });
+                    });
+
+
+                    var new_row = `
+                        <tr id="userRowId${data.id}">
+                            <td>${data.id} </td>
+                            <td>${data.email} </td>
+                            <td>${data.roles.map(role => role.name).join(" , ")} </td>
+                            <td> <button class='btn-info' id='editBtn'>Edit</button></td>
+                            <td> <button class='btn-danger' id='deleteBtn'>Delete</button></td>
+                        </tr>`;
+
+                    $('#userRowId' + id).replaceWith(new_row);
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        });
+
+
+    });
 
 
 });

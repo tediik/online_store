@@ -7,6 +7,7 @@ import com.jm.online_store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +44,17 @@ public class UserRestController {
                 .collect(Collectors.toSet());
         user.setRoles(resultRoleSet);
         userService.addUser(user);
+        return user;
+    }
+
+    @PutMapping
+    public User updateUser(@RequestBody User user){
+        Set<Role> resultRoleSet = user.getRoles()
+                .stream()
+                .map(role -> roleService.findByName(role.getName()).get())
+                .collect(Collectors.toSet());
+        user.setRoles(resultRoleSet);
+        userService.updateUser(user);
         return user;
     }
 }
