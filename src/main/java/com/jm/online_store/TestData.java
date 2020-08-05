@@ -36,9 +36,6 @@ public class TestData {
         User userOne = new User("premium@mail.ru", "1");
         User userTwo = new User("aloe@mail.ru", "1");
 
-//        User user3 = new User("BillGates@Microsoft.com", "1");
-//        User user4 = new User("SteveJobs@Macos.org", "1");
-
         Optional<Role> aRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> uRole = roleService.findByName("ROLE_USER");
 
@@ -48,12 +45,10 @@ public class TestData {
         adminRoles.add(aRole.get());
         adminRoles.add(uRole.get());
 
-//        admin.setRoles(adminRoles);
-//        user.setRoles(userRoles);
-//        userOne.setRoles(userRoles);
-//        userTwo.setRoles(userRoles);
-//        user3.setRoles(roleSet);
-//        user4.setRoles(roleSet);
+        admin.setRoles(adminRoles);
+        user.setRoles(userRoles);
+        userOne.setRoles(userRoles);
+        userTwo.setRoles(userRoles);
 
 
         userService.addUser(user);
