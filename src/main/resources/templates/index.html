@@ -33,11 +33,8 @@
 
     <div sec:authorize="hasRole('ROLE_ADMIN')">
         <a href="/admin" class="w3-bar-item w3-button w3-blue">Admin</a>
-        <a href="/user" class="w3-bar-item w3-button">User</a>
     </div>
-    <div sec:authorize="hasRole('ROLE_USER')">
-        <a href="/user" class="w3-bar-item w3-button">User</a>
-    </div>
+
 </div>
 
 <!-- Page Content -->
@@ -108,6 +105,8 @@
                                                             <select id="updateRoles" name="roles" class="form-control" multiple="multiple">
                                                                 <option value="ROLE_USER">ROLE_USER</option>
                                                                 <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                                                <option value="ROLE_MANAGER">ROLE_MANAGER</option>
+
                                                             </select>
                                                         </div>
 
@@ -160,6 +159,7 @@
                                                             <select id="deleteRoles" name="roles" class="form-control" multiple="multiple">
                                                                 <option value="ROLE_USER">ROLE_USER</option>
                                                                 <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                                                <option value="ROLE_MANAGER">ROLE_MANAGER</option>
                                                             </select>
                                                         </div>
 
@@ -202,6 +202,8 @@
                             <select id="addRoles" name="roles" class="form-control" multiple="multiple">
                                 <option value="ROLE_USER">ROLE_USER</option>
                                 <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                <option value="ROLE_MANAGER">ROLE_MANAGER</option>
+
                             </select>
                         </div>
                         <button id="addBtn" type="button" class=" btn btn-success btn-md btn-block">Register</button>

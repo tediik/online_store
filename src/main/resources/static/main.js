@@ -18,7 +18,7 @@ $(document).ready(function () {
                         $(tableBody).append($('<tr id="userRowId' + user.id + '">')
                             .append($("<td>").append(user.id))
                             .append($("<td>").append(user.email))
-                            .append($("<td>").append(user.roles.map(role => role.name).join(" ")))
+                            .append($("<td>").append(user.authorities.map(role => role.authority).join(" ")))
 
                             .append($("<td>").append("<button class='btn-info updateBtn '>Edit</button>").click(function (event) {
                                 $('.update-example #updateId').val(user.id);
@@ -61,7 +61,7 @@ $(document).ready(function () {
                         $('#table-body').append($('<tr id="userRowId' + data.id + '">')
                             .append($("<td>").append(data.id))
                             .append($("<td>").append(data.email))
-                            .append($("<td>").append(data.roles.map(role => role.name).join(" ")))
+                            .append($("<td>").append(data.authorities.map(role => role.authority).join(" ")))
 
                             .append($("<td>").append("<button class='btn-info updateBtn '>Edit</button>").click(function (event) {
                                 $('.update-example #updateId').val(data.id);
@@ -130,7 +130,7 @@ $(document).ready(function () {
                         <tr id="userRowId${data.id}">
                             <td>${data.id} </td>
                             <td>${data.email} </td>
-                            <td>${data.roles.map(role => role.name).join(" , ")} </td>
+                            <td>${data.authorities.map(role => role.authority).join(" , ")} </td>
                             <td> <button class='btn-info' id='editBtn'>Edit</button></td>
                             <td> <button class='btn-danger' id='deleteBtn'>Delete</button></td>
                         </tr>`;

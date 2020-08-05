@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 
 
@@ -19,10 +20,12 @@
 <body style="background-color: whitesmoke">
 
 <h1 style="font-size: 38px; background-color: black; color: white">
-    <a th:href="@{/logout}"> <button type="button" class="btn btn-outline-warning mb-3 btn-sm btn pull-right "> Logout </button></a>
     <span sec:authentication="name"></span>
+    <a th:href="@{/logout}">
+        <button type="button" class="btn btn-outline-warning mb-3 btn-sm btn pull-right ">Logout</button>
+    </a>
 </h1>
-
+<!--<span th:text="${#authentication.getPrincipal()}"></span> &lt;!&ndash; No ".getUsername()"&ndash;&gt;-->
 
 
 <h2>Welcome to Users page</h2>
