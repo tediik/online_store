@@ -44,7 +44,7 @@ public class UserRestController {
     public User saveUser(@RequestBody User user) {
         Set<Role> resultRoleSet = user.getRoles()
                 .stream()
-                .map(role -> roleService.findByName(role.getName()).get())
+                .map(role -> roleService.findByName(role.getAuthority()).get())
                 .collect(Collectors.toSet());
         user.setRoles(resultRoleSet);
         userService.addUser(user);
@@ -55,7 +55,7 @@ public class UserRestController {
     public User updateUser(@RequestBody User user){
         Set<Role> resultRoleSet = user.getRoles()
                 .stream()
-                .map(role -> roleService.findByName(role.getName()).get())
+                .map(role -> roleService.findByName(role.getAuthority()).get())
                 .collect(Collectors.toSet());
         user.setRoles(resultRoleSet);
         userService.updateUser(user);
