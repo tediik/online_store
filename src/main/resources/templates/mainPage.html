@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title></title>
+</head>
+
+<style>
+
+    header{
+        background: #deb887;
+        color: white;
+        text-align:center;
+
+    }
+    .logo{
+        margin-left: 15px;
+        float: left;
+        display:inline-block;
+    }
+    .search-header{
+        display:inline-block;
+
+    }
+    .any-button{
+        display:inline-block;
+        margin-left: 70px;
+    }
+    .loginbutton{
+        display:inline-block;
+        color: #f1f1f1;
+        float: right;
+        background: white;
+    }
+
+    aside {
+        background: #818181;
+        padding: 10px;
+        width: 150px;
+        float: left;
+        margin-top: 0;
+        min-height: 100%;
+    }
+
+    body {
+        margin: 0;
+        font-weight: 400;
+        line-height: 1.5;
+        color: white;
+        text-align: left;
+        background-color: #f7f5f5;
+    }
+    @media (min-width: 768px) {
+        .navbar-container {
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            height: 100vh;
+        }
+        .navbar-container .navbar {
+            align-items: flex-start;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            flex-direction: column;
+            height: 100%;
+        }
+        .navbar-container .navbar-collapse {
+            align-items: flex-start;
+        }
+        .navbar-container .nav {
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .navbar-container .navbar-nav {
+            flex-direction: column !important;
+        }
+
+    }
+    .h2{
+        color: #111111;
+    }
+</style>
+
+<body>
+
+<header>
+
+    <nav id="header" class="header"></nav>
+    <div class="logo">Здесь находится лого</div>
+    <div class="search-header">
+        <input type="text" class="form-control" placeholder="Search">
+    </div>
+    <div class="any-button">Здесь размещаются доп. кнопки</div>
+    <div class="btn loginbutton">
+        <a href="/login"> Login </a>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-lg-3 navbar-container bg-light">
+            <!-- Вертикальное меню -->
+            <nav class="navbar navbar-expand-md navbar-light">
+
+                <div class="collapse navbar-collapse" id="navbar">
+                    <!-- Пункты вертикального меню -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item admin-page active">
+                            <a class="nav-link" href="/">Смартфоны и гаджеты</a>
+                        </li>
+                        <li class="nav-item user-page">
+                            <a class="nav-link" href="/">Компьютеры и комплектующие</a>
+                        </li>
+                        <li class="nav-item user-page">
+                            <a class="nav-link" href="/">Категория 3</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <div class="col-md-8 col-lg-9 content-container" style="background-color: whitesmoke">
+            <p class="h2">Some goods we sell</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
