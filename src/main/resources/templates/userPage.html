@@ -21,14 +21,18 @@
 
 <h1 style="font-size: 38px; background-color: black; color: white">
     <span sec:authentication="name"></span>
-    <a th:href="@{/logout}">
-        <button type="button" class="btn btn-outline-warning mb-3 btn-sm btn pull-right ">Logout</button>
-    </a>
+    <span th:each="authority : ${#authentication.getAuthorities()}"
+          th:text="${authority.getAuthority()}">
+
+    </span>
+            <a th:href="@{/logout}">
+                <button type="button" class="btn btn-warning mb-3 btn-sm btn pull-right ">Logout</button>
+            </a>
 </h1>
 <!--<span th:text="${#authentication.getPrincipal()}"></span> &lt;!&ndash; No ".getUsername()"&ndash;&gt;-->
 
 
-<h2>Welcome to Users page</h2>
+<h2>Welcome to User's page</h2>
 
 </body>
 </html>

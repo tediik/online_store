@@ -36,7 +36,6 @@ public class UserRestController {
 
     @GetMapping
     public List<User> findAll() {
-
         return userService.findAll();
     }
 

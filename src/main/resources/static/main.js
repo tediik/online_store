@@ -1,7 +1,6 @@
 $(document).ready(function () {
     const tableBody = document.querySelector("#user-table > tbody");
 
-
     $(function () {
         $.ajax(
             {
@@ -10,10 +9,6 @@ $(document).ready(function () {
                 dataType: "json",
                 success: function (users) {
                     $.each(users, function (i, user) {
-
-
-                        // user.roles.forEach(element => console.log(element.authority));
-
 
                         $(tableBody).append($('<tr id="userRowId' + user.id + '">')
                             .append($("<td>").append(user.id))
@@ -40,7 +35,6 @@ $(document).ready(function () {
 
 
     $(function () {
-        const tableBody = document.querySelector("#user-table > tbody");
 
         $('#addBtn').on('click', function () {
             var email = $('#addEmail').val();
@@ -103,10 +97,6 @@ $(document).ready(function () {
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(user),
                 success: function (data) {
-                    console.log(data);
-
-
-
 
                     $(function updateFunc() {
                         $('#editBtn').on('click', function () {
@@ -124,7 +114,6 @@ $(document).ready(function () {
                             $('.delete-example #deleteModal').modal('show');
                         });
                     });
-
 
                     var new_row = `
                         <tr id="userRowId${data.id}">
@@ -161,6 +150,32 @@ $(document).ready(function () {
                 });
 
         })
+    });
+
+
+    $(function () {
+        $.ajax(
+            {
+                type: "GET",
+                url: '/api/roles',
+                dataType: "json",
+                success: function (roles) {
+                    console.log(roles);
+
+                    for (let i = 0; i < roles.length; i++) {
+
+                        $("#updateRoles").append('<option value=' + roles[i].authority + '>' + roles[i].authority + '</option>');
+                        $("#deleteRoles").append('<option value=' + roles[i].authority + '>' + roles[i].authority + '</option>');
+                        $("#addRoles").append('<option value=' + roles[i].authority + '>' + roles[i].authority + '</option>');
+
+                    }
+
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+
+            });
     });
 
 

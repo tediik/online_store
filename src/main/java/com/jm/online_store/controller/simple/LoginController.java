@@ -23,6 +23,7 @@ public class LoginController {
     public String visitorPage(){
         return "visitor";
     }
+
     @GetMapping("/denied")
     public String deniedPage(){
         return "denied";

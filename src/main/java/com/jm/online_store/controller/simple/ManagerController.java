@@ -8,13 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/manager")
 public class ManagerController {
 
-
-
     @GetMapping
     public String managerPage(){
         return "manager";
     }
-
-
 
 }
