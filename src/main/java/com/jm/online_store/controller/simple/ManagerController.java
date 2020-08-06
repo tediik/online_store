@@ -10,7 +10,7 @@ public class ManagerController {
 
     @GetMapping
     public String managerPage(){
-        return "manager";
+        return "managerPage";
     }
 
 }

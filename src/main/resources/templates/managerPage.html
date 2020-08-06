@@ -11,14 +11,13 @@
     <span sec:authentication="name"></span>
     <span th:each="authority : ${#authentication.getAuthorities()}"
           th:text="${authority.getAuthority()}">
-
     </span>
 
     <h1>Welcome to Manager's page</h1>
 
 
 </h1><a th:href="@{/logout}">
-    <button type="button" class="btn btn-outline-warning mb-3 btn-sm btn pull-right ">Logout</button>
+    <button type="button" class="btn btn-info mb-3 btn-md">Logout</button>
 </a>
 
 </body>

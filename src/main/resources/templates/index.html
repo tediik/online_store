@@ -22,18 +22,18 @@
 <!--Display logged in user's name-->
 <h1 style="font-size: 38px; background-color: black; color: white">
     <span sec:authentication="name"></span>
+    <span th:each="authority : ${#authentication.getAuthorities()}"
+          th:text="${authority.getAuthority()} + ' '">
+    </span>
     <a th:href="@{/logout}">
-        <button type="button" class="btn btn-outline-warning mb-3 btn-sm btn pull-right ">Logout</button>
+        <button type="button" class="btn btn-warning mb-3 btn-md btn pull-right ">Logout</button>
     </a>
 </h1>
 
 
 <!-- Sidebar -->
 <div class="w3-sidebar w3-white w3-bar-block" style="width:15%; color: white">
-
-    <div sec:authorize="hasRole('ROLE_ADMIN')">
-        <a href="/admin" class="w3-bar-item w3-button w3-blue">Admin</a>
-    </div>
+    <h3 style="font-size: 24px; background-color: darkblue; color: white"><strong>CUSTOMER MANAGEMENT</strong></h3>
 
 </div>
 

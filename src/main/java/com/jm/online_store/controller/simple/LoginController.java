@@ -14,15 +14,11 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String userPage() {
-        return "userPage";
+        return "customerPage";
     }
 
-    @GetMapping("/")
-    public String visitorPage(){
-        return "visitor";
-    }
 
     @GetMapping("/denied")
     public String deniedPage(){

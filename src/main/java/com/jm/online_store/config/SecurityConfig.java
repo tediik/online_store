@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").permitAll()
 
-                .antMatchers("/user").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+                .antMatchers("/user").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
 
                 .antMatchers("/api/users").access("hasAnyRole('ROLE_ADMIN')")
 
@@ -80,9 +80,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
+
     }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 }
