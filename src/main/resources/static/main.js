@@ -75,7 +75,6 @@ $(document).ready(function () {
                         console.log(errorThrown);
                     }
                 });
-
         });
     });
 
@@ -106,6 +105,7 @@ $(document).ready(function () {
                             $('.update-example #updateModal').modal('show');
                         });
                     });
+
                     $(function deleteFunc() {
                         $('#deleteBtn').on('click', function () {
                             $('.delete-example #deleteId').val(data.id);
@@ -160,16 +160,12 @@ $(document).ready(function () {
                 url: '/api/roles',
                 dataType: "json",
                 success: function (roles) {
-                    console.log(roles);
-
                     for (let i = 0; i < roles.length; i++) {
 
                         $("#updateRoles").append('<option value=' + roles[i].authority + '>' + roles[i].authority + '</option>');
                         $("#deleteRoles").append('<option value=' + roles[i].authority + '>' + roles[i].authority + '</option>');
                         $("#addRoles").append('<option value=' + roles[i].authority + '>' + roles[i].authority + '</option>');
-
                     }
-
                 },
                 error: function (jqXhr, textStatus, errorThrown) {
                     console.log(errorThrown);
@@ -177,8 +173,6 @@ $(document).ready(function () {
 
             });
     });
-
-
 
 
 });

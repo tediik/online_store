@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Manager PAge</title>
 </head>
 
 <body style="background-color: whitesmoke">
@@ -12,11 +12,12 @@
     <span th:each="authority : ${#authentication.getAuthorities()}"
           th:text="${authority.getAuthority()}">
     </span>
+</h1>
 
     <h1>Welcome to Manager's page</h1>
 
 
-</h1><a th:href="@{/logout}">
+<a th:href="@{/logout}">
     <button type="button" class="btn btn-info mb-3 btn-md">Logout</button>
 </a>
 

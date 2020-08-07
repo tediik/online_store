@@ -1,4 +1,4 @@
-package com.jm.online_store;
+package com.jm.online_store.config;
 
 
 import com.jm.online_store.model.Role;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Component
-public class TestData {
+public class DataInitializer {
 
     @Autowired
     private UserService userService;
