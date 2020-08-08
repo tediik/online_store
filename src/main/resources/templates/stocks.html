@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" xmlns: th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{css/styles.css}"/>
+    <style>
+        body {
+            height: 100%;
+        }
+
+        .underline {
+            border-bottom: 2px solid coral;
+        }
+
+        .card-footer {
+            background: white;
+        }
+
+        #cont {
+
+            width: 100%;
+            padding-left: 10%;
+            text-align: center
+        }
+
+    </style>
+
+
+    <title>StocksPage</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
+
+        <div class="navbar-brand">Перейти на <b><a href="/" style="color: coral">главную</a></b></div>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+        </div>
+        <div class="navbar-text"><a th:href="@{/logout}">Logout</a></div>
+    </nav>
+</header>
+<div style="background-color: #ececec">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Товары</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Акции</li>
+        </ol>
+    </nav>
+    <h2 class="text-center "><span class="underline">Акции</span></h2>
+
+
+    <div id="cont" class="row no-gutters pb-4" style="background-color: #ececec">
+
+        <div class="col-md-3 pr-3">
+
+            <br>
+            <div class="container min-height: 100vh" style="background-color: #ffffff; border-radius: 10px;">
+                <h4 class="text-center p-1">Фильтры</h4>
+                <label class="ui-checkbox ui-checkbox_list"><span>Текущие акции <span
+                        class="text-muted">(160)</span></span><input type="checkbox"
+                                                                     class="ui-checkbox__input ui-checkbox__input_list"
+                                                                     value="ALL_ACTIONS"><span
+                        class="ui-checkbox__box ui-checkbox__box_list"></span></label>
+
+                <label class="ui-checkbox ui-checkbox_list"><span>Планируемые акции <span class="text-muted">(77)</span></span><input
+                        type="checkbox" class="ui-checkbox__input ui-checkbox__input_list" value="30"><span
+                        class="ui-checkbox__box ui-checkbox__box_list"></span></label>
+
+                <label class="ui-checkbox ui-checkbox_list"><span>Завершенные акции <span class="text-muted">(77)</span></span><input
+                        type="checkbox" class="ui-checkbox__input ui-checkbox__input_list" value="30"><span
+                        class="ui-checkbox__box ui-checkbox__box_list"></span></label>
+            </div>
+            <br>
+            <div>
+                <form>
+                    <button type="button" class="btn-primary btn-lg" data-toggle='modal' data-target='#newStockModal'>
+                        Новая акция
+                    </button>
+                </form>
+            </div>
+
+        </div>
+        <div class="col-md-7">
+            <!--START of Stocks-->
+
+            <br>
+            <div class="container min-height: 100vh" style="background-color: #ffffff; border-radius: 10px;">
+
+                <div class="card-deck pt-3 pb-3">
+                    <div class="card">
+                        <img class="card-img-top" src="/img/1.jpg" alt="">
+                        <div class="card-body">
+                            <h5 class="card-title">Шляпа 1</h5>
+                            <p class="card-text">Купи 3 получи 2</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
+
+                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
+                                </button>
+                                <button class="warning btn btn-sm btn-danger">Delete</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img class="card-img-top" src="/img/1.jpg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Шляпа 2</h5>
+                            <p class="card-text">Оформи в кредит на родственника.</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
+
+                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
+                                </button>
+                                <button class="warning btn btn-sm btn-danger">Delete</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img class="card-img-top" src="/img/1.jpg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Шляпа 3</h5>
+                            <p class="card-text">Оплати доставку и получи в другом городе.</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
+
+                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
+                                </button>
+                                <button class="warning btn btn-sm btn-danger">Delete</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-------------------2 линия----------->
+
+                <div class="card-deck pt-3 pb-3">
+
+                    <div class="card">
+                        <img class="card-img-top" src="/img/1.jpg" alt="">
+                        <div class="card-body">
+                            <h5 class="card-title">Шляпа 4</h5>
+                            <p class="card-text">Покорми сотрудника, возьми его домой</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
+
+                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
+                                </button>
+                                <button class="warning btn btn-sm btn-danger">Delete</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img class="card-img-top" src="/img/1.jpg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Шляпа 5</h5>
+                            <p class="card-text">ООООООООООООчень длиииииииииинный тееееееееееееееееееееееееееееееееееееееееееееееэээээээээээээээээээээээээээээээээээээээээээкст.</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
+
+                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
+                                </button>
+                                <button class="warning btn btn-sm btn-danger">Delete</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img class="card-img-top" src="/img/1.jpg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Шляпа 6</h5>
+                            <p class="card-text">Попей бесплатный кофе за свой счет.</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
+
+                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
+                                </button>
+                                <button class="warning btn btn-sm btn-danger">Delete</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!---------------------- New Stock Modal  ------------------->
+        <div class="modal fade" id="newStockModal" data-backdrop="static" tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="stockModalLable">Добавить акцию</h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form id="stockModal">
+                        <div class="modal-body">
+                            <div>
+                                <div class="container-fluid col-sm-12">
+                                    <form enctype="multipart/form-data" method="post">
+                                        <div class="form-group">
+                                            <p>Описание акции:
+                                                <Br>
+                                                <textarea name="comment" cols="45" rows="5"></textarea>
+                                            </p>
+
+                                            <label for="date">Дата начала</label>
+                                            <input type="date" id="date" name="date"/>
+                                            <br>
+                                            <label for="date">Дата окончания</label>
+                                            <input type="date" id="date" name="date"/>
+                                            <br>
+                                            <p><input type="file" name="f" accept="image/jpeg">
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+
+                            <button type="submit" data-dismiss="modal" id="editUser" class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!---------------------- End of New Stock Modal ------------------->
+
+
+        <!---------------------- Edit Modal  ------------------->
+        <div class="modal fade" id="myModal" data-backdrop="static" tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="stockModalLable">Редактировать</h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form id="stockModal">
+                        <div class="modal-body">
+                            <div>
+                                <div class="container-fluid col-sm-12">
+                                    <form enctype="multipart/form-data" method="post">
+                                        <div class="form-group">
+                                            <p>Описание акции:
+                                                <Br>
+                                                <textarea name="comment" cols="45" rows="5"></textarea>
+                                            </p>
+
+                                            <label for="date">Дата начала</label>
+                                            <input type="date" id="date" name="date"/>
+                                            <br>
+                                            <label for="date">Дата окончания</label>
+                                            <input type="date" id="date" name="date"/>
+                                            <br>
+                                            <p><input type="file" name="f" accept="image/jpeg">
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+
+                            <button type="submit" data-dismiss="modal" id="editUser" class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!---------------------- End of Edit Modal ------------------->
+
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous"></script>
+    </div>
+</div>
+</body>
+</html>
