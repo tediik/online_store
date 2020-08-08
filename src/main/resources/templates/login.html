@@ -1,0 +1,26 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+                                                          crossorigin="anonymous" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<section id="loginform" class="outer-wrapper">
+
+    <div class="inner-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-4">
+                    <h2 class="text-left h4 mb-4">Please sign in</h2>
+                    <form th:action="@{/login}" method="post" class="form-group">
+
+                        <input type="text" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
+                               class="form-control">
+
+                        <input type="password" id="password" name="login_password" placeholder="Password"
+                               class="form-control"/>
+
+                        <button class="btn btn-primary btn-sm btn-block">Sign In</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
