@@ -1,7 +1,6 @@
-package com.jm.online_store.config;
+package com.jm.online_store.config.security;
 
 import com.jm.online_store.config.handler.LoginSuccessHandler;
-import com.jm.online_store.service.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +9,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.swing.text.DateFormatter;
 
 
 @Configuration
@@ -86,6 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
+
     @Bean
     public AuthenticationManager authManager() throws Exception {
         return this.authenticationManager();
@@ -93,11 +91,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-
+        return new BCryptPasswordEncoder();
     }
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 }

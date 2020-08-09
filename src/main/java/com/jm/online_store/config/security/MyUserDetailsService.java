@@ -1,4 +1,4 @@
-package com.jm.online_store.service;
+package com.jm.online_store.config.security;
 
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;

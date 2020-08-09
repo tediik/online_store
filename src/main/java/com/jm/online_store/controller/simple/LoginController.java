@@ -14,11 +14,11 @@ public class LoginController {
         return "login";
     }
 
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String userPage() {
         return "customerPage";
     }
-
 
     @GetMapping("/denied")
     public String deniedPage(){
