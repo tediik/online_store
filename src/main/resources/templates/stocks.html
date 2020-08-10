@@ -109,10 +109,16 @@
 
                             </div>
                             <div class="col-md-2">
-                                <button class="btn btn-md btn-info mt-5 mr-2"
-                                        data-toggle='modal' data-target='#myModal'>Edit
+                                <button class="btn btn-md btn-info mt-5 mr-2" data-toggle='modal' data-target='#myModal'>
+                                    Edit
                                 </button>
-                                <button class="warning btn btn-md btn-danger mt-2 mr-2">Delete</button>
+
+
+                                    <a th:href="@{delete(id=${stocks.id})}" class="warning btn btn-md btn-danger mt-2 mr-2"
+                                            role="button">Delete
+                                    </a>
+
+
                             </div>
                         </div>
                     </div>

@@ -12,13 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/api/stocks")
 public class StockRest {
 
     private final StockService stockService;
@@ -28,13 +30,6 @@ public class StockRest {
         this.stockService = stockService;
     }
 
-
-    //Выводим все акции
-    @GetMapping()
-    public List<Stock> findAllStocks() {
-
-        return stockService.findAllStocks();
-    }
 
     //Вычисляем по id
     @GetMapping(value = "/{id}")
@@ -49,13 +44,7 @@ public class StockRest {
 //        stockService.addStock();
 //    }
 
-    //Удаляем акцию по id
-    @DeleteMapping(value = "/{stockId}")
-    public ResponseEntity<Void> deleteStockById(@PathVariable Long stockId) {
-        stockService.deleteStockById(stockId);
 
-        return new ResponseEntity<Void>(HttpStatus.OK);
-    }
 
 //    //Редактируем новую акцию
 //    @PutMapping()
