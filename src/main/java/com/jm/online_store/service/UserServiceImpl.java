@@ -7,21 +7,18 @@ import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,6 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Value("${spring.url.activate}")
+    private String urlActivate;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
         String message = String.format(
                 "Hello, %s! \n" +
                         "Welcome to online-store. Please, visit next link: " +
-                        "http://localhost:9999/activate/%s",
+                        urlActivate,
                 userForm.getEmail(),
                 confirmationToken.getConfirmationToken()
         );
@@ -111,15 +111,14 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        Set<Role> userRole = roleRepository
-                .findByName("ROLE_CUSTOMER")
-                .stream()
-                .collect(Collectors.toSet());
+        Role userRole = roleRepository.findByName("ROLE_CUSTOMER").get();
+        Set<Role> userSetRoles = new HashSet<>();
+        userSetRoles.add(userRole);
 
         User user = new User();
         user.setEmail(confirmationToken.getUserEmail());
         user.setPassword(confirmationToken.getUserPassword());
-        user.setRoles(userRole);
+        user.setRoles(userSetRoles);
 
         addUser(user);
 
