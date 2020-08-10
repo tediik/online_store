@@ -8,6 +8,15 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+
     <title></title>
 </head>
 
@@ -19,29 +28,20 @@
         text-align:center;
 
     }
-    .logo{
-        margin-left: 15px;
-        float: left;
-        display:inline-block;
-    }
-    .search-header{
-        display:inline-block;
 
+    .navbar-expand-lg{
+        background: #deb887;
     }
+
+    .form-inline {
+        margin-left: 30%;
+    }
+
     .loginbutton{
-        display:inline-block;
         color: #f1f1f1;
         float: right;
         background: white;
-    }
-
-    aside {
-        background: #818181;
-        padding: 10px;
-        width: 150px;
-        float: left;
-        margin-top: 0;
-        min-height: 100%;
+        margin-left: 55%;
     }
 
     body {
@@ -52,76 +52,177 @@
         text-align: left;
         background-color: #f7f5f5;
     }
-    @media (min-width: 768px) {
-        .navbar-container {
-            position: sticky;
-            top: 0;
-            overflow-y: auto;
-            height: 100vh;
-        }
-        .navbar-container .navbar {
-            align-items: flex-start;
-            justify-content: flex-start;
-            flex-wrap: nowrap;
-            flex-direction: column;
-            height: 100%;
-        }
-        .navbar-container .navbar-collapse {
-            align-items: flex-start;
-        }
-        .navbar-container .nav {
-            flex-direction: column;
-            flex-wrap: nowrap;
-        }
-        .navbar-container .navbar-nav {
-            flex-direction: column !important;
-        }
 
+
+
+    .navbar-nav>li>.dropdown-menu {
+        margin-top: 20px;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
     }
-    .h2{
-        color: #111111;
+    .navbar-default .navbar-nav>li>a {
+        width: 200px;
+        font-weight: bold;
     }
+    .mega-dropdown {
+        position: static !important;
+        width: 100%;
+    }
+
+    .mega-dropdown-menu > li > ul {
+        padding: 0;
+        margin: 0;
+    }
+    .mega-dropdown-menu > li > ul > li {
+        list-style: none;
+    }
+    .mega-dropdown-menu > li > ul > li > a {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.428571429;
+        color: #999;
+        white-space: normal;
+    }
+    .mega-dropdown-menu > li ul > li > a:hover,
+    .mega-dropdown-menu > li ul > li > a:focus {
+        text-decoration: none;
+        color: #444;
+        background-color: #f5f5f5;
+    }
+
+    .mega-dropdown-menu .dropdown-header {
+        color: #428bca;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .mega-dropdown-menu form {
+        margin: 3px 20px;
+    }
+    .mega-dropdown-menu .form-group {
+        margin-bottom: 3px;
+    }
+
+
 </style>
+
+
+<script>
+
+    $('.multi-level-dropdown .dropdown-submenu > a').on("click", function(e) {
+        var submenu = $(this);
+        $('.multi-level-dropdown .dropdown-submenu .dropdown-menu').removeClass('show');
+        submenu.next('.dropdown-menu').addClass('show');
+        e.stopPropagation();
+    });
+
+    $('.multi-level-dropdown .dropdown').on("hidden.bs.dropdown", function() {
+        // hide any open menus when parent closes
+        $('.multi-level-dropdown .dropdown-menu.show').removeClass('show');
+    })
+
+</script>
+
 
 <body>
 
-<header>
+<nav class="navbar navbar-expand-lg ">
 
-    <nav id="header" class="header"></nav>
-    <div class="logo">Здесь находится лого</div>
-    <div class="search-header">
-        <input type="text" class="form-control" placeholder="Search">
-    </div>
-    <div class="btn loginbutton">
-        <a th:href="@{/login}"> Login </a>
-    </div>
-</header>
+    <!-- Place logo here -->
+    <a class="navbar-brand text-uppercase" href="#">MainPage</a>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4 col-lg-3 navbar-container bg-light">
-            <!-- Вертикальное меню -->
-            <nav class="navbar navbar-expand-md navbar-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarProductMenu"
+            aria-controls="navbarProductMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-                <div class="collapse navbar-collapse" id="navbar">
-                    <!-- Пункты вертикального меню -->
-                    <ul class="navbar-nav">
-                        <li class="nav-item admin-page active">
-                            <a class="nav-link" th:href="@{/}">Смартфоны и гаджеты</a>
-                        </li>
-                        <li class="nav-item user-page">
-                            <a class="nav-link" th:href="@{/}">Компьютеры и комплектующие</a>
-                        </li>
-                    </ul>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent2">
+
+        <ul class="navbar-nav mr-auto">
+
+            <!-- Product menu -->
+            <li class="nav-item dropdown mega-dropdown active">
+                <a class="nav-link dropdown-toggle text-uppercase" id="navbarProductMenu" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">Products
+                    <span class="sr-only">(current)</span>
+                </a>
+                <div class="dropdown-menu mega-menu"
+                     aria-labelledby="navbarProductMenu">
+                    <div class="row">
+                        <div class="col-md-6 col-xl-3 sub-menu mb-xl-0 mb-4">
+                            <h6 class="sub-title text-uppercase font-weight-bold white-text">Смартфоны и гаджеты</h6>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a class="menu-item pl-0" href="#!">
+                                        <i class="fas fa-caret-right pl-1 pr-3"></i>Смартфоны
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="menu-item pl-0" href="#!">
+                                        <i class="fas fa-caret-right pl-1 pr-3"></i>Электронные книги
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 col-xl-3 sub-menu mb-xl-0 mb-4">
+                            <h6 class="sub-title text-uppercase font-weight-bold white-text">Компьютеры и комплектующие</h6>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a class="menu-item pl-0" href="#!">
+                                        <i class="fas fa-caret-right pl-1 pr-3"></i>Компьютеры и ноутбуки
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="menu-item pl-0" href="#!">
+                                        <i class="fas fa-caret-right pl-1 pr-3"></i>Комплектующие
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="menu-item pl-0" href="#!">
+                                        <i class="fas fa-caret-right pl-1 pr-3"></i>Периферия
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 col-xl-3 sub-menu mb-md-0 mb-xl-0 mb-4">
+                            <h6 class="sub-title text-uppercase font-weight-bold white-text">Еще какой-то продуктнейм</h6>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a class="menu-item pl-0" href="#!">
+                                        <i class="fas fa-caret-right pl-1 pr-3"></i>Категория1
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="menu-item pl-0" href="#!">
+                                        <i class="fas fa-caret-right pl-1 pr-3"></i>Категория2
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="menu-item pl-0" href="#!">
+                                        <i class="fas fa-caret-right pl-1 pr-3"></i>Категория3
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </nav>
-        </div>
+            </li>
+        </ul>
 
-        <div class="col-md-8 col-lg-9 content-container" style="background-color: whitesmoke">
-            <p class="h2">Some goods we sell</p>
-        </div>
+        <!-- Search -->
+        <form class="form-inline">
+            <div class="md-form my-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            </div>
+
+            <!-- Login -->
+            <div class="btn loginbutton">
+                <a th:href="@{/login}"> Login </a>
+            </div>
+        </form>
     </div>
-</div>
+</nav>
 
 </body>
 </html>
