@@ -90,116 +90,34 @@
 
         </div>
         <div class="col-md-7">
+
+
             <!--START of Stocks-->
-
             <br>
-            <div class="container min-height: 100vh" style="background-color: #ffffff; border-radius: 10px;">
+            <div class="container-fluid p-3" style="background-color: #ffffff; border-radius: 10px;">
 
-                <div class="card-deck pt-3 pb-3">
-                    <div class="card">
-                        <img class="card-img-top" src="/img/1.jpg" alt="">
-                        <div class="card-body">
-                            <h5 class="card-title">Шляпа 1</h5>
-                            <p class="card-text">Купи 3 получи 2</p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
+                <th:block th:each="stocks : ${stocks}">
+                    <div class="card mb-3">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img th:attr="src=@{'/img/' + ${stocks.stock_img}}" class="card-img" alt="...">
+                            </div>
+                            <div class="col-md-6">
 
-                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
+                                <h3 class="card-title mt-2" th:text="${stocks.stock_title}"></h3>
+                                <p class="card-text" th:text="${stocks.stock_text}"></p>
+
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-md btn-info mt-5 mr-2"
+                                        data-toggle='modal' data-target='#myModal'>Edit
                                 </button>
-                                <button class="warning btn btn-sm btn-danger">Delete</button>
-
+                                <button class="warning btn btn-md btn-danger mt-2 mr-2">Delete</button>
                             </div>
                         </div>
                     </div>
-                    <div class="card">
-                        <img class="card-img-top" src="/img/1.jpg" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Шляпа 2</h5>
-                            <p class="card-text">Оформи в кредит на родственника.</p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
+                </th:block>
 
-                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
-                                </button>
-                                <button class="warning btn btn-sm btn-danger">Delete</button>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img class="card-img-top" src="/img/1.jpg" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Шляпа 3</h5>
-                            <p class="card-text">Оплати доставку и получи в другом городе.</p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
-
-                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
-                                </button>
-                                <button class="warning btn btn-sm btn-danger">Delete</button>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-------------------2 линия----------->
-
-                <div class="card-deck pt-3 pb-3">
-
-                    <div class="card">
-                        <img class="card-img-top" src="/img/1.jpg" alt="">
-                        <div class="card-body">
-                            <h5 class="card-title">Шляпа 4</h5>
-                            <p class="card-text">Покорми сотрудника, возьми его домой</p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
-
-                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
-                                </button>
-                                <button class="warning btn btn-sm btn-danger">Delete</button>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img class="card-img-top" src="/img/1.jpg" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Шляпа 5</h5>
-                            <p class="card-text">ООООООООООООчень длиииииииииинный тееееееееееееееееееееееееееееееееееееееееееееееэээээээээээээээээээээээээээээээээээээээээээкст.</p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
-
-                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
-                                </button>
-                                <button class="warning btn btn-sm btn-danger">Delete</button>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img class="card-img-top" src="/img/1.jpg" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Шляпа 6</h5>
-                            <p class="card-text">Попей бесплатный кофе за свой счет.</p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="col-md-12 btn-group" role="group" aria-label="Basic example">
-
-                                <button class="btn btn-sm btn-info" data-toggle='modal' data-target='#myModal'>Edit
-                                </button>
-                                <button class="warning btn btn-sm btn-danger">Delete</button>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
