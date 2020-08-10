@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -42,31 +41,7 @@
         </div>
     </div>
 </div>
-=======
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<meta charset="UTF-8">
-<title>Customer Page</title>
-
-<body style="background-color: whitesmoke">
-
-<h1 style="font-size: 38px; background-color: black; color: white">
-    <span sec:authentication="name"></span>
-    <span th:each="authority : ${#authentication.getAuthorities()}"
-          th:text="${authority.getAuthority()}">
-    </span>
-</h1>
-
-
-<h2>Welcome to Customer's page</h2>
-
-<a th:href="@{/logout}">
-    <button type="button" class="btn btn-info mb-3 btn-md ">Logout</button>
-</a>
-
->>>>>>> eabd40824607c6916ae1f5d6b381e49329810add
 </body>
-</html>
 </html>
 
 

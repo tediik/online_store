@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.model.Gender;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 @RequestMapping("/customer")

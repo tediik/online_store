@@ -2,12 +2,9 @@ package com.jm.online_store.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
@@ -19,7 +16,7 @@ public class ConfirmationToken {
     @GeneratedValue(strategy = GenerationType.AUTO)
 
     @Column
-    private long tokenid;
+    private long tokenId;
 
     @Column
     private String confirmationToken;
@@ -44,12 +41,12 @@ public class ConfirmationToken {
 
     }
 
-    public long getTokenid() {
-        return tokenid;
+    public long getTokenId() {
+        return tokenId;
     }
 
-    public void setTokenid(long tokenid) {
-        this.tokenid = tokenid;
+    public void setTokenId(long tokenId) {
+        this.tokenId = tokenId;
     }
 
     public String getConfirmationToken() {
