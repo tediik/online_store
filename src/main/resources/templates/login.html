@@ -9,7 +9,7 @@
                 <div class="col-sm-4 col-sm-offset-4">
                     <h2 class="text-left h4 mb-4">Please sign in</h2>
                     <form th:action="@{/login}" method="post" class="form-group">
-
+                        <a th:text="${message}"></a>
                         <input type="text" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
                                class="form-control">
 

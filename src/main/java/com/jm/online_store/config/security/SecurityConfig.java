@@ -4,11 +4,13 @@ import com.jm.online_store.config.handler.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -19,6 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private LoginSuccessHandler successHandler;
+
     @Autowired
     private MyUserDetailsService myUserDetailsService;
 
@@ -34,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
+
                 // указываем страницу с формой логина
                 .loginPage("/login")
                 //указываем логику обработки при логине
@@ -62,10 +66,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
+
+                .antMatchers("/", "/registration", "/static/**","/activate/*").permitAll()
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").permitAll()
 
-                .antMatchers("/user").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
+                .antMatchers("/customer").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
 
                 .antMatchers("/api/users").access("hasAnyRole('ROLE_ADMIN')")
 
@@ -78,6 +84,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
+
+    @Bean
+    public AuthenticationManager authManager() throws Exception {
+        return this.authenticationManager();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
