@@ -29,7 +29,8 @@ public class CustomerController {
 
     @GetMapping("/profile")
     public String getPersonalInfo(Model model, Authentication auth) {
-        User user = (User) auth.getPrincipal();
+        User principal = (User) auth.getPrincipal();
+        User user = userService.findById(principal.getId()).get();
         model.addAttribute("user", user);
 
         return "profile";
