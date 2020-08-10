@@ -25,19 +25,19 @@
                                 <label>Email</label>
                                 <input th:field="*{email}" type="email" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
                                    class="form-control" required>
-                                <p th:each="error : ${#fields.errors('email')}" th:text="${message}">Validation error</p>
+                                <p th:text="${emailError}">Validation error</p>
                             </div>
                             <div class="form-group text-center font-weight-bold">
                                 <label>Password</label>
                                 <input th:field="*{password}" type="password" id="password" name="login_password" placeholder="Password"
                                    class="form-control" required/>
-                                <p th:each="error : ${#fields.errors('password')}" th:text="${message}">Validation error</p>
+
                             </div>
                             <div class="form-group text-center font-weight-bold">
                                 <label>Confirm password</label>
                                 <input th:field="*{passwordConfirm}" type="password" id="passwordConfirm" name="login_password_confirm" placeholder="Confirm password"
                                    class="form-control" required/>
-                                <p th:each="error : ${#fields.errors('passwordConfirm')}" th:text="${error}">Validation error</p>
+                                <p th:text="${passwordConfirmError}">Validation error</p>
                             </div>
                             <button type="submit" class="btn btn-primary btn-sm btn-block">Sign Up</button>
                         </form>

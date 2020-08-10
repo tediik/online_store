@@ -42,11 +42,11 @@ public class RegistrationController {
             return "registration";
         }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
-            model.addAttribute("message", "Пароли не совпадают");
+            model.addAttribute("passwordConfirmError", "Пароли не совпадают");
             return "registration";
         }
         if (userService.emailExist(userForm.getEmail())){
-            model.addAttribute("message", "Пользователь с таким именем уже существует");
+            model.addAttribute("emailError", "Пользователь с таким именем уже существует");
             return "registration";
         }
 

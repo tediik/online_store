@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.saveAndFlush(user);
     }
 
@@ -119,15 +121,13 @@ public class UserServiceImpl implements UserService {
         user.setPassword(confirmationToken.getUserPassword());
         user.setRoles(userRole);
 
-        userRepository.save(user);
+        addUser(user);
 
-        // Аутентификация сразу после подтверждения регистрации по ссылке на почте
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
-        authToken.setDetails(new WebAuthenticationDetails(request));
-
-        Authentication authentication = authenticationManager.authenticate(authToken);
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            request.login(user.getEmail(),confirmationToken.getUserPassword());
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 }

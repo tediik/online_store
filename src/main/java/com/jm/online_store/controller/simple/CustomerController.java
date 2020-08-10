@@ -4,6 +4,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class CustomerController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public String getCustomerPage() {
@@ -50,7 +54,7 @@ public class CustomerController {
                                  @RequestParam String oldPassword,
                                  @RequestParam String newPassword) {
         User user = (User) auth.getPrincipal();
-        if (!user.getPassword().equals(oldPassword)) {
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("message", "Неверный старый пароль!");
 
             return "changePassword";
