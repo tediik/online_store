@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
         String message = String.format(
                 "Hello, %s! \n" +
                         "Welcome to online-store. Please, visit next link: " +
-                        urlActivate,
+                        urlActivate + "/activate/%s",
                 userForm.getEmail(),
                 confirmationToken.getConfirmationToken()
         );

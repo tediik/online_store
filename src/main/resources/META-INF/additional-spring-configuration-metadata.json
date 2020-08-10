@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.url.activate",
+      "type": "java.lang.String",
+      "description": "Description for spring.url.activate."
+  }
+] }
