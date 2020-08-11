@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
 @Table(name = "stocks")
@@ -24,8 +25,19 @@ public class Stock {
     @Column(name = "stock_text")
     private String stockText;
 
+    @Column(name = "startDate")
+    private Date startDate;
+
     public Stock() {
 
+    }
+
+    public Stock(Long id, String stockImg, String stockTitle, String stockText, Date startDate) {
+        this.id = id;
+        this.stockImg = stockImg;
+        this.stockTitle = stockTitle;
+        this.stockText = stockText;
+        this.startDate = startDate;
     }
 
     public Stock(Long id, String stockImg, String stockTitle, String stockText) {
@@ -33,6 +45,20 @@ public class Stock {
         this.stockImg = stockImg;
         this.stockTitle = stockTitle;
         this.stockText = stockText;
+    }
+
+    public Stock(String stockImg, String stockTitle, String stockText) {
+        this.stockImg = stockImg;
+        this.stockTitle = stockTitle;
+        this.stockText = stockText;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
     public Long getId() {

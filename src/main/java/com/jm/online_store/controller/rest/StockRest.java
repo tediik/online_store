@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+
 public class StockRest {
 
     private final StockService stockService;
@@ -32,25 +33,31 @@ public class StockRest {
 
 
     //Вычисляем по id
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/rest/{id}")
     public Optional<Stock> findStockById(@PathVariable("id") Long id) {
 
         return stockService.findStockById(id);
     }
 
-//    //Добавляем новую акцию
-//    @PostMapping()
-//    public void addStock() {
-//        stockService.addStock();
-//    }
+    //Добавляем новую акцию
+    @PostMapping("/rest/addStock")
+    public ResponseEntity<Stock> addStockM(@RequestBody Stock stock) {
+        stockService.addStock(stock);
+
+        return ResponseEntity.ok().body(stock);
+    }
 
 
 
-//    //Редактируем новую акцию
-//    @PutMapping()
-//    public void updateStock() {
-//        stockService.updateStock();
-//
-//    }
+
+    //Редактируем акцию
+    @PutMapping("/rest/editStock")
+    public ResponseEntity<Stock> editStockM(@RequestBody Stock stock) {
+        stockService.addStock(stock);
+
+        return ResponseEntity.ok().body(stock);
+    }
+
+
 
 }

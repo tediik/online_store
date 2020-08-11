@@ -13,7 +13,7 @@ public interface StockService {
 
     List<Stock> findAllStocks();
 
-//    void addStock();
+    void addStock(Stock stock);
 
     void deleteStockById(Long id);
 

@@ -30,10 +30,10 @@ public class StockServiceImpl implements StockService{
         return stockRepository.findAll();
     }
 
-//    @Override
-//    public void addStock() {
-//        stockRepository.addStock();
-//    }
+    @Override
+    public void addStock(Stock stock) {
+        stockRepository.save(stock);
+    }
 
     @Override
     @Transactional
