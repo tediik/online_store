@@ -15,8 +15,7 @@ import java.io.Serializable;
 @Table(name = "description")
 @Data
 @NoArgsConstructor
-public class Description implements Serializable {
-    private static final long serialVersionUID = -1123556464L;
+public class Description {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
@@ -25,12 +24,22 @@ public class Description implements Serializable {
     @NonNull
     private String serialNumber;
     @NonNull
-    private int ram;
+    private String producer;
     @NonNull
-    private int hdd;
+    private int warranty;
+    @NonNull
+    private String dimensions;
+    @NonNull
+    private String color;
     @NonNull
     private Double weight;
+    //additional info about product
     @NonNull
     private String information;
-
+    //Optional fields
+    private int ram;
+    private int hdd;
+    private String screenResolution;
+    private boolean wifiOnBoard;
+    private String bluetoothVersion;
 }
