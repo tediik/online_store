@@ -25,20 +25,20 @@ public class StocksController {
 
     //Вывод всех акций на странице
     @GetMapping("/all")
-    public String getStocks(ModelMap model) {
-        model.addAttribute("stocks", stockService.findAllStocks());
+    public String getStocks() {
+
         return "stocks";
     }
 
-    //Удаляем акцию по id
-    @GetMapping("delete")
-    public String deleteStockById(@RequestParam(value = "id") String stockId) {
-        Long id = Long.parseLong(stockId);
-        stockService.deleteStockById(id);
-
-        return "forward:/stocks/all";
-
-    }
+//    //Удаляем акцию по id
+//    @GetMapping("delete")
+//    public String deleteStockById(@RequestParam(value = "id") String stockId) {
+//        Long id = Long.parseLong(stockId);
+//        stockService.deleteStockById(id);
+//
+//        return "forward:/stocks/all";
+//
+//    }
 
 
 

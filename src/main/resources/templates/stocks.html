@@ -25,10 +25,11 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <!-- ----------------------JS - jQuery END ------------->
-    <link rel="stylesheet" type="text/css" href="/styles/style.css">
 
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 
-
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
 
 
     <title>StocksPage</title>
@@ -54,31 +55,24 @@
             <li class="breadcrumb-item active" aria-current="page">Акции</li>
         </ol>
     </nav>
+
     <h2 class="text-center "><span class="underline">Акции</span></h2>
 
-
     <div id="cont" class="row no-gutters pb-4" style="background-color: #ececec">
-
         <div class="col-md-3 pr-3">
-
             <br>
             <div class="container min-height: 100vh" style="background-color: #ffffff; border-radius: 10px;">
                 <h4 class="text-center p-1">Фильтры</h4>
-
                 <div id="filters">
-
                     <label><span>Текущие акции </span>
                         <input type="checkbox" value="all_stocks">
                     </label>
-
                     <label><span>Планируемые акции </span>
                         <input type="checkbox" value="featured_stocks">
                     </label>
-
                     <label><span>Завершенные акции </span>
                         <input type="checkbox" value="finished_stocks">
                     </label>
-
                 </div>
             </div>
             <br>
@@ -90,193 +84,155 @@
                     </button>
                 </form>
             </div>
-
         </div>
+
         <div class="col-md-7">
-
-
             <!--START of Stocks-->
             <br>
             <div class="container-fluid p-3" style="background-color: #ffffff; border-radius: 10px;">
-
-<!--                <th:block th:each="stocks : ${stocks}">-->
-                    <div id="stocksDiv" class="card mb-3">
-                        <div class="row no-gutters">
-                            <div class="col-md-4">
-<!--                                <img th:attr="src=@{'/img/stocks/' + ${stocks.stock_img}}" class="card-img"-->
-<!--                                     alt="...">-->
-                            </div>
-                            <div class="col-md-6">
-
-<!--                                <h3 class="card-title mt-2" th:text="${stocks.stock_title}"></h3>-->
-<!--                                <p class="card-text" th:text="${stocks.stock_text}"></p>-->
-<!--                                <p class="card-text" th:text="${'Начало акции: ' + stocks.startDate}"></p>-->
-<!--                                <p class="card-text" th:text="${'Окончание акции: ' + stocks.endDate}"></p>-->
-
-                            </div>
-                            <div class="col-md-2">
-<!--                                <button th:attr="id=${stocks.id}" onclick="getStockForEdit(id)"-->
-<!--                                        class="btn btn-md btn-info mt-5 mr-2" data-toggle='modal'-->
-<!--                                        data-target='#editStockModal'>-->
-<!--                                    Edit-->
-<!--                                </button>-->
-
-<!--                                <a th:href="@{delete(id=${stocks.id})}"-->
-<!--                                   class="warning btn btn-md btn-danger mt-2 mr-2"-->
-<!--                                   role="button">Delete-->
-<!--                                </a>-->
-
-
-                            </div>
-                        </div>
-                    </div>
-<!--                </th:block>-->
-
-            </div>
-        </div>
-
-
-        <!---------------------- New Stock add Modal  ------------------->
-        <div class="modal fade" id="newStockModal" data-backdrop="static" tabindex="-1"
-             role="dialog"
-             aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-
-
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="stockAddModalLable">Добавить акцию</h5>
-                        <button type="button" class="close" data-dismiss="modal"
-                                aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-
-
-                    <div class="modal-body">
-
-                        <div class="container-fluid col-sm-12">
-                            <form enctype="multipart/form-data" method="post">
-                                <form id="stockAddModal">
-                                    <div class="form-group">
-                                        <label for="addStockTitle">Заголовок акции:</label>
-                                        <input id="addStockTitle" type="text" name="title" placeholder="title"
-                                               required="required">
-
-                                        <label for="addStockText">Описание акции:</label>
-                                        <textarea name="comment" id="addStockText" cols="45" rows="5"
-                                                  required="required"></textarea>
-
-                                        <label for="addStartDate">Дата начала</label>
-                                        <input type="date" id="addStartDate" name="date"/>
-                                        <br>
-                                        <label for="addEndDate">Дата окончания</label>
-                                        <input type="date" id="addEndDate" name="date"/>
-
-                                        <label for="addStockImg">Изображение</label>
-                                        <input id="addStockImg" type="file" name="f" accept="image/jpeg">
-                                    </div>
-                                </form>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-
-                        <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">
-                            Close
-                        </button>
-
-                        <button type="submit" onclick="addStock()" data-dismiss="modal" class="btn btn-primary">
-                            Save changes
-                        </button>
-                    </div>
+                <div id="stocksDiv">
+                    <!-- Здесь загрузка акций в JS... Совсем пусто :(  -->
                 </div>
             </div>
-        </div>
-        <!---------------------- End of New Stock Modal ------------------->
-
-        <!---------------------- Stock Edit Modal  ------------------->
-        <div class="modal fade" id="editStockModal" data-backdrop="static" tabindex="-1"
-             role="dialog"
-             aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            <!--End of Stocks-->
 
 
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
+            <!---------------------- New Stock add Modal  ------------------->
+            <div class="modal fade" id="newStockModal" data-backdrop="static" tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
 
-                    <div class="modal-header">
-                        <h5 class="modal-title">Редактировать акцию</h5>
-                        <button type="button" class="close" data-dismiss="modal"
-                                aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
 
-                    <form id="stockEditModal">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="stockAddModalLable">Добавить акцию</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
                         <div class="modal-body">
+
                             <div class="container-fluid col-sm-12">
                                 <form enctype="multipart/form-data" method="post">
+                                    <form id="stockAddModal">
+                                        <div class="form-group">
+                                            <label for="addStockTitle">Заголовок акции:</label>
+                                            <input id="addStockTitle" type="text" name="title" placeholder="title"
+                                                   required="required">
 
-                                    <div class="form-group">
-                                        <label for="Eid"
-                                               class="col-form-label col-sm-12 text-center">Id</label>
-                                        <div class="text-center">
-                                            <input type="text"
-                                                   class="form-control"
-                                                   id="Eid"
-                                                   readonly>
+                                            <label for="addStockText">Описание акции:</label>
+                                            <textarea name="comment" id="addStockText" cols="45" rows="5"
+                                                      required="required"></textarea>
+
+                                            <label for="addStartDate">Дата начала</label>
+                                            <input type="date" id="addStartDate" name="date"/>
+                                            <br>
+                                            <label for="addEndDate">Дата окончания</label>
+                                            <input type="date" id="addEndDate" name="date"/>
+
+                                            <label for="addStockImg">Изображение</label>
+                                            <input id="addStockImg" type="file" name="f" accept="image/jpeg">
                                         </div>
-                                        <label for="editStockTitle">Заголовок акции:</label>
-                                        <input id="editStockTitle" type="text" name="title" placeholder="title"
-                                               class="form-control"
-                                               required="required">
-
-                                        <label for="editStockText">Описание акции:</label>
-                                        <textarea name="comment" id="editStockText" cols="45" rows="5"
-                                                  class="form-control"
-                                                  required="required"></textarea>
-
-                                        <label for="editStartDate">Дата начала</label>
-                                        <input type="date" id="editStartDate" name="date"/>
-                                        <br>
-                                        <label for="editEndDate">Дата окончания</label>
-                                        <input type="date" id="editEndDate" name="date"/>
-
-                                        <br>
-                                        <label for="editStockImg">Изображение</label>
-                                        <input id="editStockImg" type="file" name="g" accept="image/jpeg"
-                                               class="form-control">
-                                    </div>
-
+                                    </form>
                                 </form>
                             </div>
                         </div>
-                    </form>
-                    <div class="modal-footer">
+                        <div class="modal-footer">
 
-                        <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">
-                            Close
-                        </button>
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
 
-                        <button type="submit" data-dismiss="modal" onclick="updateStock()" class="btn btn-primary">
-                            Save changes
-                        </button>
+                            <button type="submit" onclick="addStock()" data-dismiss="modal" class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!---------------------- End of New Stock Modal ------------------->
+
+            <!---------------------- Stock Edit Modal  ------------------->
+            <div class="modal fade" id="editStockModal" data-backdrop="static" tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title">Редактировать акцию</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <form id="stockEditModal">
+                            <div class="modal-body">
+                                <div class="container-fluid col-sm-12">
+                                    <form enctype="multipart/form-data" method="post">
+
+                                        <div class="form-group">
+                                            <label for="Eid"
+                                                   class="col-form-label col-sm-12 text-center">Id</label>
+                                            <div class="text-center">
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="Eid"
+                                                       readonly>
+                                            </div>
+                                            <label for="editStockTitle">Заголовок акции:</label>
+                                            <input id="editStockTitle" type="text" name="title" placeholder="title"
+                                                   class="form-control"
+                                                   required="required">
+
+                                            <label for="editStockText">Описание акции:</label>
+                                            <textarea name="comment" id="editStockText" cols="45" rows="5"
+                                                      class="form-control"
+                                                      required="required"></textarea>
+
+                                            <label for="editStartDate">Дата начала</label>
+                                            <input type="date" id="editStartDate" name="date"/>
+                                            <br>
+                                            <label for="editEndDate">Дата окончания</label>
+                                            <input type="date" id="editEndDate" name="date"/>
+
+                                            <br>
+                                            <label for="editStockImg">Изображение</label>
+                                            <input id="editStockImg" type="file" name="g" accept="image/jpeg"
+                                                   class="form-control">
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+
+                            <button type="submit" data-dismiss="modal" onclick="updateStock()" class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!---------------------- End of Edit Stock Modal ------------------->
+
         </div>
-        <!---------------------- End of Edit Stock Modal ------------------->
-
-
     </div>
-
-
-    <script type="text/javascript" src="/stocks.js" async></script>
 </div>
+<script type="text/javascript" src="/static/js/stocks.js" async></script>
 </body>
 </html>

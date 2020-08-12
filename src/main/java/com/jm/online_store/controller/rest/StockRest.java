@@ -54,9 +54,6 @@ public class StockRest {
         return ResponseEntity.ok().body(stock);
     }
 
-
-
-
     //Редактируем акцию
     @PutMapping("/rest/editStock")
     public ResponseEntity<Stock> editStockM(@RequestBody Stock stock) {
@@ -65,6 +62,11 @@ public class StockRest {
         return ResponseEntity.ok().body(stock);
     }
 
+    //Удаляем по id
+    @DeleteMapping(value = "/rest/{id}")
+    public void deleteStockById(@PathVariable("id") Long id) {
 
+        stockService.deleteStockById(id);
+    }
 
 }

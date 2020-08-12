@@ -1,38 +1,53 @@
 ///////////////////////////////////////////////////////////////
 /////////////////////Вывод акций///////////////////////////
-
-$.ajax("/rest/allStocks", {
-    dataType: "json",
-    success: function (data) {
-        const stocks = JSON.parse(JSON.stringify(data));
+$(document).ready(function () {
+    create();
+});
 
 
-        for (let i = 0; i < stocks.length; i++) {
-            let out = $("<div>").attr("id", stocks[i].id);
-            out.append("" +
-                "<div>" + "<img alt=\"...\">" + "</div>" +
-                "<h3>" + "Заголовок: " + "</h3>");
+function create() {
+    $("#stocksDiv").empty();
+
+    $.ajax("/rest/allStocks", {
+        dataType: "json",
+        success: function (data) {
+            const stocks = JSON.parse(JSON.stringify(data));
 
 
+            for (let i = 0; i < stocks.length; i++) {
+                let out = $("<div>").attr("id", stocks[i].id);
+                out.append("" +
+                    "<div class=\"card mb-3\">" +
+                    "<div class=\"row no-gutters\">" +
+                    "<div class=\"col-md-4\">" +
+                    "<img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\" >" +
+                    "</div>" +
 
+                    "<div class=\"col-md-6\">" +
+                    "<div class=\"card-body\">" +
+                    "<h3 class='card-title'>" + stocks[i].stock_title + "</h3>" +
+                    "<p class=\"card-text\">" + stocks[i].stock_text + "</p>" +
+                    "<p class=\"card-date\">" + stocks[i].startDate + "</p>" +
+                    "<p class=\"card-date\">" + stocks[i].endDate + "</p>" +
+                    "</div>" +
+                    "</div>" +
 
+                    "<div class=\"col-md-2\">" +
 
-            //     out.append "<h3> : + stocks[key].stock_title < /h3>" + '<br>';
-            // out += 'Описание: ' + stocks[key].stock_text + '<br>';
-            // out += 'Дата: ' + stocks[key].startDate + '<br>';
-            // out += 'Дата: ' + stocks[key].endDate + '<br>';
-            //
-            // out += '<button class="">';
+                    "<button onclick='getStockForEdit(" + stocks[i].id + ")' class=\"btn btn-md btn-info mt-5 mr-2\" data-toggle='modal' data-target='#editStockModal'>" + "Edit" + "</button>" +
+                    "<button onclick='deleteStock(" + stocks[i].id + ")' class=\"warning btn btn-md btn-danger mt-2 mr-2\"  >" + "Delete" + "</button>" +
 
-        // document.getElementById('out').innerHTML = out;
-        $("#stocksDiv").append(out)
+                    "</div>" +
+                    "</div>" +
+                    "</div>"
+                );
+
+                $("#stocksDiv").append(out)
+            }
+
         }
-
-    }
-})
-
-
-
+    })
+}
 
 ///////////////////////////////////////////////////////////////
 //////////////////////Добавить акцию/////////////////////////
@@ -58,16 +73,16 @@ function addStock() {
         type: 'POST',
         contentType: 'application/JSON; charset=utf-8',
         success: function (data) {
-            location.reload()
+            create();
+
+            toastr.success('Акция успешно добавлена!', {timeOut: 5000})
             // alert("yes!!!")
             // document.body.style.background = "green"
-
         },
         error: function (er) {
             // alert("error!")
             // document.body.style.background = "red"
         }
-
     })
 }
 
@@ -102,7 +117,6 @@ function updateStock() {
         stockText: $('#editStockText').val(),
         startDate: $('#editStartDate').val(),
         endDate: $('#editEndDate').val(),
-
     };
 
 
@@ -114,18 +128,44 @@ function updateStock() {
         type: 'PUT',
         contentType: 'application/JSON; charset=utf-8',
         success: function (data) {
-            location.reload()
+            create();
+            toastr.info('Акция успешно отредактирована!', {timeOut: 5000})
             // alert("yes!!!")
             // document.body.style.background = "green"
-
         },
         error: function (er) {
             alert("error!")
             document.body.style.background = "red"
         }
-
     })
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////Удалить пользователя из таблицы/////////////////////
+
+function deleteStock(id) {
+    $.ajax({
+            url: "/rest/" + id,
+            type: "DELETE",
+            contentType: "application/json",
+            success: function (data) {
+
+                $("#stocksDiv #" + id).remove();
+                console.log(data)
+
+                toastr.warning('Акция успешно удалена!', {timeOut: 5000})
+            },
+            error: function (er) {
+                console.log(er)
+            }
+        }
+    );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 //////////////////////////////////////////////////////////////////
 ////////////////////////Фильтры акций//////////////////////////
