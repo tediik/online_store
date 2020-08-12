@@ -1,6 +1,5 @@
 package com.jm.online_store.model;
 
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
