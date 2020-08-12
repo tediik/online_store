@@ -24,9 +24,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             httpServletResponse.sendRedirect("/admin");
 
         }
-        //следует ли перенаправлять в этом случае сразу на страницу клиентских данных?
         else if (roles.contains("ROLE_CUSTOMER")) {
-            httpServletResponse.sendRedirect("/customer");
+            httpServletResponse.sendRedirect("/");
         }else if (roles.contains("ROLE_MANAGER")) {
             httpServletResponse.sendRedirect("/manager");
         }
