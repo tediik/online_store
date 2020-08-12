@@ -65,8 +65,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").permitAll()
 
-                .antMatchers("/static/**").permitAll()
-
                 .antMatchers("/user").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
 
                 .antMatchers("/api/users").access("hasAnyRole('ROLE_ADMIN')")

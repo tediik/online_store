@@ -17,6 +17,8 @@ public interface StockService {
 
     void deleteStockById(Long id);
 
+    List<Stock> findAll();
+
 //    void updateStock();
 
 

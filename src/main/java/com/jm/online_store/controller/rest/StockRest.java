@@ -32,6 +32,13 @@ public class StockRest {
     }
 
 
+    //Выводим все акции
+    @GetMapping(value = "/rest/allStocks")
+    public List<Stock> findAll() {
+
+        return stockService.findAll();
+    }
+
     //Вычисляем по id
     @GetMapping(value = "/rest/{id}")
     public Optional<Stock> findStockById(@PathVariable("id") Long id) {

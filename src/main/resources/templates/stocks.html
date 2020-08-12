@@ -25,30 +25,10 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <!-- ----------------------JS - jQuery END ------------->
-    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="stylesheet" type="text/css" href="/styles/style.css">
 
 
-    <style>
-        body {
-            height: 100%;
-        }
 
-        .underline {
-            border-bottom: 2px solid coral;
-        }
-
-        .card-footer {
-            background: white;
-        }
-
-        #cont {
-
-            width: 100%;
-            padding-left: 10%;
-            text-align: center
-        }
-
-    </style>
 
 
     <title>StocksPage</title>
@@ -84,24 +64,28 @@
             <br>
             <div class="container min-height: 100vh" style="background-color: #ffffff; border-radius: 10px;">
                 <h4 class="text-center p-1">Фильтры</h4>
-                <label class="ui-checkbox ui-checkbox_list"><span>Текущие акции <span
-                        class="text-muted">(160)</span></span><input type="checkbox"
-                                                                     class="ui-checkbox__input ui-checkbox__input_list"
-                                                                     value="ALL_ACTIONS"><span
-                        class="ui-checkbox__box ui-checkbox__box_list"></span></label>
 
-                <label class="ui-checkbox ui-checkbox_list"><span>Планируемые акции <span class="text-muted">(77)</span></span><input
-                        type="checkbox" class="ui-checkbox__input ui-checkbox__input_list" value="30"><span
-                        class="ui-checkbox__box ui-checkbox__box_list"></span></label>
+                <div id="filters">
 
-                <label class="ui-checkbox ui-checkbox_list"><span>Завершенные акции <span class="text-muted">(77)</span></span><input
-                        type="checkbox" class="ui-checkbox__input ui-checkbox__input_list" value="30"><span
-                        class="ui-checkbox__box ui-checkbox__box_list"></span></label>
+                    <label><span>Текущие акции </span>
+                        <input type="checkbox" value="all_stocks">
+                    </label>
+
+                    <label><span>Планируемые акции </span>
+                        <input type="checkbox" value="featured_stocks">
+                    </label>
+
+                    <label><span>Завершенные акции </span>
+                        <input type="checkbox" value="finished_stocks">
+                    </label>
+
+                </div>
             </div>
             <br>
             <div>
                 <form>
-                    <button type="button" class="btn-primary btn-lg" data-toggle='modal' data-target='#newStockModal'>
+                    <button type="button" class="btn-primary btn-lg" data-toggle='modal'
+                            data-target='#newStockModal'>
                         Новая акция
                     </button>
                 </form>
@@ -115,37 +99,38 @@
             <br>
             <div class="container-fluid p-3" style="background-color: #ffffff; border-radius: 10px;">
 
-                <th:block th:each="stocks : ${stocks}">
-                    <div class="card mb-3">
+<!--                <th:block th:each="stocks : ${stocks}">-->
+                    <div id="stocksDiv" class="card mb-3">
                         <div class="row no-gutters">
                             <div class="col-md-4">
-                                <img th:attr="src=@{'/img/stocks/' + ${stocks.stock_img}}" class="card-img" alt="...">
+<!--                                <img th:attr="src=@{'/img/stocks/' + ${stocks.stock_img}}" class="card-img"-->
+<!--                                     alt="...">-->
                             </div>
                             <div class="col-md-6">
 
-                                <h3 class="card-title mt-2" th:text="${stocks.stock_title}"></h3>
-                                <p class="card-text" th:text="${stocks.stock_text}"></p>
-                                <p class="card-text" th:text="${'Начало акции: ' + stocks.startDate}"></p>
-                                <p class="card-text" th:text="${'Окончание акции: ' + stocks.endDate}"></p>
+<!--                                <h3 class="card-title mt-2" th:text="${stocks.stock_title}"></h3>-->
+<!--                                <p class="card-text" th:text="${stocks.stock_text}"></p>-->
+<!--                                <p class="card-text" th:text="${'Начало акции: ' + stocks.startDate}"></p>-->
+<!--                                <p class="card-text" th:text="${'Окончание акции: ' + stocks.endDate}"></p>-->
 
                             </div>
                             <div class="col-md-2">
-                                <button th:attr="id=${stocks.id}" onclick="getStockForEdit(id)"
-                                        class="btn btn-md btn-info mt-5 mr-2" data-toggle='modal'
-                                        data-target='#editStockModal'>
-                                    Edit
-                                </button>
+<!--                                <button th:attr="id=${stocks.id}" onclick="getStockForEdit(id)"-->
+<!--                                        class="btn btn-md btn-info mt-5 mr-2" data-toggle='modal'-->
+<!--                                        data-target='#editStockModal'>-->
+<!--                                    Edit-->
+<!--                                </button>-->
 
-
-                                <a th:href="@{delete(id=${stocks.id})}" class="warning btn btn-md btn-danger mt-2 mr-2"
-                                   role="button">Delete
-                                </a>
+<!--                                <a th:href="@{delete(id=${stocks.id})}"-->
+<!--                                   class="warning btn btn-md btn-danger mt-2 mr-2"-->
+<!--                                   role="button">Delete-->
+<!--                                </a>-->
 
 
                             </div>
                         </div>
                     </div>
-                </th:block>
+<!--                </th:block>-->
 
             </div>
         </div>
@@ -184,11 +169,11 @@
                                         <textarea name="comment" id="addStockText" cols="45" rows="5"
                                                   required="required"></textarea>
 
-                                        <label for="date">Дата начала</label>
-                                        <input type="date" id="date" name="date"/>
+                                        <label for="addStartDate">Дата начала</label>
+                                        <input type="date" id="addStartDate" name="date"/>
                                         <br>
-                                        <label for="date">Дата окончания</label>
-                                        <input type="date" id="date" name="date"/>
+                                        <label for="addEndDate">Дата окончания</label>
+                                        <input type="date" id="addEndDate" name="date"/>
 
                                         <label for="addStockImg">Изображение</label>
                                         <input id="addStockImg" type="file" name="f" accept="image/jpeg">
@@ -213,7 +198,7 @@
         </div>
         <!---------------------- End of New Stock Modal ------------------->
 
-        <!---------------------- New Stock Edit Modal  ------------------->
+        <!---------------------- Stock Edit Modal  ------------------->
         <div class="modal fade" id="editStockModal" data-backdrop="static" tabindex="-1"
              role="dialog"
              aria-labelledby="exampleModalLabel"
