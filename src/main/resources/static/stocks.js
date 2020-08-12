@@ -64,6 +64,7 @@ function updateStock() {
         stockTitle: $('#editStockTitle').val(),
         stockText: $('#editStockText').val(),
         startDate: $('#editStartDate').val(),
+        endDate: $('#editEndDate').val(),
 
     };
 
@@ -88,3 +89,29 @@ function updateStock() {
 
     })
 }
+
+
+///////получение даты и вывод акции/////////////////////
+
+const start = new Date("February 29, 2020").getTime();
+const end = new Date("March 1, 2021").getTime();
+
+// const time = new Date().getTime();
+// if(time > start && time < end + 60*60*24)
+    // alert("Только с 29 февраля по 2 марта при заказе утюга, получите асфальтоукладчик бесплатно!");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -28,16 +28,20 @@ public class Stock {
     @Column(name = "startDate")
     private Date startDate;
 
+    @Column(name = "endDate")
+    private Date endDate;
+
     public Stock() {
 
     }
 
-    public Stock(Long id, String stockImg, String stockTitle, String stockText, Date startDate) {
+    public Stock(Long id, String stockImg, String stockTitle, String stockText, Date startDate, Date endDate) {
         this.id = id;
         this.stockImg = stockImg;
         this.stockTitle = stockTitle;
         this.stockText = stockText;
         this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Stock(Long id, String stockImg, String stockTitle, String stockText) {
@@ -51,6 +55,14 @@ public class Stock {
         this.stockImg = stockImg;
         this.stockTitle = stockTitle;
         this.stockText = stockText;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public Date getStartDate() {
