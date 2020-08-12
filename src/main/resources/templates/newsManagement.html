@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>News Management</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="/static/news-management.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+</head>
+<body>
+<header th:insert="/blocks/header :: header"></header>
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <a class="btn btn-link" href="/manager"><---обратно</a>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager">Главная</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/news/add">Добавить новость</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
+            </div>
+        </div>
+        <div class="col-sm-8 text-left">
+            <h1 class="text-center">Управление новостями</h1>
+            <div id="news">
+                <div th:each="news : ${news}" class="alert alert-info mt-2">
+                    <h2 th:text="${news.title}"></h2>
+                    <h5 th:text="${news.anons}"></h5>
+                    <p th:text="${news.fullText}"></p>
+                    <a th:href="'/manager/news/' + ${news.id} + '/edit'" class="btn btn-primary">Редактировать</a>
+                    <a th:href="'/manager/news/' + ${news.id} + '/delete'" class="btn btn-danger">Удалить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalEditLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditLabel">Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <form name="formEdit" id="editModalNews">
+                                <div class="form-group text-center font-weight-bold">
+                                    <label for="idNewsUpdate">ID</label>
+                                    <input type="text" class="form-control" id="idNewsUpdate" name="id" disabled>
+                                </div>
+                                <div class="form-group text-center font-weight-bold">
+                                    <label for="titleNewsUpdate">Заголовок</label>
+                                    <input type="text" class="form-control" id="titleNewsUpdate" name="title" required>
+                                </div>
+                                <div class="form-group text-center font-weight-bold">
+                                    <label for="anonsNewsUpdate">Краткое описание</label>
+                                    <input type="text" class="form-control" id="anonsNewsUpdate" name="anons" required>
+                                </div>
+                                <div class="form-group text-center font-weight-bold">
+                                    <label for="fullTextUpdate">Полный текст</label>
+                                    <input type="text" class="form-control" id="fullTextUpdate" name="fullText" required>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="editNews()" class="btn btn-primary" form="editModalNews">Обновить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--</editor-fold>-->
+
+<!--<editor-fold desc="modal delete">-->
+<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDeleteLabel">Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <form name="formEdit" id="deleteModalNews">
+                                <div class="form-group text-center font-weight-bold">
+                                    <label for="idNewsDelete">ID</label>
+                                    <input type="text" class="form-control" id="idNewsDelete" name="id" disabled>
+                                </div>
+                                <div class="form-group text-center font-weight-bold">
+                                    <label for="titleNewsDelete">Заголовок</label>
+                                    <input type="text" class="form-control" id="titleNewsDelete" name="title" required>
+                                </div>
+                                <div class="form-group text-center font-weight-bold">
+                                    <label for="anonsNewsDelete">Краткое описание</label>
+                                    <input type="text" class="form-control" id="anonsNewsDelete" name="anons" required>
+                                </div>
+                                <div class="form-group text-center font-weight-bold">
+                                    <label for="fullTextDelete">Полный текст</label>
+                                    <input type="text" class="form-control" id="fullTextDelete" name="fullText" required>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="deleteNews()" class="btn btn-primary" form="deleteModalNews">Обновить</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

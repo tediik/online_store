@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -57,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем URL логаута
 
                 // указываем URL при удачном логауте
-                .logoutSuccessUrl("/login?logout")
+                .logoutSuccessUrl("/")
                 .and()
                 .csrf().disable();
                 //выклчаем кроссдоменную секьюрность (на этапе обучения неважна)
@@ -67,15 +66,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
 
-                .antMatchers("/", "/registration", "/static/**","/activate/*").permitAll()
+                .antMatchers("/",
+                        "/news/**",
+                        "/registration",
+                        "/static/**",
+                        "/activate/**").permitAll()
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").permitAll()
 
-                .antMatchers("/customer").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
+                .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
 
-                .antMatchers("/api/users").access("hasAnyRole('ROLE_ADMIN')")
+                .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
 
-                .antMatchers("/manager").access("hasAnyRole('ROLE_MANAGER')")
+                .antMatchers("/manager/**").access("hasAnyRole('ROLE_MANAGER')")
 
                 .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated()
 

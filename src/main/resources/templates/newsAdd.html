@@ -10,18 +10,25 @@
 <div class="container-fluid">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <a class="btn btn-link" href="/manager/news"><---обратно</a>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/manager">Главная</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/logout">Выйти</a>
             </div>
         </div>
         <div class="col-sm-8 text-left">
-
+            <h1 class="mb-2 text-center">Добавление новости</h1>
+            <form th:action="@{/manager/news/post}" th:object="${news}" method="post">
+                <input type="text" name="title" placeholder="Введите название" class="form-control" required>
+                <br>
+                <input type="text" name="anons" placeholder="Введите краткое описание" class="form-control" required>
+                <br>
+                <textarea name="fullText" placeholder="Введите полный текст" class="form-control" required></textarea>
+                <br>
+                <button type="submit" class="btn btn-success">Добавить новость</button>
+            </form>
         </div>
     </div>
 </div>

@@ -17,7 +17,7 @@ public class LoginController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String userPage() {
-        return "customerPage";
+        return "homePage";
     }
 
     @GetMapping("/denied")

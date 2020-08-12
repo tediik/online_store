@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>News Management</title>
+    <title>News Edit</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
@@ -10,18 +10,26 @@
 <div class="container-fluid">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <a class="btn btn-link" href="/manager/news"><---обратно</a>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/manager">Главная</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/logout">Выйти</a>
             </div>
         </div>
         <div class="col-sm-8 text-left">
-
+            <h1 class="mb-2 text-center">Редактирование новости</h1>
+            <form th:action="@{/manager/news/update}" th:object="${news}" method="post">
+                <input th:field="${news.id}" hidden>
+                <input th:field="${news.title}" type="text" name="title" placeholder="Введите название" class="form-control" required>
+                <br>
+                <input th:field="${news.anons}" type="text" name="anons" placeholder="Введите краткое описание" class="form-control" required>
+                <br>
+                <textarea th:field="${news.fullText}" name="fullText" placeholder="Введите полный текст" class="form-control" required></textarea>
+                <br>
+                <button type="submit" class="btn btn-success">Обновить</button>
+            </form>
         </div>
     </div>
 </div>
