@@ -12,11 +12,11 @@ public class CategoriesService {
     @Autowired
     CategoriesRepository categoriesRepository;
 
-    public List< Categories > getAllCategories() {
+    public List<Categories> getAllCategories() {
         return categoriesRepository.findAll();
     }
 
-    public Optional< Categories > getProductByCategoryId(Long categoryId) {
+    public Optional<Categories> getProductByCategoryId(Long categoryId) {
         return categoriesRepository.findById(categoryId);
     }
 

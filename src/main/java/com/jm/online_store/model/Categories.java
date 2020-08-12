@@ -29,5 +29,5 @@ public class Categories {
     private String superCategory;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
-    private List< Product > products;
+    private List<Product> products;
 }

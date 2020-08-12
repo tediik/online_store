@@ -35,5 +35,5 @@ public class Product {
     @NonNull
     private Double rating;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List< Description > descriptions;
+    private List<Description> descriptions;
 }

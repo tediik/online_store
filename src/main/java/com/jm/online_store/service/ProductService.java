@@ -12,7 +12,7 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public Optional< Product > findProductById(Long productId){
+    public Optional<Product> findProductById(Long productId){
         return productRepository.findById(productId);
     }
 
