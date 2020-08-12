@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/")
 public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -15,7 +14,8 @@ public class LoginController {
     }
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    //Заглушка, заменить на нужную
+    @RequestMapping(value = "/someURL", method = RequestMethod.GET)
     public String userPage() {
         return "customerPage";
     }
@@ -24,12 +24,4 @@ public class LoginController {
     public String deniedPage(){
         return "denied";
     }
-
-
-
-
-
-
-
-
 }
