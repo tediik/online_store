@@ -1,14 +1,11 @@
 package com.jm.online_store.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,13 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -33,31 +24,10 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "email")
-    @Email
-    @NotBlank
     private String email;
 
     @Column(name = "password")
-    @NotBlank
     private String password;
-
-    @Transient
-    @NotBlank
-    private String passwordConfirm;
-
-    private String firstName;
-
-    private String lastName;
-
-    @Enumerated(EnumType.STRING)
-    private Gender userGender;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    private Date birthdayDate;
-
-    @Temporal(TemporalType.DATE)
-    private Date registerDate;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
@@ -68,17 +38,18 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    public User() {
-        registerDate = new Date();
-    }
+
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
-        registerDate = new Date();
     }
 
-    public Long getId() {
+    public User() {
+    }
+
+
+     public Long getId() {
         return id;
     }
 
@@ -110,53 +81,6 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Date getBirthdayDate() {
-        return birthdayDate;
-    }
-
-    public void setBirthdayDate(Date birthdayDate) {
-        this.birthdayDate = birthdayDate;
-    }
-
-    public Date getRegisterDate() {
-        return registerDate;
-    }
-
-    public void setRegisterDate(Date registerDate) {
-        this.registerDate = registerDate;
-    }
-
-    public Gender getUserGender() {
-        return userGender;
-    }
-
-    public void setUserGender(Gender userGender) {
-        this.userGender = userGender;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

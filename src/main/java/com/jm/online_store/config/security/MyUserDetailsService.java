@@ -1,5 +1,6 @@
 package com.jm.online_store.config.security;
 
+import com.jm.online_store.model.User;
 import com.jm.online_store.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,5 +22,11 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
         return userRepository.findByEmail(username).get();
+
     }
+
+
+
+
+
 }
