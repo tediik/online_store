@@ -1,9 +1,7 @@
-
 header{
     background: #deb887;
     color: white;
     text-align:center;
-    display:inline-block;
 }
 
 .form-inline {
@@ -29,13 +27,12 @@ header{
     background: white;
 }
 
-/* Vertical Mega Menu Styles */
 .mega-menu{
     font: bold 13px Arial, sans-serif;
     line-height: 16px;
     background: #deb887;
     border-left: 1px solid #1B1B1B;
-    position: relative; /* Required */
+    position: relative;
     max-width: 20%;
 }
 .mega-menu li a {
@@ -56,7 +53,6 @@ header{
 .mega-menu li a.dc-mega {
     position: relative;
 }
-/* Add arrow icon to parent links */
 .mega-menu li a .dc-mega-icon {
     display: block;
     position: absolute;
@@ -65,9 +61,8 @@ header{
     width: 6px;
     height: 8px;
 }
-/* Mega menu container */
 .mega-menu li .sub-container {
-    position: absolute; /* Required */
+    position: absolute;
     background: #4B4B4B;
     padding: 10px 10px 0 10px;
     overflow: hidden;
@@ -75,7 +70,7 @@ header{
     border-left: none;
 }
 .mega-menu li .sub .row {
-    width: 100%; overflow: hidden; /* Clear floats */
+    width: 100%; overflow: hidden;
 }
 .mega-menu li .sub li {
     float: none;
@@ -84,7 +79,7 @@ header{
     font-weight: normal;
 }
 .mega-menu li .sub li.mega-hdr {
-    float: left; /* Required */
+    float: left;
     margin: 0 5px 10px 5px;
 }
 .mega-menu li .sub a, .mega-menu.left li .sub a {
@@ -121,7 +116,6 @@ header{
 .mega-menu .sub ul li {
     padding-right: 0;
 }
-/* Styling for menu items with only 2 levels */
 .mega-menu li .sub-container.non-mega .sub {
     padding: 10px;}
 .mega-menu li .sub-container.non-mega li {
