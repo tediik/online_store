@@ -86,7 +86,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied");
-
     }
 
     @Bean
