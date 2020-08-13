@@ -1,4 +1,4 @@
-package com.jm.online_store.config.facebook;
+package com.jm.online_store.config.security.facebook;
 
 import java.util.Map;
 

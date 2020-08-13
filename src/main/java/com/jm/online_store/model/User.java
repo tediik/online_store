@@ -78,6 +78,12 @@ public class User implements UserDetails {
         registerDate = new Date();
     }
 
+    public User(String email, String password, Set<Role> roleSet) {
+        this.email = email;
+        this.password = password;
+        this.roles = roleSet;
+    }
+
     public Long getId() {
         return id;
     }
