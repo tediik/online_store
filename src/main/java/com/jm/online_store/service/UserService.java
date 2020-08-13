@@ -17,10 +17,6 @@ public interface UserService {
 
     void updateUser(User user);
 
-    Optional<User> findByEmail(String username);
-
-    boolean isUserExistsByEmail(String email);
-
 
 
 

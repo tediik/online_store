@@ -38,15 +38,7 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    public User(Long id, String email, Set<Role> roles) {
-        this.id = id;
-        this.email = email;
-        this.roles = roles;
-    }
 
-    public User(String email) {
-        this.email = email;
-    }
 
     public User(String email, String password) {
         this.email = email;
