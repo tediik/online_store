@@ -42,18 +42,17 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oath2User = super.loadUser(userRequest);
-        return buildPrincipal(oath2User, userRequest.getClientRegistration().getRegistrationId());
+        return buildPrincipal(oath2User);
     }
 
     /**
      * Builds the security principal from the given userReqest.
      * Registers the user if not already reqistered
      */
-    public OAuth2User buildPrincipal(OAuth2User oath2User, String registrationId) {
+    public OAuth2User buildPrincipal(OAuth2User oath2User) {
         FacebookUserInfo facebookUserInfo = new FacebookUserInfo(oath2User.getAttributes());
         String email = facebookUserInfo.getEmail();
 
-        Map<String, Object> attributes = oath2User.getAttributes();
         User user = userRepository.findByEmail(email).orElseGet(()  -> {
 
             Set<Role> roleSet = new HashSet<>();
