@@ -70,7 +70,7 @@ $(document).ready(function () {
                                 $('.delete-example #deletePassword').val(data.password);
                                 $('.delete-example #deleteModal').modal('show');
                             })));
-                    },
+                        },
                     error: function (jqXhr, textStatus, errorThrown) {
                         console.log(errorThrown);
                     }
@@ -173,6 +173,8 @@ $(document).ready(function () {
 
             });
     });
+
+
 
 
 });

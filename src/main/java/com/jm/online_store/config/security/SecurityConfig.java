@@ -1,6 +1,8 @@
 package com.jm.online_store.config.security;
 
+import com.jm.online_store.config.facebook.FacebookOAuth2UserService;
 import com.jm.online_store.config.handler.LoginSuccessHandler;
+import com.jm.online_store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,17 +12,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     @Autowired
     private LoginSuccessHandler successHandler;
+
     @Autowired
     private MyUserDetailsService myUserDetailsService;
+
+    @Autowired
+    private FacebookOAuth2UserService facebookOAuth2UserService;
+
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -28,14 +37,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 
+//    @Override
+//    public void configure(HttpSecurity http) throws Exception {
+//
+//        http.authorizeRequests()
+//                .anyRequest().authenticated()
+//                .and()
+//                .oauth2Login()
+//                .userInfoEndpoint().userService(facebookOAuth2UserService);
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
-                // указываем страницу с формой логина
-                .loginPage("/login")
+
+
+        // указываем страницу с формой логина
                 //указываем логику обработки при логине
                 .successHandler(successHandler)
                 // указываем action с формы логина
@@ -56,16 +79,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login?logout")
                 .and()
                 .csrf().disable();
-                //выклчаем кроссдоменную секьюрность (на этапе обучения неважна)
+        //выклчаем кроссдоменную секьюрность (на этапе обучения неважна)
 
 
         http
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
+
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").permitAll()
 
-                .antMatchers("/user").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
+                .and()
+
+                .authorizeRequests()
+
+                .and()
+
+                .oauth2Login().userInfoEndpoint().userService(facebookOAuth2UserService).and()
+
+                .and()
+
+                .authorizeRequests()
+
+
+
+
+//                .antMatchers("/user").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
 
                 .antMatchers("/api/users").access("hasAnyRole('ROLE_ADMIN')")
 
@@ -74,13 +113,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated()
 
                 .and()
+
                 .exceptionHandling().accessDeniedPage("/denied");
 
     }
 
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
+
 }
