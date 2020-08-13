@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -25,17 +26,17 @@ public class Stock {
     @Column(name = "stock_text")
     private String stockText;
 
-    @Column(name = "startDate")
-    private Date startDate;
+    @Column
+    private LocalDate startDate;
 
-    @Column(name = "endDate")
-    private Date endDate;
+    @Column
+    private LocalDate endDate;
 
     public Stock() {
 
     }
 
-    public Stock(Long id, String stockImg, String stockTitle, String stockText, Date startDate, Date endDate) {
+    public Stock(Long id, String stockImg, String stockTitle, String stockText, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.stockImg = stockImg;
         this.stockTitle = stockTitle;
@@ -57,19 +58,19 @@ public class Stock {
         this.stockText = stockText;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

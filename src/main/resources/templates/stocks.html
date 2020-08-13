@@ -31,7 +31,6 @@
 
     <link rel="stylesheet" type="text/css" href="../static/css/style.css">
 
-
     <title>StocksPage</title>
 </head>
 <body>
@@ -119,7 +118,7 @@
                             <div class="container-fluid col-sm-12">
                                 <form enctype="multipart/form-data" method="post">
                                     <form id="stockAddModal">
-                                        <div class="form-group">
+                                        <div class="form-group field">
                                             <label for="addStockTitle">Заголовок акции:</label>
                                             <input id="addStockTitle" type="text" name="title" placeholder="title"
                                                    required="required">
@@ -127,7 +126,8 @@
                                             <label for="addStockText">Описание акции:</label>
                                             <textarea name="comment" id="addStockText" cols="45" rows="5"
                                                       required="required"></textarea>
-
+                                        </div>
+                                        <div class="form-group">
                                             <label for="addStartDate">Дата начала</label>
                                             <input type="date" id="addStartDate" name="date"/>
                                             <br>
@@ -141,14 +141,15 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer actions">
 
                             <button type="button" class="btn btn-secondary"
                                     data-dismiss="modal">
                                 Close
                             </button>
 
-                            <button type="submit" onclick="addStock()" data-dismiss="modal" class="btn btn-primary">
+                            <button id="save" type="submit" onclick="addStock()" data-dismiss="modal"
+                                    class="btn btn-primary" disabled="disabled">
                                 Save changes
                             </button>
                         </div>
@@ -188,11 +189,12 @@
                                                        id="Eid"
                                                        readonly>
                                             </div>
-                                            <label for="editStockTitle">Заголовок акции:</label>
-                                            <input id="editStockTitle" type="text" name="title" placeholder="title"
-                                                   class="form-control"
-                                                   required="required">
-
+                                            <div class="field2">
+                                                <label for="editStockTitle">Заголовок акции:</label>
+                                                <input id="editStockTitle" type="text" name="title" placeholder="title"
+                                                       class="form-control"
+                                                       required="required">
+                                            </div>
                                             <label for="editStockText">Описание акции:</label>
                                             <textarea name="comment" id="editStockText" cols="45" rows="5"
                                                       class="form-control"
@@ -214,14 +216,14 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="modal-footer">
+                        <div class="modal-footer actions2">
 
                             <button type="button" class="btn btn-secondary"
                                     data-dismiss="modal">
                                 Close
                             </button>
 
-                            <button type="submit" data-dismiss="modal" onclick="updateStock()" class="btn btn-primary">
+                            <button id="editSave" type="submit" data-dismiss="modal" onclick="updateStock()" class="btn btn-primary" disabled="disabled">
                                 Save changes
                             </button>
                         </div>
@@ -230,9 +232,15 @@
             </div>
             <!---------------------- End of Edit Stock Modal ------------------->
 
+
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="/static/js/stocks.js" async></script>
+
+<!--MomentJs (work with dates)-->
+<script type="text/JavaScript" src="../static/js/moment.js"></script>
+
 </body>
 </html>

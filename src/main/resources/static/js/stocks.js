@@ -8,6 +8,8 @@ $(document).ready(function () {
 function create() {
     $("#stocksDiv").empty();
 
+    moment.locale('ru');
+
     $.ajax("/rest/allStocks", {
         dataType: "json",
         success: function (data) {
@@ -27,8 +29,10 @@ function create() {
                     "<div class=\"card-body\">" +
                     "<h3 class='card-title'>" + stocks[i].stock_title + "</h3>" +
                     "<p class=\"card-text\">" + stocks[i].stock_text + "</p>" +
-                    "<p class=\"card-date\">" + stocks[i].startDate + "</p>" +
-                    "<p class=\"card-date\">" + stocks[i].endDate + "</p>" +
+                    "<p>" + "Срок проведения акции: " + "</p>" +
+                    "<div class=\"card-date\">" + "с " + moment(stocks[i].startDate).format("DD MMM") +
+                    " по " + moment(stocks[i].endDate).format("DD MMM YYYY") +
+                    "</div>" +
                     "</div>" +
                     "</div>" +
 
@@ -52,6 +56,23 @@ function create() {
 ///////////////////////////////////////////////////////////////
 //////////////////////Добавить акцию/////////////////////////
 
+////////запрещаем сохранение если не заполнены поля/////////////
+$(document).ready(function () {
+    $('.field input').on('keyup', function () {
+        let empty = false;
+
+        $('.field input').each(function () {
+            empty = $(this).val().length == 0;
+        });
+
+        if (empty)
+            $('.actions #save').attr('disabled', 'disabled');
+        else
+            $('.actions #save').attr('disabled', false);
+    });
+});
+
+
 function addStock() {
 
 
@@ -73,7 +94,10 @@ function addStock() {
         type: 'POST',
         contentType: 'application/JSON; charset=utf-8',
         success: function (data) {
+
             create();
+
+            $('.modal-body').find('lable,input,textarea').val('');
 
             toastr.success('Акция успешно добавлена!', {timeOut: 5000})
             // alert("yes!!!")
@@ -99,7 +123,6 @@ function getStockForEdit(id) {
             $(".modal-body #Eid").val(stock.id)
             $(".modal-body #editStockTitle").val(stock.stock_title)
             $(".modal-body #editStockText").val(stock.stock_text)
-            $(".modal-body #editStockImg").val(stock.stock_img)
             $(".modal-body #editStartDate").val(stock.startDate)
             $(".modal-body #editEndDate").val(stock.endDate)
         }
@@ -141,6 +164,26 @@ function updateStock() {
 }
 
 
+////////запрещаем сохранение если не заполнены поля/////////////
+$(document).ready(function () {
+    $('.field2 input').on('keyup', function () {
+        let empty = false;
+
+        $('.field2 input').each(function () {
+            empty = $(this).val().length == 0;
+        });
+
+        if (empty)
+            $('.actions2 #editSave').attr('disabled', 'disabled');
+        else
+            $('.actions2 #editSave').attr('disabled', false);
+    });
+});
+///////////////////////////////////////////////////////////////////
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////Удалить пользователя из таблицы/////////////////////
 
@@ -164,7 +207,6 @@ function deleteStock(id) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 //////////////////////////////////////////////////////////////////
