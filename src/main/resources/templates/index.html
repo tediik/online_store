@@ -7,11 +7,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/main.js"></script>
+    <script type="text/javascript" src="static/main.js"></script>
 
-
-
-
+    <title>Admin panel</title>
 </head>
 <body style="background-color: whitesmoke">
 
@@ -20,18 +18,17 @@
 
     <div class="container col-11">
         <!--Display logged in user's name-->
-        <h1 style="font-size: 38px; background-color: black; color: white">
-            <span sec:authentication="name"></span>
-            <span th:each="authority : ${#authentication.getAuthorities()}"
-                  th:text="${authority.getAuthority()} + ' '">
-    </span>
-        </h1>
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
+            <a class="navbar-brand"
+               th:each="authority : ${#authentication.getAuthorities()}"
+               th:text="${authority.getAuthority()} + ' '"></a>
+
+            <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
+        </nav>
 
         <div class="card" >
             <h5 class="card-header">Admin Panel</h5>
-            <a th:href="@{/logout}">
-                <button type="button" class="btn btn-warning mb-3 btn-md btn float-right ">Logout</button>
-            </a>
             <div class="card-body" >
 
                 <nav>
@@ -69,7 +66,7 @@
 
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title">Modal Heading</h4>
+                                                        <h4 class="modal-title">Edit user</h4>
                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
 
@@ -124,7 +121,7 @@
                                                 <div class="modal-content">
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title">Modal Heading</h4>
+                                                        <h4 class="modal-title">Delete user</h4>
                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
 
