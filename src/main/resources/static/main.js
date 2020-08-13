@@ -75,6 +75,7 @@ $(document).ready(function () {
                         console.log(errorThrown);
                     }
                 });
+            $('.nav-tabs a[href="#nav-home"]').tab('show');
         });
     });
 
