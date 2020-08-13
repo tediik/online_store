@@ -1,9 +1,11 @@
 package com.jm.online_store.config.security;
 
+import com.jm.online_store.config.facebook.FacebookOAuth2UserService;
 import com.jm.online_store.config.handler.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private LoginSuccessHandler successHandler;
     @Autowired
     private MyUserDetailsService myUserDetailsService;
+    @Autowired
+    private FacebookOAuth2UserService facebookOAuth2UserService;
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -29,13 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
+
+
                 // указываем страницу с формой логина
-                .loginPage("/login")
                 //указываем логику обработки при логине
                 .successHandler(successHandler)
                 // указываем action с формы логина
@@ -56,16 +59,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login?logout")
                 .and()
                 .csrf().disable();
-                //выклчаем кроссдоменную секьюрность (на этапе обучения неважна)
+        //выклчаем кроссдоменную секьюрность (на этапе обучения неважна)
 
 
         http
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
+
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").permitAll()
 
-                .antMatchers("/user").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
+                .and()
+
+                .authorizeRequests()
+
+                .and()
+
+                .oauth2Login().userInfoEndpoint().userService(facebookOAuth2UserService).and()
+
+                .and()
+
+                .authorizeRequests()
+
+
+
+
+//                .antMatchers("/user").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
 
                 .antMatchers("/api/users").access("hasAnyRole('ROLE_ADMIN')")
 
@@ -74,10 +93,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated()
 
                 .and()
+
                 .exceptionHandling().accessDeniedPage("/denied");
 
     }
 
+    @Bean
+    public AuthenticationManager authManager() throws Exception {
+        return this.authenticationManager();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
