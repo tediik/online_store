@@ -15,7 +15,7 @@ $(document).ready(function () {
                             .append($("<td>").append(user.email))
                             .append($("<td>").append(user.authorities.map(role => role.authority).join(" ")))
 
-                            .append($("<td>").append("<button class='btn-info updateBtn '>Edit</button>").click(function (event) {
+                            .append($("<td>").append("<button class='btn btn-info updateBtn '>Edit</button>").click(function (event) {
                                 $('.update-example #updateId').val(user.id);
                                 $('.update-example #updateEmail').val(user.email);
                                 //$('.update-example #updatePassword').val(user.password);
@@ -29,7 +29,7 @@ $(document).ready(function () {
                                 })
                             }))
 
-                            .append($("<td>").append("<button class='btn-danger deleteBtn'>Delete</button>").click(function (event) {
+                            .append($("<td>").append("<button class='btn btn-danger deleteBtn'>Delete</button>").click(function (event) {
                                 $('.delete-example #deleteId').val(user.id);
                                 $('.delete-example #deleteEmail').val(user.email);
                                 $('.delete-example #deletePassword').val(user.password);
