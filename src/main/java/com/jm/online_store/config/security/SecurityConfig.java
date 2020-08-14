@@ -22,12 +22,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private LoginSuccessHandler successHandler;
     @Autowired
     private MyUserDetailsService myUserDetailsService;
+    @Autowired
     private FacebookOAuth2UserService facebookOAuth2UserService;
 
-    @Autowired
-    public void setFacebookOAuth2UserService(FacebookOAuth2UserService facebookOAuth2UserService) {
-        this.facebookOAuth2UserService = facebookOAuth2UserService;
-    }
+
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -37,6 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(facebookOAuth2UserService);
+
         http.formLogin()
 
                 // указываем страницу с формой логина
@@ -66,19 +66,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
 
-                .antMatchers("/", "/main", "/registration", "/static/**", "/activate/*").permitAll()
+                .antMatchers("/", "/main", "/registration", "/static/**","/activate/*").permitAll()
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").permitAll()
 
                 .antMatchers("/css/**", "/js/**", "/images/**", "/static/**").permitAll()
-
-                .and()
-
-                .oauth2Login().userInfoEndpoint().userService(facebookOAuth2UserService).and()
-
-                .and()
-
-                .authorizeRequests()
 
                 .antMatchers("/customer").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
 
@@ -90,6 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied");
+
     }
 
     @Bean
