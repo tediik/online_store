@@ -18,7 +18,7 @@ $(document).ready(function () {
                             .append($("<td>").append("<button class='btn-info updateBtn '>Edit</button>").click(function (event) {
                                 $('.update-example #updateId').val(user.id);
                                 $('.update-example #updateEmail').val(user.email);
-                                $('.update-example #updatePassword').val(user.password);
+                                //$('.update-example #updatePassword').val(user.password);
                                 $('.update-example #updateModal').modal('show');
                             }))
 

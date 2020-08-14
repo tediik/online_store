@@ -20,7 +20,7 @@ public interface UserService {
 
     Optional<User> findByEmail(String username);
 
-    boolean emailExist(String email);
+    boolean isExist(String email);
 
     void regNewAccount(User user);
 
