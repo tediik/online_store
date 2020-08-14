@@ -18,7 +18,6 @@ $(document).ready(function () {
                             .append($("<td>").append("<button class='btn btn-info updateBtn '>Edit</button>").click(function (event) {
                                 $('.update-example #updateId').val(user.id);
                                 $('.update-example #updateEmail').val(user.email);
-                                //$('.update-example #updatePassword').val(user.password);
                                 $('.update-example #updateModal').modal('show');
                                 $('#updateRoles option').each(function () {
                                     if (user.roles.map(role => role.name).includes($(this).val())) {
@@ -64,14 +63,13 @@ $(document).ready(function () {
                             .append($("<td>").append(data.email))
                             .append($("<td>").append(data.authorities.map(role => role.authority).join(" ")))
 
-                            .append($("<td>").append("<button class='btn-info updateBtn '>Edit</button>").click(function (event) {
+                            .append($("<td>").append("<button class='btn btn-info updateBtn '>Edit</button>").click(function (event) {
                                 $('.update-example #updateId').val(data.id);
                                 $('.update-example #updateEmail').val(data.email);
-                                $('.update-example #updatePassword').val(data.password);
                                 $('.update-example #updateModal').modal('show');
                             }))
 
-                            .append($("<td>").append("<button class='btn-danger deleteBtn'>Delete</button>").click(function (event) {
+                            .append($("<td>").append("<button class='btn btn-danger deleteBtn'>Delete</button>").click(function (event) {
                                 $('.delete-example #deleteId').val(data.id);
                                 $('.delete-example #deleteEmail').val(data.email);
                                 $('.delete-example #deletePassword').val(data.password);
@@ -109,7 +107,6 @@ $(document).ready(function () {
                         $('#editBtn').on('click', function () {
                             $('.update-example #updateId').val(data.id);
                             $('.update-example #updateEmail').val(data.email);
-                            $('.update-example #updatePassword').val(data.password);
                             $('.update-example #updateModal').modal('show');
                         });
                     });
@@ -128,8 +125,8 @@ $(document).ready(function () {
                             <td>${data.id} </td>
                             <td>${data.email} </td>
                             <td>${data.authorities.map(role => role.authority).join(" , ")} </td>
-                            <td> <button class='btn-info' id='editBtn'>Edit</button></td>
-                            <td> <button class='btn-danger' id='deleteBtn'>Delete</button></td>
+                            <td> <button class='btn btn-info' id='editBtn'>Edit</button></td>
+                            <td> <button class='btn btn-danger' id='deleteBtn'>Delete</button></td>
                         </tr>`;
 
                     $('#userRowId' + id).replaceWith(new_row);
