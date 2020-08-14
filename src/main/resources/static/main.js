@@ -20,6 +20,13 @@ $(document).ready(function () {
                                 $('.update-example #updateEmail').val(user.email);
                                 //$('.update-example #updatePassword').val(user.password);
                                 $('.update-example #updateModal').modal('show');
+                                $('#updateRoles option').each(function () {
+                                    if (user.roles.map(role => role.name).includes($(this).val())) {
+                                        $(this).prop('selected', true);
+                                    } else {
+                                        $(this).prop('selected', false);
+                                    }
+                                })
                             }))
 
                             .append($("<td>").append("<button class='btn-danger deleteBtn'>Delete</button>").click(function (event) {
