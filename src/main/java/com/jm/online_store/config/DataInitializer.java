@@ -14,19 +14,17 @@ import java.util.Set;
 @Component
 public class DataInitializer {
 
-    private UserService userService;
-    private RoleService roleService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public void setUserService(@Lazy UserService userService) {
+    public DataInitializer(@Lazy UserService userService, RoleService roleService) {
         this.userService = userService;
-    }
-    @Autowired
-    public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
     }
 
-//    @PostConstruct
+
+    //    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");

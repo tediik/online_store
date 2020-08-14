@@ -2,7 +2,7 @@ package com.jm.online_store.config.security.facebook;
 
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
-import com.jm.online_store.repository.RoleRepository;
+import com.jm.online_store.service.RoleService;
 import com.jm.online_store.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,17 +22,15 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
 
     private static final Log log = LogFactory.getLog(FacebookOAuth2UserService.class);
 
-    private UserService userService;
-    private RoleRepository roleRepository;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public FacebookOAuth2UserService(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
-    @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
+
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -52,7 +50,7 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
         String firstName = fullName.substring(0, fullName.length() - lastName.length());
         User user = userService.findByEmail(email).orElseGet(() -> {
             Set<Role> roleSet = new HashSet<>();
-            Optional<Role> fbDefaultRole = roleRepository.findByName("ROLE_CUSTOMER");
+            Optional<Role> fbDefaultRole = roleService.findByName("ROLE_CUSTOMER");
             roleSet.add(fbDefaultRole.get());
             // register a new user
             User newUser = new User(email, "1",firstName,lastName, roleSet);
