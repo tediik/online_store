@@ -47,12 +47,15 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User buildPrincipal(OAuth2User oath2User) {
         FacebookUserInfo facebookUserInfo = new FacebookUserInfo(oath2User.getAttributes());
         String email = facebookUserInfo.getEmail();
+        String fullName = facebookUserInfo.getName();
+        String lastName = fullName.split(" ")[fullName.split(" ").length-1];
+        String firstName = fullName.substring(0, fullName.length() - lastName.length());
         User user = userService.findByEmail(email).orElseGet(() -> {
             Set<Role> roleSet = new HashSet<>();
             Optional<Role> fbDefaultRole = roleRepository.findByName("ROLE_CUSTOMER");
             roleSet.add(fbDefaultRole.get());
             // register a new user
-            User newUser = new User(email, "1", roleSet);
+            User newUser = new User(email, "1",firstName,lastName, roleSet);
             userService.addUser(newUser);
             return newUser;
         });
