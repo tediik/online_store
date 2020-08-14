@@ -47,16 +47,12 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> findAllWithPostingDateTimeBefore(LocalDateTime postingDate) {
 
-        List<News> newsList = newsRepository.findAllWithPostingDateTimeBefore(postingDate);
-        newsList.forEach(i -> i.setPosted(true));
-        return newsList;
+        return newsRepository.findAllWithPostingDateTimeBefore(postingDate);
     }
 
     @Override
     public List<News> findAllWithPostingDateTimeAfter(LocalDateTime postingDate) {
 
-        List<News> newsList = newsRepository.findAllWithPostingDateTimeAfter(postingDate);
-        newsList.forEach(i -> i.setPosted(true));
-        return newsList;
+        return newsRepository.findAllWithPostingDateTimeAfter(postingDate);
     }
 }

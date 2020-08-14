@@ -40,12 +40,7 @@
                 <label for="fullText">Полный текст</label>
                 <textarea th:field="${news.fullText}" id="fullText" name="fullText" placeholder="Введите полный текст" class="form-control" required></textarea>
                 <br>
-                <label for="postingDate" class="col-xs-2 col-form-label">Хотите изменить дату публикации?</label>
-                <div class="col-xs-10">
-                    <input th:value="${{news.postingDate}}" class="form-control"
-                           type="datetime-local" id="postingDate" name="postingDateTime">
-                </div>
-                <br>
+                <input th:field="${news.postingDate}" th:value="${news.postingDate}" class="form-control" id="postingDate" name="postingDateTime" hidden>
                 <button type="submit" class="btn btn-success">Обновить</button>
             </form>
         </div>

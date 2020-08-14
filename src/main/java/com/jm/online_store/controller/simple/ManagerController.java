@@ -35,9 +35,12 @@ public class ManagerController {
     public String newsManagement(Model model) {
 
         List<News> newsList = newsService.findAll();
+
         List<News> publishedNewsList = newsService
                 .findAllWithPostingDateTimeBefore(LocalDateTime.now());
-        List<News> unpublishedNewsList = newsService.findAllWithPostingDateTimeAfter(LocalDateTime.now());
+
+        List<News> unpublishedNewsList = newsService
+                .findAllWithPostingDateTimeAfter(LocalDateTime.now());
 
         model.addAttribute("news", newsList);
         model.addAttribute("publishedNews", publishedNewsList);

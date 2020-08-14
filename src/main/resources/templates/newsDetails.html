@@ -15,7 +15,7 @@
         <div class="col-sm-8 text-left">
             <div th:each="news : ${news}" class="alert alert-info mt-2">
                 <h3 th:text="${news.title}"></h3>
-                <p th:text="${news.fullText}"></p>
+                <p th:utext="${news.fullText}"></p>
             </div>
         </div>
     </div>

@@ -13,11 +13,6 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String userPage() {
-        return "mainPage";
-    }
-
     @GetMapping("/denied")
     public String deniedPage(){
         return "denied";

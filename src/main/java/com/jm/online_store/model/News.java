@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,12 +32,9 @@ public class News {
 
     private LocalDateTime postingDate;
 
-    private boolean isPosted;
-
     public News(String title, String anons, String fullText) {
         this.title = title;
         this.anons = anons;
         this.fullText = fullText;
-        this.isPosted = false;
     }
 }
