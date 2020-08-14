@@ -22,8 +22,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private LoginSuccessHandler successHandler;
     @Autowired
     private MyUserDetailsService myUserDetailsService;
-    @Autowired
     private FacebookOAuth2UserService facebookOAuth2UserService;
+
+    @Autowired
+    public void setFacebookOAuth2UserService(FacebookOAuth2UserService facebookOAuth2UserService) {
+        this.facebookOAuth2UserService = facebookOAuth2UserService;
+    }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
