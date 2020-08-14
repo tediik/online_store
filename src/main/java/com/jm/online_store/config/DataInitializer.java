@@ -19,11 +19,8 @@ public class DataInitializer {
     @Autowired
     private UserService userService;
 
-
     @Autowired
     private RoleService roleService;
-
-
 
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");

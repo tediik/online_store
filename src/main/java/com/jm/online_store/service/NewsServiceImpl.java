@@ -4,7 +4,7 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +16,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> findAll() {
+
         return newsRepository.findAll();
     }
 
@@ -41,5 +42,21 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public void deleteById(Long id) {
         newsRepository.deleteById(id);
+    }
+
+    @Override
+    public List<News> findAllWithPostingDateTimeBefore(LocalDateTime postingDate) {
+
+        List<News> newsList = newsRepository.findAllWithPostingDateTimeBefore(postingDate);
+        newsList.forEach(i -> i.setPosted(true));
+        return newsList;
+    }
+
+    @Override
+    public List<News> findAllWithPostingDateTimeAfter(LocalDateTime postingDate) {
+
+        List<News> newsList = newsRepository.findAllWithPostingDateTimeAfter(postingDate);
+        newsList.forEach(i -> i.setPosted(true));
+        return newsList;
     }
 }

@@ -101,8 +101,14 @@
             <artifactId>spring-context-support</artifactId>
             <version>5.1.4.RELEASE</version>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/org.webjars.bower/summernote -->
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>summernote</artifactId>
+			<version>0.8.16</version>
+		</dependency>
 
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>

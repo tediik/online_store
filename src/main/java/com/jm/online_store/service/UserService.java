@@ -1,7 +1,6 @@
 package com.jm.online_store.service;
 
 import com.jm.online_store.model.User;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
