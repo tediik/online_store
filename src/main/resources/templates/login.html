@@ -1,6 +1,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<script src="https://kit.fontawesome.com/8b586a0688.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css">
+<body>
+
 <section id="loginform" class="outer-wrapper">
     <div class="inner-wrapper">
         <div class="container h-100">
@@ -16,7 +20,10 @@
 
                         <button class="btn btn-primary btn-sm btn-block">Sign In</button>
                     </form>
-                    <div class=""> <a href="/oauth2/authorization/facebook" class="btn btn-primary btn-block facebook" style="background-color: #3B5998"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </div>
+                    <div><a href="/oauth2/authorization/facebook" title="Facebook" class="btn btn-block btn-sm  btn-social btn-lg btn-facebook">
+                        <i class="fa fa-facebook"></i> Sign in with Facebook
+                    </a>
+                    </div>
                 </div>
 
             </div>
@@ -24,3 +31,4 @@
     </div>
 
 </section>
+</body>

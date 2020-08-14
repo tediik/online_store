@@ -4,6 +4,7 @@ import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,10 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
     private static final Log log = LogFactory.getLog(FacebookOAuth2UserService.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -43,13 +43,13 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User buildPrincipal(OAuth2User oath2User) {
         FacebookUserInfo facebookUserInfo = new FacebookUserInfo(oath2User.getAttributes());
         String email = facebookUserInfo.getEmail();
-        User user = userRepository.findByEmail(email).orElseGet(() -> {
+        User user = userService.findByEmail(email).orElseGet(() -> {
             Set<Role> roleSet = new HashSet<>();
             Optional<Role> fbDefaultRole = roleRepository.findByName("ROLE_CUSTOMER");
             roleSet.add(fbDefaultRole.get());
             // register a new user
-            User newUser = new User(email,passwordEncoder.encode("1"),roleSet);
-            userRepository.save(newUser);
+            User newUser = new User(email,"1",roleSet);
+            userService.addUser(newUser);
             return newUser;
         });
         return oath2User;
