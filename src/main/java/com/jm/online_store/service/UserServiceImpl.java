@@ -1,6 +1,7 @@
 package com.jm.online_store.service;
 
 import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
@@ -8,6 +9,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,6 +69,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void addUser(@NotNull User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+            throw new InvalidEmailException();
+        }
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             user.setRoles(persistRoles(user.getRoles()));
         }
@@ -80,6 +85,8 @@ public class UserServiceImpl implements UserService {
         if (!editUser.getEmail().equals(user.getEmail())) {
             if (isExist(user.getEmail())) {
                 throw new EmailAlreadyExistsException();
+            } else if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+                throw new InvalidEmailException();
             }
             editUser.setEmail(user.getEmail());
         }
