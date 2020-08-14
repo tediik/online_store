@@ -12,31 +12,16 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
-    <title>Кабинет покупателя</title>
+    <title>Избранное</title>
 </head>
 <body>
-<div class="profile-container">
-    <header class="header">
-        <div class="logo-container"></div>
-    </header>
-    <div class="body"></div>
-</div>
 <div class="container-fluid">
     <div class="row min-vh-100">
         <div class="col-md-2">
-            <!--            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">-->
-            <!--                <a href="/customer">Главная</a>-->
-            <!--            </div>-->
-            <!--            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">-->
-            <!--                <a href="/customer/profile">Профиль</a>-->
-            <!--            </div>-->
-            <!--            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">-->
-            <!--                <a href="/logout">Выйти</a>-->
-            <!--            </div>-->
             <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" role="tab" aria-selected="true"
-                   href="/customer">Главная</a>
                 <a class="nav-link" role="tab" aria-selected="true"
+                   href="/customer">Главная</a>
+                <a class="nav-link active" role="tab" aria-selected="true"
                    href="/customer/wishlist">Избранные товары</a>
                 <a class="nav-link" role="tab" aria-selected="true"
                    href="/customer/order">Заказы</a>
@@ -46,20 +31,7 @@
                    href="/logout">Выйти</a>
             </div>
         </div>
-        <div class="col-md-10"
-             style="background: #edeef0">
-            <div id="admin_panel"></div>
-            <div class="tab-content" id="nav-tabContent-p">
-                <div class="tab-pane fade show active" id="pills-home-profile" role="tabpanel"
-                     aria-labelledby="nav-home-profile">
-
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 </body>
 </html>
-
-
-

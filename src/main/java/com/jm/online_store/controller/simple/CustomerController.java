@@ -65,4 +65,14 @@ public class CustomerController {
 
         return "redirect:/customer/profile";
     }
+
+    @GetMapping("/order")
+    public String getOrderPage() {
+        return "customerOrder";
+    }
+
+    @GetMapping("/wishlist")
+    public String getWishList() {
+        return "customerWishlist";
+    }
 }
