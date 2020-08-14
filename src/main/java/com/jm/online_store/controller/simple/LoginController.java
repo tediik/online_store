@@ -14,17 +14,8 @@ public class LoginController {
         return "login";
     }
 
-
     @GetMapping("/denied")
     public String deniedPage(){
         return "denied";
     }
-
-
-
-
-
-
-
-
 }
