@@ -7,14 +7,25 @@ import com.jm.online_store.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,6 +53,7 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oath2User = super.loadUser(userRequest);
+
         return buildPrincipal(oath2User);
     }
 
@@ -55,16 +67,15 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
         String fullName = facebookUserInfo.getName();
         String lastName = fullName.split(" ")[fullName.split(" ").length - 1];
         String firstName = fullName.substring(0, fullName.length() - lastName.length());
+        Set<Role> roleSet = new HashSet<>();
+        Optional<Role> fbDefaultRole = roleRepository.findByName("ROLE_CUSTOMER");
+        roleSet.add(fbDefaultRole.get());
+        User newUser = new User(email, passwordEncoder.encode("1"), firstName, lastName, roleSet);
         User user = userRepository.findByEmail(email).orElseGet(() -> {
-            Set<Role> roleSet = new HashSet<>();
-            Optional<Role> fbDefaultRole = roleRepository.findByName("ROLE_CUSTOMER");
-            roleSet.add(fbDefaultRole.get());
             // register a new user
-            User newUser = new User(email, passwordEncoder.encode("1"), firstName, lastName, roleSet);
             userRepository.save(newUser);
             return newUser;
         });
         return oath2User;
     }
 }
-
