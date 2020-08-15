@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.RoleService;
 import com.jm.online_store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
+
 @Controller
 @RequestMapping("/customer")
 public class CustomerController {
@@ -21,6 +24,9 @@ public class CustomerController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping
     public String getCustomerPage() {
@@ -38,6 +44,7 @@ public class CustomerController {
 
     @PostMapping("/profile")
     public String updateUserInfo(User user, Model model) {
+        user.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
         userService.updateUser(user);
         model.addAttribute("user", user);
 
