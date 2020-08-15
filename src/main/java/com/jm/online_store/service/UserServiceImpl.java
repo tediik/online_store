@@ -72,7 +72,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User userFromDB = userRepository.findByEmail(user.getEmail()).get();
+        if (!user.getPassword().equals(userFromDB.getPassword())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userRepository.saveAndFlush(user);
     }
 
