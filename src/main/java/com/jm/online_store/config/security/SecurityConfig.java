@@ -1,5 +1,6 @@
 package com.jm.online_store.config.security;
 
+import com.jm.online_store.config.security.facebook.FacebookOAuth2UserService;
 import com.jm.online_store.config.handler.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,9 +20,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private LoginSuccessHandler successHandler;
-
     @Autowired
     private MyUserDetailsService myUserDetailsService;
+    @Autowired
+    private FacebookOAuth2UserService facebookOAuth2UserService;
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -29,11 +31,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
-
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(facebookOAuth2UserService).and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
+
         http.formLogin()
                 // указываем страницу с формой логина
                 .loginPage("/login")
@@ -56,18 +57,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .and()
                 .csrf().disable();
-                //выклчаем кроссдоменную секьюрность (на этапе обучения неважна)
         http
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 .antMatchers("/",
-                                        "/news/**",
-                                            "/registration",
-                                                "/css/**",
-                                                    "/js/**",
-                                                        "/images/**",
-                                                            "/static/**",
-                                                                "/activate/**").permitAll()
+                                        "/login",
+                                            "/news/**",
+                                                "/registration",
+                                                    "/css/**",
+                                                        "/js/**",
+                                                            "/images/**",
+                                                                "/static/**",
+                                                                    "/activate/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
                 .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
@@ -76,7 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied");
     }
-
 
     @Bean
     public AuthenticationManager authManager() throws Exception {

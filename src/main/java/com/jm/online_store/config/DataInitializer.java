@@ -1,6 +1,5 @@
 package com.jm.online_store.config;
 
-
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.RoleService;
@@ -8,7 +7,6 @@ import com.jm.online_store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -16,12 +14,16 @@ import java.util.Set;
 @Component
 public class DataInitializer {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    private RoleService roleService;
+    public DataInitializer(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
+//        @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -34,7 +36,6 @@ public class DataInitializer {
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
         User customer = new User("customer@mail.ru", "1");
-
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
@@ -53,16 +54,8 @@ public class DataInitializer {
         admin.setRoles(adminRoles);
         customer.setRoles(customerRoles);
 
-
-
-
         userService.addUser(manager);
         userService.addUser(customer);
         userService.addUser(admin);
-
-
-
     }
-
-
 }
