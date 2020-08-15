@@ -1,4 +1,4 @@
-package com.jm.online_store.config.security.facebook;//package com.jm.online_store.config.facebook;
+package com.jm.online_store.config.security.facebook;
 
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.UserService;
@@ -39,7 +39,7 @@ public class LoginListener implements ApplicationListener<InteractiveAuthenticat
                 Authentication newCustomAuthentication = new UsernamePasswordAuthenticationToken(userPrincipalFromDB, null, userPrincipalFromDB.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(newCustomAuthentication);
             }
-        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+        } else if (authentication.getClass().isAssignableFrom(UsernamePasswordAuthenticationToken.class)) {
             System.out.println("Form based manual authorization");
         }
         Authentication oAuth2Authentication = (Authentication) SecurityContextHolder.getContext().getAuthentication();

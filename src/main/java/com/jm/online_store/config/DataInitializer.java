@@ -23,7 +23,6 @@ public class DataInitializer {
         this.roleService = roleService;
     }
 
-
     //    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
@@ -59,10 +58,5 @@ public class DataInitializer {
         userService.addUser(manager);
         userService.addUser(customer);
         userService.addUser(admin);
-
-
-
     }
-
-
 }

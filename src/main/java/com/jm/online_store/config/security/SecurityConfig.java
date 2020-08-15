@@ -25,8 +25,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private FacebookOAuth2UserService facebookOAuth2UserService;
 
-
-
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(myUserDetailsService)
@@ -82,7 +80,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied");
-
     }
 
     @Bean
