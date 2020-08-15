@@ -24,7 +24,7 @@ public class DataInitializer {
     private RoleService roleService;
 
 
-    @PostConstruct
+    //@PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -56,15 +56,10 @@ public class DataInitializer {
         admin.setRoles(adminRoles);
         customer.setRoles(customerRoles);
 
-
-
-
         userService.addUser(manager);
         userService.addUser(customer);
         userService.addUser(admin);
-
-
-
+        
     }
 
 
