@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем URL логаута
 
                 // указываем URL при удачном логауте
-                .logoutSuccessUrl("/login?logout")
+                .logoutSuccessUrl("/")
                 .and()
                 .csrf().disable();
         //выклчаем кроссдоменную секьюрность (на этапе обучения неважна)
