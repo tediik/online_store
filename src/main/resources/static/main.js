@@ -120,6 +120,7 @@ $(document).ready(function () {
                         });
                     });
 
+
                     var new_row = `
                         <tr id="userRowId${data.id}">
                             <td>${data.id} </td>
@@ -143,7 +144,9 @@ $(document).ready(function () {
 
     $(function () {
         $('#deleteSubmitBtn').on('click', function () {
-            var $deleteId = $('#deleteId').val();
+            let $deleteId = $('#deleteId').val();
+            console.log("deleteId");
+            console.log($deleteId);
             $.ajax(
                 {
                     type: 'DELETE',
@@ -154,7 +157,8 @@ $(document).ready(function () {
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         console.log(errorThrown);
-                    }
+                    },
+
                 });
 
         })
