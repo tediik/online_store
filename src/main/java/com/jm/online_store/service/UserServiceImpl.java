@@ -44,6 +44,12 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.url.activate}")
     private String urlActivate;
 
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Transactional
     @Override
     public List<User> findAll() {
         return userRepository.findAll();

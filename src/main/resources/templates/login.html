@@ -1,15 +1,17 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-                                                          crossorigin="anonymous" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<script src="https://kit.fontawesome.com/8b586a0688.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css">
+<body>
 
 <section id="loginform" class="outer-wrapper">
-
     <div class="inner-wrapper">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4 col-sm-offset-4">
-                    <h2 class="text-left h4 mb-4">Please sign in</h2>
+        <div class="container h-100">
+            <div class="row h-75 justify-content-center align-items-center">
+                <div class="col-sm-4 col-sm-offset-6">
+                    <h2 class="form-signin-heading">Please sign in</h2>
                     <form th:action="@{/login}" method="post" class="form-group">
-                        <a th:text="${message}"></a>
                         <input type="text" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
                                class="form-control">
 
@@ -18,9 +20,14 @@
 
                         <button class="btn btn-primary btn-sm btn-block">Sign In</button>
                     </form>
+                    <div><a href="/oauth2/authorization/facebook" title="Facebook" class="btn btn-block btn-sm  btn-social btn-lg btn-facebook">
+                        <i class="fa fa-facebook"></i> Sign in with Facebook
+                    </a>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
-
 </section>
+</body>

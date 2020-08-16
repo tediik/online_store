@@ -24,7 +24,4 @@ public class RoleRestController {
     public List<Role> findAll(){
         return roleService.findAll();
     }
-
-
-
 }
