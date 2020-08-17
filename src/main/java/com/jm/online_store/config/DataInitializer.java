@@ -1,6 +1,5 @@
 package com.jm.online_store.config;
 
-
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.RoleService;
@@ -16,15 +15,16 @@ import java.util.Set;
 @Component
 public class DataInitializer {
 
+    private final UserService userService;
+    private final RoleService roleService;
+
     @Autowired
-    private UserService userService;
+    public DataInitializer(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
-
-    @Autowired
-    private RoleService roleService;
-
-
-    @PostConstruct
+    /*@PostConstruct*/
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -37,7 +37,6 @@ public class DataInitializer {
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
         User customer = new User("customer@mail.ru", "1");
-
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
@@ -56,16 +55,8 @@ public class DataInitializer {
         admin.setRoles(adminRoles);
         customer.setRoles(customerRoles);
 
-
-
-
         userService.addUser(manager);
         userService.addUser(customer);
         userService.addUser(admin);
-
-
-
     }
-
-
 }

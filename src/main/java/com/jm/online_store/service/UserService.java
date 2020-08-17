@@ -1,7 +1,6 @@
 package com.jm.online_store.service;
 
 import com.jm.online_store.model.User;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +9,7 @@ public interface UserService {
 
     List<User> findAll();
 
-    Optional<User>findById(Long id);
+    Optional<User> findById(Long id);
 
     void addUser(User user);
 
@@ -26,3 +25,6 @@ public interface UserService {
 
     boolean activateUser(String code, HttpServletRequest request);
 }
+
+
+

@@ -35,15 +35,34 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
-    private final ConfirmationTokenRepository confirmTokenRepository;
-    private final MailSenderService mailSenderService;
-    private final AuthenticationManager authenticationManager;
+    private  PasswordEncoder passwordEncoder;
 
-    @Value("${spring.url.activate}")
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private ConfirmationTokenRepository confirmTokenRepository;
+
+    @Autowired
+    private MailSenderService mailSenderService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Value("${spring.server.url}")
     private String urlActivate;
 
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Transactional
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
