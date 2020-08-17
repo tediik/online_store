@@ -3,7 +3,7 @@ package com.jm.online_store.controller.simple;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.RoleService;
 import com.jm.online_store.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -15,18 +15,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collections;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/customer")
 public class CustomerController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
     @GetMapping
     public String getCustomerPage() {
