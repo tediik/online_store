@@ -12,10 +12,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Value("${spring.url.activate}")
+    @Value("${spring.server.url}")
     private String urlActivate;
 
     @Autowired
@@ -117,9 +116,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        Role userRole = roleRepository.findByName("ROLE_CUSTOMER").get();
-        Set<Role> userSetRoles = new HashSet<>();
-        userSetRoles.add(userRole);
+        Set<Role> userSetRoles = Collections.singleton(roleRepository.findByName("ROLE_CUSTOMER").get());
 
         User user = new User();
         user.setEmail(confirmationToken.getUserEmail());

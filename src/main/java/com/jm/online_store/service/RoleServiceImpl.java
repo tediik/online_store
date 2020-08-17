@@ -4,7 +4,6 @@ import com.jm.online_store.model.Role;
 import com.jm.online_store.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
