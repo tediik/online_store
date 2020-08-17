@@ -63,7 +63,7 @@ public class User implements UserDetails {
     private Date registerDate;
 
     @ManyToMany(fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.REFRESH)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
