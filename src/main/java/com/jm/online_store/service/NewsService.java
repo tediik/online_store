@@ -21,7 +21,7 @@ public interface NewsService {
 
     void deleteById(Long id);
 
-    List<News> findAllWithPostingDateTimeBefore(LocalDateTime postingDate);
+    List<News> findAllByPostingDateBefore(LocalDateTime timeNow);
 
-    List<News> findAllWithPostingDateTimeAfter(LocalDateTime postingDate);
+    List<News> findAllByPostingDateAfter(LocalDateTime timeNow);
 }

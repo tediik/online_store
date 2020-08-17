@@ -7,6 +7,7 @@ import com.jm.online_store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +24,7 @@ public class DataInitializer {
         this.roleService = roleService;
     }
 
-//        @PostConstruct
+    /*@PostConstruct*/
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");

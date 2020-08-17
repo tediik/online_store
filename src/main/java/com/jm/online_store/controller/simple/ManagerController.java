@@ -2,6 +2,7 @@ package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.News;
 import com.jm.online_store.service.NewsService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -19,12 +20,12 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping(value = "/manager", method = RequestMethod.GET)
 public class ManagerController {
 
-    @Autowired
-    NewsService newsService;
+    private final NewsService newsService;
 
     @GetMapping
     public String managerPage(){
@@ -37,10 +38,10 @@ public class ManagerController {
         List<News> newsList = newsService.findAll();
 
         List<News> publishedNewsList = newsService
-                .findAllWithPostingDateTimeBefore(LocalDateTime.now());
+                .findAllByPostingDateBefore(LocalDateTime.now());
 
         List<News> unpublishedNewsList = newsService
-                .findAllWithPostingDateTimeAfter(LocalDateTime.now());
+                .findAllByPostingDateAfter(LocalDateTime.now());
 
         model.addAttribute("news", newsList);
         model.addAttribute("publishedNews", publishedNewsList);

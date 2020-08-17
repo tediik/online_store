@@ -18,11 +18,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 
     boolean existsById(Long id);
 
-    @Query("select a from News a where a.postingDate <= :postingDate")
-    List<News> findAllWithPostingDateTimeBefore(
-            @Param("postingDate") LocalDateTime postingDate);
+    List<News> findAllByPostingDateBefore(LocalDateTime timeNow);
 
-    @Query("select a from News a where a.postingDate >= :postingDate")
-    List<News> findAllWithPostingDateTimeAfter(
-            @Param("postingDate") LocalDateTime postingDate);
+    List<News> findAllByPostingDateAfter(LocalDateTime timeNow);
 }

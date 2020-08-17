@@ -2,21 +2,21 @@ package com.jm.online_store.service;
 
 import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class NewsServiceImpl implements NewsService {
 
-    @Autowired
-    NewsRepository newsRepository;
+    private final NewsRepository newsRepository;
 
     @Override
     public List<News> findAll() {
-
         return newsRepository.findAll();
     }
 
@@ -45,14 +45,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<News> findAllWithPostingDateTimeBefore(LocalDateTime postingDate) {
-
-        return newsRepository.findAllWithPostingDateTimeBefore(postingDate);
+    public List<News> findAllByPostingDateBefore(LocalDateTime timeNow) {
+        return newsRepository.findAllByPostingDateBefore(timeNow);
     }
 
     @Override
-    public List<News> findAllWithPostingDateTimeAfter(LocalDateTime postingDate) {
-
-        return newsRepository.findAllWithPostingDateTimeAfter(postingDate);
+    public List<News> findAllByPostingDateAfter(LocalDateTime timeNow) {
+        return newsRepository.findAllByPostingDateAfter(timeNow);
     }
 }
