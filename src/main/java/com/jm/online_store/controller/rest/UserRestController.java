@@ -65,7 +65,5 @@ public class UserRestController {
     public ResponseEntity<Void> deleteUserById(@PathVariable Long userId){
         userService.deleteByID(userId);
         return new ResponseEntity<Void>(HttpStatus.OK);
-
-
     }
 }
