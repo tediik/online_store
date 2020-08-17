@@ -132,10 +132,6 @@ $(document).ready(function () {
                     $('#userRowId' + id).replaceWith(new_row);
                 },
                 error: function (jqXhr, textStatus, errorThrown) {
-                    console.log(jqXhr);
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    alert(jqXhr.responseJSON.message);
                 }
             });
         });
