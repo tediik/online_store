@@ -11,6 +11,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
     void deleteStockById(Long id);
 
-//    void updateStock();
+
 
 }

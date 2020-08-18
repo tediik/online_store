@@ -2,12 +2,14 @@ package com.jm.online_store.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.Date;
+
 
 @Entity
 @Table(name = "stocks")
@@ -32,30 +34,29 @@ public class Stock {
     @Column
     private LocalDate endDate;
 
+    @Enumerated(EnumType.STRING)
+    public StockEnum stockEnum;
+
     public Stock() {
 
     }
 
-    public Stock(Long id, String stockImg, String stockTitle, String stockText, LocalDate startDate, LocalDate endDate) {
+    public Stock(Long id, String stockImg, String stockTitle, String stockText, LocalDate startDate, LocalDate endDate, StockEnum stockEnum) {
         this.id = id;
         this.stockImg = stockImg;
         this.stockTitle = stockTitle;
         this.stockText = stockText;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.stockEnum = stockEnum;
     }
 
-    public Stock(Long id, String stockImg, String stockTitle, String stockText) {
-        this.id = id;
-        this.stockImg = stockImg;
-        this.stockTitle = stockTitle;
-        this.stockText = stockText;
+    public StockEnum getStockEnum() {
+        return stockEnum;
     }
 
-    public Stock(String stockImg, String stockTitle, String stockText) {
-        this.stockImg = stockImg;
-        this.stockTitle = stockTitle;
-        this.stockText = stockText;
+    public void setStockEnum(StockEnum stockEnum) {
+        this.stockEnum = stockEnum;
     }
 
     public LocalDate getEndDate() {

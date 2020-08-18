@@ -60,19 +60,25 @@
     <div id="cont" class="row no-gutters pb-4" style="background-color: #ececec">
         <div class="col-md-3 pr-3">
             <br>
-            <div class="container min-height: 100vh" style="background-color: #ffffff; border-radius: 10px;">
+            <div class="container filters min-height: 100vh pb-4" style="background-color: #ffffff; border-radius: 10px;">
                 <h4 class="text-center p-1">Фильтры</h4>
-                <div id="filters">
-                    <label><span>Текущие акции </span>
-                        <input type="checkbox" value="all_stocks">
-                    </label>
-                    <label><span>Планируемые акции </span>
-                        <input type="checkbox" value="featured_stocks">
-                    </label>
-                    <label><span>Завершенные акции </span>
-                        <input type="checkbox" value="finished_stocks">
-                    </label>
+
+                <div>
+                    <button type="button" class="btn-primary btn-md active" data-filter="ALL">Все акции</button>
                 </div>
+                <br>
+                <div>
+                    <button type="button" class="btn-primary btn-md" data-filter="CURRENT">Текущие акции</button>
+                </div>
+                <br>
+                <div>
+                    <button type="button" class="btn-primary btn-md" data-filter="FUTURE">Планируемые акции</button>
+                </div>
+                <br>
+                <div>
+                    <button type="button" class="btn-primary btn-md" data-filter="PAST">Завершенные акции</button>
+                </div>
+
             </div>
             <br>
             <div>
@@ -89,9 +95,9 @@
             <!--START of Stocks-->
             <br>
             <div class="container-fluid p-3" style="background-color: #ffffff; border-radius: 10px;">
-                <div id="stocksDiv">
+                <ul class="allStocks" id="stocksDiv">
                     <!-- Здесь загрузка акций в JS... Совсем пусто :(  -->
-                </div>
+                </ul>
             </div>
             <!--End of Stocks-->
 
@@ -223,7 +229,8 @@
                                 Close
                             </button>
 
-                            <button id="editSave" type="submit" data-dismiss="modal" onclick="updateStock()" class="btn btn-primary" disabled="disabled">
+                            <button id="editSave" type="submit" data-dismiss="modal" onclick="updateStock()"
+                                    class="btn btn-primary" disabled="disabled">
                                 Save changes
                             </button>
                         </div>

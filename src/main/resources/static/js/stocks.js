@@ -15,9 +15,9 @@ function create() {
         success: function (data) {
             const stocks = JSON.parse(JSON.stringify(data));
 
-
             for (let i = 0; i < stocks.length; i++) {
-                let out = $("<div>").attr("id", stocks[i].id);
+                let out = $("<li>").attr("id", stocks[i].id).attr("data-filter", stocks[i].stockEnum);
+
                 out.append("" +
                     "<div class=\"card mb-3\">" +
                     "<div class=\"row no-gutters\">" +
@@ -39,18 +39,36 @@ function create() {
                     "<div class=\"col-md-2\">" +
 
                     "<button onclick='getStockForEdit(" + stocks[i].id + ")' class=\"btn btn-md btn-info mt-5 mr-2\" data-toggle='modal' data-target='#editStockModal'>" + "Edit" + "</button>" +
-                    "<button onclick='deleteStock(" + stocks[i].id + ")' class=\"warning btn btn-md btn-danger mt-2 mr-2\"  >" + "Delete" + "</button>" +
+                    "<button onclick='deleteStock(" + stocks[i].id + ")' class=\"warning btn btn-md btn-danger mt-2 mr-2\">" + "Delete" + "</button>" +
 
                     "</div>" +
                     "</div>" +
-                    "</div>"
+                    "</div>" +
+                    "</div>" +
+                    "</li>"
                 );
 
                 $("#stocksDiv").append(out)
             }
-
         }
     })
+
+/////////////////////////////////////
+///////фильтр акций///////////////
+
+    $('.filters button').on('click', function() {
+        $('.filters button').removeClass('active');
+        $(this).parent('button').addClass('active'); // выделяем выбранную категорию
+
+        const cat = $(this).attr('data-filter'); // определяем категорию
+
+        if (cat === 'ALL') {
+            $('.allStocks li').show();
+        } else {
+            $('.allStocks li').hide();
+            $('.allStocks li[data-filter="' + cat + '"]').show();
+        }
+    });
 }
 
 ///////////////////////////////////////////////////////////////
@@ -75,30 +93,25 @@ $(document).ready(function () {
 
 function addStock() {
 
-
-    const stock = {
+    const stockAdd = {
         id: $('#id').val(),
         stockImg: $('#addStockImg').val(),
         stockTitle: $('#addStockTitle').val(),
         stockText: $('#addStockText').val(),
         startDate: $('#addStartDate').val(),
         endDate: $('#addEndDate').val(),
+        stock: $('#stockTimeZone').val(),
     };
-
-
     $.ajax({
         // processData: false,
         url: "/rest/addStock",
-        data: JSON.stringify(stock),
+        data: JSON.stringify(stockAdd),
         dataType: 'json',
         type: 'POST',
         contentType: 'application/JSON; charset=utf-8',
         success: function (data) {
-
             create();
-
             $('.modal-body').find('lable,input,textarea').val('');
-
             toastr.success('Акция успешно добавлена!', {timeOut: 5000})
             // alert("yes!!!")
             // document.body.style.background = "green"
@@ -110,7 +123,6 @@ function addStock() {
     })
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //////////////////////Редактировать акцию////////////////////////////////
 
@@ -119,7 +131,7 @@ function getStockForEdit(id) {
         type: "GET",
         url: "/rest/" + id,
         dataType: 'json',
-        success: function (stock) { //заполнение таблицы данными
+        success: function (stock) { //заполнение полей данными
             $(".modal-body #Eid").val(stock.id)
             $(".modal-body #editStockTitle").val(stock.stock_title)
             $(".modal-body #editStockText").val(stock.stock_text)
@@ -129,7 +141,7 @@ function getStockForEdit(id) {
     });
 }
 
-////Эдит акции///////////
+////Редактирование акции///////////
 
 function updateStock() {
 
@@ -141,7 +153,6 @@ function updateStock() {
         startDate: $('#editStartDate').val(),
         endDate: $('#editEndDate').val(),
     };
-
 
     $.ajax({
         // processData: false,
@@ -163,7 +174,6 @@ function updateStock() {
     })
 }
 
-
 ////////запрещаем сохранение если не заполнены поля/////////////
 $(document).ready(function () {
     $('.field2 input').on('keyup', function () {
@@ -179,9 +189,6 @@ $(document).ready(function () {
             $('.actions2 #editSave').attr('disabled', false);
     });
 });
-///////////////////////////////////////////////////////////////////
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,10 +200,8 @@ function deleteStock(id) {
             type: "DELETE",
             contentType: "application/json",
             success: function (data) {
-
                 $("#stocksDiv #" + id).remove();
                 console.log(data)
-
                 toastr.warning('Акция успешно удалена!', {timeOut: 5000})
             },
             error: function (er) {
@@ -207,51 +212,3 @@ function deleteStock(id) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////
-////////////////////////Фильтры акций//////////////////////////
-
-//
-
-
-// const start = new Date("February 29, 2020").getTime();
-// const end = new Date("March 1, 2021").getTime();
-
-// const time = new Date().getTime();
-// if(time > start && time < end + 60*60*24)
-// alert("Только с 29 февраля по 2 марта при заказе утюга, получите асфальтоукладчик бесплатно!");
-
-
-// const filters = document.querySelector('#filters');
-//
-// filters.addEventListener('input', filterStocks);
-//
-// function filterStocks() {
-//     const
-//
-//         sizes = [...filters.querySelectorAll('#size input:checked')].map(n => n.value),
-//
-//     outputStocks(DATA.filter(n => (!sizes.length || sizes.includes(n.size))));
-// }
-//
-// const DATA = [
-//
-// ];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

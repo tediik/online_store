@@ -19,7 +19,6 @@ public class StockServiceImpl implements StockService{
         this.stockRepository = stockRepository;
     }
 
-
     @Override
     public List<Stock> findAll() {
         return stockRepository.findAll();
@@ -46,8 +45,4 @@ public class StockServiceImpl implements StockService{
         stockRepository.deleteStockById(id);
     }
 
-//    @Override
-//    public void updateStock() {
-//        stockRepository.updateStock();
-//    }
 }
