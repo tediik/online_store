@@ -47,6 +47,7 @@ $(document).ready(function () {
             var password = $('#addPassword').val();
             var roles = $('#addRoles').val();
             var user = {email, password, roles};
+            $(".alert").alert('close');
             $.ajax(
                 {
                     type: 'POST',
@@ -75,12 +76,17 @@ $(document).ready(function () {
                                 $('.delete-example #deletePassword').val(data.password);
                                 $('.delete-example #deleteModal').modal('show');
                             })));
-                        },
+                        $('.nav-tabs a[href="#nav-home"]').tab('show');
+                    },
                     error: function (jqXhr, textStatus, errorThrown) {
-                        console.log(errorThrown);
+                        $('#add-email-form-group').append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>" +
+                            "<strong>Error:</strong>&nbsp;" + jqXhr.responseJSON.message +
+                            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+                            "<span aria-hidden='true'>&times;</span>" +
+                            "</button>" +
+                            "</div>")
                     }
                 });
-            $('.nav-tabs a[href="#nav-home"]').tab('show');
         });
     });
 
@@ -177,8 +183,6 @@ $(document).ready(function () {
 
             });
     });
-
-
 
 
 });

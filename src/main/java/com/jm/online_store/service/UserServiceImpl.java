@@ -91,6 +91,9 @@ public class UserServiceImpl implements UserService {
         if (ValidationUtils.isNotValidEmail(user.getEmail())) {
             throw new InvalidEmailException();
         }
+        if (isExist(user.getEmail())) {
+            throw new EmailAlreadyExistsException();
+        }
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             user.setRoles(persistRoles(user.getRoles()));
         }
