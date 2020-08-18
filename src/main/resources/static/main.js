@@ -70,11 +70,12 @@ $(document).ready(function () {
                                 $('.delete-example #deletePassword').val(data.password);
                                 $('.delete-example #deleteModal').modal('show');
                             })));
-                    },
+                        },
                     error: function (jqXhr, textStatus, errorThrown) {
                         console.log(errorThrown);
                     }
                 });
+            $('.nav-tabs a[href="#nav-home"]').tab('show');
         });
     });
 
@@ -173,6 +174,8 @@ $(document).ready(function () {
 
             });
     });
+
+
 
 
 });

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>News Management</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+</head>
+<body>
+<header th:insert="/blocks/header :: header"></header>
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <a class="btn btn-link" href="/manager"><---обратно</a>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager">Главная</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/news/add">Добавить новость</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
+            </div>
+        </div>
+        <div class="col-sm-8 tab-pane">
+            <h1 class="text-center">Управление новостями</h1>
+            <ul class="nav nav-tabs">
+                <!-- Первая вкладка (активная) -->
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#tab_all_news">Все</a>
+                </li>
+                <!-- Вторая вкладка -->
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab_published_news">Опубликованные</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab_unpublished_news">Не опубликованные</a>
+                </li>
+            </ul>
+            <!-- Блоки с контентом -->
+            <div class="tab-content">
+                <!-- Первый блок (он отображается по умолчанию, т.к. имеет классы show и active) -->
+                <div class="tab-pane fade show active" id="tab_all_news">
+                    <div th:each="news : ${news}" class="alert alert-info mt-2">
+                        <h2 th:text="${news.title}"></h2>
+                        <h5 th:text="${news.anons}"></h5>
+                        <p th:utext="${news.fullText}"></p>
+                        <div class="container-fluid row">
+                            <div class="text-left align-text-bottom col">
+                                <span class="text-left" th:text="'Дата публикации: ' + ${#temporals.format(news.postingDate, 'dd-MM-yyyy HH:mm')}"></span>
+                            </div>
+                            <div class="text-right col">
+                                <a th:href="'/manager/news/' + ${news.id} + '/edit'" class="btn btn-primary">Редактировать</a>
+                                <a th:href="'/manager/news/' + ${news.id} + '/delete'" class="btn btn-danger">Удалить</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Второй блок -->
+                <div class="tab-pane fade" id="tab_published_news">
+                    <div th:each="news : ${publishedNews}" class="alert alert-info mt-2">
+                        <h2 th:text="${news.title}"></h2>
+                        <h5 th:text="${news.anons}"></h5>
+                        <p th:utext="${news.fullText}"></p>
+                        <div class="container-fluid row">
+                            <div class="text-left align-text-bottom col">
+                                <span class="text-left" th:text="'Дата публикации: ' + ${#temporals.format(news.postingDate, 'dd-MM-yyyy HH:mm')}"></span>
+                            </div>
+                            <div class="text-right col">
+                                <a th:href="'/manager/news/' + ${news.id} + '/edit'" class="btn btn-primary">Редактировать</a>
+                                <a th:href="'/manager/news/' + ${news.id} + '/delete'" class="btn btn-danger">Удалить</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Третий блок -->
+                <div class="tab-pane fade" id="tab_unpublished_news">
+                    <div th:each="news : ${unpublishedNews}" class="alert alert-info mt-2">
+                        <h2 th:text="${news.title}"></h2>
+                        <h5 th:text="${news.anons}"></h5>
+                        <p th:utext="${news.fullText}"></p>
+                        <div class="container-fluid row">
+                            <div class="text-left align-text-bottom col">
+                                <span class="text-left" th:text="'Дата публикации: ' + ${#temporals.format(news.postingDate, 'dd-MM-yyyy HH:mm')}"></span>
+                            </div>
+                            <div class="text-right col">
+                                <a th:href="'/manager/news/' + ${news.id} + '/edit'" class="btn btn-primary">Редактировать</a>
+                                <a th:href="'/manager/news/' + ${news.id} + '/delete'" class="btn btn-danger">Удалить</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
