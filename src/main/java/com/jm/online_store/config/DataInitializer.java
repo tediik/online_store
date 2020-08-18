@@ -38,7 +38,6 @@ public class DataInitializer {
         User manager = new User("manager@mail.ru", "1");
         User customer = new User("customer@mail.ru", "1");
 
-
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
         Optional<Role> managRole = roleService.findByName("ROLE_MANAGER");

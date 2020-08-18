@@ -1,25 +1,29 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Manager PAge</title>
+    <title>News Management</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+<body>
+<header th:insert="/blocks/header :: header"></header>
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager">Главная</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
+            </div>
+        </div>
+        <div class="col-sm-8 text-left">
 
-<body style="background-color: whitesmoke">
-
-<h1 style="font-size: 38px; background-color: black; color: white">
-    <span sec:authentication="name"></span>
-    <span th:each="authority : ${#authentication.getAuthorities()}"
-          th:text="${authority.getAuthority()}">
-    </span>
-</h1>
-
-    <h1>Welcome to Manager's page</h1>
-
-
-<a th:href="@{/logout}">
-    <button type="button" class="btn btn-info mb-3 btn-md">Logout</button>
-</a>
-
+        </div>
+    </div>
+</div>
 </body>
 </html>

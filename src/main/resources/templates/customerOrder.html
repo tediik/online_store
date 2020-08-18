@@ -22,18 +22,58 @@
 <body>
 <div class="container-fluid">
     <div class="row min-vh-100">
-        <div class="col-md-2">
-            <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                <a class="nav-link" role="tab" aria-selected="true"
-                   href="/customer">Главная</a>
-                <a class="nav-link" role="tab" aria-selected="true"
-                   href="/customer/wishlist">Избранные товары</a>
-                <a class="nav-link active" role="tab" aria-selected="true"
-                   href="/customer/order">Заказы</a>
-                <a class="nav-link" role="tab" aria-selected="true"
-                   href="/customer/profile">Профиль</a>
-                <a class="nav-link" role="tab" aria-selected="true"
-                   href="/logout">Выйти</a>
+        <!--        <div class="col-md-2">-->
+        <!--            <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">-->
+        <!--                <a class="nav-link" role="tab" aria-selected="true"-->
+        <!--                   href="/customer">Главная</a>-->
+        <!--                <a class="nav-link" role="tab" aria-selected="true"-->
+        <!--                   href="/customer/wishlist">Избранные товары</a>-->
+        <!--                <a class="nav-link active" role="tab" aria-selected="true"-->
+        <!--                   href="/customer/order">Заказы</a>-->
+        <!--                <a class="nav-link" role="tab" aria-selected="true"-->
+        <!--                   href="/customer/profile">Профиль</a>-->
+        <!--                <a class="nav-link" role="tab" aria-selected="true"-->
+        <!--                   href="/logout">Выйти</a>-->
+        <!--            </div>-->
+        <!--        </div>-->
+
+        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <a class="btn btn-link" href="/"><---обратно</a>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/customer">Главная</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/customer/wishlist">Избранные товары</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary active" href="/customer/order">Заказы</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/customer/profile">Профиль</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
+            </div>
+        </div>
+        <div class="col-sm-8 tab-pane">
+            <ul class="nav nav-tabs">
+                <!-- Первая вкладка (активная) -->
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#tab_all_orders">Все заказы</a>
+                </li>
+                <!-- Вторая вкладка -->
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab_incarts">Открытые</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab_completed">Завершенные</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab_canceled">Отменённые</a>
+                </li>
+            </ul>
+            <!-- Блоки с контентом -->
+            <div class="tab-content">
             </div>
         </div>
     </div>
