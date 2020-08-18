@@ -1,42 +1,45 @@
 package com.jm.online_store.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.util.Date;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
+@Table(name = "orders")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
+    @NotNull
     private Long amount;
 
-    @Temporal(TemporalType.DATE)
-    private Date dateTime;
+    private LocalDateTime dateTime;
 
-    private String status;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -45,4 +48,9 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> products;
+
+    // Список статусов заказа
+    public enum Status {
+        COMPLETED, CANCELED, INCARTS;
+    }
 }

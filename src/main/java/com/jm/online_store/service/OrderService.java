@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderService {
 
-    @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    public void setOrderRepository(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 }
