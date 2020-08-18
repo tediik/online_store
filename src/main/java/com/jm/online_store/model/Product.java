@@ -1,8 +1,11 @@
 package com.jm.online_store.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +20,8 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "product")
 public class Product {
 
@@ -36,4 +41,6 @@ public class Product {
     private Double rating;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Description> descriptions;
+    @NonNull
+    private String producttype;
 }

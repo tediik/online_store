@@ -27,4 +27,8 @@ public class CategoriesService {
     public void deleteCategory(Long idCategory){
         categoriesRepository.deleteById(idCategory);
     }
+
+    public void saveAll(List<Categories> catList){
+        categoriesRepository.saveAll(catList);
+    }
 }
