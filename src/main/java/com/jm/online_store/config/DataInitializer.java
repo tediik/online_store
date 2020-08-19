@@ -4,6 +4,7 @@ import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Component
+@Slf4j
 public class DataInitializer {
 
     private final UserService userService;
@@ -58,5 +60,9 @@ public class DataInitializer {
         userService.addUser(manager);
         userService.addUser(customer);
         userService.addUser(admin);
+
+        log.info("Test data has been initialed - database updated");
+
+
     }
 }

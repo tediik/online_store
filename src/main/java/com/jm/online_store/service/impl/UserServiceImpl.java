@@ -7,6 +7,7 @@ import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -114,7 +116,9 @@ public class UserServiceImpl implements UserService {
 
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
+            log.debug("ConfirmationToken is null");
             return false;
+
         }
 
         Set<Role> userSetRoles = Collections.singleton(roleRepository.findByName("ROLE_CUSTOMER").get());
@@ -129,7 +133,7 @@ public class UserServiceImpl implements UserService {
         try {
             request.login(user.getEmail(),confirmationToken.getUserPassword());
         } catch (ServletException e) {
-            e.printStackTrace();
+            log.debug("Servlet exception from ActivateUser Method " + e);
         }
         return true;
     }
