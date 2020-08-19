@@ -1,6 +1,5 @@
 package com.jm.online_store.config.security;
 
-import com.jm.online_store.config.security.facebook.FacebookOAuth2UserService;
 import com.jm.online_store.config.handler.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyUserDetailsService myUserDetailsService;
     @Autowired
-    private FacebookOAuth2UserService facebookOAuth2UserService;
+    private OAuth2UserService OAuth2UserService;
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -33,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(facebookOAuth2UserService).and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
+        http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(OAuth2UserService).and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
 
         http.formLogin()
                 // указываем страницу с формой логина

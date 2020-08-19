@@ -1,5 +1,7 @@
-package com.jm.online_store.config.security.facebook;
+package com.jm.online_store.config.security;
 
+import com.jm.online_store.config.security.oauth2userinfo.OAuth2UserInfo;
+import com.jm.online_store.config.security.oauth2userinfo.OAuth2UserInfoFactory;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.RoleRepository;
@@ -19,9 +21,9 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
+public class OAuth2UserService extends DefaultOAuth2UserService {
 
-    private static final Log log = LogFactory.getLog(FacebookOAuth2UserService.class);
+    private static final Log log = LogFactory.getLog(OAuth2UserService.class);
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -34,7 +36,7 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     @Autowired
-    public FacebookOAuth2UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public OAuth2UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
@@ -42,18 +44,17 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oath2User = super.loadUser(userRequest);
-
-        return buildPrincipal(oath2User);
+        return buildPrincipal(oath2User, userRequest);
     }
 
     /**
      * Builds the security principal from the given userReqest.
      * Registers the user if not already reqistered
      */
-    public OAuth2User buildPrincipal(OAuth2User oath2User) {
-        FacebookUserInfo facebookUserInfo = new FacebookUserInfo(oath2User.getAttributes());
-        String email = facebookUserInfo.getEmail();
-        String fullName = facebookUserInfo.getName();
+    public OAuth2User buildPrincipal(OAuth2User oauth2User, OAuth2UserRequest oAuth2UserRequest) {
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oauth2User.getAttributes());
+        String email = oAuth2UserInfo.getEmail();
+        String fullName = oAuth2UserInfo.getName();
         String lastName = fullName.split(" ")[fullName.split(" ").length - 1];
         String firstName = fullName.substring(0, fullName.length() - lastName.length());
         Set<Role> roleSet = new HashSet<>();
@@ -65,6 +66,6 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
             userRepository.save(newUser);
             return newUser;
         });
-        return oath2User;
+        return oauth2User;
     }
 }
