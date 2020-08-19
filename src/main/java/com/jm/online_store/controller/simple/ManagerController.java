@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.News;
-import com.jm.online_store.service.NewsService;
+import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
