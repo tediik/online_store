@@ -1,12 +1,23 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>News Management</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<header th:insert="/blocks/header :: header"></header>
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+        </div>
+        <div class="navbar-text"><a th:href="@{/logout}">Выйти</a></div>
+    </nav>
+</header>
+
 <div class="container-fluid">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
@@ -17,7 +28,7 @@
                 <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
+                <a class="btn btn-outline-primary" href="/manager/stocks"> Акции</a>
             </div>
         </div>
         <div class="col-sm-8 text-left">
