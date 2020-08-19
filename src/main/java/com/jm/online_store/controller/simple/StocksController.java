@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
-@RequestMapping("/stocks")
+@RequestMapping("/manager")
 public class StocksController {
 
     private final StockService stockService;
@@ -24,22 +24,9 @@ public class StocksController {
 
 
     //Вывод всех акций на странице
-    @GetMapping("/all")
+    @GetMapping("/stocks")
     public String getStocks() {
 
         return "stocks";
     }
-
-//    //Удаляем акцию по id
-//    @GetMapping("delete")
-//    public String deleteStockById(@RequestParam(value = "id") String stockId) {
-//        Long id = Long.parseLong(stockId);
-//        stockService.deleteStockById(id);
-//
-//        return "forward:/stocks/all";
-//
-//    }
-
-
-
 }
