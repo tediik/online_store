@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -39,7 +38,6 @@ public class DataInitializer {
         User manager = new User("manager@mail.ru", "1");
         User customer = new User("customer@mail.ru", "1");
 
-
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
         Optional<Role> managRole = roleService.findByName("ROLE_MANAGER");
@@ -62,7 +60,7 @@ public class DataInitializer {
         userService.addUser(admin);
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
