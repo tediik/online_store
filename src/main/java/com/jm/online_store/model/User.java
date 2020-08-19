@@ -195,4 +195,9 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    private enum Gender {
+        MAN,
+        WOMAN
+    }
 }
