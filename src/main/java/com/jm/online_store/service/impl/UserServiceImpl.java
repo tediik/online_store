@@ -1,4 +1,4 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
@@ -6,6 +6,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private ConfirmationTokenRepository confirmTokenRepository;
 
     @Autowired
-    private MailSenderService mailSenderService;
+    private MailSenderServiceImpl mailSenderService;
 
     @Autowired
     private AuthenticationManager authenticationManager;

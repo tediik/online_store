@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.UserService;
+import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
