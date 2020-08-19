@@ -115,8 +115,8 @@ function getStockForEdit(id) {
         dataType: 'json',
         success: function (stock) { //заполнение полей данными
             $(".modal-body #Eid").val(stock.id)
-            $(".modal-body #editStockTitle").val(stock.stock_title)
-            $(".modal-body #editStockText").val(stock.stock_text)
+            $(".modal-body #editStockTitle").val(stock.stockTitle)
+            $(".modal-body #editStockText").val(stock.stockText)
             $(".modal-body #editStartDate").val(stock.startDate)
             $(".modal-body #editEndDate").val(stock.endDate)
         }
