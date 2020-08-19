@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>News Add</title>
@@ -15,7 +15,7 @@
 </head>
 <body>
 <header th:insert="/blocks/header :: header"></header>
-<div class="container-fluid">
+<div class="container-fluid mb-5">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
             <a class="btn btn-link" href="/manager/news"><---обратно</a>
@@ -50,7 +50,7 @@
         </div>
     </div>
 </div>
-<div th:insert="/blocks/footer :: footer"></div>
+
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <script src="/static/js/textRedactor.js"></script>
