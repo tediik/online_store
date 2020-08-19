@@ -24,7 +24,7 @@ public class DataInitializer {
         this.roleService = roleService;
     }
 
-    /*@PostConstruct*/
+    //@PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
