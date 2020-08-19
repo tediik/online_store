@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
 
@@ -39,8 +40,8 @@ public class Product {
     private int amount;
     @NonNull
     private Double rating;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Description> descriptions;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Description descriptions;
     @NonNull
     private String productType;
 }

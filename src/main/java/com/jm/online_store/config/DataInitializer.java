@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public class DataInitializer {
     private final RoleService roleService;
     private final CategoriesService categoriesService;
 
-//    @PostConstruct
+    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -61,7 +62,7 @@ public class DataInitializer {
         userService.addUser(admin);
     }
 
-//    @PostConstruct
+    @PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
@@ -90,15 +91,14 @@ public class DataInitializer {
         Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here",  1024, 256, "1920x960", false, "4.0");
         Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here",  2048, 128, "1024x480", true, "5.0");
 
-        product1.setDescriptions(Arrays.asList(description1));
-        product2.setDescriptions(Arrays.asList(description2));
-        product3.setDescriptions(Arrays.asList(description3));
-        product4.setDescriptions(Arrays.asList(description4));
-        product5.setDescriptions(Arrays.asList(description5));
-        product6.setDescriptions(Arrays.asList(description6));
-        product7.setDescriptions(Arrays.asList(description7));
-        product8.setDescriptions(Arrays.asList(description8));
-        product9.setDescriptions(Arrays.asList(description9));
+        product1.setDescriptions(description1);
+        product2.setDescriptions(description2);
+        product3.setDescriptions(description3);
+        product4.setDescriptions(description4);
+        product5.setDescriptions(description5);
+        product6.setDescriptions(description6);
+        product7.setDescriptions(description7);
+        product8.setDescriptions(description8);
 
         category1.setProducts(Arrays.asList(product1, product2, product3));
         category2.setProducts(Arrays.asList(product4, product5, product6));
