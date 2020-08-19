@@ -34,9 +34,11 @@ public class Stock {
     private String stockText;
 
     @Column
+    @NonNull
     private LocalDate startDate;
 
     @Column
+    @NonNull
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)

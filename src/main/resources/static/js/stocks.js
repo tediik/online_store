@@ -4,7 +4,6 @@ $(document).ready(function () {
     create();
 });
 
-
 function create() {
     $("#stocksDiv").empty();
 
@@ -47,7 +46,6 @@ function create() {
                     "</div>" +
                     "</li>"
                 );
-
                 $("#stocksDiv").append(out)
             }
         }
@@ -84,6 +82,20 @@ function addStock() {
         endDate: $('#addEndDate').val(),
         stock: $('#stockTimeZone').val(),
     };
+
+        $('.field2 input').on('keyup', function () {
+            let empty = false;
+
+            $('.field input').each(function () {
+                empty = $(this).val().length === 0;
+            });
+
+            if (empty)
+                $('#save').attr('disabled', 'disabled');
+            else
+                $('#save').attr('disabled', false);
+        });
+
     $.ajax({
         // processData: false,
         url: "/rest/addStock",
@@ -99,7 +111,7 @@ function addStock() {
             // document.body.style.background = "green"
         },
         error: function (er) {
-            // alert("error!")
+            alert("Заполните все поля!")
             // document.body.style.background = "red"
         }
     })
@@ -107,7 +119,6 @@ function addStock() {
 
 ///////////////////////////////////////////////////////////////////////////
 //////////////////////Редактировать акцию////////////////////////////////
-
 function getStockForEdit(id) {
     $.ajax({
         type: "GET",
@@ -123,8 +134,7 @@ function getStockForEdit(id) {
     });
 }
 
-////Редактирование акции///////////
-
+////Сохранение заполненных полей///////////
 function updateStock() {
 
     const stock = {
@@ -149,16 +159,13 @@ function updateStock() {
             // document.body.style.background = "green"
         },
         error: function () {
-            alert("error!")
+            alert("Заполните все поля!")
         }
     })
 }
 
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////Удалить пользователя из таблицы/////////////////////
-
 function deleteStock(id) {
     $.ajax({
             url: "/rest/" + id,

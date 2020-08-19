@@ -6,13 +6,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- ----------------------JS - jQuery ------------->
-
     <script src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
@@ -34,6 +32,7 @@
     <title>StocksPage</title>
 </head>
 <body>
+
 <header>
     <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
 
@@ -46,6 +45,7 @@
         <div class="navbar-text"><a th:href="@{/logout}">Logout</a></div>
     </nav>
 </header>
+
 <div style="background-color: #ececec">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -60,7 +60,8 @@
     <div id="cont" class="row no-gutters pb-4" style="background-color: #ececec">
         <div class="col-md-3 pr-3">
             <br>
-            <div class="container filters min-height: 100vh pb-4" style="background-color: #ffffff; border-radius: 10px;">
+            <div class="container filters min-height: 100vh pb-4"
+                 style="background-color: #ffffff; border-radius: 10px;">
                 <h4 class="text-center p-1">Фильтры</h4>
 
                 <div>
@@ -101,7 +102,6 @@
             </div>
             <!--End of Stocks-->
 
-
             <!---------------------- New Stock add Modal  ------------------->
             <div class="modal fade" id="newStockModal" data-backdrop="static" tabindex="-1"
                  role="dialog"
@@ -120,30 +120,24 @@
                         </div>
 
                         <div class="modal-body">
-
                             <div class="container-fluid col-sm-12">
-                                <form enctype="multipart/form-data" method="post">
-                                    <form id="stockAddModal">
-                                        <div class="form-group field">
-                                            <label for="addStockTitle">Заголовок акции:</label>
-                                            <input id="addStockTitle" type="text" name="title" placeholder="title"
-                                                   required="required">
-
-                                            <label for="addStockText">Описание акции:</label>
-                                            <textarea name="comment" id="addStockText" cols="45" rows="5"
-                                                      required="required"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="addStartDate">Дата начала</label>
-                                            <input type="date" id="addStartDate" name="date"/>
-                                            <br>
-                                            <label for="addEndDate">Дата окончания</label>
-                                            <input type="date" id="addEndDate" name="date"/>
-
-                                            <label for="addStockImg">Изображение</label>
-                                            <input id="addStockImg" type="file" name="f" accept="image/jpeg">
-                                        </div>
-                                    </form>
+                                <form id="stockAddModal" enctype="multipart/form-data" method="post">
+                                    <div class="form-group">
+                                        <label for="addStockTitle">Заголовок акции:</label>
+                                        <input id="addStockTitle" type="text" name="title" placeholder="title">
+                                        <br>
+                                        <label for="addStockText">Описание акции:</label>
+                                        <textarea name="comment" id="addStockText" cols="45" rows="5"></textarea>
+                                        <br>
+                                        <label for="addStartDate">Дата начала</label>
+                                        <input type="date" id="addStartDate" name="start"/>
+                                        <br>
+                                        <label for="addEndDate">Дата окончания</label>
+                                        <input type="date" id="addEndDate" name="end"/>
+                                        <br>
+                                        <label for="addStockImg">Изображение</label>
+                                        <input id="addStockImg" type="file" name="f" accept="image/jpeg">
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -238,7 +232,6 @@
                 </div>
             </div>
             <!---------------------- End of Edit Stock Modal ------------------->
-
 
         </div>
     </div>

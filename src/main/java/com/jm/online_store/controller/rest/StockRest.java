@@ -2,7 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.StockEnum;
-import com.jm.online_store.service.StockService;
+import com.jm.online_store.service.interf.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

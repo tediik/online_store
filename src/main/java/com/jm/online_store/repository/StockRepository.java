@@ -10,7 +10,4 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     Optional<Stock> findById(Long id);
 
     void deleteStockById(Long id);
-
-
-
 }

@@ -1,7 +1,8 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.repository.StockRepository;
+import com.jm.online_store.service.interf.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StockServiceImpl implements StockService{
+public class StockServiceImpl implements StockService {
 
     private final StockRepository stockRepository;
 
