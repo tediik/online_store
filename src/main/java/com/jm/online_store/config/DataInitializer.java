@@ -3,9 +3,10 @@ package com.jm.online_store.config;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.ProductService;
-import com.jm.online_store.service.RoleService;
-import com.jm.online_store.service.UserService;
+
+import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
