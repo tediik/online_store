@@ -27,7 +27,6 @@ public class MailSenderServiceImpl implements MailSenderService {
         mailMessage.setText(message);
         log.info("Confirmation email was sent from" + username + "to " + emailTo + "with subject " + subject + "and message" + message);
 
-
         mailSender.send(mailMessage);
     }
 
