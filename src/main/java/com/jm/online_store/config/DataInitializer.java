@@ -8,16 +8,15 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.CategoriesService;
 import com.jm.online_store.service.RoleService;
 import com.jm.online_store.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import lombok.Data;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Data
 @Component
 public class DataInitializer {
 
@@ -25,14 +24,7 @@ public class DataInitializer {
     private final RoleService roleService;
     private final CategoriesService categoriesService;
 
-    @Autowired
-    public DataInitializer(UserService userService, RoleService roleService, CategoriesService categoriesService) {
-        this.userService = userService;
-        this.roleService = roleService;
-        this.categoriesService = categoriesService;
-    }
-
-    @PostConstruct
+//    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -69,7 +61,7 @@ public class DataInitializer {
         userService.addUser(admin);
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");

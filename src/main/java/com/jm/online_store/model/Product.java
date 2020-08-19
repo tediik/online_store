@@ -42,5 +42,5 @@ public class Product {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Description> descriptions;
     @NonNull
-    private String producttype;
+    private String productType;
 }
