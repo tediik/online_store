@@ -60,7 +60,7 @@ public class DataInitializer {
         userService.addUser(admin);
     }
 
-//    @PostConstruct
+    @PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");

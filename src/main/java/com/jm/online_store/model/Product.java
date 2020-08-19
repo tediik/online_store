@@ -37,7 +37,7 @@ public class Product {
     private int amount;
     @NonNull
     private Double rating;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private Description descriptions;
     @NonNull
     private String productType;
