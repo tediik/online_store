@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,25 +21,10 @@
     <title>Заказы</title>
 </head>
 <body>
+<header th:insert="/blocks/header :: header"></header>
 <div class="container-fluid">
     <div class="row min-vh-100">
-        <!--        <div class="col-md-2">-->
-        <!--            <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">-->
-        <!--                <a class="nav-link" role="tab" aria-selected="true"-->
-        <!--                   href="/customer">Главная</a>-->
-        <!--                <a class="nav-link" role="tab" aria-selected="true"-->
-        <!--                   href="/customer/wishlist">Избранные товары</a>-->
-        <!--                <a class="nav-link active" role="tab" aria-selected="true"-->
-        <!--                   href="/customer/order">Заказы</a>-->
-        <!--                <a class="nav-link" role="tab" aria-selected="true"-->
-        <!--                   href="/customer/profile">Профиль</a>-->
-        <!--                <a class="nav-link" role="tab" aria-selected="true"-->
-        <!--                   href="/logout">Выйти</a>-->
-        <!--            </div>-->
-        <!--        </div>-->
-
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <a class="btn btn-link" href="/"><---обратно</a>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/customer">Главная</a>
             </div>
@@ -51,29 +37,96 @@
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/customer/profile">Профиль</a>
             </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
-            </div>
         </div>
-        <div class="col-sm-8 tab-pane">
-            <ul class="nav nav-tabs">
-                <!-- Первая вкладка (активная) -->
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#tab_all_orders">Все заказы</a>
-                </li>
-                <!-- Вторая вкладка -->
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab_incarts">Открытые</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab_completed">Завершенные</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab_canceled">Отменённые</a>
-                </li>
-            </ul>
-            <!-- Блоки с контентом -->
-            <div class="tab-content">
+        <div class="col-md-10" style="background: #edeef0">
+            <br>
+            <div class="container-fluid bg-light">
+                <div class="tab-pane">
+                    <ul class="nav nav-tabs">
+                        <!-- Первая вкладка (активная) -->
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tab_all_orders">Все заказы</a>
+                        </li>
+                        <!-- Вторая вкладка -->
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_incarts">Открытые</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_completed">Завершенные</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_canceled">Отменённые</a>
+                        </li>
+                    </ul>
+                    <!-- Блоки с контентом -->
+                    <div class="tab-content">
+                        <!--                        Все заказы-->
+                        <div class="tab-pane fade show active" id="tab_all_orders">
+                            <div th:each="order : ${orders}" class="alert alert-info mt-2">
+                                <h2 th:text="'Номер заказа: ' + ${order.id}"></h2>
+                                <p th:utext="'Статус: ' + ${order.status}"></p>
+                                <div class="container-fluid row">
+                                    <div class="text-left align-text-bottom col">
+                                        <span class="text-left"
+                                              th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </div>
+                                    <div class="text-right col">
+                                        <a th:href="'/customer/order/' + ${order.id} + '/edit'" class="btn btn-primary">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        Открытые-->
+                        <div class="tab-pane fade show active" id="tab_incarts">
+                            <div th:each="order : ${incartsOrders}" class="alert alert-info mt-2">
+                                <h2 th:text="'Номер заказа: ' + ${order.id}"></h2>
+                                <p th:utext="'Статус: ' + ${order.status}"></p>
+                                <div class="container-fluid row">
+                                    <div class="text-left align-text-bottom col">
+                                        <span class="text-left"
+                                              th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </div>
+                                    <div class="text-right col">
+                                        <a th:href="'/customer/order/' + ${order.id} + '/edit'" class="btn btn-primary">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        Завершенные-->
+                        <div class="tab-pane fade show active" id="tab_completed">
+                            <div th:each="order : ${completedOrders}" class="alert alert-info mt-2">
+                                <h2 th:text="'Номер заказа: ' + ${order.id}"></h2>
+                                <p th:utext="'Статус: ' + ${order.status}"></p>
+                                <div class="container-fluid row">
+                                    <div class="text-left align-text-bottom col">
+                                        <span class="text-left"
+                                              th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </div>
+                                    <div class="text-right col">
+                                        <a th:href="'/customer/order/' + ${order.id} + '/edit'" class="btn btn-primary">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        Отменённые-->
+                        <div class="tab-pane fade show active" id="tab_canceled">
+                            <div th:each="order : ${canceledOrders}" class="alert alert-info mt-2">
+                                <h2 th:text="'Номер заказа: ' + ${order.id}"></h2>
+                                <p th:utext="'Статус: ' + ${order.status}"></p>
+                                <div class="container-fluid row">
+                                    <div class="text-left align-text-bottom col">
+                                        <span class="text-left"
+                                              th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </div>
+                                    <div class="text-right col">
+                                        <a th:href="'/customer/order/' + ${order.id} + '/edit'" class="btn btn-primary">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

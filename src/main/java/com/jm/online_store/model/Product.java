@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -17,6 +18,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "product")
 public class Product {
 
@@ -36,4 +38,11 @@ public class Product {
     private Double rating;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Description> descriptions;
+
+    public Product(String product, Double price, int amount, Double rating) {
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+        this.rating = rating;
+    }
 }

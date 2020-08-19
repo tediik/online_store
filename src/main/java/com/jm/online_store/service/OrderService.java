@@ -1,16 +1,19 @@
 package com.jm.online_store.service;
 
-import com.jm.online_store.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.jm.online_store.model.Order;
 
-@Service
-public class OrderService {
+import java.util.List;
+import java.util.Optional;
 
-    OrderRepository orderRepository;
+public interface OrderService {
 
-    @Autowired
-    public void setOrderRepository(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
+    List<Order> findAll();
+
+    List<Order> findByUserId(Long id);
+
+    Optional<Order> findById(Long id);
+
+    List<Order> findAllByStatusEquals(String status);
+
+    void addOrder(Order order);
 }

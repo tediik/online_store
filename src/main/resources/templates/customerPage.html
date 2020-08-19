@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,16 +20,16 @@
     <title>Кабинет покупателя</title>
 </head>
 <body>
-<div class="profile-container">
-    <header class="header">
-        <div class="logo-container"></div>
-    </header>
-    <div class="body"></div>
-</div>
+<header th:insert="/blocks/header :: header"></header>
+<!--<div class="profile-container">-->
+<!--    <header class="header">-->
+<!--        <div class="logo-container"></div>-->
+<!--    </header>-->
+<!--    <div class="body"></div>-->
+<!--</div>-->
 <div class="container-fluid">
     <div class="row min-vh-100">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <a class="btn btn-link" href="/"><---обратно</a>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary active" href="/customer">Главная</a>
             </div>
@@ -41,9 +41,6 @@
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/customer/profile">Профиль</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
             </div>
         </div>
         <div class="col-md-10" style="background: #edeef0">
