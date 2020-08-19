@@ -14,25 +14,15 @@ import java.util.Set;
 
 /**
  * Рест контроллер для избранных товаров.
- *
  */
 @RestController
 public class FavouritesGoodsRestController {
-    /**
-     * объект сервиса для работы рест контроллера.
-     * внедрение зависимости через конструктор.
-     */
     private final UserService userService;
 
-    /**
-     * конструктор для внерения зависимости.
-     * @param userService бин userService
-     */
     @Autowired
     public FavouritesGoodsRestController(UserService userService) {
         this.userService = userService;
     }
-
     /**
      * контроллер для получения товаров избранное для авторизованного пользователяю
      * используется поиск по идентификатору пользователя, т.к. используется ленивая под

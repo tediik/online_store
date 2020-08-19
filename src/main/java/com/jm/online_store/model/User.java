@@ -35,58 +35,37 @@ import java.util.Set;
 @Getter
 @Setter
 public class User implements UserDetails {
-    /**
-     * уникальный идентификатор пользователя.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    /**
-     * адрес электронной почты пользователя.
-     */
+
     @Column(name = "email")
     @Email
     @NotBlank
     private String email;
-    /**
-     * пароль пользователя.
-     */
+
     @Column(name = "password")
     @NotBlank
     private String password;
-    /**
-     * ?????
-     */
+
     @Transient
     @NotBlank
     private String passwordConfirm;
-    /**
-     * имя пользователя.
-     */
+
     private String firstName;
-    /**
-     * фамилия ползователя.
-     */
+
     private String lastName;
-    /**
-     * пол пользователя(мужской, женский).
-     */
+
     @Enumerated(EnumType.STRING)
     private Gender userGender;
-    /**
-     * дата дня рождения пользователя.
-     */
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date birthdayDate;
-    /**
-     * дата регистрации пользователя.
-     */
+
     @Temporal(TemporalType.DATE)
     private Date registerDate;
-    /**
-     * роли пользователя - основа для разделения полномочий.
-     */
+
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
     @JoinTable(
@@ -94,43 +73,24 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
-    /**
-     * список избранных товаров пользователя.
-     * подгружается "ленивым" способом.
-     */
-    @ManyToMany(fetch = FetchType.LAZY)
+
+    @ManyToMany
     @JoinTable(
             name = "user_product",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favouritesGoods;
 
-    /**
-     * конструктор по умолчанию.
-     */
     public User() {
         registerDate = new Date();
     }
 
-    /**
-     * конструктор с основными полями пользвателя.
-     * @param email адрес электронной почты.
-     * @param password пароль
-     */
     public User(String email, String password) {
         this.email = email;
         this.password = password;
         registerDate = new Date();
     }
 
-    /**
-     * конструктор.
-     * @param email адрес электронной почты.
-     * @param password пароль
-     * @param firstName имя
-     * @param lastName фамилия
-     * @param roleSet список ролей
-     */
     public User(String email, String password, String firstName, String lastName, Set<Role> roleSet) {
         this.email = email;
         this.password = password;
@@ -169,9 +129,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    /**
-     * ????
-     */
     private enum Gender {
         MAN,
         WOMAN
