@@ -36,15 +36,15 @@ public class StockRest {
 
         for (Stock stock : stocks) {
             if (presentDate.isAfter(stock.getEndDate()) || (presentDate.equals(stock.getEndDate()))) {
-                stock.stockEnum = StockEnum.valueOf("PAST");
+                stock.setStockEnum(StockEnum.PAST);
 
             } else if (presentDate.isBefore(stock.getStartDate()) ) {
-                    stock.stockEnum = StockEnum.valueOf("FUTURE");
+                    stock.setStockEnum(StockEnum.FUTURE);
 
             } else if ((presentDate.isAfter(stock.getStartDate())
                     || (presentDate.equals(stock.getStartDate()))
                     && (presentDate.isBefore(stock.getEndDate())))){
-                stock.stockEnum = StockEnum.valueOf("CURRENT");
+                stock.setStockEnum(StockEnum.CURRENT);
 
             }
         }

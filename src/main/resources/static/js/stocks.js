@@ -27,8 +27,8 @@ function create() {
 
                     "<div class=\"col-md-6\">" +
                     "<div class=\"card-body\">" +
-                    "<h3 class='card-title'>" + stocks[i].stock_title + "</h3>" +
-                    "<p class=\"card-text\">" + stocks[i].stock_text + "</p>" +
+                    "<h3 class='card-title'>" + stocks[i].stockTitle + "</h3>" +
+                    "<p class=\"card-text\">" + stocks[i].stockText + "</p>" +
                     "<p>" + "Срок проведения акции: " + "</p>" +
                     "<div class=\"card-date\">" + "с " + moment(stocks[i].startDate).format("DD MMM") +
                     " по " + moment(stocks[i].endDate).format("DD MMM YYYY") +
@@ -73,24 +73,6 @@ function create() {
 
 ///////////////////////////////////////////////////////////////
 //////////////////////Добавить акцию/////////////////////////
-
-////////запрещаем сохранение если не заполнены поля/////////////
-$(document).ready(function () {
-    $('.field input').on('keyup', function () {
-        let empty = false;
-
-        $('.field input').each(function () {
-            empty = $(this).val().length == 0;
-        });
-
-        if (empty)
-            $('.actions #save').attr('disabled', 'disabled');
-        else
-            $('.actions #save').attr('disabled', false);
-    });
-});
-
-
 function addStock() {
 
     const stockAdd = {
@@ -109,9 +91,9 @@ function addStock() {
         dataType: 'json',
         type: 'POST',
         contentType: 'application/JSON; charset=utf-8',
-        success: function (data) {
+        success: function () {
             create();
-            $('.modal-body').find('lable,input,textarea').val('');
+            $('.modal-body').find('input,textarea').val('');
             toastr.success('Акция успешно добавлена!', {timeOut: 5000})
             // alert("yes!!!")
             // document.body.style.background = "green"
@@ -155,40 +137,23 @@ function updateStock() {
     };
 
     $.ajax({
-        // processData: false,
         url: "/rest/editStock",
         data: JSON.stringify(stock),
         dataType: 'json',
         type: 'PUT',
         contentType: 'application/JSON; charset=utf-8',
-        success: function (data) {
+        success: function () {
             create();
             toastr.info('Акция успешно отредактирована!', {timeOut: 5000})
             // alert("yes!!!")
             // document.body.style.background = "green"
         },
-        error: function (er) {
+        error: function () {
             alert("error!")
-            document.body.style.background = "red"
         }
     })
 }
 
-////////запрещаем сохранение если не заполнены поля/////////////
-$(document).ready(function () {
-    $('.field2 input').on('keyup', function () {
-        let empty = false;
-
-        $('.field2 input').each(function () {
-            empty = $(this).val().length == 0;
-        });
-
-        if (empty)
-            $('.actions2 #editSave').attr('disabled', 'disabled');
-        else
-            $('.actions2 #editSave').attr('disabled', false);
-    });
-});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
