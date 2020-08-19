@@ -1,8 +1,8 @@
 package com.jm.online_store.config.security.facebook;
 
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 public class LoginListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
     private final UserService userService;
