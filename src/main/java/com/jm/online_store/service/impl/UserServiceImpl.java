@@ -118,7 +118,6 @@ public class UserServiceImpl implements UserService {
         if (confirmationToken == null) {
             log.debug("ConfirmationToken is null");
             return false;
-
         }
 
         Set<Role> userSetRoles = Collections.singleton(roleRepository.findByName("ROLE_CUSTOMER").get());
