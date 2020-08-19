@@ -62,7 +62,5 @@ public class DataInitializer {
         userService.addUser(admin);
 
         log.info("Test data has been initialed - database updated");
-
-
     }
 }
