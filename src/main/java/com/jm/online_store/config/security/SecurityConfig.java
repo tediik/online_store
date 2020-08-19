@@ -36,7 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(facebookOAuth2UserService).and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
 
         http.formLogin()
-
                 // указываем страницу с формой логина
                 .loginPage("/login")
                 //указываем логику обработки при логине
@@ -58,26 +57,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .and()
                 .csrf().disable();
-        //выклчаем кроссдоменную секьюрность (на этапе обучения неважна)
-
         http
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
-
-                .antMatchers("/", "/main", "/registration", "/static/**","/activate/*").permitAll()
-                //страницы аутентификаци доступна всем
-                .antMatchers("/login").permitAll()
-
-                .antMatchers("/css/**", "/js/**", "/images/**", "/static/**").permitAll()
-
-                .antMatchers("/customer").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN' )")
-
-                .antMatchers("/api/users").access("hasAnyRole('ROLE_ADMIN')")
-
-                .antMatchers("/manager").access("hasAnyRole('ROLE_MANAGER')")
-
+                .antMatchers("/", "/login", "/news/**", "/registration", "/css/**").permitAll()
+                .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**").permitAll()
+                .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
+                .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
+                .antMatchers("/manager/**").access("hasAnyRole('ROLE_MANAGER')")
                 .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated()
-
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied");
     }
