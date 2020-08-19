@@ -9,7 +9,8 @@ body {
 #cont {
     width: 100%;
     padding-left: 10%;
-    text-align: center
+    text-align: center;
+    background-color: #ececec;
 }
 
 a {
@@ -23,3 +24,24 @@ ul {
     margin-left: 0; /* Отступ слева в браузере IE и Opera */
     padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
 }
+
+header {
+    background-color: #7373ee;
+}
+
+.navbar-brand {
+    color: coral;
+}
+
+.main-wrapper {
+    background-color: #ececec;
+}
+
+.filters {
+    background-color: #ffffff; border-radius: 10px;
+}
+
+.stocksWrapper {
+    background-color: #ffffff; border-radius: 10px;
+}
+

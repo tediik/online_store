@@ -27,16 +27,16 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/stocksStyle.css">
 
     <title>StocksPage</title>
 </head>
 <body>
 
 <header>
-    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
+    <nav class="navbar navbar-expand-md navbar-dark">
 
-        <div class="navbar-brand">Перейти на <b><a href="/" style="color: coral">главную</a></b></div>
+        <div class="navbar-brand">Перейти на <b><a href="/">главную</a></b></div>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
@@ -46,7 +46,7 @@
     </nav>
 </header>
 
-<div style="background-color: #ececec">
+<div class="main-wrapper">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/manager">Кабинет менеджера</a></li>
@@ -56,11 +56,10 @@
 
     <h2 class="text-center "><span class="underline">Акции</span></h2>
 
-    <div id="cont" class="row no-gutters pb-4" style="background-color: #ececec">
+    <div id="cont" class="row no-gutters pb-4">
         <div class="col-md-3 pr-3">
             <br>
-            <div class="container filters min-height: 100vh pb-4"
-                 style="background-color: #ffffff; border-radius: 10px;">
+            <div class="container filters min-height: 100vh pb-4">
                 <h4 class="text-center p-1">Фильтры</h4>
 
                 <div>
@@ -94,7 +93,7 @@
         <div class="col-md-7">
             <!--START of Stocks-->
             <br>
-            <div class="container-fluid p-3" style="background-color: #ffffff; border-radius: 10px;">
+            <div class="stocksWrapper container-fluid p-3">
                 <ul class="allStocks" id="stocksDiv">
                     <!-- Здесь загрузка акций в JS... Совсем пусто :(  -->
                 </ul>
@@ -162,10 +161,8 @@
                  role="dialog"
                  aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
-
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-
                         <div class="modal-header">
                             <h5 class="modal-title">Редактировать акцию</h5>
                             <button type="button" class="close" data-dismiss="modal"
@@ -178,7 +175,6 @@
                             <div class="modal-body">
                                 <div class="container-fluid col-sm-12">
                                     <form enctype="multipart/form-data" method="post">
-
                                         <div class="form-group">
                                             <label for="Eid"
                                                    class="col-form-label col-sm-12 text-center">Id</label>
@@ -210,7 +206,6 @@
                                             <input id="editStockImg" type="file" name="g" accept="image/jpeg"
                                                    class="form-control">
                                         </div>
-
                                     </form>
                                 </div>
                             </div>
@@ -231,15 +226,13 @@
                 </div>
             </div>
             <!---------------------- End of Edit Stock Modal ------------------->
-
         </div>
     </div>
 </div>
 
 <script type="text/javascript" src="/static/js/stocks.js" async></script>
-
 <!--MomentJs (work with dates)-->
-<script type="text/JavaScript" src="../static/js/moment.js"></script>
+<script type="text/JavaScript" src="../static/js/moment.js" async></script>
 
 </body>
 </html>

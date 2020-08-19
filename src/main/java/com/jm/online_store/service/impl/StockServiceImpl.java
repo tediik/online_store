@@ -3,7 +3,7 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.service.interf.StockService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,14 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class StockServiceImpl implements StockService {
 
     private final StockRepository stockRepository;
-
-    @Autowired
-    public StockServiceImpl(StockRepository stockRepository) {
-        this.stockRepository = stockRepository;
-    }
 
     @Override
     public List<Stock> findAll() {
@@ -45,5 +41,4 @@ public class StockServiceImpl implements StockService {
     public void deleteStockById(Long id) {
         stockRepository.deleteStockById(id);
     }
-
 }

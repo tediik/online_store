@@ -1,5 +1,4 @@
-///////////////////////////////////////////////////////////////
-/////////////////////Вывод акций///////////////////////////
+/*Вывод акций*/
 $(document).ready(function () {
     create();
 });
@@ -50,29 +49,26 @@ function create() {
             }
         }
     })
-
-/////////////////////////////////////
-///////фильтр акций///////////////
-
-    $('.filters button').on('click', function() {
-        $('.filters button').removeClass('active');
-        $(this).parent('button').addClass('active'); // выделяем выбранную категорию
-
-        const cat = $(this).attr('data-filter'); // определяем категорию
-
-        if (cat === 'ALL') {
-            $('.allStocks li').show();
-        } else {
-            $('.allStocks li').hide();
-            $('.allStocks li[data-filter="' + cat + '"]').show();
-        }
-    });
 }
 
-///////////////////////////////////////////////////////////////
-//////////////////////Добавить акцию/////////////////////////
-function addStock() {
 
+/*Фильтр акций*/
+$('.filters button').on('click', function () {
+    $('.filters button').removeClass('active');
+    $(this).parent('button').addClass('active'); // выделяем выбранную категорию
+
+    const cat = $(this).attr('data-filter'); // определяем категорию
+
+    if (cat === 'ALL') {
+        $('.allStocks li').show();
+    } else {
+        $('.allStocks li').hide();
+        $('.allStocks li[data-filter="' + cat + '"]').show();
+    }
+});
+
+/*Добавить акцию*/
+function addStock() {
     const stockAdd = {
         id: $('#id').val(),
         stockImg: $('#addStockImg').val(),
@@ -83,21 +79,7 @@ function addStock() {
         stock: $('#stockTimeZone').val(),
     };
 
-        $('.field2 input').on('keyup', function () {
-            let empty = false;
-
-            $('.field input').each(function () {
-                empty = $(this).val().length === 0;
-            });
-
-            if (empty)
-                $('#save').attr('disabled', 'disabled');
-            else
-                $('#save').attr('disabled', false);
-        });
-
     $.ajax({
-        // processData: false,
         url: "/rest/addStock",
         data: JSON.stringify(stockAdd),
         dataType: 'json',
@@ -107,18 +89,14 @@ function addStock() {
             create();
             $('.modal-body').find('input,textarea').val('');
             toastr.success('Акция успешно добавлена!', {timeOut: 5000})
-            // alert("yes!!!")
-            // document.body.style.background = "green"
         },
-        error: function (er) {
+        error: function () {
             alert("Заполните все поля!")
-            // document.body.style.background = "red"
         }
     })
 }
 
-///////////////////////////////////////////////////////////////////////////
-//////////////////////Редактировать акцию////////////////////////////////
+/*Редактировать акцию*/
 function getStockForEdit(id) {
     $.ajax({
         type: "GET",
@@ -134,9 +112,8 @@ function getStockForEdit(id) {
     });
 }
 
-////Сохранение заполненных полей///////////
+/*Сохранение заполненных полей*/
 function updateStock() {
-
     const stock = {
         id: $('#Eid').val(),
         stockImg: $('#editStockImg').val(),
@@ -155,8 +132,6 @@ function updateStock() {
         success: function () {
             create();
             toastr.info('Акция успешно отредактирована!', {timeOut: 5000})
-            // alert("yes!!!")
-            // document.body.style.background = "green"
         },
         error: function () {
             alert("Заполните все поля!")
@@ -164,8 +139,7 @@ function updateStock() {
     })
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////Удалить пользователя из таблицы/////////////////////
+/*Удалить пользователя из таблицы*/
 function deleteStock(id) {
     $.ajax({
             url: "/rest/" + id,
@@ -182,5 +156,3 @@ function deleteStock(id) {
         }
     );
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////

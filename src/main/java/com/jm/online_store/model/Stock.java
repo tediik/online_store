@@ -1,9 +1,9 @@
 package com.jm.online_store.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "stocks")
 public class Stock {
 
@@ -42,5 +43,13 @@ public class Stock {
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
-    private StockEnum stockEnum;
+    private StockType stockType;
+
+    public enum StockType {
+        CURRENT ("CURRENT"),
+        PAST ("PAST"),
+        FUTURE ("FUTURE");
+
+        StockType(String title) { }
+    }
 }
