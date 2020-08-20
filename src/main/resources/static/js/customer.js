@@ -4,7 +4,7 @@ async function fillFavouritesGoods() {
     let content = await response.json();
     let favoriteGoodsJson = document.getElementById('favouritesGoodsList');
     let key
-
+    $(favoriteGoodsJson).empty();
     for (key in content) {
         let product = `
         <tr class=${content[key].id} id=${content[key].id}>

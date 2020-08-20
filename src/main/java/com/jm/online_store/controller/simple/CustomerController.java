@@ -27,18 +27,18 @@ public class CustomerController {
 
     private final RoleService roleService;
 
-    @GetMapping
-    public String getCustomerPage() {
-        return "customerPage";
-    }
+//    @GetMapping
+//    public String getCustomerPage() {
+//        return "customerPage";
+//    }
 
-    @GetMapping("/profile")
+    @GetMapping
     public String getPersonalInfo(Model model, Authentication auth) {
         User principal = (User) auth.getPrincipal();
         User user = userService.findById(principal.getId()).get();
         model.addAttribute("user", user);
 
-        return "profile";
+        return "customerPage";
     }
 
     @PostMapping("/profile")
@@ -47,7 +47,7 @@ public class CustomerController {
         userService.updateUser(user);
         model.addAttribute("user", user);
 
-        return "/profile";
+        return "customerPage";
     }
 
     @GetMapping("/change-password")
