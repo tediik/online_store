@@ -51,11 +51,9 @@ public class User implements UserDetails {
     private Gender userGender;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    private Date birthdayDate;
+    private LocalDate birthdayDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date registerDate;
+    private LocalDate registerDate;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
