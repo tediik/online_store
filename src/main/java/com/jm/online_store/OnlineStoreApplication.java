@@ -1,7 +1,7 @@
 package com.jm.online_store;
 
-import com.jm.online_store.service.CategoriesService;
-import com.jm.online_store.service.ProductService;
+
+import com.jm.online_store.service.interf.ProductService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

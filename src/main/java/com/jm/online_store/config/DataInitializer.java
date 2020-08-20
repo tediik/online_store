@@ -5,10 +5,10 @@ import com.jm.online_store.model.Description;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.CategoriesService;
-import com.jm.online_store.service.RoleService;
-import com.jm.online_store.service.UserService;
+import com.jm.online_store.service.interf.CategoriesService;
 import lombok.Data;
+import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.UserService;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class DataInitializer {
     private final RoleService roleService;
     private final CategoriesService categoriesService;
 
-    @PostConstruct
+//    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -37,6 +37,7 @@ public class DataInitializer {
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
         User customer = new User("customer@mail.ru", "1");
+
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
@@ -60,7 +61,7 @@ public class DataInitializer {
         userService.addUser(admin);
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
@@ -97,6 +98,7 @@ public class DataInitializer {
         product6.setDescriptions(description6);
         product7.setDescriptions(description7);
         product8.setDescriptions(description8);
+        product9.setDescriptions(description9);
 
         category1.setProducts(Arrays.asList(product1, product2, product3));
         category2.setProducts(Arrays.asList(product4, product5, product6));
