@@ -4,18 +4,17 @@ import com.github.scribejava.apis.OdnoklassnikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import com.jm.online_store.model.User;
 import com.jm.online_store.service.RoleService;
 import com.jm.online_store.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 @AllArgsConstructor
@@ -38,6 +37,7 @@ public class OAuth2Service {
     private final OAuth20Service service = new ServiceBuilder(clientId)
             .apiSecret(secretKey)
             .callback("http://localhost:9999/oauth")
+            .defaultScope("GET_EMAIL")
             .build(OdnoklassnikiApi.instance());
 
     public String getAuthorizationUrl() {
@@ -52,7 +52,13 @@ public class OAuth2Service {
             service.signRequest(accessToken, request);
             String userFromOK = service.execute(request).getBody();
             System.out.println(userFromOK);
-            System.out.println();
+            String string = userFromOK.substring(userFromOK.lastIndexOf(":") + 2);
+            String email = string.substring(0, string.length() - 2);
+            System.out.println(email);
+            User user = new User();
+            user.setEmail(email);
+            user.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
+
         } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
