@@ -29,7 +29,7 @@ header {
     background-color: #7373ee;
 }
 
-.navbar-brand {
+.headTitle {
     color: coral;
 }
 
@@ -44,4 +44,3 @@ header {
 .stocksWrapper {
     background-color: #ffffff; border-radius: 10px;
 }
-

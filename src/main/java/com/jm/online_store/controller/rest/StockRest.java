@@ -26,14 +26,17 @@ public class StockRest {
         LocalDate presentDate = LocalDate.now();
         List<Stock> stocks = stockService.findAll();
 
+        //Проверка дат акций на соответствие фильтру
         for (Stock stock : stocks) {
-            if (presentDate.isAfter(stock.getEndDate()) || (presentDate.equals(stock.getEndDate()))) {
-                stock.setStockType(Stock.StockType.PAST);
-            } else if (presentDate.isBefore(stock.getStartDate())) {
-                stock.setStockType(Stock.StockType.FUTURE);
-            } else if ((presentDate.isAfter(stock.getStartDate()) || (presentDate.equals(stock.getStartDate()))
-                    && (presentDate.isBefore(stock.getEndDate())))) {
-                stock.setStockType(Stock.StockType.CURRENT);
+            if (((stock.getStartDate()) != (null)) && ((stock.getEndDate()) != (null))) {
+                if (presentDate.isAfter(stock.getEndDate()) || (presentDate.equals(stock.getEndDate()))) {
+                    stock.setStockType(Stock.StockType.PAST);
+                } else if (presentDate.isBefore(stock.getStartDate())) {
+                    stock.setStockType(Stock.StockType.FUTURE);
+                } else if ((presentDate.isAfter(stock.getStartDate()) || (presentDate.equals(stock.getStartDate()))
+                        && (presentDate.isBefore(stock.getEndDate())))) {
+                    stock.setStockType(Stock.StockType.CURRENT);
+                }
             }
         }
         return stockService.findAll();

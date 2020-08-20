@@ -3,7 +3,6 @@ package com.jm.online_store.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -35,11 +34,9 @@ public class Stock {
     private String stockText;
 
     @Column
-    @NonNull
     private LocalDate startDate;
 
     @Column
-    @NonNull
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
