@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,21 +79,21 @@ public class CustomerController {
 
     @GetMapping("/order")
     public String getOrderPage(Authentication auth, Model model) {
-        User principal = (User) auth.getPrincipal();
+        Long userId = ((User) auth.getPrincipal()).getId();
 
-//        List<Order> orders = orderService.findByUserId(principal.getId());
-        List<Order> orders = orderService.findAll();
-
-//        List<Order> incartsOrders = orderService.findAllByStatusEquals("INCARTS");
-//        List<Order> completedOrders = orderService.findAllByStatusEquals("COMPLETED");
-//        List<Order> canceledOrders = orderService.findAllByStatusEquals("CANCELED");
-
-        model.addAttribute("orders", orders);
-//        model.addAttribute("incartsOrders", incartsOrders);
-//        model.addAttribute("completedOrders", completedOrders);
-//        model.addAttribute("canceledOrders", canceledOrders);
+        model.addAttribute("orders", List.copyOf(orderService.findAllByUserId(userId)));
+        model.addAttribute("incartsOrders", List.copyOf(orderService.findAllByUserIdAndStatus(userId, Order.Status.INCARTS)));
+        model.addAttribute("completedOrders", List.copyOf(orderService.findAllByUserIdAndStatus(userId, Order.Status.COMPLETED)));
+        model.addAttribute("canceledOrders", List.copyOf(orderService.findAllByUserIdAndStatus(userId, Order.Status.CANCELED)));
 
         return "customerOrder";
+    }
+
+    @GetMapping("/order/{id}")
+    public String orderDetails(@PathVariable(value = "id") Long id, Model model) {
+        Order order = orderService.findById(id).orElseGet(Order::new);
+        model.addAttribute("order", order);
+        return "customerOrderDetails";
     }
 
     @GetMapping("/wishlist")

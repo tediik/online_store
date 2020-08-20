@@ -6,6 +6,7 @@ import com.jm.online_store.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,18 +27,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findByUserId(Long id) {
-        return orderRepository.findByUserId(id);
+    public List<Order> findAllByUserId(Long userId) {
+        return orderRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public List<Order> findAllByUserIdAndStatus(Long userId, Order.Status status) {
+        return orderRepository.findAllByUserIdAndStatus(userId, status);
     }
 
     @Override
     public Optional<Order> findById(Long id) {
         return orderRepository.findById(id);
-    }
-
-    @Override
-    public List<Order> findAllByStatusEquals(String status) {
-        return orderRepository.findAllByStatusEquals(status);
     }
 
     /**

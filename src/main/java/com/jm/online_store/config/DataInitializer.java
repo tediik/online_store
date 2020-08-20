@@ -88,20 +88,23 @@ public class DataInitializer {
         Order completedOrder2 = new Order(LocalDateTime.of(2020, 1, 23, 13, 37), Order.Status.COMPLETED);
         completedOrder2.setProducts(Set.of(productService.findProductById(3L).get()));
 
-        Order canceledOrder = new Order(LocalDateTime.of(2020, 3, 10, 16, 51), Order.Status.CANCELED);
+        Order incartsOrder1 = new Order(LocalDateTime.of(2020, 3, 10, 16, 51), Order.Status.INCARTS);
+        incartsOrder1.setProducts(Set.of(productService.findProductById(5L).get()));
+
+        Order canceledOrder = new Order(LocalDateTime.of(2020, 6, 13, 15, 3), Order.Status.CANCELED);
         canceledOrder.setProducts(Set.of(
                 productService.findProductById(4L).get(),
                 productService.findProductById(5L).get(),
                 productService.findProductById(6L).get()));
 
-
-        Order incartsOrder = new Order(LocalDateTime.now(), Order.Status.INCARTS);
-        incartsOrder.setProducts(Set.of(productService.findProductById(6L).get()));
+        Order incartsOrder2 = new Order(LocalDateTime.now(), Order.Status.INCARTS);
+        incartsOrder2.setProducts(Set.of(productService.findProductById(6L).get()));
 
         orderService.addOrder(completedOrder1);
         orderService.addOrder(completedOrder2);
+        orderService.addOrder(incartsOrder1);
         orderService.addOrder(canceledOrder);
-        orderService.addOrder(incartsOrder);
+        orderService.addOrder(incartsOrder2);
 
         customer.setOrders(Set.copyOf(orderService.findAll()));
 

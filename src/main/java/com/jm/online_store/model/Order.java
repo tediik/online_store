@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -47,7 +47,7 @@ public class Order {
     private Status status;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private User user;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)

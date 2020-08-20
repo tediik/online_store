@@ -5,18 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
     <title>Заказы</title>
 </head>
@@ -39,7 +34,7 @@
             </div>
         </div>
         <div class="col-md-10" style="background: #edeef0">
-            <br>
+            <div class="col-12"><h1></h1></div>
             <div class="container-fluid bg-light">
                 <div class="tab-pane">
                     <ul class="nav nav-tabs">
@@ -62,69 +57,100 @@
                     <div class="tab-content">
                         <!--                        Все заказы-->
                         <div class="tab-pane fade show active" id="tab_all_orders">
-                            <div th:each="order : ${orders}" class="alert alert-info mt-2">
-                                <h2 th:text="'Номер заказа: ' + ${order.id}"></h2>
-                                <p th:utext="'Статус: ' + ${order.status}"></p>
-                                <div class="container-fluid row">
-                                    <div class="text-left align-text-bottom col">
-                                        <span class="text-left"
-                                              th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                            <div th:each="order : ${orders}"
+                                 th:class="${order.status.name() == 'INCARTS' ? 'alert alert-success mt-2' : 'alert alert-info mt-2'}">
+                                <h4 th:text="'Номер заказа: ' + ${order.id}"></h4>
+                                <h6 th:if="${order.status.name() == 'COMPLETED'}">Статус:  завершён</h6>
+                                <h6 th:if="${order.status.name() == 'CANCELED'}">Статус:  отменён</h6>
+                                <h6 th:if="${order.status.name() == 'INCARTS'}">Статус:  в корзине</h6>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 th:text="'Количество товаров : ' + ${order.amount}"></h5>
                                     </div>
-                                    <div class="text-right col">
-                                        <a th:href="'/customer/order/' + ${order.id} + '/edit'" class="btn btn-primary">Подробнее</a>
+                                    <div class="col-6">
+                                        <h5 th:text="'Сумма заказа: ' + ${order.orderPrice} + ' P'"></h5>
+                                    </div>
+                                    <div class="col-12"><h1></h1></div>
+                                    <div class="col-6">
+                                        <span th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <a th:href="'/customer/order/' + ${order.id}"
+                                           class="btn btn-primary">Подробнее</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!--                        Открытые-->
-                        <div class="tab-pane fade show active" id="tab_incarts">
-                            <div th:each="order : ${incartsOrders}" class="alert alert-info mt-2">
-                                <h2 th:text="'Номер заказа: ' + ${order.id}"></h2>
-                                <p th:utext="'Статус: ' + ${order.status}"></p>
-                                <div class="container-fluid row">
-                                    <div class="text-left align-text-bottom col">
-                                        <span class="text-left"
-                                              th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                        <div class="tab-pane fade show" id="tab_incarts">
+                            <div th:each="order : ${incartsOrders}" class="alert alert-success mt-2">
+                                <h4 th:text="'Номер заказа: ' + ${order.id}"></h4>
+                                <div class="col-12"><h6>&nbsp;</h6></div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 th:text="'Количество товаров : ' + ${order.amount}"></h5>
                                     </div>
-                                    <div class="text-right col">
-                                        <a th:href="'/customer/order/' + ${order.id} + '/edit'" class="btn btn-primary">Подробнее</a>
+                                    <div class="col-6">
+                                        <h5 th:text="'Сумма заказа: ' + ${order.orderPrice} + ' P'"></h5>
+                                    </div>
+                                    <div class="col-12"><h1></h1></div>
+                                    <div class="col-6">
+                                        <span th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <a th:href="'/customer/order/' + ${order.id}"
+                                           class="btn btn-primary">Подробнее</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!--                        Завершенные-->
-                        <div class="tab-pane fade show active" id="tab_completed">
-                            <div th:each="order : ${completedOrders}" class="alert alert-info mt-2">
-                                <h2 th:text="'Номер заказа: ' + ${order.id}"></h2>
-                                <p th:utext="'Статус: ' + ${order.status}"></p>
-                                <div class="container-fluid row">
-                                    <div class="text-left align-text-bottom col">
-                                        <span class="text-left"
-                                              th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                        <div class="tab-pane fade show" id="tab_completed">
+                            <div th:each="order : ${completedOrders}" class="alert alert-primary mt-2">
+                                <h4 th:text="'Номер заказа: ' + ${order.id}"></h4>
+                                <div class="col-12"><h6>&nbsp;</h6></div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 th:text="'Количество товаров : ' + ${order.amount}"></h5>
                                     </div>
-                                    <div class="text-right col">
-                                        <a th:href="'/customer/order/' + ${order.id} + '/edit'" class="btn btn-primary">Подробнее</a>
+                                    <div class="col-6">
+                                        <h5 th:text="'Сумма заказа: ' + ${order.orderPrice} + ' P'"></h5>
+                                    </div>
+                                    <div class="col-12"><h1></h1></div>
+                                    <div class="col-6">
+                                        <span th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <a th:href="'/customer/order/' + ${order.id}"
+                                           class="btn btn-primary">Подробнее</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!--                        Отменённые-->
-                        <div class="tab-pane fade show active" id="tab_canceled">
-                            <div th:each="order : ${canceledOrders}" class="alert alert-info mt-2">
-                                <h2 th:text="'Номер заказа: ' + ${order.id}"></h2>
-                                <p th:utext="'Статус: ' + ${order.status}"></p>
-                                <div class="container-fluid row">
-                                    <div class="text-left align-text-bottom col">
-                                        <span class="text-left"
-                                              th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                        <div class="tab-pane fade show" id="tab_canceled">
+                            <div th:each="order : ${canceledOrders}" class="alert alert-secondary mt-2">
+                                <h4 th:text="'Номер заказа: ' + ${order.id}"></h4>
+                                <div class="col-12"><h6>&nbsp;</h6></div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 th:text="'Количество товаров : ' + ${order.amount}"></h5>
                                     </div>
-                                    <div class="text-right col">
-                                        <a th:href="'/customer/order/' + ${order.id} + '/edit'" class="btn btn-primary">Подробнее</a>
+                                    <div class="col-6">
+                                        <h5 th:text="'Сумма заказа: ' + ${order.orderPrice} + ' P'"></h5>
+                                    </div>
+                                    <div class="col-12"><h1></h1></div>
+                                    <div class="col-6">
+                                        <span th:text="'Время заказа: ' + ${#temporals.format(order.dateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <a th:href="'/customer/order/' + ${order.id}"
+                                           class="btn btn-primary">Подробнее</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <br>
+                        <div class="col-12"><h1>&nbsp;</h1></div>
                     </div>
                 </div>
             </div>
