@@ -3,7 +3,6 @@ package com.jm.online_store.controller.simple;
 import com.jm.online_store.model.News;
 import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,10 +52,12 @@ public class ManagerController {
     }
 
     @PostMapping("/news/post")
-    public String newsPost(News news, Model model, @RequestParam("postingDateTime")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime postingDateTime) {
+    public String newsPost(News news) {
 
-        news.setPostingDate(postingDateTime);
+        if(news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
+            news.setPostingDate(LocalDateTime.now());
+        }
+
         newsService.save(news);
         return "redirect:/manager/news";
     }
@@ -75,7 +75,11 @@ public class ManagerController {
     }
 
     @PostMapping("/news/update")
-    public String newsUpdate(News news, Model model) {
+    public String newsUpdate(News news) {
+
+        if(news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
+            news.setPostingDate(LocalDateTime.now());
+        }
 
         newsService.save(news);
         return "redirect:/manager/news";

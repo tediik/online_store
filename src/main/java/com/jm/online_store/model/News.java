@@ -30,6 +30,7 @@ public class News {
 
     private String fullText;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime postingDate;
 
     public News(String title, String anons, String fullText) {
