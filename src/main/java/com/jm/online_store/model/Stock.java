@@ -43,10 +43,8 @@ public class Stock {
     private StockType stockType;
 
     public enum StockType {
-        CURRENT ("CURRENT"),
-        PAST ("PAST"),
-        FUTURE ("FUTURE");
-
-        StockType(String title) { }
+        CURRENT,
+        PAST,
+        FUTURE;
     }
 }

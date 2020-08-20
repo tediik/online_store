@@ -16,40 +16,39 @@ function create() {
             for (let i = 0; i < stocks.length; i++) {
                 let out = $("<li>").attr("id", stocks[i].id).attr("data-filter", stocks[i].stockType);
 
-                out.append("" +
-                    "<div class=\"card mb-3\">"
-                        + "<div class=\"row no-gutters\">"
-                            + "<div class=\"col-md-4\">"
-                            +     "<img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">"
-                            + "</div>"
-                            + "<div class=\"col-md-6\">"
-                            +     "<div class=\"card-body\">"
-                            +         "<h3 class='card-title'>" + stocks[i].stockTitle + "</h3>"
-                            +         "<p class=\"card-text\">" + stocks[i].stockText + "</p>"
-                            +         "<p>" + "Срок проведения акции: " + "</p>"
-                            +         "<div class=\"card-date\">"
-                            +             "с " + moment(stocks[i].startDate).format("DD MMM")
-                            +             " по " + moment(stocks[i].endDate).format("DD MMM YYYY")
-                            +         "</div>"
-                            +     "</div>"
-                            + "</div>"
-                            + "<div class=\"col-md-2\">"
-                            +     "<button onclick='getStockForEdit(" + stocks[i].id + ")' "
-                            +            "class=\"btn btn-md btn-info mt-5 mr-2\" data-toggle='modal' "
-                            +            "data-target='#editStockModal'>" + "Edit" + "</button>"
-                            +     "<button onclick='deleteStock(" + stocks[i].id + ")' "
-                            +             "class=\"warning btn btn-md btn-danger mt-2 mr-2\">" + "Delete" + "</button>"
-                            + "</div>"
-                        + "</div>"
-                    + "</div>"
-                + "</li>" );
+                out.append(
+                    `<div class=\"card mb-3\">
+                        <div class=\"row no-gutters\">
+                            <div class=\"col-md-4\">
+                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">
+                            </div>
+                            <div class=\"col-md-6\">
+                                <div class=\"card-body\">
+                                    <h3 class='card-title'>${stocks[i].stockTitle}</h3>
+                                    <p class=\"card-text\">${stocks[i].stockText}</p>
+                                    <p>Срок проведения акции: </p>
+                                    <div class=\"card-date\">
+                                         с ${moment(stocks[i].startDate).format("DD MMM")}
+                                         по ${moment(stocks[i].endDate).format("DD MMM YYYY")}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=\"col-md-2\">
+                                <button onclick='getStockForEdit(${stocks[i].id})'
+                                        class=\"btn btn-md btn-info mt-5 mr-2\" data-toggle='modal'
+                                        data-target='#editStockModal'>Edit</button>
+                                <button onclick='deleteStock(${stocks[i].id})'
+                                         class=\"warning btn btn-md btn-danger mt-2 mr-2\">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </li> `);
 
                 $("#stocksDiv").append(out)
             }
         }
     })
 }
-
 
 /*Фильтр акций*/
 $('.filters button').on('click', function () {
