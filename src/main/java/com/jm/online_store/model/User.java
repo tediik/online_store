@@ -1,5 +1,7 @@
 package com.jm.online_store.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,9 +25,13 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * основная сущность проекта - USER.
+ */
 @Entity
+@Getter
+@Setter
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -60,9 +66,15 @@ public class User implements UserDetails {
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_product",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> favouritesGoods;
 
     public User() {
         registerDate = LocalDate.now();
@@ -190,5 +202,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    private enum Gender {
+        MAN,
+        WOMAN
     }
 }
