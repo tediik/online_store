@@ -1,4 +1,4 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
@@ -9,8 +9,10 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +26,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -32,36 +33,22 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private  PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    private final ConfirmationTokenRepository confirmTokenRepository;
+    private final MailSenderServiceImpl mailSenderService;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private ConfirmationTokenRepository confirmTokenRepository;
-
-    @Autowired
-    private MailSenderService mailSenderService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    @Setter
+    private PasswordEncoder passwordEncoder;
 
     @Value("${spring.server.url}")
     private String urlActivate;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Transactional
     @Override

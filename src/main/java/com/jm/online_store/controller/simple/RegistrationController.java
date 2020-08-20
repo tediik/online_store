@@ -2,8 +2,8 @@ package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
-import com.jm.online_store.service.RoleService;
-import com.jm.online_store.service.UserService;
+import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
