@@ -23,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -149,14 +150,14 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        Role userRole = roleRepository.findByName("ROLE_CUSTOMER").get();
-        Set<Role> userSetRoles = new HashSet<>();
-        userSetRoles.add(userRole);
+        Set<Role> userRoles = roleRepository.findByName("ROLE_CUSTOMER")
+                .map(Collections::singleton)
+                .orElse(Collections.emptySet());
 
         User user = new User();
         user.setEmail(confirmationToken.getUserEmail());
         user.setPassword(confirmationToken.getUserPassword());
-        user.setRoles(userSetRoles);
+        user.setRoles(userRoles);
 
         addUser(user);
 

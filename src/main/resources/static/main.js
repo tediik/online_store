@@ -15,7 +15,8 @@ $(document).ready(function () {
                             .append($("<td>").append(user.email))
                             .append($("<td>").append(user.authorities.map(role => role.authority).join(" ")))
 
-                            .append($("<td>").append("<button class='btn btn-info updateBtn '>Edit</button>").click(function (event) {
+                            .append($("<td>").append("<button class='btn btn-info updateBtn'>Edit</button>").click(function (event) {
+                                $(".alert").alert('close');
                                 $('.update-example #updateId').val(user.id);
                                 $('.update-example #updateEmail').val(user.email);
                                 $('.update-example #updateModal').modal('show');
@@ -43,11 +44,11 @@ $(document).ready(function () {
     $(function () {
 
         $('#addBtn').on('click', function () {
+            $(".alert").alert('close');
             var email = $('#addEmail').val();
             var password = $('#addPassword').val();
             var roles = $('#addRoles').val();
             var user = {email, password, roles};
-            $(".alert").alert('close');
             $.ajax(
                 {
                     type: 'POST',
@@ -78,13 +79,8 @@ $(document).ready(function () {
                             })));
                         $('.nav-tabs a[href="#nav-home"]').tab('show');
                     },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        $('#add-email-form-group').append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>" +
-                            "<strong>Error:</strong>&nbsp;" + jqXhr.responseJSON.message +
-                            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
-                            "<span aria-hidden='true'>&times;</span>" +
-                            "</button>" +
-                            "</div>")
+                    error: function (data) {
+                        handleError(data, '#add-email-form-group');
                     }
                 });
         });
@@ -94,6 +90,7 @@ $(document).ready(function () {
 
 
         $('#updateSubmitBtn').on('click', function () {
+            $(".alert").alert('close');
             var id = $('#updateId').val();
             var email = $('#updateEmail').val();
             var password = $('#updatePassword').val();
@@ -111,6 +108,7 @@ $(document).ready(function () {
 
                     $(function updateFunc() {
                         $('#editBtn').on('click', function () {
+                            $(".alert").alert('close');
                             $('.update-example #updateId').val(data.id);
                             $('.update-example #updateEmail').val(data.email);
                             $('.update-example #updateModal').modal('show');
@@ -136,8 +134,10 @@ $(document).ready(function () {
                         </tr>`;
 
                     $('#userRowId' + id).replaceWith(new_row);
+                    $('#updateModal').modal('hide');
                 },
-                error: function (jqXhr, textStatus, errorThrown) {
+                error: function (data) {
+                    handleError(data, '#update-email-form-group');
                 }
             });
         });
@@ -186,3 +186,12 @@ $(document).ready(function () {
 
 
 });
+
+function handleError(data, element) {
+    $(element).append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>" +
+        "<strong>Error:</strong>&nbsp;" + data.responseJSON.message +
+        "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+        "<span aria-hidden='true'>&times;</span>" +
+        "</button>" +
+        "</div>");
+}
