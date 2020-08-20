@@ -8,9 +8,11 @@ import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -18,6 +20,7 @@ import java.util.Set;
 /**
  * класс первичного заполнения таблиц.
  */
+@AllArgsConstructor
 @Component
 public class DataInitializer {
 
@@ -25,14 +28,7 @@ public class DataInitializer {
     private final RoleService roleService;
     private final ProductService productService;
 
-    @Autowired
-    public DataInitializer(UserService userService, RoleService roleService, ProductService productService) {
-        this.userService = userService;
-        this.roleService = roleService;
-        this.productService = productService;
-    }
-
-//    @PostConstruct
+  //  @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
