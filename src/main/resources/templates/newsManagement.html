@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>News Management</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -11,22 +11,31 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 </head>
 <body>
-<header th:insert="/blocks/header :: header"></header>
-<div class="container-fluid">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
+        <div class="navbar-brand">Перейти на <span><b><a style="color: coral" href="/">главную</a></b></span></div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+        </div>
+        <div class="navbar-text"><a th:href="@{/logout}">Logout</a></div>
+    </nav>
+</header>
+<div class="container-fluid" style="padding-right: 0px; padding-left: 0px">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/manager">Кабинет менеджера</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Все новости</li>
+        </ol>
+    </nav>
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <a class="btn btn-link" href="/manager"><---обратно</a>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager">Главная</a>
-            </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/manager/news/add">Добавить новость</a>
             </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
-            </div>
         </div>
         <div class="col-sm-8 tab-pane">
+            <br>
             <h1 class="text-center">Управление новостями</h1>
             <ul class="nav nav-tabs">
                 <!-- Первая вкладка (активная) -->
@@ -95,7 +104,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
