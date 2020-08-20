@@ -41,7 +41,7 @@
                 <textarea th:field="${news.fullText}" id="fullText" name="fullText" placeholder="Введите полный текст" class="form-control" required></textarea>
                 <br>
                 <label for="postingDate"></label>
-                <input th:field="${news.postingDate}" th:value="${news.postingDate}" class="form-control" id="postingDate" name="postingDateTime" type="datetime-local">
+                <input th:field="${news.postingDate}" th:value="${#temporals.formatISO(news.postingDate)}" class="form-control" id="postingDate" name="postingDateTime" type="datetime-local">
                 <br>
                 <button type="submit" class="btn btn-success">Обновить</button>
             </form>
