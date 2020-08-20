@@ -32,11 +32,11 @@ function create() {
                             +             " по " + moment(stocks[i].endDate).format("DD MMM YYYY")
                             +         "</div>"
                             +     "</div>"
+                            + "</div>"
                             +     "<div class=\"col-md-2\">"
                             +         "<button onclick='getStockForEdit(" + stocks[i].id + ")' class=\"btn btn-md btn-info mt-5 mr-2\" data-toggle='modal' data-target='#editStockModal'>" + "Edit" + "</button>"
-                            +         "<button onclick='deleteStock(" + stocks[i].id + ")' class=\"warning btn btn-md btn-danger mt-2 mr-2\">" + "Delete" + "</button>" +
+                            +         "<button onclick='deleteStock(" + stocks[i].id + ")' class=\"warning btn btn-md btn-danger mt-2 mr-2\">" + "Delete" + "</button>"
                             +     "</div>"
-                            + "</div>"
                         + "</div>"
                     + "</div>"
                 + "</li>" );
