@@ -55,7 +55,7 @@ public class ManagerController {
     public String newsPost(News news) {
 
         if(news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
-            news.setPostingDate(LocalDateTime.now());
+            news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
         }
 
         newsService.save(news);
@@ -78,7 +78,7 @@ public class ManagerController {
     public String newsUpdate(News news) {
 
         if(news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
-            news.setPostingDate(LocalDateTime.now());
+            news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
         }
 
         newsService.save(news);
