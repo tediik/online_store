@@ -16,13 +16,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -69,13 +67,13 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     public User() {
-        registerDate = new Date();
+        registerDate = LocalDate.now();
     }
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
-        registerDate = new Date();
+        registerDate = LocalDate.now();
     }
 
     public User(String email, String password, String firstName, String lastName, Set<Role> roleSet) {
@@ -142,19 +140,19 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public Date getBirthdayDate() {
+    public LocalDate getBirthdayDate() {
         return birthdayDate;
     }
 
-    public void setBirthdayDate(Date birthdayDate) {
+    public void setBirthdayDate(LocalDate birthdayDate) {
         this.birthdayDate = birthdayDate;
     }
 
-    public Date getRegisterDate() {
+    public LocalDate getRegisterDate() {
         return registerDate;
     }
 
-    public void setRegisterDate(Date registerDate) {
+    public void setRegisterDate(LocalDate registerDate) {
         this.registerDate = registerDate;
     }
 
