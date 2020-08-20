@@ -18,14 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -60,11 +57,9 @@ public class User implements UserDetails {
     private Gender userGender;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    private Date birthdayDate;
+    private LocalDate birthdayDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date registerDate;
+    private LocalDate registerDate;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
@@ -82,13 +77,13 @@ public class User implements UserDetails {
     private Set<Product> favouritesGoods;
 
     public User() {
-        registerDate = new Date();
+        registerDate = LocalDate.now();
     }
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
-        registerDate = new Date();
+        registerDate = LocalDate.now();
     }
 
     public User(String email, String password, String firstName, String lastName, Set<Role> roleSet) {
