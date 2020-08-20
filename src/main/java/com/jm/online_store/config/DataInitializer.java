@@ -34,12 +34,6 @@ public class DataInitializer {
     private final NewsService newsService;
     private final ProductService productService;
 
-    @Autowired
-    public DataInitializer(UserService userService, RoleService roleService, ProductService productService) {
-        this.userService = userService;
-        this.roleService = roleService;
-        this.productService = productService;
-    }
 
     /*@PostConstruct*/
     public void roleConstruct() {
