@@ -19,20 +19,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * основная сущность проекта - USER.
+ */
 @Entity
 @Data
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -58,17 +58,24 @@ public class User implements UserDetails {
     private Gender userGender;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    private Date birthdayDate;
+    private LocalDate birthdayDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date registerDate;
+    private LocalDate registerDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JoinTable(name = "user_role",
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = CascadeType.REFRESH)
+    @JoinTable(
+            name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_product",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> favouritesGoods;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -76,13 +83,13 @@ public class User implements UserDetails {
     private Set<Order> orders;
 
     public User() {
-        registerDate = new Date();
+        registerDate = LocalDate.now();
     }
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
-        registerDate = new Date();
+        registerDate = LocalDate.now();
     }
 
     public User(String email, String password, String firstName, String lastName, Set<Role> roleSet) {
@@ -125,6 +132,11 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    private enum Gender {
+        MAN,
+        WOMAN
     }
 
     @Override

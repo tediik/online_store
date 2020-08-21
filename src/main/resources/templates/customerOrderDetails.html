@@ -29,7 +29,7 @@
                 <a class="btn btn-outline-primary" href="/customer">Главная</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/customer/wishlist">Избранные товары</a>
+                <a class="btn btn-outline-primary" data-toggle="tab" role="tab" href="#favouritesGoods" aria-controls="favouritesGoods" onclick="fillFavouritesGoods()">Избранные товары</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary active" href="/customer/order">Заказы</a>
@@ -73,13 +73,6 @@
                 <div class="col-12"><h1>&nbsp;</h1></div>
             </div>
         </div>
-
-        <!--        <div class="col-sm-8 text-left">-->
-        <!--            <div th:each="news : ${news}" class="alert alert-info mt-2">-->
-        <!--                <h3 th:text="${news.title}"></h3>-->
-        <!--                <p th:utext="${news.fullText}"></p>-->
-        <!--            </div>-->
-        <!--        </div>-->
     </div>
 </div>
 </body>

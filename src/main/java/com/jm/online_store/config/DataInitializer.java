@@ -4,14 +4,15 @@ import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.OrderServiceImpl;
-import com.jm.online_store.service.ProductInOrderService;
-import com.jm.online_store.service.ProductService;
-import com.jm.online_store.service.RoleService;
-import com.jm.online_store.service.UserService;
+import com.jm.online_store.service.interf.ProductInOrderService;
+import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,6 +20,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * класс первичного заполнения таблиц.
+ */
 @Component
 @AllArgsConstructor
 public class DataInitializer {
@@ -26,10 +30,10 @@ public class DataInitializer {
     private final UserService userService;
     private final RoleService roleService;
     private final ProductService productService;
-    private final OrderServiceImpl orderService;
+    private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
 
-    //    @PostConstruct
+//    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -63,9 +67,27 @@ public class DataInitializer {
         userService.addUser(manager);
         userService.addUser(customer);
         userService.addUser(admin);
+
+        Product product_1 = new Product("apple", 100000D, 10, 0.1);
+        Product product_2 = new Product("samsung", 80000D, 100, 0.9);
+        Product product_3 = new Product("xiaomi", 30000D, 50, 0.5);
+
+        productService.saveProduct(product_1);
+        productService.saveProduct(product_2);
+        productService.saveProduct(product_3);
+
+        Set<Product> productSet = new HashSet<>();
+        productSet.add(product_1);
+        productSet.add(product_2);
+        productSet.add(product_3);
+
+        customer = userService.findByEmail("customer@mail.ru").get();
+        customer.setFavouritesGoods(productSet);
+        userService.updateUser(customer);
+
     }
 
-    //    @PostConstruct
+//    @PostConstruct
     public void ordersConstruct() {
         User customer = userService.findByEmail("customer@mail.ru").get();
 

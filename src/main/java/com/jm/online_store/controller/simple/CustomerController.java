@@ -2,9 +2,9 @@ package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.OrderService;
-import com.jm.online_store.service.RoleService;
-import com.jm.online_store.service.UserService;
+import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -94,10 +94,5 @@ public class CustomerController {
         Order order = orderService.findOrderById(id).orElseGet(Order::new);
         model.addAttribute("order", order);
         return "customerOrderDetails";
-    }
-
-    @GetMapping("/wishlist")
-    public String getWishList() {
-        return "customerWishlist";
     }
 }

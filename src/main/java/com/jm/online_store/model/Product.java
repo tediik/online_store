@@ -30,21 +30,16 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false, updatable = false, nullable = false)
     private Long id;
-
     @NonNull
     @Column(name = "product", nullable = false)
     private String product;
-
     @NonNull
     @Column(name = "price", nullable = false)
     private Double price;
-
     @NonNull
     private int amount;
-
     @NonNull
     private Double rating;
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Description> descriptions;
 

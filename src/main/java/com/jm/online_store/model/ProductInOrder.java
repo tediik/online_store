@@ -14,6 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * сущность для связи продукта и заказа и хранения кол-ва конкретного продукта в заказе
+ */
 @Entity
 @Data
 @NoArgsConstructor

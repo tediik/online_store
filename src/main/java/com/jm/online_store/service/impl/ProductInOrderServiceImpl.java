@@ -1,15 +1,18 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.ProductInOrder;
 import com.jm.online_store.repository.ProductInOrderRepository;
+import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.ProductInOrderService;
+import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class ProductInOrderService {
+public class ProductInOrderServiceImpl implements ProductInOrderService {
 
     private final ProductService productService;
     private final OrderService orderService;

@@ -1,11 +1,20 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.ConfirmationToken;
+import com.jm.online_store.model.Order;
+import com.jm.online_store.model.Product;
+import com.jm.online_store.model.ProductInOrder;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
+import com.jm.online_store.repository.OrderRepository;
+import com.jm.online_store.repository.ProductInOrderRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,7 +46,7 @@ public class UserServiceImpl implements UserService {
     private ConfirmationTokenRepository confirmTokenRepository;
 
     @Autowired
-    private MailSenderService mailSenderService;
+    private MailSenderServiceImpl mailSenderService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -131,5 +140,67 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Service
+    @AllArgsConstructor
+    public static class OrderServiceImpl implements OrderService {
+
+        private final OrderRepository orderRepository;
+
+        @Override
+        public List<Order> findAll() {
+            return orderRepository.findAll();
+        }
+
+        @Override
+        public List<Order> findAllByUserId(Long userId) {
+            return orderRepository.findAllByUserId(userId);
+        }
+
+        @Override
+        public List<Order> findAllByUserIdAndStatus(Long userId, Order.Status status) {
+            return orderRepository.findAllByUserIdAndStatus(userId, status);
+        }
+
+        @Override
+        public Optional<Order> findOrderById(Long id) {
+            return orderRepository.findById(id);
+        }
+
+        @Override
+        public Long addOrder(Order order) {
+            order.setAmount(Long.valueOf(0));
+            order.setOrderPrice(Double.valueOf(0));
+            Order savedOrder = orderRepository.save(order);
+            return savedOrder.getId();
+        }
+
+        @Override
+        public void updateOrder(Order order) {
+            orderRepository.save(order);
+        }
+    }
+
+    @Service
+    @AllArgsConstructor
+    public static class ProductInOrderService {
+
+        private final ProductService productService;
+        private final OrderService orderService;
+        private final ProductInOrderRepository repository;
+
+        public void addToOrder(long productId, long orderId, int amount) {
+            Product product = productService.findProductById(productId).get();
+            Order order = orderService.findOrderById(orderId).get();
+
+            order.setOrderPrice(order.getOrderPrice() + product.getPrice());
+            order.setAmount(order.getAmount() + amount);
+
+            orderService.updateOrder(order);
+
+            ProductInOrder productInOrder = new ProductInOrder(product, order, amount);
+            repository.save(productInOrder);
+        }
     }
 }
