@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page not found</title>
+    <style>
+        body {
+            background-color: #EEEDE9;
+            height: 100%;
+            color: #2F3034;
+            font-family: LeituraDisplay, serif;
+            font-size: 1em;
+            font-weight: normal;
+            margin: 0 0 16px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .main-wrapper {
+            box-sizing: border-box;
+            height: auto;
+            min-height: min-content;
+            overflow: hidden;
+            padding-top: 70px;
+            position: relative;
+        }
+
+        .second {
+            margin: auto;
+            width: 100%;
+            padding: 0 30px;
+            text-align: center;
+        }
+
+        #error-animation {
+            flex-basis: 66.66666666666666%;
+            max-width: 66.66666666666666%;
+        }
+
+        img {
+            padding-left: 15%;
+            display: block;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid main-wrapper">
+    <div class="second">
+        <div class="third">
+            <h1>This page
+                does not exist.<br>...or does it?
+            </h1>
+            <h3>Try the <a href="/">homepage</a>.</h3>
+            <div id="error-animation">
+                <img src="/static/img/404Page/unicorn.gif" alt="error animation">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
