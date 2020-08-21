@@ -2,7 +2,6 @@ package com.jm.online_store.service;
 
 import com.jm.online_store.model.Order;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +13,9 @@ public interface OrderService {
 
     List<Order> findAllByUserIdAndStatus(Long userId, Order.Status status);
 
-    Optional<Order> findById(Long id);
+    Optional<Order> findOrderById(Long id);
 
-    void addOrder(Order order);
+    Long addOrder(Order order);
+
+    void updateOrder(Order order);
 }

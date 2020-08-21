@@ -2,25 +2,27 @@ package com.jm.online_store.service;
 
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ProductService {
 
-    @Autowired
-    ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    public Optional<Product> findProductById(Long productId){
+    public Optional<Product> findProductById(Long productId) {
         return productRepository.findById(productId);
     }
 
-    public void saveProduct (Product product){
-        productRepository.save(product);
+    public Long saveProduct(Product product) {
+        Product savedProduct = productRepository.save(product);
+        return savedProduct.getId();
     }
 
-    public void deleteProduct(Long idProduct){
+    public void deleteProduct(Long idProduct) {
         productRepository.deleteById(idProduct);
     }
 }

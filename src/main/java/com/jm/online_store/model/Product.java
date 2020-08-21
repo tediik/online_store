@@ -1,9 +1,12 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +22,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "product")
 public class Product {
 
@@ -44,10 +48,7 @@ public class Product {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Description> descriptions;
 
-    public Product(String product, Double price, int amount, Double rating) {
-        this.product = product;
-        this.price = price;
-        this.amount = amount;
-        this.rating = rating;
-    }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonBackReference
+    private List<ProductInOrder> productInOrders;
 }

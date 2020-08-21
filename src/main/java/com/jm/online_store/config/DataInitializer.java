@@ -5,13 +5,13 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.OrderServiceImpl;
+import com.jm.online_store.service.ProductInOrderService;
 import com.jm.online_store.service.ProductService;
 import com.jm.online_store.service.RoleService;
 import com.jm.online_store.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,8 +27,9 @@ public class DataInitializer {
     private final RoleService roleService;
     private final ProductService productService;
     private final OrderServiceImpl orderService;
+    private final ProductInOrderService productInOrderService;
 
-//    @PostConstruct
+    //    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -64,7 +65,7 @@ public class DataInitializer {
         userService.addUser(admin);
     }
 
-//    @PostConstruct
+    //    @PostConstruct
     public void ordersConstruct() {
         User customer = userService.findByEmail("customer@mail.ru").get();
 
@@ -76,35 +77,35 @@ public class DataInitializer {
         products.add(new Product("Smartphone Samsung Galaxy S10 128 Gb", 54321.0, 23, 4.1));
         products.add(new Product("RC car buggy WLToys 12428", 6666.0, 100500, 4.6));
 
+        List<Long> productsIds = new ArrayList<>();
         for (Product product : products) {
-            productService.saveProduct(product);
+            productsIds.add(productService.saveProduct(product));
         }
 
-        Order completedOrder1 = new Order(LocalDateTime.of(2019, 12, 31, 22, 10), Order.Status.COMPLETED);
-        completedOrder1.setProducts(Set.of(
-                productService.findProductById(1L).get(),
-                productService.findProductById(2L).get()));
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order(LocalDateTime.of(2019, 12, 31, 22, 10), Order.Status.COMPLETED));
+        orders.add(new Order(LocalDateTime.of(2020, 1, 23, 13, 37), Order.Status.COMPLETED));
+        orders.add(new Order(LocalDateTime.of(2020, 3, 10, 16, 51), Order.Status.INCARTS));
+        orders.add(new Order(LocalDateTime.of(2020, 6, 13, 15, 3), Order.Status.CANCELED));
+        orders.add(new Order(LocalDateTime.now(), Order.Status.INCARTS));
 
-        Order completedOrder2 = new Order(LocalDateTime.of(2020, 1, 23, 13, 37), Order.Status.COMPLETED);
-        completedOrder2.setProducts(Set.of(productService.findProductById(3L).get()));
+        List<Long> ordersIds = new ArrayList<>();
+        for (Order order : orders) {
+            ordersIds.add(orderService.addOrder(order));
+        }
 
-        Order incartsOrder1 = new Order(LocalDateTime.of(2020, 3, 10, 16, 51), Order.Status.INCARTS);
-        incartsOrder1.setProducts(Set.of(productService.findProductById(5L).get()));
+        productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
+        productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
 
-        Order canceledOrder = new Order(LocalDateTime.of(2020, 6, 13, 15, 3), Order.Status.CANCELED);
-        canceledOrder.setProducts(Set.of(
-                productService.findProductById(4L).get(),
-                productService.findProductById(5L).get(),
-                productService.findProductById(6L).get()));
+        productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
 
-        Order incartsOrder2 = new Order(LocalDateTime.now(), Order.Status.INCARTS);
-        incartsOrder2.setProducts(Set.of(productService.findProductById(6L).get()));
+        productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
 
-        orderService.addOrder(completedOrder1);
-        orderService.addOrder(completedOrder2);
-        orderService.addOrder(incartsOrder1);
-        orderService.addOrder(canceledOrder);
-        orderService.addOrder(incartsOrder2);
+        productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
+        productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
+        productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
+
+        productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
 
         customer.setOrders(Set.copyOf(orderService.findAll()));
 

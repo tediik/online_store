@@ -1,25 +1,18 @@
 package com.jm.online_store.service;
 
 import com.jm.online_store.model.Order;
-import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    OrderRepository orderRepository;
-
-    @Autowired
-    public void setOrderRepository(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
+    private final OrderRepository orderRepository;
 
     @Override
     public List<Order> findAll() {
@@ -37,26 +30,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Optional<Order> findById(Long id) {
+    public Optional<Order> findOrderById(Long id) {
         return orderRepository.findById(id);
     }
 
-    /**
-     * Method calculates amount and order price before saving object
-     *
-     * @param order the object to save to the database
-     */
     @Override
-    public void addOrder(Order order) {
-        Set<Product> products = order.getProducts();
-        Long amount = Long.valueOf(0);
-        Double orderPrice = Double.valueOf(0);
-        for (Product product : products) {
-            amount++;
-            orderPrice += product.getPrice();
-        }
-        order.setAmount(amount);
-        order.setOrderPrice(orderPrice);
+    public Long addOrder(Order order) {
+        order.setAmount(Long.valueOf(0));
+        order.setOrderPrice(Double.valueOf(0));
+        Order savedOrder = orderRepository.save(order);
+        return savedOrder.getId();
+    }
+
+    @Override
+    public void updateOrder(Order order) {
         orderRepository.save(order);
     }
 }

@@ -91,7 +91,7 @@ public class CustomerController {
 
     @GetMapping("/order/{id}")
     public String orderDetails(@PathVariable(value = "id") Long id, Model model) {
-        Order order = orderService.findById(id).orElseGet(Order::new);
+        Order order = orderService.findOrderById(id).orElseGet(Order::new);
         model.addAttribute("order", order);
         return "customerOrderDetails";
     }

@@ -56,18 +56,18 @@
                         <h3 th:text="${order.orderPrice} + ' P'"></h3>
                     </div>
                 </div>
-                <div th:each="product : ${order.products}" class="row alert alert-light mt-2">
+                <div th:each="product : ${order.productInOrders}" class="row alert alert-light mt-2">
                     <div class="col-3">
-                        <h4 th:text="${product.product}"></h4>
+                        <h4 th:text="${product.product.product}"></h4>
                     </div>
                     <div class="col-3">
-                        <h4 th:text="'количество: '"></h4>
+                        <h4 th:text="'количество: ' + ${product.amount}"></h4>
                     </div>
                     <div class="col-3">
-                        <h4 th:text="'цена: ' + ${product.price}"></h4>
+                        <h4 th:text="'цена: ' + ${product.product.price} + ' &#8381;'"></h4>
                     </div>
                     <div class="col-3">
-                        <h4 th:text="'сумма: '"></h4>
+                        <h4 th:text="'сумма: ' + ${product.amount}*${product.product.price} + ' &#8381;'"></h4>
                     </div>
                 </div>
                 <div class="col-12"><h1>&nbsp;</h1></div>
