@@ -9,5 +9,7 @@ public interface SchedulerTasksRepository extends JpaRepository<SchedulerTasks, 
 
     SchedulerTasks findByTaskName(String name);
 
-    SchedulerTasks findByExecutionDay(LocalDate day);
+    SchedulerTasks findByExecutionDayOfTheWeek(String nameOfDay);
+
+    SchedulerTasks findByTaskStatus(boolean status);
 }

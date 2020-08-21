@@ -11,6 +11,8 @@ public interface SchedulerTaskService {
 
     SchedulerTasks findTaskByName(String name);
 
+    SchedulerTasks findByNameOfDay(String nameOfDay);
+
     void addTask(SchedulerTasks task);
 
     void deleteTaskById(Long id);

@@ -11,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
@@ -25,7 +24,7 @@ public class SchedulerTasks {
     private Long id;
 
     @NotBlank
-    @Column(name = "task_name")
+    @Column(name = "task_name", length = 100)
     private String taskName;
 
     @NotBlank
@@ -33,8 +32,8 @@ public class SchedulerTasks {
     private boolean taskStatus;
 
     @NotBlank
-    @Column(name = "execution_day")
-    private LocalDate executionDay;
+    @Column(name = "execution_day", length = 20)
+    private String executionDayOfTheWeek;
 
     @NotBlank
     @Column(name = "task_start_time")

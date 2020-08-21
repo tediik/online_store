@@ -30,6 +30,11 @@ public class SchedulerTaskImpl implements SchedulerTaskService {
     }
 
     @Override
+    public SchedulerTasks findByNameOfDay(String nameOfDay) {
+        return schedulerTasksRepository.findByExecutionDayOfTheWeek(nameOfDay);
+    }
+
+    @Override
     public void addTask(SchedulerTasks task) {
 
     }
