@@ -104,7 +104,6 @@ public class UserServiceImpl implements UserService {
                 userForm.getEmail(),
                 confirmationToken.getConfirmationToken()
         );
-
         mailSenderService.send(userForm.getEmail(), "Activation code", message);
     }
 
@@ -122,6 +121,7 @@ public class UserServiceImpl implements UserService {
                         urlActivate + "/customer/activatenewmail/%s",
                 user.getEmail(),
                 confirmationToken.getConfirmationToken()
+
         );
         mailSenderService.send(user.getEmail(), "Activation code", message);
     }
