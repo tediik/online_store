@@ -109,6 +109,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void changeUsersMail(User user, String newMail){
+
+        user.setEmail(newMail);
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
+        confirmTokenRepository.save(confirmationToken);
+
+        String message = String.format(
+                "Hello, %s! \n" +
+                        "You have requested the email change. Please, confirm via link: " +
+                        urlActivate + "/customer/activatenewmail/%s",
+                user.getEmail(),
+                confirmationToken.getConfirmationToken()
+        );
+        mailSenderService.send(user.getEmail(), "Activation code", message);
+    }
+
+    @Override
     public boolean activateUser(String token, HttpServletRequest request) {
 
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
@@ -130,6 +148,18 @@ public class UserServiceImpl implements UserService {
         } catch (ServletException e) {
             e.printStackTrace();
         }
+        return true;
+    }
+
+    @Override
+    public boolean activateNewUsersMail(String token, HttpServletRequest request){
+        ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
+        if (confirmationToken == null) {
+            return false;
+        }
+        User user =  userRepository.findById(confirmationToken.getUserId()).get();
+        user.setEmail(confirmationToken.getUserEmail());
+        userRepository.saveAndFlush(user);
         return true;
     }
 }

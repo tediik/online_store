@@ -23,6 +23,10 @@ public interface UserService {
 
     void regNewAccount(User user);
 
+    void changeUsersMail(User user, String newMail);
+
+    boolean activateNewUsersMail(String code, HttpServletRequest request);
+
     boolean activateUser(String code, HttpServletRequest request);
 }
 

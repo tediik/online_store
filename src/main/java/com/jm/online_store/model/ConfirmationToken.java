@@ -27,12 +27,22 @@ public class ConfirmationToken {
     @Column
     private String userPassword;
 
+    @Column
+    private Long userId;
+
     @Temporal(TemporalType.DATE)
     private Date createdDate;
 
     public ConfirmationToken(String userEmail, String userPassword) {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+        createdDate = new Date();
+        confirmationToken = UUID.randomUUID().toString();
+    }
+
+    public ConfirmationToken(Long userId, String userMail) {
+        this.userId = userId;
+        this.userEmail = userMail;
         createdDate = new Date();
         confirmationToken = UUID.randomUUID().toString();
     }
@@ -79,5 +89,11 @@ public class ConfirmationToken {
 
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+
+    public void setUserId(Long userId) { this.userId = userId; }
+
+    public Long getUserId() {
+        return userId;
     }
 }

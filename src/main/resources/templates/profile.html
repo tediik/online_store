@@ -68,6 +68,30 @@
                                                 <label for="email_input">Email</label>
                                                 <input th:field="*{email}" type="text" class="form-control" id="email_input" name="email">
                                             </div>
+                                            <button type="button" style="background-color: #ff8e05" class="m-2 btn btn-success d-block mx-auto" data-toggle="modal" data-target="#openNewMailModal">Изменить email</button>
+                                            <div id="openNewMailModal" class="modal">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h3 class="modal-title">Название</h3>
+                                                            <a href="#close" title="Close" class="close">×</a>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form th:action="@{/customer/change-mail}" method="post" class="form-group">
+                                                                <div class="form-group text-center font-weight-bold">
+                                                                    <label for="new_mail">Введите новый адрес электронной почты</label>
+                                                                    <input type="email"
+                                                                           id="new_mail"
+                                                                           name="newMail"
+                                                                           class="form-control" required/>
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary btn-sm btn-block">Подтвердить</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div class="form-group text-center font-weight-bold">
                                                 <label for="date_birthday_input" class="col-xs-2 col-form-label">День рождения</label>
                                                 <div class="col-xs-10">

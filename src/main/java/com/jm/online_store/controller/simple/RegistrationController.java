@@ -28,13 +28,11 @@ public class RegistrationController {
     @Autowired
     private ConfirmationTokenRepository confirmationTokenRepository;
 
-
     @GetMapping("/registration")
     public String showRegistrationForm(Model model) {
         model.addAttribute("userForm", new User());
         return "registration";
     }
-
 
     @PostMapping("/registration")
     public String registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
@@ -55,10 +53,10 @@ public class RegistrationController {
         return "successfulRegister";
     }
 
-
     @GetMapping("/activate/{token}")
     public String activate(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateUser(token, request);
         return "redirect:/customer";
     }
+
 }

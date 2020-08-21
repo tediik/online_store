@@ -13,6 +13,7 @@ import java.util.Optional;
 @Service
 public class NewsServiceImpl implements NewsService {
 
+    
     private final NewsRepository newsRepository;
 
     @Override

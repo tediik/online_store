@@ -9,10 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 
 @AllArgsConstructor
@@ -36,7 +38,6 @@ public class CustomerController {
         User principal = (User) auth.getPrincipal();
         User user = userService.findById(principal.getId()).get();
         model.addAttribute("user", user);
-
         return "profile";
     }
 
@@ -45,13 +46,11 @@ public class CustomerController {
         user.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
         userService.updateUser(user);
         model.addAttribute("user", user);
-
         return "/profile";
     }
 
     @GetMapping("/change-password")
     public String changePassword() {
-
         return "changePassword";
     }
 
@@ -69,5 +68,21 @@ public class CustomerController {
         userService.updateUser(user);
 
         return "redirect:/customer/profile";
+    }
+
+    @PostMapping("/change-mail")
+    public String changeMailReq(Authentication auth, Model model,
+                              @RequestParam String newMail) {
+        User user = (User) auth.getPrincipal();
+        userService.changeUsersMail(user, newMail);
+        model.addAttribute("message", "Please check your email!");
+        return "redirect:/customer/profile";
+
+    }
+
+    @GetMapping("/activatenewmail/{token}")
+    public String changeMail(@PathVariable String token, HttpServletRequest request){
+        userService.activateNewUsersMail(token, request);
+        return "redirect:/customer";
     }
 }
