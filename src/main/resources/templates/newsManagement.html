@@ -20,7 +20,9 @@
                 <a class="btn btn-outline-primary" href="/manager">Главная</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/news/add">Добавить новость</a>
+                <button class="btn btn-outline-primary"
+                    data-toggle="modal" data-target="#addNewsModal">Добавить новость
+                </button>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/logout">Выйти</a>
@@ -95,9 +97,133 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
+<!---------------------- New News add Modal  ------------------->
+<div class="modal fade" id="addNewsModal" data-backdrop="static" tabindex="-1"
+     role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNewsModalLabel">Добавление новости</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid col-sm-12">
+                    <form id="addNewsFormModal" enctype="multipart/form-data" method="post">
+                        <div class="form-group">
+                            <label for="title">Заголовок</label>
+                            <input type="text" id="title" name="title" placeholder="Введите название" class="form-control" required>
+                            <br>
+                            <label for="anons">Анонс</label>
+                            <input type="text" id="anons" name="anons" placeholder="Введите краткое описание" class="form-control" required>
+                            <br>
+                            <label for="fullText">Полный текст</label>
+                            <textarea id="fullText" name="fullText" placeholder="Введите полный текст" class="form-control" required></textarea>
+                            <br>
+                            <label for="postingDate" class="col-xs-2 col-form-label">Выберите дату публикации</label>
+                            <div class="col-xs-10">
+                                <input class="form-control" type="datetime-local" id="postingDate" name="postingDateTime">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer actions">
+
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Закрыть
+                </button>
+
+                <button id="save" type="submit" onclick="addNews()" data-dismiss="modal"
+                        class="btn btn-primary">
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!---------------------- End of New News Modal ------------------->
+
+<!---------------------- News Edit Modal  ------------------->
+<div class="modal fade" id="editNewsModal" data-backdrop="static" tabindex="-1"
+     role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Редактировать новость</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form id="stockEditModal">
+                <div class="modal-body">
+                    <div class="container-fluid col-sm-12">
+                        <form enctype="multipart/form-data" method="post">
+                            <div class="form-group">
+                                <label for="Eid"
+                                       class="col-form-label col-sm-12 text-center">Id</label>
+                                <div class="text-center">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="Eid"
+                                           readonly>
+                                </div>
+                                <div class="field2">
+                                    <label for="editStockTitle">Заголовок акции:</label>
+                                    <input id="editStockTitle" type="text" name="title" placeholder="title"
+                                           class="form-control"
+                                           required="required">
+                                </div>
+                                <label for="editStockText">Описание акции:</label>
+                                <textarea name="comment" id="editStockText" cols="45" rows="5"
+                                          class="form-control"
+                                          required="required"></textarea>
+
+                                <label for="editStartDate">Дата начала</label>
+                                <input type="date" id="editStartDate" name="date"/>
+                                <br>
+                                <label for="editEndDate">Дата окончания</label>
+                                <input type="date" id="editEndDate" name="date"/>
+
+                                <br>
+                                <label for="editStockImg">Изображение</label>
+                                <input id="editStockImg" type="file" name="g" accept="image/jpeg"
+                                       class="form-control">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer actions2">
+
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Close
+                </button>
+
+                <button id="editSave" type="submit" data-dismiss="modal" onclick="updateStock()"
+                        class="btn btn-primary">
+                    Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!---------------------- End of Edit News Modal ------------------->
 </body>
 </html>
