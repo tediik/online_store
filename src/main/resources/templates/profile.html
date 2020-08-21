@@ -45,9 +45,6 @@
                                 <div class="row p-3">
                                     <div class="col-4">
                                         <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}" method="post" data-role="personal-info-form">
-                                            <div class="form-group text-center font-weight-bold">
-                                                <a href="/customer/change-password" text="сменить пароль">сменить пароль</a>
-                                            </div>
                                             <div class="form-group text-center font-weight-bold" hidden>
                                                 <label class="input-row_label" for="id_update">ID</label>
                                                 <input th:field="*{id}" type="text" class="form-control" id="id_update" name="id">
@@ -68,6 +65,7 @@
                                                 <label for="email_input">Email</label>
                                                 <input th:field="*{email}" type="text" class="form-control" id="email_input" name="email">
                                             </div>
+
                                             <button type="button" style="background-color: #ff8e05" class="m-2 btn btn-success d-block mx-auto" data-toggle="modal" data-target="#openNewMailModal">Изменить email</button>
                                             <div id="openNewMailModal" class="modal">
                                                 <div class="modal-dialog">
@@ -91,7 +89,32 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <button type="button" style="background-color: #ff8e05" class="m-2 btn btn-success d-block mx-auto" data-toggle="modal" data-target="#openChangePassModal">Изменить пароль</button>
+                                            <div id="openChangePassModal" class="modal">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h3 class="modal-title">Название</h3>
+                                                            <a href="#close" title="Close" class="close">×</a>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form th:action="@{/customer/change-password}" method="post" class="form-group">
+                                                                <div class="form-group text-center font-weight-bold">
+                                                                    <label for="old_password">Старый пароль</label>
+                                                                    <input type="password" id="old_password" name="oldPassword" autofocus="autofocus"
+                                                                           class="form-control" required>
+                                                                </div>
+                                                                <div class="form-group text-center font-weight-bold">
+                                                                    <label for="new_password">Новый пароль</label>
+                                                                    <input type="password" id="new_password" name="newPassword"
+                                                                           class="form-control" required/>
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary btn-sm btn-block">Сохранить</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group text-center font-weight-bold">
                                                 <label for="date_birthday_input" class="col-xs-2 col-form-label">День рождения</label>
                                                 <div class="col-xs-10">

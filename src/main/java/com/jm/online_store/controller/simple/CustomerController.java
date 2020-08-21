@@ -62,7 +62,7 @@ public class CustomerController {
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("message", "Неверный старый пароль!");
 
-            return "changePassword";
+            return "redirect:/customer/profile";
         }
         user.setPassword(newPassword);
         userService.updateUser(user);
@@ -77,12 +77,12 @@ public class CustomerController {
         userService.changeUsersMail(user, newMail);
         model.addAttribute("message", "Please check your email!");
         return "redirect:/customer/profile";
-
     }
 
     @GetMapping("/activatenewmail/{token}")
-    public String changeMail(@PathVariable String token, HttpServletRequest request){
+    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request){
         userService.activateNewUsersMail(token, request);
+        model.addAttribute("messageMail", "Email адрес успешно изменен");
         return "redirect:/customer";
     }
 }
