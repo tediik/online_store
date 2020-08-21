@@ -164,6 +164,5 @@ public class DataInitializer {
         newsService.save(firstNews);
         newsService.save(secondNews);
         newsService.save(thirdNews);
-
     }
 }
