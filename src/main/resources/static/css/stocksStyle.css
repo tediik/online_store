@@ -1,0 +1,46 @@
+body {
+    height: 100%;
+}
+
+.underline {
+    border-bottom: 2px solid coral;
+}
+
+#cont {
+    width: 100%;
+    padding-left: 10%;
+    text-align: center;
+    background-color: #ececec;
+}
+
+a {
+    cursor: pointer;
+}
+
+li {
+    list-style-type: none; /* Убираем маркеры */
+}
+ul {
+    margin-left: 0; /* Отступ слева в браузере IE и Opera */
+    padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+}
+
+header {
+    background-color: #7373ee;
+}
+
+.headTitle {
+    color: coral;
+}
+
+.main-wrapper {
+    background-color: #ececec;
+}
+
+.filters {
+    background-color: #ffffff; border-radius: 10px;
+}
+
+.stocksWrapper {
+    background-color: #ffffff; border-radius: 10px;
+}
