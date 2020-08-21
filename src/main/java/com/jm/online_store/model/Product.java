@@ -1,6 +1,8 @@
 package com.jm.online_store.model;
 
 import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -14,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.ArrayList;
 
 @Entity
 @Data
@@ -41,4 +44,12 @@ public class Product {
     private Description descriptions;
     @NonNull
     private String productType;
+
+    public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+        this.rating = rating;
+        this.descriptions = new ArrayList<>();
+    }
 }
