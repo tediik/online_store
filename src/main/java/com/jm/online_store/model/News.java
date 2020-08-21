@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +31,7 @@ public class News {
     private String anons;
 
     @Column(name = "full_text")
+    @Type(type = "text")
     private String fullText;
 
     private LocalDateTime postingDate;
