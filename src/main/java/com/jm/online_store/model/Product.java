@@ -37,7 +37,7 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Double price;
     @NonNull
-    private int amount;
+    private Integer amount;
     @NonNull
     private Double rating;
     @OneToOne(cascade = CascadeType.ALL)
