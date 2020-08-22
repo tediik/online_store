@@ -4,7 +4,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,6 +25,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ * основная сущность проекта - USER.
+ */
 @Entity
 public class User implements UserDetails {
 
@@ -72,6 +73,13 @@ public class User implements UserDetails {
 
 
     private String profilePicture;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_product",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> favouritesGoods;
 
     public User() {
         registerDate = new Date();
@@ -207,5 +215,10 @@ public class User implements UserDetails {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    private enum Gender {
+        MAN,
+        WOMAN
     }
 }
