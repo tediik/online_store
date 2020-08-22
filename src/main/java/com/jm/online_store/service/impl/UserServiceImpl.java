@@ -145,17 +145,15 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public void updateUserImage(Long userId, MultipartFile file) throws IOException {
+        //Save image to Uploads folder in users directory
+        String uploadDirectory = System.getProperty("user.dir")+"/uploads";
+        Path fileNameAndPath = Paths.get(uploadDirectory, file.getOriginalFilename());
+        byte[] bytes = file.getBytes();
+        Files.write(fileNameAndPath, bytes);
+        //Set user's profile picture
         String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        saveImageToFolder(file);
         User user = userRepository.findById(userId).get();
         user.setProfilePicture(filename);
         userRepository.save(user);
-    }
-
-    public void saveImageToFolder(MultipartFile imageFile) throws IOException {
-        String uploadDirectory = System.getProperty("user.dir")+"/uploads";
-        Path fileNameAndPath = Paths.get(uploadDirectory, imageFile.getOriginalFilename());
-        byte[] bytes = imageFile.getBytes();
-        Files.write(fileNameAndPath, bytes);
     }
 }
