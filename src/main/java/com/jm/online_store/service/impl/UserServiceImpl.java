@@ -156,4 +156,11 @@ public class UserServiceImpl implements UserService {
         user.setProfilePicture(filename);
         userRepository.save(user);
     }
+
+    public void deleteUserImage(Long userId){
+        User user = userRepository.findById(userId).get();
+        String filename = StringUtils.cleanPath("def.jpg");
+        user.setProfilePicture(filename);
+        userRepository.save(user);
+    }
 }

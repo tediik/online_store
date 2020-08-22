@@ -124,7 +124,12 @@
                                                 <div class="modal-body">
                                                     <form method="post" enctype="multipart/form-data" th:action="@{/customer/uploadImage/{id}(id = ${user.id})}">
                                                         <input type="file" name="imageFile" alt="Picture">
-                                                        <input type="submit" value="Upload" class="btn btn-sm btn-outline-warning"/>
+                                                        <input type="submit" value="Upload Picture" class="btn btn-sm btn-outline-success"/>
+                                                    </form>
+                                                    <br>
+
+                                                    <form method="post" enctype="multipart/form-data" th:action="@{/customer/deleteImage/{id}(id = ${user.id})}">
+                                                        <input type="submit" value="Delete Picture" class="btn btn-sm btn-outline-danger"/>
                                                     </form>
                                                 </div>
                                                 <!-- Modal footer -->

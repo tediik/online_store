@@ -79,4 +79,12 @@ public class CustomerController {
         userService.updateUserImage(Long.valueOf(id), imageFile);
         return "redirect:/customer/profile";
     }
+
+    @PostMapping("/deleteImage/{id}")
+    public String deleteImage(@PathVariable Long id) throws Exception {
+        userService.deleteUserImage(id);
+        return "redirect:/customer/profile";
+    }
+
+
 }

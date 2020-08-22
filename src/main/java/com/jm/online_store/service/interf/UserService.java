@@ -29,6 +29,7 @@ public interface UserService {
     boolean activateUser(String code, HttpServletRequest request);
 
     void updateUserImage(Long valueOf, MultipartFile imageFile) throws IOException;
+    void deleteUserImage(Long userId);
 }
 
 
