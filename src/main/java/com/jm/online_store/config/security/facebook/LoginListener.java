@@ -27,17 +27,17 @@ public class LoginListener implements ApplicationListener<InteractiveAuthenticat
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Current authentication is " + authentication);
+        log.debug("Current authentication is " + authentication);
 
         //Checking if Authentication coming from OAuth
         if (authentication.getClass().isAssignableFrom(OAuth2AuthenticationToken.class)) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             String clientRegistrationId = oauthToken.getAuthorizedClientRegistrationId();
-            log.info("Authentication request coming from OAuth with token details: " + oauthToken);
+            log.debug("Authentication request coming from OAuth with token details: " + oauthToken);
 
             //Checking if OAuth authentication Token is coming from Facebook
             if (clientRegistrationId.equals("facebook")) {
-                log.info("Client registration Id from OAuth token is: " + clientRegistrationId);
+                log.debug("Client registration Id from OAuth token is: " + clientRegistrationId);
                 OAuth2AuthenticatedPrincipal principal = ((OAuth2AuthenticationToken) authentication).getPrincipal();
                 FacebookUserInfo facebookUserInfo = new FacebookUserInfo(principal.getAttributes());
                 User userPrincipalFromDB = userService.findByEmail(facebookUserInfo.getEmail()).get();
@@ -45,7 +45,7 @@ public class LoginListener implements ApplicationListener<InteractiveAuthenticat
                 SecurityContextHolder.getContext().setAuthentication(newCustomAuthentication);
             }
         } else if (authentication.getClass().isAssignableFrom(UsernamePasswordAuthenticationToken.class)) {
-            log.info("Form based manual authorization");
+            log.debug("Form based manual authorization");
         }
     }
 }

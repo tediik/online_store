@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
         try {
             request.login(user.getEmail(),confirmationToken.getUserPassword());
         } catch (ServletException e) {
-            log.debug("Servlet exception from ActivateUser Method " + e);
+            log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
         }
         return true;
     }

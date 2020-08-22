@@ -41,7 +41,7 @@ public class RegistrationController {
     @PostMapping("/registration")
     public String registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            log.debug("BindingResult in registerUserAccount hasErrors " + bindingResult);
+            log.debug("BindingResult in registerUserAccount hasErrors: {}", bindingResult);
             return "registration";
         }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){

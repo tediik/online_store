@@ -1,32 +1,38 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.model.News;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
+
+import com.jm.online_store.service.interf.NewsService;
+import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
-import lombok.extern.slf4j.Slf4j;
+
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * класс первичного заполнения таблиц.
+ */
+@AllArgsConstructor
 @Component
-@Slf4j
 public class DataInitializer {
 
     private final UserService userService;
     private final RoleService roleService;
+    private final ProductService productService;
+    private final NewsService newsService;
 
-    @Autowired
-    public DataInitializer(UserService userService, RoleService roleService) {
-        this.userService = userService;
-        this.roleService = roleService;
-    }
-
-    /*@PostConstruct*/
+    //    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -61,8 +67,6 @@ public class DataInitializer {
         userService.addUser(customer);
         userService.addUser(admin);
 
-        log.info("Test data has been initialed - database updated");
-
         Product product_1 = new Product("apple", 100000D, 10, 0.1);
         Product product_2 = new Product("samsung", 80000D, 100, 0.9);
         Product product_3 = new Product("xiaomi", 30000D, 50, 0.5);
@@ -82,7 +86,7 @@ public class DataInitializer {
 
     }
 
-    //    @PostConstruct
+//    @PostConstruct
     public void newsConstructor(){
         News firstNews = News.builder()
                 .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
