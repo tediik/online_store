@@ -76,7 +76,7 @@ public class CustomerController {
 
     @PostMapping("/uploadImage/{id}")
     public String handleImagePost(@PathVariable String id, @RequestParam("imageFile") MultipartFile imageFile) throws Exception {
-        userService.saveImage(Long.valueOf(id), imageFile);
+        userService.updateUserImage(Long.valueOf(id), imageFile);
         return "redirect:/customer/profile";
     }
 }

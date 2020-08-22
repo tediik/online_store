@@ -1,4 +1,4 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
@@ -6,7 +6,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
-import org.hibernate.mapping.Collection;
+import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,17 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Blob;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -50,12 +47,12 @@ public class UserServiceImpl implements UserService {
     private ConfirmationTokenRepository confirmTokenRepository;
 
     @Autowired
-    private MailSenderService mailSenderService;
+    private MailSenderServiceImpl mailSenderService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Value("${spring.url.activate}")
+    @Value("${spring.server.url}")
     private String urlActivate;
 
     @Autowired
@@ -129,9 +126,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        Role userRole = roleRepository.findByName("ROLE_CUSTOMER").get();
-        Set<Role> userSetRoles = new HashSet<>();
-        userSetRoles.add(userRole);
+        Set<Role> userSetRoles = Collections.singleton(roleRepository.findByName("ROLE_CUSTOMER").get());
 
         User user = new User();
         user.setEmail(confirmationToken.getUserEmail());
@@ -149,23 +144,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public void saveImage(Long userId, MultipartFile file) throws Exception {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        saveImage(file);
-        File toReturn = new File("/home/yuri/images/" + file.getOriginalFilename());
+    public void updateUserImage(Long userId, MultipartFile file) throws IOException {
+        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        saveImageToFolder(file);
         User user = userRepository.findById(userId).get();
         user.setProfilePicture(filename);
         userRepository.save(user);
-
     }
 
-    public void saveImage(MultipartFile imageFile) throws Exception {
+    public void saveImageToFolder(MultipartFile imageFile) throws IOException {
         String uploadDirectory = System.getProperty("user.dir")+"/uploads";
-
-        File convFile = new File("/static/images/" + imageFile.getOriginalFilename());
-        String folder = "/home/yuri/IdeaProjects/online_store/src/main/resources/static/images/";
+        Path fileNameAndPath = Paths.get(uploadDirectory, imageFile.getOriginalFilename());
         byte[] bytes = imageFile.getBytes();
-        Path path = Paths.get(folder + imageFile.getOriginalFilename());
-        Files.write(path, bytes);
+        Files.write(fileNameAndPath, bytes);
     }
 }

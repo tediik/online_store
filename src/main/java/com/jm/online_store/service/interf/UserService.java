@@ -1,9 +1,10 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public interface UserService {
 
     boolean activateUser(String code, HttpServletRequest request);
 
-    void saveImage(Long aLong, MultipartFile imageFile) throws Exception;
+    void updateUserImage(Long valueOf, MultipartFile imageFile) throws IOException;
 }
 
 
