@@ -160,6 +160,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public void saveImage(MultipartFile imageFile) throws Exception {
+        String uploadDirectory = System.getProperty("user.dir")+"/uploads";
+
         File convFile = new File("/static/images/" + imageFile.getOriginalFilename());
         String folder = "/home/yuri/IdeaProjects/online_store/src/main/resources/static/images/";
         byte[] bytes = imageFile.getBytes();

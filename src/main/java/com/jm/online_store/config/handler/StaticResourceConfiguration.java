@@ -9,7 +9,7 @@ public class StaticResourceConfiguration implements WebMvcConfigurer {
 
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
             "classpath:/META-INF/resources/", "classpath:/resources/",
-            "classpath:/static/", "classpath:/public/" };
+            "classpath:/static/", "classpath:/public/", "classpath:/home/yuri/images/" };
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

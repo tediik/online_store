@@ -104,6 +104,9 @@
                                     <img alt="UserPhoto" class="rounded-circle img-responsive mt-2"
                                          height="152" th:src="@{../images/{name}(name = ${user.getProfilePicture()})}" width="152">
 
+                                    <img alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                         height="152" th:src="@{/home/yuri/images/{name}(name = ${user.getProfilePicture()})}" width="152">
+
 
                                 <form method="post" enctype="multipart/form-data" th:action="@{/customer/uploadImage/{id}(id = ${user.id})}">
                                     <input type="file" name="imageFile">
