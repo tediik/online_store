@@ -1,6 +1,7 @@
 package com.jm.online_store.service;
 
 import com.jm.online_store.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -25,6 +26,8 @@ public interface UserService {
     void regNewAccount(User user);
 
     boolean activateUser(String code, HttpServletRequest request);
+
+    void saveImage(Long aLong, MultipartFile imageFile) throws Exception;
 }
 
 
