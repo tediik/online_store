@@ -15,13 +15,17 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
+
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
+
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
@@ -92,6 +96,7 @@ public class DataInitializer {
         customer = userService.findByEmail("customer@mail.ru").get();
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
+
     }
 
     //    @PostConstruct
