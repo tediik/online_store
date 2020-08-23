@@ -2,7 +2,6 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
-import com.jm.online_store.exception.StorageException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
@@ -34,7 +33,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -183,13 +181,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUserImage(Long userId) throws IOException {
         final String defaultAvatar = StringUtils.cleanPath("def.jpg");
-        //Pull user from DB by ID
         User user = userRepository.findById(userId).get();
         //Get profilePicture name from User and delete this profile picture from Uploads
         String uploadDirectory = System.getProperty("user.dir") + "/uploads";
         Path fileNameAndPath = Paths.get(uploadDirectory, user.getProfilePicture());
-        String p = fileNameAndPath.getFileName().toString();
-        if (!p.equals(defaultAvatar)) {
+        //Check if deleting picture is not a default avatar
+        if (!fileNameAndPath.getFileName().toString().equals(defaultAvatar)) {
             Files.delete(fileNameAndPath);
         }
         //Set a default avatar as a user profilePicture
