@@ -49,7 +49,7 @@ public class RegistrationController {
             model.addAttribute("passwordConfirmError", "Пароли не совпадают");
             return "registration";
         }
-        if (userService.emailExist(userForm.getEmail())){
+        if (userService.isExist(userForm.getEmail())){
             log.debug("User with same email already exists : emailError ");
             model.addAttribute("emailError", "Пользователь с таким именем уже существует");
             return "registration";
