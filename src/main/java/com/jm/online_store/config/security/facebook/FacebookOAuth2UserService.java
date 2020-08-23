@@ -4,6 +4,7 @@ import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import lombok.Setter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +22,17 @@ import java.util.Set;
 @Service
 public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
 
-    private static final Log log = LogFactory.getLog(FacebookOAuth2UserService.class);
-
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    @Autowired
+    @Setter
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
+    /*@Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-    }
+    }*/
 
     @Autowired
     public FacebookOAuth2UserService(UserRepository userRepository, RoleRepository roleRepository) {

@@ -22,13 +22,14 @@ public interface UserService {
 
     Optional<User> findByEmail(String username);
 
-    boolean emailExist(String email);
+    boolean isExist(String email);
 
     void regNewAccount(User user);
 
     boolean activateUser(String code, HttpServletRequest request);
 
     void updateUserImage(Long valueOf, MultipartFile imageFile) throws IOException;
+
     void deleteUserImage(Long userId);
 }
 

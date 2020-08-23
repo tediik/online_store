@@ -14,4 +14,6 @@ public interface CategoriesService {
     void saveCategory (Categories categories);
 
     void deleteCategory(Long idCategory);
+
+    void saveAll(List<Categories> catList);
 }

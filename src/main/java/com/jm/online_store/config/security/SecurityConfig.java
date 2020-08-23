@@ -33,7 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(facebookOAuth2UserService).and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
+        http
+                .oauth2Login().loginPage("/login").userInfoEndpoint().userService(facebookOAuth2UserService)
+                .and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
 
         http.formLogin()
                 // указываем страницу с формой логина
