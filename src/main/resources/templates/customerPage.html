@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous">
-    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
     <!-- Optional JavaScript -->
     <script src="../static/js/customer.js"></script>
+    <script src="../static/js/busket.js"></script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
@@ -35,6 +35,9 @@
                 <a class="btn btn-outline-primary" data-toggle="tab" role="tab" href="#favouritesGoods" aria-controls="favouritesGoods" onclick="fillFavouritesGoods()">Избранное</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" data-toggle="tab" role="tab" href="#basket" aria-controls="favouritesGoods" onclick="fillBusket()">Корзина</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/logout">Выйти</a>
             </div>
         </div>
@@ -55,8 +58,32 @@
                         <tbody id="favouritesGoodsList">
 
                         </tbody>
-                        </tr>
                     </table>
+                </div>
+                <div class="tab-pane" id="basket" role="tabpanel" aria-labelledby="basket-tab">
+                    <h3>корзина</h3>
+                    <div class="row min-vh-100">
+                        <div class="col-md-9" style="padding-right: 0px; padding-left: 0px" >
+                            сама корзина
+                            <table class="table table-striped">
+                            <tbody id="busketList">
+
+                            </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-3" style="padding-right: 0px; padding-left: 0px">
+                            <tr>
+                                <span>общее количество товара:</span>
+                                <h3 id="countBasketGoods"></h3>
+                            </tr>
+                            <tr>
+                                <span>стоимость заказа:</span>
+                                <h3 id="sumBasketGoods"></h3>
+                            </tr>
+
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">купить</button>
+                        </div>
+                    </div>
                 </div>
                </div>
             </div>

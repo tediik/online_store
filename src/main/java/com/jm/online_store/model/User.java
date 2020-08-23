@@ -22,7 +22,10 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -74,7 +77,14 @@ public class User implements UserDetails {
             name = "user_product",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> favouritesGoods;
+    private Set<Product> favouritesGoods = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_basket",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "basket_id"))
+    private List<Basket> userBasket = new ArrayList<>();
 
     public User() {
         registerDate = LocalDate.now();

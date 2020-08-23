@@ -1,5 +1,6 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.model.Basket;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
@@ -85,7 +87,7 @@ public class DataInitializer {
 
     }
 
-    //    @PostConstruct
+//        @PostConstruct
     public void newsConstructor(){
         News firstNews = News.builder()
                 .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
