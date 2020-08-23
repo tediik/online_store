@@ -50,6 +50,5 @@ public class Product {
         this.price = price;
         this.amount = amount;
         this.rating = rating;
-        this.descriptions = new ArrayList<>();
     }
 }

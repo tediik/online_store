@@ -2,6 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
+import com.jm.online_store.exception.StorageException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
@@ -160,22 +161,39 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public void updateUserImage(Long userId, MultipartFile file) throws IOException {
-        //Save image to Uploads folder in users directory
-        String uploadDirectory = System.getProperty("user.dir") + "/uploads";
-        Path fileNameAndPath = Paths.get(uploadDirectory, file.getOriginalFilename());
-        byte[] bytes = file.getBytes();
-        Files.write(fileNameAndPath, bytes);
-        //Set user's profile picture
-        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        User user = userRepository.findById(userId).get();
-        user.setProfilePicture(filename);
-        userRepository.save(user);
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        //Save received image File to Uploads folder in users directory
+        if (!file.isEmpty()) {
+            String uploadDirectory = System.getProperty("user.dir") + "/uploads";
+            Path fileNameAndPath = Paths.get(uploadDirectory, file.getOriginalFilename());
+            byte[] bytes = file.getBytes();
+            try {
+                Files.write(fileNameAndPath, bytes);
+                //Set user's profile picture
+                User user = userRepository.findById(userId).get();
+                user.setProfilePicture(filename);
+                userRepository.save(user);
+            } catch (IOException e) {
+                log.debug("Failed to store file {} {}", fileNameAndPath, e);
+            }
+        }
+        log.debug("Failed to store file - file is not present {}", filename);
     }
 
-    public void deleteUserImage(Long userId) {
+    @Transactional
+    public void deleteUserImage(Long userId) throws IOException {
+        final String defaultAvatar = StringUtils.cleanPath("def.jpg");
+        //Pull user from DB by ID
         User user = userRepository.findById(userId).get();
-        String filename = StringUtils.cleanPath("def.jpg");
-        user.setProfilePicture(filename);
+        //Get profilePicture name from User and delete this profile picture from Uploads
+        String uploadDirectory = System.getProperty("user.dir") + "/uploads";
+        Path fileNameAndPath = Paths.get(uploadDirectory, user.getProfilePicture());
+        String p = fileNameAndPath.getFileName().toString();
+        if (!p.equals(defaultAvatar)) {
+            Files.delete(fileNameAndPath);
+        }
+        //Set a default avatar as a user profilePicture
+        user.setProfilePicture(defaultAvatar);
         userRepository.save(user);
     }
 

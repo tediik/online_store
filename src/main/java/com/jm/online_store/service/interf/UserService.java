@@ -30,7 +30,7 @@ public interface UserService {
 
     void updateUserImage(Long valueOf, MultipartFile imageFile) throws IOException;
 
-    void deleteUserImage(Long userId);
+    void deleteUserImage(Long userId) throws IOException;
 }
 
 
