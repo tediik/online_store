@@ -4,6 +4,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
+@Slf4j
 public class RegistrationController {
 
     @Autowired
@@ -39,13 +41,16 @@ public class RegistrationController {
     @PostMapping("/registration")
     public String registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            log.debug("BindingResult in registerUserAccount hasErrors: {}", bindingResult);
             return "registration";
         }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+            log.debug("Passwords do not match : passwordConfirmError");
             model.addAttribute("passwordConfirmError", "Пароли не совпадают");
             return "registration";
         }
-        if (userService.emailExist(userForm.getEmail())){
+        if (userService.isExist(userForm.getEmail())){
+            log.debug("User with same email already exists : emailError ");
             model.addAttribute("emailError", "Пользователь с таким именем уже существует");
             return "registration";
         }

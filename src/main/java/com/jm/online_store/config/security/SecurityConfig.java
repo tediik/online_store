@@ -33,7 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(facebookOAuth2UserService).and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
+        http
+                .oauth2Login().loginPage("/login").userInfoEndpoint().userService(facebookOAuth2UserService)
+                .and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
 
         http.formLogin()
                 // указываем страницу с формой логина
@@ -61,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/news/**", "/registration", "/css/**").permitAll()
-                .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**").permitAll()
+                .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**", "/404").permitAll()
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
                 .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
                 .antMatchers("/manager/**").access("hasAnyRole('ROLE_MANAGER')")
