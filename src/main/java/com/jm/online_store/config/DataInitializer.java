@@ -2,22 +2,31 @@ package com.jm.online_store.config;
 
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Description;
-import com.jm.online_store.model.News;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CategoriesService;
+import lombok.Data;
+import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.UserService;
+import org.springframework.stereotype.Component;
+import java.util.Arrays;
+import com.jm.online_store.model.News;
+import com.jm.online_store.model.Product;
+import com.jm.online_store.model.Role;
+import com.jm.online_store.model.User;
+
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -36,7 +45,7 @@ public class DataInitializer {
     private final ProductService productService;
     private final NewsService newsService;
 
-    @PostConstruct
+//    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -89,8 +98,8 @@ public class DataInitializer {
         userService.updateUser(customer);
     }
 
-//    @PostConstruct
-    public void newsConstructor() {
+    //    @PostConstruct
+    public void newsConstructor(){
         News firstNews = News.builder()
                 .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
                 .anons("Не пропустите розыгрыш потрясающих призов.")
@@ -170,7 +179,7 @@ public class DataInitializer {
         newsService.save(thirdNews);
     }
 
-        @PostConstruct
+//    @PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
@@ -196,8 +205,8 @@ public class DataInitializer {
         Description description5 = new Description("33211678NXU", "ATop corp.", 3, "690x765x322", "black", 3.5, "some additional info here");
         Description description6 = new Description("333367653Rh", "Rhino corp.", 3, "612x678x315", "orange", 2.8, "some additional info here");
         Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "some additional info here", 512, 512, "1920x960", true, "5.0");
-        Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 256, "1920x960", false, "4.0");
-        Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 128, "1024x480", true, "5.0");
+        Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here",  1024, 256, "1920x960", false, "4.0");
+        Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here",  2048, 128, "1024x480", true, "5.0");
 
         product1.setDescriptions(description1);
         product2.setDescriptions(description2);

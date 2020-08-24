@@ -10,6 +10,7 @@ import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
+import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -68,6 +69,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findByEmail(String username) {
+        return userRepository.findByEmail(username);
+    }
+
+
+    @Override
     public boolean isExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
@@ -112,11 +119,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByEmail(String username) {
-        return userRepository.findByEmail(username);
-    }
-
-    @Override
+    @Transactional
     public void regNewAccount(User userForm) {
         ConfirmationToken confirmationToken = new ConfirmationToken(userForm.getEmail(), userForm.getPassword());
         confirmTokenRepository.save(confirmationToken);
@@ -133,30 +136,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean activateUser(String token, HttpServletRequest request) {
 
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
+            log.debug("ConfirmationToken is null");
             return false;
         }
 
-        Set<Role> userSetRoles = Collections.singleton(roleRepository.findByName("ROLE_CUSTOMER").get());
+        Set<Role> userRoles = roleRepository.findByName("ROLE_CUSTOMER")
+                .map(Collections::singleton)
+                .orElse(Collections.emptySet());
 
         User user = new User();
         user.setEmail(confirmationToken.getUserEmail());
         user.setPassword(confirmationToken.getUserPassword());
-        user.setRoles(userSetRoles);
+        user.setRoles(userRoles);
 
         addUser(user);
 
         try {
             request.login(user.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {
-            e.printStackTrace();
+            log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
         }
         return true;
     }
 
+    private Set<Role> persistRoles(Set<Role> roles) {
+        return roles.stream()
+                .map(Role::getName)
+                .map(roleRepository::findByName)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     @Transactional
     public void updateUserImage(Long userId, MultipartFile file) throws IOException {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -178,6 +195,7 @@ public class UserServiceImpl implements UserService {
         log.debug("Failed to store file - file is not present {}", filename);
     }
 
+    @Override
     @Transactional
     public void deleteUserImage(Long userId) throws IOException {
         final String defaultAvatar = StringUtils.cleanPath("def.jpg");
@@ -192,14 +210,5 @@ public class UserServiceImpl implements UserService {
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
         userRepository.save(user);
-    }
-
-    private Set<Role> persistRoles(Set<Role> roles) {
-        return roles.stream()
-                .map(Role::getName)
-                .map(roleRepository::findByName)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toSet());
     }
 }
