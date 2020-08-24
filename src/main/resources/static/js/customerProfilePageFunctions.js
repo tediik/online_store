@@ -1,18 +1,12 @@
 const stockMailingCheckbox = document.getElementById('#stockMailingCheckbox')
 
-// stockMailingCheckbox.addEventListener('click', handleStockMailingCheckbox)
-
-function handleStockMailingCheckbox() {
-    console.log("Нажал")
-}
-
 $('#stockMailingCheckbox').change(function(){
     if(this.checked!==true){
-        $(".form-check-label").hide();
+        $(".day-of-the-week").addClass("d-none")
         console.log("hide")
     }
     else{
-        $(".form-check-label").show();
+        $(".day-of-the-week").removeClass("d-none")
         console.log("show")
     }
 });
