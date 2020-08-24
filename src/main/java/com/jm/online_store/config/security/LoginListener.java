@@ -1,5 +1,7 @@
-package com.jm.online_store.config.security.facebook;
+package com.jm.online_store.config.security;
 
+import com.jm.online_store.config.security.oauth2userinfo.OAuth2UserInfo;
+import com.jm.online_store.config.security.oauth2userinfo.OAuth2UserInfoFactory;
 import com.jm.online_store.model.User;
 import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.service.interf.UserService;
@@ -35,18 +37,19 @@ public class LoginListener implements ApplicationListener<InteractiveAuthenticat
             String clientRegistrationId = oauthToken.getAuthorizedClientRegistrationId();
             log.debug("Authentication request coming from OAuth with token details: " + oauthToken);
 
-            //Checking if OAuth authentication Token is coming from Facebook
-            if (clientRegistrationId.equals("facebook")) {
-                log.debug("Client registration Id from OAuth token is: " + clientRegistrationId);
-                OAuth2AuthenticatedPrincipal principal = ((OAuth2AuthenticationToken) authentication).getPrincipal();
-                FacebookUserInfo facebookUserInfo = new FacebookUserInfo(principal.getAttributes());
-                User userPrincipalFromDB = userService.findByEmail(facebookUserInfo.getEmail()).get();
-                Authentication newCustomAuthentication = new UsernamePasswordAuthenticationToken(userPrincipalFromDB, null, userPrincipalFromDB.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(newCustomAuthentication);
-            }
+            OAuth2AuthenticatedPrincipal principal = ((OAuth2AuthenticationToken) authentication).getPrincipal();
+
+            //Sending data to retrieve proper UserInfo
+            OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(clientRegistrationId, principal.getAttributes());
+            log.debug("Client registration Id from OAuth token is: " + clientRegistrationId);
+            User userPrincipalFromDB = userService.findByEmail(oAuth2UserInfo.getEmail()).get();
+            Authentication newCustomAuthentication = new UsernamePasswordAuthenticationToken(userPrincipalFromDB, null, userPrincipalFromDB.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(newCustomAuthentication);
+
         } else if (authentication.getClass().isAssignableFrom(UsernamePasswordAuthenticationToken.class)) {
             log.debug("Form based manual authorization");
         }
+        Authentication oAuth2Authentication = (Authentication) SecurityContextHolder.getContext().getAuthentication();
     }
 }
 
