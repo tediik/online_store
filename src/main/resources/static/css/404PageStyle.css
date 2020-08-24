@@ -1,0 +1,38 @@
+body {
+    background-color: #EEEDE9;
+    height: 100%;
+    color: #2F3034;
+    font-family: LeituraDisplay, serif;
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0 0 16px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.main-wrapper {
+    box-sizing: border-box;
+    height: auto;
+    min-height: min-content;
+    overflow: hidden;
+    padding-top: 70px;
+    position: relative;
+}
+
+.second {
+    margin: auto;
+    width: 100%;
+    padding: 0 30px;
+    text-align: center;
+}
+
+#error-animation {
+    flex-basis: 66.66666666666666%;
+    max-width: 66.66666666666666%;
+}
+
+img {
+    padding-left: 15%;
+    display: block;
+    max-width: 100%;
+}
