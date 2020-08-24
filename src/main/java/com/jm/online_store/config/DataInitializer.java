@@ -99,7 +99,7 @@ public class DataInitializer {
 
     }
 
-        @PostConstruct
+//        @PostConstruct
     public void newsConstructor(){
         News firstNews = News.builder()
                 .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
@@ -180,7 +180,7 @@ public class DataInitializer {
         newsService.save(thirdNews);
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
