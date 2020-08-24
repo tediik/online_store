@@ -1,9 +1,9 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
+import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
