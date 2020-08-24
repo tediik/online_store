@@ -62,13 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/news/**", "/registration", "/css/**").permitAll()
                 .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**").permitAll()
-                .antMatchers("/manager/**").permitAll() // ToDo удалить
-                .antMatchers("/api/manager/**").permitAll() // ToDo удалить
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
                 .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
-/*
                 .antMatchers("/manager/**").access("hasAnyRole('ROLE_MANAGER')")
-*/
                 .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied");
