@@ -89,20 +89,11 @@
 			<artifactId>bootstrap</artifactId>
 			<version>4.5.0</version>
 		</dependency>
-<<<<<<< HEAD
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
             <version>5.1.4.RELEASE</version>
         </dependency>
-
-=======
-    <dependency>
-       <groupId>org.springframework</groupId>
-       <artifactId>spring-context-support</artifactId>
-       <version>5.1.4.RELEASE</version>
-    </dependency>
->>>>>>> dev
 		<!--  https://mvnrepository.com/artifact/org.springframework.security.oauth.boot/spring-security-oauth2-autoconfigure  -->
 		<dependency>
 			<groupId>org.springframework.security.oauth.boot</groupId>
