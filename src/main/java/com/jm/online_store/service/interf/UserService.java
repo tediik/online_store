@@ -1,4 +1,4 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.User;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ public interface UserService {
 
     Optional<User> findByEmail(String username);
 
-    boolean emailExist(String email);
+    boolean isExist(String email);
 
     void regNewAccount(User user);
 

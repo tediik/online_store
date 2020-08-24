@@ -19,7 +19,7 @@ public class LoginController {
     public String oAuthOdnoklassniki(Model model, @RequestParam String code) {
 
         oAuth2Service.UserAuth(code);
-        return "redirect:/mainPage";
+        return "redirect:/";
     }
 
     @GetMapping(value = "/login")

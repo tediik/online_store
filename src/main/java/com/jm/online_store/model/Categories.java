@@ -1,8 +1,11 @@
 package com.jm.online_store.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +20,8 @@ import java.util.List;
 @Table(name = "categories")
 @Data
 @NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Categories {
 
     @Id
