@@ -77,9 +77,8 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favouritesGoods;
 
-    @ManyToOne
-    @JoinColumn(name = "task_id")
-    private SchedulerTasks task;
+    @Column(name = "day_of_week_for_stock_send")
+    private String dayOfWeekForStockSend;
 
     public User() {
         registerDate = LocalDate.now();
