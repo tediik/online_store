@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 
 @AllArgsConstructor
@@ -75,13 +76,13 @@ public class CustomerController {
     }
 
     @PostMapping("/uploadImage/{id}")
-    public String handleImagePost(@PathVariable String id, @RequestParam("imageFile") MultipartFile imageFile) throws Exception {
+    public String handleImagePost(@PathVariable String id, @RequestParam("imageFile") MultipartFile imageFile) {
         userService.updateUserImage(Long.valueOf(id), imageFile);
         return "redirect:/customer/profile";
     }
 
     @PostMapping("/deleteImage/{id}")
-    public String deleteImage(@PathVariable Long id) throws Exception {
+    public String deleteImage(@PathVariable Long id) {
         userService.deleteUserImage(id);
         return "redirect:/customer/profile";
     }

@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUserImage(Long userId, MultipartFile file) throws IOException {
+    public void updateUserImage(Long userId, MultipartFile file) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         //Save received image File to Uploads folder in users directory
         if (!file.isEmpty()) {
@@ -197,7 +197,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUserImage(Long userId) throws IOException {
+    public void deleteUserImage(Long userId) {
         final String defaultAvatar = StringUtils.cleanPath("def.jpg");
         User user = userRepository.findById(userId).get();
         //Get profilePicture name from User and delete this profile picture from Uploads
