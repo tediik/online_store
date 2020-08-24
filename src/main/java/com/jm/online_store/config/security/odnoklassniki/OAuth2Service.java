@@ -43,7 +43,7 @@ public class OAuth2Service {
     private final String clientId = "512000494295";
     private final String publicKey = "CINLIMJGDIHBABABA";
     private final String secretKey = "2DD0271520909F838004E332";
-    
+
     private final OAuth20Service service = new ServiceBuilder(clientId)
             .apiSecret(secretKey)
             .callback("http://localhost:9999/oauth")

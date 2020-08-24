@@ -14,19 +14,32 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 </head>
 <body>
-<header th:insert="/blocks/header :: header"></header>
-<div class="container-fluid">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
+
+        <div class="navbar-brand">Перейти на <span><b><a style="color: coral" href="/">главную</a></b></span></div>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+        </div>
+        <div class="navbar-text"><a th:href="@{/logout}">Logout</a></div>
+    </nav>
+</header>
+<div class="container-fluid" style="padding-right: 0px; padding-left: 0px">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/manager">Кабинет менеджера</a></li>
+            <li class="breadcrumb-item"><a href="/manager/news">Новости</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Добавить новость</li>
+        </ol>
+    </nav>
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <a class="btn btn-link" href="/manager/news"><---обратно</a>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager">Главная</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
-            </div>
+
         </div>
-        <div class="col-sm-8 text-left">
+        <div class="col-sm-8 text-left  mb-5">
+            <br>
             <h1 class="mb-2 text-center">Добавление новости</h1>
             <br>
             <form th:action="@{/manager/news/post}" th:object="${news}" method="post">
@@ -50,7 +63,7 @@
         </div>
     </div>
 </div>
-<div th:insert="/blocks/footer :: footer"></div>
+
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <script src="/static/js/textRedactor.js"></script>
