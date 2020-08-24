@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +30,7 @@ public class News {
 
     private String anons;
 
+    @Type(type = "text")
     private String fullText;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
