@@ -40,7 +40,7 @@ public class ConfirmationToken {
     public ConfirmationToken(Long userId, String userMail) {
         this.userId = userId;
         this.userEmail = userMail;
-        createdDate = new Date();
+        createdDate = LocalDate.now();
         confirmationToken = UUID.randomUUID().toString();
     }
 
