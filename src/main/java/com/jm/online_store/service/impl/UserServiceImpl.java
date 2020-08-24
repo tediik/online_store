@@ -7,8 +7,10 @@ import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
+import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.util.ValidationUtils;
@@ -127,6 +129,10 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(userForm.getEmail(), "Activation code", message);
     }
 
+    /**
+     * Method generates confirmation token based on users ID and Email adress
+     * Sends generated token to new users email
+     */
     @Override
     public void changeUsersMail(User user, String newMail){
 
@@ -175,6 +181,10 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    /**
+     * Method receives token and request after User confirms mail change via link
+     * After that, new email address is saved to users DB table
+     */
     @Override
     public boolean activateNewUsersMail(String token, HttpServletRequest request){
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
