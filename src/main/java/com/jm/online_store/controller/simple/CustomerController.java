@@ -85,6 +85,4 @@ public class CustomerController {
         userService.deleteUserImage(id);
         return "redirect:/customer/profile";
     }
-
-
 }
