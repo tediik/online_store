@@ -77,14 +77,9 @@
                                                             <input type="text" name="ID" value="" class="form-control" placeholder="Id" id="updateId" readonly="readonly">
                                                         </div>
 
-                                                        <div class="form-group">
+                                                        <div id="update-email-form-group" class="form-group">
                                                             <label for="updateEmail" class="form-control-label">Email:</label>
                                                             <input type="email" name="email" value="" class="form-control" placeholder="Email" id="updateEmail">
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="updatePassword" class="form-control-label">Password:</label>
-                                                            <input type="password" name="password" value="" class="form-control" placeholder="Password" id="updatePassword">
                                                         </div>
 
                                                         <div class="form-group">
@@ -99,7 +94,7 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn  btn-danger" data-dismiss="modal">Close</button>
 
-                                                            <button type="button" id="updateSubmitBtn" class="btn btn-primary " data-dismiss="modal">Edit</button>
+                                                            <button type="button" id="updateSubmitBtn" class="btn btn-primary">Edit</button>
                                                         </div>
                                                     </div>
 
@@ -173,9 +168,10 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">New User</div>
                             <div class="panel-body">
-                                <div class="form-group ">
+                                <div id="add-email-form-group" class="form-group">
                                     <label for="addEmail">Email:</label>
                                     <input type="text" id="addEmail" name="email" placeholder="E-mail" class="form-control">
+
                                 </div>
                                 <div class="form-group">
                                     <label for="addPassword">Password:</label>

@@ -12,6 +12,4 @@ public class AdminController {
     public String homePage(){
         return "index";
     }
-
-
 }
