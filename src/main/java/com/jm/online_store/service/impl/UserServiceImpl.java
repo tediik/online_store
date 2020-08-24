@@ -181,15 +181,15 @@ public class UserServiceImpl implements UserService {
         if (!file.isEmpty()) {
             String uploadDirectory = System.getProperty("user.dir") + "/uploads";
             Path fileNameAndPath = Paths.get(uploadDirectory, file.getOriginalFilename());
-            byte[] bytes = file.getBytes();
             try {
+                byte[] bytes = file.getBytes();
                 Files.write(fileNameAndPath, bytes);
                 //Set user's profile picture
                 User user = userRepository.findById(userId).get();
                 user.setProfilePicture(filename);
                 userRepository.save(user);
             } catch (IOException e) {
-                log.debug("Failed to store file {} {}", fileNameAndPath, e);
+                log.debug("Failed to store file {} {}", fileNameAndPath, e.getMessage());
             }
         }
         log.debug("Failed to store file - file is not present {}", filename);
@@ -204,8 +204,13 @@ public class UserServiceImpl implements UserService {
         String uploadDirectory = System.getProperty("user.dir") + "/uploads";
         Path fileNameAndPath = Paths.get(uploadDirectory, user.getProfilePicture());
         //Check if deleting picture is not a default avatar
-        if (!fileNameAndPath.getFileName().toString().equals(defaultAvatar)) {
-            Files.delete(fileNameAndPath);
+        try {
+            if (!fileNameAndPath.getFileName().toString().equals(defaultAvatar)) {
+                Files.delete(fileNameAndPath);
+            }
+        }
+        catch (IOException e){
+            log.debug("Failed to delete file {} {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);

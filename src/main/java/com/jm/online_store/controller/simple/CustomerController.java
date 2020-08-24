@@ -76,13 +76,13 @@ public class CustomerController {
     }
 
     @PostMapping("/uploadImage/{id}")
-    public String handleImagePost(@PathVariable String id, @RequestParam("imageFile") MultipartFile imageFile) {
+    public String handleImagePost(@PathVariable String id, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         userService.updateUserImage(Long.valueOf(id), imageFile);
         return "redirect:/customer/profile";
     }
 
     @PostMapping("/deleteImage/{id}")
-    public String deleteImage(@PathVariable Long id) {
+    public String deleteImage(@PathVariable Long id) throws IOException {
         userService.deleteUserImage(id);
         return "redirect:/customer/profile";
     }
