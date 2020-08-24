@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>News Management</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -15,24 +15,33 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 </head>
 <body>
-<header th:insert="/blocks/header :: header"></header>
-<div class="container-fluid">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
+        <div class="navbar-brand">Перейти на <span><b><a style="color: coral" href="/">главную</a></b></span></div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+        </div>
+        <div class="navbar-text"><a th:href="@{/logout}">Logout</a></div>
+    </nav>
+</header>
+<div class="container-fluid" style="padding-right: 0px; padding-left: 0px">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/manager">Кабинет менеджера</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Все новости</li>
+        </ol>
+    </nav>
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <a class="btn btn-link" href="/manager"><---обратно</a>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager">Главная</a>
-            </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <button class="btn btn-outline-primary"
                     data-toggle="modal" data-target="#addNewsModal">Добавить новость
                 </button>
             </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/logout">Выйти</a>
-            </div>
         </div>
         <div class="col-sm-8 tab-pane">
+            <br>
             <h1 class="text-center">Управление новостями</h1>
             <ul class="nav nav-tabs">
                 <!-- Первая вкладка (активная) -->
@@ -48,7 +57,7 @@
                 </li>
             </ul>
             <!-- Блоки с контентом -->
-            <div class="tab-content">
+            <div class="tab-content mb-5">
                 <!-- Первый блок (он отображается по умолчанию, т.к. имеет классы show и active) -->
                 <div class="tab-pane fade show active" id="tab_all_news">
                     <div id="allNews">
@@ -198,7 +207,6 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
             <form id="deleteNewsFormModal">
                 <div class="modal-body">
                     <div class="container-fluid col-sm-12">

@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,6 +31,7 @@ public class News {
 
     private String anons;
 
+    @Column(name = "full_text")
     @Type(type = "text")
     private String fullText;
 
