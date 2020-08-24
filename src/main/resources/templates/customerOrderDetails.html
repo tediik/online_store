@@ -49,7 +49,7 @@
                         <h3>Общая стоимость:</h3>
                     </div>
                     <div class="col-6">
-                        <h3 th:text="${order.orderPrice} + ' P'"></h3>
+                        <h3 th:text="${#numbers.formatDecimal(order.orderPrice, 2, 2, 'COMMA')} + ' &#8381;'"></h3>
                     </div>
                 </div>
                 <div th:each="product : ${order.productInOrders}" class="row alert alert-light mt-2">
@@ -60,10 +60,10 @@
                         <h4 th:text="'количество: ' + ${product.amount}"></h4>
                     </div>
                     <div class="col-3">
-                        <h4 th:text="'цена: ' + ${product.product.price} + ' &#8381;'"></h4>
+                        <h4 th:text="'цена: ' + ${#numbers.formatDecimal(product.product.price, 2, 2, 'COMMA')} + ' &#8381;'"></h4>
                     </div>
                     <div class="col-3">
-                        <h4 th:text="'сумма: ' + ${product.amount}*${product.product.price} + ' &#8381;'"></h4>
+                        <h4 th:text="'сумма: ' + ${#numbers.formatDecimal(product.amount*product.product.price, 2, 2, 'COMMA')} + ' &#8381;'"></h4>
                     </div>
                 </div>
                 <div class="col-12"><h1>&nbsp;</h1></div>

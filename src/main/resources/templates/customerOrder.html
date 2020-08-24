@@ -68,7 +68,7 @@
                                         <h5 th:text="'Количество товаров : ' + ${order.amount}"></h5>
                                     </div>
                                     <div class="col-6">
-                                        <h5 th:text="'Сумма заказа: ' + ${order.orderPrice} + ' &#8381;'"></h5>
+                                        <h5 th:text="'Сумма заказа: ' + ${#numbers.formatDecimal(order.orderPrice, 2, 2, 'COMMA')} + ' &#8381;'"></h5>
                                     </div>
                                     <div class="col-12"><h1></h1></div>
                                     <div class="col-6">
