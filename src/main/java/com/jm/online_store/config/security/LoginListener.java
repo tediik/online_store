@@ -3,7 +3,7 @@ package com.jm.online_store.config.security;
 import com.jm.online_store.config.security.oauth2userinfo.OAuth2UserInfo;
 import com.jm.online_store.config.security.oauth2userinfo.OAuth2UserInfoFactory;
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.UserService;
+import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
