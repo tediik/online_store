@@ -35,4 +35,9 @@ public class BasketServiceImpl implements BasketService {
     public Basket updateBasket(Basket basket) {
         return basketRepository.saveAndFlush(basket);
     }
+
+    @Override
+    public Basket addBasket(Basket basket) {
+        return basketRepository.save(basket);
+    }
 }
