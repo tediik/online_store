@@ -41,6 +41,4 @@ public class ProductInOrder {
 
     @NonNull
     private int amount;
-
-
 }

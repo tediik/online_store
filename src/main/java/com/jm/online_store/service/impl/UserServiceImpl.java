@@ -101,7 +101,8 @@ public class UserServiceImpl implements UserService {
         }
         editUser.setRoles(persistRoles(user.getRoles()));
         log.debug("editUser: {}", editUser);
-        userRepository.save(editUser);
+//        userRepository.save(editUser);
+        userRepository.save(user);
     }
 
     @Override

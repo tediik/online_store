@@ -18,6 +18,11 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(productId);
     }
 
+    @Override
+    public Optional<Product> findProductByName(String productName) {
+        return productRepository.findByProduct(productName);
+    }
+
     public Long saveProduct(Product product) {
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
