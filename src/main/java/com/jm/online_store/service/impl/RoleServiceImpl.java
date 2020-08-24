@@ -1,7 +1,8 @@
-package com.jm.online_store.service;
+package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Role;
 import com.jm.online_store.repository.RoleRepository;
+import com.jm.online_store.service.interf.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

@@ -100,7 +100,7 @@
                                             <button type="submit" style="background-color: #ff8e05" class="m-2 btn btn-success d-block mx-auto">Сохранить</button>
                                             <div class="m-2 text-center personal-info_register-container" style="background-color: #f9f9f9">
                                                 Дата регистрации:
-                                                <a th:field="*{registerDate}" th:text="${#dates.format(user.registerDate, 'yyyy-MM-dd')}" class="personal-info_register-date font-weight-bold" id="register_date"></a>
+                                                <a th:field="*{registerDate}" th:text="*{registerDate}" class="personal-info_register-date font-weight-bold" id="register_date"></a>
                                             </div>
                                         </form>
                                         <div id="openNewMailModal" class="modal">
