@@ -8,22 +8,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css" >
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 
     <script src="/static/js/mainPage.js"></script>
-    <script src="/static/js/jquery.hoverIntent.minified.js"> </script>
+    <script src="/static/js/jquery.hoverIntent.minified.js"></script>
     <title></title>
 </head>
 
 <script>
 
-    jQuery(document).ready(function($) {
+    jQuery(document).ready(function ($) {
         $('#mega-1').dcVerticalMegaMenu();
     });
 
@@ -34,7 +35,7 @@
 
 <header>
 
-    <div> <a th:href="@{/}"> Logo place </a> </div>
+    <div><a th:href="@{/}"> Logo place </a></div>
 
     <!-- Search -->
     <form class="form-inline">
@@ -69,42 +70,90 @@
             <li><a href="#">Смартфоны и гаджеты</a>
                 <ul>
                     <li><a href="#">Смартфоны</a>
-                        <ul><li><a href="#">Смартфоны</a></li>
+                        <ul>
+                            <li><a href="/phones">Смартфоны</a></li>
                             <li><a href="#">Электронные часы</a></li>
-                        </ul></li>
+                        </ul>
+                    </li>
                     <li><a href="#">Планшеты</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#">Электронные книги</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
-                </ul></li>
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
             <li><a href="#">Компьютеры</a>
                 <ul>
                     <li><a href="#">Компьютеры</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#">Комплектующие</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#">Периферия</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
-                </ul></li></ul>
-
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
     </div>
 </div>
+<div class="row justify-content-md-center">
+    <div class="col col-lg-2">
+    </div>
 
+    <div class="col-md-8 container-fluid p-4" style="background-color: #ffffff">
+        <table class="table table-striped ">
+            <thead>
+            <tr>
+                <th>Продукт</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Рейтинг</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="products : ${products}">
+                <tr>
+                    <td th:text="${products.product}"></td>
+                    <td th:text="${products.price}"></td>
+                    <td th:text="${products.amount}"></td>
+                    <td th:text="${products.rating}"></td>
+                    <td><a class="btn btn-info btn-sm " role="button"
+                           data-toggle="modal" data-target="#EditModal">Избранное</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-warning btn-sm" role="button"
+                           data-toggle="modal" data-target="#EditModal">В корзину</a>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

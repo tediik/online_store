@@ -2,6 +2,7 @@ package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Product;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
@@ -11,4 +12,6 @@ public interface ProductService {
     void saveProduct (Product product);
 
     void deleteProduct(Long idProduct);
+
+    List<Product> findAll();
 }

@@ -5,6 +5,8 @@ import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,5 +25,9 @@ public class ProductServiceImpl implements ProductService {
 
     public void deleteProduct(Long idProduct){
         productRepository.deleteById(idProduct);
+    }
+
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 }
