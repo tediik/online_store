@@ -15,24 +15,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="profile-container">
-        <header class="header">
-            <div class="logo-container"></div>
-        </header>
-        <div class="body"></div>
-    </div>
+<header th:insert="/blocks/header :: header"></header>
     <div class="container-fluid">
         <div class="row min-vh-100">
             <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-                <a class="btn btn-link" href="/"><---обратно</a>
                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                     <a class="btn btn-outline-primary" href="/customer">Главная</a>
                 </div>
                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                    <a class="btn btn-outline-primary" href="/customer/profile">Профиль</a>
+                    <a class="btn btn-outline-primary" href="/customer#favouritesGoods">Избранные товары</a>
                 </div>
                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                    <a class="btn btn-outline-primary" href="/logout">Выйти</a>
+                    <a class="btn btn-outline-primary" href="/customer/order">Заказы</a>
+                </div>
+                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                    <a class="btn btn-outline-primary active" href="/customer/profile">Профиль</a>
                 </div>
             </div>
             <div class="col-md-10"
@@ -72,7 +69,6 @@
                                             <div class="m-4">
                                                 <a th:text="${message}"></a>
                                             </div>
-
                                             <div class="form-group text-center font-weight-bold">
                                                 <label for="date_birthday_input" class="col-xs-2 col-form-label">День рождения</label>
                                                 <div class="col-xs-10">
