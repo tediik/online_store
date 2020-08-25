@@ -21,8 +21,6 @@ public interface UserService {
 
     boolean isExist(String email);
 
-    boolean emailCheck(String email);
-
     void regNewAccount(User user);
 
     boolean activateUser(String code, HttpServletRequest request);

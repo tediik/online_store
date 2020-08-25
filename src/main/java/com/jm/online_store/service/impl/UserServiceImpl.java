@@ -70,10 +70,6 @@ public class UserServiceImpl implements UserService {
     public boolean isExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
-    @Override
-    public boolean emailCheck(String email) {
-        return ValidationUtils.isNotValidEmail(email);
-    }
 
     @Override
     @Transactional
