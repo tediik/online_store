@@ -4,6 +4,7 @@ import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import lombok.Setter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,7 +21,10 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
+
+    private static final Log log = LogFactory.getLog(FacebookOAuth2UserService.class);
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -28,11 +32,6 @@ public class FacebookOAuth2UserService extends DefaultOAuth2UserService {
     @Autowired
     @Setter
     private PasswordEncoder passwordEncoder;
-
-    /*@Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }*/
 
     @Autowired
     public FacebookOAuth2UserService(UserRepository userRepository, RoleRepository roleRepository) {

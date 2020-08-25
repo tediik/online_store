@@ -19,10 +19,12 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
+
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
+
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,7 +51,7 @@ public class DataInitializer {
     private final NewsService newsService;
     private final BasketService basketService;
 
-    @PostConstruct
+//    @PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -116,8 +118,6 @@ public class DataInitializer {
         userService.updateUser(customer);
 
     }
-
-
 
 //        @PostConstruct
     public void newsConstructor(){
@@ -200,7 +200,7 @@ public class DataInitializer {
         newsService.save(thirdNews);
     }
 
-    @PostConstruct
+   // @PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");

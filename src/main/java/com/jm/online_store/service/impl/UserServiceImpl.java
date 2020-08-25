@@ -10,6 +10,7 @@ import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
+import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -66,7 +67,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(username);
     }
 
-
     @Override
     public boolean isExist(String email) {
         return userRepository.findByEmail(email).isPresent();
@@ -98,11 +98,12 @@ public class UserServiceImpl implements UserService {
             } else if (ValidationUtils.isNotValidEmail(user.getEmail())) {
                 throw new InvalidEmailException();
             }
-            editUser.setEmail(user.getEmail());
+
         }
-        editUser.setRoles(persistRoles(user.getRoles()));
-        log.debug("editUser: {}", editUser);
-        userRepository.save(editUser);
+        userRepository.save(user);
+//        editUser.setRoles(persistRoles(user.getRoles()));
+//        log.debug("editUser: {}", editUser);
+//        userRepository.save(editUser);
     }
 
     @Override
@@ -134,6 +135,7 @@ public class UserServiceImpl implements UserService {
 
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
+            log.debug("ConfirmationToken is null");
             return false;
         }
 
@@ -149,9 +151,9 @@ public class UserServiceImpl implements UserService {
         addUser(user);
 
         try {
-            request.login(user.getEmail(), confirmationToken.getUserPassword());
+            request.login(user.getEmail(),confirmationToken.getUserPassword());
         } catch (ServletException e) {
-            e.printStackTrace();
+            log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
         }
         return true;
     }
