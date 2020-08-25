@@ -56,7 +56,7 @@ public class RegistrationController {
             return "registration";
         }
         if (validationUtils.isNotValidEmail(userForm.getEmail())){
-            log.debug("Wrong email! : emailError ");
+            log.debug("Wrong email! Не правильно введен email");
             model.addAttribute("emailError", "Не правильно введен email");
             return "registration";
         }
