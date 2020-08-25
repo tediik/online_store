@@ -26,7 +26,7 @@ import javax.persistence.Table;
 public class ProductInOrder {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
