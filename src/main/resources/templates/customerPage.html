@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
@@ -11,17 +11,11 @@
     <script src="../static/js/busket.js"></script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="profile-container">
-    <header class="header">
-        <div class="logo-container"></div>
-    </header>
-    <div class="body"></div>
-</div>
+<header th:insert="/blocks/header :: header"></header>
 <div class="container-fluid">
     <div class="row min-vh-100">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
@@ -37,6 +31,9 @@
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" data-toggle="tab" role="tab" href="#basket" aria-controls="favouritesGoods" onclick="fillBusket()">Корзина</a>
             </div>
+        <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+            <a class="btn btn-outline-primary" href="/customer/order">Заказы</a>
+        </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/logout">Выйти</a>
             </div>

@@ -98,12 +98,11 @@ public class UserServiceImpl implements UserService {
             } else if (ValidationUtils.isNotValidEmail(user.getEmail())) {
                 throw new InvalidEmailException();
             }
-
+            editUser.setEmail(user.getEmail());
         }
+        editUser.setRoles(persistRoles(user.getRoles()));
+        log.debug("editUser: {}", editUser);
         userRepository.save(user);
-//        editUser.setRoles(persistRoles(user.getRoles()));
-//        log.debug("editUser: {}", editUser);
-//        userRepository.save(editUser);
     }
 
     @Override
@@ -151,7 +150,7 @@ public class UserServiceImpl implements UserService {
         addUser(user);
 
         try {
-            request.login(user.getEmail(),confirmationToken.getUserPassword());
+            request.login(user.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {
             log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
         }
