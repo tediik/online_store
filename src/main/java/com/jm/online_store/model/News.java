@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -34,6 +35,7 @@ public class News {
     @Type(type = "text")
     private String fullText;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime postingDate;
 
     public News(String title, String anons, String fullText) {

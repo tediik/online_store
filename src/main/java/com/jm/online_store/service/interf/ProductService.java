@@ -8,7 +8,9 @@ public interface ProductService {
 
     Optional<Product> findProductById(Long productId);
 
-    void saveProduct (Product product);
+    Optional<Product> findProductByName(String productName);
+
+    Long saveProduct(Product product);
 
     void deleteProduct(Long idProduct);
 }

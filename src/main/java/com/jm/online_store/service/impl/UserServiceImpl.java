@@ -10,7 +10,6 @@ import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
-import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -102,7 +101,7 @@ public class UserServiceImpl implements UserService {
         }
         editUser.setRoles(persistRoles(user.getRoles()));
         log.debug("editUser: {}", editUser);
-        userRepository.save(editUser);
+        userRepository.save(user);
     }
 
     @Override
@@ -150,7 +149,7 @@ public class UserServiceImpl implements UserService {
         addUser(user);
 
         try {
-            request.login(user.getEmail(),confirmationToken.getUserPassword());
+            request.login(user.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {
             log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
         }

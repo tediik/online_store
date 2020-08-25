@@ -1,25 +1,26 @@
-package com.jm.online_store.config.security.facebook;
+package com.jm.online_store.config.security.oauth2userinfo;
 
 import java.util.Map;
 
-public class FacebookUserInfo {
+public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
 
-    private final Map<String, Object> attributes;
-
-    public FacebookUserInfo(Map<String, Object> attributes) {
-        this.attributes = attributes;
+    public GoogleOAuth2UserInfo(Map<String, Object> attributes) {
+        super(attributes);
     }
 
+    @Override
     public String getId() {
         return (String) attributes.get("id");
     }
 
+    @Override
     public String getName() {
         return (String) attributes.get("name");
     }
 
+    @Override
     public String getEmail() {
         return (String) attributes.get("email");
     }
-}
 
+}
