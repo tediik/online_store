@@ -1,7 +1,7 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org">
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
+    <title>Регистрация</title>
     <!-- Required meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -15,26 +15,26 @@
 <body>
     <section id="loginform" class="outer-wrapper">
         <div class="inner-wrapper">
-            <div class="container">
+            <div class="container mt-5">
                 <div class="row justify-content-center">
-                    <div class="col-sm-4 col-sm-offset-4">
+                    <div class="col-sm-4">
                         <h2 class="text-left h4 mb-4">Please sign up</h2>
                         <form th:action="@{/registration}" th:object="${userForm}" method="post" class="form-group">
 
                             <div class="form-group text-center font-weight-bold">
-                                <label>Email</label>
+                                <label for="email">Email</label>
                                 <input th:field="*{email}" type="email" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
                                    class="form-control" required>
                                 <p th:text="${emailError}">Validation error</p>
                             </div>
                             <div class="form-group text-center font-weight-bold">
-                                <label>Password</label>
+                                <label for="password">Password</label>
                                 <input th:field="*{password}" type="password" id="password" name="login_password" placeholder="Password"
                                    class="form-control" required/>
 
                             </div>
                             <div class="form-group text-center font-weight-bold">
-                                <label>Confirm password</label>
+                                <label for="passwordConfirm">Confirm password</label>
                                 <input th:field="*{passwordConfirm}" type="password" id="passwordConfirm" name="login_password_confirm" placeholder="Confirm password"
                                    class="form-control" required/>
                                 <p th:text="${passwordConfirmError}">Validation error</p>
