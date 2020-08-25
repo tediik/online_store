@@ -16,6 +16,13 @@ function create() {
             for (let i = 0; i < stocks.length; i++) {
                 let out = $("<li>").attr("id", stocks[i].id).attr("data-filter", stocks[i].stockType);
 
+                let endDate = stocks[i].endDate
+                if (endDate === null) {
+                    endDate = "бессрочно"
+                } else {
+                    endDate = moment(endDate).format("DD MMM YYYY")
+                }
+
                 out.append(
                     `<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
@@ -29,7 +36,7 @@ function create() {
                                     <p>Срок проведения акции: </p>
                                     <div class=\"card-date\">
                                          с ${moment(stocks[i].startDate).format("DD MMM")}
-                                         по ${moment(stocks[i].endDate).format("DD MMM YYYY")}
+                                         по ${endDate}
                                     </div>
                                 </div>
                             </div>
@@ -67,6 +74,10 @@ $('.filters button').on('click', function () {
 
 /*Добавить акцию*/
 function addStock() {
+    if ($('#addStartDate') === "") {
+        toastr.success('Назначьте дату начала акции!', {timeOut: 5000})
+        return
+    }
     const stockAdd = {
         id: $('#id').val(),
         stockImg: $('#addStockImg').val(),
