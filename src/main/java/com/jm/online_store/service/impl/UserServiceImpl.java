@@ -203,7 +203,8 @@ public class UserServiceImpl implements UserService {
         final String defaultAvatar = StringUtils.cleanPath("def.jpg");
         User user = userRepository.findById(userId).get();
         //Get profilePicture name from User and delete this profile picture from Uploads
-        String uploadDirectory = System.getProperty("user.dir") + "/uploads";
+        String uploadDirectory = System.getProperty("user.dir") + "\\uploads";
+        String UPLOAD_DIR = System.getProperty("user.home") + "/uploads";
         Path fileNameAndPath = Paths.get(uploadDirectory, user.getProfilePicture());
         //Check if deleting picture is not a default avatar
         try {
