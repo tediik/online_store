@@ -63,26 +63,26 @@
                 <h4 class="text-center p-1">Фильтры</h4>
 
                 <div>
-                    <button type="button" class="btn-primary btn-md active" data-filter="ALL">Все акции</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="ALL">Все акции</button>
                 </div>
                 <br>
                 <div>
-                    <button type="button" class="btn-primary btn-md" data-filter="CURRENT">Текущие акции</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="CURRENT">Текущие акции</button>
                 </div>
                 <br>
                 <div>
-                    <button type="button" class="btn-primary btn-md" data-filter="FUTURE">Планируемые акции</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="FUTURE">Планируемые акции</button>
                 </div>
                 <br>
                 <div>
-                    <button type="button" class="btn-primary btn-md" data-filter="PAST">Завершенные акции</button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="PAST">Завершенные акции</button>
                 </div>
 
             </div>
             <br>
             <div>
                 <form>
-                    <button type="button" class="btn-primary btn-lg" data-toggle='modal'
+                    <button type="button" class="btn btn-primary" data-toggle='modal'
                             data-target='#newStockModal'>
                         Новая акция
                     </button>
@@ -196,7 +196,7 @@
                                                       required="required"></textarea>
 
                                             <label for="editStartDate">Дата начала</label>
-                                            <input type="date" id="editStartDate" name="date"/>
+                                            <input type="date" id="editStartDate" name="date" required/>
                                             <br>
                                             <label for="editEndDate">Дата окончания</label>
                                             <input type="date" id="editEndDate" name="date"/>
@@ -230,9 +230,9 @@
     </div>
 </div>
 
-<script type="text/javascript" src="/static/js/stocks.js" async></script>
+<script type="text/javascript" src="/static/js/stocks.js"></script>
 <!--MomentJs (work with dates)-->
-<script type="text/JavaScript" src="../static/js/moment.js" async></script>
+<script type="text/JavaScript" src="../static/js/moment.js"></script>
 
 </body>
 </html>
