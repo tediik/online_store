@@ -54,6 +54,11 @@ public class RegistrationController {
             model.addAttribute("emailError", "Пользователь с таким именем уже существует");
             return "registration";
         }
+        if (userService.emailCheck(userForm.getEmail())){
+            log.debug("Wrong email! : emailError ");
+            model.addAttribute("emailError", "Не правильно введен email");
+            return "registration";
+        }
 
         userService.regNewAccount(userForm);
         model.addAttribute("message", "Please check your email!");
