@@ -31,39 +31,39 @@ public class RegistrationController {
     private ConfirmationTokenRepository confirmationTokenRepository;
 
 
-    @GetMapping("/registration")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("userForm", new User());
-        return "registration";
-    }
-
-
-    @PostMapping("/registration")
-    public String registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            log.debug("BindingResult in registerUserAccount hasErrors: {}", bindingResult);
-            return "registration";
-        }
-        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
-            log.debug("Passwords do not match : passwordConfirmError");
-            model.addAttribute("passwordConfirmError", "Пароли не совпадают");
-            return "registration";
-        }
-        if (userService.isExist(userForm.getEmail())){
-            log.debug("User with same email already exists : emailError ");
-            model.addAttribute("emailError", "Пользователь с таким именем уже существует");
-            return "registration";
-        }
-
-        userService.regNewAccount(userForm);
-        model.addAttribute("message", "Please check your email!");
-        return "successfulRegister";
-    }
-
-
-    @GetMapping("/activate/{token}")
-    public String activate(Model model, @PathVariable String token, HttpServletRequest request) {
-        userService.activateUser(token, request);
-        return "redirect:/customer";
-    }
+//    @GetMapping("/registration")
+//    public String showRegistrationForm(Model model) {
+//        model.addAttribute("userForm", new User());
+//        return "registration";
+//    }
+//
+//
+//    @PostMapping("/registration")
+//    public String registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
+//        if (bindingResult.hasErrors()) {
+//            log.debug("BindingResult in registerUserAccount hasErrors: {}", bindingResult);
+//            return "registration";
+//        }
+//        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+//            log.debug("Passwords do not match : passwordConfirmError");
+//            model.addAttribute("passwordConfirmError", "Пароли не совпадают");
+//            return "registration";
+//        }
+//        if (userService.isExist(userForm.getEmail())){
+//            log.debug("User with same email already exists : emailError ");
+//            model.addAttribute("emailError", "Пользователь с таким именем уже существует");
+//            return "registration";
+//        }
+//
+//        userService.regNewAccount(userForm);
+//        model.addAttribute("message", "Please check your email!");
+//        return "successfulRegister";
+//    }
+//
+//
+//    @GetMapping("/activate/{token}")
+//    public String activate(Model model, @PathVariable String token, HttpServletRequest request) {
+//        userService.activateUser(token, request);
+//        return "redirect:/customer";
+//    }
 }
