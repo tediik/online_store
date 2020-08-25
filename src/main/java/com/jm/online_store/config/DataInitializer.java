@@ -1,27 +1,18 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.model.Basket;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Description;
-import com.jm.online_store.model.Product;
-import com.jm.online_store.model.Role;
-import com.jm.online_store.model.User;
-import com.jm.online_store.model.Basket;
-import com.jm.online_store.service.interf.CategoriesService;
-import com.jm.online_store.service.interf.BasketService;
-import com.jm.online_store.service.interf.OrderService;
-import com.jm.online_store.service.interf.ProductInOrderService;
-import lombok.Data;
-import com.jm.online_store.service.interf.RoleService;
-import com.jm.online_store.service.interf.UserService;
-import org.springframework.stereotype.Component;
-import java.util.Arrays;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.NewsService;
+import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
@@ -276,19 +267,13 @@ public class DataInitializer {
 
         productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
         productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
-
         productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
-
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
-
         productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
-
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
-
         customer.setOrders(Set.copyOf(orderService.findAll()));
-
         userService.updateUser(customer);
     }
 }

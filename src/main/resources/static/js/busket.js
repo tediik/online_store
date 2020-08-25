@@ -11,7 +11,7 @@ async function fillBusket() {
         let product = `
         <tr class=${content[key].id} id=${content[key].id}>
     <td>${content[key].product.product}</td>
-    <td>${content[key].product.price} &#8381;</td>
+    <td> цена: ${content[key].product.price} &#8381;</td>
     <td>
     <div class="amount">
 \t<button id="down" class="btn btn-primary" onclick="downCountBasket(${content[key].id})">-</button>
@@ -20,7 +20,7 @@ async function fillBusket() {
 </div>
     </td>
     <td>
-    ${content[key].product.price * content[key].count}
+    стоимость: ${content[key].product.price * content[key].count}
     </td>
     <td>
     <button class="btn btn-primary" onclick="deleteBasket(${content[key].id})">Удалить</button>
