@@ -57,6 +57,8 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.server.url}")
     private String urlActivate;
 
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
+
     @Transactional
     @Override
     public List<User> findAll() {
@@ -176,7 +178,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUserImage(Long userId, MultipartFile file) {
-        final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         if (!file.isEmpty()) {
             deleteUserImage(userId);
@@ -198,7 +199,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUserImage(Long userId) {
-        final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
         final String defaultAvatar = StringUtils.cleanPath("def.jpg");
         User user = userRepository.findById(userId).get();
         //Get profilePicture name from User and delete this profile picture from Uploads
