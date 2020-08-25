@@ -11,11 +11,11 @@ async function fillBusket() {
         let product = `
         <tr class=${content[key].id} id=${content[key].id}>
     <td>${content[key].product.product}</td>
-    <td>${content[key].product.price}</td>
+    <td>${content[key].product.price} &#8381;</td>
     <td>
     <div class="amount">
 \t<button id="down" class="btn btn-primary" onclick="downCountBasket(${content[key].id})">-</button>
-    <input type="text" size="1" value=${content[key].count} readonly/>
+    <span/>${content[key].count} </span>
 \t<button id="up" class="btn btn-primary" onclick="upCountBasket(${content[key].id})">+</button>
 </div>
     </td>
@@ -30,6 +30,7 @@ async function fillBusket() {
         sumBasket += content[key].product.price * content[key].count;
         $(basketGoodsJson).append(product);
     }
+    sumBasket +=" &#8381;";
     $('#countBasketGoods').empty();
     $('#sumBasketGoods').empty();
 
@@ -59,6 +60,14 @@ async function downCountBasket(id) {
     await fetch("/customer/downBusketGoods", {
         method: "PUT",
         body: id,
+        headers: {"Content-Type": "application/json; charset=utf-8"}
+    });
+    await fillBusket();
+}
+
+async function buildOrderFromBasket() {
+    await fetch("/customer/busketGoods", {
+        method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
     await fillBusket();

@@ -41,4 +41,9 @@ public class ProductInOrder {
 
     @NonNull
     private int amount;
+
+    public ProductInOrder(Product product, int count) {
+        this.product = product;
+        this.amount = count;
+    }
 }
