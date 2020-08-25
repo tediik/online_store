@@ -62,12 +62,10 @@
                                                 <label for="email_input">Email</label>
                                                 <input th:field="*{email}" type="text" class="form-control" id="email_input" name="email" readonly>
                                             </div>
+                                            <div>
                                             <button type="button" style="background-color: #ff8e05" class="m-2 btn btn-success d-block mx-auto" data-toggle="modal" data-target="#openNewMailModal">Изменить email</button>
 
                                             <button type="button" style="background-color: #ff8e05" class="m-2 btn btn-success d-block mx-auto" data-toggle="modal" data-target="#openChangePassModal">Изменить пароль</button>
-
-                                            <div class="m-4">
-                                                <a th:text="${message}"></a>
                                             </div>
                                             <div class="form-group text-center font-weight-bold">
                                                 <label for="date_birthday_input" class="col-xs-2 col-form-label">День рождения</label>

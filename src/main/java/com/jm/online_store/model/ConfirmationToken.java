@@ -1,5 +1,9 @@
 package com.jm.online_store.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +13,9 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class ConfirmationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,55 +49,5 @@ public class ConfirmationToken {
         this.userEmail = userMail;
         createdDate = LocalDate.now();
         confirmationToken = UUID.randomUUID().toString();
-    }
-
-    public ConfirmationToken() {
-
-    }
-
-    public long getTokenId() {
-        return tokenId;
-    }
-
-    public void setTokenId(long tokenId) {
-        this.tokenId = tokenId;
-    }
-
-    public String getConfirmationToken() {
-        return confirmationToken;
-    }
-
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
-    }
-
-    public LocalDate getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
-    public void setUserId(Long userId) { this.userId = userId; }
-
-    public Long getUserId() {
-        return userId;
     }
 }
