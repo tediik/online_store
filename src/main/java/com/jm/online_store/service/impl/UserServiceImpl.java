@@ -10,7 +10,6 @@ import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
-import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -28,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -176,35 +176,32 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUserImage(Long userId, MultipartFile file) {
-        //delete current user's profile picture
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        //Save received image File to Uploads folder in users directory
+        final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
+        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         if (!file.isEmpty()) {
             deleteUserImage(userId);
-            String uploadDirectory = System.getProperty("user.dir") + "/uploads";
-            Path fileNameAndPath = Paths.get(uploadDirectory, file.getOriginalFilename());
+            Path fileNameAndPath = Paths.get(uploadDirectory, originalFilename);
             try {
                 byte[] bytes = file.getBytes();
                 Files.write(fileNameAndPath, bytes);
                 //Set user's profile picture
                 User user = userRepository.findById(userId).get();
-                user.setProfilePicture(filename);
+                user.setProfilePicture(originalFilename);
                 userRepository.save(user);
             } catch (IOException e) {
                 log.debug("Failed to store file {} {}", fileNameAndPath, e.getMessage());
             }
         }
-        log.debug("Failed to store file - file is not present {}", filename);
+        log.debug("Failed to store file - file is not present {}", originalFilename);
     }
 
     @Override
     @Transactional
     public void deleteUserImage(Long userId) {
+        final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
         final String defaultAvatar = StringUtils.cleanPath("def.jpg");
         User user = userRepository.findById(userId).get();
         //Get profilePicture name from User and delete this profile picture from Uploads
-        String uploadDirectory = System.getProperty("user.dir") + "\\uploads";
-        String UPLOAD_DIR = System.getProperty("user.home") + "/uploads";
         Path fileNameAndPath = Paths.get(uploadDirectory, user.getProfilePicture());
         //Check if deleting picture is not a default avatar
         try {
