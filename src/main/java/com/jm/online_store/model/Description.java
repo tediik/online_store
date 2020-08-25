@@ -24,7 +24,7 @@ public class Description {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NonNull
     private String serialNumber;

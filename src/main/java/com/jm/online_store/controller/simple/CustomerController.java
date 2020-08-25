@@ -1,6 +1,8 @@
 package com.jm.online_store.controller.simple;
 
+import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @AllArgsConstructor
 @Controller
@@ -29,6 +32,8 @@ public class CustomerController {
     private final PasswordEncoder passwordEncoder;
 
     private final RoleService roleService;
+
+    private final OrderService orderService;
 
     @GetMapping
     public String getCustomerPage() {
@@ -85,5 +90,24 @@ public class CustomerController {
     public String deleteImage(@PathVariable Long id) throws IOException {
         userService.deleteUserImage(id);
         return "redirect:/customer/profile";
+    }
+
+    @GetMapping("/order")
+    public String getOrderPage(Authentication auth, Model model) {
+        Long userId = ((User) auth.getPrincipal()).getId();
+
+        model.addAttribute("orders", List.copyOf(orderService.findAllByUserId(userId)));
+        model.addAttribute("incartsOrders", List.copyOf(orderService.findAllByUserIdAndStatus(userId, Order.Status.INCARTS)));
+        model.addAttribute("completedOrders", List.copyOf(orderService.findAllByUserIdAndStatus(userId, Order.Status.COMPLETED)));
+        model.addAttribute("canceledOrders", List.copyOf(orderService.findAllByUserIdAndStatus(userId, Order.Status.CANCELED)));
+
+        return "customerOrder";
+    }
+
+    @GetMapping("/order/{id}")
+    public String orderDetails(@PathVariable(value = "id") Long id, Model model) {
+        Order order = orderService.findOrderById(id).orElseGet(Order::new);
+        model.addAttribute("order", order);
+        return "customerOrderDetails";
     }
 }
