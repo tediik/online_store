@@ -241,8 +241,8 @@ public class DataInitializer {
 //    @PostConstruct
     public void stockConstrucktor(){
         Stock firstStock = Stock.builder()
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusDays(10L))
+                .startDate(LocalDate.now().plusDays(2))
+                .endDate(LocalDate.now().plusDays(12L))
                 .stockTitle("Собери персональный компьютер на базе Intel® Core™ – получи скидку!")
                 .stockText("оберите свой мощный компьютер на базе процессоров Intel® Core™! Корпуса,карты памяти, " +
                         "твердотельные накопители от именитых производителей, материнские платы MSI и процессоры " +
