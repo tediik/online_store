@@ -1,9 +1,11 @@
 package com.jm.online_store.controller.simple;
 
+import com.jm.online_store.model.GenericResponce;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
+import com.jm.online_store.util.ValidationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,6 +35,8 @@ public class MainPageController {
     @Autowired
     private ConfirmationTokenRepository confirmationTokenRepository;
 
+    private ValidationUtils validationUtils;
+
     @GetMapping
     public String mainPage(Model model) {
         model.addAttribute("userForm", new User());
@@ -39,24 +44,26 @@ public class MainPageController {
     }
 
     @PostMapping("/registration")
-    public String registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
+    @ResponseBody
+    public GenericResponce registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             log.debug("BindingResult in registerUserAccount hasErrors: {}", bindingResult);
-            return "mainPage";
+            return new GenericResponce("");
         }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
             log.debug("Passwords do not match : passwordConfirmError");
-            model.addAttribute("passwordConfirmError", "Пароли не совпадают");
-            return "mainPage";
+            return new GenericResponce("passwordError");
         }
         if (userService.isExist(userForm.getEmail())){
-            log.debug("User with same email already exists : emailError ");
-            model.addAttribute("emailError", "Пользователь с таким именем уже существует");
-            return "mainPage";
+            log.debug("User with same email already exists");
+            return new GenericResponce("duplicatedEmailError");
+        }
+        if (validationUtils.isNotValidEmail(userForm.getEmail())){
+            log.debug("Wrong email! Не правильно введен email");
+            return new GenericResponce("notValidEmailError");
         }
         userService.regNewAccount(userForm);
-        model.addAttribute("message", "Please check your email!");
-        return "mainPage";
+        return new GenericResponce("success");
     }
 
     @GetMapping("/activate/{token}")

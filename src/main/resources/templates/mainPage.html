@@ -25,7 +25,27 @@
 
     jQuery(document).ready(function($) {
         $('#mega-1').dcVerticalMegaMenu();
+        $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
+            $("#openNewRegistrationModal form")[0].reset();//reset modal fields
+            $("#openNewRegistrationModal .error").html('');//reset error spans
+        });
     });
+
+    function register(){
+        $(".alert").html("").hide();
+        var formData= $('form').serialize();
+        $.post("http://localhost:9999/registration",formData ,function(data){
+            console.log(data)
+            if(data.message == "success"){
+                $("#okMessage").show().html(data.responseJSON.message);
+            }else if(data.message == "emailError"){
+                $("#emailError").show().html(data.responseJSON.message);
+            }else if(data.message == "passwordError"){
+                $("#passwordError").show().html(data.responseJSON.message);
+            }
+        })
+    }
+
 
 </script>
 
@@ -68,44 +88,49 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Название</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                     <span aria-hidden="true">x</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/registration}" th:object="${userForm}" method="post" class="form-group">
-
+                <form action="/registration" method="POST" enctype="utf8">
                     <div class="form-group text-center font-weight-bold">
-                        <label for="email">Email</label>
-                        <input th:field="*{email}"
-                               type="email" id="email"
-                               name="login_username"
-                               autofocus="autofocus"
-                               placeholder="Email"
-                               class="form-control" required>
-                        <p th:text="${emailError}">Validation error</p>
+                    <label for="email">Email</label>
+                        <input  name="email"
+                                value=""
+                                id="email"
+                                placeholder="email"
+                                type="email"
+                                autofocus
+                                class="form-control"/>
                     </div>
                     <div class="form-group text-center font-weight-bold">
-                        <label for="password">Password</label>
-                        <input th:field="*{password}"
-                               type="password"
-                               id="password"
-                               name="login_password"
-                               placeholder="Password"
-                               class="form-control" required/>
-
+                    <label for="password">Password</label>
+                        <input  name="password"
+                                value=""
+                                id="password"
+                                placeholder="password"
+                                type="password"
+                                autofocus
+                                class="form-control"/>
                     </div>
                     <div class="form-group text-center font-weight-bold">
-                        <label for="passwordConfirm">Confirm password</label>
-                        <input th:field="*{passwordConfirm}"
-                               type="password"
+                    <label for="passwordConfirm">Confirm your password</label>
+                        <input name="passwordConfirm"
+                               value=""
                                id="passwordConfirm"
-                               name="login_password_confirm"
-                               placeholder="Confirm password"
-                               class="form-control" required/>
-                        <p th:text="${passwordConfirmError}">Validation error</p>
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm btn-block">Sign Up</button>
+                    <span id="okMessage" style="display:none" class="error">На ваш почтовый адрес была выслана ссылка для подтверждения</span>
+                    <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
+                    <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
+                    <span id="notValidEmailError"style="display:none" class="error">Неверный формат электронной почты</span>
+                    <div>
+                    <a href="#" onclick="register()" class="btn btn-primary btn-sm btn-block"> submit</a>
+                    </div>
                 </form>
             </div>
         </div>
