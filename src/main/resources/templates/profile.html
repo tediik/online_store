@@ -41,6 +41,14 @@
                             <div class="container-fluid bg-light">
                                 <div class="row p-3">
                                     <div class="col-4">
+                                        <div class="imgContainer">
+                                            <div>
+                                                <img alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                                     height="152" th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}" width="152"></div>
+                                            <div class="imgButton">
+                                                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal"> Edit Profile Picture</button>
+                                            </div>
+                                        </div>
                                         <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}" method="post" data-role="personal-info-form">
                                             <div class="form-group text-center font-weight-bold">
                                                 <a href="/customer/change-password" text="сменить пароль">Cменить пароль</a>
@@ -95,6 +103,35 @@
                                                 <a th:field="*{registerDate}" th:text="*{registerDate}" class="personal-info_register-date font-weight-bold" id="register_date"></a>
                                             </div>
                                         </form>
+                                        <!--Profile picture change modal-->
+                                        <div class="modal" id="myModal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Upload your profile picture</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+
+                                                    <!-- Modal body -->
+                                                    <div class="modal-body">
+                                                        <form method="post" enctype="multipart/form-data" th:action="@{/customer/uploadImage/{id}(id = ${user.id})}">
+                                                            <input type="file" name="imageFile" alt="Picture">
+                                                            <input type="submit" value="Upload Picture" class="btn btn-sm btn-outline-success"/>
+                                                        </form>
+                                                        <br>
+                                                        <form method="post" enctype="multipart/form-data" th:action="@{/customer/deleteImage/{id}(id = ${user.id})}">
+                                                            <input type="submit" value="Delete Picture" class="btn btn-sm btn-outline-danger"/>
+                                                        </form>
+                                                    </div>
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
