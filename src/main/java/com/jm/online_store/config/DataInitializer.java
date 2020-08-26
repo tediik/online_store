@@ -58,7 +58,7 @@ public class DataInitializer {
     private final ProductInOrderService productInOrderService;
 
 //    @PostConstruct
-    public void roleConstruct() {
+    public void roleInit() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
         Role managerRole = new Role("ROLE_MANAGER");
@@ -112,7 +112,7 @@ public class DataInitializer {
     }
 
 //    @PostConstruct
-    public void newsConstructor() {
+    public void newsInit() {
         News firstNews = News.builder()
                 .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
                 .anons("Не пропустите розыгрыш потрясающих призов.")
@@ -193,7 +193,7 @@ public class DataInitializer {
     }
 
 //    @PostConstruct
-    public void productConstructor() {
+    public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
         Categories category2 = new Categories("PC", "Computer");
@@ -239,7 +239,7 @@ public class DataInitializer {
     }
 
 //    @PostConstruct
-    public void stockConstrucktor(){
+    public void stockInit(){
         Stock firstStock = Stock.builder()
                 .startDate(LocalDate.now().plusDays(2))
                 .endDate(LocalDate.now().plusDays(12L))
@@ -290,7 +290,7 @@ public class DataInitializer {
     }
 
 //    @PostConstruct
-    public void ordersConstruct() {
+    public void ordersInit() {
         User customer = userService.findByEmail("customer@mail.ru").get();
 
         List<Long> productsIds = new ArrayList<>();
