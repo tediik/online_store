@@ -1,6 +1,6 @@
 package com.jm.online_store.model;
 
-public enum  AuthProvider {
+public enum AuthProvider {
     LOCAL,
     FACEBOOK,
     GOOGLE,

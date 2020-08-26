@@ -141,7 +141,7 @@ public class User implements UserDetails {
         return true;
     }
 
-    private enum Gender {
+    public enum Gender {
         MAN,
         WOMAN
     }

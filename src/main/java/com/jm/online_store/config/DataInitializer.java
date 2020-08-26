@@ -31,7 +31,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,12 +52,11 @@ public class DataInitializer {
     private final CategoriesService categoriesService;
     private final ProductService productService;
     private final NewsService newsService;
-    private final StockService stockService;
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
 
 //    @PostConstruct
-    public void roleInit() {
+    public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
         Role managerRole = new Role("ROLE_MANAGER");
@@ -192,7 +190,7 @@ public class DataInitializer {
         newsService.save(thirdNews);
     }
 
-//    @PostConstruct
+	//@PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
@@ -239,6 +237,48 @@ public class DataInitializer {
     }
 
 //    @PostConstruct
+    public void ordersInit() {
+        User customer = userService.findByEmail("customer@mail.ru").get();
+
+        List<Long> productsIds = new ArrayList<>();
+        productsIds.add(productService.findProductByName("NX-7893-PC-09878").get().getId());
+        productsIds.add(productService.findProductByName("Asus-NX4567").get().getId());
+        productsIds.add(productService.findProductByName("ACER-5432").get().getId());
+        productsIds.add(productService.findProductByName("XIAOMI-Mi10").get().getId());
+        productsIds.add(productService.findProductByName("LG-2145").get().getId());
+        productsIds.add(productService.findProductByName("Apple-10").get().getId());
+
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order(LocalDateTime.of(2019, 12, 31, 22, 10), Order.Status.COMPLETED));
+        orders.add(new Order(LocalDateTime.of(2020, 1, 23, 13, 37), Order.Status.COMPLETED));
+        orders.add(new Order(LocalDateTime.of(2020, 3, 10, 16, 51), Order.Status.INCARTS));
+        orders.add(new Order(LocalDateTime.of(2020, 6, 13, 15, 3), Order.Status.CANCELED));
+        orders.add(new Order(LocalDateTime.now(), Order.Status.INCARTS));
+
+        List<Long> ordersIds = new ArrayList<>();
+        for (Order order : orders) {
+            ordersIds.add(orderService.addOrder(order));
+        }
+
+        productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
+        productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
+
+        productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
+
+        productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
+
+        productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
+        productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
+        productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
+
+        productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
+
+        customer.setOrders(Set.copyOf(orderService.findAll()));
+
+        userService.updateUser(customer);
+    }
+
+    //    @PostConstruct
     public void stockInit(){
         Stock firstStock = Stock.builder()
                 .startDate(LocalDate.now().plusDays(2))
@@ -287,47 +327,5 @@ public class DataInitializer {
         stockService.addStock(firstStock);
         stockService.addStock(secondStock);
         stockService.addStock(thirdStock);
-    }
-
-//    @PostConstruct
-    public void ordersInit() {
-        User customer = userService.findByEmail("customer@mail.ru").get();
-
-        List<Long> productsIds = new ArrayList<>();
-        productsIds.add(productService.findProductByName("NX-7893-PC-09878").get().getId());
-        productsIds.add(productService.findProductByName("Asus-NX4567").get().getId());
-        productsIds.add(productService.findProductByName("ACER-5432").get().getId());
-        productsIds.add(productService.findProductByName("XIAOMI-Mi10").get().getId());
-        productsIds.add(productService.findProductByName("LG-2145").get().getId());
-        productsIds.add(productService.findProductByName("Apple-10").get().getId());
-
-        List<Order> orders = new ArrayList<>();
-        orders.add(new Order(LocalDateTime.of(2019, 12, 31, 22, 10), Order.Status.COMPLETED));
-        orders.add(new Order(LocalDateTime.of(2020, 1, 23, 13, 37), Order.Status.COMPLETED));
-        orders.add(new Order(LocalDateTime.of(2020, 3, 10, 16, 51), Order.Status.INCARTS));
-        orders.add(new Order(LocalDateTime.of(2020, 6, 13, 15, 3), Order.Status.CANCELED));
-        orders.add(new Order(LocalDateTime.now(), Order.Status.INCARTS));
-
-        List<Long> ordersIds = new ArrayList<>();
-        for (Order order : orders) {
-            ordersIds.add(orderService.addOrder(order));
-        }
-
-        productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
-        productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
-
-        productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
-
-        productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
-
-        productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
-        productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
-        productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
-
-        productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
-
-        customer.setOrders(Set.copyOf(orderService.findAll()));
-
-        userService.updateUser(customer);
     }
 }
