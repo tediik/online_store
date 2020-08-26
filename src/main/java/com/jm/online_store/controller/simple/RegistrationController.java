@@ -7,7 +7,6 @@ import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,9 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RegistrationController {
 
     private final RoleService roleService;
-
     private final UserService userService;
-
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
     //private ValidationUtils validationUtils;
@@ -44,17 +41,17 @@ public class RegistrationController {
             log.debug("BindingResult in registerUserAccount hasErrors: {}", bindingResult);
             return "registration";
         }
-        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())) {
             log.debug("Passwords do not match : passwordConfirmError");
             model.addAttribute("passwordConfirmError", "Пароли не совпадают");
             return "registration";
         }
-        if (userService.isExist(userForm.getEmail())){
+        if (userService.isExist(userForm.getEmail())) {
             log.debug("User with same email already exists : emailError ");
             model.addAttribute("emailError", "Пользователь с таким именем уже существует");
             return "registration";
         }
-        if (ValidationUtils.isNotValidEmail(userForm.getEmail())){
+        if (ValidationUtils.isNotValidEmail(userForm.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
             model.addAttribute("emailError", "Не правильно введен email");
             return "registration";
