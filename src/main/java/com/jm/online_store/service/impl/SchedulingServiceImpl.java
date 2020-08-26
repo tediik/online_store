@@ -52,4 +52,29 @@ public class SchedulingServiceImpl implements com.jm.online_store.service.interf
         }
     }
 
+    /**
+     * Метод создает messageBody для рассылки акций
+     *
+     * @param currentAndFutureStocks лист актуальных акций
+     * @return Строка с текстом.
+     */
+    private String prepareMessageBody(List<Stock> currentAndFutureStocks) {
+        StringBuilder messageForEmail = new StringBuilder();
+        for (Stock stock : currentAndFutureStocks) {
+            messageForEmail
+                    .append(stock.getStockTitle())
+                    .append("\n")
+                    .append(stock.getStockText())
+                    .append("\n")
+                    .append("\n")
+                    .append("Акция проходит с: ")
+                    .append(stock.getStartDate())
+                    .append(" по: ")
+                    .append(stock.getEndDate())
+                    .append("\n")
+                    .append("\n");
+        }
+        return messageForEmail.toString();
+    }
+
 }
