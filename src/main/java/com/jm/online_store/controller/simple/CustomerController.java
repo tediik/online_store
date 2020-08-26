@@ -6,6 +6,7 @@ import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Controller
 @RequestMapping("/customer")
+@Slf4j
 public class CustomerController {
 
     private final UserService userService;
@@ -66,7 +68,7 @@ public class CustomerController {
 
             return "redirect:/customer/profile" ;
         }
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userService.updateUser(user);
 
         return "redirect:/customer/profile";
