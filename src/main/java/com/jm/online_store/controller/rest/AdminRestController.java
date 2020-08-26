@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/api/admin")
@@ -22,5 +24,11 @@ public class AdminRestController {
         User principal = (User) authentication.getPrincipal();
         User authUser = userService.getOne(principal.getId());
         return new ResponseEntity<>(authUser, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/allUsers")
+    public ResponseEntity<List<User>> getAllUsersList(){
+        List<User> allUsers = userService.findAll();
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 }
