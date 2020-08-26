@@ -27,13 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 public class MainPageController {
 
     @Autowired
-    private RoleService roleService;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private ConfirmationTokenRepository confirmationTokenRepository;
 
     private ValidationUtils validationUtils;
 
