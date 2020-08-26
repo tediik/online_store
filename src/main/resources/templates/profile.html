@@ -8,8 +8,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
-    <!-- Optional JavaScript -->
 </head>
 <body>
 <header th:insert="/blocks/header :: header"></header>
@@ -111,6 +109,7 @@
                                             <label for="dayOfWeekDropList">Выберите день недели</label>
                                             <select class="form-control" id="dayOfWeekDropList"
                                                     th:field="*{dayOfWeekForStockSend}">
+                                                <option value=""></option>
                                                 <option value="MONDAY">Понедельник</option>
                                                 <option value="TUESDAY">Вторник</option>
                                                 <option value="WEDNESDAY">Среда</option>
