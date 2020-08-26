@@ -27,8 +27,6 @@ public class RegistrationController {
     private final UserService userService;
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
-    //private ValidationUtils validationUtils;
-
     @GetMapping("/registration")
     public String showRegistrationForm(Model model) {
         model.addAttribute("userForm", new User());
