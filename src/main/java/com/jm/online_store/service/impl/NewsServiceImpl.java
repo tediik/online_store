@@ -13,8 +13,9 @@ import java.util.Optional;
  * Сервис класс, имплементация интерфейса {@link NewsService}
  * Содержит бизнес логику, использует методы репозитория {@link NewsRepository}
  */
-@AllArgsConstructor
+
 @Service
+@AllArgsConstructor
 public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;

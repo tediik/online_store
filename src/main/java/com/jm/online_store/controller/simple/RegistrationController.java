@@ -5,6 +5,7 @@ import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,18 +21,16 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class RegistrationController {
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private ConfirmationTokenRepository confirmationTokenRepository;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
 
-    private ValidationUtils validationUtils;
+    //private ValidationUtils validationUtils;
 
     @GetMapping("/registration")
     public String showRegistrationForm(Model model) {
@@ -55,7 +54,7 @@ public class RegistrationController {
             model.addAttribute("emailError", "Пользователь с таким именем уже существует");
             return "registration";
         }
-        if (validationUtils.isNotValidEmail(userForm.getEmail())){
+        if (ValidationUtils.isNotValidEmail(userForm.getEmail())){
             log.debug("Wrong email! Не правильно введен email");
             model.addAttribute("emailError", "Не правильно введен email");
             return "registration";

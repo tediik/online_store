@@ -3,6 +3,7 @@ package com.jm.online_store.config.security;
 import com.jm.online_store.config.security.oauth2userinfo.OAuth2UserInfo;
 import com.jm.online_store.config.security.oauth2userinfo.OAuth2UserInfoFactory;
 import com.jm.online_store.model.User;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class LoginListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
     private final UserService userService;
-
-    @Autowired
-    public LoginListener(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
