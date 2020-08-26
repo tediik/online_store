@@ -7,10 +7,8 @@ import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
-import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
-import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
@@ -102,6 +100,7 @@ public class UserServiceImpl implements UserService {
             editUser.setEmail(user.getEmail());
         }
         editUser.setRoles(persistRoles(user.getRoles()));
+        editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
         userRepository.save(user);
     }
@@ -125,7 +124,7 @@ public class UserServiceImpl implements UserService {
                 userForm.getEmail(),
                 confirmationToken.getConfirmationToken()
         );
-        mailSenderService.send(userForm.getEmail(), "Activation code", message);
+        mailSenderService.send(userForm.getEmail(), "Activation code", message, "Confirmation");
     }
 
     /**
@@ -133,7 +132,7 @@ public class UserServiceImpl implements UserService {
      * Sends generated token to new users email
      */
     @Override
-    public void changeUsersMail(User user, String newMail){
+    public void changeUsersMail(User user, String newMail) {
 
         user.setEmail(newMail);
 
@@ -148,7 +147,7 @@ public class UserServiceImpl implements UserService {
                 confirmationToken.getConfirmationToken()
 
         );
-        mailSenderService.send(user.getEmail(), "Activation code", message);
+        mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
     }
 
     @Override
@@ -185,12 +184,12 @@ public class UserServiceImpl implements UserService {
      * After that, new email address is saved to users DB table
      */
     @Override
-    public boolean activateNewUsersMail(String token, HttpServletRequest request){
+    public boolean activateNewUsersMail(String token, HttpServletRequest request) {
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
             return false;
         }
-        User user =  userRepository.findById(confirmationToken.getUserId()).get();
+        User user = userRepository.findById(confirmationToken.getUserId()).get();
         user.setEmail(confirmationToken.getUserEmail());
         userRepository.saveAndFlush(user);
         return true;
