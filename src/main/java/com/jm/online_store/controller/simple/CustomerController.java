@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,7 +43,6 @@ public class CustomerController {
         User principal = (User) auth.getPrincipal();
         User user = userService.findById(principal.getId()).get();
         model.addAttribute("user", user);
-
         return "profile";
     }
 
@@ -51,13 +51,11 @@ public class CustomerController {
         user.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
         userService.updateUser(user);
         model.addAttribute("user", user);
-
         return "/profile";
     }
 
     @GetMapping("/change-password")
     public String changePassword() {
-
         return "changePassword";
     }
 
@@ -67,9 +65,9 @@ public class CustomerController {
                                  @RequestParam String newPassword) {
         User user = (User) auth.getPrincipal();
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            model.addAttribute("message", "Неверный старый пароль!");
+            model.addAttribute("message", "Pls, double check previous password!");
 
-            return "changePassword";
+            return "redirect:/customer/profile" ;
         }
         user.setPassword(newPassword);
         userService.updateUser(user);
@@ -94,5 +92,21 @@ public class CustomerController {
         Order order = orderService.findOrderById(id).orElseGet(Order::new);
         model.addAttribute("order", order);
         return "customerOrderDetails";
+    }
+
+    @PostMapping("/changemail")
+    public String changeMailReq(Authentication auth, Model model,
+                              @RequestParam String newMail) {
+        User user = (User) auth.getPrincipal();
+        userService.changeUsersMail(user, newMail);
+        model.addAttribute("message", "Please check your email!");
+        return "redirect:/customer/profile";
+    }
+
+    @GetMapping("/activatenewmail/{token}")
+    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request){
+        userService.activateNewUsersMail(token, request);
+        model.addAttribute("message", "Email address changes successfully");
+        return "redirect:/customer";
     }
 }
