@@ -5,6 +5,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.MailSenderService;
+import com.jm.online_store.service.interf.SchedulingService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,12 +15,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Класс планировщик заданий. В соответствии с заданным планом выполняет определенные действия.
+ * Класс планировщик заданий. В соответствии с заданным планом выполняет определенные действия(задания).
  */
 @AllArgsConstructor
 @Slf4j
 @Service
-public class SchedulingServiceImpl implements com.jm.online_store.service.interf.SchedulingService {
+public class SchedulingServiceImpl implements SchedulingService {
 
     private final MailSenderService mailSenderService;
     private final UserRepository userRepository;
@@ -27,10 +28,18 @@ public class SchedulingServiceImpl implements com.jm.online_store.service.interf
 
     private final String EMAIL_TYPE = "Stock sender";
 
+    /**
+     * Метод выполняется с регулярностью заданным параметром ${emailStockSending.delay} в файле application.properties
+     * берем текущий день, делаем выборку среди всех {@link User} у кого в поле DayOfWeekForStockSend
+     * текущий день недели отправляем заранее сформированный email из текущих и будущих акций.
+     * Акции отбирабтся следующим условием:
+     *  - Задается период +- 7 дней от текущего.
+     *  - день старта акции должен попадать в этот промежуток и день окончания акции должен быть после текущего дня.
+     */
     @Override
     @Scheduled(cron = "${emailStockSending.delay}")
     public void sendStocksToCustomers() {
-        String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
+        User.DayOfWeekForStockSend dayOfWeek = User.DayOfWeekForStockSend.valueOf(LocalDate.now().getDayOfWeek().toString());
         List<User> usersToSendStock = userRepository.findByDayOfWeekForStockSend(dayOfWeek);
         LocalDate beginningOfPeriod = LocalDate.now().minusDays(7L);
         LocalDate endOfPeriod = LocalDate.now().plusDays(7L);
@@ -48,7 +57,7 @@ public class SchedulingServiceImpl implements com.jm.online_store.service.interf
             }
             log.debug("{} stock emails were sent", usersToSendStock.size());
         } else {
-            log.debug("There are no users in db that satisfy conditions");
+            log.debug("There are no users in db with DayOfWeekForStockSend field equals {}", dayOfWeek);
         }
     }
 
