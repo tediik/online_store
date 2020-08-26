@@ -26,11 +26,8 @@ import java.util.List;
 public class CustomerController {
 
     private final UserService userService;
-
     private final PasswordEncoder passwordEncoder;
-
     private final RoleService roleService;
-
     private final OrderService orderService;
 
     @GetMapping

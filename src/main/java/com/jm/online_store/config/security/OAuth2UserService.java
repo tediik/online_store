@@ -6,6 +6,7 @@ import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private static final Log log = LogFactory.getLog(OAuth2UserService.class);
@@ -32,12 +34,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     @Autowired
     @Setter
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public OAuth2UserService(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

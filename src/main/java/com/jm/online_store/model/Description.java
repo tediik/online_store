@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "description")
@@ -52,7 +51,7 @@ public class Description {
                        Double weight, String information, int ram, int hdd, String screenResolution, boolean wifiOnBoard, String bluetoothVersion) {
         this.serialNumber = serialNumber;
         this.producer = producer;
-        this. warranty = warranty;
+        this.warranty = warranty;
         this.dimensions = dimensions;
         this.color = color;
         this.weight = weight;

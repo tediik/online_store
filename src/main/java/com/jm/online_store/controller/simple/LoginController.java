@@ -29,7 +29,7 @@ public class LoginController {
     }
 
     @GetMapping("/denied")
-    public String deniedPage(){
+    public String deniedPage() {
         return "denied";
     }
 }

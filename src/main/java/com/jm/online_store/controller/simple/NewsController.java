@@ -30,7 +30,7 @@ public class NewsController {
     }
 
     @GetMapping("/{id}")
-    public String newsDetails(@PathVariable(value = "id") Long id,Model model) {
+    public String newsDetails(@PathVariable(value = "id") Long id, Model model) {
 
         if (!newsService.existsById(id)) {
             return "redirect:/news";
