@@ -1,11 +1,14 @@
 package com.jm.online_store.controller.rest;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.model.Basket;
 import com.jm.online_store.model.Order;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
+import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +36,17 @@ public class BusketRestController {
     private final BasketService basketService;
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
+    private final ProductService productService;
+
+    /**
+     * мтеод для получения авторизованного пользователя.
+     *
+     * @param authentication модель данных, построенная на основе залогированного User.
+     * @return авторизванный пользователь.
+     */
+    private User getAutorityUser(Authentication authentication) {
+        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
+    }
 
     /**
      * контроллер для получения товаров в корзине для авторизованного User.
@@ -43,8 +57,8 @@ public class BusketRestController {
      * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
      */
     @GetMapping(value = "/customer/busketGoods")
-    public ResponseEntity<List<Basket>> getFavouritesGoods(Authentication authentication) {
-        User autorityUser = userService.findById(((User) authentication.getPrincipal()).getId()).get();
+    public ResponseEntity<List<Basket>> getBasket(Authentication authentication) {
+        User autorityUser = getAutorityUser(authentication);
         List<Basket> baskets = autorityUser.getUserBasket();
         return new ResponseEntity<>(baskets, HttpStatus.OK);
     }
@@ -57,14 +71,18 @@ public class BusketRestController {
      */
     @PostMapping(value = "/customer/busketGoods")
     public ResponseEntity buildOrderFromBasket(Authentication authentication) {
-        User autorityUser = userService.findById(((User) authentication.getPrincipal()).getId()).get();
+        User autorityUser = getAutorityUser(authentication);
         List<Basket> basketList = autorityUser.getUserBasket();
+        Product product;
         int count = 0;
         double sum = 0;
         Order order = new Order();
         long orderId = orderService.addOrder(order);
         for (Basket basket : basketList) {
             productInOrderService.addToOrder(basket.getProduct().getId(), orderId, basket.getCount());
+            product = basket.getProduct();
+            product.setAmount(product.getAmount() - basket.getCount());
+            productService.saveProduct(product);
             count += basket.getCount();
             sum += basket.getProduct().getPrice() * basket.getCount();
         }
@@ -81,7 +99,6 @@ public class BusketRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-
     /**
      * Контроллер для удаления сущности Basket (корзина) из списка корзин User.
      *
@@ -91,7 +108,7 @@ public class BusketRestController {
      */
     @DeleteMapping(value = "/customer/busketGoods")
     public ResponseEntity deleteBasket(@RequestBody Long id, Authentication authentication) {
-        User autorityUser = userService.findById(((User) authentication.getPrincipal()).getId()).get();
+        User autorityUser = getAutorityUser(authentication);
         List<Basket> basketList = autorityUser.getUserBasket();
         basketList.remove(basketService.findBasketById(id));
         autorityUser.setUserBasket(basketList);
@@ -100,38 +117,30 @@ public class BusketRestController {
     }
 
     /**
-     * Контроллер для увеличения количества товара на 1.
      *
-     * @param id идентификатор Basket
-     * @return new ResponseEntity(HttpStatus.OK);
+     * @param json
+     * @return
      */
-    @PutMapping(value = "/customer/upBusketGoods")
-    public ResponseEntity updateUpBasket(@RequestBody Long id) {
+    @PutMapping(value = "/customer/busketGoods")
+    public ResponseEntity updateUpBasket(@RequestBody ObjectNode json) {
+        Long id = json.get("id").asLong();
+        int difference = json.get("count").asInt();
         Basket basket = basketService.findBasketById(id);
         int count = basket.getCount();
-        if (basket.getProduct().getAmount() > count) {
-            count = basket.getCount() + 1;
-            basket.setCount(count);
-            basketService.updateBasket(basket);
+        if (difference > 0) {
+            if (basket.getProduct().getAmount() > count) {
+                count += difference;
+                basket.setCount(count);
+            } else {
+                basket.setCount(basket.getProduct().getAmount());
+            }
+        } else {
+            if (count > 1) {
+                count += difference;
+                basket.setCount(count);
+            }
         }
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    /**
-     * Контроллер для уменьшения количества товара на 1.
-     *
-     * @param id идентификатор Basket
-     * @return new ResponseEntity(HttpStatus.OK);
-     */
-    @PutMapping(value = "/customer/downBusketGoods")
-    public ResponseEntity updateDownBasket(@RequestBody Long id) {
-        Basket basket = basketService.findBasketById(id);
-        int count = basket.getCount();
-        if (count > 1) {
-            count = basket.getCount() - 1;
-            basket.setCount(count);
             basketService.updateBasket(basket);
-        }
         return new ResponseEntity(HttpStatus.OK);
     }
 }

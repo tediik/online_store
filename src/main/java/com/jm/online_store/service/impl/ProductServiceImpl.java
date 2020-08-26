@@ -8,27 +8,58 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * класс для реализации сервисного слоя для "Product".
+ */
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
+    /**
+     * метод поиска Product по иденификатору.
+     *
+     * @param productId идентификатор Product
+     * @return Optional<Product>
+     */
+    @Override
     public Optional<Product> findProductById(Long productId) {
         return productRepository.findById(productId);
     }
 
+    /**
+     * метод поиска Product по наименованию.
+     *
+     * @param productName наименование Product
+     * @return Optional<Product>
+     */
     @Override
     public Optional<Product> findProductByName(String productName) {
         return productRepository.findByProduct(productName);
     }
 
+    /**
+     * метод обновления Product.
+     *
+     * @param product экземпляр класса Product
+     * @return идентификатор обновленного Product
+     */
+    @Override
     public Long saveProduct(Product product) {
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
     }
 
+    /**
+     * метод удаления Product.
+     *
+     * @param idProduct идентификатор Product
+     */
+    @Override
     public void deleteProduct(Long idProduct) {
         productRepository.deleteById(idProduct);
     }
 }
+
+
