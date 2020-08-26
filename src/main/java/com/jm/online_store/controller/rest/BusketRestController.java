@@ -117,9 +117,10 @@ public class BusketRestController {
     }
 
     /**
+     * контроллер для обновления количества товара в корзине.
      *
-     * @param json
-     * @return
+     * @param json json из 2-х параметров
+     * @return ResponseEntity(HttpStatus.OK)
      */
     @PutMapping(value = "/customer/busketGoods")
     public ResponseEntity updateUpBasket(@RequestBody ObjectNode json) {
