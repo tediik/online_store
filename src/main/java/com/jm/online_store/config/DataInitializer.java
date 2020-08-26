@@ -54,6 +54,7 @@ public class DataInitializer {
     private final NewsService newsService;
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
+    private final StockService stockService;
 
 //    @PostConstruct
     public void roleConstruct() {
