@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.config.security.odnoklassniki.OAuth2Service;
+import com.jm.online_store.config.security.odnoklassniki.OAuth2Odnoklassniki;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,20 +13,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/")
 public class LoginController {
 
-    private final OAuth2Service oAuth2Service;
+    private final OAuth2Odnoklassniki oAuth2Odnoklassniki;
 
     @GetMapping("/oauth")
-    public String oAuthOdnoklassniki(Model model, @RequestParam String code) {
-
-        oAuth2Service.UserAuth(code);
+    public String oAuthOdnoklassniki(@RequestParam String code) {
+        oAuth2Odnoklassniki.UserAuth(code);
         return "redirect:/";
     }
 
     @GetMapping(value = "/login")
     public String loginPage(Model model) {
-
-        String authUrlOK = oAuth2Service.getAuthorizationUrl();
-
+        String authUrlOK = oAuth2Odnoklassniki.getAuthorizationUrl();
         model.addAttribute("authUrlOK", authUrlOK);
         return "login";
     }

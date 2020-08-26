@@ -11,10 +11,14 @@ import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,7 +32,7 @@ import java.util.concurrent.ExecutionException;
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
-public class OAuth2Service {
+public class OAuth2Odnoklassniki {
 
     @Autowired
     private UserService userService;
@@ -36,29 +40,39 @@ public class OAuth2Service {
     @Autowired
     private RoleService roleService;
 
-    private static final String NETWORK_NAME = "Odnoklassniki.ru";
-    private static final String PROTECTED_RESOURCE_URL
-            = "https://api.ok.ru/api/users/getCurrentUser?application_key=CINLIMJGDIHBABABA&format=JSON";
+    @Value("${spring.server.url}")
+    private String serverUrl;
 
-    private final String clientId = "512000494295";
-    private final String publicKey = "CINLIMJGDIHBABABA";
-    private final String secretKey = "2DD0271520909F838004E332";
+    @Value("${spring.oauth2.odnoklassniki.resource_url}")
+    private String resourceUrl;
 
-    private final OAuth20Service service = new ServiceBuilder(clientId)
-            .apiSecret(secretKey)
-            .callback("http://localhost:9999/oauth")
-            .defaultScope("GET_EMAIL")
-            .build(OdnoklassnikiApi.instance());
+    @Value("${spring.oauth2.odnoklassniki.client_id}")
+    private String clientId;
+
+    @Value("${spring.oauth2.odnoklassniki.public_key}")
+    private String publicKey;
+
+    @Value("${spring.oauth2.odnoklassniki.secret_key}")
+    private String secretKey;
+
+    public OAuth20Service serviceBuilder() {
+        return new ServiceBuilder(clientId)
+                .apiSecret(secretKey)
+                .callback(serverUrl + "/oauth")
+                .defaultScope("GET_EMAIL")
+                .build(OdnoklassnikiApi.instance());
+    }
 
     public String getAuthorizationUrl() {
-        return service.getAuthorizationUrl();
+        return serviceBuilder().getAuthorizationUrl();
     }
 
     public void UserAuth(String token) {
         try {
+            OAuth20Service service = serviceBuilder();
             OAuth2AccessToken accessToken = service.getAccessToken(token);
             accessToken = service.refreshAccessToken(accessToken.getRefreshToken());
-            OAuthRequest request = new OAuthRequest(Verb.GET, String.format(PROTECTED_RESOURCE_URL, publicKey));
+            OAuthRequest request = new OAuthRequest(Verb.GET, String.format(resourceUrl, publicKey));
             service.signRequest(accessToken, request);
             String userFromOK = service.execute(request).getBody();
 
