@@ -178,15 +178,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUserImage(Long userId, MultipartFile file) {
+        User user = userRepository.findById(userId).get();
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         if (!file.isEmpty()) {
-            deleteUserImage(userId);
+            if (user.getProfilePicture() != null) {
+                deleteUserImage(userId);
+            }
             Path fileNameAndPath = Paths.get(uploadDirectory, originalFilename);
             try {
                 byte[] bytes = file.getBytes();
                 Files.write(fileNameAndPath, bytes);
                 //Set user's profile picture
-                User user = userRepository.findById(userId).get();
                 user.setProfilePicture(originalFilename);
                 userRepository.save(user);
             } catch (IOException e) {
@@ -212,13 +214,6 @@ public class UserServiceImpl implements UserService {
             log.debug("Failed to delete file {} {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
         //Set a default avatar as a user profilePicture
-        setDefaultUserAvatar(userId);
-    }
-
-    public void setDefaultUserAvatar(Long userId) {
-        final String defaultAvatar = StringUtils.cleanPath("def.jpg");
-        User user = userRepository.findById(userId).get();
         user.setProfilePicture(defaultAvatar);
-        userRepository.save(user);
     }
 }
