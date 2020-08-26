@@ -74,7 +74,7 @@ $('.filters button').on('click', function () {
 
 /*Добавить акцию*/
 function addStock() {
-    if ($('#addStartDate') === "") {
+    if ($('#addStartDate').val() === "" || $('#addStartDate').val() === null) {
         toastr.success('Назначьте дату начала акции!', {timeOut: 5000})
         return
     }

@@ -3,6 +3,8 @@ package com.jm.online_store.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,6 +33,7 @@ public class Stock {
     private String stockTitle;
 
     @Column(name = "stock_text")
+    @Type(type = "text")
     private String stockText;
 
     @Column
