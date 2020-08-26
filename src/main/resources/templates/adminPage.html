@@ -7,8 +7,6 @@
     <title>Admin panel</title>
 </head>
 <body style="background-color: whitesmoke">
-
-
 <div class="row">
 
     <div class="container col-11">
@@ -37,151 +35,151 @@
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <!--                main tab -->
                         <table class="table table-active table-striped" id="user-table" style="background-color: white">
-                            <thead class="thead-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>EMAIL</th>
-                                <th>ROLES</th>
-                                <th>EDIT</th>
-                                <th>DELETE</th>
-                            </tr>
-                            </thead>
+<!--                            <thead class="thead-dark">-->
+<!--                            <tr>-->
+<!--                                <th>ID</th>-->
+<!--                                <th>EMAIL</th>-->
+<!--                                <th>ROLES</th>-->
+<!--                                <th>EDIT</th>-->
+<!--                                <th>DELETE</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
 
-                            <tbody ID="table-body">
-                            <tr id="table-row" class="table-info">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <div class="update-example">
-                                        <!-- The Modal -->
-                                        <div class="modal fade" id="updateModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
+<!--                            <tbody ID="table-body">-->
+<!--                            <tr id="table-row" class="table-info">-->
+<!--                                <td></td>-->
+<!--                                <td></td>-->
+<!--                                <td></td>-->
+<!--                                <td>-->
+<!--                                    <div class="update-example">-->
+<!--                                        &lt;!&ndash; The Modal &ndash;&gt;-->
+<!--                                        <div class="modal fade" id="updateModal">-->
+<!--                                            <div class="modal-dialog modal-lg">-->
+<!--                                                <div class="modal-content">-->
 
-                                                    <!-- Modal Header -->
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Edit user</h4>
-                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                    </div>
+<!--                                                    &lt;!&ndash; Modal Header &ndash;&gt;-->
+<!--                                                    <div class="modal-header">-->
+<!--                                                        <h4 class="modal-title">Edit user</h4>-->
+<!--                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+<!--                                                    </div>-->
 
-                                                    <!-- Modal body -->
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="updateId" class="form-control-label">Id:</label>
-                                                            <input type="text" name="ID" value="" class="form-control" placeholder="Id" id="updateId" readonly="readonly">
-                                                        </div>
+<!--                                                    &lt;!&ndash; Modal body &ndash;&gt;-->
+<!--                                                    <div class="modal-body">-->
+<!--                                                        <div class="form-group">-->
+<!--                                                            <label for="updateId" class="form-control-label">Id:</label>-->
+<!--                                                            <input type="text" name="ID" value="" class="form-control" placeholder="Id" id="updateId" readonly="readonly">-->
+<!--                                                        </div>-->
 
-                                                        <div id="update-email-form-group" class="form-group">
-                                                            <label for="updateEmail" class="form-control-label">Email:</label>
-                                                            <input type="email" name="email" value="" class="form-control" placeholder="Email" id="updateEmail">
-                                                        </div>
+<!--                                                        <div id="update-email-form-group" class="form-group">-->
+<!--                                                            <label for="updateEmail" class="form-control-label">Email:</label>-->
+<!--                                                            <input type="email" name="email" value="" class="form-control" placeholder="Email" id="updateEmail">-->
+<!--                                                        </div>-->
 
-                                                        <div class="form-group">
-                                                            <label>User Roles</label>
-                                                            <select id="updateRoles" name="roles" class="form-control" multiple="multiple">
+<!--                                                        <div class="form-group">-->
+<!--                                                            <label>User Roles</label>-->
+<!--                                                            <select id="updateRoles" name="roles" class="form-control" multiple="multiple">-->
 
-                                                                <!--                            Ajax populates options from database-->
+<!--                                                                &lt;!&ndash;                            Ajax populates options from database&ndash;&gt;-->
 
-                                                            </select>
-                                                        </div>
+<!--                                                            </select>-->
+<!--                                                        </div>-->
 
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn  btn-danger" data-dismiss="modal">Close</button>
+<!--                                                        <div class="modal-footer">-->
+<!--                                                            <button type="button" class="btn  btn-danger" data-dismiss="modal">Close</button>-->
 
-                                                            <button type="button" id="updateSubmitBtn" class="btn btn-primary">Edit</button>
-                                                        </div>
-                                                    </div>
-
-
-                                                </div>
-                                            </div>
-                                        </div>
+<!--                                                            <button type="button" id="updateSubmitBtn" class="btn btn-primary">Edit</button>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
 
 
-                                    </div>
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
 
 
-                                </td>
+<!--                                    </div>-->
 
-                                <td>
-                                    <div class="delete-example">
-                                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <!-- Modal Header -->
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Delete user</h4>
-                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                    </div>
 
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="deleteId" class="form-control-label">Id:</label>
-                                                            <input type="text" name="ID" value="" class="form-control" placeholder="Id" id="deleteId" readonly="readonly">
-                                                        </div>
+<!--                                </td>-->
 
-                                                        <div class="form-group">
-                                                            <label for="deleteEmail" class="form-control-label">Email:</label>
-                                                            <input type="email" name="email" value="" class="form-control" placeholder="Email" id="deleteEmail" readonly="readonly">
-                                                        </div>
+<!--                                <td>-->
+<!--                                    <div class="delete-example">-->
+<!--                                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">-->
+<!--                                            <div class="modal-dialog modal-lg">-->
+<!--                                                <div class="modal-content">-->
+<!--                                                    &lt;!&ndash; Modal Header &ndash;&gt;-->
+<!--                                                    <div class="modal-header">-->
+<!--                                                        <h4 class="modal-title">Delete user</h4>-->
+<!--                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+<!--                                                    </div>-->
 
-                                                        <div class="form-group">
-                                                            <label for="deletePassword" class="form-control-label">Password:</label>
-                                                            <input type="password" name="password" value="" class="form-control" placeholder="Password" id="deletePassword"
-                                                                   readonly="readonly">
-                                                        </div>
+<!--                                                    <div class="modal-body">-->
+<!--                                                        <div class="form-group">-->
+<!--                                                            <label for="deleteId" class="form-control-label">Id:</label>-->
+<!--                                                            <input type="text" name="ID" value="" class="form-control" placeholder="Id" id="deleteId" readonly="readonly">-->
+<!--                                                        </div>-->
 
-                                                        <div class="form-group">
-                                                            <label>User Roles</label>
-                                                            <select id="deleteRoles" name="roles" class="form-control" multiple="multiple" readonly="readonly">
+<!--                                                        <div class="form-group">-->
+<!--                                                            <label for="deleteEmail" class="form-control-label">Email:</label>-->
+<!--                                                            <input type="email" name="email" value="" class="form-control" placeholder="Email" id="deleteEmail" readonly="readonly">-->
+<!--                                                        </div>-->
 
-                                                            </select>
-                                                        </div>
+<!--                                                        <div class="form-group">-->
+<!--                                                            <label for="deletePassword" class="form-control-label">Password:</label>-->
+<!--                                                            <input type="password" name="password" value="" class="form-control" placeholder="Password" id="deletePassword"-->
+<!--                                                                   readonly="readonly">-->
+<!--                                                        </div>-->
 
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn  btn-danger" data-dismiss="modal">Close</button>
+<!--                                                        <div class="form-group">-->
+<!--                                                            <label>User Roles</label>-->
+<!--                                                            <select id="deleteRoles" name="roles" class="form-control" multiple="multiple" readonly="readonly">-->
 
-                                                            <button type="button" id="deleteSubmitBtn" class="btn btn-primary " data-dismiss="modal">Delete</button>
-                                                        </div>
+<!--                                                            </select>-->
+<!--                                                        </div>-->
 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
+<!--                                                        <div class="modal-footer">-->
+<!--                                                            <button type="button" class="btn  btn-danger" data-dismiss="modal">Close</button>-->
+
+<!--                                                            <button type="button" id="deleteSubmitBtn" class="btn btn-primary " data-dismiss="modal">Delete</button>-->
+<!--                                                        </div>-->
+
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
                         </table>
 
 
                     </div>
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <!--                Secondary user addition form-->
-                        <h3>Add User</h3>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">New User</div>
-                            <div class="panel-body">
-                                <div id="add-email-form-group" class="form-group">
-                                    <label for="addEmail">Email:</label>
-                                    <input type="text" id="addEmail" name="email" placeholder="E-mail" class="form-control">
+<!--                        <h3>Add User</h3>-->
+<!--                        <div class="panel panel-default">-->
+<!--                            <div class="panel-heading">New User</div>-->
+<!--                            <div class="panel-body">-->
+<!--                                <div id="add-email-form-group" class="form-group">-->
+<!--                                    <label for="addEmail">Email:</label>-->
+<!--                                    <input type="text" id="addEmail" name="email" placeholder="E-mail" class="form-control">-->
 
-                                </div>
-                                <div class="form-group">
-                                    <label for="addPassword">Password:</label>
-                                    <input type="password" id="addPassword" name="password" placeholder="Password" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label>Role</label>
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="addPassword">Password:</label>-->
+<!--                                    <input type="password" id="addPassword" name="password" placeholder="Password" class="form-control">-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label>Role</label>-->
 
-                                    <select id="addRoles" name="roles" class="form-control" multiple="multiple">
+<!--                                    <select id="addRoles" name="roles" class="form-control" multiple="multiple">-->
 
-                                    </select>
-                                </div>
-                                <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Register</button>
-                            </div>
-                        </div>
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                                <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Add</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -192,5 +190,6 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <script type="text/javascript" src="static/main.js"></script>
+<script src="/static/js/AdminPageRender.js"></script>
 </body>
 </html>
