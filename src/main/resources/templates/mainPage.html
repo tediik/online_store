@@ -25,9 +25,10 @@
 
     jQuery(document).ready(function($) {
         $('#mega-1').dcVerticalMegaMenu();
+
         $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
             $("#openNewRegistrationModal form")[0].reset();//reset modal fields
-            $("#openNewRegistrationModal .error").html('');//reset error spans
+            $("#openNewRegistrationModal .error").hide();//reset error spans
         });
     });
 
@@ -38,17 +39,17 @@
             console.log(data)
             if(data.message == "success"){
                 $("#okMessage").show().html(data.responseJSON.message);
-            }else if(data.message == "emailError"){
-                $("#emailError").show().html(data.responseJSON.message);
+            }else if(data.message == "duplicatedEmailError"){
+                $("#duplicatedEmailError").show().html(data.responseJSON.message);
             }else if(data.message == "passwordError"){
                 $("#passwordError").show().html(data.responseJSON.message);
+            }else if(data.message == "notValidEmailError") {
+                $("#notValidEmailError").show().html(data.responseJSON.message);
             }
         })
     }
 
-
 </script>
-
 
 <body>
 
@@ -62,7 +63,6 @@
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
         </div>
     </form>
-
 
     <!-- Customer service -->
     <a class="p-2 text-dark" href="/news">Новости</a>
@@ -87,7 +87,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Название</h3>
+                <h3 class="modal-title">Регистрация</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                     <span aria-hidden="true">x</span>
                 </button>
@@ -105,7 +105,7 @@
                                 class="form-control"/>
                     </div>
                     <div class="form-group text-center font-weight-bold">
-                    <label for="password">Password</label>
+                    <label for="password">Пароль</label>
                         <input  name="password"
                                 value=""
                                 id="password"
@@ -115,7 +115,7 @@
                                 class="form-control"/>
                     </div>
                     <div class="form-group text-center font-weight-bold">
-                    <label for="passwordConfirm">Confirm your password</label>
+                    <label for="passwordConfirm">Повторите пароль</label>
                         <input name="passwordConfirm"
                                value=""
                                id="passwordConfirm"
@@ -124,12 +124,20 @@
                                autofocus
                                class="form-control"/>
                     </div>
-                    <span id="okMessage" style="display:none" class="error">На ваш почтовый адрес была выслана ссылка для подтверждения</span>
-                    <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
-                    <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
-                    <span id="notValidEmailError"style="display:none" class="error">Неверный формат электронной почты</span>
                     <div>
-                    <a href="#" onclick="register()" class="btn btn-primary btn-sm btn-block"> submit</a>
+                    <span id="okMessage" style="display:none" class="error">На ваш почтовый адрес была выслана ссылка для подтверждения</span>
+                    </div>
+                       <div>
+                        <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
+                       </div>
+                          <div>
+                           <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
+                          </div>
+                    <div>
+                    <span id="notValidEmailError" style="display:none" class="error">Неверный формат электронной почты</span>
+                    </div>
+                        <div>
+                    <a onclick="register()" class="btn btn-primary btn-sm btn-block"> submit</a>
                     </div>
                 </form>
             </div>
