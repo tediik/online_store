@@ -24,6 +24,8 @@ public interface UserService {
     void regNewAccount(User user);
 
     boolean activateUser(String code, HttpServletRequest request);
+
+    public User getOne(Long id);
 }
 
 

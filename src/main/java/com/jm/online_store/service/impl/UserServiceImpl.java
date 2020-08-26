@@ -164,4 +164,8 @@ public class UserServiceImpl implements UserService {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
     }
+
+    public User getOne(Long id){
+        return userRepository.getOne(id);
+    }
 }
