@@ -60,7 +60,6 @@ public class RegistrationController {
         return "successfulRegister";
     }
 
-
     @GetMapping("/activate/{token}")
     public String activate(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateUser(token, request);

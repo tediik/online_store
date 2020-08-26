@@ -42,7 +42,7 @@ public class DataInitializer {
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
 
-    //    @PostConstruct
+    //@PostConstruct
     public void roleConstruct() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -96,7 +96,7 @@ public class DataInitializer {
 
     }
 
-    //    @PostConstruct
+    //@PostConstruct
     public void newsConstructor() {
         News firstNews = News.builder()
                 .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
@@ -177,7 +177,7 @@ public class DataInitializer {
         newsService.save(thirdNews);
     }
 
-    //    @PostConstruct
+	//@PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
@@ -223,7 +223,7 @@ public class DataInitializer {
         categoriesService.saveAll(Arrays.asList(category1, category2, category3));
     }
 
-    //    @PostConstruct
+    //@PostConstruct
     public void ordersConstruct() {
         User customer = userService.findByEmail("customer@mail.ru").get();
 
