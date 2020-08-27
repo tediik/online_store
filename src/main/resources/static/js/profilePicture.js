@@ -4,6 +4,8 @@ $(document).ready(function () {
             var file_data = $('#fileInput').prop('files')[0];
             var form_data = new FormData();
             form_data.append("imageFile", file_data);
+            console.log(form_data);
+            console.log(form_data.get("imageFile"));
             $.ajax(
                 {
                     type: 'POST',

@@ -81,6 +81,10 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favouritesGoods;
 
+    @Column(name = "day_of_week_for_stock_send")
+    @Enumerated(EnumType.STRING)
+    private DayOfWeekForStockSend dayOfWeekForStockSend;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @JsonBackReference
@@ -139,9 +143,19 @@ public class User implements UserDetails {
         return true;
     }
 
-    private enum Gender {
+    public enum Gender {
         MAN,
         WOMAN
+    }
+
+    public enum DayOfWeekForStockSend {
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY
     }
 
     @Override

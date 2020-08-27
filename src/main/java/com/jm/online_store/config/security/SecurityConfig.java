@@ -1,6 +1,8 @@
 package com.jm.online_store.config.security;
 
 import com.jm.online_store.config.handler.LoginSuccessHandler;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,13 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final LoginSuccessHandler successHandler;
+    private final MyUserDetailsService myUserDetailsService;
+
     @Autowired
-    private LoginSuccessHandler successHandler;
-    @Autowired
-    private MyUserDetailsService myUserDetailsService;
-    @Autowired
+    @Setter
     private OAuth2UserService OAuth2UserService;
 
     @Override
@@ -60,6 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/news/**", "/registration", "/css/**").permitAll()
+                .antMatchers("/oauth/**").permitAll()
                 .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**", "/404").permitAll()
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
                 .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
