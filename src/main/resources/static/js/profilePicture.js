@@ -36,6 +36,7 @@ $(document).ready(function () {
                     cache: false,
                     success: function (data) {
                         $('#profilePic').attr('src', data);
+                        $('#blah').attr('src' , data);
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         console.log(errorThrown);
