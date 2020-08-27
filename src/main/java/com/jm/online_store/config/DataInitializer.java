@@ -181,9 +181,9 @@ public class DataInitializer {
 //    @PostConstruct
     public void productInit() {
 
-        Categories category1 = new Categories("Laptop", "Computer");
-        Categories category2 = new Categories("PC", "Computer");
-        Categories category3 = new Categories("Smartphone", "Cellphone");
+        Categories category1 = new Categories("Ноутбуки", "Компьютеры");
+        Categories category2 = new Categories("PC", "Компьютеры");
+        Categories category3 = new Categories("Смартфоны", "Мобильные телефоны");
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer");
         Product product2 = new Product("ACER-5432", 399.9, 10, 4.2, "Computer");
