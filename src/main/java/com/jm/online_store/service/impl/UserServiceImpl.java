@@ -240,7 +240,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         log.debug("Failed to store file - file is not present {}", originalFilename);
-        return File.separator+"uploads"+File.separator +"images"+File.separator+file.getOriginalFilename();
+        return File.separator + "uploads" + File.separator + "images" + File.separator + file.getOriginalFilename();
     }
 
     /**
@@ -261,9 +261,10 @@ public class UserServiceImpl implements UserService {
                 Files.delete(fileNameAndPath);
             }
         } catch (IOException e) {
-            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());        }
+            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());        
+        }
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
-        return File.separator+"uploads"+File.separator +"images"+File.separator+defaultAvatar;
+        return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
     }
 }
