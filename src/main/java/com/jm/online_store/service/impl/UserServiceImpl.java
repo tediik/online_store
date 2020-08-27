@@ -214,6 +214,11 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * updateUserImage method receives authorised user's Id and Multipart Image file
+     * saves Image in Uploads/images folder
+     * and sets saved image to userProfilePicture
+     */
     @Override
     @Transactional
     public String updateUserImage(Long userId, MultipartFile file) {
@@ -232,13 +237,17 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(user);
             } catch (IOException e) {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
-
             }
         }
         log.debug("Failed to store file - file is not present {}", originalFilename);
         return File.separator+"uploads"+File.separator +"images"+File.separator+file.getOriginalFilename();
     }
 
+    /**
+     * deleteUserImage method receives authorised user's Id
+     * deletes current user's profile picture and sets a default avatar
+     * default avatar cannot be deleted
+     */
     @Override
     @Transactional
     public String deleteUserImage(Long userId) {
