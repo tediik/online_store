@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService {
             editUser.setEmail(user.getEmail());
         }
         editUser.setRoles(persistRoles(user.getRoles()));
+        editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
         userRepository.save(user);
     }
@@ -123,8 +124,30 @@ public class UserServiceImpl implements UserService {
                 userForm.getEmail(),
                 confirmationToken.getConfirmationToken()
         );
+        mailSenderService.send(userForm.getEmail(), "Activation code", message, "Confirmation");
+    }
 
-        mailSenderService.send(userForm.getEmail(), "Activation code", message);
+    /**
+     * Method generates confirmation token based on users ID and Email adress
+     * Sends generated token to new users email
+     */
+    @Override
+    public void changeUsersMail(User user, String newMail) {
+
+        user.setEmail(newMail);
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
+        confirmTokenRepository.save(confirmationToken);
+
+        String message = String.format(
+                "Hello, %s! \n" +
+                        "You have requested the email change. Please, confirm via link: " +
+                        urlActivate + "/customer/activatenewmail/%s",
+                user.getEmail(),
+                confirmationToken.getConfirmationToken()
+
+        );
+        mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
     }
 
     @Override
@@ -153,6 +176,22 @@ public class UserServiceImpl implements UserService {
         } catch (ServletException e) {
             log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
         }
+        return true;
+    }
+
+    /**
+     * Method receives token and request after User confirms mail change via link
+     * After that, new email address is saved to users DB table
+     */
+    @Override
+    public boolean activateNewUsersMail(String token, HttpServletRequest request) {
+        ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
+        if (confirmationToken == null) {
+            return false;
+        }
+        User user = userRepository.findById(confirmationToken.getUserId()).get();
+        user.setEmail(confirmationToken.getUserEmail());
+        userRepository.saveAndFlush(user);
         return true;
     }
 

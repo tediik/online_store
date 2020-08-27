@@ -19,16 +19,18 @@ import java.util.Set;
 @RestController
 public class FavouritesGoodsRestController {
     private final UserService userService;
+
     /**
      * контроллер для получения товаров "избранное" для авторизованного User.
      * используется поиск по идентификатору User, т.к. используется ленивая
      * загрузка товаров, добавленных в "избранное".
+     *
      * @param authentication модель данных, построенная на основе залогированного User.
      * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
      */
     @GetMapping(value = "/customer/favouritesGoods")
     public ResponseEntity<Set<Product>> getFavouritesGoods(Authentication authentication) {
-        User autorityUser = userService.findById(((User)authentication.getPrincipal()).getId()).get();
+        User autorityUser = userService.findById(((User) authentication.getPrincipal()).getId()).get();
         Set<Product> favouritesGoods = autorityUser.getFavouritesGoods();
         return new ResponseEntity<>(favouritesGoods, HttpStatus.OK);
     }
