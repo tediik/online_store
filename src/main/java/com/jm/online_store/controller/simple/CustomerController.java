@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.simple;
 
+import com.jm.online_store.controller.ResponseTransfer;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.OrderService;
@@ -8,14 +9,18 @@ import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -80,16 +85,18 @@ public class CustomerController {
         return "redirect:/customer/profile";
     }
 
-    @PostMapping("/uploadImage/{id}")
-    public String handleImagePost(@PathVariable String id, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        userService.updateUserImage(Long.valueOf(id), imageFile);
-        return "redirect:/customer/profile";
+    @PostMapping("/uploadImage")
+    @ResponseBody
+    public String handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userService.updateUserImage(userDetails.getId(), imageFile);
     }
 
-    @PostMapping("/deleteImage/{id}")
-    public String deleteImage(@PathVariable Long id) throws IOException {
-        userService.deleteUserImage(id);
-        return "redirect:/customer/profile";
+    @DeleteMapping("/deleteImage")
+    @ResponseBody
+    public String deleteImage() throws IOException {
+        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userService.deleteUserImage(userDetails.getId());
     }
 
     @GetMapping("/order")

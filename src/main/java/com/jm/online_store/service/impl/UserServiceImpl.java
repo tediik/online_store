@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUserImage(Long userId, MultipartFile file) {
+    public String updateUserImage(Long userId, MultipartFile file) {
         User user = userRepository.findById(userId).get();
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         if (!file.isEmpty()) {
@@ -196,11 +196,12 @@ public class UserServiceImpl implements UserService {
             }
         }
         log.debug("Failed to store file - file is not present {}", originalFilename);
+        return File.separator+"uploads"+File.separator +"images"+File.separator+file.getOriginalFilename();
     }
 
     @Override
     @Transactional
-    public void deleteUserImage(Long userId) {
+    public String deleteUserImage(Long userId) {
         final String defaultAvatar = StringUtils.cleanPath("def.jpg");
         User user = userRepository.findById(userId).get();
         //Get profilePicture name from User and delete this profile picture from Uploads
@@ -215,5 +216,6 @@ public class UserServiceImpl implements UserService {
         }
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
+        return File.separator+"uploads"+File.separator +"images"+File.separator+defaultAvatar;
     }
 }

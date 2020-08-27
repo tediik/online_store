@@ -28,9 +28,9 @@ public interface UserService {
 
     boolean activateUser(String code, HttpServletRequest request);
 
-    void updateUserImage(Long valueOf, MultipartFile imageFile) throws IOException;
+    String updateUserImage(Long valueOf, MultipartFile imageFile) throws IOException;
 
-    void deleteUserImage(Long userId) throws IOException;
+    String deleteUserImage(Long userId) throws IOException;
 }
 
 
