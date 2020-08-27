@@ -107,7 +107,6 @@ public class DataInitializer {
         customer = userService.findByEmail("customer@mail.ru").get();
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
-
     }
 
 //    @PostConstruct
