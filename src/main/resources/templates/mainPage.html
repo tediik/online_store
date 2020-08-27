@@ -14,6 +14,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
     <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css" >
 
     <script src="/static/js/mainPage.js"></script>
@@ -38,15 +40,21 @@
         $.post("http://localhost:9999/registration",formData ,function(data){
             console.log(data)
             if(data.message == "success"){
-                $("#okMessage").show().html(data.responseJSON.message);
+                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000})
+                close();
             }else if(data.message == "duplicatedEmailError"){
-                $("#duplicatedEmailError").show().html(data.responseJSON.message);
+                $("#duplicatedEmailError").show();
             }else if(data.message == "passwordError"){
-                $("#passwordError").show().html(data.responseJSON.message);
+                $("#passwordError").show();
             }else if(data.message == "notValidEmailError") {
-                $("#notValidEmailError").show().html(data.responseJSON.message);
+                $("#notValidEmailError").show();
             }
         })
+    }
+
+    function close() {
+        $('#openNewRegistrationModal').hide();
+        $(".modal-backdrop.show").hide();
     }
 
 </script>
@@ -123,9 +131,6 @@
                                type="password"
                                autofocus
                                class="form-control"/>
-                    </div>
-                    <div>
-                    <span id="okMessage" style="display:none" class="error">На ваш почтовый адрес была выслана ссылка для подтверждения</span>
                     </div>
                        <div>
                         <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
