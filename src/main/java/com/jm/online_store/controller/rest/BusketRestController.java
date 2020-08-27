@@ -1,9 +1,9 @@
 package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.jm.online_store.model.Basket;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.OrderService;
@@ -57,10 +57,23 @@ public class BusketRestController {
      * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
      */
     @GetMapping(value = "/customer/busketGoods")
-    public ResponseEntity<List<Basket>> getBasket(Authentication authentication) {
+    public ResponseEntity<List<SubBasket>> getBasket(Authentication authentication) {
         User autorityUser = getAutorityUser(authentication);
-        List<Basket> baskets = autorityUser.getUserBasket();
-        return new ResponseEntity<>(baskets, HttpStatus.OK);
+        List<SubBasket> subBaskets = autorityUser.getUserBasket();
+        int productCount;
+        for (SubBasket subBasket : subBaskets) {
+            productCount = productService.findProductById(subBasket.getProduct().getId()).get().getAmount();
+            if (productCount < subBasket.getCount()) {
+                subBasket.setCount(productCount);
+                if (productCount < 1) {
+                    subBaskets.remove(subBasket);
+                    basketService.deleteBasket(subBasket);
+                }
+                autorityUser.setUserBasket(subBaskets);
+                userService.updateUser(autorityUser);
+            }
+        }
+        return new ResponseEntity<>(subBaskets, HttpStatus.OK);
     }
 
     /**
@@ -72,19 +85,19 @@ public class BusketRestController {
     @PostMapping(value = "/customer/busketGoods")
     public ResponseEntity buildOrderFromBasket(Authentication authentication) {
         User autorityUser = getAutorityUser(authentication);
-        List<Basket> basketList = autorityUser.getUserBasket();
+        List<SubBasket> subBasketList = autorityUser.getUserBasket();
         Product product;
         int count = 0;
         double sum = 0;
         Order order = new Order();
         long orderId = orderService.addOrder(order);
-        for (Basket basket : basketList) {
-            productInOrderService.addToOrder(basket.getProduct().getId(), orderId, basket.getCount());
-            product = basket.getProduct();
-            product.setAmount(product.getAmount() - basket.getCount());
+        for (SubBasket subBasket : subBasketList) {
+            productInOrderService.addToOrder(subBasket.getProduct().getId(), orderId, subBasket.getCount());
+            product = subBasket.getProduct();
+            product.setAmount(product.getAmount() - subBasket.getCount());
             productService.saveProduct(product);
-            count += basket.getCount();
-            sum += basket.getProduct().getPrice() * basket.getCount();
+            count += subBasket.getCount();
+            sum += subBasket.getProduct().getPrice() * subBasket.getCount();
         }
         order.setDateTime(LocalDateTime.now());
         order.setAmount((long) count);
@@ -100,7 +113,7 @@ public class BusketRestController {
     }
 
     /**
-     * Контроллер для удаления сущности Basket (корзина) из списка корзин User.
+     * Контроллер для удаления сущности SubBasket (корзина) из списка корзин User.
      *
      * @param id             идентификатор миникорзины
      * @param authentication авторизованный пользователь User
@@ -109,9 +122,9 @@ public class BusketRestController {
     @DeleteMapping(value = "/customer/busketGoods")
     public ResponseEntity deleteBasket(@RequestBody Long id, Authentication authentication) {
         User autorityUser = getAutorityUser(authentication);
-        List<Basket> basketList = autorityUser.getUserBasket();
-        basketList.remove(basketService.findBasketById(id));
-        autorityUser.setUserBasket(basketList);
+        List<SubBasket> subBasketList = autorityUser.getUserBasket();
+        subBasketList.remove(basketService.findBasketById(id));
+        autorityUser.setUserBasket(subBasketList);
         userService.updateUser(autorityUser);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -126,22 +139,22 @@ public class BusketRestController {
     public ResponseEntity updateUpBasket(@RequestBody ObjectNode json) {
         Long id = json.get("id").asLong();
         int difference = json.get("count").asInt();
-        Basket basket = basketService.findBasketById(id);
-        int count = basket.getCount();
+        SubBasket subBasket = basketService.findBasketById(id);
+        int count = subBasket.getCount();
         if (difference > 0) {
-            if (basket.getProduct().getAmount() > count) {
+            if (subBasket.getProduct().getAmount() > count) {
                 count += difference;
-                basket.setCount(count);
+                subBasket.setCount(count);
             } else {
-                basket.setCount(basket.getProduct().getAmount());
+                subBasket.setCount(subBasket.getProduct().getAmount());
             }
         } else {
             if (count > 1) {
                 count += difference;
-                basket.setCount(count);
+                subBasket.setCount(count);
             }
         }
-            basketService.updateBasket(basket);
+        basketService.updateBasket(subBasket);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

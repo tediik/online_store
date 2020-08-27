@@ -82,12 +82,24 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favouritesGoods = new HashSet<>();
 
+    /**
+     * поле корзина клиента.
+     * "Корзина клиента" состоит из подкорзин "SubBasket", сотоящих в свою очередь
+     * из сущности "Product" и количества данного "Product" в "SubBasket".
+     * данная схема необходима, чтобы мжно было хранить необходимое количество тавара
+     * для заказа пользователя и сам товар как экземпляр класса "Product".
+     * для оформления заказа необходимо пройти по всем "SubBasket" и получить из сущности "Product",
+     * который находится в "SubBasket" актуальную цену, из объекта "SubBasket" получить количество товара "Product".
+     * Для добавления товара в корзину необходимо пройти по всем "SubBasket" и проверить на наличие данного "Product"
+     * в корзине. При наличии совпадений, необходимо проверить коичество(наличие) данного "Product" в БД
+     * и увеличить на "1" в данном "SubBasket".
+     */
     @OneToMany
     @JoinTable(
             name = "user_basket",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "basket_id"))
-    private List<Basket> userBasket = new ArrayList<>();
+    private List<SubBasket> userBasket = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

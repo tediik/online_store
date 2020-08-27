@@ -13,14 +13,17 @@ import javax.persistence.ManyToOne;
 
 /**
  * класс корзины (миникорзина из одного продукта).
- * количество продукта.
+ * "Корзина клиента" состоит из подкорзин "SubBasket", сотоящих в свою очередь
+ *из сущности "Product" и количества данного "Product" в "SubBasket".
+ *данная схема необходима, чтобы мжно было хранить необходимое количество тавара
+ * для заказа пользователя и сам товар как экземпляр класса "Product".
  */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Basket {
+public class SubBasket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

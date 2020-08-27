@@ -1,6 +1,6 @@
 package com.jm.online_store.config;
 
-import com.jm.online_store.model.Basket;
+import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Description;
 import com.jm.online_store.model.News;
@@ -98,18 +98,18 @@ public class DataInitializer {
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
 
-        Basket basket_1 = new Basket();
-        basket_1.setProduct(product_1);
-        basket_1.setCount(1);
-        basketService.addBasket(basket_1);
-        Basket basket_2 = new Basket();
-        basket_2.setProduct(product_3);
-        basket_2.setCount(1);
-        basketService.addBasket(basket_2);
-        List<Basket> basketList = new ArrayList<>();
-        basketList.add(basket_1);
-        basketList.add(basket_2);
-        customer.setUserBasket(basketList);
+        SubBasket subBasket_1 = new SubBasket();
+        subBasket_1.setProduct(product_1);
+        subBasket_1.setCount(1);
+        basketService.addBasket(subBasket_1);
+        SubBasket subBasket_2 = new SubBasket();
+        subBasket_2.setProduct(product_3);
+        subBasket_2.setCount(1);
+        basketService.addBasket(subBasket_2);
+        List<SubBasket> subBasketList = new ArrayList<>();
+        subBasketList.add(subBasket_1);
+        subBasketList.add(subBasket_2);
+        customer.setUserBasket(subBasketList);
         userService.updateUser(customer);
 
     }
