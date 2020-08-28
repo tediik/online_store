@@ -35,8 +35,8 @@ async function fillBusket() {
             <td>
                 <button class="btn btn-primary" onclick="deleteBasket(${content[key].id})">Удалить</button>
             </td>
-       <tr>
-`;
+        <tr>
+        `;
         sumBasket += content[key].product.price * content[key].count;
         $(basketGoodsJson).append(product);
     }
