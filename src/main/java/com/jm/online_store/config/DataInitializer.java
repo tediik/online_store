@@ -1,12 +1,27 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Description;
+import com.jm.online_store.model.Product;
+import com.jm.online_store.model.Role;
+import com.jm.online_store.model.Stock;
+import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.StockService;
+import lombok.Data;
+import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.UserService;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.Arrays;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -18,7 +33,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +56,8 @@ public class DataInitializer {
     private final NewsService newsService;
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
+    private final BasketService basketService;
+    private final StockService stockService;
 
 //    @PostConstruct
     public void roleConstruct() {
@@ -95,10 +111,23 @@ public class DataInitializer {
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
 
+        SubBasket subBasket_1 = new SubBasket();
+        subBasket_1.setProduct(product_1);
+        subBasket_1.setCount(1);
+        basketService.addBasket(subBasket_1);
+        SubBasket subBasket_2 = new SubBasket();
+        subBasket_2.setProduct(product_3);
+        subBasket_2.setCount(1);
+        basketService.addBasket(subBasket_2);
+        List<SubBasket> subBasketList = new ArrayList<>();
+        subBasketList.add(subBasket_1);
+        subBasketList.add(subBasket_2);
+        customer.setUserBasket(subBasketList);
+        userService.updateUser(customer);
     }
 
 //    @PostConstruct
-    public void newsConstructor() {
+    public void newsInit() {
         News firstNews = News.builder()
                 .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
                 .anons("Не пропустите розыгрыш потрясающих призов.")
@@ -178,7 +207,7 @@ public class DataInitializer {
         newsService.save(thirdNews);
     }
 
-//    @PostConstruct
+	//@PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
@@ -225,7 +254,7 @@ public class DataInitializer {
     }
 
 //    @PostConstruct
-    public void ordersConstruct() {
+    public void ordersInit() {
         User customer = userService.findByEmail("customer@mail.ru").get();
 
         List<Long> productsIds = new ArrayList<>();
@@ -250,19 +279,64 @@ public class DataInitializer {
 
         productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
         productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
-
         productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
-
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
-
         productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
-
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
-
         customer.setOrders(Set.copyOf(orderService.findAll()));
-
         userService.updateUser(customer);
+    }
+
+    //    @PostConstruct
+    public void stockInit(){
+        Stock firstStock = Stock.builder()
+                .startDate(LocalDate.now().plusDays(2))
+                .endDate(LocalDate.now().plusDays(12L))
+                .stockTitle("Собери персональный компьютер на базе Intel® Core™ – получи скидку!")
+                .stockText("оберите свой мощный компьютер на базе процессоров Intel® Core™! Корпуса,карты памяти, " +
+                        "твердотельные накопители от именитых производителей, материнские платы MSI и процессоры " +
+                        "Intel® Core™ помогут вам создать свою мощную машину! Работайте максимально эффективно на " +
+                        "ПК с процессором Intel® Core™. Этот процессор обеспечивает впечатляющую производительность " +
+                        "для развлечений и многозадачности. Улучшенная продуктивность, бесперебойная потоковая " +
+                        "трансляция и превосходные развлечения в формате HD — это и многое другое с Intel® Core™! " +
+                        "Используйте свое умное и продвинутое «железо» в работе и будьте эффективными и быстрыми в " +
+                        "решении задач или же с азартом побеждайте врагов в «тяжелых» играх!" +
+                        "Приобретая комплектующие для сборки ПК и процессоры Intel® Core™, вы получаете скидку 10 %!")
+                .build();
+
+        Stock secondStock = Stock.builder()
+                .startDate(LocalDate.now().minusDays(5L))
+                .endDate(LocalDate.now().plusDays(3L))
+                .stockTitle("Рассрочка или бонусы! Смартфоны Samsung Galaxy M-серии")
+                .stockText("Смартфон Samsung Galaxy M21 обладает тройной камерой на 48+8+5 Мп, а M31 и M31s – " +
+                        "квадрокамерами на 64+8+5+5 Мп и 64+12+5+5 соответственно. Такие параметры позволят вам " +
+                        "совершенствовать мастерство в мобильной фотографии или видеосъемке в формате Ultra HD 4K." +
+                        " Фронтальные камеры смартфонов порадуют любителей селфи – снимки будут получаться детальными" +
+                        " и сочными. Galaxy M-серии работают с аккумуляторами емкостью 6 000 мА*ч. Система" +
+                        " распознавания лица и сканер отпечатка пальца гарантируют сохранность ваших данных" +
+                        " – доступ к информации будете иметь только вы. Выберите Samsung Galaxy M-серии," +
+                        " отвечающий всем вашим требованиям." +
+                        "Оформите беспроцентный кредит1 на смартфоны Samsung Galaxy M-серии из списка в" +
+                        " любом магазине нашей сети или получите до 2 300 рублей на бонусную карту" +
+                        " ProZaPass2 – выбор за вами!")
+                .build();
+
+        Stock thirdStock = Stock.builder()
+                .startDate(LocalDate.now().minusDays(20L))
+                .endDate(LocalDate.now().minusDays(5L))
+                .stockTitle("Скидки на игры ЕА!")
+                .stockText("В течение действия акции вы можете приобрести игры ЕА из списка по" +
+                        " очень привлекательным ценам!" +
+                        "Вы можете стать обладателем игр EA для Xbox One, Nintendo Switch и PS4" +
+                        " в различных жанрах. Ощутите всю радость победы в хоккейном матче, станьте" +
+                        " стремительным уличным автогонщиком, постройте дом мечты или очутитесь в" +
+                        " фантастическом мире и примите участие в битве галактических масштабов!")
+                .build();
+
+        stockService.addStock(firstStock);
+        stockService.addStock(secondStock);
+        stockService.addStock(thirdStock);
     }
 }

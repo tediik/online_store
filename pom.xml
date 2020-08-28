@@ -8,6 +8,7 @@
 		<version>2.3.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.jm.online_store</groupId>
 	<artifactId>online_store</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -88,11 +89,11 @@
 			<artifactId>bootstrap</artifactId>
 			<version>4.5.0</version>
 		</dependency>
-    <dependency>
-       <groupId>org.springframework</groupId>
-       <artifactId>spring-context-support</artifactId>
-       <version>5.1.4.RELEASE</version>
-    </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>5.1.4.RELEASE</version>
+        </dependency>
 		<!--  https://mvnrepository.com/artifact/org.springframework.security.oauth.boot/spring-security-oauth2-autoconfigure  -->
 		<dependency>
 			<groupId>org.springframework.security.oauth.boot</groupId>
@@ -107,6 +108,21 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-client</artifactId>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.github.scribejava/scribejava-apis -->
+		<dependency>
+			<groupId>com.github.scribejava</groupId>
+			<artifactId>scribejava-apis</artifactId>
+			<version>7.0.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.github.scribejava/scribejava-core -->
+		<dependency>
+			<groupId>com.github.scribejava</groupId>
+			<artifactId>scribejava-core</artifactId>
+			<version>7.0.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

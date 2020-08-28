@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "stocks")
@@ -31,7 +33,7 @@ public class Stock {
 
     @Column(name = "stock_title")
     private String stockTitle;
-
+    
     @Column(name = "stock_text")
     @Type(type = "text")
     private String stockText;
