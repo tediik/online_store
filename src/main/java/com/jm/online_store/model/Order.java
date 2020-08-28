@@ -1,7 +1,9 @@
 package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,11 +47,15 @@ public class Order {
     private Status status;
 
     @ManyToOne
-    @JsonManagedReference
+    //@JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    @JsonBackReference
+    //@JsonBackReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private List<ProductInOrder> productInOrders;
 
     // Список статусов заказа

@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
-        userRepository.save(user);
+        userRepository.save(editUser);
     }
 
     @Override
