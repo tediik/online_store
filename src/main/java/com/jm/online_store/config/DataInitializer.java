@@ -6,18 +6,24 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
+import com.jm.online_store.model.Stock;
+import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +34,10 @@ import java.util.Set;
 
 /**
  * класс первичного заполнения таблиц.
+ *
+ * для первичного заполнения базы данных раскомментировать аннотацию
+ * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
+ * в файле "application.properties" с "update" на "create" или "create-drop".
  */
 @AllArgsConstructor
 @Component
@@ -41,9 +51,28 @@ public class DataInitializer {
     private final NewsService newsService;
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
+    private final BasketService basketService;
+    private final StockService stockService;
 
-    //@PostConstruct
-    public void roleConstruct() {
+    /**
+     * Основной метод для заполнения базы данных.
+     * Вызов методов добавлять в этод метод.
+     * Следить за последовательностью вызова.
+     */
+//    @PostConstruct
+    public void initDataBaseFilling() {
+        roleInit();
+        newsInit();
+        productInit();
+        ordersInit();
+        stockInit();
+    }
+
+    /**
+     * Метод конфигурирования и первичного заполнения таблиц:
+     * ролей, юзеров и корзины.
+     */
+    private void roleInit() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
         Role managerRole = new Role("ROLE_MANAGER");
@@ -94,10 +123,25 @@ public class DataInitializer {
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
 
+        SubBasket subBasket_1 = new SubBasket();
+        subBasket_1.setProduct(product_1);
+        subBasket_1.setCount(1);
+        basketService.addBasket(subBasket_1);
+        SubBasket subBasket_2 = new SubBasket();
+        subBasket_2.setProduct(product_3);
+        subBasket_2.setCount(1);
+        basketService.addBasket(subBasket_2);
+        List<SubBasket> subBasketList = new ArrayList<>();
+        subBasketList.add(subBasket_1);
+        subBasketList.add(subBasket_2);
+        customer.setUserBasket(subBasketList);
+        userService.updateUser(customer);
     }
 
-    //@PostConstruct
-    public void newsConstructor() {
+    /**
+     * Метод первичного тестового заполнения новостей.
+     */
+    private void newsInit() {
         News firstNews = News.builder()
                 .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
                 .anons("Не пропустите розыгрыш потрясающих призов.")
@@ -177,8 +221,10 @@ public class DataInitializer {
         newsService.save(thirdNews);
     }
 
-	//@PostConstruct
-    public void productInit() {
+    /**
+     * Метод первичного тестового заполнения товаров.
+     */
+    private void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
         Categories category2 = new Categories("PC", "Computer");
@@ -223,8 +269,10 @@ public class DataInitializer {
         categoriesService.saveAll(Arrays.asList(category1, category2, category3));
     }
 
-    //@PostConstruct
-    public void ordersConstruct() {
+    /**
+     * Метод первичного тестового заполнения заказов.
+     */
+    private void ordersInit() {
         User customer = userService.findByEmail("customer@mail.ru").get();
 
         List<Long> productsIds = new ArrayList<>();
@@ -249,19 +297,66 @@ public class DataInitializer {
 
         productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
         productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
-
         productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
-
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
-
         productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
-
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
-
         customer.setOrders(Set.copyOf(orderService.findAll()));
-
         userService.updateUser(customer);
+    }
+
+    /**
+     * Метод первичного тестового заполнения акций.
+     */
+    private void stockInit() {
+        Stock firstStock = Stock.builder()
+                .startDate(LocalDate.now().plusDays(2))
+                .endDate(LocalDate.now().plusDays(12L))
+                .stockTitle("Собери персональный компьютер на базе Intel® Core™ – получи скидку!")
+                .stockText("оберите свой мощный компьютер на базе процессоров Intel® Core™! Корпуса,карты памяти, " +
+                        "твердотельные накопители от именитых производителей, материнские платы MSI и процессоры " +
+                        "Intel® Core™ помогут вам создать свою мощную машину! Работайте максимально эффективно на " +
+                        "ПК с процессором Intel® Core™. Этот процессор обеспечивает впечатляющую производительность " +
+                        "для развлечений и многозадачности. Улучшенная продуктивность, бесперебойная потоковая " +
+                        "трансляция и превосходные развлечения в формате HD — это и многое другое с Intel® Core™! " +
+                        "Используйте свое умное и продвинутое «железо» в работе и будьте эффективными и быстрыми в " +
+                        "решении задач или же с азартом побеждайте врагов в «тяжелых» играх!" +
+                        "Приобретая комплектующие для сборки ПК и процессоры Intel® Core™, вы получаете скидку 10 %!")
+                .build();
+
+        Stock secondStock = Stock.builder()
+                .startDate(LocalDate.now().minusDays(5L))
+                .endDate(LocalDate.now().plusDays(3L))
+                .stockTitle("Рассрочка или бонусы! Смартфоны Samsung Galaxy M-серии")
+                .stockText("Смартфон Samsung Galaxy M21 обладает тройной камерой на 48+8+5 Мп, а M31 и M31s – " +
+                        "квадрокамерами на 64+8+5+5 Мп и 64+12+5+5 соответственно. Такие параметры позволят вам " +
+                        "совершенствовать мастерство в мобильной фотографии или видеосъемке в формате Ultra HD 4K." +
+                        " Фронтальные камеры смартфонов порадуют любителей селфи – снимки будут получаться детальными" +
+                        " и сочными. Galaxy M-серии работают с аккумуляторами емкостью 6 000 мА*ч. Система" +
+                        " распознавания лица и сканер отпечатка пальца гарантируют сохранность ваших данных" +
+                        " – доступ к информации будете иметь только вы. Выберите Samsung Galaxy M-серии," +
+                        " отвечающий всем вашим требованиям." +
+                        "Оформите беспроцентный кредит1 на смартфоны Samsung Galaxy M-серии из списка в" +
+                        " любом магазине нашей сети или получите до 2 300 рублей на бонусную карту" +
+                        " ProZaPass2 – выбор за вами!")
+                .build();
+
+        Stock thirdStock = Stock.builder()
+                .startDate(LocalDate.now().minusDays(20L))
+                .endDate(LocalDate.now().minusDays(5L))
+                .stockTitle("Скидки на игры ЕА!")
+                .stockText("В течение действия акции вы можете приобрести игры ЕА из списка по" +
+                        " очень привлекательным ценам!" +
+                        "Вы можете стать обладателем игр EA для Xbox One, Nintendo Switch и PS4" +
+                        " в различных жанрах. Ощутите всю радость победы в хоккейном матче, станьте" +
+                        " стремительным уличным автогонщиком, постройте дом мечты или очутитесь в" +
+                        " фантастическом мире и примите участие в битве галактических масштабов!")
+                .build();
+
+        stockService.addStock(firstStock);
+        stockService.addStock(secondStock);
+        stockService.addStock(thirdStock);
     }
 }

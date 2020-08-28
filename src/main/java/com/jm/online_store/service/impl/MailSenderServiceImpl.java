@@ -18,14 +18,14 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Value("${spring.mail.username}")
     private String username;
 
-    public void send(String emailTo, String subject, String message) {
+    public void send(String emailTo, String subject, String message, String emailType) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
         mailMessage.setFrom(username);
         mailMessage.setTo(emailTo);
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
-        log.info("Confirmation email was sent from {} to {} with subject {} and message {}", username, emailTo, subject, mailMessage);
+        log.info("{} email was sent from {} to {} with subject {} and message {}",emailType, username, emailTo, subject, mailMessage);
         mailSender.send(mailMessage);
     }
 }
