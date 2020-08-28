@@ -55,13 +55,13 @@ public class DataInitializer {
     private final StockService stockService;
 
     /**
-     *основной метод для заполнения базы данных.
+     * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
-     * следить за последовательностью вызова.
+     * Следить за последовательностью вызова.
      */
 //    @PostConstruct
     public void initDataBaseFilling() {
-        roleConstruct();
+        roleInit();
         newsInit();
         productInit();
         ordersInit();
@@ -69,10 +69,10 @@ public class DataInitializer {
     }
 
     /**
-     *метод конфигурирования и первичного заполнения таблиц:
-     *ролей, юзеров и корзины.
+     * Метод конфигурирования и первичного заполнения таблиц:
+     * ролей, юзеров и корзины.
      */
-    private void roleConstruct() {
+    private void roleInit() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
         Role managerRole = new Role("ROLE_MANAGER");
@@ -139,7 +139,7 @@ public class DataInitializer {
     }
 
     /**
-     *метод первичного тестового заполнения новостей.
+     * Метод первичного тестового заполнения новостей.
      */
     private void newsInit() {
         News firstNews = News.builder()
@@ -222,7 +222,7 @@ public class DataInitializer {
     }
 
     /**
-     *метод первичного тестового заполнения товаров.
+     * Метод первичного тестового заполнения товаров.
      */
     private void productInit() {
 
@@ -270,7 +270,7 @@ public class DataInitializer {
     }
 
     /**
-     *метод первичного тестового заполнения заказов.
+     * Метод первичного тестового заполнения заказов.
      */
     private void ordersInit() {
         User customer = userService.findByEmail("customer@mail.ru").get();
@@ -308,7 +308,7 @@ public class DataInitializer {
     }
 
     /**
-     *метод первичного тестового заполнения акций.
+     * Метод первичного тестового заполнения акций.
      */
     private void stockInit() {
         Stock firstStock = Stock.builder()
