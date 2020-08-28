@@ -28,13 +28,13 @@ public class MainPageRestController {
     private final CategoriesService categoriesService;
 
     @GetMapping("/categories")
-    public ResponseEntity<List<Categories>> getCategories() {
+    public ResponseEntity<Map<String, List<String>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.getAllCategories();
         Map<String, List<String>> categoriesBySuperCategories = new HashMap<>();
         for (Categories category : categoriesFromDB) {
             categoriesBySuperCategories.merge(category.getSuperCategory(), Arrays.asList(category.getCategory()),
                     (oldV, newV) -> Stream.concat(oldV.stream(), newV.stream()).collect(Collectors.toList()));
         }
-        return new ResponseEntity<>(categoriesFromDB, HttpStatus.OK);
+        return new ResponseEntity<>(categoriesBySuperCategories, HttpStatus.OK);
     }
 }

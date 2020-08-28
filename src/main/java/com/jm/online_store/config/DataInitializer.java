@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
@@ -31,6 +32,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -191,12 +193,23 @@ public class DataInitializer {
         newsService.save(thirdNews);
     }
 
-	//@PostConstruct
+//    @PostConstruct
     public void productInit() {
 
         Categories category1 = new Categories("Ноутбуки", "Компьютеры");
-        Categories category2 = new Categories("PC", "Компьютеры");
-        Categories category3 = new Categories("Смартфоны", "Мобильные телефоны");
+        Categories category2 = new Categories("Компьютеры", "Компьютеры");
+        Categories category3 = new Categories("Смартфоны", "Смартфоны и гаджеты");
+        Categories category4 = new Categories("Комплектующие", "Компьютеры");
+        Categories category5 = new Categories("Периферия", "Компьютеры");
+        Categories category6 = new Categories("Планшеты", "Смартфоны и гаджеты");
+        Categories category7 = new Categories("Электронные книги", "Смартфоны и гаджеты");
+        Categories category8 = new Categories("Аксессуары", "Смартфоны и гаджеты");
+        Categories category9 = new Categories("Телевизоры", "ТВ и развлечения");
+        Categories category10 = new Categories("Игры", "ТВ и развлечения");
+        Categories category11 = new Categories("Аудиотехника", "ТВ и развлечения");
+        Categories category12 = new Categories("Оргтехника", "Офис и сеть");
+        Categories category13 = new Categories("Роутеры и сетевое оборудование", "Офис и сеть");
+        Categories category14 = new Categories("Техника для кухни", "Бытовая техника");
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer");
         Product product2 = new Product("ACER-5432", 399.9, 10, 4.2, "Computer");
@@ -234,7 +247,8 @@ public class DataInitializer {
         category2.setProducts(Arrays.asList(product4, product5, product6));
         category3.setProducts(Arrays.asList(product7, product8, product9));
 
-        categoriesService.saveAll(Arrays.asList(category1, category2, category3));
+        categoriesService.saveAll(Arrays.asList(category1, category2, category3,
+                category4, category5, category6, category7, category8, category9, category10, category11, category12, category13, category14));
     }
 
 //    @PostConstruct
@@ -279,8 +293,8 @@ public class DataInitializer {
         userService.updateUser(customer);
     }
 
-    //    @PostConstruct
-    public void stockInit(){
+//    @PostConstruct
+    public void stockInit() {
         Stock firstStock = Stock.builder()
                 .startDate(LocalDate.now().plusDays(2))
                 .endDate(LocalDate.now().plusDays(12L))
