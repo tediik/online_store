@@ -5,26 +5,19 @@ $(document).ready(function () {
 
 function create() {
     $("#stocksDiv").empty();
-
     moment.locale('ru');
-
     $.ajax("/rest/allStocks", {
         dataType: "json",
         success: function (data) {
             const stocks = JSON.parse(JSON.stringify(data));
-
             for (let i = 0; i < stocks.length; i++) {
                 let out = $("<li>").attr("id", stocks[i].id).attr("data-filter", stocks[i].stockType);
-
-
-
                 let endDate = stocks[i].endDate
                 if (endDate === null) {
                     endDate = "бессрочно"
                 } else {
                     endDate = moment(endDate).format("DD MMM YYYY")
                 }
-
                 out.append(
                     `<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
@@ -52,7 +45,6 @@ function create() {
                         </div>
                     </div>
                 </li> `);
-
                 $("#stocksDiv").append(out)
             }
         }
@@ -63,9 +55,7 @@ function create() {
 $('.filters button').on('click', function () {
     $('.filters button').removeClass('active');
     $(this).parent('button').addClass('active'); // выделяем выбранную категорию
-
     const cat = $(this).attr('data-filter'); // определяем категорию
-
     if (cat === 'ALL') {
         $('.allStocks li').show();
     } else {
