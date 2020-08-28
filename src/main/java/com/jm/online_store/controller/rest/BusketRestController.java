@@ -39,7 +39,7 @@ public class BusketRestController {
     private final ProductService productService;
 
     /**
-     * мтеод для получения авторизованного пользователя.
+     * метод для получения авторизованного пользователя.
      *
      * @param authentication модель данных, построенная на основе залогированного User.
      * @return авторизванный пользователь.
@@ -115,7 +115,7 @@ public class BusketRestController {
     /**
      * Контроллер для удаления сущности SubBasket (корзина) из списка корзин User.
      *
-     * @param id             идентификатор миникорзины
+     * @param id идентификатор миникорзины
      * @param authentication авторизованный пользователь User
      * @return ResponseEntity(HttpStatus.OK)
      */
