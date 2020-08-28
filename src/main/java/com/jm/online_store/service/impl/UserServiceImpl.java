@@ -96,6 +96,9 @@ public class UserServiceImpl implements UserService {
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             user.setRoles(persistRoles(user.getRoles()));
         }
+        if (user.getProfilePicture().isEmpty()) {
+            user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+        }
         userRepository.save(user);
     }
 
