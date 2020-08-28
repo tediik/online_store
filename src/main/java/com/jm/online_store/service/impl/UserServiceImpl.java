@@ -83,6 +83,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    /**
+     * метод добавления нового пользователя.
+     *
+     * проверяется пароль на валидность, отсутствие пользвателя с данным электронным адресом(уникальное значение)
+     * @param user полученный объект User/
+     */
     @Override
     @Transactional
     public void addUser(@NotNull User user) {
@@ -102,6 +108,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    /**
+     * метод обновления пользователя.
+     *
+     * @param user ползователь, полученный из контроллера.
+     */
     @Override
     @Transactional
     public void updateUser(@NotNull User user) {
@@ -120,12 +131,22 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    /**
+     * метод удаления пользоватлея по идентификаитору.
+     *
+     * @param id идентификатор.
+     */
     @Override
     @Transactional
     public void deleteByID(Long id) {
         userRepository.deleteById(id);
     }
 
+    /**
+     * метод регистрации нового User.
+     *
+     * @param userForm User построенный из данных формы.
+     */
     @Override
     @Transactional
     public void regNewAccount(User userForm) {
@@ -165,6 +186,13 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
     }
 
+    /**
+     * метод проверки активации пользователя.
+     *
+     * @param token модель, построенная на основе пользователя, после подтверждения
+     * @param request параметры запроса.
+     * @return булево значение "true or false"
+     */
     @Override
     @Transactional
     public boolean activateUser(String token, HttpServletRequest request) {
