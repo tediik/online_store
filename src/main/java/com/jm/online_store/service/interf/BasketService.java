@@ -2,9 +2,6 @@ package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.SubBasket;
 
-/**
- * интерфейс для бизнеслогики корзины.
- */
 public interface BasketService {
     SubBasket addBasket(SubBasket subBasket);
     SubBasket findBasketById(Long idBasket);

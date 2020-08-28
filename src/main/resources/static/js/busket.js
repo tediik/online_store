@@ -16,22 +16,22 @@ async function fillBusket() {
         countGoods += content[key].count;
         let product = `
         <tr class=${content[key].id} id=${content[key].id}>
-    <td>${content[key].product.product}</td>
-    <td> цена: ${prepareNumber(content[key].product.price)} &#8381;</td>
-    <td>
-    <div class="amount">
-<button id="down" class="btn btn-primary" onclick="updateCountBasket(${content[key].id}, -1 )">-</button>
-    <span>${content[key].count} шт.</span>
-<button id="up" class="btn btn-primary" onclick="updateCountBasket(${content[key].id}, 1 )">+</button>
-</div>
-    </td>
-    <td>
-    стоимость: ${prepareNumber(content[key].product.price * content[key].count)} &#8381;
-    </td>
-    <td>
-    <button class="btn btn-primary" onclick="deleteBasket(${content[key].id})">Удалить</button>
-    </td>
-    <tr>
+            <td>${content[key].product.product}</td>
+            <td> цена: ${prepareNumber(content[key].product.price)} &#8381;</td>
+            <td>
+            <div class="amount">
+                    <button id = "down" class = "btn btn-primary" onclick = "updateCountBasket(${content[key].id}, -1 )" > - </button>
+            <span>${content[key].count} шт.</span>
+                    <button id = "up" class = "btn btn-primary" onclick = "updateCountBasket(${content[key].id}, 1 )" > + </button>
+            </div>
+            </td>
+            <td>
+                стоимость: ${prepareNumber(content[key].product.price * content[key].count)} &#8381;
+            </td>
+            <td>
+            <button class="btn btn-primary" onclick="deleteBasket(${content[key].id})">Удалить</button>
+            </td>
+       <tr>
 `;
         sumBasket += content[key].product.price * content[key].count;
         $(basketGoodsJson).append(product);
