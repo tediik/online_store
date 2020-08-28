@@ -8,9 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-/**
- * класс для реализации сервисного слоя для "Product".
- */
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -61,5 +58,3 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(idProduct);
     }
 }
-
-
