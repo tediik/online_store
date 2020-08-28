@@ -39,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
      * Метод добавления заказа.
      * Первоначально кол-во продуктов и общая стоимость равны 0,
      * эти поля изменяются методом {@link ProductInOrderServiceImpl#addToOrder(long, long, int)}
+     *
      * @param order заказ, сохраняемый в базу
      * @return id сохранённого объекта
      */

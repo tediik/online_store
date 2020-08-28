@@ -30,6 +30,7 @@ public class ManagerRestController {
 
     /**
      * Метод возвращающий всписок всех новостей
+     *
      * @return List<News> возвращает список всех новстей из базы данных
      */
     @GetMapping("/news")
@@ -41,13 +42,14 @@ public class ManagerRestController {
 
     /**
      * Метод сохраняет новости в базу данных
+     *
      * @param news сущность для сохранения в базе данных
      * @return возвращает заполненную сущность клиенту
      */
     @PostMapping("/news/post")
     public ResponseEntity<News> newsPost(@RequestBody News news) {
 
-        if(news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
+        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
             news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
         }
 
@@ -57,13 +59,14 @@ public class ManagerRestController {
 
     /**
      * Метод обновляет сущность в базе данных
+     *
      * @param news сущность для сохранения в базе данных
      * @return возвращает обновленную сущность клиенту
      */
     @PutMapping("/news/update")
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
 
-        if(news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
+        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
             news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
         }
 
@@ -73,6 +76,7 @@ public class ManagerRestController {
 
     /**
      * Метод удаляет сушность из базы данных по уникальному идентификатору
+     *
      * @param id уникальный идентификатор
      * @return возвращает идентификатор удаленной сущности клиенту
      */

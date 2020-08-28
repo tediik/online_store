@@ -23,10 +23,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +59,8 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.server.url}")
     private String urlActivate;
 
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
+
     @Transactional
     @Override
     public List<User> findAll() {
@@ -67,6 +76,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findByEmail(String username) {
         return userRepository.findByEmail(username);
     }
+
 
     @Override
     public boolean isExist(String email) {
@@ -102,6 +112,7 @@ public class UserServiceImpl implements UserService {
             editUser.setEmail(user.getEmail());
         }
         editUser.setRoles(persistRoles(user.getRoles()));
+        editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
         userRepository.save(user);
     }
@@ -125,8 +136,30 @@ public class UserServiceImpl implements UserService {
                 userForm.getEmail(),
                 confirmationToken.getConfirmationToken()
         );
+        mailSenderService.send(userForm.getEmail(), "Activation code", message, "Confirmation");
+    }
 
-        mailSenderService.send(userForm.getEmail(), "Activation code", message);
+    /**
+     * Method generates confirmation token based on users ID and Email adress
+     * Sends generated token to new users email
+     */
+    @Override
+    public void changeUsersMail(User user, String newMail) {
+
+        user.setEmail(newMail);
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
+        confirmTokenRepository.save(confirmationToken);
+
+        String message = String.format(
+                "Hello, %s! \n" +
+                        "You have requested the email change. Please, confirm via link: " +
+                        urlActivate + "/customer/activatenewmail/%s",
+                user.getEmail(),
+                confirmationToken.getConfirmationToken()
+
+        );
+        mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
     }
 
     @Override
@@ -158,6 +191,22 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    /**
+     * Method receives token and request after User confirms mail change via link
+     * After that, new email address is saved to users DB table
+     */
+    @Override
+    public boolean activateNewUsersMail(String token, HttpServletRequest request) {
+        ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
+        if (confirmationToken == null) {
+            return false;
+        }
+        User user = userRepository.findById(confirmationToken.getUserId()).get();
+        user.setEmail(confirmationToken.getUserEmail());
+        userRepository.saveAndFlush(user);
+        return true;
+    }
+
     private Set<Role> persistRoles(Set<Role> roles) {
         return roles.stream()
                 .map(Role::getName)
@@ -165,5 +214,59 @@ public class UserServiceImpl implements UserService {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * updateUserImage method receives authorised user's Id and Multipart Image file
+     * saves Image in Uploads/images folder
+     * and sets saved image to userProfilePicture
+     */
+    @Override
+    @Transactional
+    public String updateUserImage(Long userId, MultipartFile file) {
+        User user = userRepository.findById(userId).get();
+        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+        if (!file.isEmpty()) {
+            if (user.getProfilePicture() != null) {
+                deleteUserImage(userId);
+            }
+            Path fileNameAndPath = Paths.get(uploadDirectory, originalFilename);
+            try {
+                byte[] bytes = file.getBytes();
+                Files.write(fileNameAndPath, bytes);
+                //Set user's profile picture
+                user.setProfilePicture(originalFilename);
+                userRepository.save(user);
+            } catch (IOException e) {
+                log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
+            }
+        }
+        log.debug("Failed to store file - file is not present {}", originalFilename);
+        return File.separator + "uploads" + File.separator + "images" + File.separator + file.getOriginalFilename();
+    }
+
+    /**
+     * deleteUserImage method receives authorised user's Id
+     * deletes current user's profile picture and sets a default avatar
+     * default avatar cannot be deleted
+     */
+    @Override
+    @Transactional
+    public String deleteUserImage(Long userId) {
+        final String defaultAvatar = StringUtils.cleanPath("def.jpg");
+        User user = userRepository.findById(userId).get();
+        //Get profilePicture name from User and delete this profile picture from Uploads
+        Path fileNameAndPath = Paths.get(uploadDirectory, user.getProfilePicture());
+        //Check if deleting picture is not a default avatar
+        try {
+            if (!fileNameAndPath.getFileName().toString().equals(defaultAvatar)) {
+                Files.delete(fileNameAndPath);
+            }
+        } catch (IOException e) {
+            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());        
+        }
+        //Set a default avatar as a user profilePicture
+        user.setProfilePicture(defaultAvatar);
+        return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
     }
 }

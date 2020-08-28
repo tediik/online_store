@@ -67,6 +67,8 @@ public class User implements UserDetails {
 
     private LocalDate registerDate;
 
+    private String profilePicture;
+
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
     @JoinTable(
@@ -100,6 +102,10 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "basket_id"))
     private List<SubBasket> userBasket = new ArrayList<>();
+
+    @Column(name = "day_of_week_for_stock_send")
+    @Enumerated(EnumType.STRING)
+    private DayOfWeekForStockSend dayOfWeekForStockSend;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -159,9 +165,19 @@ public class User implements UserDetails {
         return true;
     }
 
-    private enum Gender {
+    public enum Gender {
         MAN,
         WOMAN
+    }
+
+    public enum DayOfWeekForStockSend {
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY
     }
 
     @Override
