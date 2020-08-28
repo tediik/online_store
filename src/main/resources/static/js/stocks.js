@@ -35,7 +35,7 @@ function create() {
                                     </div>
                                 </div>
                             </div>
-                            <div class=\"col-md-2\">
+                            <div class=\"col-md-2\ text-center">
                                 <button onclick='getStockForEdit(${stocks[i].id})'
                                         class=\"btn btn-md btn-info mt-5 mr-2\" data-toggle='modal'
                                         data-target='#editStockModal'>Edit</button>
