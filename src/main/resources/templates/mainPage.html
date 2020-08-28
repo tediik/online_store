@@ -25,7 +25,7 @@
 
 <script>
 
-    jQuery(document).ready(function($) {
+    jQuery(document).ready(function ($) {
         $('#mega-1').dcVerticalMegaMenu();
 
         $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
@@ -33,29 +33,6 @@
             $("#openNewRegistrationModal .error").hide();//reset error spans
         });
     });
-
-    function register(){
-        $(".alert").html("").hide();
-        var formData= $('form').serialize();
-        $.post("http://localhost:9999/registration",formData ,function(data){
-            console.log(data)
-            if(data.message == "success"){
-                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000})
-                close();
-            }else if(data.message == "duplicatedEmailError"){
-                $("#duplicatedEmailError").show();
-            }else if(data.message == "passwordError"){
-                $("#passwordError").show();
-            }else if(data.message == "notValidEmailError") {
-                $("#notValidEmailError").show();
-            }
-        })
-    }
-
-    function close() {
-        $('#openNewRegistrationModal').hide();
-        $(".modal-backdrop.show").hide();
-    }
 
 </script>
 
@@ -78,7 +55,7 @@
         <a th:href="@{/customer}"> Кабинет покупателя </a>
     </div>
     <!-- Registration -->
-    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER')" class="btn registrationbutton" data-toggle="modal" data-target="#openNewRegistrationModal">
+    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn registrationbutton" data-toggle="modal" data-target="#openNewRegistrationModal">
         <a> Регистрация </a>
     </div>
     <!-- Login -->
