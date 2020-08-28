@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,13 +33,16 @@ public class StockRest {
         LocalDate presentDate = LocalDate.now();
         List<Stock> stocks = stockService.findAll();
         for (Stock stock : stocks) {
-            if (((stock.getStartDate()) != (null)) && ((stock.getEndDate()) != (null))) {
-                if (presentDate.isAfter(stock.getEndDate()) || (presentDate.equals(stock.getEndDate()))) {
-                    stock.setStockType(Stock.StockType.PAST);
-                } else if (presentDate.isBefore(stock.getStartDate())) {
+            if (((stock.getStartDate()) != null)) {
+                if (presentDate.isBefore(stock.getStartDate())) {
                     stock.setStockType(Stock.StockType.FUTURE);
+                } else if (stock.getEndDate() != null && presentDate.isAfter(stock.getEndDate())
+                        || (presentDate.equals(stock.getEndDate()))) {
+                    stock.setStockType(Stock.StockType.PAST);
                 } else if ((presentDate.isAfter(stock.getStartDate()) || (presentDate.equals(stock.getStartDate()))
-                        && (presentDate.isBefore(stock.getEndDate())))) {
+                        && stock.getEndDate() != null && (presentDate.isBefore(stock.getEndDate())))) {
+                    stock.setStockType(Stock.StockType.CURRENT);
+                } else {
                     stock.setStockType(Stock.StockType.CURRENT);
                 }
             }
@@ -63,6 +67,9 @@ public class StockRest {
      */
     @PostMapping("/rest/addStock")
     public ResponseEntity<Stock> addStockM(@RequestBody Stock stock) {
+        if(stock.getEndDate() != null && stock.getEndDate().isBefore(stock.getStartDate())) {
+            stock.setEndDate(stock.getStartDate().plusDays(1));
+        }
         stockService.addStock(stock);
         return ResponseEntity.ok().body(stock);
     }
@@ -74,6 +81,9 @@ public class StockRest {
      */
     @PutMapping("/rest/editStock")
     public ResponseEntity<Stock> editStockM(@RequestBody Stock stock) {
+        if(stock.getEndDate() != null && stock.getEndDate().isBefore(stock.getStartDate())) {
+            stock.setEndDate(stock.getStartDate().plusDays(1));
+        }
         stockService.addStock(stock);
         return ResponseEntity.ok().body(stock);
     }

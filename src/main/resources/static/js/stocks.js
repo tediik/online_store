@@ -16,6 +16,8 @@ function create() {
             for (let i = 0; i < stocks.length; i++) {
                 let out = $("<li>").attr("id", stocks[i].id).attr("data-filter", stocks[i].stockType);
 
+
+
                 let endDate = stocks[i].endDate
                 if (endDate === null) {
                     endDate = "бессрочно"
@@ -78,7 +80,7 @@ function addStock() {
         toastr.success('Назначьте дату начала акции!', {timeOut: 5000})
         return
     }
-    const stockAdd = {
+     stockAdd = {
         id: $('#id').val(),
         stockImg: $('#addStockImg').val(),
         stockTitle: $('#addStockTitle').val(),
