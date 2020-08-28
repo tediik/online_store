@@ -1,5 +1,6 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Description;
 import com.jm.online_store.model.Product;
@@ -20,6 +21,7 @@ import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -54,6 +56,7 @@ public class DataInitializer {
     private final NewsService newsService;
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
+    private final BasketService basketService;
     private final StockService stockService;
 
 //    @PostConstruct
@@ -106,6 +109,20 @@ public class DataInitializer {
 
         customer = userService.findByEmail("customer@mail.ru").get();
         customer.setFavouritesGoods(productSet);
+        userService.updateUser(customer);
+
+        SubBasket subBasket_1 = new SubBasket();
+        subBasket_1.setProduct(product_1);
+        subBasket_1.setCount(1);
+        basketService.addBasket(subBasket_1);
+        SubBasket subBasket_2 = new SubBasket();
+        subBasket_2.setProduct(product_3);
+        subBasket_2.setCount(1);
+        basketService.addBasket(subBasket_2);
+        List<SubBasket> subBasketList = new ArrayList<>();
+        subBasketList.add(subBasket_1);
+        subBasketList.add(subBasket_2);
+        customer.setUserBasket(subBasketList);
         userService.updateUser(customer);
     }
 
@@ -262,19 +279,13 @@ public class DataInitializer {
 
         productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
         productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
-
         productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
-
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
-
         productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
-
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
-
         customer.setOrders(Set.copyOf(orderService.findAll()));
-
         userService.updateUser(customer);
     }
 

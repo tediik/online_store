@@ -24,7 +24,10 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -79,7 +82,26 @@ public class User implements UserDetails {
             name = "user_product",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> favouritesGoods;
+    private Set<Product> favouritesGoods = new HashSet<>();
+
+    /**
+     * поле корзина клиента.
+     * "Корзина клиента" состоит из подкорзин "SubBasket", сотоящих в свою очередь
+     * из сущности "Product" и количества данного "Product" в "SubBasket".
+     * данная схема необходима, чтобы мжно было хранить необходимое количество тавара
+     * для заказа пользователя и сам товар как экземпляр класса "Product".
+     * для оформления заказа необходимо пройти по всем "SubBasket" и получить из сущности "Product",
+     * который находится в "SubBasket" актуальную цену, из объекта "SubBasket" получить количество товара "Product".
+     * Для добавления товара в корзину необходимо пройти по всем "SubBasket" и проверить на наличие данного "Product"
+     * в корзине. При наличии совпадений, необходимо проверить коичество(наличие) данного "Product" в БД
+     * и увеличить на "1" в данном "SubBasket".
+     */
+    @OneToMany
+    @JoinTable(
+            name = "user_basket",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "basket_id"))
+    private List<SubBasket> userBasket = new ArrayList<>();
 
     @Column(name = "day_of_week_for_stock_send")
     @Enumerated(EnumType.STRING)
