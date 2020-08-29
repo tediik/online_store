@@ -3,19 +3,17 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
-
+import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
-import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
-import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,20 +44,17 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
-
     @Autowired
     @Setter
     private PasswordEncoder passwordEncoder;
-
     @Value("${spring.server.url}")
     private String urlActivate;
-
-    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
 
     @Transactional
     @Override
@@ -101,7 +96,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(@NotNull User user) {
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserAdminPanel(@NotNull User user) {
         User editUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
         if (!editUser.getEmail().equals(user.getEmail())) {
             if (isExist(user.getEmail())) {
@@ -114,7 +115,7 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
-        userRepository.save(user);
+        userRepository.save(editUser);
     }
 
     @Override
@@ -263,7 +264,7 @@ public class UserServiceImpl implements UserService {
                 Files.delete(fileNameAndPath);
             }
         } catch (IOException e) {
-            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());        
+            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
