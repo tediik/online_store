@@ -111,7 +111,7 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    //@JsonBackReference
+    //@JsonBackReference  пока не удаляю, возможно придется менять обратно
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id")
     private Set<Order> orders;
