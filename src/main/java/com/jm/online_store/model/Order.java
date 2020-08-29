@@ -47,13 +47,13 @@ public class Order {
     private Status status;
 
     @ManyToOne
-    //@JsonManagedReference пока не удаляю, возможно придется менять обратно
+    //TODO @JsonManagedReference пока не удаляю, возможно придется менять обратно
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    //@JsonBackReference пока не удаляю, возможно придется менять обратно
+    //TODO @JsonBackReference пока не удаляю, возможно придется менять обратно
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     private List<ProductInOrder> productInOrders;
