@@ -37,6 +37,8 @@ public interface UserService {
     String updateUserImage(Long valueOf, MultipartFile imageFile) throws IOException;
 
     String deleteUserImage(Long userId) throws IOException;
+
+    void addNewUserFromAdmin(User newUser);
 }
 
 

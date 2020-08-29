@@ -3,19 +3,17 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
-
+import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
-import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
-import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,20 +44,17 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
-
     @Autowired
     @Setter
     private PasswordEncoder passwordEncoder;
-
     @Value("${spring.server.url}")
     private String urlActivate;
-
-    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
 
     @Transactional
     @Override
@@ -268,16 +263,29 @@ public class UserServiceImpl implements UserService {
         user.setProfilePicture(defaultAvatar);
         return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
     }
+
     @Override
-    public User updateUserFromAdminPage(User user){
+    @Transactional
+    public void addNewUserFromAdmin(User newUser) {
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
+        log.info("User with email: {} was saved successfully", newUser.getEmail());
+        userRepository.save(newUser);
+
+    }
+
+    @Override
+    @Transactional
+    public User updateUserFromAdminPage(User user) {
         User editedUser = userRepository.findById(user.getId()).get();
+        Set<Role> newRoles = persistRoles(user.getRoles());
+        editedUser.setRoles(newRoles);
         editedUser.setEmail(user.getEmail());
         editedUser.setFirstName(user.getFirstName());
         editedUser.setLastName(user.getLastName());
-        if (!user.getPassword().equals("")){
+        if (!user.getPassword().equals("")) {
             editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        editedUser.setRoles(user.getRoles());
         return userRepository.save(editedUser);
     }
 }

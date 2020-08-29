@@ -1,7 +1,6 @@
 package com.jm.online_store.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -13,8 +12,7 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Role implements GrantedAuthority {
 
     @Id
