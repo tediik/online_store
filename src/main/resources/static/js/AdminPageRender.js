@@ -7,6 +7,26 @@ document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 addRolesOnNewUserForm()
 fetchUsersAndRenderTable()
 
+
+/**
+ * fetch запрос на roleRestUrl для получения всех ролей из бд
+ *
+ */
+function addRolesOnNewUserForm() {
+    fetch(roleRestUrl, {headers: headers}).then(response => response.json())
+        .then(allRoles => renderRolesSelectOnNewUserForm(allRoles))
+}
+
+/**
+ * рендерит <Select> на странице добавления User'a
+ * @param allRoles
+ */
+function renderRolesSelectOnNewUserForm(allRoles) {
+    let selectRoles = $('#addRoles').empty()
+    $.each(allRoles, function (i, role) {
+        selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
+    })
+}
 /**
  * Функция рендера модального окна Edit user
  * @param user пользователь из таблицы
@@ -78,12 +98,109 @@ function deleteModalWindowRender(userToDelete) {
  * @param event
  */
 function handleDeleteButton(event) {
-const userId = event.target.dataset["userId"]
+    const userId = event.target.dataset["userId"]
     fetch(adminRestUrl + "/users/" + userId, {headers: headers})
         .then(response => response.json())
         .then(userToDelete => deleteModalWindowRender(userToDelete))
 }
 
+
+/**
+ * функция делает активным таблицу с пользователями
+ * и обновляет в ней данные
+ */
+function showAndRefreshHomeTab() {
+    fetchUsersAndRenderTable()
+    $('#nav-home').addClass('tab-pane fade active show')
+    $('#nav-profile').removeClass('active show')
+    $('#nav-profile-tab').removeClass('active')
+    $('#nav-home-tab').addClass('active')
+}
+
+/**
+ * функция обработки кнопки add на форме нового пользователя
+ */
+function handleAddBtn() {
+    let user = {
+        email: $('#addEmail').val(),
+        password: $('#addPassword').val(),
+        roles: getSelectValues(document.getElementById('addRoles'))
+    }
+
+    /**
+     * обработка валидности полей формы
+     * @param text - текст для вывода в алекрт
+     * @param field - поле на каком установить фокус
+     */
+    function handleNotValidFormField(text, field) {
+        $('#alert-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>${text}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+        $('#' + field).focus()
+
+        window.setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000)
+    }
+
+    /**
+     * функция очистки полей формы нового пользователя
+     */
+    function clearFormFields() {
+        $('#addEmail').val("")
+        $('#addPassword').val("")
+        $('#addRoles').selectedIndex = -1
+        addRolesOnNewUserForm()
+    }
+
+    fetch(adminRestUrl, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json;charset=utf-8'},
+        body: JSON.stringify(user)
+    }).then(
+        function (response) {
+            let field;
+            if (response.status !== 200) {
+                response.text()
+                    .then(
+                        function (text) {
+                            if (text === "notValidEmailError") {
+                                field = "addEmail"
+                                handleNotValidFormField("Вы ввели некоректный Email адрес!", field)
+                            }
+                            if (text === "duplicatedEmailError") {
+                                field = "addEmail"
+                                handleNotValidFormField("Такой email адрес уже существует", field)
+                            }
+                            if (text === "emptyPasswordError") {
+                                field = "addPassword"
+                                handleNotValidFormField("Заполните поле пароль", field)
+                            }
+                            if (text === "emptyRolesError") {
+                                field = "addRoles"
+                                handleNotValidFormField("Необходимо выбрать роль", field)
+                            }
+                            console.log(text)
+                        })
+            } else {
+                response.text().then(function () {
+                    showAndRefreshHomeTab();
+                    clearFormFields();
+                })
+            }
+        }
+    )
+}
+
+/**
+ * функция обработки нажатия кнопки accept в модальном окне
+ * @param event
+ */
 function handleAcceptButtonFromModalWindow(event) {
     const user = {
         id: $('#idInputModal').val(),
@@ -110,10 +227,12 @@ function handleAcceptButtonFromModalWindow(event) {
             method: 'PUT',
             headers: headers,
             body: JSON.stringify(user)
-        }).then(response => response.json())
-            .then(editedUser => console.log('User: ' + editedUser + ' was modifies'))
-            .then(() => $('#tr-' + user.id).remove())
-        $('#userModalWindow').modal('hide')
+        }).then(function (response){
+            if (response.ok){
+                fetchUsersAndRenderTable()
+                $('#userModalWindow').modal('hide')
+            }
+        })
     }
 }
 
@@ -137,6 +256,10 @@ function getSelectValues(select) {
     return result;
 }
 
+/**
+ * функция рендера таблицы пользователей
+ * @param users
+ */
 function renderUsersTable(users) {
     let table = $('#user-table')
     table.empty()
@@ -205,29 +328,4 @@ function fetchUsersAndRenderTable() {
             'Content-type': 'application/json; charset=UTF-8'
         }
     }).then(response => response.json()).then(users => renderUsersTable(users))
-}
-
-//TODO доделать
-function renderNewUserForm() {
-    let newUserForm = $('#new-user-form')
-    newUserForm.empty().append(`
-        <div class="panel-body">
-        <div id="add-email-form-group" class="form-group">
-            <label for="addEmail">Email:</label>
-            <input type="text" id="addEmail" name="email" placeholder="E-mail" class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="addPassword">Password:</label>
-            <input type="password" id="addPassword" name="password" placeholder="Password" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>Role</label>
-
-            <select id="addRoles" name="roles" class="form-control" multiple="multiple">
-
-            </select>
-        </div>
-        <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Add</button>
-    </div>
-        `)
 }
