@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.simple;
 
+import com.jm.online_store.config.security.Twitter.TwitterAuth;
 import com.jm.online_store.config.security.odnoklassniki.OAuth2Odnoklassniki;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
 
     private final OAuth2Odnoklassniki oAuth2Odnoklassniki;
+    private final TwitterAuth twitterAuth;
 
     @GetMapping("/oauth")
     public String oAuthOdnoklassniki(@RequestParam String code) {
@@ -24,7 +26,9 @@ public class LoginController {
     @GetMapping(value = "/login")
     public String loginPage(Model model) {
         String authUrlOK = oAuth2Odnoklassniki.getAuthorizationUrl();
+        String twitterUrl = twitterAuth.getAuthorizationUrl();
         model.addAttribute("authUrlOK", authUrlOK);
+        model.addAttribute("twitterUrl", twitterUrl);
         return "login";
     }
 
