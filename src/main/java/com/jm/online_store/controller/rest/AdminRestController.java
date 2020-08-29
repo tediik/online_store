@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.dto.UserRequestDto;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
