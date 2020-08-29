@@ -66,11 +66,8 @@ public class StockRest {
      * @param stock акиця для добавления
      * @return ResponseEntity<Stock> Возвращает добавленную акцию с кодом ответа
      */
-    @PostMapping("/rest/addStock")
+    @PostMapping(value = "/rest/addStock", consumes = "application/json")
     public ResponseEntity<Stock> addStockM(@RequestBody Stock stock) {
-        if(stock.getEndDate() != null && stock.getEndDate().isBefore(stock.getStartDate())) {
-            stock.setEndDate(stock.getStartDate().plusDays(1));
-        }
         stockService.addStock(stock);
         return ResponseEntity.ok().body(stock);
     }
@@ -82,9 +79,6 @@ public class StockRest {
      */
     @PutMapping("/rest/editStock")
     public ResponseEntity<Stock> editStockM(@RequestBody Stock stock) {
-        if(stock.getEndDate() != null && stock.getEndDate().isBefore(stock.getStartDate())) {
-            stock.setEndDate(stock.getStartDate().plusDays(1));
-        }
         stockService.addStock(stock);
         return ResponseEntity.ok().body(stock);
     }
