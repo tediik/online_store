@@ -164,8 +164,16 @@ public class UserServiceImpl implements UserService {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
     }
-
-    public User getOne(Long id){
-        return userRepository.getOne(id);
+    @Override
+    public User updateUserFromAdminPage(User user){
+        User editedUser = userRepository.findById(user.getId()).get();
+        editedUser.setEmail(user.getEmail());
+        editedUser.setFirstName(user.getFirstName());
+        editedUser.setLastName(user.getLastName());
+        if (!user.getPassword().equals("")){
+            editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        editedUser.setRoles(user.getRoles());
+        return userRepository.save(editedUser);
     }
 }

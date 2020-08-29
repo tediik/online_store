@@ -25,7 +25,7 @@ public interface UserService {
 
     boolean activateUser(String code, HttpServletRequest request);
 
-    public User getOne(Long id);
+    User updateUserFromAdminPage(User user);
 }
 
 
