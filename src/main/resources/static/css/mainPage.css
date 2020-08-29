@@ -118,10 +118,7 @@ html {
     .featurette-heading {
         margin-top: 7rem;
     }
-}
-
-
-/*header{*/
+}/*header{*/
 /*    background: #deb887;*/
 /*    color: white;*/
 /*    text-align:center;*/
@@ -251,4 +248,19 @@ html {
 /*}*/
 /*.mega-menu li .sub-container.non-mega li a:hover {*/
 /*    color: #1B1B1B;*/
+/*}*/
+
+/*.submitRegButton{*/
+/*    border: 1px solid #333;*/
+/*    display: inline-block;*/
+/*    padding: 5px 15px;*/
+/*    text-decoration: none;*/
+/*    color: #000;*/
+/*    background: #098ddf;*/
+/*}*/
+
+/*.submitRegButton:hover {*/
+/*    box-shadow: 0 0 5px rgba(0,0,0,0.3); !* Тень *!*/
+/*    background: linear-gradient(to bottom, #fcfff4, #e9e9ce); !* Градиент *!*/
+/*    color: #a00;*/
 /*}*/
