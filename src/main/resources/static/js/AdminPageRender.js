@@ -2,7 +2,9 @@ let adminRestUrl = "http://localhost:9999/api/admin"
 let roleRestUrl = "http://localhost:9999/api/roles"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
+document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
+addRolesOnNewUserForm()
 fetchUsersAndRenderTable()
 
 /**
