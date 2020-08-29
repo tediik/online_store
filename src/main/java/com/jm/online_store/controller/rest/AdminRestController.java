@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
+import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -76,7 +78,24 @@ public class AdminRestController {
     }
 
     @PostMapping
-    public ResponseEntity<User> addNewUser(@RequestBody User newUser) {
+    public ResponseEntity addNewUser(@RequestBody User newUser) {
+        if (ValidationUtils.isNotValidEmail(newUser.getEmail())){
+            log.debug("Wrong email! Не правильно введен email");
+            return new ResponseEntity("notValidEmailError", HttpStatus.BAD_REQUEST);
+        }
+        if (userService.isExist(newUser.getEmail())){
+            log.debug("User with same email already exists");
+            return new ResponseEntity("duplicatedEmailError", HttpStatus.BAD_REQUEST);
+        }
+        if (newUser.getPassword().equals("")){
+            log.debug("Password empty");
+            return new ResponseEntity("emptyPasswordError", HttpStatus.BAD_REQUEST);
+        }
+        if (newUser.getRoles().size()==0){
+            log.debug("Roles not selected");
+            return new ResponseEntity("emptyRolesError", HttpStatus.BAD_REQUEST);
+        }
+        userService.addNewUserFromAdmin(newUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
