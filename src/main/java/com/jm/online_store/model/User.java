@@ -69,7 +69,7 @@ public class User implements UserDetails {
 
     private LocalDate registerDate;
 
-    private String profilePicture;
+    private String profilePicture="";
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)

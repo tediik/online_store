@@ -78,6 +78,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    /**
+     * метод добавления нового пользователя.
+     *
+     * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
+     * @param user полученный объект User/
+     */
     @Override
     @Transactional
     public void addUser(@NotNull User user) {
@@ -91,9 +97,17 @@ public class UserServiceImpl implements UserService {
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             user.setRoles(persistRoles(user.getRoles()));
         }
+        if (user.getProfilePicture().isEmpty()) {
+            user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+        }
         userRepository.save(user);
     }
 
+    /**
+     * метод обновления пользователя.
+     *
+     * @param user пользователь, полученный из контроллера.
+     */
     @Override
     @Transactional
     public void updateUser(User user) {
@@ -118,12 +132,22 @@ public class UserServiceImpl implements UserService {
         userRepository.save(editUser);
     }
 
+    /**
+     * метод удаления пользователя по идентификатору.
+     *
+     * @param id идентификатор.
+     */
     @Override
     @Transactional
     public void deleteByID(Long id) {
         userRepository.deleteById(id);
     }
 
+    /**
+     * метод регистрации нового User.
+     *
+     * @param userForm User построенный из данных формы.
+     */
     @Override
     @Transactional
     public void regNewAccount(User userForm) {
@@ -163,6 +187,13 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
     }
 
+    /**
+     * метод проверки активации пользователя.
+     *
+     * @param token модель, построенная на основе пользователя, после подтверждения
+     * @param request параметры запроса.
+     * @return булево значение "true or false"
+     */
     @Override
     @Transactional
     public boolean activateUser(String token, HttpServletRequest request) {
