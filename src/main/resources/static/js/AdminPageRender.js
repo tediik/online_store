@@ -18,8 +18,8 @@ function addRolesOnNewUserForm() {
 }
 
 /**
- * рендерит <Select> на странице добавления User'a
- * @param allRoles
+ * рендерит <Select> c выбором ролей на странице добавления нового User'a
+ * @param allRoles - принимается список всех ролей
  */
 function renderRolesSelectOnNewUserForm(allRoles) {
     let selectRoles = $('#addRoles').empty()
@@ -34,8 +34,8 @@ function renderRolesSelectOnNewUserForm(allRoles) {
  */
 function editModalWindowRender(user, allRoles) {
     $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
-    $('#idInputModal').val(user.id)
     $('#rolesSelectModal').empty()
+    $('#idInputModal').val(user.id)
     $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-user')
     $('.modal-title').text("Edit user")
     $('#emailInputModal').val(user.email).prop('readonly', false)
@@ -60,21 +60,6 @@ function editModalWindowRender(user, allRoles) {
 }
 
 /**
- * Функция обраотки нажатия кнопки Edit в таблице пользователей
- * @param event
- */
-function handleEditButton(event) {
-    const userId = event.target.dataset["userId"]
-    Promise.all([
-        fetch(adminRestUrl + "/users/" + userId, {headers: headers}),
-        fetch(roleRestUrl, {headers: headers})
-    ])
-        .then(([response1, response2]) => Promise.all([response1.json(), response2.json()]))
-        .then(([userToEdit, allRoles]) => editModalWindowRender(userToEdit, allRoles))
-
-}
-
-/**
  * Функция рендера модального окна Delete user
  * @param userToDelete
  */
@@ -91,6 +76,20 @@ function deleteModalWindowRender(userToDelete) {
     $.each(userToDelete.roles, function (i, role) {
         $('#rolesSelectModal').append(`<option disabled>${role.name}</option>>`)
     })
+}
+/**
+ * Функция обраотки нажатия кнопки Edit в таблице пользователей
+ * @param event
+ */
+function handleEditButton(event) {
+    const userId = event.target.dataset["userId"]
+    Promise.all([
+        fetch(adminRestUrl + "/users/" + userId, {headers: headers}),
+        fetch(roleRestUrl, {headers: headers})
+    ])
+        .then(([response1, response2]) => Promise.all([response1.json(), response2.json()]))
+        .then(([userToEdit, allRoles]) => editModalWindowRender(userToEdit, allRoles))
+
 }
 
 /**
@@ -128,7 +127,8 @@ function handleAddBtn() {
     }
 
     /**
-     * обработка валидности полей формы
+     * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
+     * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
      * @param text - текст для вывода в алекрт
      * @param field - поле на каком установить фокус
      */
