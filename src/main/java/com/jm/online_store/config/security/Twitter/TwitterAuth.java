@@ -31,7 +31,6 @@ import java.util.concurrent.ExecutionException;
 @AllArgsConstructor
 @Service
 public class TwitterAuth {
-
     @Autowired
     private UserService userService;
 
@@ -55,7 +54,6 @@ public class TwitterAuth {
         System.out.println("Now go and authorize ScribeJava here:");
         return service.getAuthorizationUrl(requestToken);
     }
-
 
     public void getAccessToken(String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
         final String oauthVerifier = oauth_verifier;
