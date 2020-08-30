@@ -11,6 +11,7 @@ import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
+@Slf4j
 public class OAuth2Odnoklassniki {
 
     @Autowired
@@ -72,8 +74,8 @@ public class OAuth2Odnoklassniki {
             OAuthRequest request = new OAuthRequest(Verb.GET, String.format(resourceUrl, publicKey));
             service.signRequest(accessToken, request);
             String userFromOK = service.execute(request).getBody();
-
-            System.out.println(userFromOK);
+            log.debug(userFromOK);
+            
             String email = null;
             String firstName = null;
             String lastName = null;

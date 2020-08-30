@@ -5,17 +5,19 @@ $(document).ready(function () {
 
 function create() {
     $("#stocksDiv").empty();
-
     moment.locale('ru');
-
     $.ajax("/rest/allStocks", {
         dataType: "json",
         success: function (data) {
             const stocks = JSON.parse(JSON.stringify(data));
-
             for (let i = 0; i < stocks.length; i++) {
                 let out = $("<li>").attr("id", stocks[i].id).attr("data-filter", stocks[i].stockType);
-
+                let endDate = stocks[i].endDate
+                if (endDate === null) {
+                    endDate = "бессрочно"
+                } else {
+                    endDate = moment(endDate).format("DD MMM YYYY")
+                }
                 out.append(
                     `<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
@@ -29,21 +31,22 @@ function create() {
                                     <p>Срок проведения акции: </p>
                                     <div class=\"card-date\">
                                          с ${moment(stocks[i].startDate).format("DD MMM")}
-                                         по ${moment(stocks[i].endDate).format("DD MMM YYYY")}
+                                         по ${endDate}
                                     </div>
                                 </div>
                             </div>
-                            <div class=\"col-md-2\">
-                                <button onclick='getStockForEdit(${stocks[i].id})'
-                                        class=\"btn btn-md btn-info mt-5 mr-2\" data-toggle='modal'
-                                        data-target='#editStockModal'>Edit</button>
-                                <button onclick='deleteStock(${stocks[i].id})'
-                                         class=\"warning btn btn-md btn-danger mt-2 mr-2\">Delete</button>
+                            <div class="col-md-2 flex-row align-items-center">
+                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                                    <button onclick='getStockForEdit(${stocks[i].id})' class="btn btn-info" data-toggle='modal'
+                                            data-target='#editStockModal'>Edit</button>
+                                </div>
+                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                                    <button onclick='deleteStock(${stocks[i].id})' class="btn btn-danger">Delete</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </li> `);
-
                 $("#stocksDiv").append(out)
             }
         }
@@ -54,9 +57,7 @@ function create() {
 $('.filters button').on('click', function () {
     $('.filters button').removeClass('active');
     $(this).parent('button').addClass('active'); // выделяем выбранную категорию
-
     const cat = $(this).attr('data-filter'); // определяем категорию
-
     if (cat === 'ALL') {
         $('.allStocks li').show();
     } else {
@@ -67,16 +68,25 @@ $('.filters button').on('click', function () {
 
 /*Добавить акцию*/
 function addStock() {
-    const stockAdd = {
+    let startDate = $('#addStartDate').val()
+    startDate = moment(startDate).format("YYYY-MM-DD")
+    let endDate = ""
+    if ($('#addEndDate').val() !== null || $('#addEndDate').val() !== "") {
+        endDate = $('#addEndDate').val()
+        endDate = moment(endDate).format("YYYY-MM-DD")
+    }
+    if (endDate === "Invalid date") {
+        endDate = ""
+    }
+     const stockAdd = {
         id: $('#id').val(),
         stockImg: $('#addStockImg').val(),
         stockTitle: $('#addStockTitle').val(),
         stockText: $('#addStockText').val(),
-        startDate: $('#addStartDate').val(),
-        endDate: $('#addEndDate').val(),
+        startDate: startDate,
+        endDate: endDate,
         stock: $('#stockTimeZone').val(),
     };
-
     $.ajax({
         url: "/rest/addStock",
         data: JSON.stringify(stockAdd),
@@ -112,15 +122,24 @@ function getStockForEdit(id) {
 
 /*Сохранение заполненных полей*/
 function updateStock() {
+    startDate = $('#editStartDate').val()
+    startDate = moment(startDate).format("YYYY-MM-DD")
+    let endDate = ""
+    if ($('#editEndDate').val() !== null || $('#editEndDate').val() !== "") {
+        endDate = $('#editEndDate').val()
+        endDate = moment(endDate).format("YYYY-MM-DD")
+    }
+    if (endDate === "Invalid date") {
+        endDate = ""
+    }
     const stock = {
         id: $('#Eid').val(),
         stockImg: $('#editStockImg').val(),
         stockTitle: $('#editStockTitle').val(),
         stockText: $('#editStockText').val(),
-        startDate: $('#editStartDate').val(),
-        endDate: $('#editEndDate').val(),
+        startDate: startDate,
+        endDate: endDate,
     };
-
     $.ajax({
         url: "/rest/editStock",
         data: JSON.stringify(stock),
@@ -146,7 +165,7 @@ function deleteStock(id) {
             success: function (data) {
                 $("#stocksDiv #" + id).remove();
                 console.log(data)
-                toastr.warning('Акция успешно удалена!', {timeOut: 5000})
+                toastr.error('Акция успешно удалена!', {timeOut: 5000})
             },
             error: function (er) {
                 console.log(er)
@@ -154,3 +173,31 @@ function deleteStock(id) {
         }
     );
 }
+
+$("#stockAddModal").ready(function () {
+    var name=document.getElementById("addStartDate");
+    var click=document.getElementById("save");
+    click.onclick=function()
+    {
+        if(!name.value){
+            toastr.warning('Заполните дату начала акции!', {timeOut: 5000})
+        } else {
+            $("#newStockModal").modal('hide');
+            addStock()
+        }
+    }
+})
+
+$("#stockEditModal").ready(function () {
+    var name=document.getElementById("editStartDate");
+    var click=document.getElementById("editSave");
+    click.onclick=function()
+    {
+        if(!name.value){
+            toastr.warning('Заполните дату начала акции!', {timeOut: 5000})
+        } else {
+            $("#editStockModal").modal('hide');
+            updateStock()
+        }
+    }
+})
