@@ -1,6 +1,8 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,12 +33,16 @@ public class ProductInOrder {
 
     @NonNull
     @ManyToOne
-    @JsonManagedReference
+    //TODO @JsonManagedReference пока не удаляю, возможно придется менять обратно
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private Product product;
 
     @NonNull
     @ManyToOne
-    @JsonManagedReference
+    //TODO @JsonManagedReference пока не удаляю, возможно придется менять обратно
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private Order order;
 
     @NonNull

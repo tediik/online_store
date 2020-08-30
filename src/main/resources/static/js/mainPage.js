@@ -1,3 +1,30 @@
+function register() {
+    $(".alert").html("").hide();
+    var formData = $('form').serialize();
+    $.ajax({
+        url: '/registration',
+        type: 'POST',
+        data: formData,
+        success: function (data) {
+            if (data == "success") {
+                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000})
+                close();
+            } else if (data == "duplicatedEmailError") {
+                $("#duplicatedEmailError").show();
+            } else if (data == "passwordError") {
+                $("#passwordError").show();
+            } else if (data == "notValidEmailError") {
+                $("#notValidEmailError").show();
+            }
+        }
+    });
+}
+
+function close() {
+    $('#openNewRegistrationModal').hide();
+    $(".modal-backdrop.show").hide();
+}
+
 (function($){
 
     //define the new for the plugin ans how to call it

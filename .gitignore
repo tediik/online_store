@@ -58,6 +58,7 @@ out/
 
 # Log file
 *.log
+/logs/
 *.gz
 
 # Package Files #
