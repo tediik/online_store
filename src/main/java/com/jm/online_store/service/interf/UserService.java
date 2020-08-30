@@ -20,7 +20,7 @@ public interface UserService {
 
     void updateUser(User user);
 
-    Optional<User> findByEmail(String username);
+    Optional<User> findByEmail(String email);
 
     boolean isExist(String email);
 
