@@ -14,6 +14,7 @@ import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,6 +31,7 @@ import java.util.concurrent.ExecutionException;
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
+@Slf4j
 public class TwitterAuth {
     @Autowired
     private UserService userService;
@@ -49,9 +51,8 @@ public class TwitterAuth {
                 .build(TwitterApi.instance());
 
         // Obtain the Request Token
-        System.out.println("Fetching the Request Token...");
+        log.debug("Fetching the Request Token...");
         requestToken = service.getRequestToken();
-        System.out.println("Now go and authorize ScribeJava here:");
         return service.getAuthorizationUrl(requestToken);
     }
 
@@ -59,15 +60,15 @@ public class TwitterAuth {
         final String oauthVerifier = oauth_verifier;
 
         // Trade the Request Token and Verifier for the Access Token
-        System.out.println("Trading the Request Token for an Access Token...");
+        log.debug("Trading the Request Token for an Access Token...");
         final OAuth1AccessToken accessToken = service.getAccessToken(requestToken, oauthVerifier);
 
         // Now let's go and ask for a protected resource!
-        System.out.println("Now we're going to access a protected resource...");
+        log.debug("Now we're going to access a protected resource...");
         final OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
         service.signRequest(accessToken, request);
         String userFromTwitter = service.execute(request).getBody();
-        System.out.println(userFromTwitter);
+        log.debug(userFromTwitter);
 
         String email = "test@example.ru";
         String name = null;
