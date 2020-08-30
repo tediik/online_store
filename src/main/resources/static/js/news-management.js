@@ -189,7 +189,6 @@ function updateNews() {
                     object = msg;
                 }
             })
-
             clickButtonEditDelete()
         }
     })

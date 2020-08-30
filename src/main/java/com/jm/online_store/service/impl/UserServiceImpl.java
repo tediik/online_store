@@ -44,20 +44,17 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
-
     @Autowired
     @Setter
     private PasswordEncoder passwordEncoder;
-
     @Value("${spring.server.url}")
     private String urlActivate;
-
-    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
 
     @Transactional
     @Override
@@ -81,6 +78,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    /**
+     * метод добавления нового пользователя.
+     *
+     * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
+     * @param user полученный объект User/
+     */
     @Override
     @Transactional
     public void addUser(@NotNull User user) {
@@ -94,12 +97,26 @@ public class UserServiceImpl implements UserService {
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             user.setRoles(persistRoles(user.getRoles()));
         }
+        if (user.getProfilePicture().isEmpty()) {
+            user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+        }
+        userRepository.save(user);
+    }
+
+    /**
+     * метод обновления пользователя.
+     *
+     * @param user пользователь, полученный из контроллера.
+     */
+    @Override
+    @Transactional
+    public void updateUser(User user) {
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUser(@NotNull User user) {
+    public void updateUserAdminPanel(@NotNull User user) {
         User editUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
         if (!editUser.getEmail().equals(user.getEmail())) {
             if (isExist(user.getEmail())) {
@@ -112,15 +129,25 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
-        userRepository.save(user);
+        userRepository.save(editUser);
     }
 
+    /**
+     * метод удаления пользователя по идентификатору.
+     *
+     * @param id идентификатор.
+     */
     @Override
     @Transactional
     public void deleteByID(Long id) {
         userRepository.deleteById(id);
     }
 
+    /**
+     * метод регистрации нового User.
+     *
+     * @param userForm User построенный из данных формы.
+     */
     @Override
     @Transactional
     public void regNewAccount(User userForm) {
@@ -160,6 +187,13 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
     }
 
+    /**
+     * метод проверки активации пользователя.
+     *
+     * @param token модель, построенная на основе пользователя, после подтверждения
+     * @param request параметры запроса.
+     * @return булево значение "true or false"
+     */
     @Override
     @Transactional
     public boolean activateUser(String token, HttpServletRequest request) {
@@ -261,7 +295,7 @@ public class UserServiceImpl implements UserService {
                 Files.delete(fileNameAndPath);
             }
         } catch (IOException e) {
-            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());        
+            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);

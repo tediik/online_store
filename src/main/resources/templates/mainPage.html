@@ -14,6 +14,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
     <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css" >
 
     <script src="/static/js/mainPage.js"></script>
@@ -23,12 +25,16 @@
 
 <script>
 
-    jQuery(document).ready(function($) {
+    jQuery(document).ready(function ($) {
         $('#mega-1').dcVerticalMegaMenu();
+
+        $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
+            $("#openNewRegistrationModal form")[0].reset();//reset modal fields
+            $("#openNewRegistrationModal .error").hide();//reset error spans
+        });
     });
 
 </script>
-
 
 <body>
 
@@ -43,15 +49,14 @@
         </div>
     </form>
 
-
     <!-- Customer service -->
     <a class="p-2 text-dark" href="/news">Новости</a>
     <div class="btn customerbutton">
         <a th:href="@{/customer}"> Кабинет покупателя </a>
     </div>
     <!-- Registration -->
-    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER')" class="btn registrationbutton">
-        <a th:href="@{/registration}"> Регистрация </a>
+    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn registrationbutton" data-toggle="modal" data-target="#openNewRegistrationModal">
+        <a> Регистрация </a>
     </div>
     <!-- Login -->
     <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER')" class="btn loginbutton">
@@ -62,6 +67,65 @@
     </div>
 
 </header>
+
+<div id="openNewRegistrationModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Регистрация</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/registration" method="POST" enctype="utf8">
+                    <div class="form-group text-center font-weight-bold">
+                    <label for="email">Email</label>
+                        <input  name="email"
+                                value=""
+                                id="email"
+                                placeholder="email"
+                                type="email"
+                                autofocus
+                                class="form-control"/>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                    <label for="password">Пароль</label>
+                        <input  name="password"
+                                value=""
+                                id="password"
+                                placeholder="password"
+                                type="password"
+                                autofocus
+                                class="form-control"/>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                    <label for="passwordConfirm">Повторите пароль</label>
+                        <input name="passwordConfirm"
+                               value=""
+                               id="passwordConfirm"
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
+                    </div>
+                       <div>
+                        <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
+                       </div>
+                          <div>
+                           <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
+                          </div>
+                    <div>
+                    <span id="notValidEmailError" style="display:none" class="error">Неверный формат электронной почты</span>
+                    </div>
+                        <div>
+                    <a onclick="register()" class="btn btn-primary btn-sm btn-block"> submit</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="demo-container clear">
     <div class="test">

@@ -2,35 +2,28 @@ package com.jm.online_store.config;
 
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Description;
-import com.jm.online_store.model.Product;
-import com.jm.online_store.model.Role;
-import com.jm.online_store.model.Stock;
-import com.jm.online_store.model.User;
-import com.jm.online_store.service.interf.CategoriesService;
-import com.jm.online_store.service.interf.StockService;
-import lombok.Data;
-import com.jm.online_store.service.interf.RoleService;
-import com.jm.online_store.service.interf.UserService;
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.util.Arrays;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
+import com.jm.online_store.model.Stock;
+import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +34,10 @@ import java.util.Set;
 
 /**
  * класс первичного заполнения таблиц.
+ *
+ * для первичного заполнения базы данных раскомментировать аннотацию
+ * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
+ * в файле "application.properties" с "update" на "create" или "create-drop".
  */
 @AllArgsConstructor
 @Component
@@ -54,10 +51,28 @@ public class DataInitializer {
     private final NewsService newsService;
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
+    private final BasketService basketService;
     private final StockService stockService;
 
-//    @PostConstruct
-    public void roleConstruct() {
+    /**
+     * Основной метод для заполнения базы данных.
+     * Вызов методов добавлять в этод метод.
+     * Следить за последовательностью вызова.
+     */
+    //@PostConstruct
+    public void initDataBaseFilling() {
+        roleInit();
+        newsInit();
+        productInit();
+        ordersInit();
+        stockInit();
+    }
+
+    /**
+     * Метод конфигурирования и первичного заполнения таблиц:
+     * ролей, юзеров и корзины.
+     */
+    private void roleInit() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
         Role managerRole = new Role("ROLE_MANAGER");
@@ -107,10 +122,26 @@ public class DataInitializer {
         customer = userService.findByEmail("customer@mail.ru").get();
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
+
+        SubBasket subBasket_1 = new SubBasket();
+        subBasket_1.setProduct(product_1);
+        subBasket_1.setCount(1);
+        basketService.addBasket(subBasket_1);
+        SubBasket subBasket_2 = new SubBasket();
+        subBasket_2.setProduct(product_3);
+        subBasket_2.setCount(1);
+        basketService.addBasket(subBasket_2);
+        List<SubBasket> subBasketList = new ArrayList<>();
+        subBasketList.add(subBasket_1);
+        subBasketList.add(subBasket_2);
+        customer.setUserBasket(subBasketList);
+        userService.updateUser(customer);
     }
 
-//    @PostConstruct
-    public void newsInit() {
+    /**
+     * Метод первичного тестового заполнения новостей.
+     */
+    private void newsInit() {
         News firstNews = News.builder()
                 .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
                 .anons("Не пропустите розыгрыш потрясающих призов.")
@@ -190,8 +221,10 @@ public class DataInitializer {
         newsService.save(thirdNews);
     }
 
-	//@PostConstruct
-    public void productInit() {
+    /**
+     * Метод первичного тестового заполнения товаров.
+     */
+    private void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
         Categories category2 = new Categories("PC", "Computer");
@@ -236,8 +269,10 @@ public class DataInitializer {
         categoriesService.saveAll(Arrays.asList(category1, category2, category3));
     }
 
-//    @PostConstruct
-    public void ordersInit() {
+    /**
+     * Метод первичного тестового заполнения заказов.
+     */
+    private void ordersInit() {
         User customer = userService.findByEmail("customer@mail.ru").get();
 
         List<Long> productsIds = new ArrayList<>();
@@ -262,24 +297,20 @@ public class DataInitializer {
 
         productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
         productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
-
         productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
-
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
-
         productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
-
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
-
         customer.setOrders(Set.copyOf(orderService.findAll()));
-
         userService.updateUser(customer);
     }
 
-    //    @PostConstruct
-    public void stockInit(){
+    /**
+     * Метод первичного тестового заполнения акций.
+     */
+    private void stockInit() {
         Stock firstStock = Stock.builder()
                 .startDate(LocalDate.now().plusDays(2))
                 .endDate(LocalDate.now().plusDays(12L))

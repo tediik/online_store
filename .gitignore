@@ -10,6 +10,7 @@
 .idea/
 target/
 logs/**
+logs/
 online_store.iml
 *.sql
 !.mvn/wrapper/maven-wrapper.jar
@@ -57,6 +58,8 @@ out/
 
 # Log file
 *.log
+/logs/
+*.gz
 
 # Package Files #
 *.jar
