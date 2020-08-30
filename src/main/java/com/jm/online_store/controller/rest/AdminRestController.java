@@ -39,7 +39,7 @@ public class AdminRestController {
     public ResponseEntity<List<User>> getAllUsersList() {
         List<User> allUsers = userService.findAll();
         if (allUsers == null) {
-            log.info("There are no users in db");
+            log.debug("There are no users in db");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
@@ -48,11 +48,11 @@ public class AdminRestController {
     @GetMapping(value = "/users/{id}")
     public ResponseEntity<User> getUserInfo(@PathVariable Long id) {
         if (userService.findById(id).isEmpty()) {
-            log.info("User with id: {} not found", id);
+            log.debug("User with id: {} not found", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         User user = userService.findById(id).get();
-        log.info("User with id: {} found, email is: {}", id, user.getEmail());
+        log.debug("User with id: {} found, email is: {}", id, user.getEmail());
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -61,19 +61,21 @@ public class AdminRestController {
         try {
             userService.deleteByID(id);
         } catch (IllegalArgumentException e) {
-            log.info("There is no user with id: {}", id);
+            log.debug("There is no user with id: {}", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        log.info("User with id: {}, was deleted successfully", id);
+        log.debug("User with id: {}, was deleted successfully", id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<User> editUser(@RequestBody User user) {
         if (userService.findById(user.getId()).isEmpty()) {
+            log.debug("There are no user with id: {}", user.getId());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         userService.updateUserFromAdminPage(user);
+        log.debug("Changes to user with id: {} was successfully added", user.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
