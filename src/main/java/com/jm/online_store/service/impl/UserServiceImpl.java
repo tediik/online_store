@@ -301,6 +301,10 @@ public class UserServiceImpl implements UserService {
         return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
     }
 
+    /**
+     * Service method to add new user from admin page
+     * @param newUser
+     */
     @Override
     @Transactional
     public void addNewUserFromAdmin(User newUser) {
@@ -308,9 +312,13 @@ public class UserServiceImpl implements UserService {
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
         log.info("User with email: {} was saved successfully", newUser.getEmail());
         userRepository.save(newUser);
-
     }
 
+    /**
+     * Service method to update user from admin page
+     * @param user
+     * @return
+     */
     @Override
     @Transactional
     public User updateUserFromAdminPage(User user) {
