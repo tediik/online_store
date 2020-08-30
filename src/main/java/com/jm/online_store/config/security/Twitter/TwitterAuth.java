@@ -4,14 +4,11 @@ import com.github.scribejava.apis.TwitterApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
-import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Response;
-import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
+import lombok.NoArgsConstructor;
+
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -34,19 +31,17 @@ public class TwitterAuth {
     public String twitterAuth() throws InterruptedException, ExecutionException, IOException {
         service = new ServiceBuilder("BiCDQUyByE72SHyBkqJPe1wAi")
                 .apiSecret("KlJocOjZNnLodCExCNfsQbaz3utxjhOoc7rFuUwncgolAgQnEA")
-                .callback("http://localhost:9999" + "/oauth1")
+                .callback("http://localhost:9999" + "/oauth/authorize")
                 .build(TwitterApi.instance());
         final Scanner in = new Scanner(System.in);
 
         // Obtain the Request Token
         System.out.println("Fetching the Request Token...");
         requestToken = service.getRequestToken();
-        System.out.println("Got the Request Token!");
-        System.out.println();
-
         System.out.println("Now go and authorize ScribeJava here:");
         return service.getAuthorizationUrl(requestToken);
     }
+
 
     public void getAccessToken(String token) throws InterruptedException, ExecutionException, IOException {
         final String oauthVerifier = code;

@@ -14,19 +14,19 @@ import java.util.concurrent.ExecutionException;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping("/")
+
 public class LoginController {
 
     private final OAuth2Odnoklassniki oAuth2Odnoklassniki;
     private final TwitterAuth twitterAuth;
 
-    @GetMapping("/oauth")
-    public String oAuthOdnoklassniki(@RequestParam String code) {
-        oAuth2Odnoklassniki.UserAuth(code);
-        return "redirect:/";
-    }
+//    @GetMapping("/oauth")
+//    public String oAuthOdnoklassniki(@RequestParam String code) {
+//        oAuth2Odnoklassniki.UserAuth(code);
+//        return "redirect:/";
+//    }
 
-    @GetMapping("/oauth1")
+    @GetMapping("/oauth/authorize")
     public String oAuthTwitter(@RequestParam String code) throws InterruptedException, ExecutionException, IOException {
         System.out.println("CODE!!!!!!!!");
         twitterAuth.getAccessToken(code);
