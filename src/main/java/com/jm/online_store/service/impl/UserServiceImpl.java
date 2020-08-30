@@ -21,10 +21,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -37,16 +44,15 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
-
     @Autowired
     @Setter
     private PasswordEncoder passwordEncoder;
-
     @Value("${spring.server.url}")
     private String urlActivate;
 
@@ -66,11 +72,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(username);
     }
 
+
     @Override
     public boolean isExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    /**
+     * метод добавления нового пользователя.
+     *
+     * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
+     * @param user полученный объект User/
+     */
     @Override
     @Transactional
     public void addUser(@NotNull User user) {
@@ -84,12 +97,26 @@ public class UserServiceImpl implements UserService {
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             user.setRoles(persistRoles(user.getRoles()));
         }
+        if (user.getProfilePicture().isEmpty()) {
+            user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+        }
+        userRepository.save(user);
+    }
+
+    /**
+     * метод обновления пользователя.
+     *
+     * @param user пользователь, полученный из контроллера.
+     */
+    @Override
+    @Transactional
+    public void updateUser(User user) {
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUser(@NotNull User user) {
+    public void updateUserAdminPanel(@NotNull User user) {
         User editUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
         if (!editUser.getEmail().equals(user.getEmail())) {
             if (isExist(user.getEmail())) {
@@ -102,15 +129,25 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
-        userRepository.save(user);
+        userRepository.save(editUser);
     }
 
+    /**
+     * метод удаления пользователя по идентификатору.
+     *
+     * @param id идентификатор.
+     */
     @Override
     @Transactional
     public void deleteByID(Long id) {
         userRepository.deleteById(id);
     }
 
+    /**
+     * метод регистрации нового User.
+     *
+     * @param userForm User построенный из данных формы.
+     */
     @Override
     @Transactional
     public void regNewAccount(User userForm) {
@@ -150,6 +187,13 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
     }
 
+    /**
+     * метод проверки активации пользователя.
+     *
+     * @param token модель, построенная на основе пользователя, после подтверждения
+     * @param request параметры запроса.
+     * @return булево значение "true or false"
+     */
     @Override
     @Transactional
     public boolean activateUser(String token, HttpServletRequest request) {
@@ -202,5 +246,59 @@ public class UserServiceImpl implements UserService {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * updateUserImage method receives authorised user's Id and Multipart Image file
+     * saves Image in Uploads/images folder
+     * and sets saved image to userProfilePicture
+     */
+    @Override
+    @Transactional
+    public String updateUserImage(Long userId, MultipartFile file) {
+        User user = userRepository.findById(userId).get();
+        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+        if (!file.isEmpty()) {
+            if (user.getProfilePicture() != null) {
+                deleteUserImage(userId);
+            }
+            Path fileNameAndPath = Paths.get(uploadDirectory, originalFilename);
+            try {
+                byte[] bytes = file.getBytes();
+                Files.write(fileNameAndPath, bytes);
+                //Set user's profile picture
+                user.setProfilePicture(originalFilename);
+                userRepository.save(user);
+            } catch (IOException e) {
+                log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
+            }
+        }
+        log.debug("Failed to store file - file is not present {}", originalFilename);
+        return File.separator + "uploads" + File.separator + "images" + File.separator + file.getOriginalFilename();
+    }
+
+    /**
+     * deleteUserImage method receives authorised user's Id
+     * deletes current user's profile picture and sets a default avatar
+     * default avatar cannot be deleted
+     */
+    @Override
+    @Transactional
+    public String deleteUserImage(Long userId) {
+        final String defaultAvatar = StringUtils.cleanPath("def.jpg");
+        User user = userRepository.findById(userId).get();
+        //Get profilePicture name from User and delete this profile picture from Uploads
+        Path fileNameAndPath = Paths.get(uploadDirectory, user.getProfilePicture());
+        //Check if deleting picture is not a default avatar
+        try {
+            if (!fileNameAndPath.getFileName().toString().equals(defaultAvatar)) {
+                Files.delete(fileNameAndPath);
+            }
+        } catch (IOException e) {
+            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
+        }
+        //Set a default avatar as a user profilePicture
+        user.setProfilePicture(defaultAvatar);
+        return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
     }
 }
