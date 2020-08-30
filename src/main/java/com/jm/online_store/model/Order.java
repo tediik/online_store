@@ -49,15 +49,9 @@ public class Order {
     private Status status;
 
     @ManyToOne
-    //TODO @JsonManagedReference пока не удаляю, возможно придется менять обратно
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    //TODO @JsonBackReference пока не удаляю, возможно придется менять обратно
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     private List<ProductInOrder> productInOrders;
 
     // Список статусов заказа

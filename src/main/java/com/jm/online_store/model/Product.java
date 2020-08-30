@@ -52,9 +52,6 @@ public class Product {
     private String productType;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-    //TODO @JsonBackReference пока не удаляю, возможно придется менять обратно
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     private List<ProductInOrder> productInOrders;
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
