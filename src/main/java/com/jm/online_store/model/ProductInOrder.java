@@ -25,6 +25,8 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Table(name = "order_product")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductInOrder {
 
     @Id
@@ -33,16 +35,10 @@ public class ProductInOrder {
 
     @NonNull
     @ManyToOne
-    //TODO @JsonManagedReference пока не удаляю, возможно придется менять обратно
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     private Product product;
 
     @NonNull
     @ManyToOne
-    //TODO @JsonManagedReference пока не удаляю, возможно придется менять обратно
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     private Order order;
 
     @NonNull
