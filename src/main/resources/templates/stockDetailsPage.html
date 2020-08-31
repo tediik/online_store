@@ -1,19 +1,38 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>News</title>
+    <title>Акции</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <meta property="og:url"           content="http://localhost:9999/customer/stockDetails" />
+    <meta property="og:type"          content="Online Store" />
+    <meta property="og:title"         content="JM Online Store" />
+    <meta property="og:description"   content="The best online store!" />
 </head>
-<body>
+<div id="fb-root"></div>
+<script>
+    (function (d, s, id) {
+        let js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
 <header th:insert="/blocks/header :: header"></header>
 <div class="container-fluid">
     <div class="row content justify-content-center">
         <div class="col-sm-8 text-left">
             <div class="alert alert-info mt-2">
-                <h3>Заголовок</h3>
-                <p>тело акции</p>
+                <h3 id="stockHeader"></h3>
+                <p id="stockBody"></p>
+                <div class="fb-share-button"
+                     data-href="https://www.java-mentor.com/"
+                     data-layout="button_count">
+                </div>
+                <button class="btn-sm btn-primary" type="button" onclick="share()">Share</button>
             </div>
         </div>
     </div>
@@ -27,5 +46,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+<script src="/static/js/stockDetailsPageRender.js"></script>
 </body>
 </html>
