@@ -77,7 +77,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByFirstName(FirstName);
     }
 
-
     @Override
     public boolean isExist(String email) {
         return userRepository.findByEmail(email).isPresent();
@@ -307,5 +306,38 @@ public class UserServiceImpl implements UserService {
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
         return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
+    }
+
+    /**
+     * Service method to add new user from admin page
+     * @param newUser
+     */
+    @Override
+    @Transactional
+    public void addNewUserFromAdmin(User newUser) {
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
+        log.debug("User with email: {} was saved successfully", newUser.getEmail());
+        userRepository.save(newUser);
+    }
+
+    /**
+     * Service method to update user from admin page
+     * @param user
+     * @return
+     */
+    @Override
+    @Transactional
+    public User updateUserFromAdminPage(User user) {
+        User editedUser = userRepository.findById(user.getId()).get();
+        Set<Role> newRoles = persistRoles(user.getRoles());
+        editedUser.setRoles(newRoles);
+        editedUser.setEmail(user.getEmail());
+        editedUser.setFirstName(user.getFirstName());
+        editedUser.setLastName(user.getLastName());
+        if (!user.getPassword().equals("")) {
+            editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        return userRepository.save(editedUser);
     }
 }
