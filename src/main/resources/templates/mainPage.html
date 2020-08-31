@@ -8,20 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-
-    <!-- Custom styles for this template -->
-    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 
     <title></title>
 </head>
@@ -45,7 +38,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Регистрация</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">x</span>
                 </button>
             </div>
@@ -53,23 +46,23 @@
                 <form action="/registration" method="POST" enctype="utf8">
                     <div class="form-group text-center font-weight-bold">
                         <label for="email">Email</label>
-                        <input  name="email"
-                                value=""
-                                id="email"
-                                placeholder="email"
-                                type="email"
-                                autofocus
-                                class="form-control"/>
+                        <input name="email"
+                               value=""
+                               id="email"
+                               placeholder="email"
+                               type="email"
+                               autofocus
+                               class="form-control"/>
                     </div>
                     <div class="form-group text-center font-weight-bold">
                         <label for="password">Пароль</label>
-                        <input  name="password"
-                                value=""
-                                id="password"
-                                placeholder="password"
-                                type="password"
-                                autofocus
-                                class="form-control"/>
+                        <input name="password"
+                               value=""
+                               id="password"
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
                     </div>
                     <div class="form-group text-center font-weight-bold">
                         <label for="passwordConfirm">Повторите пароль</label>
@@ -102,12 +95,13 @@
 <main role="main" class="container">
     <div class="row">
         <div class="col-2">
-            <ul class="navbar-nav mr-auto" aria-orientation="vertical" id="siteMenu">
+            <ul class="navbar-nav mr-auto shadow" aria-orientation="vertical" id="siteMenu">
                 <!-- menu from mainPage.js -->
             </ul>
         </div>
         <div class="col-5 promo">
-            <span><h4>Акции</h4></span><a class="text-secondary" href="/manager/stocks">(все акции)</a>
+            <h4 class="my-0 font-weight-normal">Акции / <a class="text-secondary" href="/manager/stocks">(все акции)</a>
+            </h4>
             <div id="myCarousel" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -124,7 +118,8 @@
                                 <h4>Example headline.</h4>
                                 <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
                                     porta gravida at eget metus.</p>
-                                <p><a class="btn btn-outline-secondary promobtn" href="#" role="button">Sign up today</a></p>
+                                <p><a class="btn btn-outline-secondary promobtn" href="#" role="button">Sign up
+                                    today</a></p>
                             </div>
                         </div>
                     </div>
@@ -167,13 +162,33 @@
             </div>
         </div>
         <div class="col-4 news">
-            <a><h4>Новости</h4></a>
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Новости / <a class="text-secondary" href="/news">(все новости)</a></h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title pricing-card-title my-0 font-weight-normal">breaking news</h5>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>10 users included</li>
+                        <li>2 GB of storage</li>
+                        <li>Email support</li>
+                        <li>Help center access</li>
+                    </ul>
+                    <!--                    <button type="button" class="btn btn-block btn-outline-primary">Sign up for free</button>-->
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
-        <div class="col">
-            <h4>Актуальные предложения</h4>
+        <div class="col-2">
         </div>
+        <div class="col-10">
+            <h4 class="my-0 font-weight-normal products">Актуальные предложения</h4>
+            <div id="someProductsView">
+                <!-- products view from mainPage.js-->
+            </div>
+        </div>
+    </div>
     </div>
 
 </main><!-- /.container -->
@@ -181,10 +196,13 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-
 <!-- Optional JavaScript -->
 <script src="../static/js/mainPage.js"></script>
 <script src="/static/js/jquery.hoverIntent.minified.js"></script>
-
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </body>
 </html>

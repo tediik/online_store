@@ -1,5 +1,5 @@
 <div th:fragment="header">
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom box-shadow siteHeader">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom shadow-sm siteHeader">
         <h4 class="my-0 mr-md-auto text-light">Company name</h4>
 
         <nav class="my-2 my-md-0 mr-md-3">
@@ -10,11 +10,14 @@
             </form>
         </nav>
         <!-- Customer service -->
-        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn btn-outline-secondary font-weight-bold secondarybtn" href="/customer">Кабинет покупателя</a>
+        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           href="/customer">Кабинет покупателя</a>
         <!-- Registration -->
-        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-secondary font-weight-bold secondarybtn" data-toggle="modal" data-target="#openNewRegistrationModal">Регистрация</a>
+        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           data-toggle="modal" data-target="#openNewRegistrationModal">Регистрация</a>
         <!-- Login -->
-        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton" href="/login">Войти</a>
+        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton"
+           href="/login">Войти</a>
         <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton" href="/logout">Выйти</a>
     </div>
 </div>

@@ -6,6 +6,7 @@ import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,5 +57,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long idProduct) {
         productRepository.deleteById(idProduct);
+    }
+
+    /**
+     * метод выбора всех Product, идентификатор которых меньше переданного.
+     *
+     * @param id идентификатор Product
+     * @return List<Product>
+     */
+    @Override
+    public List<Product> findAllByIdBefore(Long id) {
+        return productRepository.findAllByIdBefore(id);
     }
 }

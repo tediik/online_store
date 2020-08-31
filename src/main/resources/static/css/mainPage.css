@@ -30,17 +30,23 @@ html {
 
 .dropdownbtn {
     min-width: 218px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     background: #ebc493;
 }
 
+/*.menunavbar {*/
+/*    background: #ebc493;*/
+/*    min-width: 200px;*/
+/*}*/
 .promo {
     margin-left: 1rem;
 }
+
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */
 /* Carousel base class */
 .carousel {
+    margin-top: .3rem;
     margin-bottom: 1rem;
     min-width: 450px;
 }
@@ -118,6 +124,24 @@ html {
 /*        margin-top: 7rem;*/
 /*    }*/
 /*}*/
+
+.products {
+    padding-bottom: 1rem;
+}
+
+.productView {
+    margin-left: -.6rem;
+    margin-right: -.6rem;
+}
+
+.productName {
+    margin: 1rem;
+}
+
+.productImg {
+    margin-right: auto;
+    margin-left: auto;
+}
 
 /*header{*/
 /*    background: #deb887;*/

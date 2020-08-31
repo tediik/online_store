@@ -1,8 +1,10 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,9 @@ public class MainPageRestController {
     @Autowired
     private CategoriesService categoriesService;
 
+    @Autowired
+    private ProductService productService;
+
     @PostMapping("/registration")
     @ResponseBody
     public ResponseEntity registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
@@ -73,6 +78,9 @@ public class MainPageRestController {
         return "redirect:/customer";
     }
 
+    /**
+     * Возвращает названия подкатегорий, отсортированные по категориям.
+     */
     @GetMapping("api/categories")
     public ResponseEntity<Map<String, List<String>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.getAllCategories();
@@ -82,5 +90,14 @@ public class MainPageRestController {
                     (oldV, newV) -> Stream.concat(oldV.stream(), newV.stream()).collect(Collectors.toList()));
         }
         return new ResponseEntity<>(categoriesBySuperCategories, HttpStatus.OK);
+    }
+
+    /**
+     * Возвращает список первых .findAllByIdBefore(13L) продуктов (в данном случае, первых 12ти).
+     */
+    @GetMapping("api/products")
+    public ResponseEntity<List<Product>> getSomeProducts() {
+        List<Product> products = productService.findAllByIdBefore(13L);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }
