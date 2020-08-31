@@ -12,6 +12,7 @@
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
@@ -23,7 +24,7 @@
     <title></title>
 </head>
 
-<script>
+<!--<script>
 
     jQuery(document).ready(function ($) {
         $('#mega-1').dcVerticalMegaMenu();
@@ -32,15 +33,22 @@
             $("#openNewRegistrationModal form")[0].reset();//reset modal fields
             $("#openNewRegistrationModal .error").hide();//reset error spans
         });
+
+        $('#user-email').text($.cookie('email'));
     });
 
-</script>
+</script>-->
+
 
 <body>
 
 <header>
 
     <div> <a th:href="@{/}"> Logo place </a> </div>
+
+    <div>
+        <a id="user-email"></a>
+    </div>
 
     <!-- Search -->
     <form class="form-inline">
@@ -51,8 +59,8 @@
 
     <!-- Customer service -->
     <a class="p-2 text-dark" href="/news">Новости</a>
-    <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn customerbutton">
-        <a th:href="@{/customer}"> Кабинет покупателя </a>
+    <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_MANAGER')"  class="btn customerbutton">
+        <a th:href="@{/customer}" id="role-redirect"> Кабинет покупателя </a>
     </div>
     <!-- Registration -->
     <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn registrationbutton" data-toggle="modal" data-target="#openNewRegistrationModal">
