@@ -14,8 +14,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Data
@@ -34,7 +36,7 @@ public class Stock {
 
     @Column(name = "stock_title")
     private String stockTitle;
-    
+
     @Column(name = "stock_text")
     @Type(type = "text")
     private String stockText;
@@ -50,9 +52,12 @@ public class Stock {
     @Enumerated(EnumType.STRING)
     private StockType stockType;
 
+    @OneToMany(mappedBy = "stock")
+    private Set<SharedStocks> sharedStocks;
+
     public enum StockType {
         CURRENT,
         PAST,
-        FUTURE;
+        FUTURE
     }
 }

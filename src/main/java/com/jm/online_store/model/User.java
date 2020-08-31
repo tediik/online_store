@@ -1,8 +1,5 @@
 package com.jm.online_store.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -114,6 +111,9 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Set<Order> orders;
+
+    @OneToMany(mappedBy = "user")
+    private Set<SharedStocks> sharedStocks;
 
     public User() {
         registerDate = LocalDate.now();
