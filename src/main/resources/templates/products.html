@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- ----------------------JS - jQuery ------------->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <!-- ----------------------JS - jQuery END ------------->
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="../static/css/stocksStyle.css">
+    <!-- Подключаем библиотеку summernote bs-4 -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark">
+
+        <div class="navbar-brand">Перейти на <span><b><a class="headTitle" href="/">главную</a></b></span></div>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+        </div>
+        <div class="navbar-text"><a th:href="@{/logout}">Logout</a></div>
+    </nav>
+</header>
+
+<div class="main-wrapper">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/manager">Кабинет менеджера</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Товары</li>
+        </ol>
+    </nav>
+
+    <h2 class="text-center"><span class="underline">Товары</span></h2>
+
+    <div id="cont" class="row no-gutters pb-4">
+        <div class="col-md-3 pr-3">
+            <div>
+                <form>
+                    <button type="button" class="btn btn-primary" data-toggle='modal'
+                            data-target='#newProductModal'>
+                        Добавить товар
+                    </button>
+                </form>
+            </div>
+            <div>
+                <form>
+                    <button type="button" class="btn btn-primary" data-toggle='modal'
+                            data-target='#newProductImportModal'>
+                        Загрузить товары из файла
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <!--START of Products-->
+            <br>
+            <div class="productsWrapper container-fluid p-3">
+                <ul class="allProducts" id="productsDiv">
+                </ul>
+            </div>
+            <!--End of Products-->
+
+            <!---------------------- New product add Modal  ------------------->
+            <div class="modal fade" id="newProductModal" data-backdrop="static" tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="productAddModalLabel">Добавить товар</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="container-fluid col-sm-12">
+                                <form id="productAddModal" name="productAddModal" enctype="multipart/form-data" method="post">
+                                    <div class="form-group">
+                                        <label for="addProductTitle">Наименование товара:</label>
+                                        <input id="addProductTitle" type="text" name="title" placeholder="product">
+
+                                        <label for="addProductAmount">Кол-во на данный момент:</label>
+                                        <input id="addProductAmount" type="number" size="4" step="1" name="num" min="1" max="1000" value="1">
+
+                                        <label for="addProductPrice">Цена на данный момент:</label>
+                                        <input id="addProductPrice" type="number" size="6" step="10" name="num" min="1" max="1000000" value="1">
+                                        <br>
+                                        <label for="addProductText">Описание товара:</label>
+                                        <textarea name="comment" id="addProductText" cols="45" rows="5"></textarea>
+                                        <br>
+                                        <label for="addProductImg">Изображение</label>
+                                        <input id="addProductImg" type="file" name="f" accept="image/jpeg">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer actions">
+
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+
+                            <button id="save" type="submit"
+                                    class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!---------------------- End of New Stock Modal ------------------->
+
+            <!---------------------- Stock Edit Modal  ------------------->
+            <div class="modal fade" id="editProductModal" data-backdrop="static" tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Редактировать акцию</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <form id="productEditModal">
+                            <div class="modal-body">
+                                <div class="container-fluid col-sm-12">
+                                    <form enctype="multipart/form-data" method="post">
+                                        <div class="form-group">
+                                            <label for="Eid"
+                                                   class="col-form-label col-sm-12 text-center">Id</label>
+                                            <div class="text-center">
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="Eid"
+                                                       readonly>
+                                            </div>
+                                            <div class="field2">
+                                                <label for="editProductTitle">Наименование товара:</label>
+                                                <input id="editProductTitle" type="text" name="title" placeholder="title"
+                                                       class="form-control"
+                                                       required="required">
+                                            </div>
+                                            <div class="field2">
+                                                <label for="editProductAmount">Кол-во на данный момент:</label>
+                                                <input id="editProductAmount" type="number" size="4" step="1" name="num" min="1" max="1000" value="1">
+
+                                            </div>
+                                            <div class="field2">
+                                                <label for="editProductPrice">Цена на данный момент:</label>
+                                                <input id="editProductPrice" type="number" size="6" step="10" name="num" min="1" max="1000000" value="1">
+
+                                            </div>
+                                            <label for="editProductText">Описание товара:</label>
+                                            <textarea name="comment" id="editProductText" cols="45" rows="5"
+                                                      class="form-control"
+                                                      required="required"></textarea>
+                                            <br>
+                                            <label for="editProductImg">Изображение</label>
+                                            <input id="editProductImg" type="file" name="g" accept="image/jpeg"
+                                                   class="form-control">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer actions2">
+
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+
+                            <button id="editSave" type="submit"
+                                    class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!---------------------- End of Edit Product Modal ------------------->
+            <!---------------------- New products import Modal  ------------------->
+            <div class="modal fade" id="newProductImportModal" data-backdrop="static" tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="productImportModalLabel">Добавить товар</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="container-fluid col-sm-12">
+                                <form method="POST" enctype="multipart/form-data"
+                                      action="/rest/products/uploadProductsFile">
+                                    File to upload: <input type="file" name="file"><br /> Name:
+                                    <label>
+                                        <input type="text" name="name">
+                                    </label><br /> <br />
+                                    <input type="submit"
+                                           value="Upload"> Press here to upload the file!
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer actions">
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+
+                            <button id="import" type="submit"
+                                    class="btn btn-primary">
+                                Загрузить данные из файла
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/static/js/products.js"></script>
+<!--MomentJs (work with dates)-->
+<script type="text/JavaScript" src="../static/js/moment.js"></script>
+<script src="/static/js/summernote.js"></script>
+<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
+<script src="/static/js/textRedactor.js"></script>
+<link href="/static/css/summernote.css" rel="stylesheet">
+<script src="/static/js/date_range.js"></script>
+</body>
+</html>

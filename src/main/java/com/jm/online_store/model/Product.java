@@ -48,6 +48,8 @@ public class Product {
     private Description descriptions;
     @NonNull
     private String productType;
+    @Column(name = "product_img")
+    private String productImg;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     //TODO @JsonBackReference пока не удаляю, возможно придется менять обратно
@@ -55,10 +57,17 @@ public class Product {
             property = "id")
     private List<ProductInOrder> productInOrders;
 
+    public Product(@NonNull String product, @NonNull Double price, @NonNull int amount) {
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+    }
+
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
         this.product = product;
         this.price = price;
         this.amount = amount;
         this.rating = rating;
     }
+
 }
