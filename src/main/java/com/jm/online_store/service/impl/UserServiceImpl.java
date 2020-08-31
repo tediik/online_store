@@ -72,6 +72,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+    @Override
+    public Optional<User> findByFirstName(String FirstName) {
+        return userRepository.findByFirstName(FirstName);
+    }
+
 
     @Override
     public boolean isExist(String email) {
@@ -88,17 +93,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void addUser(@NotNull User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
-            throw new InvalidEmailException();
-        }
-        if (isExist(user.getEmail())) {
-            throw new EmailAlreadyExistsException();
-        }
-        if (!CollectionUtils.isEmpty(user.getRoles())) {
-            user.setRoles(persistRoles(user.getRoles()));
-        }
-        if (user.getProfilePicture().isEmpty()) {
-            user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+        if (user.getEmail() != null) {
+            if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+                throw new InvalidEmailException();
+            }
+            if (isExist(user.getEmail())) {
+                throw new EmailAlreadyExistsException();
+            }
+            if (!CollectionUtils.isEmpty(user.getRoles())) {
+                user.setRoles(persistRoles(user.getRoles()));
+            }
+            if (user.getProfilePicture().isEmpty()) {
+                user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+            }
         }
         userRepository.save(user);
     }

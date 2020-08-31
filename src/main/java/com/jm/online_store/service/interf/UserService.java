@@ -24,6 +24,8 @@ public interface UserService {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByFirstName(String FirstName);
+
     boolean isExist(String email);
 
     void regNewAccount(User user);

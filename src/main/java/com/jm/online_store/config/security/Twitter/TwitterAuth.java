@@ -11,11 +11,10 @@ import com.github.scribejava.core.oauth.OAuth10aService;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,28 +27,33 @@ import java.util.concurrent.ExecutionException;
 /**
  * Класс OAuth 1.0 авторизации через Twitter API
  */
-@NoArgsConstructor
-@AllArgsConstructor
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TwitterAuth {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final RoleService roleService;
 
-    @Autowired
-    private RoleService roleService;
+    @Value("${spring.server.url}")
+    private String serverUrl;
 
-    public static final String PROTECTED_RESOURCE_URL = "https://api.twitter.com/1.1/account/verify_credentials.json";
+    @Value("${spring.oauth1a.twitter.public_key}")
+    private String publicKey;
+
+    @Value("${spring.oauth1a.twitter.secret_key}")
+    private String secretKey;
+
+    @Value("${spring.oauth1a.twitter.resource_url}")
+    private String resourceUrl;
+
     private OAuth1RequestToken requestToken;
     private OAuth10aService service;
 
-    @SuppressWarnings("PMD.SystemPrintln")
     public String twitterAuth() throws InterruptedException, ExecutionException, IOException {
-        service = new ServiceBuilder("BiCDQUyByE72SHyBkqJPe1wAi")
-                .apiSecret("KlJocOjZNnLodCExCNfsQbaz3utxjhOoc7rFuUwncgolAgQnEA")
-                .callback("http://localhost:9999" + "/oauthTwitter")
+        service = new ServiceBuilder(publicKey)
+                .apiSecret(secretKey)
+                .callback(serverUrl + "/oauthTwitter")
                 .build(TwitterApi.instance());
-
         // Obtain the Request Token
         log.debug("Fetching the Request Token...");
         requestToken = service.getRequestToken();
@@ -57,20 +61,17 @@ public class TwitterAuth {
     }
 
     public void getAccessToken(String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
-        final String oauthVerifier = oauth_verifier;
-
         // Trade the Request Token and Verifier for the Access Token
         log.debug("Trading the Request Token for an Access Token...");
-        final OAuth1AccessToken accessToken = service.getAccessToken(requestToken, oauthVerifier);
+        final OAuth1AccessToken accessToken = service.getAccessToken(requestToken, oauth_verifier);
 
         // Now let's go and ask for a protected resource!
         log.debug("Now we're going to access a protected resource...");
-        final OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
+        final OAuthRequest request = new OAuthRequest(Verb.GET, resourceUrl);
         service.signRequest(accessToken, request);
         String userFromTwitter = service.execute(request).getBody();
         log.debug(userFromTwitter);
 
-        String email = "test@example.ru";
         String name = null;
         String screen_name = null;
         String description = null;
@@ -97,13 +98,12 @@ public class TwitterAuth {
         }
 
         User newUser = new User();
-        newUser.setEmail(email);
         newUser.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
         newUser.setFirstName(name);
         newUser.setLastName(screen_name);
         newUser.setPassword("1");
 
-        User user = userService.findByEmail(email).orElseGet(() -> {
+        User user = userService.findByFirstName(name).orElseGet(() -> {
             userService.addUser(newUser);
             return newUser;
         });
