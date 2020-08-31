@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import org.hibernate.annotations.Type;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,15 +34,17 @@ public class Stock {
 
     @Column(name = "stock_title")
     private String stockTitle;
-
-    @Type(type = "text")
+    
     @Column(name = "stock_text")
+    @Type(type = "text")
     private String stockText;
 
     @Column
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate startDate;
 
     @Column
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)

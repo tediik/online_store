@@ -1,6 +1,8 @@
 package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -67,7 +69,7 @@ public class User implements UserDetails {
 
     private LocalDate registerDate;
 
-    private String profilePicture;
+    private String profilePicture="";
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
@@ -109,7 +111,9 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    //TODO @JsonBackReference  пока не удаляю, возможно придется менять обратно
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id")
     private Set<Order> orders;
 
     public User() {

@@ -11,8 +11,17 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css" >
 
     <title></title>
 </head>
@@ -20,8 +29,6 @@
 <script>
 
     jQuery(document).ready(function ($) {
-        $('#mega-1').dcVerticalMegaMenu();
-
         $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
             $("#openNewRegistrationModal form")[0].reset();//reset modal fields
             $("#openNewRegistrationModal .error").hide();//reset error spans
@@ -32,36 +39,6 @@
 
 <body>
 <header th:insert="/blocks/mainHeader :: header"></header>
-
-<!--<header>-->
-
-<!--    <div> <a th:href="@{/}"> Logo place </a> </div>-->
-
-<!--    &lt;!&ndash; Search &ndash;&gt;-->
-<!--    <form class="form-inline">-->
-<!--        <div class="md-form my-0">-->
-<!--            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">-->
-<!--        </div>-->
-<!--    </form>-->
-
-<!--    &lt;!&ndash; Customer service &ndash;&gt;-->
-<!--    <a class="p-2 text-dark" href="/news">Новости</a>-->
-<!--    <div class="btn customerbutton">-->
-<!--        <a th:href="@{/customer}"> Кабинет покупателя </a>-->
-<!--    </div>-->
-<!--    &lt;!&ndash; Registration &ndash;&gt;-->
-<!--    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn registrationbutton" data-toggle="modal" data-target="#openNewRegistrationModal">-->
-<!--        <a> Регистрация </a>-->
-<!--    </div>-->
-<!--    &lt;!&ndash; Login &ndash;&gt;-->
-<!--    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER')" class="btn loginbutton">-->
-<!--        <a th:href="@{/login}"> Войти </a>-->
-<!--    </div>-->
-<!--    <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn loginbutton">-->
-<!--        <a th:href="@{/logout}"> Выйти </a>-->
-<!--    </div>-->
-
-<!--</header>-->
 
 <div id="openNewRegistrationModal" class="modal">
     <div class="modal-dialog">
@@ -125,12 +102,12 @@
 <main role="main" class="container">
     <div class="row">
         <div class="col-2">
-            <ul class="navbar-nav mr-auto menunavbar" aria-orientation="vertical" id="siteMenu">
+            <ul class="navbar-nav mr-auto" aria-orientation="vertical" id="siteMenu">
                 <!-- menu from mainPage.js -->
             </ul>
         </div>
-        <div class="col-5">
-            <a><h4>Акции</h4></a>
+        <div class="col-5 promo">
+            <span><h4>Акции</h4></span><a class="text-secondary" href="/manager/stocks">(все акции)</a>
             <div id="myCarousel" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -144,11 +121,10 @@
                              alt="First slide">
                         <div class="container">
                             <div class="carousel-caption text-left">
-                                <h1>Example headline.</h1>
+                                <h4>Example headline.</h4>
                                 <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
-                                    porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id
-                                    elit.</p>
-                                <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
+                                    porta gravida at eget metus.</p>
+                                <p><a class="btn btn-outline-secondary promobtn" href="#" role="button">Sign up today</a></p>
                             </div>
                         </div>
                     </div>
@@ -158,11 +134,10 @@
                              alt="Second slide">
                         <div class="container">
                             <div class="carousel-caption">
-                                <h1>Another example headline.</h1>
-                                <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
-                                    porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id
-                                    elit.</p>
-                                <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                                <h4>Another example headline.</h4>
+                                <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Nullam id dolor id nibh
+                                    ultricies vehicula ut id elit.</p>
+                                <p><a class="btn btn-secondary" href="#" role="button">Learn more</a></p>
                             </div>
                         </div>
                     </div>
@@ -172,11 +147,11 @@
                              alt="Third slide">
                         <div class="container">
                             <div class="carousel-caption text-right">
-                                <h1>One more for good measure.</h1>
+                                <h4>One more for good measure.</h4>
                                 <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
                                     porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id
                                     elit.</p>
-                                <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
+                                <p><a class="btn btn-primary" href="#" role="button">Browse gallery</a></p>
                             </div>
                         </div>
                     </div>
@@ -191,7 +166,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-5">
+        <div class="col-4 news">
             <a><h4>Новости</h4></a>
         </div>
     </div>
@@ -209,11 +184,7 @@
 
 <!-- Optional JavaScript -->
 <script src="../static/js/mainPage.js"></script>
-<script src="/static/js/jquery.hoverIntent.minified.js"> </script>
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="/static/js/jquery.hoverIntent.minified.js"></script>
+
 </body>
 </html>
