@@ -23,32 +23,13 @@
     <script src="/static/js/jquery.hoverIntent.minified.js"> </script>
     <title></title>
 </head>
-
-<!--<script>
-
-    jQuery(document).ready(function ($) {
-        $('#mega-1').dcVerticalMegaMenu();
-
-        $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
-            $("#openNewRegistrationModal form")[0].reset();//reset modal fields
-            $("#openNewRegistrationModal .error").hide();//reset error spans
-        });
-
-        $('#user-email').text($.cookie('email'));
-    });
-
-</script>-->
-
-
 <body>
 
 <header>
 
     <div> <a th:href="@{/}"> Logo place </a> </div>
 
-    <div>
-        <a id="user-email"></a>
-    </div>
+    <div id="user-email"></div>
 
     <!-- Search -->
     <form class="form-inline">
