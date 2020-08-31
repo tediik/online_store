@@ -11,7 +11,6 @@ import com.github.scribejava.core.oauth.OAuth10aService;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
