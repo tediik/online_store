@@ -134,6 +134,13 @@ public class User implements UserDetails {
         this.roles = roleSet;
     }
 
+    public User(String password, String firstName, String lastName, Set<Role> roleSet) {
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.roles = roleSet;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

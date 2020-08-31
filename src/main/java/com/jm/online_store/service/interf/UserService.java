@@ -22,7 +22,9 @@ public interface UserService {
 
     void updateUserAdminPanel(User user);
 
-    Optional<User> findByEmail(String username);
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByFirstName(String FirstName);
 
     boolean isExist(String email);
 
