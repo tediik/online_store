@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -113,6 +114,7 @@ public class User implements UserDetails {
     private Set<Order> orders;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference(value = "user-sharedStock")
     private Set<SharedStock> sharedStocks;
 
     public User() {
