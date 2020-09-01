@@ -5,19 +5,24 @@
 let stockId = 1
 const sharedStockApiUrl = "/api/sharedStock/"
 const stockApiUrl = "/api/stock/"
+let urlToShare = document.location.href
 let myHeaders = new Headers()
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
+
+document.getElementById('shareButtons').innerHTML = VK.Share.button(urlToShare, {
+    type: 'custom ',
+    text: '<button type="button" class="btn btn-secondary" id="vkShareButton">Share on VK</button>'
+});
 /**
  * function that handles facebook share button.
  * If page was shared lunches function that add row into SharedStock
  */
-$('#fbShareButton').click(function() {
+$('#fbShareButton').click(function () {
     FB.ui({
         method: 'feed',
         link: 'https://www.java-mentor.com/',
-        // caption: 'An example caption',
-    }, function(response){
+    }, function (response) {
         if (response === null) {
             console.log('was not shared');
         } else {
@@ -26,6 +31,10 @@ $('#fbShareButton').click(function() {
         }
     });
 });
+
+$('#vk_share_button').click(function () {
+    handleShareButton("vk")
+})
 
 /**
  * Сделал для теста что бы каждый раз не публиковать акцию у себя на странице
