@@ -179,7 +179,9 @@ public class UserServiceImpl implements UserService {
     public void changeUsersMail(User user, String newMail) {
 
         user.setEmail(newMail);
-
+        if (isExist(user.getEmail())) {
+            throw new EmailAlreadyExistsException();
+        }
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
 
