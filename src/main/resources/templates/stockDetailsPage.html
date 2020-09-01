@@ -10,15 +10,16 @@
     <meta property="og:title" content="JM Online Store"/>
     <meta property="og:description" content="The best online store!"/>
     <!--    <meta property="og:image"         content="https://www.your-domain.com/path/image.jpg" />-->
+    <script type="text/javascript" src="https://vk.com/js/api/share.js?93" charset="windows-1251"></script>
 </head>
 <body>
 <script>
-    window.fbAsyncInit = function() {
+    window.fbAsyncInit = function () {
         FB.init({
-            appId            : '933203153853320',
-            autoLogAppEvents : true,
-            xfbml            : true,
-            version          : 'v8.0'
+            appId: '933203153853320',
+            autoLogAppEvents: true,
+            xfbml: true,
+            version: 'v8.0'
         });
     };
 </script>
@@ -41,11 +42,21 @@
             <div class="alert alert-info mt-2">
                 <h3 id="stockHeader"></h3>
                 <p id="stockBody"></p>
-<!--                <div class="fb-share-button"-->
-<!--                     data-href="https://www.java-mentor.com/"-->
-<!--                     data-layout="button_count">-->
-<!--                </div>-->
                 <button class="btn-sm btn-primary btn-sm" id="fbShareButton">Share on Facebook</button>
+                <div id="vk_share_button">
+
+                </div>
+                <div class="btn-group btn-group-sm" role="group" aria-label="...">
+
+                </div>
+                <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group" id="shareButtons">
+                        <button type="button" class="btn btn-secondary">Share on Facebook</button>
+                        <button type="button" class="btn btn-secondary">2</button>
+                        <button type="button" class="btn btn-secondary">3</button>
+                        <button type="button" class="btn btn-secondary">4</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
