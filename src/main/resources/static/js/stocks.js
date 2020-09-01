@@ -1,9 +1,39 @@
+let sharedStockApiUrl = "/api/sharedStock"
+let myHeaders = new Headers()
+myHeaders.append('Content-type', 'application/json; charset=UTF-8')
+
 /*Вывод акций*/
 $(document).ready(function () {
-    create();
+    fetch(sharedStockApiUrl, {headers: myHeaders}).then(function (response) {
+        if (response.ok) {
+            response.json().then(sharedStocks => create(sharedStocks))
+        }
+    })
 });
 
-function create() {
+function sort() {
+    let nodeList = document.querySelectorAll('li');
+    let itemsArray = [];
+    let parent = nodeList[0].parentNode;
+    for (let i = 0; i < nodeList.length; i++) {
+        itemsArray.push(parent.removeChild(nodeList[i]));
+    }
+    itemsArray.sort(function (nodeA, nodeB) {
+        let textA = nodeA.querySelector('div:nth-child(2)').textContent;
+        let textB = nodeB.querySelector('div:nth-child(2)').textContent;
+        let numberA = parseInt(textA);
+        let numberB = parseInt(textB);
+        if (numberA < numberB) return 1;
+        if (numberA > numberB) return -1;
+        return 0;
+    })
+        .forEach(function (node) {
+            parent.appendChild(node)
+        });
+}
+
+function create(sharedStocks) {
+    let sharedStocksQuantity = sharedStocks.length
     $("#stocksDiv").empty();
     moment.locale('ru');
     $.ajax("/rest/allStocks", {
@@ -11,6 +41,7 @@ function create() {
         success: function (data) {
             const stocks = JSON.parse(JSON.stringify(data));
             for (let i = 0; i < stocks.length; i++) {
+                let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 10)
                 let out = $("<li>").attr("id", stocks[i].id).attr("data-filter", stocks[i].stockType);
                 let endDate = stocks[i].endDate
                 if (endDate === null) {
@@ -28,6 +59,7 @@ function create() {
                                 <div class=\"card-body\">
                                     <h3 class='card-title'>${stocks[i].stockTitle}</h3>
                                     <p class=\"card-text\">${stocks[i].stockText}</p>
+                                    <p id="rating">Рейтинг: ${rating}</p>
                                     <p>Срок проведения акции: </p>
                                     <div class=\"card-date\">
                                          с ${moment(stocks[i].startDate).format("DD MMM")}
