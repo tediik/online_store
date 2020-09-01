@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.service.interf.MailSenderService;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -12,8 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@Setter
-@Getter
+@Data
 @RequiredArgsConstructor
 public class MailSenderServiceImpl implements MailSenderService {
 
