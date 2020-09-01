@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -14,10 +15,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css" >
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 
     <script src="/static/js/mainPage.js"></script>
-    <script src="/static/js/jquery.hoverIntent.minified.js"> </script>
+    <script src="/static/js/jquery.hoverIntent.minified.js"></script>
     <title>Регистрация</title>
 </head>
 <body>
@@ -25,32 +26,24 @@
     <h1>Регистрация</h1>
     <form action="/registration" method="POST" enctype="utf8">
         <div class="form-group text-center font-weight-bold">
-            <label for="email">firstName</label>
-            <input th:value="${name}" name="firstName"
-                    value=""
-                    id="firstName"
-                    placeholder="firstName"
-                    class="form-control"/>
-        </div>
-        <div class="form-group text-center font-weight-bold">
             <label for="email">Email</label>
-            <input  name="email"
-                    value=""
-                    id="email"
-                    placeholder="email"
-                    type="email"
-                    autofocus
-                    class="form-control"/>
+            <input name="email"
+                   value=""
+                   id="email"
+                   placeholder="email"
+                   type="email"
+                   autofocus
+                   class="form-control"/>
         </div>
         <div class="form-group text-center font-weight-bold">
             <label for="password">Пароль</label>
-            <input  name="password"
-                    value=""
-                    id="password"
-                    placeholder="password"
-                    type="password"
-                    autofocus
-                    class="form-control"/>
+            <input name="password"
+                   value=""
+                   id="password"
+                   placeholder="password"
+                   type="password"
+                   autofocus
+                   class="form-control"/>
         </div>
         <div class="form-group text-center font-weight-bold">
             <label for="passwordConfirm">Повторите пароль</label>

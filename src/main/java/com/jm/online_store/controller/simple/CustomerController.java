@@ -71,7 +71,7 @@ public class CustomerController {
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("message", "Pls, double check previous password!");
 
-            return "redirect:/customer/profile" ;
+            return "redirect:/customer/profile";
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userService.updateUser(user);
@@ -114,7 +114,7 @@ public class CustomerController {
 
     @PostMapping("/changemail")
     public String changeMailReq(Authentication auth, Model model,
-                              @RequestParam String newMail) {
+                                @RequestParam String newMail) {
         User user = (User) auth.getPrincipal();
         userService.changeUsersMail(user, newMail);
         model.addAttribute("message", "Please check your email!");
@@ -122,7 +122,7 @@ public class CustomerController {
     }
 
     @GetMapping("/activatenewmail/{token}")
-    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request){
+    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateNewUsersMail(token, request);
         model.addAttribute("message", "Email address changes successfully");
         return "redirect:/customer";

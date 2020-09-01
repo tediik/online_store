@@ -59,7 +59,7 @@ public class TwitterAuth {
         return service.getAuthorizationUrl(requestToken);
     }
 
-    public User getAccessToken(String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
+    public void getAccessToken(String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
         // Trade the Request Token and Verifier for the Access Token
         log.debug("Trading the Request Token for an Access Token...");
         final OAuth1AccessToken accessToken = service.getAccessToken(requestToken, oauth_verifier);
@@ -82,34 +82,6 @@ public class TwitterAuth {
             if (pair.contains("name")) {
                 name = pair.substring(pair.indexOf(":") + 2, pair.length() - 2);
             }
-            if (pair.contains("screen_name")) {
-                screen_name = pair.substring(pair.indexOf(":") + 2, pair.length() - 1);
-            }
-            if (pair.contains("description")) {
-                description = pair.substring(pair.indexOf(":") + 2, pair.length() - 1);
-            }
-            if (pair.contains("location")) {
-                location = pair.substring(pair.indexOf(":") + 2, pair.length() - 1);
-            }
-            if (pair.contains("profile_image_url")) {
-                profile_image_url = pair.substring(pair.indexOf(":") + 2, pair.length() - 1);
-            }
         }
-
-        User newUser = new User();
-        newUser.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
-        newUser.setFirstName(name);
-        newUser.setLastName(screen_name);
-        newUser.setPassword("1");
-
-        User user = userService.findByFirstName(name).orElseGet(() -> {
-            userService.addUser(newUser);
-            return newUser;
-        });
-
-        Authentication customAuthentication = new UsernamePasswordAuthenticationToken(
-                user, null, user.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(customAuthentication);
-        return user;
     }
 }

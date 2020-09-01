@@ -2,7 +2,6 @@ package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.config.security.Twitter.TwitterAuth;
 import com.jm.online_store.config.security.odnoklassniki.OAuth2Odnoklassniki;
-import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @AllArgsConstructor
@@ -31,11 +29,8 @@ public class LoginController {
     }
 
     @GetMapping("/oauthTwitter")
-    public String oAuthTwitter(@RequestParam String oauth_verifier,  Model model) throws InterruptedException, ExecutionException, IOException {
+    public String oAuthTwitter(@RequestParam String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
         twitterAuth.getAccessToken(oauth_verifier);
-        Optional<User> user = userService.findByFirstName("Yuri7864328");
-        System.out.println(user);
-
         return "TwitterRegistrationPage";
     }
 
