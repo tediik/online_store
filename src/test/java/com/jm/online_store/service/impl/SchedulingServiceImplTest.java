@@ -5,6 +5,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.service.interf.MailSenderService;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -20,19 +21,16 @@ import static org.mockito.Mockito.verify;
 /**
  * Модульное, функциональное тестирование (JUnit5 + Mockito)
  */
+@Slf4j
 @Service
 class SchedulingServiceImplTest {
-    @Mock
-    private MailSenderService mailSenderServiceMock;
+
+//    private MailSenderService mailSenderServiceMock;
 //    private StockRepository stockRepository;
 //    private String dayOfWeek = "tuesday";
-    private User userToSendStock;
-    private Stock currentAndFutureStocksMock;
+//    private User userToSendStock;
+//    private Stock currentAndFutureStocksMock;
 
-    public SchedulingServiceImplTest() {
-        MockitoAnnotations.initMocks(this);
-
-    }
 
 //    @BeforeTestClass
 //    public void beforeTests() {
@@ -41,12 +39,16 @@ class SchedulingServiceImplTest {
 ////        mailSenderServiceMock = Mockito.mock(MailSenderService.class);
 //    }
 
-   @Test
-    public void sendStocksToCustomers() {
-       String messageBody = "title1" + "\n" + "text1";
-       String messageSubject = "Внимание Акции!!!";
-       String EMAIL_TYPE = "Stock sender";
-       mailSenderServiceMock.send("fresh81@yandex.ru", messageSubject, messageBody, EMAIL_TYPE);
+    @Test
+    public void sendStocksToCustomerTest() throws InterruptedException {
+        String messageBody = "title1" + "\n" + "text1";
+        String messageSubject = "Внимание Акции!!!";
+        String EMAIL_TYPE = "Stock sender";
+        log.info("before send");
+        MailSenderService mailSenderServiceMock = Mockito.mock(MailSenderService.class);
+        mailSenderServiceMock.send("fresh81@yandex.ru", messageSubject, messageBody, EMAIL_TYPE);
+        Thread.sleep(6000);
+        log.info("after send");
     }
 
 //    @Test
