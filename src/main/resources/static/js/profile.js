@@ -1,3 +1,10 @@
+jQuery(document).ready(function ($) {
+    $("#openNewMailModal").on('hidden.bs.modal', function (e) {
+        $("#openNewMailModal form")[0].reset();//reset modal fields
+        $("#openNewMailModal .error").hide();//reset error spans
+    });
+});
+
 function changeMail() {
     var formData = $('form').serialize();
     $.ajax({
