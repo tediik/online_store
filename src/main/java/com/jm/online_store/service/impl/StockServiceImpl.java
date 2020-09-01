@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.service.interf.StockService;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -22,8 +22,11 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Optional<Stock> findStockById(Long id) {
-        return stockRepository.findById(id);
+    public Stock findStockById(Long id) {
+        if (stockRepository.findById(id).isEmpty()){
+            throw new StockNotFoundException();
+        }
+        return stockRepository.findById(id).get();
     }
 
     @Override
@@ -41,4 +44,6 @@ public class StockServiceImpl implements StockService {
     public void deleteStockById(Long id) {
         stockRepository.deleteStockById(id);
     }
+
+
 }
