@@ -1,7 +1,9 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.service.interf.MailSenderService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@Setter
+@Getter
 @RequiredArgsConstructor
 public class MailSenderServiceImpl implements MailSenderService {
 
-    private final JavaMailSender mailSender;
+    private JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
     private String username;
