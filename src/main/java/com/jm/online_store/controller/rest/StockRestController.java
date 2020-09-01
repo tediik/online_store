@@ -6,6 +6,7 @@ import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,8 @@ public class StockRestController {
         } catch (StockNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(requestedStock);
+//        return ResponseEntity.ok(requestedStock);
+        return new ResponseEntity<>(requestedStock, HttpStatus.OK);
     }
 
 }
