@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "stocks")
 public class Stock {
 
@@ -53,7 +55,7 @@ public class Stock {
     private StockType stockType;
 
     @OneToMany(mappedBy = "stock")
-    private Set<SharedStocks> sharedStocks;
+    private Set<SharedStock> sharedStocks;
 
     public enum StockType {
         CURRENT,

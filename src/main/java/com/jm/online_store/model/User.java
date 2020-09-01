@@ -68,7 +68,7 @@ public class User implements UserDetails {
 
     private LocalDate registerDate;
 
-    private String profilePicture="";
+    private String profilePicture = "";
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
@@ -113,7 +113,7 @@ public class User implements UserDetails {
     private Set<Order> orders;
 
     @OneToMany(mappedBy = "user")
-    private Set<SharedStocks> sharedStocks;
+    private Set<SharedStock> sharedStocks;
 
     public User() {
         registerDate = LocalDate.now();
@@ -175,21 +175,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    public enum Gender {
-        MAN,
-        WOMAN
-    }
-
-    public enum DayOfWeekForStockSend {
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -203,5 +188,20 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, password);
+    }
+
+    public enum Gender {
+        MAN,
+        WOMAN
+    }
+
+    public enum DayOfWeekForStockSend {
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY
     }
 }
