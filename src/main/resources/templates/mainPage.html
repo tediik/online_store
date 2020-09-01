@@ -45,15 +45,15 @@
         <a th:href="@{/customer}" id="role-redirect"> Кабинет покупателя </a>
     </div>
     <!-- Registration -->
-    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn registrationbutton"
+    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER') "class="btn registrationbutton"
          data-toggle="modal" data-target="#openNewRegistrationModal">
         <a> Регистрация </a>
     </div>
     <!-- Login -->
-    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER')" class="btn loginbutton">
+    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn loginbutton">
         <a th:href="@{/login}"> Войти </a>
     </div>
-    <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn loginbutton">
+    <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn loginbutton">
         <a th:href="@{/logout}"> Выйти </a>
     </div>
 
