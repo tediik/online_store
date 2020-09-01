@@ -173,7 +173,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:action="@{/customer/changemail}" method="post" class="form-group">
+                                                    <form action="/customer/changemail" method="POST" enctype="utf8">
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="new_mail">Введите новый адрес электронной почты</label>
                                                             <input type="email"
@@ -181,7 +181,10 @@
                                                                    name="newMail"
                                                                    class="form-control" required/>
                                                         </div>
-                                                        <button type="submit" class="btn btn-primary btn-sm btn-block" onclick="successChangeMail()">Подтвердить</button>
+                                                        <div>
+                                                            <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-sm btn-block" onclick="changeMail()">Подтвердить</button>
                                                     </form>
                                                 </div>
                                             </div>
