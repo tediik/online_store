@@ -1,6 +1,10 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,8 +19,12 @@ import javax.persistence.Table;
 
 @Entity
 @Data
-@Table(name = "shared_stoks")
-public class SharedStocks {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "shared_stocks")
+public class SharedStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
