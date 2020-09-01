@@ -127,4 +127,9 @@ public class CustomerController {
         model.addAttribute("message", "Email address changes successfully");
         return "redirect:/customer";
     }
+
+    @GetMapping("/stockDetails")
+    public String showStockDetailsPage(){
+        return "stockDetailsPage";
+    }
 }
