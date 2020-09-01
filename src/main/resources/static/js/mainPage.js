@@ -16,7 +16,7 @@ $(document).ready(function ($) {
 
     /*логин под админом*/
     if (roles.includes("ADMIN")) {
-        //document.getElementById("role-redirect").innerHTML = "Профиль";
+        $('#role-redirect').text("Профиль");
         $('#role-redirect').click(function () {
             $('#role-redirect').attr("href", "http://localhost:9999/customer/profile");
         });
@@ -29,6 +29,7 @@ $(document).ready(function ($) {
 
     /*логин под менеджером*/
     if (roles.includes("MANAGER")) {
+        $('#role-redirect').text("Профиль");
         $('#role-redirect').click(function () {
             $('#role-redirect').attr("href", "http://localhost:9999/customer/profile");
         });

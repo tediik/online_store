@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.StringJoiner;
 
+/**
+ * Перехватчик для получения имейла и ролей залогиненного пользователя из секьюрного контекста.
+ * Оба значения передаются в js-файл через куки.
+ */
 @Component
 public class CurrentUserInterceptor implements HandlerInterceptor {
     @Override
