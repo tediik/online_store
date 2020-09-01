@@ -28,6 +28,10 @@ html {
     margin-left: 20rem;
 }
 
+.formSearch {
+    margin-right: 28.9rem;
+}
+
 .dropdownbtn {
     min-width: 218px;
     font-size: 1rem;
@@ -135,7 +139,9 @@ html {
 }
 
 .productName {
-    margin: 1rem;
+    margin-left: -.8rem;
+    margin-right: -1rem;
+    padding-bottom: 1rem;
 }
 
 .productImg {

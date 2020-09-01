@@ -42,12 +42,11 @@ function fillCategories(data) {
     for (let key in data) {
         let item = `<li class="nav-item dropright">
                 <a class="btn btn-outline-light dropdown-toggle text-secondary font-weight-normal dropdownbtn" 
-                    href=${key} id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${key}</a>
+                    href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${key}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
         let subItem = ``;
-        for (let value of data[key]) {
-            let toLatin = util.Transliteration.сyrillicToLatin(${value});
-            subItem += `<a class="dropdown-item" href=${toLatin}>${value}</a> `;
+        for (let value = 0; value < data[key].length; value += 2) {
+            subItem += `<a class="dropdown-item" href="/categories/${data[key][value + 1]}">${data[key][value]}</a> `;
         }
         item += subItem;
         $(siteMenu).append(item);
@@ -68,8 +67,8 @@ function fillSomeProducts(data) {
                             <text x="25%" y="50%" fill="#eceeef">Product img</text></svg>
                     </div>
                     <div class="col p-4 d-flex flex-column position-static">
-                        <p class="card-text mb-auto">${data[key].product}</p>
-                        <a class="btn btn-sm btn-outline-light producthref" href="${data[key].id}" role="button">View details &raquo;</a>
+                        <p class="card-text mb-auto productName">${data[key].product}</p>
+                        <a class="btn btn-sm btn-outline-light producthref" href="/products/${data[key].id}" role="button">Подробнее &raquo;</a>
                     </div>
                 </div>
             </div>`;

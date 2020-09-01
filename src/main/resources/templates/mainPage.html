@@ -1,33 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Интернет магазин техники</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- Custom styles for this template -->
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
-
-    <title></title>
 </head>
 
 <script>
-
     jQuery(document).ready(function ($) {
         $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
             $("#openNewRegistrationModal form")[0].reset();//reset modal fields
             $("#openNewRegistrationModal .error").hide();//reset error spans
         });
     });
-
 </script>
 
 <body>
@@ -99,6 +95,7 @@
                 <!-- menu from mainPage.js -->
             </ul>
         </div>
+        <!-- Carousel -->
         <div class="col-5 promo">
             <h4 class="my-0 font-weight-normal">Акции / <a class="text-secondary" href="/manager/stocks">(все акции)</a>
             </h4>
@@ -161,10 +158,12 @@
                 </a>
             </div>
         </div>
+        <!-- News card -->
         <div class="col-4 news">
             <div class="card mb-4 shadow-sm">
                 <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Новости / <a class="text-secondary" href="/news">(все новости)</a></h4>
+                    <h4 class="my-0 font-weight-normal">Новости / <a class="text-secondary" href="/news">(все
+                        новости)</a></h4>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title pricing-card-title my-0 font-weight-normal">breaking news</h5>
@@ -174,11 +173,11 @@
                         <li>Email support</li>
                         <li>Help center access</li>
                     </ul>
-                    <!--                    <button type="button" class="btn btn-block btn-outline-primary">Sign up for free</button>-->
                 </div>
             </div>
         </div>
     </div>
+    <!-- Products -->
     <div class="row">
         <div class="col-2">
         </div>
@@ -189,16 +188,14 @@
             </div>
         </div>
     </div>
-    </div>
-
 </main><!-- /.container -->
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
 <!-- Optional JavaScript -->
 <script src="../static/js/mainPage.js"></script>
 <script src="/static/js/jquery.hoverIntent.minified.js"></script>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
