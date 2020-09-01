@@ -39,7 +39,7 @@ html {
 /*    min-width: 200px;*/
 /*}*/
 .promo {
-    margin-left: 1rem;
+    margin-left: 2.4rem;
 }
 
 /* CUSTOMIZE THE CAROUSEL
@@ -143,6 +143,9 @@ html {
     margin-left: auto;
 }
 
+.producthref {
+    background: #ebc493;
+}
 /*header{*/
 /*    background: #deb887;*/
 /*    color: white;*/

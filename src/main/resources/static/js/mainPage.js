@@ -46,7 +46,8 @@ function fillCategories(data) {
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
         let subItem = ``;
         for (let value of data[key]) {
-            subItem += `<a class="dropdown-item" href=${value}>${value}</a> `;
+            let toLatin = util.Transliteration.сyrillicToLatin(${value});
+            subItem += `<a class="dropdown-item" href=${toLatin}>${value}</a> `;
         }
         item += subItem;
         $(siteMenu).append(item);
@@ -68,7 +69,7 @@ function fillSomeProducts(data) {
                     </div>
                     <div class="col p-4 d-flex flex-column position-static">
                         <p class="card-text mb-auto">${data[key].product}</p>
-                        <a class="btn btn-sm btn-secondary" href="${data[key].id}" role="button">View details &raquo;</a>
+                        <a class="btn btn-sm btn-outline-light producthref" href="${data[key].id}" role="button">View details &raquo;</a>
                     </div>
                 </div>
             </div>`;
