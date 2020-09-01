@@ -6,6 +6,7 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
+import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
@@ -16,6 +17,7 @@ import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
@@ -30,6 +32,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -53,19 +56,21 @@ public class DataInitializer {
     private final ProductInOrderService productInOrderService;
     private final BasketService basketService;
     private final StockService stockService;
+    private final SharedStockService sharedStockService;
 
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct
+//    @PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
         productInit();
         ordersInit();
         stockInit();
+        sharedStockInit();
     }
 
     /**
@@ -358,5 +363,24 @@ public class DataInitializer {
         stockService.addStock(firstStock);
         stockService.addStock(secondStock);
         stockService.addStock(thirdStock);
+    }
+
+    public void sharedStockInit(){
+        String[] socialNetworkNames = {"facebook", "vk", "twitter"};
+        List<Stock> stocks = stockService.findAll();
+        List<User> users = userService.findAll();
+        Random random = new Random();
+        for (Stock stock : stocks){
+            for (User user : users){
+                long generatedLongForStock = 1 + (long) (Math.random() * ((stocks.size() + 1) - 0));
+                SharedStock sharedStock = SharedStock.builder()
+                        .user(user)
+                        .stock(stockService.findStockById(generatedLongForStock))
+                        .socialNetworkName(socialNetworkNames[random.nextInt(socialNetworkNames.length)])
+                        .build();
+                sharedStockService.addSharedStock(sharedStock);
+            }
+        }
+
     }
 }
