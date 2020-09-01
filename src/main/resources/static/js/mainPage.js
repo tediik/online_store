@@ -18,12 +18,12 @@ $(document).ready(function ($) {
     if (roles.includes("ADMIN")) {
         $('#role-redirect').text("Профиль");
         $('#role-redirect').click(function () {
-            $('#role-redirect').attr("href", "http://localhost:9999/customer/profile");
+            $('#role-redirect').attr("href", "/customer/profile");
         });
         $('#profile-favourite, #profile-orders, #profile-news, #profile-promotion').hide();
         document.getElementById("profile-main-link").innerHTML = "Админка";
         $('#profile-main-link').click(function () {
-            $('#profile-main-link').attr("href", "http://localhost:9999/admin");
+            $('#profile-main-link').attr("href", "/admin");
         });
     }
 
@@ -31,18 +31,14 @@ $(document).ready(function ($) {
     if (roles.includes("MANAGER")) {
         $('#role-redirect').text("Профиль");
         $('#role-redirect').click(function () {
-            $('#role-redirect').attr("href", "http://localhost:9999/customer/profile");
+            $('#role-redirect').attr("href", "/customer/profile");
         });
         $('#profile-favourite, #profile-orders').hide();
         $('#profile-main-link').click(function () {
-            $('#profile-main-link').attr("href", "http://localhost:9999/manager");
+            $('#profile-main-link').attr("href", "/manager");
         });
     }
 });
-
-function roleBasedRenderPage(e) {
-
-}
 
 function register() {
     $(".alert").html("").hide();
