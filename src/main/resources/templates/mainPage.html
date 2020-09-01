@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -16,10 +17,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css" >
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 
     <script src="/static/js/mainPage.js"></script>
-    <script src="/static/js/jquery.hoverIntent.minified.js"> </script>
+    <script src="/static/js/jquery.hoverIntent.minified.js"></script>
     <title></title>
 </head>
 
@@ -40,7 +41,7 @@
 
 <header>
 
-    <div> <a th:href="@{/}"> Logo place </a> </div>
+    <div><a th:href="@{/}"> Logo place </a></div>
 
     <!-- Search -->
     <form class="form-inline">
@@ -55,7 +56,8 @@
         <a th:href="@{/customer}"> Кабинет покупателя </a>
     </div>
     <!-- Registration -->
-    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn registrationbutton" data-toggle="modal" data-target="#openNewRegistrationModal">
+    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn registrationbutton"
+         data-toggle="modal" data-target="#openNewRegistrationModal">
         <a> Регистрация </a>
     </div>
     <!-- Login -->
@@ -73,34 +75,34 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Регистрация</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">x</span>
                 </button>
             </div>
             <div class="modal-body">
                 <form action="/registration" method="POST" enctype="utf8">
                     <div class="form-group text-center font-weight-bold">
-                    <label for="email">Email</label>
-                        <input  name="email"
-                                value=""
-                                id="email"
-                                placeholder="email"
-                                type="email"
-                                autofocus
-                                class="form-control"/>
+                        <label for="email">Email</label>
+                        <input name="email"
+                               value=""
+                               id="email"
+                               placeholder="email"
+                               type="email"
+                               autofocus
+                               class="form-control"/>
                     </div>
                     <div class="form-group text-center font-weight-bold">
-                    <label for="password">Пароль</label>
-                        <input  name="password"
-                                value=""
-                                id="password"
-                                placeholder="password"
-                                type="password"
-                                autofocus
-                                class="form-control"/>
+                        <label for="password">Пароль</label>
+                        <input name="password"
+                               value=""
+                               id="password"
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
                     </div>
                     <div class="form-group text-center font-weight-bold">
-                    <label for="passwordConfirm">Повторите пароль</label>
+                        <label for="passwordConfirm">Повторите пароль</label>
                         <input name="passwordConfirm"
                                value=""
                                id="passwordConfirm"
@@ -109,17 +111,17 @@
                                autofocus
                                class="form-control"/>
                     </div>
-                       <div>
-                        <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
-                       </div>
-                          <div>
-                           <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
-                          </div>
                     <div>
-                    <span id="notValidEmailError" style="display:none" class="error">Неверный формат электронной почты</span>
+                        <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
                     </div>
-                        <div>
-                    <a onclick="register()" class="btn btn-primary btn-sm btn-block"> submit</a>
+                    <div>
+                        <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
+                    </div>
+                    <div>
+                        <span id="notValidEmailError" style="display:none" class="error">Неверный формат электронной почты</span>
+                    </div>
+                    <div>
+                        <a onclick="register()" class="btn btn-primary btn-sm btn-block"> submit</a>
                     </div>
                 </form>
             </div>
@@ -133,39 +135,54 @@
             <li><a href="#">Смартфоны и гаджеты</a>
                 <ul>
                     <li><a href="#">Смартфоны</a>
-                        <ul><li><a href="#">Смартфоны</a></li>
+                        <ul>
+                            <li><a href="#">Смартфоны</a></li>
                             <li><a href="#">Электронные часы</a></li>
-                        </ul></li>
+                        </ul>
+                    </li>
                     <li><a href="#">Планшеты</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#">Электронные книги</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
-                </ul></li>
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
             <li><a href="#">Компьютеры</a>
                 <ul>
                     <li><a href="#">Компьютеры</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#">Комплектующие</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#">Периферия</a>
-                        <ul><li><a href="#">Menu Link</a></li>
+                        <ul>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
                             <li><a href="#">Menu Link</a></li>
-                        </ul></li>
-                </ul></li></ul>
+                            <li><a href="#">Menu Link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
 
     </div>
 </div>

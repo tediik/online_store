@@ -59,7 +59,7 @@ public class TwitterAuth {
         return service.getAuthorizationUrl(requestToken);
     }
 
-    public void getAccessToken(String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
+    public User getAccessToken(String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
         // Trade the Request Token and Verifier for the Access Token
         log.debug("Trading the Request Token for an Access Token...");
         final OAuth1AccessToken accessToken = service.getAccessToken(requestToken, oauth_verifier);
@@ -110,5 +110,6 @@ public class TwitterAuth {
         Authentication customAuthentication = new UsernamePasswordAuthenticationToken(
                 user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(customAuthentication);
+        return user;
     }
 }

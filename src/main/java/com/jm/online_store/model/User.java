@@ -140,6 +140,10 @@ public class User implements UserDetails {
         this.roles = roleSet;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
