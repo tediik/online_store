@@ -85,5 +85,4 @@ public class SchedulingServiceImpl implements SchedulingService {
         }
         return messageForEmail.toString();
     }
-
 }
