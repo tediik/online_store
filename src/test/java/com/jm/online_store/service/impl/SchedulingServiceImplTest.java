@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.model.User;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.MailSenderService;
@@ -32,9 +33,10 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class SchedulingServiceImplTest {
 
-    @Mock
+    SchedulingServiceImpl schedulingService;
+
     private MailSenderService mailSenderService;
-    @Mock
+
     private UserRepository userRepository;
     @Mock
     private StockRepository stockRepository;
@@ -44,6 +46,8 @@ public class SchedulingServiceImplTest {
 
     @BeforeEach public void initMocks() {
         MockitoAnnotations.initMocks(this);
+        User.DayOfWeekForStockSend dayOfWeek;
+        when(userRepository.findByDayOfWeekForStockSend(dayOfWeek)).thenReturn("WEDNESDAY");
     }
 
     @Test
