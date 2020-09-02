@@ -3,6 +3,7 @@ package com.jm.online_store.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -39,6 +40,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -111,9 +113,6 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    //TODO @JsonBackReference  пока не удаляю, возможно придется менять обратно
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "id")
     private Set<Order> orders;
 
     public User() {
@@ -128,6 +127,13 @@ public class User implements UserDetails {
 
     public User(String email, String password, String firstName, String lastName, Set<Role> roleSet) {
         this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.roles = roleSet;
+    }
+
+    public User(String password, String firstName, String lastName, Set<Role> roleSet) {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
