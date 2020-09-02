@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Data
 public class MailSenderServiceImpl implements MailSenderService {
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
     private String username;

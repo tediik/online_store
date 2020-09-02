@@ -7,12 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -25,6 +22,8 @@ class MailSenderServiceImplTest {
 
     @Autowired
     private MailSenderServiceImpl senderService;
+
+    @Autowired
     private JavaMailSenderImpl javaMailSender;
     private GreenMail greenMail;
 
@@ -32,9 +31,10 @@ class MailSenderServiceImplTest {
     public void before() {
         greenMail = new GreenMail(ServerSetupTest.SMTP);
         greenMail.start();
-        javaMailSender = new JavaMailSenderImpl();
-        javaMailSender.setPort(3025);
+        javaMailSender.setProtocol("smtp");
+        javaMailSender.setPassword(null);
         javaMailSender.setHost("localhost");
+        javaMailSender.setPort(3025);
     }
 
     @Test
@@ -43,7 +43,6 @@ class MailSenderServiceImplTest {
         String to = "test@receiver.com";
         String subject = "test subject";
         String text = "test message";
-        senderService.setMailSender(javaMailSender);
         senderService.setUsername(from);
         senderService.send(to, subject, text, "");
         Message[] messages = greenMail.getReceivedMessages();
