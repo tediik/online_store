@@ -115,18 +115,6 @@ public class CustomerController {
         return "customerOrderDetails";
     }
 
-    @PostMapping("/changemail")
-    @ResponseBody
-    public ResponseEntity changeMailReq(Authentication auth, Model model,
-                                        @RequestParam String newMail) {
-        User user = (User) auth.getPrincipal();
-        if (userService.isExist(newMail)) {
-            return new ResponseEntity("duplicatedEmailError", HttpStatus.OK);
-        }
-        userService.changeUsersMail(user, newMail);
-        return new ResponseEntity("success", HttpStatus.OK);
-    }
-
     @GetMapping("/activatenewmail/{token}")
     public String changeMail(Model model, @PathVariable String token, HttpServletRequest request){
         userService.activateNewUsersMail(token, request);
