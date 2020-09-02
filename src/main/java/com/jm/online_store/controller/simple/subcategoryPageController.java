@@ -11,7 +11,6 @@ public class subcategoryPageController {
 
     @GetMapping("/{categoryName}")
     public String getSubcategoryPage(@PathVariable(value = "categoryName") String categoryName) {
-
         return "subcategoryPage";
     }
 }

@@ -40,13 +40,15 @@ fetch("/api/products")
 function fillCategories(data) {
     let siteMenu = document.getElementById('siteMenu');
     for (let key in data) {
-        let item = `<li class="nav-item dropright">
+        let item = `
+            <li class="nav-item dropright">
                 <a class="btn btn-outline-light dropdown-toggle text-secondary font-weight-normal dropdownbtn" 
                     href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${key}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
         let subItem = ``;
         for (let value = 0; value < data[key].length; value += 2) {
-            subItem += `<a class="dropdown-item" href="/categories/${data[key][value + 1]}">${data[key][value]}</a> `;
+            subItem += `<a class="dropdown-item" href="/categories/${data[key][value + 1]}" name="category" value=${key}>
+                            ${data[key][value]}</a> `;
         }
         item += subItem;
         $(siteMenu).append(item);

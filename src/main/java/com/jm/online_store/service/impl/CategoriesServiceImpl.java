@@ -19,8 +19,12 @@ public class CategoriesServiceImpl implements CategoriesService {
         return categoriesRepository.findAll();
     }
 
-    public Optional<Categories> getProductByCategoryId(Long categoryId) {
+    public Optional<Categories> getCategoryById(Long categoryId) {
         return categoriesRepository.findById(categoryId);
+    }
+
+    public Long getIdBySuperCategory(String superCategoryName) {
+        return categoriesRepository.getIdBySuperCategory(superCategoryName);
     }
 
     public void saveCategory(Categories categories) {
