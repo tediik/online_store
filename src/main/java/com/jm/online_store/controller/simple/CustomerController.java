@@ -41,8 +41,7 @@ public class CustomerController {
     /**
      * метод получения данных зарегестрированного пользователя.
      * формирование модели для вывода в "view"
-     * @param model модель для view
-     * @param auth модель данных, построенных на основе зарегестрированного User
+     * модель данных, построенных на основе зарегестрированного User
      * @return
      */
     @GetMapping
@@ -70,6 +69,11 @@ public class CustomerController {
         model.addAttribute("user", updadeUser);
 
         return "customerPage";
+    }
+
+    @GetMapping("/change-password")
+    public String changePassword() {
+        return "changePassword";
     }
 
     /**
@@ -108,15 +112,6 @@ public class CustomerController {
     public String deleteImage() throws IOException {
         User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userService.deleteUserImage(userDetails.getId());
-    }
-
-    @PostMapping("/changemail")
-    public String changeMailReq(Authentication auth, Model model,
-                              @RequestParam String newMail) {
-        User user = (User) auth.getPrincipal();
-        userService.changeUsersMail(user, newMail);
-        model.addAttribute("message", "Please check your email!");
-        return "redirect:/customer/profile";
     }
 
     @GetMapping("/activatenewmail/{token}")
