@@ -1,25 +1,29 @@
 package com.jm.online_store.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "description")
 @Data
 @NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Description {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NonNull
     private String serialNumber;
@@ -42,4 +46,20 @@ public class Description {
     private String screenResolution;
     private boolean wifiOnBoard;
     private String bluetoothVersion;
+
+    public Description(String serialNumber, String producer, int warranty, String dimensions, String color,
+                       Double weight, String information, int ram, int hdd, String screenResolution, boolean wifiOnBoard, String bluetoothVersion) {
+        this.serialNumber = serialNumber;
+        this.producer = producer;
+        this.warranty = warranty;
+        this.dimensions = dimensions;
+        this.color = color;
+        this.weight = weight;
+        this.information = information;
+        this.ram = ram;
+        this.hdd = hdd;
+        this.screenResolution = screenResolution;
+        this.wifiOnBoard = wifiOnBoard;
+        this.bluetoothVersion = bluetoothVersion;
+    }
 }

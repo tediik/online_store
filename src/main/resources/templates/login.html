@@ -12,7 +12,7 @@
                 <div class="col-sm-4 col-sm-offset-6">
                     <h2 class="form-signin-heading">Please sign in</h2>
                     <form th:action="@{/login}" method="post" class="form-group">
-                        <input type="text" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
+                        <input type="email" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
                                class="form-control">
 
                         <input type="password" id="password" name="login_password" placeholder="Password"
@@ -20,12 +20,17 @@
 
                         <button class="btn btn-primary btn-sm btn-block">Sign In</button>
                     </form>
-                    <div><a href="/oauth2/authorization/facebook" title="Facebook" class="btn btn-block btn-sm  btn-social btn-lg btn-facebook">
-                        <i class="fa fa-facebook"></i> Sign in with Facebook
-                    </a>
+                    <div>
+                        <a href="/oauth2/authorization/facebook" title="Facebook" class="btn btn-block btn-sm  btn-social btn-lg btn-facebook">
+                            <i class="fa fa-facebook"></i> Sign in with Facebook
+                        </a>
+                    </div>
+                    <div>
+                        <a th:href="${authUrlOK}" class="btn btn-block btn-social btn-odnoklassniki">
+                            <span style="text-decoration-color: #f9f9f9" class="fa fa-odnoklassniki"></span> Sign in with Odnoklassniki
+                        </a>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

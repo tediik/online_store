@@ -1,5 +1,8 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,11 +21,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -33,7 +41,7 @@ import java.util.Set;
 @Setter
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "email")
@@ -61,6 +69,8 @@ public class User implements UserDetails {
 
     private LocalDate registerDate;
 
+    private String profilePicture="";
+
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
     @JoinTable(
@@ -74,7 +84,37 @@ public class User implements UserDetails {
             name = "user_product",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> favouritesGoods;
+    private Set<Product> favouritesGoods = new HashSet<>();
+
+    /**
+     * поле корзина клиента.
+     * "Корзина клиента" состоит из подкорзин "SubBasket", сотоящих в свою очередь
+     * из сущности "Product" и количества данного "Product" в "SubBasket".
+     * данная схема необходима, чтобы мжно было хранить необходимое количество тавара
+     * для заказа пользователя и сам товар как экземпляр класса "Product".
+     * для оформления заказа необходимо пройти по всем "SubBasket" и получить из сущности "Product",
+     * который находится в "SubBasket" актуальную цену, из объекта "SubBasket" получить количество товара "Product".
+     * Для добавления товара в корзину необходимо пройти по всем "SubBasket" и проверить на наличие данного "Product"
+     * в корзине. При наличии совпадений, необходимо проверить коичество(наличие) данного "Product" в БД
+     * и увеличить на "1" в данном "SubBasket".
+     */
+    @OneToMany
+    @JoinTable(
+            name = "user_basket",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "basket_id"))
+    private List<SubBasket> userBasket = new ArrayList<>();
+
+    @Column(name = "day_of_week_for_stock_send")
+    @Enumerated(EnumType.STRING)
+    private DayOfWeekForStockSend dayOfWeekForStockSend;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    //TODO @JsonBackReference  пока не удаляю, возможно придется менять обратно
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id")
+    private Set<Order> orders;
 
     public User() {
         registerDate = LocalDate.now();
@@ -97,6 +137,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -124,8 +169,33 @@ public class User implements UserDetails {
         return true;
     }
 
-    private enum Gender {
+    public enum Gender {
         MAN,
         WOMAN
+    }
+
+    public enum DayOfWeekForStockSend {
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password);
     }
 }

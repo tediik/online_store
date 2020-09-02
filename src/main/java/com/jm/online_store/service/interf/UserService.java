@@ -1,7 +1,10 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.User;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,13 +20,25 @@ public interface UserService {
 
     void updateUser(User user);
 
+    void updateUserFromController(User user);
+
+    void updateUserAdminPanel(User user);
+
     Optional<User> findByEmail(String username);
 
-    boolean emailExist(String email);
+    boolean isExist(String email);
 
     void regNewAccount(User user);
 
+    void changeUsersMail(User user, String newMail);
+
+    boolean activateNewUsersMail(String code, HttpServletRequest request);
+
     boolean activateUser(String code, HttpServletRequest request);
+
+    String updateUserImage(Long valueOf, MultipartFile imageFile) throws IOException;
+
+    String deleteUserImage(Long userId) throws IOException;
 }
 
 

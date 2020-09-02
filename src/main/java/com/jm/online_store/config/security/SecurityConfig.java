@@ -1,7 +1,8 @@
 package com.jm.online_store.config.security;
 
-import com.jm.online_store.config.security.facebook.FacebookOAuth2UserService;
 import com.jm.online_store.config.handler.LoginSuccessHandler;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,14 +17,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final LoginSuccessHandler successHandler;
+    private final MyUserDetailsService myUserDetailsService;
+
     @Autowired
-    private LoginSuccessHandler successHandler;
-    @Autowired
-    private MyUserDetailsService myUserDetailsService;
-    @Autowired
-    private FacebookOAuth2UserService facebookOAuth2UserService;
+    @Setter
+    private OAuth2UserService OAuth2UserService;
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -33,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(facebookOAuth2UserService).and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
+        http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(OAuth2UserService).and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
 
         http.formLogin()
                 // указываем страницу с формой логина
@@ -61,7 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/news/**", "/registration", "/css/**").permitAll()
-                .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**").permitAll()
+                .antMatchers("/oauth/**").permitAll()
+                .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**", "/404").permitAll()
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
                 .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
                 .antMatchers("/manager/**").access("hasAnyRole('ROLE_MANAGER')")

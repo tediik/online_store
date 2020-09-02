@@ -3,25 +3,58 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    public Optional<Product> findProductById(Long productId){
+    /**
+     * метод поиска Product по иденификатору.
+     *
+     * @param productId идентификатор Product
+     * @return Optional<Product>
+     */
+    @Override
+    public Optional<Product> findProductById(Long productId) {
         return productRepository.findById(productId);
     }
 
-    public void saveProduct (Product product){
-        productRepository.save(product);
+    /**
+     * метод поиска Product по наименованию.
+     *
+     * @param productName наименование Product
+     * @return Optional<Product>
+     */
+    @Override
+    public Optional<Product> findProductByName(String productName) {
+        return productRepository.findByProduct(productName);
     }
 
-    public void deleteProduct(Long idProduct){
+    /**
+     * метод обновления Product.
+     *
+     * @param product экземпляр класса Product
+     * @return идентификатор обновленного Product
+     */
+    @Override
+    public Long saveProduct(Product product) {
+        Product savedProduct = productRepository.save(product);
+        return savedProduct.getId();
+    }
+
+    /**
+     * метод удаления Product.
+     *
+     * @param idProduct идентификатор Product
+     */
+    @Override
+    public void deleteProduct(Long idProduct) {
         productRepository.deleteById(idProduct);
     }
 }
