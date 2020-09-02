@@ -113,7 +113,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "user_id")
     private Set<Order> orders;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonManagedReference(value = "user-sharedStock")
     private Set<SharedStock> sharedStocks;
 

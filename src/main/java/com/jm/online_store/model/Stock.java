@@ -60,7 +60,7 @@ public class Stock {
     @Enumerated(EnumType.STRING)
     private StockType stockType;
 
-    @OneToMany(mappedBy = "stock")
+    @OneToMany(mappedBy = "stock", orphanRemoval = true)
     @JsonManagedReference(value = "stock-sharedStock")
     private Set<SharedStock> sharedStocks;
 
