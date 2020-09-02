@@ -13,6 +13,7 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,6 +55,10 @@ public class Product {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     private List<ProductInOrder> productInOrders;
+
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY,
+//            mappedBy = "product")
+//    private List<ProductComment> comments;
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
         this.product = product;

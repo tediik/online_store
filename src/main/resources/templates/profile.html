@@ -40,7 +40,8 @@
                                     <div class="imgContainer">
                                         <div>
                                             <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                                                 height="152" th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}" width="152"></div>
+                                                 height="152" th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}" width="152">
+                                        </div>
                                         <div class="imgButton">
                                             <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal"> Edit Profile Picture</button>
                                         </div>

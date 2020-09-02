@@ -144,3 +144,18 @@ header{
     background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
     color: #a00;
 }
+
+.submitRegButton{
+    border: 1px solid #333;
+    display: inline-block;
+    padding: 5px 15px;
+    text-decoration: none;
+    color: #000;
+    background: #098ddf;
+}
+
+.submitRegButton:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
+    background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
+    color: #a00;
+}

@@ -3,17 +3,19 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.model.ConfirmationToken;
+
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
+import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,17 +46,20 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
-    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
+
     @Autowired
     @Setter
     private PasswordEncoder passwordEncoder;
+
     @Value("${spring.server.url}")
     private String urlActivate;
+
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
 
     @Transactional
     @Override
@@ -97,9 +102,6 @@ public class UserServiceImpl implements UserService {
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             user.setRoles(persistRoles(user.getRoles()));
         }
-        if (user.getProfilePicture().isEmpty()) {
-            user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
-        }
         userRepository.save(user);
     }
 
@@ -129,7 +131,7 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
-        userRepository.save(editUser);
+        userRepository.save(user);
     }
 
     /**

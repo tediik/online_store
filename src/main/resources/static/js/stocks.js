@@ -201,3 +201,31 @@ $("#stockEditModal").ready(function () {
         }
     }
 })
+
+$("#stockAddModal").ready(function () {
+    var name=document.getElementById("addStartDate");
+    var click=document.getElementById("save");
+    click.onclick=function()
+    {
+        if(!name.value){
+            toastr.warning('Заполните дату начала акции!', {timeOut: 5000})
+        } else {
+            $("#newStockModal").modal('hide');
+            addStock()
+        }
+    }
+})
+
+$("#stockEditModal").ready(function () {
+    var name=document.getElementById("editStartDate");
+    var click=document.getElementById("editSave");
+    click.onclick=function()
+    {
+        if(!name.value){
+            toastr.warning('Заполните дату начала акции!', {timeOut: 5000})
+        } else {
+            $("#editStockModal").modal('hide');
+            updateStock()
+        }
+    }
+})
