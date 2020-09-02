@@ -41,7 +41,7 @@ public class ManagerController {
         return "newsManagement";
     }
 
-    @GetMapping("/profile")
+    /*@GetMapping("/profile")
     public String getPersonalInfo(Model model, Authentication auth) {
         User principal = (User) auth.getPrincipal();
         User user = userService.findById(principal.getId()).get();
@@ -106,5 +106,5 @@ public class ManagerController {
         userService.activateNewUsersMail(token, request);
         model.addAttribute("message", "Email address changes successfully");
         return "redirect:/manager";
-    }
+    }*/
 }

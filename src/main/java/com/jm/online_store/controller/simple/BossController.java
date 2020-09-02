@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.util.Collections;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/boss")
 @RequiredArgsConstructor
-public class AdminController {
+public class BossController {
 
     private final UserService userService;
     private final RoleService roleService;
@@ -36,12 +36,12 @@ public class AdminController {
         return "adminPage";
     }
 
-    /*@GetMapping("/profile")
+    @GetMapping("/profile")
     public String getPersonalInfo(Model model, Authentication auth) {
         User principal = (User) auth.getPrincipal();
         User user = userService.findById(principal.getId()).get();
         model.addAttribute("user", user);
-        return "profileAdmin";
+        return "profileBoss";
     }
 
     @PostMapping("/profile")
@@ -49,7 +49,7 @@ public class AdminController {
         user.setRoles(Collections.singleton(roleService.findByName("ROLE_ADMIN").get()));
         userService.updateUser(user);
         model.addAttribute("user", user);
-        return "/profileAdmin";
+        return "/profileBoss";
     }
 
     @GetMapping("/change-password")
@@ -65,12 +65,12 @@ public class AdminController {
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("message", "Pls, double check previous password!");
 
-            return "redirect:/admin/profile";
+            return "redirect:/boss/profile";
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userService.updateUser(user);
 
-        return "redirect:/admin/profile";
+        return "redirect:/boss/profile";
     }
 
     @PostMapping("/uploadImage")
@@ -93,7 +93,7 @@ public class AdminController {
         User user = (User) auth.getPrincipal();
         userService.changeUsersMail(user, newMail);
         model.addAttribute("message", "Please check your email!");
-        return "redirect:/admin/profile";
+        return "redirect:/boss/profile";
     }
 
     @GetMapping("/activatenewmail/{token}")
@@ -101,5 +101,5 @@ public class AdminController {
         userService.activateNewUsersMail(token, request);
         model.addAttribute("message", "Email address changes successfully");
         return "redirect:/admin";
-    }*/
+    }
 }

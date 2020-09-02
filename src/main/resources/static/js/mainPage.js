@@ -17,25 +17,15 @@ $(document).ready(function ($) {
     /*логин под админом*/
     if (roles.includes("ADMIN")) {
         $('#role-redirect').text("Профиль").click(function () {
-            $('#role-redirect').attr("href", "/admin/profile");
+            $('#role-redirect').attr("href", "/boss/profile");
         });
-        /*$('#role-redirect').click(function () {
-            $('#role-redirect').attr("href", "/admin/profile");
-        });*/
-        /*$('#profile-main-link').click(function () {
-            $('#profile-main-link').attr("href", "/admin");
-        });*/
     }
 
     /*логин под менеджером*/
     if (roles.includes("MANAGER")) {
-        $('#role-redirect').text("Профиль");
-        $('#role-redirect').click(function () {
-            $('#role-redirect').attr("href", "/manager/profile");
+        $('#role-redirect').text("Профиль").click(function () {
+            $('#role-redirect').attr("href", "/boss/profile");
         });
-        /*$('#profile-main-link').click(function () {
-            $('#profile-main-link').attr("href", "/manager");
-        });*/
     }
 });
 
