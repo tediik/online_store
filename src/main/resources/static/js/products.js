@@ -1,5 +1,8 @@
 $(document).ready(function () {
     create();
+    $("#newProductImportModal").on('hidden.bs.modal', function (e) {
+        $("#newProductImportModal form")[0].reset();//reset modal fields
+    });
 });
 
 /*Создаем таблицу товаров*/
@@ -72,7 +75,7 @@ function addProduct() {
 function importProductsFromFile(){
 
     var fileData = new FormData();
-    fileData.append( 'file', input.files[0] );
+    fileData.append('file', $('#file')[0].files[0]);
 
     $.ajax({
         url: '/rest/products/uploadProductsFile',
@@ -167,6 +170,7 @@ $("#productImportModal").ready(function () {
     var click = document.getElementById("inputFileSubmit");
     click.onclick = function () {
         $("#newProductImportModal").modal('hide');
+        console.log("Скрипт запущен")
          importProductsFromFile()
     }
 })

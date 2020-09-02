@@ -227,13 +227,11 @@
 
                         <div class="modal-body">
                             <div class="container-fluid col-sm-12">
-                                <form method="POST" enctype="multipart/form-data"
-                                      action="/rest/products/uploadProductsFile">
-                                    File to upload: <input type="file" name="file"><br />
+                                <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
+                                    <label for="file">Выберите файл:</label>
+                                    <input id="file" type="file" name="file">
                                     <br />
                                     <br />
-                                    <input type="submit"
-                                           value="Upload"> Press here to upload the file!
                                 </form>
                             </div>
                         </div>
@@ -243,7 +241,7 @@
                                 Close
                             </button>
 
-                            <button id="import" type="submit"
+                            <button id="inputFileSubmit" type="submit"
                                     class="btn btn-primary">
                                 Загрузить данные из файла
                             </button>
