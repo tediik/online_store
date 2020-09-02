@@ -369,10 +369,12 @@ public class DataInitializer {
         String[] socialNetworkNames = {"facebook", "vk", "twitter"};
         List<Stock> stocks = stockService.findAll();
         List<User> users = userService.findAll();
+        Long firstNumber = stocks.get(0).getId();
+        Long lastNumber = stocks.get(stocks.size() - 1).getId();
         Random random = new Random();
         for (Stock stock : stocks){
             for (User user : users){
-                long generatedLongForStock = 1 + (long) (Math.random() * ((stocks.size() + 1) - 0));
+                long generatedLongForStock = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
                 SharedStock sharedStock = SharedStock.builder()
                         .user(user)
                         .stock(stockService.findStockById(generatedLongForStock))
