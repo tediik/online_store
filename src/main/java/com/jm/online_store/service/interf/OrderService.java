@@ -2,7 +2,6 @@ package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.dto.OrderDTO;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 
 import java.util.List;
 import java.util.Optional;

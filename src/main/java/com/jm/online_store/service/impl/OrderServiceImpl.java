@@ -15,7 +15,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-
     private final OrderRepository orderRepository;
 
     @Override
@@ -35,8 +34,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<Order> findOrderById(Long id) {
-        Optional order = orderRepository.findById(id);
-        return order;
+        return orderRepository.findById(id);
     }
 
     /**
@@ -60,6 +58,7 @@ public class OrderServiceImpl implements OrderService {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(order, OrderDTO.class);
     }
+
     /**
      * Метод добавления заказа.
      * Первоначально кол-во продуктов и общая стоимость равны 0,
@@ -80,4 +79,5 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrder(Order order) {
         orderRepository.save(order);
     }
+
 }
