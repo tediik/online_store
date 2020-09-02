@@ -16,27 +16,26 @@ $(document).ready(function ($) {
 
     /*логин под админом*/
     if (roles.includes("ADMIN")) {
-        $('#role-redirect').text("Профиль");
-        $('#role-redirect').click(function () {
-            $('#role-redirect').attr("href", "/customer/profile");
+        $('#role-redirect').text("Профиль").click(function () {
+            $('#role-redirect').attr("href", "/admin/profile");
         });
-        $('#profile-favourite, #profile-orders, #profile-news, #profile-promotion').hide();
-        document.getElementById("profile-main-link").innerHTML = "Админка";
-        $('#profile-main-link').click(function () {
+        /*$('#role-redirect').click(function () {
+            $('#role-redirect').attr("href", "/admin/profile");
+        });*/
+        /*$('#profile-main-link').click(function () {
             $('#profile-main-link').attr("href", "/admin");
-        });
+        });*/
     }
 
     /*логин под менеджером*/
     if (roles.includes("MANAGER")) {
         $('#role-redirect').text("Профиль");
         $('#role-redirect').click(function () {
-            $('#role-redirect').attr("href", "/customer/profile");
+            $('#role-redirect').attr("href", "/manager/profile");
         });
-        $('#profile-favourite, #profile-orders').hide();
-        $('#profile-main-link').click(function () {
+        /*$('#profile-main-link').click(function () {
             $('#profile-main-link').attr("href", "/manager");
-        });
+        });*/
     }
 });
 

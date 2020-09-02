@@ -15,17 +15,17 @@
 <div class="container-fluid">
     <div class="row min-vh-100">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/customer">Главная</a>
+            <div id="profile-main-link" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager">Главная</a>
             </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/customer#favouritesGoods">Избранные товары</a>
+            <div id="profile-news" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
             </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/customer/order">Заказы</a>
+            <div id="profile-promotion" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/stocks"> Акции</a>
             </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary active" href="/customer/profile">Профиль</a>
+            <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary active" href="/manager/profile">Профиль</a>
             </div>
         </div>
         <div class="col-md-10"
@@ -73,7 +73,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}" method="post" data-role="personal-info-form">
+                                    <form th:action="@{/manager/profile}" th:object="${user}" th:value="${user.id}" method="post" data-role="personal-info-form">
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="id_update">ID</label>
                                             <input th:field="*{id}" type="text" class="form-control" id="id_update" name="id">
@@ -168,7 +168,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:action="@{/customer/changemail}" method="post" class="form-group">
+                                                    <form th:action="@{/manager/changemail}" method="post" class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="new_mail">Введите новый адрес электронной почты</label>
                                                             <input type="email"
@@ -192,7 +192,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:action="@{/customer/change-password}" method="post" class="form-group">
+                                                    <form th:action="@{/manager/change-password}" method="post" class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="old_password">Старый пароль</label>
                                                             <input type="password" id="old_password" name="oldPassword" autofocus="autofocus"

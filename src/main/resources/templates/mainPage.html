@@ -24,7 +24,7 @@
     </form>
     <!-- Customer service -->
     <a class="p-2 text-dark" href="/news">Новости</a>
-    <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_MANAGER')" class="btn customerbutton">
+    <div sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CUSTOMER', 'ROLE_MANAGER')" class="btn customerbutton">
         <a th:href="@{/customer}" id="role-redirect"> Кабинет покупателя </a>
     </div>
     <!-- Registration -->
