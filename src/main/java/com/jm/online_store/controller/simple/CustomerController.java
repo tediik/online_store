@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.simple;
 
+import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.OrderService;
@@ -7,6 +8,8 @@ import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -71,7 +74,7 @@ public class CustomerController {
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("message", "Pls, double check previous password!");
 
-            return "redirect:/customer/profile";
+            return "redirect:/customer/profile" ;
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userService.updateUser(user);
