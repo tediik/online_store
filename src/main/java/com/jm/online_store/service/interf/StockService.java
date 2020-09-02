@@ -17,4 +17,11 @@ public interface StockService {
 
     List<Stock> findAll();
 
+    List<Stock> findCurrentStocks();
+
+    List<Stock> findFutureStocks();
+
+    List<Stock> findPastStocks();
+
+    void updateStock(Stock stock);
 }

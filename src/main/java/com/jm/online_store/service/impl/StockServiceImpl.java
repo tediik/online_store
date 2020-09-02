@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -40,10 +41,40 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    public List<Stock> findCurrentStocks() {
+        List<Stock> currentStocks = stockRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrEndDateEquals(LocalDate.now(), LocalDate.now(), null);
+        if (currentStocks.isEmpty()){
+            throw new StockNotFoundException();
+        }
+        return currentStocks;
+    }
+
+    @Override
     @Transactional
     public void deleteStockById(Long id) {
         stockRepository.deleteStockById(id);
     }
 
+    @Override
+    public List<Stock> findFutureStocks() {
+        List<Stock> currentStocks = stockRepository.findByStartDateAfter(LocalDate.now());
+        if (currentStocks.isEmpty()){
+            throw new StockNotFoundException();
+        }
+        return currentStocks;
+    }
 
+    @Override
+    public List<Stock> findPastStocks() {
+        List<Stock> currentStocks = stockRepository.findByEndDateBefore(LocalDate.now());
+        if (currentStocks.isEmpty()){
+            throw new StockNotFoundException();
+        }
+        return currentStocks;
+    }
+
+    @Override
+    public void updateStock(Stock stock) {
+
+    }
 }
