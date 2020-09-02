@@ -9,32 +9,29 @@ function create() {
     $.ajax("/rest/products/allProducts", {
         dataType: "json",
         success: function (data) {
-            const stocks = JSON.parse(JSON.stringify(data))
-            console.log(stocks);
-            for (let i = 0; i < stocks.length; i++) {
-                let out = $("<li>").attr("id", stocks[i].id);
+            const products = JSON.parse(JSON.stringify(data))
+            for (let i = 0; i < products.length; i++) {
+                let out = $("<li>").attr("id", products[i].id);
                 out.append(
                     `<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-6\">
                                 <div class=\"card-body\">
                                     <h4 class='card-title'>Наименование товара</h4>
-                                    <h4 class='card-title'>${stocks[i].product}</h4>
+                                    <h4 class='card-title'>${products[i].product}</h4>
                                     <h4 class='card-title'>Цена товара</h4>
-                                    <p class=\"card-text\">${stocks[i].price}</p>
+                                    <p class=\"card-text\">${products[i].price}</p>
                                     <h4 class='card-title'>Кол-во товара</h4>
-                                    <p class=\"card-text\">${stocks[i].amount}</p>
-                                    <h4 class='card-title'>Описание</h4>
-                                    <p class=\"card-text\">${stocks[i].stockText}</p>
+                                    <p class=\"card-text\">${products[i].amount}</p>
                                 </div>
                             </div>
                             <div class="col-md-2 flex-row align-items-center">
                                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button onclick='getProductForEdit(${stocks[i].id})' class="btn btn-info" data-toggle='modal'
+                                    <button onclick='getProductForEdit(${products[i].id})' class="btn btn-info" data-toggle='modal'
                                             data-target='#editProductModal'>Edit</button>
                                 </div>
                                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button onclick='deleteProduct(${stocks[i].id})' class="btn btn-danger">Delete</button>
+                                    <button onclick='deleteProduct(${products[i].id})' class="btn btn-danger">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -50,12 +47,11 @@ function create() {
 function addProduct() {
 
     const productAdd = {
-        productTitle: $('#addProductTitle').val(),
-        productPrice: $('#addProductPrice').val(),
-        productAmount: $('#addProductAmount').val(),
-        productText: $('#addProductText').val(),
-        productImg: $('#addProductImg').val(),
+        product: $('#addProductTitle').val(),
+        price: $('#addProductPrice').val(),
+        amount: $('#addProductAmount').val(),
     };
+
     $.ajax({
         url: "/rest/products/addProduct",
         data: JSON.stringify(productAdd),
@@ -75,26 +71,23 @@ function addProduct() {
 
 function importProductsFromFile(){
 
-    const productAddFromFile = {
-        fileName: $('#name').val(),
-    };
-    console.log(productAddFromFile)
+    var fileData = new FormData();
+    fileData.append( 'file', input.files[0] );
 
     $.ajax({
-        url: "/rest/products/importProducts/" + productAddFromFile,
-        data: JSON.stringify(productAddFromFile),
-        dataType: 'json',
+        url: '/rest/products/uploadProductsFile',
+        data: fileData,
+        processData: false,
+        contentType: false,
         type: 'POST',
-        contentType: 'application/JSON; charset=utf-8',
-        success: function () {
+        success: function(data){
             create();
             toastr.info('Импорт товаров завершен!', {timeOut: 5000})
         },
         error: function () {
             alert("Некорретный путь к файлу!")
         }
-    })
-
+    });
 }
 
 /*Редактировать товар*/
@@ -103,13 +96,11 @@ function getProductForEdit(id) {
         type: "GET",
         url: "/rest/products/" + id,
         dataType: 'json',
-        success: function (stock) {
-            $(".modal-body #Eid").val(stock.id)
-            $(".modal-body #editProductTitle").val(stock.productTitle)
-            $(".modal-body #editProductPrice").val(stock.productPrice)
-            $(".modal-body #editProductAmount").val(stock.productAmount)
-            $(".modal-body #editProductText").val(stock.productText)
-            $(".modal-body #editProductImg").val(stock.productImg)
+        success: function (products) {
+            $(".modal-body #Eid").val(products.id)
+            $(".modal-body #editProductTitle").val(products.product)
+            $(".modal-body #editProductPrice").val(products.price)
+            $(".modal-body #editProductAmount").val(products.amount)
         }
     });
 }
@@ -118,11 +109,9 @@ function getProductForEdit(id) {
 function updateProduct() {
     const productEdit = {
         id: $('#Eid').val(),
-        productTitle: $('#editProductTitle').val(),
-        productPrice: $('#editProductPrice').val(),
-        productAmount: $('#editProductAmount').val(),
-        productText: $('#editProductText').val(),
-        productImg: $('#editProductImg').val(),
+        product: $('#editProductTitle').val(),
+        price: $('#editProductPrice').val(),
+        amount: $('#editProductAmount').val(),
     };
     $.ajax({
         url: "/rest/products/editProduct",

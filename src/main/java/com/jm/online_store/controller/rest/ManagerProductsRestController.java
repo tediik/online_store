@@ -8,14 +8,22 @@ import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
@@ -29,6 +37,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -47,81 +56,37 @@ public class ManagerProductsRestController {
 
     /**
      * Метод обрабатывает загрузку файла с товарами на сервер
-     * @param name имя файла, выбранное для сохранения
+     * Вызывает соответствующий сервисный метод в зависимости от типа файла(CSV или XML)
      * @param file файл с данными
      */
-
     @PostMapping(value = "/rest/products/uploadProductsFile")
-    public void handleFileUpload(@RequestParam("name") String name,
-                                 @RequestParam("file") MultipartFile file) {
+    public void handleFileUpload(@RequestParam("file") MultipartFile file) throws FileNotFoundException {
         try {
             byte[] bytes = file.getBytes();
             BufferedOutputStream stream =
-                    new BufferedOutputStream(new FileOutputStream(new File("uploads/xml/" + name + ".xml")));
+                    new BufferedOutputStream(new FileOutputStream(new File("uploads/import/" + file.getOriginalFilename())));
             stream.write(bytes);
             stream.close();
         } catch (Exception e) {
             log.error("Ошибка сохранения файла");
             e.printStackTrace();
         }
-        importFromFile(name);
+        log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
+        if(getFileExtension(file.getOriginalFilename()).equals(".xml")){
+            productService.importFromXMLFile(file.getOriginalFilename());
+        }
+            productService.importFromCSVFile(file.getOriginalFilename());
 //        return new ResponseEntity(HttpStatus.OK);
     }
 
     /**
-     * Метод импортирует список товаров из сохраненного XML файла
-     * Записывает товары в БД
+     * Метод-сепаратор, возвращающий расширение файла
+     * @param myFileName имя файла
      */
-    public void importFromFile(String fileName) {
-        try {
-            // Создается построитель документа
-            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
-            // Создается дерево DOM документа из файла
-            Document document = documentBuilder.parse("uploads/xml/" + fileName + ".xml");
-
-            document.getDocumentElement().normalize();
-
-            System.out.println("Root element :" + document.getDocumentElement().getNodeName());
-
-            NodeList nList = document.getElementsByTagName("product");
-
-            System.out.println("----------------------------");
-
-            for (int temp = 0; temp < nList.getLength(); temp++) {
-
-                Node nNode = nList.item(temp);
-
-                System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-                    Element eElement = (Element) nNode;
-
-                    String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
-                    String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
-                    String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
-                    System.out.println("Product : " + productName);
-                    System.out.println("Price : " + productPrice);
-                    System.out.println("Amount : " + productAmount);
-                    Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
-                    productService.saveProduct(product);
-                }
-            }
-
-
-        } catch (ParserConfigurationException e) {
-            log.error("Ошибка конфигурации парсера");
-            e.printStackTrace();
-        } catch (SAXException e) {
-            log.error("Ошибка XML синтаксиса");
-            e.printStackTrace();
-        } catch (IOException e) {
-            log.error("Ошибка ввода/вывода");
-            e.printStackTrace();
-        }
+    private static String getFileExtension(String myFileName) {
+        int index = myFileName.indexOf('.');
+        return index == -1? null : myFileName.substring(index);
     }
-
 
     /**
      * Метод выводит список всех товаров
@@ -147,7 +112,8 @@ public class ManagerProductsRestController {
      * @param product акиця для добавления
      * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
      */
-    @PostMapping(value = "/rest/products/addProduct", consumes = "application/json")
+    @PostMapping(value = "/rest/products/addProduct", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public ResponseEntity<Product> addProductM(@RequestBody Product product) {
         productService.saveProduct(product);
         return ResponseEntity.ok().body(product);

@@ -121,11 +121,6 @@
                                         <label for="addProductPrice">Цена на данный момент:</label>
                                         <input id="addProductPrice" type="number" size="6" step="10" name="num" min="1" max="1000000" value="1">
                                         <br>
-                                        <label for="addProductText">Описание товара:</label>
-                                        <textarea name="comment" id="addProductText" cols="45" rows="5"></textarea>
-                                        <br>
-                                        <label for="addProductImg">Изображение</label>
-                                        <input id="addProductImg" type="file" name="f" accept="image/jpeg">
                                     </div>
                                 </form>
                             </div>
@@ -191,14 +186,7 @@
                                                 <input id="editProductPrice" type="number" size="6" step="10" name="num" min="1" max="1000000" value="1">
 
                                             </div>
-                                            <label for="editProductText">Описание товара:</label>
-                                            <textarea name="comment" id="editProductText" cols="45" rows="5"
-                                                      class="form-control"
-                                                      required="required"></textarea>
                                             <br>
-                                            <label for="editProductImg">Изображение</label>
-                                            <input id="editProductImg" type="file" name="g" accept="image/jpeg"
-                                                   class="form-control">
                                         </div>
                                     </form>
                                 </div>
@@ -241,10 +229,9 @@
                             <div class="container-fluid col-sm-12">
                                 <form method="POST" enctype="multipart/form-data"
                                       action="/rest/products/uploadProductsFile">
-                                    File to upload: <input type="file" name="file"><br /> Name:
-                                    <label>
-                                        <input type="text" name="name">
-                                    </label><br /> <br />
+                                    File to upload: <input type="file" name="file"><br />
+                                    <br />
+                                    <br />
                                     <input type="submit"
                                            value="Upload"> Press here to upload the file!
                                 </form>
