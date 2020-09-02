@@ -2,53 +2,45 @@
  * stockId for tests
  * @type {number}
  */
-let stockId = 1
+let stockId = 57
+/**
+ * Global variables declaration
+ */
 const sharedStockApiUrl = "/api/sharedStock/"
 const stockApiUrl = "/api/stock/"
 let urlToShare = document.location.href
 let myHeaders = new Headers()
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
-
-document.getElementById('shareButtons').innerHTML = VK.Share.button(urlToShare, {
-    type: 'custom ',
-    text: '<button type="button" class="btn btn-secondary" id="vkShareButton">Share on VK</button>'
-});
-/**
- * function that handles facebook share button.
- * If page was shared lunches function that add row into SharedStock
- */
-$('#fbShareButton').click(function () {
-    FB.ui({
-        method: 'feed',
-        link: 'https://www.java-mentor.com/',
-    }, function (response) {
-        if (response === null) {
-            console.log('was not shared');
-        } else {
-            handleShareButton("facebook")
-            console.log('shared - post id is ' + response.post_id);
-        }
-    });
-});
-
-$('#vk_share_button').click(function () {
-    handleShareButton("vk")
+$(document).ready(function () {
+    fetchStockDetailsPage(stockId)
+    generateShareLinks()
 })
+/**
+ * Share buttons event listeners
+ */
+document.getElementById('shareFacebookLink').addEventListener('click', handleShareButton)
+document.getElementById('shareVKLink').addEventListener('click', handleShareButton)
 
 /**
- * Сделал для теста что бы каждый раз не публиковать акцию у себя на странице
+ * generates share links
  */
-// $('#fbShareButton').click(function() {
-//             handleShareButton("facebook")
-// });
+function generateShareLinks() {
+    let encoded = encodeURIComponent(urlToShare)
+    let facebookShareLink = `https://www.facebook.com/sharer/sharer.php?u=${encoded}`
+    let vkShareLink = `https://vk.com/share.php?url=${urlToShare}`
+    $('#shareFacebookLink').attr("href", facebookShareLink)
+    $('#shareVKLink').attr("href", vkShareLink)
+}
 
 /**
  * function that handles share buttons.
  * Sends POST fetch request to shared stock api
  * @param socialNetworkName - name of social network, which button was clicked
  */
-function handleShareButton(socialNetworkName) {
+function handleShareButton() {
+    let socialNetworkName = $(this).attr('data-socialNetworkName')
+
     let body = {
         stock: {
             id: stockId
@@ -86,12 +78,11 @@ function fetchStockDetailsPage(stockId) {
         method: 'GET'
     }).then(function (response) {
         if (response.status !== 200) {
-            //TODO пишем код если респонс не 200
+            response.text().then(text => console.log(text))
         } else {
             response.json().then(stockFromDb => renderStockDetailPage(stockFromDb))
         }
     }).catch(error => console.log(error))
 }
 
-fetchStockDetailsPage(stockId)
 
