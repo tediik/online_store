@@ -341,4 +341,10 @@ public class UserServiceImpl implements UserService {
         }
         return userRepository.save(editedUser);
     }
+
+    @Override
+    @Transactional
+    public void updateUserFromController(User user) {
+        userRepository.saveAndFlush(user);
+    }
 }
