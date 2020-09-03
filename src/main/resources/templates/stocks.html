@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,24 +11,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <!-- ----------------------JS - jQuery ------------->
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-            crossorigin="anonymous"></script>
-
+    <!--    Date picker-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
-    <!-- ----------------------JS - jQuery END ------------->
 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
@@ -61,38 +49,52 @@
     </nav>
 
     <h2 class="text-center"><span class="underline">Акции</span></h2>
+    <div id="mainWindowAlert">
 
+    </div>
     <div id="cont" class="row no-gutters pb-4">
-        <div class="col-md-3 pr-3">
+        <div class="col-md-3 pr-3" id="leftNavigationBar">
             <br>
             <div class="container filters min-height: 100vh pb-4">
                 <h4 class="text-center p-1">Фильтры</h4>
-
-                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                    <button type="button" class="btn btn-outline-primary" data-filter="ALL">Все акции</button>
-                </div>
-                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                    <button type="button" class="btn btn-outline-primary" data-filter="CURRENT">Текущие акции</button>
-                </div>
-                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                    <button type="button" class="btn btn-outline-primary" data-filter="FUTURE">Планируемые акции</button>
-                </div>
-                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                    <button type="button" class="btn btn-outline-primary" data-filter="PAST">Завершенные акции</button>
+                <div id="stockFilters">
+                    <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                         aria-orientation="vertical">
+                        <button data-toggle-id="allStocks" type="button" class="btn btn-outline-primary" id="filterAllStocks">Все акции</button>
+                    </div>
+                    <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                         aria-orientation="vertical">
+                        <button data-toggle-id="currentStocks" type="button" class="btn btn-outline-primary" id="filterCurrentStocks">Текущие акции
+                        </button>
+                    </div>
+                    <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                         aria-orientation="vertical">
+                        <button data-toggle-id="futureStocks" type="button" class="btn btn-outline-primary" id="filterFutureStocks">Планируемые акции
+                        </button>
+                    </div>
+                    <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                         aria-orientation="vertical">
+                        <button data-toggle-id="pastStocks" type="button" class="btn btn-outline-primary" id="filterPastStocks">Завершенные акции
+                        </button>
+                    </div>
                 </div>
                 <h4 class="text-center p-1">Сортировка</h4>
                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                    <button type="button" class="btn btn-outline-primary" id="ratingDown">Рейтинг по убыванию</button>
+                    <button type="button" class="btn btn-outline-primary" id="sortDown" data-sort="sortDown">Рейтинг по
+                        убыванию
+                    </button>
                 </div>
                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                    <button type="button" class="btn btn-outline-primary" id="ratingUp">Рейтинг по возрастанию</button>
+                    <button type="button" class="btn btn-outline-primary" id="sortUp" data-sort="sortUp">Рейтинг по
+                        возрастанию
+                    </button>
                 </div>
             </div>
             <br>
             <div>
                 <form>
                     <button type="button" class="btn btn-primary" data-toggle='modal'
-                            data-target='#newStockModal'>
+                            data-target='#stockModal' id="newStockButton">
                         Новая акция
                     </button>
                 </form>
@@ -108,66 +110,8 @@
                 </ul>
             </div>
             <!--End of Stocks-->
-
-            <!---------------------- New Stock add Modal  ------------------->
-            <div class="modal fade" id="newStockModal" data-backdrop="static" tabindex="-1"
-                 role="dialog"
-                 aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="stockAddModalLable">Добавить акцию</h5>
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="container-fluid col-sm-12">
-                                <form id="stockAddModal" name="stockAddModal" enctype="multipart/form-data" method="post">
-                                    <div class="form-group">
-                                        <label for="addStockTitle">Заголовок акции:</label>
-                                        <input id="addStockTitle" type="text" name="title" placeholder="title">
-                                        <br>
-                                        <label for="addStockText">Описание акции:</label>
-                                        <textarea name="comment" id="addStockText" cols="45" rows="5"></textarea>
-                                        <br>
-                                        <div id="datepicker_add"></div>
-                                        <label for="addStartDate">Дата начала</label>
-                                        <input id="addStartDate" name="addStartDate" data-validate/>
-                                        <br>
-                                        <label for="addEndDate">Дата окончания</label>
-                                        <input id="addEndDate" name="addEndDated"/>
-                                        <br>
-                                        <label for="addStockImg">Изображение</label>
-                                        <input id="addStockImg" type="file" name="f" accept="image/jpeg">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="modal-footer actions">
-
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">
-                                Close
-                            </button>
-
-                            <button id="save" type="submit"
-                                    class="btn btn-primary">
-                                Save changes
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!---------------------- End of New Stock Modal ------------------->
-
-            <!---------------------- Stock Edit Modal  ------------------->
-            <div class="modal fade" id="editStockModal" data-backdrop="static" tabindex="-1"
+            <!---------------------- Stock Modal  ------------------->
+            <div class="modal fade" id="stockModal" data-backdrop="static" tabindex="-1"
                  role="dialog"
                  aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
@@ -175,6 +119,9 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Редактировать акцию</h5>
+                            <div id="modal-alert">
+
+                            </div>
                             <button type="button" class="close" data-dismiss="modal"
                                     aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -186,40 +133,40 @@
                                 <div class="container-fluid col-sm-12">
                                     <form enctype="multipart/form-data" method="post">
                                         <div class="form-group">
-                                            <label for="Eid"
-                                                   class="col-form-label col-sm-12 text-center">Id</label>
-                                            <div class="text-center">
+                                            <div class="text-center" id="stockIdDiv">
+                                                <label for="stockId"
+                                                       class="col-form-label col-sm-12 text-center">Id</label>
                                                 <input type="text"
                                                        class="form-control"
-                                                       id="Eid"
+                                                       id="stockId"
                                                        readonly>
                                             </div>
                                             <div class="field2">
-                                                <label for="editStockTitle">Заголовок акции:</label>
-                                                <input id="editStockTitle" type="text" name="title" placeholder="title"
+                                                <label for="stockTitle">Заголовок акции:</label>
+                                                <input id="stockTitle" type="text" name="title" placeholder="title"
                                                        class="form-control"
                                                        required="required">
                                             </div>
-                                            <label for="editStockText">Описание акции:</label>
-                                            <textarea name="comment" id="editStockText" cols="45" rows="5"
+                                            <label for="stockText">Описание акции:</label>
+                                            <textarea name="comment" id="stockText" cols="45" rows="5"
                                                       class="form-control"
                                                       required="required"></textarea>
                                             <div id="datepicker_edit"></div>
-                                            <label for="editStartDate">Дата начала</label>
-                                            <input id="editStartDate" name="date" required/>
+                                            <label for="startDate">Дата начала</label>
+                                            <input id="startDate" name="date" required/>
                                             <br>
-                                            <label for="editEndDate">Дата окончания</label>
-                                            <input id="editEndDate" name="date"/>
+                                            <label for="endDate">Дата окончания</label>
+                                            <input id="endDate" name="date"/>
                                             <br>
-                                            <label for="editStockImg">Изображение</label>
-                                            <input id="editStockImg" type="file" name="g" accept="image/jpeg"
+                                            <label for="stockImg">Изображение</label>
+                                            <input id="stockImg" type="file" name="g" accept="image/jpeg"
                                                    class="form-control">
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </form>
-                        <div class="modal-footer actions2">
+                        <div class="modal-footer actions2" id="modalFooter">
 
                             <button type="button" class="btn btn-secondary"
                                     data-dismiss="modal">
@@ -238,14 +185,18 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript" src="/static/js/stocks.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
 <!--MomentJs (work with dates)-->
 <script type="text/JavaScript" src="../static/js/moment.js"></script>
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
-<script src="/static/js/textRedactor.js"></script>
 <link href="/static/css/summernote.css" rel="stylesheet">
 <script src="/static/js/date_range.js"></script>
+<script src="/static/js/stockPageRenderAndFunctions.js"></script>
 </body>
 </html>
