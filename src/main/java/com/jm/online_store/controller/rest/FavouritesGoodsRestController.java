@@ -64,7 +64,7 @@ public class FavouritesGoodsRestController {
         favouritesGoods.add(product);
         autorityUser.setFavouritesGoods(favouritesGoods);
         userService.updateUserFromController(autorityUser);
-        return (ResponseEntity) ResponseEntity.ok();
+        return ResponseEntity.ok(200);
     }
 
     /**
@@ -84,6 +84,6 @@ public class FavouritesGoodsRestController {
         }
         autorityUser.setFavouritesGoods(favouritesGoods);
         userService.updateUserFromController(autorityUser);
-        return (ResponseEntity) ResponseEntity.ok();
+        return ResponseEntity.ok(200);
     }
 }
