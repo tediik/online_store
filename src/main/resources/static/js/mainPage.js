@@ -15,17 +15,16 @@ function getCurrent() {
         type: 'GET',
         dataType: 'json',
         success: function (user) {
-            let role = user.roles.map(role => role.name)
+            let role = user.roles.map(role => role.name);
             $('#user-email').append(user.email);
-            if (role.includes("ROLE_ADMIN")) {
+            if (role.includes("ROLE_ADMIN") || role.includes("ROLE_MANAGER")) {
                 $('#role-redirect').text("Профиль").click(function () {
                     $('#role-redirect').attr("href", "/boss/profile");
                 });
+            }
+            if (role.includes("ROLE_ADMIN")) {
                 $('#profile-main-link-manager, #profile-news, #profile-promotion').hide();
             } else if (role.includes("ROLE_MANAGER")) {
-                $('#role-redirect').text("Профиль").click(function () {
-                    $('#role-redirect').attr("href", "/boss/profile");
-                });
                 $('#profile-main-link-admin').hide();
             }
         }

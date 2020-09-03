@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/users")
 public class CurrentUserRestController {
 
+    /**
+     * Метод для получения имейла и ролей залогиненного пользователя,
+     * в дальнейшем используемых на фронте при отдаче вариации страницы профиля.
+     * @param authentication
+     * @return
+     */
     @GetMapping("/getCurrent")
     public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
