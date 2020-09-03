@@ -1,30 +1,22 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.repository.UserRepository;
-import com.jm.online_store.service.interf.MailSenderService;
-import com.jm.online_store.service.interf.SchedulingService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.util.Assert;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import static com.jm.online_store.model.User.DayOfWeekForStockSend.SUNDAY;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-
 
 /**
  * Модульное, функциональное тестирование (JUnit5 + Mockito)
@@ -33,30 +25,79 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class SchedulingServiceImplTest {
 
+    @Autowired
     SchedulingServiceImpl schedulingService;
-
-    private MailSenderService mailSenderService;
-
+    @MockBean
     private UserRepository userRepository;
-    @Mock
+    @MockBean
     private StockRepository stockRepository;
 
-    @InjectMocks
-    SchedulingServiceImpl schedulingServiceImpl = new SchedulingServiceImpl(mailSenderService,userRepository,stockRepository);
+    //Проверка отправки акции пользователю в указанный день
+    @Test
+    void send_stocks_to_customers() {
+        User testUser = new User();
+        testUser.setEmail("Test@yandex.ru");
 
-    @BeforeEach public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-        User.DayOfWeekForStockSend dayOfWeek;
-        when(userRepository.findByDayOfWeekForStockSend(dayOfWeek)).thenReturn("WEDNESDAY");
+        List<User> testUserList = new ArrayList<>();
+        testUserList.add(testUser);
+
+        Stock testStock = new Stock();
+        testStock.setStockTitle("Test title");
+        testStock.setStockText("Test text");
+        testStock.setStartDate(LocalDate.now());
+        testStock.setEndDate(LocalDate.now());
+
+        List<Stock> testStockList = new ArrayList<>();
+        testStockList.add(testStock);
+
+        log.info("Before sending Stock");
+
+        when(userRepository.findByDayOfWeekForStockSend(any()))
+                .thenReturn(testUserList);
+        when(stockRepository.findAllByStartDateBetweenAndEndDateIsAfter(any(), any(), any()))
+                .thenReturn(testStockList);
+
+        Assert.notNull(userRepository.findByDayOfWeekForStockSend(any()),"Проверка, что NotNull");
+
+        Mockito.verify(userRepository, Mockito.times(1))
+                .findByDayOfWeekForStockSend(any());
+
+        schedulingService.sendStocksToCustomers();
+
+        log.info("After sending Stock");
     }
 
+    //Проверка отправки акции пользователю в отсутствующий день
+    // (по воскресеньям не запускать)
     @Test
-    void sendStocksToCustomers() throws InterruptedException {
-        log.info("Before sending");
+    void do_not_send_stocks_to_customers() {
+        User testUser = new User();
+        testUser.setEmail("Test@yandex.ru");
 
-        mailSenderService.send(new String("1"),new String("2"),new String("3"),new String("4"));
-        Thread.sleep(10000);
-        log.info("After sending");
+        List<User> testUserList = new ArrayList<>();
+        testUserList.add(testUser);
 
+        Stock testStock = new Stock();
+        testStock.setStockTitle("Test title");
+        testStock.setStockText("Test text");
+        testStock.setStartDate(LocalDate.now());
+        testStock.setEndDate(LocalDate.now());
+
+        List<Stock> testStockList = new ArrayList<>();
+        testStockList.add(testStock);
+
+        log.info("Before sending Stock");
+
+        when(userRepository.findByDayOfWeekForStockSend(SUNDAY))
+                .thenReturn(testUserList);
+        when(stockRepository.findAllByStartDateBetweenAndEndDateIsAfter(any(), any(), any()))
+                .thenReturn(testStockList);
+
+        Mockito.verify(userRepository, Mockito.times(0))
+                .findByDayOfWeekForStockSend(any());
+
+        schedulingService.sendStocksToCustomers();
+
+        log.info("After sending Stock");
     }
 }
