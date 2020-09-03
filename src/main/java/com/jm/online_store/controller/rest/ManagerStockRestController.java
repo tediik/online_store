@@ -20,8 +20,8 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/stock")
-public class StockRestController {
+@RequestMapping("/manager/api/stock")
+public class ManagerStockRestController {
     private final StockService stockService;
 
     @GetMapping("/{id}")

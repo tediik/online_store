@@ -2,12 +2,13 @@
  * stockId for tests
  * @type {number}
  */
-let stockId = 57
+let stockId = 58
+
 /**
  * Global variables declaration
  */
-const sharedStockApiUrl = "/api/sharedStock/"
-const stockApiUrl = "/api/stock/"
+const sharedStockApiUrl = "/customer/api/sharedStock/"
+const stockApiUrl = "/customer/api/stock/"
 let urlToShare = document.location.href
 let myHeaders = new Headers()
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
@@ -36,7 +37,7 @@ function generateShareLinks() {
 /**
  * function that handles share buttons.
  * Sends POST fetch request to shared stock api
- * @param socialNetworkName - name of social network, which button was clicked
+ * name of social network, which button was clicked
  */
 function handleShareButton() {
     let socialNetworkName = $(this).attr('data-socialNetworkName')

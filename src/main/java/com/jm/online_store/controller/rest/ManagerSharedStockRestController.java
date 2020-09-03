@@ -19,9 +19,8 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/sharedStock")
-public class SharedStockRest {
-    private final StockService stockService;
+@RequestMapping("/manager/api/sharedStock")
+public class ManagerSharedStockRestController {
     private final SharedStockService sharedStockService;
 
     @PostMapping

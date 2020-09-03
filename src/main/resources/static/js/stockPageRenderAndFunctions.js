@@ -10,8 +10,8 @@ $('#stockModal').on('hidden.bs.modal', function () {
  * Declaration of global variables
  */
 let myHeaders = new Headers()
-let sharedStockApiUrl = "/api/sharedStock"
-let stockApiUrl = "/api/stock"
+let sharedStockApiUrl = "/manager/api/sharedStock"
+let stockApiUrl = "/manager/api/stock"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
 
@@ -234,7 +234,7 @@ function stockModalClearFields() {
 
 /**
  * Stock list render
- * @param stocksList stocks from db
+ * @param stocks stocks from db
  */
 function renderStockList(stocks) {
     let stockDiv = $("#stocksDiv").empty()
@@ -310,7 +310,7 @@ function handleSummernote() {
 /**
  * Function creates allert message when fields in modal are invalid
  * @param text - text of message
- * @param field - field to focus
+ * @param focusField - field to focus
  */
 function invalidModalField(text, focusField) {
     document.querySelector('#modal-alert').innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">

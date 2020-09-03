@@ -121,6 +121,7 @@ public class CustomerController {
         return "redirect:/customer";
     }
 
+    //временная заглушка пока нет акций на главной
     @GetMapping("/stockDetails")
     public String showStockDetailsPage(){
         return "stockDetailsPage";
