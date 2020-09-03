@@ -68,10 +68,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByEmail(String username) {
-        return userRepository.findByEmail(username);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
+    @Override
+    public Optional<User> findByFirstName(String FirstName) {
+        return userRepository.findByFirstName(FirstName);
+    }
 
     @Override
     public boolean isExist(String email) {
@@ -88,17 +92,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void addUser(@NotNull User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
-            throw new InvalidEmailException();
-        }
-        if (isExist(user.getEmail())) {
-            throw new EmailAlreadyExistsException();
-        }
-        if (!CollectionUtils.isEmpty(user.getRoles())) {
-            user.setRoles(persistRoles(user.getRoles()));
-        }
-        if (user.getProfilePicture().isEmpty()) {
-            user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+        if (user.getEmail() != null) {
+            if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+                throw new InvalidEmailException();
+            }
+            if (isExist(user.getEmail())) {
+                throw new EmailAlreadyExistsException();
+            }
+            if (!CollectionUtils.isEmpty(user.getRoles())) {
+                user.setRoles(persistRoles(user.getRoles()));
+            }
+            if (user.getProfilePicture().isEmpty()) {
+                user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+            }
         }
         userRepository.save(user);
     }
@@ -169,10 +175,10 @@ public class UserServiceImpl implements UserService {
      * Sends generated token to new users email
      */
     @Override
+    @Transactional
     public void changeUsersMail(User user, String newMail) {
 
         user.setEmail(newMail);
-
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
 
@@ -228,6 +234,7 @@ public class UserServiceImpl implements UserService {
      * After that, new email address is saved to users DB table
      */
     @Override
+    @Transactional
     public boolean activateNewUsersMail(String token, HttpServletRequest request) {
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
@@ -300,5 +307,44 @@ public class UserServiceImpl implements UserService {
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
         return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
+    }
+
+    /**
+     * Service method to add new user from admin page
+     * @param newUser
+     */
+    @Override
+    @Transactional
+    public void addNewUserFromAdmin(User newUser) {
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
+        log.debug("User with email: {} was saved successfully", newUser.getEmail());
+        userRepository.save(newUser);
+    }
+
+    /**
+     * Service method to update user from admin page
+     * @param user
+     * @return
+     */
+    @Override
+    @Transactional
+    public User updateUserFromAdminPage(User user) {
+        User editedUser = userRepository.findById(user.getId()).get();
+        Set<Role> newRoles = persistRoles(user.getRoles());
+        editedUser.setRoles(newRoles);
+        editedUser.setEmail(user.getEmail());
+        editedUser.setFirstName(user.getFirstName());
+        editedUser.setLastName(user.getLastName());
+        if (!user.getPassword().equals("")) {
+            editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        return userRepository.save(editedUser);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserFromController(User user) {
+        userRepository.saveAndFlush(user);
     }
 }

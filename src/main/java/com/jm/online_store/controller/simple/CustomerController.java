@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
@@ -21,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
+/**
+ * CustomerController контроллер для пользователя с ролью "Customer"
+ */
 @AllArgsConstructor
 @Controller
 @RequestMapping("/customer")
@@ -37,25 +38,37 @@ public class CustomerController {
     private final RoleService roleService;
     private final OrderService orderService;
 
+    /**
+     * метод получения данных зарегестрированного пользователя.
+     * формирование модели для вывода в "view"
+     * модель данных, построенных на основе зарегестрированного User
+     * @return
+     */
     @GetMapping
-    public String getCustomerPage() {
+    public String getPersonalInfo(Model model, Authentication auth) {
+        User user = (User) auth.getPrincipal();
+        model.addAttribute("user", user);
         return "customerPage";
     }
 
-    @GetMapping("/profile")
-    public String getPersonalInfo(Model model, Authentication auth) {
-        User principal = (User) auth.getPrincipal();
-        User user = userService.findById(principal.getId()).get();
-        model.addAttribute("user", user);
-        return "profile";
-    }
-
+    /**
+     * метод ля формирования данных для обновления User.
+     * @param user пользователь
+     * @param model модель для view
+     * @return
+     */
     @PostMapping("/profile")
     public String updateUserInfo(User user, Model model) {
         user.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
-        userService.updateUser(user);
-        model.addAttribute("user", user);
-        return "/profile";
+       User updadeUser = userService.findById(user.getId()).get();
+        updadeUser.setFirstName(user.getFirstName());
+        updadeUser.setLastName(user.getLastName());
+        updadeUser.setBirthdayDate(user.getBirthdayDate());
+        updadeUser.setUserGender(user.getUserGender());
+        userService.updateUser(updadeUser);
+        model.addAttribute("user", updadeUser);
+
+        return "customerPage";
     }
 
     @GetMapping("/change-password")
@@ -63,6 +76,14 @@ public class CustomerController {
         return "changePassword";
     }
 
+    /**
+     * метод обработки изменения пароля User.
+     * @param auth модель данных, построенных на основе зарегестрированного User
+     * @param model модель для view
+     * @param oldPassword старый пароль
+     * @param newPassword новый пароль
+     * @return страница User
+     */
     @PostMapping("/change-password")
     public String changePassword(Authentication auth, Model model,
                                  @RequestParam String oldPassword,
@@ -76,7 +97,7 @@ public class CustomerController {
         user.setPassword(passwordEncoder.encode(newPassword));
         userService.updateUser(user);
 
-        return "redirect:/customer/profile";
+        return "customerPage";
     }
 
     @PostMapping("/uploadImage")
@@ -91,34 +112,6 @@ public class CustomerController {
     public String deleteImage() throws IOException {
         User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userService.deleteUserImage(userDetails.getId());
-    }
-
-    @GetMapping("/order")
-    public String getOrderPage(Authentication auth, Model model) {
-        Long userId = ((User) auth.getPrincipal()).getId();
-
-        model.addAttribute("orders", List.copyOf(orderService.findAllByUserId(userId)));
-        model.addAttribute("incartsOrders", List.copyOf(orderService.findAllByUserIdAndStatus(userId, Order.Status.INCARTS)));
-        model.addAttribute("completedOrders", List.copyOf(orderService.findAllByUserIdAndStatus(userId, Order.Status.COMPLETED)));
-        model.addAttribute("canceledOrders", List.copyOf(orderService.findAllByUserIdAndStatus(userId, Order.Status.CANCELED)));
-
-        return "customerOrder";
-    }
-
-    @GetMapping("/order/{id}")
-    public String orderDetails(@PathVariable(value = "id") Long id, Model model) {
-        Order order = orderService.findOrderById(id).orElseGet(Order::new);
-        model.addAttribute("order", order);
-        return "customerOrderDetails";
-    }
-
-    @PostMapping("/changemail")
-    public String changeMailReq(Authentication auth, Model model,
-                              @RequestParam String newMail) {
-        User user = (User) auth.getPrincipal();
-        userService.changeUsersMail(user, newMail);
-        model.addAttribute("message", "Please check your email!");
-        return "redirect:/customer/profile";
     }
 
     @GetMapping("/activatenewmail/{token}")
