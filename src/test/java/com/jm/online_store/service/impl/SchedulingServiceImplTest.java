@@ -36,7 +36,7 @@ public class SchedulingServiceImplTest {
     @Test
     void send_stocks_to_customers() {
         User testUser = new User();
-        testUser.setEmail("Test@yandex.ru");
+        testUser.setEmail("jm-online-store@yandex.ru");
 
         List<User> testUserList = new ArrayList<>();
         testUserList.add(testUser);
@@ -72,7 +72,7 @@ public class SchedulingServiceImplTest {
     @Test
     void do_not_send_stocks_to_customers() {
         User testUser = new User();
-        testUser.setEmail("Test@yandex.ru");
+        testUser.setEmail("jm-online-store@yandex.ru");
 
         List<User> testUserList = new ArrayList<>();
         testUserList.add(testUser);
