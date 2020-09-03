@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -75,6 +76,12 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public void updateStock(Stock stock) {
-
+        Stock modifiedStock = stockRepository.findById(stock.getId()).orElseThrow(StockNotFoundException::new);
+        modifiedStock.setStartDate(stock.getStartDate());
+        modifiedStock.setEndDate(stock.getEndDate());
+        modifiedStock.setStockTitle(stock.getStockTitle());
+        modifiedStock.setStockText(stock.getStockText());
+        modifiedStock.setStockImg(stock.getStockImg());
+        stockRepository.save(modifiedStock);
     }
 }
