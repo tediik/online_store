@@ -6,19 +6,23 @@ $(document).ready(function ($) {
         $("#openNewRegistrationModal .error").hide();//reset error spans
     });
 
+    $('#user-email').hide();
+    getEmail();
+
     /*выводит email залогиненного пользователя*/
     let roles = $.cookie('roles');
     let email = $.cookie('email');
-    if (email.includes("anonymousUser")) {
+    /*if (email.includes("anonymousUser")) {
         $('#user-email').hide();
     }
-    $('#user-email').text($.cookie('email'));
+    $('#user-email').text($.cookie('email'));*/
 
     /*логин под админом*/
     if (roles.includes("ADMIN")) {
         $('#role-redirect').text("Профиль").click(function () {
             $('#role-redirect').attr("href", "/boss/profile");
         });
+        $('#profile-main-link-manager, #profile-news, #profile-promotion').hide();
     }
 
     /*логин под менеджером*/
@@ -26,8 +30,22 @@ $(document).ready(function ($) {
         $('#role-redirect').text("Профиль").click(function () {
             $('#role-redirect').attr("href", "/boss/profile");
         });
+        $('#profile-main-link-admin').hide();
     }
 });
+
+function getEmail() {
+    $.ajax({
+        url: '/api/users/current',
+        type: 'GET',
+        //contentType: 'application/json',
+        success: function (email) {
+            console.log("user");
+            console.log(email);
+            $('#user-email').append(email);
+        }
+    })
+}
 
 function register() {
     $(".alert").html("").hide();

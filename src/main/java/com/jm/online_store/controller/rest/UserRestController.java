@@ -4,8 +4,10 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,5 +48,11 @@ public class UserRestController {
     public ResponseEntity<Void> deleteUserById(@PathVariable Long userId) {
         userService.deleteByID(userId);
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<String> currentUser(Authentication authentication) {
+        User currentUser = (User) authentication.getPrincipal();
+        return currentUser == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(currentUser.getEmail());
     }
 }
