@@ -6,43 +6,28 @@ $(document).ready(function ($) {
         $("#openNewRegistrationModal .error").hide();//reset error spans
     });
 
-    $('#user-email').hide();
-    getEmail();
-
-    /*выводит email залогиненного пользователя*/
-    let roles = $.cookie('roles');
-    let email = $.cookie('email');
-    /*if (email.includes("anonymousUser")) {
-        $('#user-email').hide();
-    }
-    $('#user-email').text($.cookie('email'));*/
-
-    /*логин под админом*/
-    if (roles.includes("ADMIN")) {
-        $('#role-redirect').text("Профиль").click(function () {
-            $('#role-redirect').attr("href", "/boss/profile");
-        });
-        $('#profile-main-link-manager, #profile-news, #profile-promotion').hide();
-    }
-
-    /*логин под менеджером*/
-    if (roles.includes("MANAGER")) {
-        $('#role-redirect').text("Профиль").click(function () {
-            $('#role-redirect').attr("href", "/boss/profile");
-        });
-        $('#profile-main-link-admin').hide();
-    }
+    getCurrent();
 });
 
-function getEmail() {
+function getCurrent() {
     $.ajax({
-        url: '/api/users/current',
+        url: '/users/getCurrent',
         type: 'GET',
-        //contentType: 'application/json',
-        success: function (email) {
-            console.log("user");
-            console.log(email);
-            $('#user-email').append(email);
+        dataType: 'json',
+        success: function (user) {
+            let role = user.roles.map(role => role.name)
+            $('#user-email').append(user.email);
+            if (role.includes("ROLE_ADMIN")) {
+                $('#role-redirect').text("Профиль").click(function () {
+                    $('#role-redirect').attr("href", "/boss/profile");
+                });
+                $('#profile-main-link-manager, #profile-news, #profile-promotion').hide();
+            } else if (role.includes("ROLE_MANAGER")) {
+                $('#role-redirect').text("Профиль").click(function () {
+                    $('#role-redirect').attr("href", "/boss/profile");
+                });
+                $('#profile-main-link-admin').hide();
+            }
         }
     })
 }
