@@ -28,8 +28,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Product {
 
     @Id
@@ -52,6 +50,8 @@ public class Product {
     private String productType;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
     private List<ProductInOrder> productInOrders;
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {

@@ -175,10 +175,10 @@ public class UserServiceImpl implements UserService {
      * Sends generated token to new users email
      */
     @Override
+    @Transactional
     public void changeUsersMail(User user, String newMail) {
 
         user.setEmail(newMail);
-
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
 
@@ -234,6 +234,7 @@ public class UserServiceImpl implements UserService {
      * After that, new email address is saved to users DB table
      */
     @Override
+    @Transactional
     public boolean activateNewUsersMail(String token, HttpServletRequest request) {
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
@@ -339,5 +340,11 @@ public class UserServiceImpl implements UserService {
             editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         return userRepository.save(editedUser);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserFromController(User user) {
+        userRepository.saveAndFlush(user);
     }
 }
