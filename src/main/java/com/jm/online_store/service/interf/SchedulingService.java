@@ -4,5 +4,5 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 public interface SchedulingService {
     @Scheduled(cron = "${emailStockSending.delay}")
-    void sendStocksToCustomers();
+    void sendStocksToCustomers() throws InterruptedException;
 }
