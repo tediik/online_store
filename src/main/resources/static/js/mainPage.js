@@ -1,3 +1,36 @@
+$(document).ready(function ($) {
+    $('#mega-1').dcVerticalMegaMenu();
+
+    $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
+        $("#openNewRegistrationModal form")[0].reset();//reset modal fields
+        $("#openNewRegistrationModal .error").hide();//reset error spans
+    });
+
+    getCurrent();
+});
+
+function getCurrent() {
+    $.ajax({
+        url: '/users/getCurrent',
+        type: 'GET',
+        dataType: 'json',
+        success: function (user) {
+            let role = user.roles.map(role => role.name);
+            $('#user-email').append(user.email);
+            if (role.includes("ROLE_ADMIN") || role.includes("ROLE_MANAGER")) {
+                $('#role-redirect').text("Профиль").click(function () {
+                    $('#role-redirect').attr("href", "/boss/profile");
+                });
+            }
+            if (role.includes("ROLE_ADMIN")) {
+                $('#profile-main-link-manager, #profile-news, #profile-promotion').hide();
+            } else if (role.includes("ROLE_MANAGER")) {
+                $('#profile-main-link-admin').hide();
+            }
+        }
+    })
+}
+
 function register() {
     $(".alert").html("").hide();
     var formData = $('form').serialize();
@@ -25,10 +58,10 @@ function close() {
     $(".modal-backdrop.show").hide();
 }
 
-(function($){
+(function ($) {
 
     //define the new for the plugin ans how to call it
-    $.fn.dcVerticalMegaMenu = function(options){
+    $.fn.dcVerticalMegaMenu = function (options) {
         //set default options
         var defaults = {
             classParent: 'dc-mega',
@@ -51,10 +84,10 @@ function close() {
         var $dcVerticalMegaMenuObj = this;
 
         //act upon the element that is passed into the design
-        return $dcVerticalMegaMenuObj.each(function(options){
+        return $dcVerticalMegaMenuObj.each(function (options) {
 
             $mega = $(this);
-            if(defaults.direction == 'left'){
+            if (defaults.direction == 'left') {
                 $mega.addClass('left');
             } else {
                 $mega.addClass('right');
@@ -63,86 +96,86 @@ function close() {
             var megaWidth = $mega.width();
 
             // Set up menu
-            $('> li',$mega).each(function(){
+            $('> li', $mega).each(function () {
 
                 var $parent = $(this);
-                var $megaSub = $('> ul',$parent);
+                var $megaSub = $('> ul', $parent);
 
-                if($megaSub.length > 0){
+                if ($megaSub.length > 0) {
 
-                    $('> a',$parent).addClass(defaults.classParent).append('<span class="'+defaults.classArrow+'"></span>');
-                    $megaSub.addClass(defaults.classSubMenu).wrap('<div class="'+defaults.classContainer+'" />');
-                    var $container = $('.'+defaults.classContainer,$parent);
+                    $('> a', $parent).addClass(defaults.classParent).append('<span class="' + defaults.classArrow + '"></span>');
+                    $megaSub.addClass(defaults.classSubMenu).wrap('<div class="' + defaults.classContainer + '" />');
+                    var $container = $('.' + defaults.classContainer, $parent);
 
-                    if($('ul',$megaSub).length > 0){
+                    if ($('ul', $megaSub).length > 0) {
 
-                        $parent.addClass(defaults.classParent+'-li');
+                        $parent.addClass(defaults.classParent + '-li');
                         $container.addClass(defaults.classMega);
 
                         // Set sub headers
-                        $('> li',$megaSub).each(function(){
+                        $('> li', $megaSub).each(function () {
                             $(this).addClass('mega-unit');
-                            if($('> ul',this).length){
+                            if ($('> ul', this).length) {
                                 $(this).addClass(defaults.classSubParent);
-                                $('> a',this).addClass(defaults.classSubParent+'-a');
+                                $('> a', this).addClass(defaults.classSubParent + '-a');
                             } else {
                                 $(this).addClass(defaults.classSubLink);
-                                $('> a',this).addClass(defaults.classSubLink+'-a');
+                                $('> a', this).addClass(defaults.classSubLink + '-a');
                             }
                         });
 
                         // Create Rows
-                        var hdrs = $('.mega-unit',$parent);
+                        var hdrs = $('.mega-unit', $parent);
                         rowSize = parseInt(defaults.rowItems);
-                        for(var i = 0; i < hdrs.length; i+=rowSize){
-                            hdrs.slice(i, i+rowSize).wrapAll('<div class="'+defaults.classRow+'" />');
+                        for (var i = 0; i < hdrs.length; i += rowSize) {
+                            hdrs.slice(i, i + rowSize).wrapAll('<div class="' + defaults.classRow + '" />');
                         }
 
                         // Get mega dimensions
-                        var itemWidth = $('.mega-unit',$megaSub).outerWidth(true);
-                        var rowItems = $('.row:eq(0) .mega-unit',$megaSub).length;
+                        var itemWidth = $('.mega-unit', $megaSub).outerWidth(true);
+                        var rowItems = $('.row:eq(0) .mega-unit', $megaSub).length;
                         var innerItemWidth = itemWidth * rowItems;
                         var totalItemWidth = innerItemWidth + containerPad;
 
                         // Set mega header height
-                        $('.row',this).each(function(){
-                            $('.mega-unit:last',this).addClass('last');
+                        $('.row', this).each(function () {
+                            $('.mega-unit:last', this).addClass('last');
                             var maxValue = undefined;
-                            $('.mega-unit > a',this).each(function(){
+                            $('.mega-unit > a', this).each(function () {
                                 var val = parseInt($(this).height());
-                                if (maxValue === undefined || maxValue < val){
+                                if (maxValue === undefined || maxValue < val) {
                                     maxValue = val;
                                 }
                             });
-                            $('.mega-unit > a',this).css('height',maxValue+'px');
-                            $(this).css('width',innerItemWidth+'px');
+                            $('.mega-unit > a', this).css('height', maxValue + 'px');
+                            $(this).css('width', innerItemWidth + 'px');
                         });
                         var subWidth = $megaSub.outerWidth(true);
                         var totalWidth = $container.outerWidth(true);
                         var containerPad = totalWidth - subWidth;
                         // Calculate Row Height
-                        $('.row',$megaSub).each(function(){
+                        $('.row', $megaSub).each(function () {
                             var rowHeight = $(this).height();
-                            $(this).parent('.row').css('height',rowHeight+'px');
+                            $(this).parent('.row').css('height', rowHeight + 'px');
                         });
-                        $('.row:last',$megaSub).addClass('last');
-                        $('.row:first',$megaSub).addClass('first');
+                        $('.row:last', $megaSub).addClass('last');
+                        $('.row:first', $megaSub).addClass('first');
                     } else {
-                        $container.addClass('non-'+defaults.classMega);
+                        $container.addClass('non-' + defaults.classMega);
                     }
                 }
 
-                var $container = $('.'+defaults.classContainer,$parent);
+                var $container = $('.' + defaults.classContainer, $parent);
                 var subWidth = $megaSub.outerWidth(true);
                 // Get flyout height
                 var subHeight = $container.height();
                 var itemHeight = $parent.outerHeight(true);
                 // Set position to top of parent
                 $container.css({
-                    height: subHeight+'px',
-                    marginTop: -itemHeight+'px',
+                    height: subHeight + 'px',
+                    marginTop: -itemHeight + 'px',
                     zIndex: '1000',
-                    width: subWidth+'px'
+                    width: subWidth + 'px'
                 }).hide();
             });
 
@@ -155,13 +188,13 @@ function close() {
                 out: megaOut // function = onMouseOut callback (REQUIRED)
             };
 
-            $('li',$dcVerticalMegaMenuObj).hoverIntent(config);
+            $('li', $dcVerticalMegaMenuObj).hoverIntent(config);
 
-            function megaOver(){
+            function megaOver() {
                 $(this).addClass('mega-hover');
-                var $link = $('> a',this);
-                var $subNav = $('.sub',this);
-                var $container = $('.sub-container',this);
+                var $link = $('> a', this);
+                var $subNav = $('.sub', this);
+                var $container = $('.sub-container', this);
                 var width = $container.width();
                 var outerHeight = $container.outerHeight();
                 var height = $container.height();
@@ -173,29 +206,30 @@ function close() {
                 var maxHeight = bodyHeight - offset;
                 var xsHeight = maxHeight - outerHeight;
 
-                if(xsHeight < 0){
+                if (xsHeight < 0) {
                     var containerMargin = xsHeight - itemHeight;
-                    $container.css({marginTop: containerMargin+'px'});
+                    $container.css({marginTop: containerMargin + 'px'});
                 }
 
                 var containerPosition = {right: megaWidth};
-                if(defaults.direction == 'right'){
+                if (defaults.direction == 'right') {
                     containerPosition = {left: megaWidth};
                 }
 
-                if(defaults.effect == 'fade'){
+                if (defaults.effect == 'fade') {
                     $container.css(containerPosition).fadeIn(defaults.speed);
                 }
-                if(defaults.effect == 'show'){
+                if (defaults.effect == 'show') {
                     $container.css(containerPosition).show();
                 }
-                if(defaults.effect == 'slide'){
+                if (defaults.effect == 'slide') {
                     $container.css({
                         width: 0,
                         height: 0,
-                        opacity: 0});
+                        opacity: 0
+                    });
 
-                    if(defaults.direction == 'right'){
+                    if (defaults.direction == 'right') {
 
                         $container.show().css({
                             left: megaWidth
@@ -214,9 +248,9 @@ function close() {
                 }
             }
 
-            function megaOut(){
+            function megaOut() {
                 $(this).removeClass('mega-hover');
-                var $container = $('.sub-container',this);
+                var $container = $('.sub-container', this);
                 $container.hide();
             }
         });

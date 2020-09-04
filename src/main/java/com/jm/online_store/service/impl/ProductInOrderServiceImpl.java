@@ -33,12 +33,12 @@ public class ProductInOrderServiceImpl implements ProductInOrderService {
         Product product = productService.findProductById(productId).get();
         Order order = orderService.findOrderById(orderId).get();
 
-        order.setOrderPrice(order.getOrderPrice() + product.getPrice());
+        order.setOrderPrice(order.getOrderPrice() + product.getPrice() * amount);
         order.setAmount(order.getAmount() + amount);
 
         orderService.updateOrder(order);
 
-        ProductInOrder productInOrder = new ProductInOrder(product, order, amount);
+        ProductInOrder productInOrder = new ProductInOrder(product, order, amount, product.getPrice());
         repository.save(productInOrder);
     }
 }
