@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Рест контроллер для crud операций с акциями
@@ -27,6 +25,7 @@ public class StockRest {
 
     /**
      * Метод выводит все акции
+     *
      * @return List<Stock> список всех акций
      */
     @GetMapping(value = "/rest/allStocks")
@@ -53,16 +52,18 @@ public class StockRest {
 
     /**
      * Метод, ищет акции по id
+     *
      * @param id идентификатор акции
      * @return Optiona<Stock> возвращает акцию
      */
     @GetMapping(value = "/rest/{id}")
-    public Optional<Stock> findStockById(@PathVariable("id") Long id) {
+    public Stock findStockById(@PathVariable("id") Long id) {
         return stockService.findStockById(id);
     }
 
     /**
      * Метод добавляет акцию
+     *
      * @param stock акиця для добавления
      * @return ResponseEntity<Stock> Возвращает добавленную акцию с кодом ответа
      */
@@ -74,6 +75,7 @@ public class StockRest {
 
     /**
      * Редактирует акцию
+     *
      * @param stock акция для редактирования
      * @return ResponseEntity<Stock> Возвращает отредактированную акцию с кодом овтета
      */
@@ -85,6 +87,7 @@ public class StockRest {
 
     /**
      * Метод удаления акции по идентификатору
+     *
      * @param id идентификатор акции
      */
     @DeleteMapping(value = "/rest/{id}")
