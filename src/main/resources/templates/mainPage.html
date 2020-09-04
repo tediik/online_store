@@ -10,64 +10,35 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
-
-    <script src="/static/js/mainPage.js"></script>
-    <script src="/static/js/jquery.hoverIntent.minified.js"></script>
-    <title></title>
 </head>
-
-<script>
-
-    jQuery(document).ready(function ($) {
-        $('#mega-1').dcVerticalMegaMenu();
-
-        $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
-            $("#openNewRegistrationModal form")[0].reset();//reset modal fields
-            $("#openNewRegistrationModal .error").hide();//reset error spans
-        });
-    });
-
-</script>
-
 <body>
 
 <header>
-
     <div><a th:href="@{/}"> Logo place </a></div>
-
+    <div id="user-email" style="position: absolute; top: 0; right: 10px; color: #1B1B1B"></div>
     <!-- Search -->
     <form class="form-inline">
         <div class="md-form my-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
         </div>
     </form>
-
     <!-- Customer service -->
     <a class="p-2 text-dark" href="/news">Новости</a>
-    <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn customerbutton">
-        <a th:href="@{/customer}"> Кабинет покупателя </a>
+    <div sec:authorize="isAuthenticated()" class="btn customerbutton">
+        <a th:href="@{/customer}" id="role-redirect"> Кабинет покупателя </a>
     </div>
     <!-- Registration -->
-    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')" class="btn registrationbutton"
+    <div sec:authorize="!isAuthenticated()" class="btn registrationbutton"
          data-toggle="modal" data-target="#openNewRegistrationModal">
         <a> Регистрация </a>
     </div>
     <!-- Login -->
-    <div sec:authorize="!hasAnyAuthority('ROLE_CUSTOMER')" class="btn loginbutton">
+    <div sec:authorize="!isAuthenticated()" class="btn loginbutton">
         <a th:href="@{/login}"> Войти </a>
     </div>
-    <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn loginbutton">
+    <div sec:authorize="isAuthenticated()" class="btn loginbutton">
         <a th:href="@{/logout}"> Выйти </a>
     </div>
-
 </header>
 
 <div id="openNewRegistrationModal" class="modal">
@@ -183,9 +154,19 @@
                 </ul>
             </li>
         </ul>
-
     </div>
 </div>
 
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+<link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
+
+<script src="/static/js/mainPage.js"></script>
+<script src="/static/js/jquery.hoverIntent.minified.js"></script>
 </body>
 </html>
