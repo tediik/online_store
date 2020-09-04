@@ -83,5 +83,23 @@ public class TwitterAuth {
                 name = pair.substring(pair.indexOf(":") + 2, pair.length() - 2);
             }
         }
+
+        if (userService.findByFirstName(name).equals(null)) {
+            User newUser = new User();
+            newUser.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
+            newUser.setFirstName(name);
+            newUser.setPassword("1");
+            userService.addUser(newUser);
+
+            Authentication customAuthentication = new UsernamePasswordAuthenticationToken(
+                    newUser, null, newUser.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(customAuthentication);
+        } else {
+            User user = userService.findByFirstName(name);
+
+            Authentication customAuthentication = new UsernamePasswordAuthenticationToken(
+                    user, null, user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(customAuthentication);
+        }
     }
 }

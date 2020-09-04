@@ -31,6 +31,14 @@ public class LoginController {
     @GetMapping("/oauthTwitter")
     public String oAuthTwitter(@RequestParam String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
         twitterAuth.getAccessToken(oauth_verifier);
+        //Если такой пользователь есть то:
+        return "redirect:/";
+        //Иначе на регистрацию:
+        //return "TwitterRegistrationPage";
+    }
+
+    @GetMapping("/TwitterRegistrationPage")
+    public String twitterRegPage() {
         return "TwitterRegistrationPage";
     }
 
