@@ -24,7 +24,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ import java.util.Set;
 
 /**
  * класс первичного заполнения таблиц.
- *
+ * <p>
  * для первичного заполнения базы данных раскомментировать аннотацию
  * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
  * в файле "application.properties" с "update" на "create" или "create-drop".
@@ -365,15 +364,15 @@ public class DataInitializer {
         stockService.addStock(thirdStock);
     }
 
-    public void sharedStockInit(){
+    public void sharedStockInit() {
         String[] socialNetworkNames = {"facebook", "vk", "twitter"};
         List<Stock> stocks = stockService.findAll();
         List<User> users = userService.findAll();
         Long firstNumber = stocks.get(0).getId();
         Long lastNumber = stocks.get(stocks.size() - 1).getId();
         Random random = new Random();
-        for (Stock stock : stocks){
-            for (User user : users){
+        for (Stock stock : stocks) {
+            for (User user : users) {
                 long generatedLongForStock = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
                 SharedStock sharedStock = SharedStock.builder()
                         .user(user)

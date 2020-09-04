@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,7 +24,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Stock findStockById(Long id) {
-        if (stockRepository.findById(id).isEmpty()){
+        if (stockRepository.findById(id).isEmpty()) {
             throw new StockNotFoundException();
         }
         return stockRepository.findById(id).get();
@@ -44,7 +43,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public List<Stock> findCurrentStocks() {
         List<Stock> currentStocks = stockRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrEndDateEquals(LocalDate.now(), LocalDate.now(), null);
-        if (currentStocks.isEmpty()){
+        if (currentStocks.isEmpty()) {
             throw new StockNotFoundException();
         }
         return currentStocks;
@@ -59,7 +58,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public List<Stock> findFutureStocks() {
         List<Stock> currentStocks = stockRepository.findByStartDateAfter(LocalDate.now());
-        if (currentStocks.isEmpty()){
+        if (currentStocks.isEmpty()) {
             throw new StockNotFoundException();
         }
         return currentStocks;
@@ -68,7 +67,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public List<Stock> findPastStocks() {
         List<Stock> currentStocks = stockRepository.findByEndDateBefore(LocalDate.now());
-        if (currentStocks.isEmpty()){
+        if (currentStocks.isEmpty()) {
             throw new StockNotFoundException();
         }
         return currentStocks;
