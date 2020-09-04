@@ -177,6 +177,21 @@ public class User implements UserDetails {
         return true;
     }
 
+    public enum Gender {
+        MAN,
+        WOMAN
+    }
+
+    public enum DayOfWeekForStockSend {
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -192,18 +207,24 @@ public class User implements UserDetails {
         return Objects.hash(id, email, password);
     }
 
-    public enum Gender {
-        MAN,
-        WOMAN
-    }
-
-    public enum DayOfWeekForStockSend {
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", passwordConfirm='" + passwordConfirm + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", userGender=" + userGender +
+                ", birthdayDate=" + birthdayDate +
+                ", registerDate=" + registerDate +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", roles=" + roles +
+                ", favouritesGoods=" + favouritesGoods +
+                ", userBasket=" + userBasket +
+                ", dayOfWeekForStockSend=" + dayOfWeekForStockSend +
+                ", orders=" + orders +
+                '}';
     }
 }
