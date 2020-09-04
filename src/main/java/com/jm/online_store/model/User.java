@@ -206,25 +206,4 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hash(id, email, password);
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", passwordConfirm='" + passwordConfirm + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", userGender=" + userGender +
-                ", birthdayDate=" + birthdayDate +
-                ", registerDate=" + registerDate +
-                ", profilePicture='" + profilePicture + '\'' +
-                ", roles=" + roles +
-                ", favouritesGoods=" + favouritesGoods +
-                ", userBasket=" + userBasket +
-                ", dayOfWeekForStockSend=" + dayOfWeekForStockSend +
-                ", orders=" + orders +
-                '}';
-    }
 }
