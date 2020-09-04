@@ -42,32 +42,28 @@ public class CustomerController {
      * метод получения данных зарегестрированного пользователя.
      * формирование модели для вывода в "view"
      * модель данных, построенных на основе зарегестрированного User
+     *
      * @return
      */
     @GetMapping
-    public String getPersonalInfo(Model model, Authentication auth) {
-        User user = (User) auth.getPrincipal();
+    public String getUserProfile(Model model, Authentication auth) {
+        User principal = (User) auth.getPrincipal();
+        User user = userService.findById(principal.getId()).get();
         model.addAttribute("user", user);
         return "customerPage";
     }
 
     /**
      * метод ля формирования данных для обновления User.
-     * @param user пользователь
+     *
+     * @param user  пользователь
      * @param model модель для view
      * @return
      */
     @PostMapping("/profile")
-    public String updateUserInfo(User user, Model model) {
-        user.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
-       User updadeUser = userService.findById(user.getId()).get();
-        updadeUser.setFirstName(user.getFirstName());
-        updadeUser.setLastName(user.getLastName());
-        updadeUser.setBirthdayDate(user.getBirthdayDate());
-        updadeUser.setUserGender(user.getUserGender());
-        userService.updateUser(updadeUser);
-        model.addAttribute("user", updadeUser);
-
+    public String updateUserProfile(User user, Model model) {
+        User updateUser = userService.updateUserProfile(user);
+        model.addAttribute("user", updateUser);
         return "customerPage";
     }
 
@@ -78,8 +74,9 @@ public class CustomerController {
 
     /**
      * метод обработки изменения пароля User.
-     * @param auth модель данных, построенных на основе зарегестрированного User
-     * @param model модель для view
+     *
+     * @param auth        модель данных, построенных на основе зарегестрированного User
+     * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
@@ -89,15 +86,10 @@ public class CustomerController {
                                  @RequestParam String oldPassword,
                                  @RequestParam String newPassword) {
         User user = (User) auth.getPrincipal();
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
             model.addAttribute("message", "Pls, double check previous password!");
-
-            return "redirect:/customer/profile" ;
         }
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userService.updateUser(user);
-
-        return "customerPage";
+        return "redirect:/customer";
     }
 
     @PostMapping("/uploadImage")
@@ -115,7 +107,7 @@ public class CustomerController {
     }
 
     @GetMapping("/activatenewmail/{token}")
-    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request){
+    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateNewUsersMail(token, request);
         model.addAttribute("message", "Email address changes successfully");
         return "redirect:/customer";

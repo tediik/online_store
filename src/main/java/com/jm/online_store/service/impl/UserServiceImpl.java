@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.server.url}")
     private String urlActivate;
 
-    @Transactional
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
@@ -84,8 +83,9 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод добавления нового пользователя.
-     *
+     * <p>
      * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
+     *
      * @param user полученный объект User/
      */
     @Override
@@ -118,6 +118,17 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User updateUserProfile(User user) {
+        User updateUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+        updateUser.setFirstName(user.getFirstName());
+        updateUser.setLastName(user.getLastName());
+        updateUser.setBirthdayDate(user.getBirthdayDate());
+        updateUser.setUserGender(user.getUserGender());
+        return userRepository.save(updateUser);
     }
 
     @Override
@@ -196,7 +207,7 @@ public class UserServiceImpl implements UserService {
     /**
      * метод проверки активации пользователя.
      *
-     * @param token модель, построенная на основе пользователя, после подтверждения
+     * @param token   модель, построенная на основе пользователя, после подтверждения
      * @param request параметры запроса.
      * @return булево значение "true or false"
      */
@@ -311,6 +322,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to add new user from admin page
+     *
      * @param newUser
      */
     @Override
@@ -324,6 +336,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
+     *
      * @param user
      * @return
      */
@@ -346,5 +359,16 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUserFromController(User user) {
         userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    @Transactional
+    public boolean changePassword(Long id, String oldPassword, String newPassword) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return true;
     }
 }

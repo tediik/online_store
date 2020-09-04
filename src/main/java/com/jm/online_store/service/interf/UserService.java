@@ -20,6 +20,8 @@ public interface UserService {
 
     void updateUser(User user);
 
+    User updateUserProfile(User user);
+
     void updateUserFromController(User user);
 
     void updateUserAdminPanel(User user);
@@ -45,6 +47,8 @@ public interface UserService {
     String deleteUserImage(Long userId) throws IOException;
 
     void addNewUserFromAdmin(User newUser);
+
+    boolean changePassword(Long id, String oldPassword, String newPassword);
 }
 
 

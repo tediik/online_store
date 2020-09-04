@@ -4,7 +4,6 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,11 +45,10 @@ public class BossController {
     }
 
     @PostMapping("/profile")
-    public String updateUserInfo(User user, Model model) {
-        user.setRoles(Collections.singleton(roleService.findByName("ROLE_ADMIN").get()));
-        userService.updateUser(user);
-        model.addAttribute("user", user);
-        return "/profileBoss";
+    public String updateUserProfile(User user, Model model) {
+        User updateUser = userService.updateUserProfile(user);
+        model.addAttribute("user", updateUser);
+        return "profileBoss";
     }
 
     @GetMapping("/change-password")
@@ -63,14 +61,9 @@ public class BossController {
                                  @RequestParam String oldPassword,
                                  @RequestParam String newPassword) {
         User user = (User) auth.getPrincipal();
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
             model.addAttribute("message", "Pls, double check previous password!");
-
-            return "redirect:/boss/profile";
         }
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userService.updateUser(user);
-
         return "redirect:/boss/profile";
     }
 
