@@ -32,22 +32,20 @@ public class SchedulingServiceImplTest {
     @MockBean
     private StockRepository stockRepository;
 
+    User testUser = new User();
+    List<User> testUserList = new ArrayList<>();
+    Stock testStock = new Stock();
+    List<Stock> testStockList = new ArrayList<>();
+
     //Проверка отправки акции пользователю в указанный день
     @Test
     void send_stocks_to_customers() {
-        User testUser = new User();
         testUser.setEmail("jm-online-store@yandex.ru");
-
-        List<User> testUserList = new ArrayList<>();
         testUserList.add(testUser);
-
-        Stock testStock = new Stock();
         testStock.setStockTitle("Test title");
         testStock.setStockText("Test text");
         testStock.setStartDate(LocalDate.now());
         testStock.setEndDate(LocalDate.now());
-
-        List<Stock> testStockList = new ArrayList<>();
         testStockList.add(testStock);
 
         log.info("Before sending Stock");
@@ -71,20 +69,6 @@ public class SchedulingServiceImplTest {
     // (по воскресеньям не запускать)
     @Test
     void do_not_send_stocks_to_customers() {
-        User testUser = new User();
-        testUser.setEmail("jm-online-store@yandex.ru");
-
-        List<User> testUserList = new ArrayList<>();
-        testUserList.add(testUser);
-
-        Stock testStock = new Stock();
-        testStock.setStockTitle("Test title");
-        testStock.setStockText("Test text");
-        testStock.setStartDate(LocalDate.now());
-        testStock.setEndDate(LocalDate.now());
-
-        List<Stock> testStockList = new ArrayList<>();
-        testStockList.add(testStock);
 
         log.info("Before sending Stock");
 
