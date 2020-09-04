@@ -40,16 +40,16 @@ class ProductInOrderServiceImplTest {
         int productAmount = product.getAmount();
         double orderPrice = order.getOrderPrice();
         long orderAmount = order.getAmount();
-        ProductInOrder productInOrder = new ProductInOrder(product, order, productAmount);
+        ProductInOrder productInOrder = new ProductInOrder(product, order, productAmount, product.getPrice());
 
         when(productService.findProductById(1L)).thenReturn(Optional.of(Optional.ofNullable(product).get()));
         when(orderService.findOrderById(1L)).thenReturn(Optional.of(Optional.ofNullable(order).get()));
-        when(productInOrderRepository.save(new ProductInOrder(product, order, productAmount))).thenReturn(productInOrder);
+        when(productInOrderRepository.save(new ProductInOrder(product, order, productAmount, product.getPrice()))).thenReturn(productInOrder);
 
         productInOrderService.addToOrder(product.getId(), order.getId(), productAmount);
         assertNotNull(order.getOrderPrice());
         assertNotNull(order.getAmount());
-        assertEquals(orderPrice + productPrice, order.getOrderPrice());
+        assertEquals(orderPrice + productPrice * productAmount, order.getOrderPrice());
         assertEquals(orderAmount + productAmount, order.getAmount());
         verify(productService, times(1)).findProductById(1L);
         verify(orderService, times(1)).updateOrder(order);
