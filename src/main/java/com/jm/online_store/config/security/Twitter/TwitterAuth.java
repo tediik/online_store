@@ -59,7 +59,7 @@ public class TwitterAuth {
         return service.getAuthorizationUrl(requestToken);
     }
 
-    public void getAccessToken(String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
+    public boolean getAccessToken(String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
         // Trade the Request Token and Verifier for the Access Token
         log.debug("Trading the Request Token for an Access Token...");
         final OAuth1AccessToken accessToken = service.getAccessToken(requestToken, oauth_verifier);
@@ -84,7 +84,7 @@ public class TwitterAuth {
             }
         }
 
-        if (userService.findByFirstName(name).equals(null)) {
+        if (userService.findByFirstName(name) == null) {
             User newUser = new User();
             newUser.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
             newUser.setFirstName(name);
@@ -94,12 +94,17 @@ public class TwitterAuth {
             Authentication customAuthentication = new UsernamePasswordAuthenticationToken(
                     newUser, null, newUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(customAuthentication);
+
+            return false;
+
         } else {
             User user = userService.findByFirstName(name);
 
             Authentication customAuthentication = new UsernamePasswordAuthenticationToken(
                     user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(customAuthentication);
+
+            return true;
         }
     }
 }

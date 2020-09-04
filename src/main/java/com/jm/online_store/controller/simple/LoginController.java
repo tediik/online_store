@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
@@ -30,11 +32,11 @@ public class LoginController {
 
     @GetMapping("/oauthTwitter")
     public String oAuthTwitter(@RequestParam String oauth_verifier) throws InterruptedException, ExecutionException, IOException {
-        twitterAuth.getAccessToken(oauth_verifier);
-        //Если такой пользователь есть то:
-        return "redirect:/";
-        //Иначе на регистрацию:
-        //return "TwitterRegistrationPage";
+        if (twitterAuth.getAccessToken(oauth_verifier)) {
+            return "redirect:/";
+        } else {
+            return "TwitterRegistrationPage";
+        }
     }
 
     @GetMapping("/TwitterRegistrationPage")
