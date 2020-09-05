@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
@@ -33,11 +34,40 @@ public class ManagerRestController {
      *
      * @return List<News> возвращает список всех новстей из базы данных
      */
-    @GetMapping("/news")
+    @GetMapping("/news/all")
     public ResponseEntity<List<News>> allNews() {
-
         List<News> allNewsList = newsService.findAll();
         return ResponseEntity.ok().body(allNewsList);
+    }
+
+    /**
+     * Method returns published news
+     * @return - ResponseEntity<List<News>>
+     */
+    @GetMapping("/news/published")
+    public ResponseEntity<List<News>> getAllPublishedNews() {
+        List<News> publishedNews;
+        try {
+            publishedNews = newsService.getNewsByStatus(true);
+        } catch (NewsNotFoundException e) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(publishedNews);
+    }
+
+    /**
+     * Method returns unpublished news
+     * @return - ResponseEntity<List<News>>
+     */
+    @GetMapping("/news/unpublished")
+    public ResponseEntity<List<News>> getAllUnpublishedNews() {
+        List<News> unpublishedNews;
+        try {
+            unpublishedNews = newsService.getNewsByStatus(false);
+        } catch (NewsNotFoundException e) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(unpublishedNews);
     }
 
     /**
