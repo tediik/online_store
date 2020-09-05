@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -204,6 +205,7 @@ public class DataInitializer {
                         " 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px; color: rgb(0, 0, 0); font-family:" +
                         " &quot;PT Sans&quot;, Arial, sans-serif;\"><i style=\"font-size: 1rem;\">23<br></i><br></p>")
                 .postingDate(LocalDateTime.now().minusDays(5L))
+                .status(true)
                 .build();
 
         News thirdNews = News.builder()
@@ -218,6 +220,7 @@ public class DataInitializer {
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
                 .postingDate(LocalDateTime.now().minusDays(13L))
+                .status(true)
                 .build();
 
         newsService.save(firstNews);
