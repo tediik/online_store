@@ -20,12 +20,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Collections;
 
 @Controller
-@RequestMapping("/boss")
+@RequestMapping("/authority")
 @RequiredArgsConstructor
-public class BossController {
+public class AuthorityController {
+
+    /**
+     * Контролллер для ролей ADMIN MANAGER
+     */
 
     private final UserService userService;
     private final RoleService roleService;
@@ -41,14 +44,14 @@ public class BossController {
         User principal = (User) auth.getPrincipal();
         User user = userService.findById(principal.getId()).get();
         model.addAttribute("user", user);
-        return "profileBoss";
+        return "profileAuthority";
     }
 
     @PostMapping("/profile")
     public String updateUserProfile(User user, Model model) {
         User updateUser = userService.updateUserProfile(user);
         model.addAttribute("user", updateUser);
-        return "profileBoss";
+        return "profileAuthority";
     }
 
     @GetMapping("/change-password")
@@ -64,7 +67,7 @@ public class BossController {
         if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
             model.addAttribute("message", "Pls, double check previous password!");
         }
-        return "redirect:/boss/profile";
+        return "redirect:/authority/profile";
     }
 
     @PostMapping("/uploadImage")
@@ -79,15 +82,6 @@ public class BossController {
     public String deleteImage() throws IOException {
         User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userService.deleteUserImage(userDetails.getId());
-    }
-
-    @PostMapping("/changemail")
-    public String changeMailReq(Authentication auth, Model model,
-                                @RequestParam String newMail) {
-        User user = (User) auth.getPrincipal();
-        userService.changeUsersMail(user, newMail);
-        model.addAttribute("message", "Please check your email!");
-        return "redirect:/boss/profile";
     }
 
     @GetMapping("/activatenewmail/{token}")

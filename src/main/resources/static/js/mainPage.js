@@ -19,7 +19,7 @@ function getCurrent() {
             $('#user-email').append(user.email);
             if (role.includes("ROLE_ADMIN") || role.includes("ROLE_MANAGER")) {
                 $('#role-redirect').text("Профиль").click(function () {
-                    $('#role-redirect').attr("href", "/boss/profile");
+                    $('#role-redirect').attr("href", "/authority/profile");
                 });
             }
             if (role.includes("ROLE_ADMIN")) {
