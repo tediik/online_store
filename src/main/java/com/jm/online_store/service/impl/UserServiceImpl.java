@@ -128,6 +128,7 @@ public class UserServiceImpl implements UserService {
         updateUser.setLastName(user.getLastName());
         updateUser.setBirthdayDate(user.getBirthdayDate());
         updateUser.setUserGender(user.getUserGender());
+        updateUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         return userRepository.save(updateUser);
     }
 
@@ -144,7 +145,6 @@ public class UserServiceImpl implements UserService {
             editUser.setEmail(user.getEmail());
         }
         editUser.setRoles(persistRoles(user.getRoles()));
-        editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
     }
