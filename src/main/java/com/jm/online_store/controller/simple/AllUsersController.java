@@ -2,6 +2,7 @@ package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,11 +17,10 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping(value = "/users")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class AllUsersController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping("/uploadImage")
     @ResponseBody

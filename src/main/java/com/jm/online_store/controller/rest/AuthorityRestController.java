@@ -2,9 +2,8 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
@@ -16,15 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/authority")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthorityRestController {
-
     /**
      * REST-контролллер для ролей ADMIN & MANAGER
      */
-
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping("/changemail")
     public ResponseEntity<String> changeMailReq(Authentication auth, Model model,
