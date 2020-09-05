@@ -1,0 +1,15 @@
+#spring.security.oauth2.client.registration.facebook.client-id=640383196588381
+#spring.security.oauth2.client.registration.facebook.client-secret=369d8d2abc1774fc18dd2fdd0733c7f5
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: 933203153853320
+            client-secret: c422a6fd091ef86806c2c1ea5b072811
+
+#test:
+#  testValues:
+#    value1: 1
+#    value2: 2
