@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/users")
-public class CurrentUserRestController {
+public class AllUsersRestController {
 
     /**
      * Метод для получения имейла и ролей залогиненного пользователя,
