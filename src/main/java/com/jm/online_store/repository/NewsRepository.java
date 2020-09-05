@@ -21,4 +21,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findAllByPostingDateBefore(LocalDateTime timeNow);
 
     List<News> findAllByPostingDateAfter(LocalDateTime timeNow);
+
+    List<News> findByStatusEquals(boolean status);
 }

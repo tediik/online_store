@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
@@ -105,5 +106,14 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> findAllByPostingDateAfter(LocalDateTime timeNow) {
         return newsRepository.findAllByPostingDateAfter(timeNow);
+    }
+
+    @Override
+    public List<News> getNewsByStatus(boolean status) {
+        List<News> newsList = newsRepository.findByStatusEquals(status);
+        if (newsList.isEmpty()) {
+            throw new NewsNotFoundException();
+        }
+        return newsList;
     }
 }

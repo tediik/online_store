@@ -24,4 +24,6 @@ public interface NewsService {
     List<News> findAllByPostingDateBefore(LocalDateTime timeNow);
 
     List<News> findAllByPostingDateAfter(LocalDateTime timeNow);
+
+    List<News> getNewsByStatus(boolean status);
 }
