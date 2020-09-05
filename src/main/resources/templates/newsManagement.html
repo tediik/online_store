@@ -2,14 +2,7 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>News Management</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- Подключаем библиотеку summernote bs-4 -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
@@ -36,7 +29,7 @@
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <button class="btn btn-outline-primary"
-                    data-toggle="modal" data-target="#addNewsModal">Добавить новость
+                        data-toggle="modal" data-target="#addNewsModal">Добавить новость
                 </button>
             </div>
         </div>
@@ -102,17 +95,22 @@
                     <form id="addNewsFormModal" enctype="multipart/form-data" method="post">
                         <div class="form-group">
                             <label for="addNewsTitle">Заголовок</label>
-                            <input type="text" id="addNewsTitle" name="title" placeholder="Введите название" class="form-control" required>
+                            <input type="text" id="addNewsTitle" name="title" placeholder="Введите название"
+                                   class="form-control" required>
                             <br>
                             <label for="addNewsAnons">Анонс</label>
-                            <input type="text" id="addNewsAnons" name="anons" placeholder="Введите краткое описание" class="form-control" required>
+                            <input type="text" id="addNewsAnons" name="anons" placeholder="Введите краткое описание"
+                                   class="form-control" required>
                             <br>
                             <label for="addNewsFullText">Полный текст</label>
-                            <textarea id="addNewsFullText" name="fullText" placeholder="Введите полный текст" class="form-control" required></textarea>
+                            <textarea id="addNewsFullText" name="fullText" placeholder="Введите полный текст"
+                                      class="form-control" required></textarea>
                             <br>
-                            <label for="addNewsPostingDate" class="col-xs-2 col-form-label">Выберите дату публикации</label>
+                            <label for="addNewsPostingDate" class="col-xs-2 col-form-label">Выберите дату
+                                публикации</label>
                             <div class="col-xs-10">
-                                <input class="form-control" type="datetime-local" id="addNewsPostingDate" name="postingDate">
+                                <input class="form-control" type="datetime-local" id="addNewsPostingDate"
+                                       name="postingDate">
                             </div>
                         </div>
                     </form>
@@ -163,17 +161,22 @@
                                            id="idNewsUpdate" readonly>
                                 </div>
                                 <label for="titleNewsUpdate">Заголовок</label>
-                                <input type="text" id="titleNewsUpdate" name="title" placeholder="Введите название" class="form-control" required>
+                                <input type="text" id="titleNewsUpdate" name="title" placeholder="Введите название"
+                                       class="form-control" required>
                                 <br>
                                 <label for="anonsNewsUpdate">Анонс</label>
-                                <input type="text" id="anonsNewsUpdate" name="anons" placeholder="Введите краткое описание" class="form-control" required>
+                                <input type="text" id="anonsNewsUpdate" name="anons"
+                                       placeholder="Введите краткое описание" class="form-control" required>
                                 <br>
                                 <label for="fullTextUpdate">Полный текст</label>
-                                <textarea id="fullTextUpdate" name="fullText" placeholder="Введите полный текст" class="form-control" required></textarea>
+                                <textarea id="fullTextUpdate" name="fullText" placeholder="Введите полный текст"
+                                          class="form-control" required></textarea>
                                 <br>
-                                <label for="postingDateUpdate" class="col-xs-2 col-form-label">Выберите дату публикации</label>
+                                <label for="postingDateUpdate" class="col-xs-2 col-form-label">Выберите дату
+                                    публикации</label>
                                 <div class="col-xs-10">
-                                    <input class="form-control" type="datetime-local" id="postingDateUpdate" name="postingDate">
+                                    <input class="form-control" type="datetime-local" id="postingDateUpdate"
+                                           name="postingDate">
                                 </div>
                             </div>
                         </form>
@@ -242,7 +245,20 @@
     </div>
 </div>
 <!---------------------- End of Delete News Modal ------------------->
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
 <script src="/static/js/moment.js"></script>
 <script src="/static/js/news-management.js"></script>
 <!--<script src="/static/js/newsPageRenderAndFunctions.js"></script>-->
