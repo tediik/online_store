@@ -1,6 +1,15 @@
-#spring.security.oauth2.client.registration.facebook.client-id=640383196588381
-#spring.security.oauth2.client.registration.facebook.client-secret=369d8d2abc1774fc18dd2fdd0733c7f5
 spring:
+  oauth1a:
+    twitter:
+      resource_url: https://api.twitter.com/1.1/account/verify_credentials.json
+      public_key: BiCDQUyByE72SHyBkqJPe1wAi
+      secret_key: KlJocOjZNnLodCExCNfsQbaz3utxjhOoc7rFuUwncgolAgQnEA
+  oauth2:
+    odnoklassniki:
+      resource_url: https://api.ok.ru/api/users/getCurrentUser?application_key=CINLIMJGDIHBABABA&format=JSON
+      client_id: 512000494295
+      public_key: CINLIMJGDIHBABABA
+      secret_key: 2DD0271520909F838004E332
   security:
     oauth2:
       client:
@@ -8,8 +17,3 @@ spring:
           facebook:
             client-id: 933203153853320
             client-secret: c422a6fd091ef86806c2c1ea5b072811
-
-#test:
-#  testValues:
-#    value1: 1
-#    value2: 2
