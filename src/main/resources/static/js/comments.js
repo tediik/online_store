@@ -21,7 +21,6 @@ $(document).ready(function () {
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
 
-                    console.log(response)
                     $('#showComments').append($("<div class=\"media mb-4\">\n" +
                         "<div>\n" +
                         "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
@@ -29,9 +28,12 @@ $(document).ready(function () {
                         "    <div class=\"media-body\" id='mediaBody" + response.id + "'>\n" +
                         "        <h5 class=\"mt-0\"> " + response.customer.email + "</h5>\n" +
                         "        <div class=\"message\">" + response.content + "</div>\n" +
-                        "        <button type='button' id='" + response.id + "'  class='btn btn-link reply'>Reply</button>\n" +
+                        "        <button type='button' id='button" + response.id + "'  class='btn btn-link reply'>Reply</button>\n" +
                         "    </div>\n" +
                         "</div>"))
+
+                    $('#commentForm').find('input:text').val('');
+
                 }
             })
         });
@@ -39,28 +41,35 @@ $(document).ready(function () {
         $(document).on('click', '.reply', function () {
             //Reply to this id
             var commentId = $(this).attr("id");
-            var mediaBody = $('#mediaBody' + commentId);
-            var replyMessageBox = $("<div class=\"card my-4\">\n" +
-                "    <h5 class=\"card-header\">Leave a Comment:</h5>\n" +
-                "    <div class=\"card-body\">\n" +
-                "        <form id=\"replyForm\">\n" +
-                "            <div class=\"form-group\">\n" +
-                "                <textarea name=\"content\" id=\"replyText\" class=\"form-control\" rows=\"3\"></textarea>\n" +
-                "            </div>\n" +
-                "           <button type=\"button\" id='submitReplyBtn' class=\"btn btn-primary\"></button> \n" +
-                "        </form>\n" +
-                "    </div>\n" +
-                "</div>");
+            commentId = commentId.replace(/\D/g, '');
+            var commentBox = $("  \n" +
+                "                <div class=\"well\">\n" +
+                "                    <h4>Leave a Comment:</h4>\n" +
+                "                        <div class=\"form-group\">\n" +
+                "                            <textarea class=\"form-control\" id=\"replyText\" rows=\"3\"></textarea>\n" +
+                "                        </div>\n" +
+                "                        <button type=\"button\" id='submitReplyBtn' class=\"btn btn-primary\">Submit</button>\n" +
+                "                </div>")
 
-            $('#parent_id').val(commentId);
-            $(this).after(replyMessageBox);
+            // var replyMessageBox = $("<div class=\"card my-4\">\n" +
+            //     "    <h5 class=\"card-header\">Leave a Comment:</h5>\n" +
+            //     "    <div class=\"card-body\">\n" +
+            //     "        <form id=\"replyForm\">\n" +
+            //     "            <div class=\"form-group\">\n" +
+            //     "                <textarea name=\"content\" id=\"replyText\" class=\"form-control\" rows=\"3\"></textarea>\n" +
+            //     "            </div>\n" +
+            //     "           <button type=\"button\" id='submitReplyBtn' class=\"btn btn-primary\"></button> \n" +
+            //     "        </form>\n" +
+            //     "    </div>\n" +
+            //     "</div>");
+
+            $(this).replaceWith(commentBox);
 
             $('#submitReplyBtn').on('click', function (event) {
+                var parentId = commentId;
                 event.preventDefault();
-                var parent_id = commentId;
                 var content = $('#replyText').val();
-                var productComment = {parent_id, content};
-                console.log(productComment);
+                var productComment = {parentId, content};
                 $.ajax({
                     //Post comment
                     url: 'http://localhost:9999/api/comments',
@@ -70,8 +79,7 @@ $(document).ready(function () {
                     cache: false,
                     contentType: "application/json; charset=utf-8",
                     success: function (response) {
-                        replyMessageBox.remove();
-                        console.log(response);
+                        commentBox.remove();
 
                         $('#mediaBody' + commentId).append($("<div class=\"media mt-4\">\n" +
                             "<div>\n" +
@@ -82,6 +90,9 @@ $(document).ready(function () {
                             "                <div class=\"message\"> " + response.content + "</div>\n" +
                             "            </div>\n" +
                             "        </div>"));
+
+                        $('#buttonId' + commentId).fadeOut();
+
                     }
                 });
             });
@@ -105,31 +116,29 @@ function showComments() {
 
                 var profilePicture = (comment.customer.profilePicture);
 
-                if (comment.parent_id === null) {
+                if (comment.parentId === null) {
                     $('#showComments').append($("<div class=\"media mb-4\">\n" +
-                        "    <div>\n" +
                         "<div>\n" +
                         "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
                         "             height=\"52\" src=\"/uploads/images/" + profilePicture + "\" width=\"52\"></div>\n" +
                         "    <div class=\"media-body\" id='mediaBody" + comment.id + "'>\n" +
-                        "        <h5 class=\"mt-0\">" + comment.customer.email + "</h5>\n" +
+                        "        <h5 class=\"mt-0\">" + comment.customer.email + "  commented on  " + timeStamp + "</h5>\n" +
                         "        <div class=\"message\">  " + comment.content + " </div>\n" +
                         "                        <div class=\"date\">" + timeStamp + "</div>\n" +
 
-                        "        <button type='button' id='buttonId" + comment.id + "'class='btn btn-link reply'>Reply</button>"));
+                        "        <button type='button' id='button" + comment.id + "' class='btn btn-link reply'>Reply</button>"));
                 }
 
-
-                if (comment.parent_id !== null) {
-                    $('#buttonId' + comment.parent_id).replaceWith($("  <div class=\"media mt-4\">\n" +
-                        "                    <div>\n" +
-                        "                        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\" height=\"52\" src=\"http://placehold.it/50x50\" width=\"52\"></div>\n" +
+                if (comment.parentId !== null) {
+                    $('#button' + comment.parentId).hide();
+                    $('#button' + comment.id).hide();
+                    $('#mediaBody' + comment.parentId).append($("  <div class=\"media mt-4\">\n" +
+                        "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
+                        "             height=\"52\" src=\"/uploads/images/" + profilePicture + "\" width=\"52\"></div>\n" +
                         "                    <div class=\"media-body\">\n" +
-                        "                        <h5 class=\"mt-0\">" + comment.customer.email + "</h5>\n" +
+                        "                        <h5 class=\"mt-0\">" + comment.customer.email + "commented on  " + timeStamp + "</h5>\n" +
                         "                        <div class=\"message\">  " + comment.content + " </div>\n" +
-                        "                        <div class=\"date\">" + timeStamp + "</div>\n" +
-                        "                    </div>\n" +
-                        "                </div>\n"));
+                        "                        <div class=\"date\">" + "commented on" + timeStamp + "</div>"));
                 }
             })
         }

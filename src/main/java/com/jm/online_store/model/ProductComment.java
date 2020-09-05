@@ -12,10 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Data
@@ -30,15 +27,13 @@ public class ProductComment {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private Long parent_id;
+    @Column(name = "parent_id")
+    private Long parentId;
 
     @ManyToOne
-    private ProductComment parent_Comment;
+    @JoinColumn(name = "parent_comment")
+    private ProductComment parentComment;
 
-    //    @ManyToOne
-//    @JoinColumn(name = "product_id")
-//    private Product product;
-//
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private User customer;
@@ -46,9 +41,4 @@ public class ProductComment {
     @Column(name = "comment_date")
     @CreationTimestamp
     private LocalDateTime commentDate;
-
-
-
-//    @ManyToOne
-//    private User parentUser;
 }

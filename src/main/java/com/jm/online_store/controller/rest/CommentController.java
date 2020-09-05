@@ -24,15 +24,15 @@ public class CommentController {
     private final UserService userService;
 
     @GetMapping("/comments")
-    public List<ProductComment> findAll() {
-        return commentRepository.findAll();
+    public ResponseEntity<List<ProductComment>> findAll() {
+        return ResponseEntity.ok(commentRepository.findAll());
     }
 
     @PostMapping("/comments")
     public ResponseEntity<ProductComment> addComment(@RequestBody ProductComment productComment) {
         User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (productComment.getParent_id() != null){
-            productComment.setParent_Comment(commentRepository.findById(productComment.getParent_id()).get());
+        if (productComment.getParentId() != null) {
+            productComment.setParentComment(commentRepository.findById(productComment.getParentId()).get());
         }
         productComment.setCustomer(userService.findById(userDetails.getId()).get());
         return ResponseEntity.ok(commentRepository.save(productComment));
