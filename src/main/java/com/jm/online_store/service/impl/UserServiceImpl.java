@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void changeUsersMail(User user, String newMail) {
-
+        String address = user.getAuthorities().toString().contains("ROLE_CUSTOMER") ? "/customer" : "/authority";
         user.setEmail(newMail);
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
@@ -196,7 +196,7 @@ public class UserServiceImpl implements UserService {
         String message = String.format(
                 "Hello, %s! \n" +
                         "You have requested the email change. Please, confirm via link: " +
-                        urlActivate + "/customer/activatenewmail/%s",
+                        urlActivate + address + "/activatenewmail/%s",
                 user.getEmail(),
                 confirmationToken.getConfirmationToken()
 

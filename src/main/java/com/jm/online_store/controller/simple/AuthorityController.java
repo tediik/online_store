@@ -63,6 +63,6 @@ public class AuthorityController {
     public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateNewUsersMail(token, request);
         model.addAttribute("message", "Email address changes successfully");
-        return "redirect:/admin";
+        return "redirect:/authority/profile";
     }
 }
