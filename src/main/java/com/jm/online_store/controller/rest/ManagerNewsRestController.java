@@ -30,6 +30,24 @@ public class ManagerNewsRestController {
     private final NewsService newsService;
 
     /**
+     * Mapping accepts @PathVariable {@link Long} id
+     *
+     * @param id - {@link Long} id of news entity
+     * @return {@link ResponseEntity<News>} or ResponseEntity.notFound()
+     */
+    @GetMapping("/news/{id}")
+    public ResponseEntity<News> getNews(@PathVariable Long id) {
+        News news;
+        try {
+            news = newsService.findById(id);
+
+        } catch (NewsNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(news);
+    }
+
+    /**
      * Метод возвращающий всписок всех новостей
      *
      * @return List<News> возвращает список всех новстей из базы данных
@@ -42,6 +60,7 @@ public class ManagerNewsRestController {
 
     /**
      * Method returns published news
+     *
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/news/published")
@@ -57,6 +76,7 @@ public class ManagerNewsRestController {
 
     /**
      * Method returns unpublished news
+     *
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/news/unpublished")
@@ -99,7 +119,6 @@ public class ManagerNewsRestController {
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
             news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
         }
-
         newsService.save(news);
         return ResponseEntity.ok().body(news);
     }
@@ -110,10 +129,15 @@ public class ManagerNewsRestController {
      * @param id уникальный идентификатор
      * @return возвращает идентификатор удаленной сущности клиенту
      */
-    @DeleteMapping("/news/{id}/delete")
+    @DeleteMapping("/news/{id}")
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
-
-        newsService.deleteById(id);
-        return ResponseEntity.ok().body(id);
+        try {
+            newsService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (NewsNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+
 }
