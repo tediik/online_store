@@ -13,7 +13,7 @@ public interface NewsService {
 
     void save(News news);
 
-    Optional<News> findById(long id);
+    News findById(long id);
 
     boolean existsById(Long id);
 

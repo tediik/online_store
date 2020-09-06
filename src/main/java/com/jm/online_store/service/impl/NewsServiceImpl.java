@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Сервис класс, имплементация интерфейса {@link NewsService}
@@ -43,15 +42,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод принимающий в качестве параметра идентификатор сущности,
-     * ищет сущность по идентификатору и возвращает сущность News
-     *
-     * @param id уникальный идентификатор сушности News
-     * @return Optional<News> возвращаемое значение в виде сущности, обернутой в Optional
+     * Method accept Long id as parameter and returns {@link News} entity
+     * @param id - {@link Long}
+     * @return returns News entity or throws {@link NewsNotFoundException}
      */
     @Override
-    public Optional<News> findById(long id) {
-        return newsRepository.findById(id);
+    public News findById(long id) {
+        News news = newsRepository.findById(id).orElseThrow(NewsNotFoundException::new);
+        return news;
     }
 
     /**
