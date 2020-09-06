@@ -330,6 +330,9 @@ public class UserServiceImpl implements UserService {
     public void addNewUserFromAdmin(User newUser) {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
+        if (newUser.getProfilePicture().isEmpty()) {
+            newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+        }
         log.debug("User with email: {} was saved successfully", newUser.getEmail());
         userRepository.save(newUser);
     }
