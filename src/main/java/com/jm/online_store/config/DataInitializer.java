@@ -39,7 +39,7 @@ import java.util.Set;
  * <p>
  * для первичного заполнения базы данных раскомментировать аннотацию
  * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
- * в файле "application.properties" с "update" на "create" или "create-drop".
+ * в файле "application.yml" с "update" на "create" или "create-drop".
  */
 @AllArgsConstructor
 @Component

@@ -29,7 +29,7 @@ public class SchedulingServiceImpl implements SchedulingService {
     private final String EMAIL_TYPE = "Stock sender";
 
     /**
-     * Метод выполняется с регулярностью заданным параметром ${emailStockSending.delay} в файле application.properties
+     * Метод выполняется с регулярностью заданным параметром ${emailStockSending.delay} в файле application.yml
      * берем текущий день, делаем выборку среди всех {@link User} у кого в поле DayOfWeekForStockSend
      * текущий день недели отправляем заранее сформированный email из текущих и будущих акций.
      * Акции отбирабтся следующим условием:
