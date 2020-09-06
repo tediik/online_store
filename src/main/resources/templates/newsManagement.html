@@ -50,14 +50,11 @@
                 </li>
             </ul>
             <!-- Блоки с контентом -->
-            <div class="tab-content mb-5">
+            <div class="tab-content mb-5" id="newsTabContent">
                 <!-- Первый блок (он отображается по умолчанию, т.к. имеет классы show и active) -->
                 <div class="tab-pane fade show active" id="tab_all_news">
-<!--                    <div id="allNews">-->
-<!--                    </div>-->
-                    <ul class="allNews" id="allNewsUl">
-<!--                        Здесь рендерится таблицы новостей-->
-                    </ul>
+                    <div id="allNews">
+                    </div>
                 </div>
                 <!-- Второй блок -->
                 <div class="tab-pane fade" id="tab_published_news">
@@ -74,7 +71,7 @@
     </div>
 </div>
 <!---------------------- New News add Modal  ------------------->
-<div class="modal fade" id="addNewsModal" data-backdrop="static"
+<div class="modal fade modal-lg" id="addNewsModal" data-backdrop="static"
      role="dialog"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -136,9 +133,9 @@
 <!---------------------- News Edit Modal  ------------------->
 <div class="modal fade" id="editNewsModal" data-backdrop="static" tabindex="-1"
      role="dialog"
-     aria-labelledby="exampleModalLabel"
+     aria-labelledby="editNewsFormModal"
      aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Редактировать новость</h5>
@@ -260,8 +257,8 @@
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
 <script src="/static/js/moment.js"></script>
-<script src="/static/js/news-management.js"></script>
-<!--<script src="/static/js/newsPageRenderAndFunctions.js"></script>-->
+<!--<script src="/static/js/news-management.js"></script>-->
+<script src="/static/js/newsManagementRenderAndFunctions.js"></script>
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <script src="/static/js/textRedactor.js"></script>
