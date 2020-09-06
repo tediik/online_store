@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/online_store?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
+    username: root
+    password: Moscow2020!
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        storage_engine: innodb
+        jdbc:
+          timezone: UTC
+  output:
+    ansi:
+      enabled: ALWAYS
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+  mail:
+    host: smtp.yandex.ru
+    username: jm-online-store@yandex.ru
+    password: jm2020
+    port: 465
+    protocol: smtps
+    debug: true
+  server:
+    url: http://localhost:9999
+  mvc:
+    static-path-pattern: /static/**
+server:
+  port: 9999
+logging:
+  file:
+    name: src/main/logs/my.log
+    max-history=1: 1
+  level:
+    com:
+      jm: debug
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger{36} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+emailStockSending:
+  delay: '0 0 10 */1 * *'
