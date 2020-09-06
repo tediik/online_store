@@ -275,11 +275,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String updateUserImage(Long userId, MultipartFile file) {
         User user = userRepository.findById(userId).get();
-        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+        String originalFilename = StringUtils.cleanPath(Math.random() + file.getOriginalFilename());
+        String avatarUniqueName = originalFilename.replaceAll("(.*).", user.getEmail().replace(".", "") + originalFilename);
         if (!file.isEmpty()) {
-            if (user.getProfilePicture() != null) {
-                deleteUserImage(userId);
-            }
             Path fileNameAndPath = Paths.get(uploadDirectory, originalFilename);
             try {
                 byte[] bytes = file.getBytes();
@@ -330,9 +328,7 @@ public class UserServiceImpl implements UserService {
     public void addNewUserFromAdmin(User newUser) {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
-        if (newUser.getProfilePicture().isEmpty()) {
-            newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
-        }
+        newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
         log.debug("User with email: {} was saved successfully", newUser.getEmail());
         userRepository.save(newUser);
     }
