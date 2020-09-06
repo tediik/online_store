@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "api/manager", method = RequestMethod.GET)
-public class ManagerRestController {
+public class ManagerNewsRestController {
 
     private final NewsService newsService;
 
