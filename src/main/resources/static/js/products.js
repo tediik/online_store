@@ -5,27 +5,49 @@ $(document).ready(function () {
     });
 });
 
-/*Создаем таблицу товаров*/
-function create() {
+function toggle(check)
+{ if(!check.checked)
+{
+    create(true)
+}
+else
+{
+    create(false)
+}
+}
+
+/*Создаем таблицу товаров без метки "удален"*/
+function create(showDeleted) {
     $("#productsDiv").empty();
     moment.locale('ru');
     $.ajax("/rest/products/allProducts", {
         dataType: "json",
         success: function (data) {
             const products = JSON.parse(JSON.stringify(data))
+            if (showDeleted != true){
+                for (let i = 0; i < products.length; i++){
+                    if(products[i].deleted == true){
+                        delete products[i]
+                    }
+                }
+            }
             for (let i = 0; i < products.length; i++) {
-                let out = $("<li>").attr("id", products[i].id);
-                out.append(
-                    `<div class=\"card mb-3\">
+                    let out = $("<li>").attr("id", products[i].id);
+                    console.log("Статус удаления" + products[i].deleted);
+                    out.append(
+                        `<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-6\">
                                 <div class=\"card-body\">
-                                    <h4 class='card-title'>Наименование товара</h4>
                                     <h4 class='card-title'>${products[i].product}</h4>
                                     <h4 class='card-title'>Цена товара</h4>
                                     <p class=\"card-text\">${products[i].price}</p>
                                     <h4 class='card-title'>Кол-во товара</h4>
                                     <p class=\"card-text\">${products[i].amount}</p>
+                                    <h4 class='card-title'>Кол-во товара</h4>
+                                    <p class=\\"card-text\\">${products[i].amount}</p>
+                                    <h4 class='card-title'>Статус удаления</h4>
+                                    <p class=\\"card-text\\">${products[i].deleted}</p>
                                 </div>
                             </div>
                             <div class="col-md-2 flex-row align-items-center">
@@ -36,13 +58,16 @@ function create() {
                                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                                     <button onclick='deleteProduct(${products[i].id})' class="btn btn-danger">Delete</button>
                                 </div>
+                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                                    <button onclick='restoreProduct(${products[i].id})' class="btn btn-info">Restore</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </li> `);
-                $("#productsDiv").append(out)
+                    $("#productsDiv").append(out)
+                }
             }
-        }
     })
 }
 
@@ -62,7 +87,7 @@ function addProduct() {
         type: 'POST',
         contentType: 'application/JSON; charset=utf-8',
         success: function () {
-            create();
+            create(false);
             $('.modal-body').find('input,textarea').val('');
             toastr.success('Новый товар добавлен!', {timeOut: 5000})
         },
@@ -84,7 +109,7 @@ function importProductsFromFile(){
         contentType: false,
         type: 'POST',
         success: function(data){
-            create();
+            create(false);
             toastr.info('Импорт товаров завершен!', {timeOut: 5000})
         },
         error: function () {
@@ -123,7 +148,7 @@ function updateProduct() {
         type: 'PUT',
         contentType: 'application/JSON; charset=utf-8',
         success: function () {
-            create();
+            create(false);
             toastr.info('Товар успешно отредактирован!', {timeOut: 5000})
         },
         error: function () {
@@ -149,6 +174,24 @@ function deleteProduct(id) {
         }
     );
 }
+
+function restoreProduct(id) {
+    $.ajax({
+            url: "/rest/products/restoredeleted/" + id,
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+                create(false);
+                console.log(data)
+                toastr.info('Товар успешно восстановлен!', {timeOut: 5000})
+            },
+            error: function (er) {
+                console.log(er)
+            }
+        }
+    );
+}
+
 
 $("#productAddModal").ready(function () {
     var click = document.getElementById("save");

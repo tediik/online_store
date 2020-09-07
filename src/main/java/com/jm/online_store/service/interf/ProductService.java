@@ -17,6 +17,8 @@ public interface ProductService {
 
     void deleteProduct(Long idProduct);
 
+    void restoreProduct(Long idProduct);
+
     List<Product> findAll();
 
     void importFromXMLFile(String fileName);

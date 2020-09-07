@@ -80,6 +80,15 @@
                     </button>
                 </form>
             </div>
+            <div>
+                <form>
+                    <!-- for keeping checkbox checked when page loads use checked="checked" --->
+                    <label for="deletedCheckbox">Спрятать удаленные товары</label>
+
+                    <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);" checked="checked">
+                    <br>
+                </form>
+            </div>
         </div>
 
         <div class="col-md-7">

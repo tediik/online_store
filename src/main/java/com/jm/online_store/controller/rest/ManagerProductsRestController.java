@@ -91,7 +91,7 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Метод добавляет акцию
+     * Метод добавляет товар
      * @param product акиця для добавления
      * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
      */
@@ -103,8 +103,8 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Редактирует акцию
-     * @param product акция для редактирования
+     * Редактирует товар
+     * @param product товар для редактирования
      * @return ResponseEntity<Product> Возвращает отредактированный товар с кодом ответа
      */
     @PutMapping("/rest/products/editProduct")
@@ -114,11 +114,18 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Метод удаления акции по идентификатору
-     * @param id идентификатор акции
+     * Метод удаления товара по идентификатору
+     * @param id идентификатор товара
      */
     @DeleteMapping(value = "/rest/products/{id}")
-    public void deleteStockById(@PathVariable("id") Long id) {
+    public void deleteProductById(@PathVariable("id") Long id) {
+        log.debug("id в контроллере" + id);
         productService.deleteProduct(id);
+    }
+
+    @PostMapping(value = "/rest/products/restoredeleted/{id}")
+    public void restoreProductById(@PathVariable("id") Long id) {
+        log.debug("id в контроллере" + id);
+        productService.restoreProduct(id);
     }
 }
