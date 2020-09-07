@@ -20,13 +20,14 @@ $(document).ready(function () {
                 cache: false,
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
+                    var timeStamp = new Date(response.commentDate).toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
 
                     $('#showComments').append($("<div class=\"media mb-4\">\n" +
                         "<div>\n" +
                         "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
                         "             height=\"52\" src=\"/uploads/images/" + response.customer.profilePicture + "\" width=\"52\"></div>\n" +
                         "    <div class=\"media-body\" id='mediaBody" + response.id + "'>\n" +
-                        "        <h5 class=\"mt-0\"> " + response.customer.email + "</h5>\n" +
+                        "        <h5 class=\"mt-0\">" + response.customer.email + "  commented on  " + timeStamp + "</h5>\n" +
                         "        <div class=\"message\">" + response.content + "</div>\n" +
                         "        <button type='button' id='button" + response.id + "'  class='btn btn-link reply'>Reply</button>\n" +
                         "    </div>\n" +
@@ -51,18 +52,6 @@ $(document).ready(function () {
                 "                        <button type=\"button\" id='submitReplyBtn' class=\"btn btn-primary\">Submit</button>\n" +
                 "                </div>")
 
-            // var replyMessageBox = $("<div class=\"card my-4\">\n" +
-            //     "    <h5 class=\"card-header\">Leave a Comment:</h5>\n" +
-            //     "    <div class=\"card-body\">\n" +
-            //     "        <form id=\"replyForm\">\n" +
-            //     "            <div class=\"form-group\">\n" +
-            //     "                <textarea name=\"content\" id=\"replyText\" class=\"form-control\" rows=\"3\"></textarea>\n" +
-            //     "            </div>\n" +
-            //     "           <button type=\"button\" id='submitReplyBtn' class=\"btn btn-primary\"></button> \n" +
-            //     "        </form>\n" +
-            //     "    </div>\n" +
-            //     "</div>");
-
             $(this).replaceWith(commentBox);
 
             $('#submitReplyBtn').on('click', function (event) {
@@ -79,6 +68,7 @@ $(document).ready(function () {
                     cache: false,
                     contentType: "application/json; charset=utf-8",
                     success: function (response) {
+                        var timeStamp = new Date(response.commentDate).toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
                         commentBox.remove();
 
                         $('#mediaBody' + commentId).append($("<div class=\"media mt-4\">\n" +
@@ -86,13 +76,10 @@ $(document).ready(function () {
                             "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
                             "             height=\"52\" src=\"/uploads/images/" + response.customer.profilePicture + "\" width=\"52\"></div>\n" +
                             "            <div class=\"media-body\">\n" +
-                            "                <h5 class=\"mt-0\">" + response.customer.username + "</h5>\n" +
+                            "                <h5 class=\"mt-0\">" + response.customer.username + " commented on  " + timeStamp + " </h5>\n" +
                             "                <div class=\"message\"> " + response.content + "</div>\n" +
                             "            </div>\n" +
                             "        </div>"));
-
-                        $('#buttonId' + commentId).fadeOut();
-
                     }
                 });
             });
@@ -100,7 +87,6 @@ $(document).ready(function () {
         });
     });
 });
-
 
 function showComments() {
     $.ajax({
@@ -110,10 +96,7 @@ function showComments() {
         dataType: "json",
         success: function (response) {
             $.each(response, function (i, comment) {
-                var date = new Date(comment.commentDate);
-                console.log(date);
-                var timeStamp = date.toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
-
+                var timeStamp = new Date(comment.commentDate).toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
                 var profilePicture = (comment.customer.profilePicture);
 
                 if (comment.parentId === null) {
@@ -128,17 +111,18 @@ function showComments() {
 
                         "        <button type='button' id='button" + comment.id + "' class='btn btn-link reply'>Reply</button>"));
                 }
-
                 if (comment.parentId !== null) {
-                    $('#button' + comment.parentId).hide();
+                    // $('#button' + comment.parentId).hide();
                     $('#button' + comment.id).hide();
                     $('#mediaBody' + comment.parentId).append($("  <div class=\"media mt-4\">\n" +
+                        "                        <div>\n" +
+
                         "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
                         "             height=\"52\" src=\"/uploads/images/" + profilePicture + "\" width=\"52\"></div>\n" +
                         "                    <div class=\"media-body\">\n" +
-                        "                        <h5 class=\"mt-0\">" + comment.customer.email + "commented on  " + timeStamp + "</h5>\n" +
+                        "                        <h5 class=\"mt-0\">" + comment.customer.email + "  commented on  " + timeStamp + "</h5>\n" +
                         "                        <div class=\"message\">  " + comment.content + " </div>\n" +
-                        "                        <div class=\"date\">" + "commented on" + timeStamp + "</div>"));
+                        "                        </div>\n"))
                 }
             })
         }

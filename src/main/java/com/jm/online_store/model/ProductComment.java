@@ -41,4 +41,6 @@ public class ProductComment {
     @Column(name = "comment_date")
     @CreationTimestamp
     private LocalDateTime commentDate;
+
+    // TODO: 07/09/2020 To add product mapping once product page will be completed 
 }

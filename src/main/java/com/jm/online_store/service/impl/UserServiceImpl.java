@@ -3,22 +3,23 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
-
+import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
-import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
-import lombok.extern.slf4j.Slf4j;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
@@ -59,8 +61,6 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.server.url}")
     private String urlActivate;
 
-    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
-
     @Transactional
     @Override
     public List<User> findAll() {
@@ -73,10 +73,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByEmail(String username) {
-        return userRepository.findByEmail(username);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
+    @Override
+    public User findByFirstName(String FirstName) {
+        return userRepository.findByFirstName(FirstName);
+    }
 
     @Override
     public boolean isExist(String email) {
@@ -85,22 +89,28 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод добавления нового пользователя.
-     *
+     * <p>
      * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
+     *
      * @param user полученный объект User/
      */
     @Override
     @Transactional
     public void addUser(@NotNull User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
-            throw new InvalidEmailException();
-        }
-        if (isExist(user.getEmail())) {
-            throw new EmailAlreadyExistsException();
-        }
-        if (!CollectionUtils.isEmpty(user.getRoles())) {
-            user.setRoles(persistRoles(user.getRoles()));
+        if (user.getEmail() != null) {
+            if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+                throw new InvalidEmailException();
+            }
+            if (isExist(user.getEmail())) {
+                throw new EmailAlreadyExistsException();
+            }
+            if (!CollectionUtils.isEmpty(user.getRoles())) {
+                user.setRoles(persistRoles(user.getRoles()));
+            }
+            if (user.getProfilePicture().isEmpty()) {
+                user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+            }
         }
         userRepository.save(user);
     }
@@ -131,7 +141,7 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
-        userRepository.save(user);
+        userRepository.save(editUser);
     }
 
     /**
@@ -171,6 +181,7 @@ public class UserServiceImpl implements UserService {
      * Sends generated token to new users email
      */
     @Override
+    @Transactional
     public void changeUsersMail(User user, String newMail) {
 
         user.setEmail(newMail);
@@ -192,7 +203,7 @@ public class UserServiceImpl implements UserService {
     /**
      * метод проверки активации пользователя.
      *
-     * @param token модель, построенная на основе пользователя, после подтверждения
+     * @param token   модель, построенная на основе пользователя, после подтверждения
      * @param request параметры запроса.
      * @return булево значение "true or false"
      */
@@ -230,6 +241,7 @@ public class UserServiceImpl implements UserService {
      * After that, new email address is saved to users DB table
      */
     @Override
+    @Transactional
     public boolean activateNewUsersMail(String token, HttpServletRequest request) {
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
@@ -302,5 +314,60 @@ public class UserServiceImpl implements UserService {
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
         return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
+    }
+
+    /**
+     * Service method to add new user from admin page
+     *
+     * @param newUser
+     */
+    @Override
+    @Transactional
+    public void addNewUserFromAdmin(User newUser) {
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
+        log.debug("User with email: {} was saved successfully", newUser.getEmail());
+        userRepository.save(newUser);
+    }
+
+    /**
+     * Service method to update user from admin page
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    @Transactional
+    public User updateUserFromAdminPage(User user) {
+        User editedUser = userRepository.findById(user.getId()).get();
+        Set<Role> newRoles = persistRoles(user.getRoles());
+        editedUser.setRoles(newRoles);
+        editedUser.setEmail(user.getEmail());
+        editedUser.setFirstName(user.getFirstName());
+        editedUser.setLastName(user.getLastName());
+        if (!user.getPassword().equals("")) {
+            editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        return userRepository.save(editedUser);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserFromController(User user) {
+        userRepository.saveAndFlush(user);
+    }
+
+    /**
+     * Service method which builds and returns currently logged in User from Authentication
+     *
+     * @return User
+     */
+    public User getCurrentLoggedInUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // AnonymousAuthenticationToken happens when anonymous authentication is enabled
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        return userRepository.findById(((User) auth.getPrincipal()).getId()).get();
     }
 }

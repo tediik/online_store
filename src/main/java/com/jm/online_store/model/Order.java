@@ -2,7 +2,6 @@ package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -53,7 +52,7 @@ public class Order {
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    //TODO @JsonBackReference пока не удаляю, возможно придется менять обратно
+    @JsonBackReference //пока не удаляю, возможно придется менять обратно
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     private List<ProductInOrder> productInOrders;
