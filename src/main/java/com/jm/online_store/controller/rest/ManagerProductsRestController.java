@@ -119,7 +119,6 @@ public class ManagerProductsRestController {
      */
     @DeleteMapping(value = "/rest/products/{id}")
     public void deleteProductById(@PathVariable("id") Long id) {
-        log.debug("id в контроллере" + id);
         productService.deleteProduct(id);
     }
 
@@ -129,7 +128,6 @@ public class ManagerProductsRestController {
      */
     @PostMapping(value = "/rest/products/restoredeleted/{id}")
     public void restoreProductById(@PathVariable("id") Long id) {
-        log.debug("id в контроллере" + id);
         productService.restoreProduct(id);
     }
 }
