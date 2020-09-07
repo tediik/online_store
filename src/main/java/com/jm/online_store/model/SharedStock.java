@@ -43,5 +43,4 @@ public class SharedStock {
     @JoinColumn(name = "stock_id", nullable = false)
     @JsonBackReference(value = "stock-sharedStock")
     private Stock stock;
-
 }
