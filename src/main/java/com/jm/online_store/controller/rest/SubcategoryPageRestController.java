@@ -20,14 +20,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categories")
 @AllArgsConstructor
-public class subcategoryPageRestController {
+public class SubcategoryPageRestController {
     private final CategoriesService categoriesService;
-    private final ProductService productService;
 
     private static String categoryName;
 
     public static void setCategoryName(String categoryName) {
-        subcategoryPageRestController.categoryName = categoryName;
+        SubcategoryPageRestController.categoryName = categoryName;
     }
 
     @GetMapping("/category")
@@ -36,11 +35,9 @@ public class subcategoryPageRestController {
         return ResponseEntity.ok().body(category);
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProductsInCategory() {
-        Long categoryId = categoriesService.getCategoryByCategoryName(categoryName).get().getId();
-//        List<Product> products = productService.findAllByCategory(categoryId);
-        List<Product> products = new ArrayList<>();
-        return ResponseEntity.ok(products);
+    @GetMapping("/categories")
+    public ResponseEntity<List<Categories>> getAllCategories() {
+        List<Categories> categories = categoriesService.getAllCategories();
+        return ResponseEntity.ok().body(categories);
     }
 }

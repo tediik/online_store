@@ -1,11 +1,11 @@
 fetch("/api/categories/category")
     .then(response => response.json())
     .then(function (data) {
-        fillCategories(data);
+        fillBreadcrumb(data);
         fillSomeProducts(data);
     });
 
-function fillCategories(data) {
+function fillBreadcrumb(data) {
     let breadcr = document.getElementById('categoriesBreadcrumb');
     $(breadcr).append(`<li class="breadcrumb-item"><a href="/">Главная</a></li>`);
     $(breadcr).append(`<li class="breadcrumb-item"><a>${data.superCategory}</a></li>`);
@@ -20,7 +20,7 @@ function fillCategories(data) {
     if (productsCount > 1 && productsCount < 5) {
         products = "товара";
     }
-    $(productsInCategory).append(`<span>${data.category}  ${productsCount} ${products}</span>`);
+    $(productsInCategory).append(`<span>${data.category}   ${productsCount} ${products}</span>`);
 }
 
 function fillSomeProducts(data) {
@@ -29,8 +29,8 @@ function fillSomeProducts(data) {
     let productsList = data.products;
     for (let key = 0; key < productsList.length; key++) {
         item += `
-            <div class="col-2">
-                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
+            <div class="col">
+                <div class="row no-gutters border rounded overflow-hidden flex-row mb-4 shadow-sm productView">
                     <div class="col-auto d-none d-lg-block productImg">
                         <svg class="bd-placeholder-img" width="160" height="160" xmlns="http://www.w3.org/2000/svg" 
                             preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
@@ -39,11 +39,11 @@ function fillSomeProducts(data) {
                     </div>
                     <div class="col p-4 d-flex flex-column position-static">
                         <p class="card-text mb-auto productName">${productsList[key].product}</p>
-                        <a class="btn btn-sm btn-outline-light producthref" href="/products/${productsList[key].id}" role="button">Подробнее &raquo;</a>
+                        <a class="btn btn-sm btn-outline-light producthref" href="/products/${productsList[key].id}" role="button">Подробнее&ensp;&raquo;</a>
                     </div>
                 </div>
             </div>`;
-        if ((key + 1) % 5 == 0) {
+        if ((key + 1) % 4 == 0) {
             $(prodsView).append(`<div class="row">` + item);
             item = ``;
         } else if ((key + 1) == productsList.length) {

@@ -47,7 +47,7 @@ function fillCategories(data) {
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
         let subItem = ``;
         for (let value = 0; value < data[key].length; value += 2) {
-            subItem += `<a class="dropdown-item" href="/categories/${data[key][value + 1]}" onclick="sendCategoryName('${data[key][value]}')">
+            subItem += `<a class="dropdown-item" href="/categories/${data[key][value + 1]}">
                             ${data[key][value]}</a> `;
         }
         item += subItem;
@@ -81,14 +81,4 @@ function fillSomeProducts(data) {
             $(prodsView).append(`<div class="row">` + item);
         }
     }
-}
-
-function sendCategoryName(data) {
-    fetch('/api/categories/category', {
-        method: 'POST',
-        body: JSON.stringify({
-            category: data
-        }),
-        headers: {"Content-Type": "application/json; charset=utf-8"}
-    });
 }

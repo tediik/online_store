@@ -59,7 +59,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct
+//    @PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -253,6 +253,10 @@ public class DataInitializer {
         Product product8 = new Product("LG-2145", 439.5, 78, 3.9, "Cellphone");
         Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, "Cellphone");
 
+        Product product10 = new Product("Notebook 1", 99.9, 2, 0.0, "Computer");
+        Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer");
+        Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, "Computer");
+
         Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "some additional info here");
         Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
         Description description3 = new Description("99966732", "Samsung", 3, "550x27x368", "white", 1.1, "some additional info here");
@@ -272,8 +276,11 @@ public class DataInitializer {
         product7.setDescriptions(description7);
         product8.setDescriptions(description8);
         product9.setDescriptions(description9);
+        product10.setDescriptions(description1);
+        product11.setDescriptions(description1);
+        product12.setDescriptions(description1);
 
-        category1.setProducts(Arrays.asList(product1, product2, product3));
+        category1.setProducts(Arrays.asList(product1, product2, product3, product10, product11, product12));
         category2.setProducts(Arrays.asList(product4, product5, product6));
         category3.setProducts(Arrays.asList(product7, product8, product9));
 

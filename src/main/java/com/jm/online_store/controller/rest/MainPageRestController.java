@@ -102,11 +102,11 @@ public class MainPageRestController {
     }
 
     /**
-     * Возвращает список первых .findAllByIdBefore(11L) продуктов (в данном случае, первых 10ти).
+     * Возвращает список первых .findAllByIdBefore(16L) продуктов (в данном случае, первых 15ти).
      */
     @GetMapping("api/products")
     public ResponseEntity<List<Product>> getSomeProducts() {
-        List<Product> products = productService.findAllByIdBefore(11L);
+        List<Product> products = productService.findAllByIdBefore(16L);
         return ResponseEntity.ok().body(products);
     }
 }

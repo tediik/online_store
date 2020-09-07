@@ -29,7 +29,7 @@
     </h4>
     <hr class="mb-4">
     <div class="row">
-        <!-- Левый столбец - фильтры -->
+        <!-- left column - filters -->
         <div class="col-3">
             <div class="card mb-4 shadow-sm">
                 <div class="card-header">
@@ -49,31 +49,42 @@
                         <li class="list-group-item d-flex justify-content-between">
                             <div class="d-block">
                                 <div class="custom-control custom-radio">
-                                    <input id="acer" type="radio" class="custom-control-input" checked required>
+                                    <input id="acer" name="producer" type="radio" class="custom-control-input" checked required>
                                     <label class="custom-control-label" for="acer">Acer</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input id="apple" type="radio" class="custom-control-input" required>
+                                    <input id="apple" name="producer" type="radio" class="custom-control-input" required>
                                     <label class="custom-control-label" for="apple">Apple</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input id="asus" type="radio" class="custom-control-input" required>
+                                    <input id="asus" name="producer" type="radio" class="custom-control-input" required>
                                     <label class="custom-control-label" for="asus">ASUS</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input id="other" type="radio" class="custom-control-input" required>
+                                    <input id="other" name="producer" type="radio" class="custom-control-input" required>
                                     <label class="custom-control-label" for="other"> </label>
                                 </div>
                             </div>
                         </li>
                     </ul>
-                    <h6 class="card-title pricing-card-title my-0 font-weight-normal">Семейство процессоров</h6>
+                    <h6 class="card-title pricing-card-title my-0 font-weight-normal">Разрешение экрана</h6>
                     <ul class="list-group mb-3">
                         <li class="list-group-item d-flex justify-content-between">
                             <div class="d-block">
                                 <div class="custom-control custom-radio">
-                                    <input id="otherp" type="radio" class="custom-control-input" required>
-                                    <label class="custom-control-label" for="otherp"> </label>
+                                    <input id="other1" name="resolution" type="radio" class="custom-control-input" required>
+                                    <label class="custom-control-label" for="other1"> </label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <h6 class="card-title pricing-card-title my-0 font-weight-normal">Размер оперативной памяти</h6>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <div class="d-block">
+                                <div class="custom-control custom-radio">
+                                    <input id="other2" name="ram" type="radio" class="custom-control-input" required>
+                                    <label class="custom-control-label" for="other2"> </label>
                                 </div>
                             </div>
                         </li>
@@ -84,8 +95,8 @@
                 </div>
             </div>
         </div>
-        <!-- Продукты -->
-        <div class="col-9">
+        <!-- Products -->
+        <div class="col-8">
             <div id="someProductsView">
                 <!-- products view from subcategoryPage.js-->
             </div>
@@ -99,7 +110,6 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
