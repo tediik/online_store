@@ -93,6 +93,11 @@ public class ProductServiceImpl implements ProductService {
         product.setDeleted(true);
         productRepository.save(product);
     }
+    /**
+     * метод восстановления удаленного Product.
+     *
+     * @param idProduct идентификатор Product
+     */
     @Override
     public void restoreProduct(Long idProduct){
         Product product = productRepository.getOne(idProduct);

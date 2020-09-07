@@ -123,6 +123,10 @@ public class ManagerProductsRestController {
         productService.deleteProduct(id);
     }
 
+    /**
+     * Метод восстановления удаленного товара по идентификатору
+     * @param id идентификатор товара
+     */
     @PostMapping(value = "/rest/products/restoredeleted/{id}")
     public void restoreProductById(@PathVariable("id") Long id) {
         log.debug("id в контроллере" + id);

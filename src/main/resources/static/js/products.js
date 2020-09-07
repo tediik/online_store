@@ -1,3 +1,5 @@
+/*Стартовый скрипт при загрузке страницы, первый вызов построения таблицы
+  Вызов функции, очищающей модалки при закрытии*/
 $(document).ready(function () {
     create();
     $("#newProductImportModal").on('hidden.bs.modal', function (e) {
@@ -5,7 +7,7 @@ $(document).ready(function () {
     });
 });
 
-
+// Функция обрабатывает действия с чекбоксом, вызывает создание таблицы в зависимости от статуса чекбокса
 function toggle(check)
 { if(!check.checked)
 {
@@ -98,6 +100,7 @@ function addProduct() {
     })
 }
 
+//Добавление товара из файла
 function importProductsFromFile(){
 
     var fileData = new FormData();
@@ -158,7 +161,7 @@ function updateProduct() {
     })
 }
 
-/*Удалить пользователя из таблицы*/
+/*Удалить товар из таблицы*/
 function deleteProduct(id) {
     $.ajax({
             url: "/rest/products/" + id,
@@ -166,7 +169,6 @@ function deleteProduct(id) {
             contentType: "application/json",
             success: function (data) {
                 $("#productsDiv #" + id).remove();
-                console.log(data)
                 toastr.error('Товар успешно удален!', {timeOut: 5000})
             },
             error: function (er) {
@@ -176,6 +178,7 @@ function deleteProduct(id) {
     );
 }
 
+// Восстановить товар из удаленных
 function restoreProduct(id) {
     $.ajax({
             url: "/rest/products/restoredeleted/" + id,
@@ -183,7 +186,6 @@ function restoreProduct(id) {
             contentType: "application/json",
             success: function (data) {
                 create(false);
-                console.log(data)
                 toastr.info('Товар успешно восстановлен!', {timeOut: 5000})
             },
             error: function (er) {
@@ -193,7 +195,7 @@ function restoreProduct(id) {
     );
 }
 
-
+//Работа модалки добавления товара
 $("#productAddModal").ready(function () {
     var click = document.getElementById("save");
     click.onclick = function () {
@@ -202,6 +204,7 @@ $("#productAddModal").ready(function () {
     }
 })
 
+//Работа модалки изменения товара
 $("#productEditModal").ready(function () {
     var click = document.getElementById("editSave");
     click.onclick = function () {
@@ -210,11 +213,11 @@ $("#productEditModal").ready(function () {
     }
 })
 
+//Работа модалки импорта из файла
 $("#productImportModal").ready(function () {
     var click = document.getElementById("inputFileSubmit");
     click.onclick = function () {
         $("#newProductImportModal").modal('hide');
-        console.log("Скрипт запущен")
          importProductsFromFile()
     }
 })
