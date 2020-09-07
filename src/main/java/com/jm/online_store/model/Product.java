@@ -71,10 +71,7 @@ public class Product {
     @Column(name = "price")
     private Map<LocalDateTime, Double> changePriceHistory = new LinkedHashMap<>();
 
-
-
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
-
         this.product = product;
         this.price = price;
         this.amount = amount;

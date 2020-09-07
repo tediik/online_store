@@ -82,7 +82,7 @@ public class ManagerRestController {
      * @param id уникальный идентификатор
      * @return возвращает идентификатор удаленной сущности клиенту
      */
-    @DeleteMapping("api/manager/news/{id}/delete")
+    @DeleteMapping("/news/{id}/delete")
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
 
         newsService.deleteById(id);
