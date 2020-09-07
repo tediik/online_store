@@ -5,6 +5,7 @@ $(document).ready(function () {
     });
 });
 
+
 function toggle(check)
 { if(!check.checked)
 {
@@ -28,12 +29,12 @@ function create(showDeleted) {
                 for (let i = 0; i < products.length; i++){
                     if(products[i].deleted == true){
                         delete products[i]
+
                     }
                 }
             }
             for (let i = 0; i < products.length; i++) {
                     let out = $("<li>").attr("id", products[i].id);
-                    console.log("Статус удаления" + products[i].deleted);
                     out.append(
                         `<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
@@ -58,8 +59,8 @@ function create(showDeleted) {
                                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                                     <button onclick='deleteProduct(${products[i].id})' class="btn btn-danger">Delete</button>
                                 </div>
-                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button onclick='restoreProduct(${products[i].id})' class="btn btn-info">Restore</button>
+                                <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                                    <button id="restorebutton" onclick='restoreProduct(${products[i].id})' class="btn btn-info">Restore</button>
                                 </div>
                             </div>
                         </div>
