@@ -6,7 +6,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<header th:insert="/blocks/header :: header"></header>
+<div th:fragment="header">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="/">Главная</a>
+            <a class="p-2 text-dark" href="/news">Новости</a>
+        </nav>
+        <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/logout">Выйти</a>
+        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/login">Войти</a>
+        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/registration">Регистрация</a>
+    </div>
+</div>
 <div class="container-fluid">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">

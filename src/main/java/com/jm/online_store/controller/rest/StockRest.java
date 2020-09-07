@@ -14,28 +14,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Рест контроллер для crud операций с акциями
+ */
 @RestController
 @AllArgsConstructor
 public class StockRest {
     private final StockService stockService;
 
-    //Выводим все акции
+    /**
+     * Метод выводит все акции
+     *
+     * @return List<Stock> список всех акций
+     */
     @GetMapping(value = "/rest/allStocks")
     public List<Stock> findAll() {
         LocalDate presentDate = LocalDate.now();
         List<Stock> stocks = stockService.findAll();
-
-        //Проверка дат акций на соответствие фильтру
         for (Stock stock : stocks) {
-            if (((stock.getStartDate()) != (null)) && ((stock.getEndDate()) != (null))) {
-                if (presentDate.isAfter(stock.getEndDate()) || (presentDate.equals(stock.getEndDate()))) {
-                    stock.setStockType(Stock.StockType.PAST);
-                } else if (presentDate.isBefore(stock.getStartDate())) {
+            if (((stock.getStartDate()) != null)) {
+                if (presentDate.isBefore(stock.getStartDate())) {
                     stock.setStockType(Stock.StockType.FUTURE);
+                } else if (stock.getEndDate() != null && presentDate.isAfter(stock.getEndDate())
+                        || (presentDate.equals(stock.getEndDate()))) {
+                    stock.setStockType(Stock.StockType.PAST);
                 } else if ((presentDate.isAfter(stock.getStartDate()) || (presentDate.equals(stock.getStartDate()))
-                        && (presentDate.isBefore(stock.getEndDate())))) {
+                        && stock.getEndDate() != null && (presentDate.isBefore(stock.getEndDate())))) {
+                    stock.setStockType(Stock.StockType.CURRENT);
+                } else {
                     stock.setStockType(Stock.StockType.CURRENT);
                 }
             }
@@ -43,27 +50,46 @@ public class StockRest {
         return stockService.findAll();
     }
 
-    //Вычисляем по id
+    /**
+     * Метод, ищет акции по id
+     *
+     * @param id идентификатор акции
+     * @return Optiona<Stock> возвращает акцию
+     */
     @GetMapping(value = "/rest/{id}")
-    public Optional<Stock> findStockById(@PathVariable("id") Long id) {
+    public Stock findStockById(@PathVariable("id") Long id) {
         return stockService.findStockById(id);
     }
 
-    //Добавляем новую акцию
-    @PostMapping("/rest/addStock")
+    /**
+     * Метод добавляет акцию
+     *
+     * @param stock акиця для добавления
+     * @return ResponseEntity<Stock> Возвращает добавленную акцию с кодом ответа
+     */
+    @PostMapping(value = "/rest/addStock", consumes = "application/json")
     public ResponseEntity<Stock> addStockM(@RequestBody Stock stock) {
         stockService.addStock(stock);
         return ResponseEntity.ok().body(stock);
     }
 
-    //Редактируем акцию
+    /**
+     * Редактирует акцию
+     *
+     * @param stock акция для редактирования
+     * @return ResponseEntity<Stock> Возвращает отредактированную акцию с кодом овтета
+     */
     @PutMapping("/rest/editStock")
     public ResponseEntity<Stock> editStockM(@RequestBody Stock stock) {
         stockService.addStock(stock);
         return ResponseEntity.ok().body(stock);
     }
 
-    //Удаляем по id
+    /**
+     * Метод удаления акции по идентификатору
+     *
+     * @param id идентификатор акции
+     */
     @DeleteMapping(value = "/rest/{id}")
     public void deleteStockById(@PathVariable("id") Long id) {
         stockService.deleteStockById(id);

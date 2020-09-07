@@ -29,22 +29,20 @@ public class SchedulingServiceImpl implements SchedulingService {
     private final String EMAIL_TYPE = "Stock sender";
 
     /**
-     * Метод выполняется с регулярностью заданным параметром ${emailStockSending.delay} в файле application.properties
+     * Метод выполняется с регулярностью заданным параметром ${emailStockSending.delay} в файле application.yml
      * берем текущий день, делаем выборку среди всех {@link User} у кого в поле DayOfWeekForStockSend
      * текущий день недели отправляем заранее сформированный email из текущих и будущих акций.
      * Акции отбирабтся следующим условием:
-     *  - Задается период +- 7 дней от текущего.
-     *  - день старта акции должен попадать в этот промежуток и день окончания акции должен быть после текущего дня.
+     * - Задается период +- 7 дней от текущего.
+     * - день старта акции должен попадать в этот промежуток и день окончания акции должен быть после текущего дня.
      */
     @Override
     @Scheduled(cron = "${emailStockSending.delay}")
     public void sendStocksToCustomers() {
         User.DayOfWeekForStockSend dayOfWeek = User.DayOfWeekForStockSend.valueOf(LocalDate.now().getDayOfWeek().toString());
         List<User> usersToSendStock = userRepository.findByDayOfWeekForStockSend(dayOfWeek);
-        LocalDate beginningOfPeriod = LocalDate.now().minusDays(7L);
-        LocalDate endOfPeriod = LocalDate.now().plusDays(7L);
         List<Stock> currentAndFutureStocks = stockRepository
-                .findAllByStartDateBetweenAndEndDateIsAfter(beginningOfPeriod, endOfPeriod, LocalDate.now());
+                .findAllByStartDateBetweenAndEndDateIsAfter(LocalDate.now().minusDays(7L), LocalDate.now().plusDays(7L), LocalDate.now());
 
         String messageBody = prepareMessageBody(currentAndFutureStocks);
         String messageSubject = "Внимание Акции!!!";
@@ -85,5 +83,4 @@ public class SchedulingServiceImpl implements SchedulingService {
         }
         return messageForEmail.toString();
     }
-
 }

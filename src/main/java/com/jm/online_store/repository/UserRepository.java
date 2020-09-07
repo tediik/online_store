@@ -12,6 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String username);
 
+    User findByFirstName(String username);
+
     boolean existsByEmail(String email);
 
     List<User> findByDayOfWeekForStockSend(User.DayOfWeekForStockSend dayOfWeekForStockSend);

@@ -44,20 +44,17 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
-
     @Autowired
     @Setter
     private PasswordEncoder passwordEncoder;
-
     @Value("${spring.server.url}")
     private String urlActivate;
-
-    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
 
     @Transactional
     @Override
@@ -71,35 +68,61 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByEmail(String username) {
-        return userRepository.findByEmail(username);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
+    @Override
+    public User findByFirstName(String FirstName) {
+        return userRepository.findByFirstName(FirstName);
+    }
 
     @Override
     public boolean isExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    /**
+     * метод добавления нового пользователя.
+     *
+     * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
+     * @param user полученный объект User/
+     */
     @Override
     @Transactional
     public void addUser(@NotNull User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
-            throw new InvalidEmailException();
+        if (user.getEmail() != null) {
+            if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+                throw new InvalidEmailException();
+            }
+            if (isExist(user.getEmail())) {
+                throw new EmailAlreadyExistsException();
+            }
+            if (!CollectionUtils.isEmpty(user.getRoles())) {
+                user.setRoles(persistRoles(user.getRoles()));
+            }
+            if (user.getProfilePicture().isEmpty()) {
+                user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+            }
         }
-        if (isExist(user.getEmail())) {
-            throw new EmailAlreadyExistsException();
-        }
-        if (!CollectionUtils.isEmpty(user.getRoles())) {
-            user.setRoles(persistRoles(user.getRoles()));
-        }
+        userRepository.save(user);
+    }
+
+    /**
+     * метод обновления пользователя.
+     *
+     * @param user пользователь, полученный из контроллера.
+     */
+    @Override
+    @Transactional
+    public void updateUser(User user) {
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUser(@NotNull User user) {
+    public void updateUserAdminPanel(@NotNull User user) {
         User editUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
         if (!editUser.getEmail().equals(user.getEmail())) {
             if (isExist(user.getEmail())) {
@@ -112,15 +135,25 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
-        userRepository.save(user);
+        userRepository.save(editUser);
     }
 
+    /**
+     * метод удаления пользователя по идентификатору.
+     *
+     * @param id идентификатор.
+     */
     @Override
     @Transactional
     public void deleteByID(Long id) {
         userRepository.deleteById(id);
     }
 
+    /**
+     * метод регистрации нового User.
+     *
+     * @param userForm User построенный из данных формы.
+     */
     @Override
     @Transactional
     public void regNewAccount(User userForm) {
@@ -142,10 +175,10 @@ public class UserServiceImpl implements UserService {
      * Sends generated token to new users email
      */
     @Override
+    @Transactional
     public void changeUsersMail(User user, String newMail) {
 
         user.setEmail(newMail);
-
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
 
@@ -160,6 +193,13 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
     }
 
+    /**
+     * метод проверки активации пользователя.
+     *
+     * @param token модель, построенная на основе пользователя, после подтверждения
+     * @param request параметры запроса.
+     * @return булево значение "true or false"
+     */
     @Override
     @Transactional
     public boolean activateUser(String token, HttpServletRequest request) {
@@ -194,6 +234,7 @@ public class UserServiceImpl implements UserService {
      * After that, new email address is saved to users DB table
      */
     @Override
+    @Transactional
     public boolean activateNewUsersMail(String token, HttpServletRequest request) {
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
@@ -261,10 +302,49 @@ public class UserServiceImpl implements UserService {
                 Files.delete(fileNameAndPath);
             }
         } catch (IOException e) {
-            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());        
+            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
         return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
+    }
+
+    /**
+     * Service method to add new user from admin page
+     * @param newUser
+     */
+    @Override
+    @Transactional
+    public void addNewUserFromAdmin(User newUser) {
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
+        log.debug("User with email: {} was saved successfully", newUser.getEmail());
+        userRepository.save(newUser);
+    }
+
+    /**
+     * Service method to update user from admin page
+     * @param user
+     * @return
+     */
+    @Override
+    @Transactional
+    public User updateUserFromAdminPage(User user) {
+        User editedUser = userRepository.findById(user.getId()).get();
+        Set<Role> newRoles = persistRoles(user.getRoles());
+        editedUser.setRoles(newRoles);
+        editedUser.setEmail(user.getEmail());
+        editedUser.setFirstName(user.getFirstName());
+        editedUser.setLastName(user.getLastName());
+        if (!user.getPassword().equals("")) {
+            editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        return userRepository.save(editedUser);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserFromController(User user) {
+        userRepository.saveAndFlush(user);
     }
 }

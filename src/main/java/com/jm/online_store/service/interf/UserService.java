@@ -20,7 +20,13 @@ public interface UserService {
 
     void updateUser(User user);
 
-    Optional<User> findByEmail(String username);
+    void updateUserFromController(User user);
+
+    void updateUserAdminPanel(User user);
+
+    Optional<User> findByEmail(String email);
+
+    User findByFirstName(String FirstName);
 
     boolean isExist(String email);
 
@@ -32,9 +38,13 @@ public interface UserService {
 
     boolean activateUser(String code, HttpServletRequest request);
 
+    User updateUserFromAdminPage(User user);
+
     String updateUserImage(Long valueOf, MultipartFile imageFile) throws IOException;
 
     String deleteUserImage(Long userId) throws IOException;
+
+    void addNewUserFromAdmin(User newUser);
 }
 
 
