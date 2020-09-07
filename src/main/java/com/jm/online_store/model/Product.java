@@ -55,10 +55,6 @@ public class Product {
         property = "id")
     private List<ProductInOrder> productInOrders;
 
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY,
-//            mappedBy = "product")
-//    private List<ProductComment> comments;
-
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
         this.product = product;
         this.price = price;
