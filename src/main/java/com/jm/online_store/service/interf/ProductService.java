@@ -2,6 +2,7 @@ package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Product;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface ProductService {
@@ -13,4 +14,6 @@ public interface ProductService {
     Long saveProduct(Product product);
 
     void deleteProduct(Long idProduct);
+
+    Map getProductPriceChange(Long idProduct);
 }

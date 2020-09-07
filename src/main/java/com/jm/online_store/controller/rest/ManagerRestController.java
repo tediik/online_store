@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.News;
 import com.jm.online_store.service.interf.NewsService;
+import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Рест контроллер для управления новостями из кабинете менеджера, а также публикации новостей
@@ -23,7 +25,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "api/manager", method = RequestMethod.GET)
+@RequestMapping(value = "api/manager")
 public class ManagerRestController {
 
     private final NewsService newsService;
@@ -80,10 +82,12 @@ public class ManagerRestController {
      * @param id уникальный идентификатор
      * @return возвращает идентификатор удаленной сущности клиенту
      */
-    @DeleteMapping("/news/{id}/delete")
+    @DeleteMapping("api/manager/news/{id}/delete")
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
 
         newsService.deleteById(id);
         return ResponseEntity.ok().body(id);
     }
+
+
 }

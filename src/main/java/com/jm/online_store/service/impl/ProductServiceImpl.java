@@ -6,6 +6,8 @@ import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -44,6 +46,9 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long saveProduct(Product product) {
+        Map<LocalDateTime, Double> map = product.getChangePriceHistory();
+        map.put(LocalDateTime.now(), product.getPrice());
+        product.setChangePriceHistory(map);
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
     }
@@ -57,4 +62,17 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Long idProduct) {
         productRepository.deleteById(idProduct);
     }
+
+    /**
+     * метод получения коллекции по мониторингу изменения цены на Product.
+     *
+     * @param idProduct идентификатор Product
+     * @return Map<LocalDateTime, Double> changePriceHistory
+     */
+    @Override
+    public Map getProductPriceChange(Long idProduct) {
+        Product product = productRepository.getOne(idProduct);
+        return product.getChangePriceHistory();
+    }
+
 }
