@@ -105,13 +105,4 @@ public class NewsServiceImpl implements NewsService {
     public List<News> findAllByPostingDateAfter(LocalDateTime timeNow) {
         return newsRepository.findAllByPostingDateAfter(timeNow);
     }
-
-    @Override
-    public List<News> getNewsByStatus(boolean status) {
-        List<News> newsList = newsRepository.findByStatusEquals(status);
-        if (newsList.isEmpty()) {
-            throw new NewsNotFoundException();
-        }
-        return newsList;
-    }
 }
