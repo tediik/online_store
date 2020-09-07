@@ -35,8 +35,7 @@ public class NewsController {
         if (!newsService.existsById(id)) {
             return "redirect:/news";
         }
-
-        News news = newsService.findById(id).orElseGet(News::new);
+        News news = newsService.findById(id);
         model.addAttribute("news", news);
         return "newsDetails";
     }
