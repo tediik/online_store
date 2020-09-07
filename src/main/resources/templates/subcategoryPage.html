@@ -21,26 +21,88 @@
 <main role="main" class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb" id="categoriesBreadcrumb">
-            <li class="breadcrumb-item"><a href="/">Главная</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Все</li>
+            <!-- from subcategoryPage.js -->
         </ol>
     </nav>
+    <h4 id="productsInCategory">
+        <!-- from subcategoryPage.js -->
+    </h4>
+    <hr class="mb-4">
     <div class="row">
-        <div class="col-2">
+        <!-- Левый столбец - фильтры -->
+        <div class="col-3">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h5 class="my-0 font-weight-normal">Фильтры</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title pricing-card-title my-0 font-weight-normal">Цена</h6>
+                    <ul class="list-group mb-3">
+                        <li class="d-flex">
+                            <input type="text" class="form-control" id="priceFrom" placeholder="от " required>
+                            &ensp;
+                            <input type="text" class="form-control" id="priceTo" placeholder="до " required>
+                        </li>
+                    </ul>
+                    <h6 class="card-title pricing-card-title my-0 font-weight-normal">Производитель</h6>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <div class="d-block">
+                                <div class="custom-control custom-radio">
+                                    <input id="acer" type="radio" class="custom-control-input" checked required>
+                                    <label class="custom-control-label" for="acer">Acer</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input id="apple" type="radio" class="custom-control-input" required>
+                                    <label class="custom-control-label" for="apple">Apple</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input id="asus" type="radio" class="custom-control-input" required>
+                                    <label class="custom-control-label" for="asus">ASUS</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input id="other" type="radio" class="custom-control-input" required>
+                                    <label class="custom-control-label" for="other"> </label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <h6 class="card-title pricing-card-title my-0 font-weight-normal">Семейство процессоров</h6>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <div class="d-block">
+                                <div class="custom-control custom-radio">
+                                    <input id="otherp" type="radio" class="custom-control-input" required>
+                                    <label class="custom-control-label" for="otherp"> </label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <hr class="mb-4">
+                    <button class="btn btn-info btn-block" type="submit">Применить</button>
+                    <button class="btn btn-outline-info btn-block" type="submit">Сбросить</button>
+                </div>
+            </div>
         </div>
-        <div class="col-10">
+        <!-- Продукты -->
+        <div class="col-9">
+            <div id="someProductsView">
+                <!-- products view from subcategoryPage.js-->
+            </div>
         </div>
     </div>
 </main>
 
 <!-- Optional JavaScript -->
-<script src="../static/js/mainPage.js"></script>
+<script src="../static/js/subcategoryPage.js"></script>
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

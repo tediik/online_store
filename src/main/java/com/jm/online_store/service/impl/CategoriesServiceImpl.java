@@ -23,8 +23,8 @@ public class CategoriesServiceImpl implements CategoriesService {
         return categoriesRepository.findById(categoryId);
     }
 
-    public Long getIdBySuperCategory(String superCategoryName) {
-        return categoriesRepository.getIdBySuperCategory(superCategoryName);
+    public Optional<Categories> getCategoryByCategoryName(String category) {
+        return categoriesRepository.findByCategory(category);
     }
 
     public void saveCategory(Categories categories) {

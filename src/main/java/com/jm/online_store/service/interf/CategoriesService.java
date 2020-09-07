@@ -11,7 +11,7 @@ public interface CategoriesService {
 
     Optional<Categories> getCategoryById(Long categoryId);
 
-    Long getIdBySuperCategory(String superCategoryName);
+    Optional<Categories> getCategoryByCategoryName(String category);
 
     void saveCategory (Categories categories);
 

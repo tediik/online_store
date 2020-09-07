@@ -21,4 +21,17 @@ public class Transliteration {
         String result = toLatin.transliterate(s);
         return result;
     }
+
+    /**
+     * Метод, преобразующий входную строку символов латиницы в кириллицу с помощью
+     * методов класса com.ibm.icu.text.Transliterator
+     *
+     * @param s строка латиницей на русском, которая должна быть преобразована
+     * @return строка на русско мкириллицей
+     */
+    public static String latinToCyrillic(String s){
+        Transliterator toCyrillic = Transliterator.getInstance("Latin-Russian/BGN");
+        String result = toCyrillic.transliterate(s);
+        return result;
+    }
 }
