@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByFirstName(String FirstName) {
+    public User findByFirstName(String FirstName) {
         return userRepository.findByFirstName(FirstName);
     }
 

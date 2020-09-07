@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface StockService {
 
-    Optional<Stock> findStockById(Long id);
+    Stock findStockById(Long id);
 
     List<Stock> findAllStocks();
 
@@ -17,4 +17,11 @@ public interface StockService {
 
     List<Stock> findAll();
 
+    List<Stock> findCurrentStocks();
+
+    List<Stock> findFutureStocks();
+
+    List<Stock> findPastStocks();
+
+    void updateStock(Stock stock);
 }
