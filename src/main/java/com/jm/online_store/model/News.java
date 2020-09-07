@@ -42,12 +42,13 @@ public class News {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    @Column(name = "status")
-    private boolean status;
+    @Column(name = "archived")
+    private boolean archived;
 
     public News(String title, String anons, String fullText) {
         this.title = title;
         this.anons = anons;
         this.fullText = fullText;
     }
+
 }
