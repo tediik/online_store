@@ -20,11 +20,13 @@ public interface UserService {
 
     void updateUser(User user);
 
+    void updateUserFromController(User user);
+
     void updateUserAdminPanel(User user);
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByFirstName(String FirstName);
+    User findByFirstName(String FirstName);
 
     boolean isExist(String email);
 

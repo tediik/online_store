@@ -1,5 +1,3 @@
-const stockMailingCheckbox = document.getElementById('#stockMailingCheckbox')
-
 /**
  * Обработка чекбокса #stockMailingCheckbox
  * если галка стоит, то отображать dropdownlist

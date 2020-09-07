@@ -1,9 +1,11 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Order;
+import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.repository.OrderRepository;
 import com.jm.online_store.service.interf.OrderService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +38,28 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * метод построения OrderDTO из Order, полученного из БД.
+     *
+     * @param id идентификатор.
+     * @return объект OrderDTO
+     */
+    @Override
+    public OrderDTO findOrderDTOById(Long id) {
+        return convertOrderToOrderDTO(orderRepository.findById(id).get());
+    }
+
+    /**
+     * метод конвертации Order в OrderDTO для отсекания лишних данных.
+     *
+     * @param order объект order.
+     * @return объект OrderDTO.
+     */
+    private OrderDTO convertOrderToOrderDTO(Order order){
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(order, OrderDTO.class);
+    }
+
+    /**
      * Метод добавления заказа.
      * Первоначально кол-во продуктов и общая стоимость равны 0,
      * эти поля изменяются методом {@link ProductInOrderServiceImpl#addToOrder(long, long, int)}
@@ -55,4 +79,5 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrder(Order order) {
         orderRepository.save(order);
     }
+
 }

@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByFirstName(String FirstName) {
+    public User findByFirstName(String FirstName) {
         return userRepository.findByFirstName(FirstName);
     }
 
@@ -340,5 +340,11 @@ public class UserServiceImpl implements UserService {
             editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         return userRepository.save(editedUser);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserFromController(User user) {
+        userRepository.saveAndFlush(user);
     }
 }
