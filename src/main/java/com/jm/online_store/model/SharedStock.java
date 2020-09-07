@@ -20,9 +20,9 @@ import javax.persistence.Table;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "shared_stocks")
 public class SharedStock {
