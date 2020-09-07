@@ -24,7 +24,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "api/manager", method = RequestMethod.GET)
+@RequestMapping(value = "api/manager/news")
 public class ManagerNewsRestController {
 
     private final NewsService newsService;
@@ -35,7 +35,7 @@ public class ManagerNewsRestController {
      * @param id - {@link Long} id of news entity
      * @return {@link ResponseEntity<News>} or ResponseEntity.notFound()
      */
-    @GetMapping("/news/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<News> getNews(@PathVariable Long id) {
         News news;
         try {
@@ -52,43 +52,43 @@ public class ManagerNewsRestController {
      *
      * @return List<News> возвращает список всех новстей из базы данных
      */
-    @GetMapping("/news/all")
+    @GetMapping("/all")
     public ResponseEntity<List<News>> allNews() {
         List<News> allNewsList = newsService.findAll();
         return ResponseEntity.ok().body(allNewsList);
     }
 
-    /**
-     * Method returns published news
-     *
-     * @return - ResponseEntity<List<News>>
-     */
-    @GetMapping("/news/published")
-    public ResponseEntity<List<News>> getAllPublishedNews() {
-        List<News> publishedNews;
-        try {
-            publishedNews = newsService.getNewsByStatus(true);
-        } catch (NewsNotFoundException e) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(publishedNews);
-    }
-
-    /**
-     * Method returns unpublished news
-     *
-     * @return - ResponseEntity<List<News>>
-     */
-    @GetMapping("/news/unpublished")
-    public ResponseEntity<List<News>> getAllUnpublishedNews() {
-        List<News> unpublishedNews;
-        try {
-            unpublishedNews = newsService.getNewsByStatus(false);
-        } catch (NewsNotFoundException e) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(unpublishedNews);
-    }
+//    /**
+//     * Method returns published news
+//     *
+//     * @return - ResponseEntity<List<News>>
+//     */
+//    @GetMapping("/news/published")
+//    public ResponseEntity<List<News>> getAllPublishedNews() {
+//        List<News> publishedNews;
+//        try {
+//            publishedNews = newsService.getNewsByStatus(true);
+//        } catch (NewsNotFoundException e) {
+//            return ResponseEntity.noContent().build();
+//        }
+//        return ResponseEntity.ok(publishedNews);
+//    }
+//
+//    /**
+//     * Method returns unpublished news
+//     *
+//     * @return - ResponseEntity<List<News>>
+//     */
+//    @GetMapping("/news/unpublished")
+//    public ResponseEntity<List<News>> getAllUnpublishedNews() {
+//        List<News> unpublishedNews;
+//        try {
+//            unpublishedNews = newsService.getNewsByStatus(false);
+//        } catch (NewsNotFoundException e) {
+//            return ResponseEntity.noContent().build();
+//        }
+//        return ResponseEntity.ok(unpublishedNews);
+//    }
 
     /**
      * Метод сохраняет новости в базу данных
@@ -96,7 +96,7 @@ public class ManagerNewsRestController {
      * @param news сущность для сохранения в базе данных
      * @return возвращает заполненную сущность клиенту
      */
-    @PostMapping("/news/post")
+    @PostMapping
     public ResponseEntity<News> newsPost(@RequestBody News news) {
 
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
@@ -113,7 +113,7 @@ public class ManagerNewsRestController {
      * @param news сущность для сохранения в базе данных
      * @return возвращает обновленную сущность клиенту
      */
-    @PutMapping("/news/update")
+    @PutMapping
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
 
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
@@ -129,7 +129,7 @@ public class ManagerNewsRestController {
      * @param id уникальный идентификатор
      * @return возвращает идентификатор удаленной сущности клиенту
      */
-    @DeleteMapping("/news/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
         try {
             newsService.deleteById(id);
