@@ -6,6 +6,7 @@
     <!-- Подключаем библиотеку summernote bs-4 -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
 </head>
 <body>
 <header>
@@ -27,15 +28,19 @@
     </nav>
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical"
+                 id="leftNavBar">
                 <button class="btn btn-outline-primary"
-                        data-toggle="modal" data-target="#addNewsModal">Добавить новость
+                        data-toggle="modal" data-target="#editNewsModal" data-toggle-id="addNewNews">Добавить новость
                 </button>
             </div>
         </div>
         <div class="col-sm-8 tab-pane">
             <br>
             <h1 class="text-center">Управление новостями</h1>
+            <div id="infoMessageMainPage">
+                <!--                place where info message appears-->
+            </div>
             <ul class="nav nav-tabs">
                 <!-- Первая вкладка (активная) -->
                 <li class="nav-item">
@@ -47,6 +52,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#tab_unpublished_news">Не опубликованные</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab_archived_news">Архивные</a>
                 </li>
             </ul>
             <!-- Блоки с контентом -->
@@ -66,68 +74,79 @@
                     <div id="unpublishedNews">
                     </div>
                 </div>
+                <!--                Четвертый блок-->
+                <div class="tab-pane fade" id="tab_archived_news">
+                    <div id="archivedNews">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <!---------------------- New News add Modal  ------------------->
-<div class="modal fade modal-lg" id="addNewsModal" data-backdrop="static"
-     role="dialog"
-     aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
+<!--<div class="modal fade modal-lg" id="addNewsModal" data-backdrop="static"-->
+<!--     role="dialog"-->
+<!--     aria-labelledby="exampleModalLabel"-->
+<!--     aria-hidden="true">-->
 
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+<!--    <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--        <div class="modal-content">-->
 
-            <div class="modal-header">
-                <h5 class="modal-title" id="addNewsModalLabel">Добавление новости</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="addNewsModalLabel">Добавление новости</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal"-->
+<!--                        aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
 
-            <div class="modal-body">
-                <div class="container-fluid col-sm-12">
-                    <form id="addNewsFormModal" enctype="multipart/form-data" method="post">
-                        <div class="form-group">
-                            <label for="addNewsTitle">Заголовок</label>
-                            <input type="text" id="addNewsTitle" name="title" placeholder="Введите название"
-                                   class="form-control" required>
-                            <br>
-                            <label for="addNewsAnons">Анонс</label>
-                            <input type="text" id="addNewsAnons" name="anons" placeholder="Введите краткое описание"
-                                   class="form-control" required>
-                            <br>
-                            <label for="addNewsFullText">Полный текст</label>
-                            <textarea id="addNewsFullText" name="fullText" placeholder="Введите полный текст"
-                                      class="form-control" required></textarea>
-                            <br>
-                            <label for="addNewsPostingDate" class="col-xs-2 col-form-label">Выберите дату
-                                публикации</label>
-                            <div class="col-xs-10">
-                                <input class="form-control" type="datetime-local" id="addNewsPostingDate"
-                                       name="postingDate">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer actions">
+<!--            <div class="modal-body">-->
+<!--                <div class="container-fluid col-sm-12">-->
+<!--                    <form id="addNewsFormModal" enctype="multipart/form-data" method="post">-->
+<!--                        <div class="form-group">-->
+<!--                            <label for="addNewsTitle">Заголовок</label>-->
+<!--                            <input type="text" id="addNewsTitle" name="title" placeholder="Введите название"-->
+<!--                                   class="form-control" required>-->
+<!--                            <br>-->
+<!--                            <label for="addNewsAnons">Анонс</label>-->
+<!--                            <input type="text" id="addNewsAnons" name="anons" placeholder="Введите краткое описание"-->
+<!--                                   class="form-control" required>-->
+<!--                            <br>-->
+<!--                            <label for="addNewsFullText">Полный текст</label>-->
+<!--                            <textarea id="addNewsFullText" name="fullText" placeholder="Введите полный текст"-->
+<!--                                      class="form-control" required></textarea>-->
+<!--                            <br>-->
+<!--                            <div class="form-check">-->
+<!--                                <input class="form-check-input" type="checkbox" value="" id="publishCheckbox">-->
+<!--                                <label class="form-check-label" for="publishCheckbox">-->
+<!--                                    Опубликовать новость?-->
+<!--                                </label>-->
+<!--                            </div>-->
+<!--                            <label for="addNewsPostingDate" class="col-xs-2 col-form-label">Выберите дату-->
+<!--                                публикации</label>-->
+<!--                            <div class="col-xs-10">-->
+<!--                                <input class="form-control small" type="datetime-local" id="addNewsPostingDate"-->
+<!--                                       name="postingDate" style="width: 25%">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="modal-footer actions">-->
 
-                <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal">
-                    Закрыть
-                </button>
+<!--                <button type="button" class="btn btn-secondary"-->
+<!--                        data-dismiss="modal">-->
+<!--                    Закрыть-->
+<!--                </button>-->
 
-                <button id="save" type="submit" onclick="addNews()" data-dismiss="modal"
-                        class="btn btn-primary">
-                    Сохранить
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<!--                <button id="save" type="submit" onclick="addNews()" data-dismiss="modal"-->
+<!--                        class="btn btn-primary">-->
+<!--                    Сохранить-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 <!---------------------- End of New News Modal ------------------->
 
 <!---------------------- News Edit Modal  ------------------->
@@ -138,21 +157,23 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Редактировать новость</h5>
+                <h5 class="modal-title" id="modalWindowTitle">Редактировать новость</h5>
                 <button type="button" class="close" data-dismiss="modal"
                         aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
+            <div id="modal-alert">
+                <!--alert messages                -->
+            </div>
             <form id="editNewsFormModal">
                 <div class="modal-body">
                     <div class="container-fluid col-sm-12">
                         <form enctype="multipart/form-data" id="editModalNews" method="post">
                             <div class="form-group">
-                                <label for="idNewsUpdate"
-                                       class="col-form-label col-sm-12 text-center">Id</label>
-                                <div class="text-center">
+                                <div class="text-center" id="idModalDiv">
+                                    <label for="idNewsUpdate"
+                                           class="col-form-label col-sm-12 text-center">Id</label>
                                     <input type="text"
                                            class="form-control"
                                            id="idNewsUpdate" readonly>
@@ -169,26 +190,30 @@
                                 <textarea id="fullTextUpdate" name="fullText" placeholder="Введите полный текст"
                                           class="form-control" required></textarea>
                                 <br>
-                                <label for="postingDateUpdate" class="col-xs-2 col-form-label">Выберите дату
-                                    публикации</label>
-                                <div class="col-xs-10">
-                                    <input class="form-control" type="datetime-local" id="postingDateUpdate"
-                                           name="postingDate">
+                                <div class="form-check" id="publishCheckboxDiv">
+                                    <input class="form-check-input" type="checkbox" value="" id="publishCheckbox">
+                                    <label class="form-check-label" for="publishCheckbox" id="publishCheckboxLabel">
+                                        Поместить новость в архив?
+                                    </label>
+                                </div>
+                                <hr>
+                                <div class="col-xs-10" id="datePublishInputDiv">
+                                    <label for="postingDateUpdate">Введите дату публикации:</label>
+                                    <input class="form-control" type="date" id="postingDateUpdate" style="width: 25%">
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
             </form>
-            <div class="modal-footer actions2">
+            <div class="modal-footer actions">
 
                 <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal">
+                        data-dismiss="modal" data-toggle-id="close">
                     Закрыть
                 </button>
 
-                <button id="editSave" type="submit" data-dismiss="modal" onclick="updateNews()"
-                        class="btn btn-primary">
+                <button id="editSave" data-toggle-id="save" class="btn btn-primary">
                     Обновить
                 </button>
             </div>
@@ -196,52 +221,6 @@
     </div>
 </div>
 <!---------------------- End of Edit News Modal ------------------->
-<!---------------------- News Delete Modal  ------------------->
-<div class="modal fade" id="deleteNewsModal" data-backdrop="static" tabindex="-1"
-     role="dialog"
-     aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Удалить новость</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="deleteNewsFormModal">
-                <div class="modal-body">
-                    <div class="container-fluid col-sm-12">
-                        <form enctype="multipart/form-data" id="deleteModalNews" method="post">
-                            <div class="form-group">
-                                <div class="text-center">
-                                    <input type="text"
-                                           class="form-control"
-                                           id="idNewsDelete" hidden>
-                                    <h3>Вы уверены?</h3>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </form>
-            <div class="modal-footer actions2">
-
-                <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal">
-                    Закрыть
-                </button>
-
-                <button id="deleteSave" type="submit" data-dismiss="modal" onclick="deleteNews()"
-                        class="btn btn-primary">
-                    Удалить
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<!---------------------- End of Delete News Modal ------------------->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
@@ -256,6 +235,11 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
+<!--    Date picker-->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="/static/js/moment.js"></script>
 <!--<script src="/static/js/news-management.js"></script>-->
 <script src="/static/js/newsManagementRenderAndFunctions.js"></script>
