@@ -6,10 +6,10 @@ let newsApiUrl = "/api/manager/news"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
 $(document).ready(function () {
-    fetchNews("/all")
+    fetchNews("/all", '#allNews')
 });
-$('#editModalNews').on('hidden.bs.modal', function () {
-    fetchNews("/all")
+$('#editNewsModal').on('hidden.bs.modal', function () {
+    fetchNews("/all", '#allNews')
 })
 
 /**
@@ -23,13 +23,48 @@ document.getElementById('publishCheckboxDiv').addEventListener('change', publish
 document.querySelector('.modal-footer').addEventListener('click', checkButtonClicked)
 /*left nav bar*/
 document.getElementById('leftNavBar').addEventListener('click', handleLeftNavBarClick)
+/*upper nav tab*/
+document.getElementById('upperNavTab').addEventListener('click', checkUpperNavButton)
+
+/**
+ * Function checks which button on top nav bar was clicked
+ * @param event
+ */
+function checkUpperNavButton(event) {
+    let tab = event.target.dataset.toggleId
+    if (tab === 'publishedNews') {
+        fetchNews('/published', '#publishedNews')
+    }
+    if (tab === 'allNews') {
+        fetchNews('/all', '#allNews')
+    }
+    if (tab === 'unpublishedNews') {
+        fetchNews('/unpublished', '#unpublishedNews')
+    }
+    if (tab === 'archivedNews') {
+        fetchNews('/archived', '#archivedNews')
+    }
+}
+
+/**
+ * function check which button was clicked in news dev (edit or delete)
+ * @param event - event from button
+ */
+function checkButton(event) {
+    let newsId = event.target.dataset.newsId
+    if (event.target.dataset.toggleId === 'edit') {
+        renderEditModalWindow(newsId)
+    }
+    if (event.target.dataset.toggleId === 'delete') {
+        handleDeleteButton(newsId)
+    }
+}
 
 /**
  * checks which button was clicked in modal window update or add
  * @param event
  */
 function checkButtonClicked(event) {
-    console.log(event.target.dataset.toggleId)
     if (event.target.dataset.toggleId === 'update') {
         updateNews(event.target.dataset.newsId)
     }
@@ -63,20 +98,39 @@ function addNewNews() {
             }
         })
         $('#editNewsModal').modal('hide')
+        $('#editModalNews').on('hide.bs.modal', function () {
+            fetchNews("/all")
+        })
     }
 }
 
 /**
- * function check which button was clicked in news dev (edit or delete)
- * @param event - event from button
+ * function makes PUT request to update news
  */
-function checkButton(event) {
-    let newsId = event.target.dataset.newsId
-    if (event.target.dataset.toggleId === 'edit') {
-        renderEditModalWindow(newsId)
+function updateNews() {
+    let news = {
+        id: document.getElementById('idNewsUpdate').value,
+        title: document.getElementById('titleNewsUpdate').value,
+        anons: document.getElementById('anonsNewsUpdate').value,
+        fullText: document.getElementById('fullTextUpdate').value,
+        postingDate: document.getElementById('postingDateUpdate').value
     }
-    if (event.target.dataset.toggleId === 'delete') {
-        handleDeleteButton(newsId)
+    if (checkFields()) {
+        fetch(newsApiUrl, {
+            method: 'PUT',
+            headers: myHeaders,
+            body: JSON.stringify(news)
+        }).then(function (response) {
+            if (response.status === 200) {
+                infoMessage('#infoMessageMainPage', 'Новость успешно обновлена', 'success')
+            } else {
+                infoMessage('#infoMessageMainPage', 'Новость не найдена', 'error')
+            }
+        })
+        $('#editNewsModal').modal('hide')
+        $('#editModalNews').on('hide.bs.modal', function () {
+            fetchNews("/all")
+        })
     }
 }
 
@@ -102,6 +156,44 @@ function renderNewNewsModal() {
 }
 
 /**
+ * Renders edit model windows
+ * @param newsId - Long id of news to edit
+ */
+function renderEditModalWindow(newsId) {
+    $('#editSave').text('Обновить')
+    $('#editSave').attr('data-toggle-id', "update")
+    $('#editSave').attr('data-news-id', newsId)
+    fetch(newsApiUrl + `/${newsId}`, {
+        headers: myHeaders
+    }).then(function (response) {
+        if (response.status === 200) {
+            response.json().then(news => renderEditModal(news))
+        } else {
+            console.log('news not found')
+            infoMessage('#infoMessageMainPage', 'Новость не найдена', 'error')
+        }
+    })
+
+    function renderEditModal(news) {
+        let now = new Date()
+
+        $('#idModalDiv').show()
+        $('#modalWindowTitle').text('Редактировать новость')
+        clearModalFields()
+        if (moment(news.postingDate).isBefore(now, 'day')) {
+            $('#postingDateUpdate').attr('disabled', true)
+        } else {
+            $('#postingDateUpdate').attr('disabled', false)
+        }
+        $('#idNewsUpdate').val(news.id)
+        $('#titleNewsUpdate').val(news.title)
+        $('#anonsNewsUpdate').val(news.anons)
+        $('#fullTextUpdate').summernote('code', news.fullText)
+        $("#postingDateUpdate").val(moment(news.postingDate).format("yyyy-MM-DD"))
+    }
+}
+
+/**
  * function clears modal window fields
  */
 function clearModalFields() {
@@ -117,9 +209,14 @@ function clearModalFields() {
  * function check modal window fields to be filled
  * @returns {boolean}
  */
+//TODO доделать логику
 function checkFields() {
     let now = new Date()
-    let postingDate = new Date(document.getElementById('postingDateUpdate').value)
+    if (document.getElementById('postingDateUpdate').value !== '') {
+        let postingDate = new Date(document.getElementById('postingDateUpdate').value)
+    } else {
+        return false
+    }
     if (document.getElementById('titleNewsUpdate').value === '') {
         invalidModalField('Введите заголовок новости!', document.getElementById('titleNewsUpdate'))
         return false
@@ -132,36 +229,12 @@ function checkFields() {
     } else if (postingDate.value === '') {
         invalidModalField('Введите дату публикации!', document.getElementById('postingDateUpdate'))
         return false
-    } else if (moment(postingDate).isBefore(now, 'day')) {
+    } else if ($('#idNewsUpdate') === '' && moment(postingDate).isBefore(now, 'day')) {
         invalidModalField('Дата публикации не может быть меньше текущей даты!', document.getElementById('postingDateUpdate'))
         return false
     }
     return true
 }
-
-function updateNews() {
-    let news = {
-        id: document.getElementById('idNewsUpdate').value,
-        title: document.getElementById('titleNewsUpdate').value,
-        anons: document.getElementById('anonsNewsUpdate').value,
-        fullText: document.getElementById('fullTextUpdate').value,
-        postingDate: document.getElementById('postingDateUpdate').value
-    }
-    if (checkFields()) {
-        fetch(newsApiUrl, {
-            method: 'PUT',
-            headers: myHeaders,
-            body: JSON.stringify(news)
-        }).then(function (response) {
-            if (response.status === 200) {
-                console.log('news successfully updated')
-            }
-        })
-        //TODO доделать
-    }
-
-}
-
 
 /**
  * function handles delete button
@@ -186,37 +259,6 @@ function handleDeleteButton(newsId) {
 }
 
 /**
- * Renders edit model windows
- * @param newsId - Long id of news to edit
- */
-function renderEditModalWindow(newsId) {
-    $('#editSave').text('Обновить')
-    $('#editSave').attr('data-toggle-id', "update")
-    $('#editSave').attr('data-news-id', newsId)
-    fetch(newsApiUrl + `/${newsId}`, {
-        headers: myHeaders
-    }).then(function (response) {
-        if (response.status === 200) {
-            response.json().then(news => renderEditModal(news))
-        } else {
-            console.log('news not found')
-            infoMessage('#infoMessageMainPage', 'Новость не найдена', 'error')
-        }
-    })
-
-    function renderEditModal(news) {
-        $('#idModalDiv').show()
-        $('#modalWindowTitle').text('Редактировать новость')
-        clearModalFields()
-        $('#idNewsUpdate').val(news.id)
-        $('#titleNewsUpdate').val(news.title)
-        $('#anonsNewsUpdate').val(news.anons)
-        $('#fullTextUpdate').summernote('code', news.fullText)
-        $("#postingDateUpdate").val(moment(news.postingDate).format("yyyy-MM-DD"))
-    }
-}
-
-/**
  * function that handles publish checkbox
  */
 //TODO переделать логику
@@ -237,14 +279,14 @@ function publishCheckboxHandler() {
  *  - /published
  *  - /unpublished
  */
-function fetchNews(status) {
+function fetchNews(status, inputDiv) {
     fetch(newsApiUrl + status, {
         headers: myHeaders
     }).then(function (response) {
         if (response.status !== 200) {
-            //TODO обработчик
+            infoMessage('#infoMessageMainPage', 'В этом разделе нет новостей', 'error')
         } else {
-            response.json().then(news => renderNewsTable(news))
+            response.json().then(news => renderNewsTable(news, inputDiv))
         }
     })
 }
@@ -253,12 +295,16 @@ function fetchNews(status) {
  * function renders news page
  * @param news List of news
  */
-function renderNewsTable(news) {
-    const allNewsUl = $('#allNews')
+//TODO Дописать java doc
+function renderNewsTable(news, inputDiv) {
+    const allNewsUl = $(`${inputDiv}`)
     allNewsUl.empty()
     news.forEach(function (element) {
-        let postingDate = moment(element.postingDate).format("YYYY-MM-DD HH:mm")
-        let modifiedDate = moment(element.modifiedDate).format("YYYY-MM-DD HH:mm")
+        let postingDate = moment(element.postingDate).format("YYYY-MM-DD")
+        let modifiedDateText = ''
+        if (element.modifiedDate !== null) {
+            modifiedDateText = `Дата последнего изменения: ` + moment(element.modifiedDate).format("YYYY-MM-DD")
+        }
         let row = `<div id="div-${element.id}" class="alert alert-info mt-2">
                         <h2 id="title">${element.title}</h2>
                         <h5 id="anons">${element.anons}</h5>
@@ -267,7 +313,7 @@ function renderNewsTable(news) {
                             <div class="text-left align-text-bottom col" id="divSpan">
                                 <span id="postingDate">Дата публикации: ${postingDate}</span>
                                 <br>
-                                <span id="postingDate">Дата последнего изменения: ${modifiedDate}</span>
+                                <span id="modifiedDate">${modifiedDateText}</span>
                             </div>
                             <div class="text-right col" id="divButtons">
                                 <button type="button" data-toggle="modal" class="btn btn-primary"  id="btn_edit_news" data-target="#editNewsModal" data-toggle-id="edit" data-news-id="${element.id}">Редактировать</button>

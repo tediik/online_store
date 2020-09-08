@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,8 +23,7 @@ public class NewsController {
     @GetMapping
     public String newsPage(Model model) {
 
-        List<News> newsList = newsService
-                .findAllByPostingDateBefore(LocalDateTime.now());
+        List<News> newsList = newsService.getAllPublished(LocalDate.now());
         model.addAttribute("news", newsList);
         return "newsPage";
     }

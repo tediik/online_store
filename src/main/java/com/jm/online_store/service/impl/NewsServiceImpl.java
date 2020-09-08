@@ -7,7 +7,7 @@ import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -43,6 +43,7 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * Method accept Long id as parameter and returns {@link News} entity
+     *
      * @param id - {@link Long}
      * @return returns News entity or throws {@link NewsNotFoundException}
      */
@@ -64,11 +65,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод обновляет сущность News в базе данных по его уникальному идентификатору
+     * Метод обновляет сущность News в базе данных и изменяет modifiedDate на сегодняшнюю дату
      *
      * @param news сушность для обновления в базе данных
      */
-    public void updateById(News news) {
+    public void update(News news) {
+        news.setModifiedDate(LocalDate.now());
         newsRepository.save(news);
     }
 
@@ -90,7 +92,7 @@ public class NewsServiceImpl implements NewsService {
      * @return возвращает список еще неопубликованных новостей List<News>
      */
     @Override
-    public List<News> findAllByPostingDateBefore(LocalDateTime timeNow) {
+    public List<News> getAllPublished(LocalDate timeNow) {
         return newsRepository.findAllByPostingDateBefore(timeNow);
     }
 
@@ -102,7 +104,7 @@ public class NewsServiceImpl implements NewsService {
      * @return возвращает список опубликованных новостей List<News>
      */
     @Override
-    public List<News> findAllByPostingDateAfter(LocalDateTime timeNow) {
+    public List<News> getAllUnpublished(LocalDate timeNow) {
         return newsRepository.findAllByPostingDateAfter(timeNow);
     }
 }

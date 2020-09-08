@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -54,41 +55,47 @@ public class ManagerNewsRestController {
      */
     @GetMapping("/all")
     public ResponseEntity<List<News>> allNews() {
-        List<News> allNewsList = newsService.findAll();
-        return ResponseEntity.ok().body(allNewsList);
+        List<News> allNewsList;
+        try {
+            allNewsList = newsService.findAll();
+            return ResponseEntity.ok(allNewsList);
+        } catch (NewsNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
-//    /**
-//     * Method returns published news
-//     *
-//     * @return - ResponseEntity<List<News>>
-//     */
-//    @GetMapping("/news/published")
-//    public ResponseEntity<List<News>> getAllPublishedNews() {
-//        List<News> publishedNews;
-//        try {
-//            publishedNews = newsService.getNewsByStatus(true);
-//        } catch (NewsNotFoundException e) {
-//            return ResponseEntity.noContent().build();
-//        }
-//        return ResponseEntity.ok(publishedNews);
-//    }
-//
-//    /**
-//     * Method returns unpublished news
-//     *
-//     * @return - ResponseEntity<List<News>>
-//     */
-//    @GetMapping("/news/unpublished")
-//    public ResponseEntity<List<News>> getAllUnpublishedNews() {
-//        List<News> unpublishedNews;
-//        try {
-//            unpublishedNews = newsService.getNewsByStatus(false);
-//        } catch (NewsNotFoundException e) {
-//            return ResponseEntity.noContent().build();
-//        }
-//        return ResponseEntity.ok(unpublishedNews);
-//    }
+    /**
+     * Method returns published news
+     *
+     * @return - ResponseEntity<List<News>>
+     */
+    @GetMapping("/published")
+    public ResponseEntity<List<News>> getAllPublishedNews() {
+        List<News> publishedNews;
+        try {
+            publishedNews = newsService.getAllPublished(LocalDate.now());
+        } catch (NewsNotFoundException e) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(publishedNews);
+    }
+
+    /**
+     * Method returns unpublished news
+     *
+     * @return - ResponseEntity<List<News>>
+     */
+    @GetMapping("/unpublished")
+    public ResponseEntity<List<News>> getAllUnpublishedNews() {
+        List<News> unpublishedNews;
+        try {
+            unpublishedNews = newsService.getAllUnpublished(LocalDate.now());
+        } catch (NewsNotFoundException e) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(unpublishedNews);
+    }
 
     /**
      * Метод сохраняет новости в базу данных
@@ -99,8 +106,7 @@ public class ManagerNewsRestController {
     @PostMapping
     public ResponseEntity<News> newsPost(@RequestBody News news) {
         newsService.save(news);
-        //TODO добавить дату изменения
-        return ResponseEntity.ok().body(news);
+        return ResponseEntity.ok(news);
     }
 
     /**
@@ -111,9 +117,8 @@ public class ManagerNewsRestController {
      */
     @PutMapping
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
-        newsService.save(news);
-        //TODO добавить дату изменения
-        return ResponseEntity.ok().body(news);
+        newsService.update(news);
+        return ResponseEntity.ok(news);
     }
 
     /**
