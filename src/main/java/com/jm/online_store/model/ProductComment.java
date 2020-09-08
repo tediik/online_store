@@ -42,5 +42,7 @@ public class ProductComment {
     @CreationTimestamp
     private LocalDateTime commentDate;
 
-    // TODO: 07/09/2020 To add product mapping once product page will be completed 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }
