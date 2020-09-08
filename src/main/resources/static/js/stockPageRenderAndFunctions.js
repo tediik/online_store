@@ -185,7 +185,6 @@ function handleSaveChangesButton() {
             }
         })
     }
-
     $('#stockModal').modal('hide')
 }
 
