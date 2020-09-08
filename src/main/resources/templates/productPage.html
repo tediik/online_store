@@ -24,13 +24,10 @@
             <!-- from subcategoryPage.js -->
         </ol>
     </nav>
-    <h4 id="productsInCategory">
-        <!-- from subcategoryPage.js -->
-    </h4>
     <hr class="mb-4">
     <div class="row">
         <div class="col">
-            <!-- Carousel with product promo -->
+            <!-- Carousel with product promo img -->
             <div class="col-5 promo">
                 <div id="myCarousel" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">
@@ -39,17 +36,17 @@
                         <li data-target="#myCarousel" data-slide-to="2"></li>
                     </ol>
                     <div class="carousel-inner">
-                        <div class="carousel-item active">
+                        <div class="carousel-item active" style="height: 250px; background: darkorange;">
                             <img class="first-slide"
                                  src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                                  alt="First slide">
                         </div>
-                        <div class="carousel-item">
+                        <div class="carousel-item" style="height: 250px; background: darkgreen;">
                             <img class="second-slide"
                                  src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                                  alt="Second slide">
                         </div>
-                        <div class="carousel-item">
+                        <div class="carousel-item" style="height: 250px; background: darkmagenta;">
                             <img class="third-slide"
                                  src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                                  alt="Third slide">
@@ -66,21 +63,48 @@
                 </div>
             </div>
         </div>
-        <div class="col">
-            <h4>Product Name</h4>
+        <div class="col" id="productName">
+            <!-- from productPage.js -->
         </div>
         <div class="col">
-            <h4>To Cart</h4>
+            <br>
+            <div class="row">
+                <button class="btn btn-warning btn-lg" type="submit" style="width: 15rem">Купить</button>
+            </div>
+            <br>
+            <div class="row">
+                <h5 class="font-weight-normal my-2">&ensp;В избранное </h5>
+                <button class="btn" type="submit"><i class="fa fa-heart-o"></i></button>
+            </div>
         </div>
     </div>
     <hr class="mb-4">
     <div class="row">
         <div class="col">
-            <nav class="nav nav-masthead justify-content-center">
-                <a class="nav-link active" href="#"><h4>Описание</h4></a>
-                <a class="nav-link" href="#"><h4>Характеристики</h4></a>
-                <a class="nav-link" href="#"><h4>Комментарии</h4></a>
+            <nav class="nav nav-masthead justify-content-center" role="tablist">
+                <a class="nav-link active mx-5" data-toggle="tab" href="#description" role="tab"
+                   aria-controls="description" aria-selected="true"><h4>Описание</h4></a>
+                <a class="nav-link mx-5" data-toggle="tab" href="#specifications" role="tab"
+                   aria-controls="specifications" aria-selected="false"><h4>Характеристики</h4></a>
+                <a class="nav-link mx-5" data-toggle="tab" href="#comments" role="tab" aria-controls="comments"
+                   aria-selected="false"><h4>Комментарии</h4></a>
             </nav>
+            <div class="tab-content">
+                <div class="tab-pane fade show active mx-5" id="description" role="tabpanel"
+                     aria-labelledby="description-tab">
+                    <hr class="mb-4">
+                    <h4>description</h4>
+                    <h4>descriptiondescriptiondescriptiondescriptiondescription</h4>
+                </div>
+                <div class="tab-pane fade mx-5" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                    <hr class="mb-4">
+                    <h4>specifications</h4>
+                </div>
+                <div class="tab-pane fade mx-5" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+                    <hr class="mb-4">
+                    <h4>comments</h4>
+                </div>
+            </div>
         </div>
     </div>
 </main>
