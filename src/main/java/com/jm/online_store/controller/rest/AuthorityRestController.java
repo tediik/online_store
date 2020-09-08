@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class AuthorityRestController {
                                                 @RequestParam String newMail) {
         User user = (User) auth.getPrincipal();
         if (userService.isExist(newMail)) {
-            return ResponseEntity.ok("duplicatedEmailError");
+            throw new EmailAlreadyExistsException();
         }
         userService.changeUsersMail(user, newMail);
         return ResponseEntity.ok("success");
