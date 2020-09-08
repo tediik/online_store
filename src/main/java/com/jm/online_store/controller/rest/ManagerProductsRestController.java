@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-
 import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
@@ -59,7 +58,7 @@ public class ManagerProductsRestController {
         }else {
             productService.importFromCSVFile(file.getOriginalFilename());
         }
-       return ResponseEntity.ok().body("sucess");
+        return ResponseEntity.ok("success");
     }
 
     /**
@@ -83,7 +82,7 @@ public class ManagerProductsRestController {
     /**
      * Метод, ищет акции по id
      * @param productId идентификатор товара
-     * @return Optiona<Product> возвращает товар
+     * @return Optional<Product> возвращает товар
      */
     @GetMapping(value = "/rest/products/{id}")
     public Optional<Product> findProductById(@PathVariable("id") Long productId) {
@@ -96,10 +95,9 @@ public class ManagerProductsRestController {
      * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
      */
     @PostMapping(value = "/rest/products/addProduct", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public ResponseEntity<Product> addProductM(@RequestBody Product product) {
         productService.saveProduct(product);
-        return ResponseEntity.ok().body(product);
+        return ResponseEntity.ok(product);
     }
 
     /**
@@ -110,7 +108,7 @@ public class ManagerProductsRestController {
     @PutMapping("/rest/products/editProduct")
     public ResponseEntity<Product> editProductM(@RequestBody Product product) {
         productService.saveProduct(product);
-        return ResponseEntity.ok().body(product);
+        return ResponseEntity.ok(product);
     }
 
     /**
@@ -118,8 +116,9 @@ public class ManagerProductsRestController {
      * @param id идентификатор товара
      */
     @DeleteMapping(value = "/rest/products/{id}")
-    public void deleteProductById(@PathVariable("id") Long id) {
+    public ResponseEntity<Long>  deleteProductById(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
+        return ResponseEntity.ok(id);
     }
 
     /**
@@ -127,7 +126,8 @@ public class ManagerProductsRestController {
      * @param id идентификатор товара
      */
     @PostMapping(value = "/rest/products/restoredeleted/{id}")
-    public void restoreProductById(@PathVariable("id") Long id) {
+    public ResponseEntity<Long> restoreProductById(@PathVariable("id") Long id) {
         productService.restoreProduct(id);
+        return ResponseEntity.ok(id);
     }
 }

@@ -48,7 +48,6 @@ public class Product {
     @NonNull
     private String productType;
     @NonNull
-    @Column(name="deleted")
     private boolean deleted;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")

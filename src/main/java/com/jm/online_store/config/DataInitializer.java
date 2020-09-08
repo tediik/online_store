@@ -65,7 +65,7 @@ public class DataInitializer {
 //    @PostConstruct
     public void initDataBaseFilling() {
         roleInit();
-        //newsInit();
+        newsInit();
         productInit();
         ordersInit();
         stockInit();
