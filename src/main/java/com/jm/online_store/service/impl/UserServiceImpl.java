@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -275,22 +276,21 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String updateUserImage(Long userId, MultipartFile file) {
         User user = userRepository.findById(userId).get();
-        String originalFilename = StringUtils.cleanPath(Math.random() + file.getOriginalFilename());
-        String avatarUniqueName = originalFilename.replaceAll("(.*).", user.getEmail().replace(".", "") + originalFilename);
+        String uniqueFilename = StringUtils.cleanPath(UUID.randomUUID() + "." + file.getOriginalFilename());
         if (!file.isEmpty()) {
-            Path fileNameAndPath = Paths.get(uploadDirectory, originalFilename);
+            Path fileNameAndPath = Paths.get(uploadDirectory, uniqueFilename);
             try {
                 byte[] bytes = file.getBytes();
                 Files.write(fileNameAndPath, bytes);
                 //Set user's profile picture
-                user.setProfilePicture(originalFilename);
+                user.setProfilePicture(uniqueFilename);
                 userRepository.save(user);
             } catch (IOException e) {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }
         }
-        log.debug("Failed to store file - file is not present {}", originalFilename);
-        return File.separator + "uploads" + File.separator + "images" + File.separator + file.getOriginalFilename();
+        log.debug("Failed to store file - file is not present {}", uniqueFilename);
+        return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
     }
 
     /**
