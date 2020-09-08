@@ -98,12 +98,8 @@ public class ManagerNewsRestController {
      */
     @PostMapping
     public ResponseEntity<News> newsPost(@RequestBody News news) {
-
-        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
-            news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
-        }
-
         newsService.save(news);
+        //TODO добавить дату изменения
         return ResponseEntity.ok().body(news);
     }
 
@@ -115,11 +111,8 @@ public class ManagerNewsRestController {
      */
     @PutMapping
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
-
-        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
-            news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
-        }
         newsService.save(news);
+        //TODO добавить дату изменения
         return ResponseEntity.ok().body(news);
     }
 
