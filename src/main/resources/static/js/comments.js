@@ -74,7 +74,7 @@ $(document).ready(function () {
                         var timeStamp = new Date(response.commentDate).toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
                         commentBox.remove();
 
-                        $('#replyDisplayId' + commentId).append($("<div class=\"media mt-4\">\n" +
+                        $('#replyDisplayId' + commentId).last(".media mt-4").append($("<div class=\"media mt-4\">\n" +
                             "<div>\n" +
                             "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
                             "             height=\"52\" src=\"/uploads/images/" + response.customer.profilePicture + "\" width=\"52\"></div>\n" +
@@ -114,8 +114,6 @@ function showComments() {
                         "        <div class=\"replyDisplay\" id='replyDisplayId" + comment.id + "'></div>"));
                 }
                 if (comment.parentId !== null) {
-                    // $('#button' + comment.parentId).hide();
-                    // $('#button' + comment.id).hide();
                     $('#mediaBody' + comment.parentId).append($("  <div class=\"media mt-4\">\n" +
                         "                        <div>\n" +
 
