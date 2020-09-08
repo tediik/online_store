@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
@@ -36,15 +37,15 @@ public class MainPageRestController {
             log.debug("BindingResult in registerUserAccount hasErrors: {}", bindingResult);
             return new ResponseEntity("Binding error", HttpStatus.OK);
         }
-        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())) {
             log.debug("Passwords do not match : passwordConfirmError");
             return new ResponseEntity("passwordError", HttpStatus.OK);
         }
-        if (userService.isExist(userForm.getEmail())){
+        if (userService.isExist(userForm.getEmail())) {
             log.debug("User with same email already exists");
             return new ResponseEntity("duplicatedEmailError", HttpStatus.OK);
         }
-        if (validationUtils.isNotValidEmail(userForm.getEmail())){
+        if (validationUtils.isNotValidEmail(userForm.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
             return new ResponseEntity("notValidEmailError", HttpStatus.OK);
         }

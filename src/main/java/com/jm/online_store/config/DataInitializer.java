@@ -6,6 +6,7 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
+import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
@@ -16,13 +17,13 @@ import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,14 +31,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 
 /**
  * класс первичного заполнения таблиц.
- *
+ * <p>
  * для первичного заполнения базы данных раскомментировать аннотацию
  * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
- * в файле "application.properties" с "update" на "create" или "create-drop".
+ * в файле "application.yml" с "update" на "create" или "create-drop".
  */
 @AllArgsConstructor
 @Component
@@ -53,6 +55,7 @@ public class DataInitializer {
     private final ProductInOrderService productInOrderService;
     private final BasketService basketService;
     private final StockService stockService;
+    private final SharedStockService sharedStockService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -66,6 +69,7 @@ public class DataInitializer {
         productInit();
         ordersInit();
         stockInit();
+        sharedStockInit();
     }
 
     /**
@@ -230,17 +234,17 @@ public class DataInitializer {
         Categories category2 = new Categories("PC", "Computer");
         Categories category3 = new Categories("Smartphone", "Cellphone");
 
-        Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer");
-        Product product2 = new Product("ACER-5432", 399.9, 10, 4.2, "Computer");
-        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer");
+        Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
+        Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
+        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer",false);
 
-        Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer");
-        Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer");
-        Product product6 = new Product("NY-2345-PC-453", 1223.9, 7, 4.7, "Computer");
+        Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer", false);
+        Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer", false);
+        Product product6 = new Product("NY-2345-PC-453", 1223.9, 7, 4.7, "Computer", false);
 
-        Product product7 = new Product("XIAOMI-Mi10", 599.9, 120, 4.9, "Cellphone");
-        Product product8 = new Product("LG-2145", 439.5, 78, 3.9, "Cellphone");
-        Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, "Cellphone");
+        Product product7 = new Product("XIAOMI-Mi10", 599.9, 120, 4.9, "Cellphone", false);
+        Product product8 = new Product("LG-2145", 439.5, 78, 3.9, "Cellphone", false);
+        Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, "Cellphone", false);
 
         Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "some additional info here");
         Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
@@ -278,7 +282,7 @@ public class DataInitializer {
         List<Long> productsIds = new ArrayList<>();
         productsIds.add(productService.findProductByName("NX-7893-PC-09878").get().getId());
         productsIds.add(productService.findProductByName("Asus-NX4567").get().getId());
-        productsIds.add(productService.findProductByName("ACER-5432").get().getId());
+        productsIds.add(productService.findProductByName("ACER-543").get().getId());
         productsIds.add(productService.findProductByName("XIAOMI-Mi10").get().getId());
         productsIds.add(productService.findProductByName("LG-2145").get().getId());
         productsIds.add(productService.findProductByName("Apple-10").get().getId());
@@ -358,5 +362,26 @@ public class DataInitializer {
         stockService.addStock(firstStock);
         stockService.addStock(secondStock);
         stockService.addStock(thirdStock);
+    }
+
+    public void sharedStockInit() {
+        String[] socialNetworkNames = {"facebook", "vk", "twitter"};
+        List<Stock> stocks = stockService.findAll();
+        List<User> users = userService.findAll();
+        Long firstNumber = stocks.get(0).getId();
+        Long lastNumber = stocks.get(stocks.size() - 1).getId();
+        Random random = new Random();
+        for (Stock stock : stocks) {
+            for (User user : users) {
+                long generatedLongForStock = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
+                SharedStock sharedStock = SharedStock.builder()
+                        .user(user)
+                        .stock(stockService.findStockById(generatedLongForStock))
+                        .socialNetworkName(socialNetworkNames[random.nextInt(socialNetworkNames.length)])
+                        .build();
+                sharedStockService.addSharedStock(sharedStock);
+            }
+        }
+
     }
 }

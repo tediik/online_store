@@ -62,8 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/news/**", "/registration", "/css/**").permitAll()
-                .antMatchers("/oauth/**", "/oauthTwitter/**").permitAll()
+                .antMatchers("/oauth/**", "/oauthTwitter/**", "/TwitterRegistrationPage/**").permitAll()
+                .antMatchers("/", "/login", "/news/**", "/registration", "/css/**", "/api/sharedStock").permitAll()
                 .antMatchers("/users/**").permitAll()
                 .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**", "/404").permitAll()
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
