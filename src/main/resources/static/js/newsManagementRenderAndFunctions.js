@@ -8,6 +8,9 @@ myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 $(document).ready(function () {
     fetchNews("/all")
 });
+$('#editModalNews').on('hidden.bs.modal', function () {
+    fetchNews("/all")
+})
 
 /**
  * Event listeners of all document
@@ -21,7 +24,6 @@ document.querySelector('.modal-footer').addEventListener('click', checkButtonCli
 /*left nav bar*/
 document.getElementById('leftNavBar').addEventListener('click', handleLeftNavBarClick)
 
-
 /**
  * checks which button was clicked in modal window update or add
  * @param event
@@ -31,8 +33,38 @@ function checkButtonClicked(event) {
     if (event.target.dataset.toggleId === 'update') {
         updateNews(event.target.dataset.newsId)
     }
+    if (event.target.dataset.toggleId === 'add') {
+        addNewNews()
+    }
 }
 
+/**
+ * function makes POST request to add news to news api
+ */
+function addNewNews() {
+
+    let newNews = {
+        title: document.getElementById('titleNewsUpdate').value,
+        anons: document.getElementById('anonsNewsUpdate').value,
+        fullText: document.getElementById('fullTextUpdate').value,
+        postingDate: moment(document.getElementById('postingDateUpdate').value).format("YYYY-MM-DD")
+    }
+
+    if (checkFields()) {
+        fetch(newsApiUrl, {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify(newNews)
+        }).then(function (response) {
+            if (response.status === 200) {
+                infoMessage('#infoMessageMainPage', 'Новость успешно добавлена', 'success')
+            } else {
+                infoMessage('#infoMessageMainPage', 'Новость не добавлена', 'alert')
+            }
+        })
+        $('#editNewsModal').modal('hide')
+    }
+}
 
 /**
  * function check which button was clicked in news dev (edit or delete)
@@ -73,6 +105,7 @@ function renderNewNewsModal() {
  * function clears modal window fields
  */
 function clearModalFields() {
+    document.getElementById('idNewsUpdate').value = ''
     document.getElementById('titleNewsUpdate').value = ''
     document.getElementById('anonsNewsUpdate').value = ''
     $('#fullTextUpdate').summernote('code', '')
@@ -85,6 +118,8 @@ function clearModalFields() {
  * @returns {boolean}
  */
 function checkFields() {
+    let now = new Date()
+    let postingDate = new Date(document.getElementById('postingDateUpdate').value)
     if (document.getElementById('titleNewsUpdate').value === '') {
         invalidModalField('Введите заголовок новости!', document.getElementById('titleNewsUpdate'))
         return false
@@ -94,28 +129,31 @@ function checkFields() {
     } else if (document.getElementById('fullTextUpdate').value === '') {
         invalidModalField('Введите новость!', document.getElementById('fullTextUpdate'))
         return false
-    } else if (document.getElementById('postingDateUpdate').value === '') {
+    } else if (postingDate.value === '') {
         invalidModalField('Введите дату публикации!', document.getElementById('postingDateUpdate'))
         return false
-    } else {
-        return true
+    } else if (moment(postingDate).isBefore(now, 'day')) {
+        invalidModalField('Дата публикации не может быть меньше текущей даты!', document.getElementById('postingDateUpdate'))
+        return false
     }
+    return true
 }
 
 function updateNews() {
     let news = {
+        id: document.getElementById('idNewsUpdate').value,
         title: document.getElementById('titleNewsUpdate').value,
         anons: document.getElementById('anonsNewsUpdate').value,
         fullText: document.getElementById('fullTextUpdate').value,
         postingDate: document.getElementById('postingDateUpdate').value
     }
-    if (checkFields()){
+    if (checkFields()) {
         fetch(newsApiUrl, {
             method: 'PUT',
             headers: myHeaders,
             body: JSON.stringify(news)
-        }).then(function (response){
-            if (response.status === 200){
+        }).then(function (response) {
+            if (response.status === 200) {
                 console.log('news successfully updated')
             }
         })
