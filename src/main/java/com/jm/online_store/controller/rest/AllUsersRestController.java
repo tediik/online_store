@@ -46,16 +46,14 @@ public class AllUsersRestController {
     }
 
     @PostMapping("/uploadImage")
-    @ResponseBody
-    public String handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+    public ResponseEntity<String> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.updateUserImage(userDetails.getId(), imageFile);
+        return ResponseEntity.ok(userService.updateUserImage(userDetails.getId(), imageFile));
     }
 
     @DeleteMapping("/deleteImage")
-    @ResponseBody
-    public String deleteImage() throws IOException {
+    public ResponseEntity<String> deleteImage() throws IOException {
         User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.deleteUserImage(userDetails.getId());
+        return ResponseEntity.ok(userService.deleteUserImage(userDetails.getId()));
     }
 }
