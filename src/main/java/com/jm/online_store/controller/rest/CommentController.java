@@ -19,11 +19,23 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    /**
+     * Fetches an arrayList of all Comments from database and returns JSON representation response
+     *
+     * @return ResponseEntity<List < ProductComment>>
+     */
     @GetMapping
     public ResponseEntity<List<ProductComment>> findAll() {
         return ResponseEntity.ok(commentService.findAll());
     }
 
+    /**
+     * Receives productComment requestBody and passes it to Service layer for processing
+     * Returns JSON representation
+     *
+     * @param productComment
+     * @return ResponseEntity<ProductComment>
+     */
     @PostMapping
     public ResponseEntity<ProductComment> addComment(@RequestBody ProductComment productComment) {
         return ResponseEntity.ok(commentService.addComment(productComment));

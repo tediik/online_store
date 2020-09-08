@@ -18,13 +18,17 @@ public class CommentServiceImpl implements CommentService {
     private final ProductCommentRepository commentRepository;
     private final UserService userService;
 
+    /**
+     * Fetches an arrayList of all Comments from database
+     * @return List<ProductComment>
+     */
     @Override
     public List<ProductComment> findAll() {
         return commentRepository.findAll();
     }
 
     /**
-     * Method checks if productComment is a new post or reply to previous comments
+     * Method checks if productComment is a new post or reply to previous comment
      * then sets a current user as author of a comment and saves to dataBase
      * @param productComment
      * @return ProductComment
@@ -40,8 +44,12 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(productComment);
     }
 
+    /**
+     * Find and retrieve ProductComment from database by Id
+     * @return ProductComment
+     */
     @Override
-    public ProductComment findById(Long parentId) {
-        return commentRepository.findById(parentId).get();
+    public ProductComment findById(Long commentId) {
+        return commentRepository.findById(commentId).get();
     }
 }

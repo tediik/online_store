@@ -24,7 +24,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -77,7 +76,6 @@ public class DataInitializer {
      * Метод конфигурирования и первичного заполнения таблиц:
      * ролей, юзеров и корзины.
      */
-//    @PostConstruct
     private void roleInit() {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
@@ -230,7 +228,6 @@ public class DataInitializer {
     /**
      * Метод первичного тестового заполнения товаров.
      */
-    //@PostConstruct
     private void productInit() {
 
         Categories category1 = new Categories("Laptop", "Computer");
@@ -279,7 +276,6 @@ public class DataInitializer {
     /**
      * Метод первичного тестового заполнения заказов.
      */
-    //@PostConstruct
     private void ordersInit() {
         User customer = userService.findByEmail("customer@mail.ru").get();
 
@@ -324,7 +320,6 @@ public class DataInitializer {
     /**
      * Метод первичного тестового заполнения акций.
      */
-    //@PostConstruct
     private void stockInit() {
         Stock firstStock = Stock.builder()
                 .startDate(LocalDate.now().plusDays(2))
