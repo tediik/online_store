@@ -60,7 +60,7 @@ public class CustomerController {
     @PostMapping("/profile")
     public String updateUserInfo(User user, Model model) {
         user.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
-       User updadeUser = userService.findById(user.getId()).get();
+        User updadeUser = userService.findById(user.getId()).get();
         updadeUser.setFirstName(user.getFirstName());
         updadeUser.setLastName(user.getLastName());
         updadeUser.setBirthdayDate(user.getBirthdayDate());

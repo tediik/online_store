@@ -127,28 +127,6 @@ function handleAddBtn() {
     }
 
     /**
-     * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
-     * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
-     * @param text - текст для вывода в алекрт
-     * @param field - поле на каком установить фокус
-     */
-    function handleNotValidFormField(text, field) {
-        $('#alert-div').empty().append(`
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>${text}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            `)
-        $('#' + field).focus()
-
-        window.setTimeout(function () {
-            $('.alert').alert('close');
-        }, 5000)
-    }
-
-    /**
      * функция очистки полей формы нового пользователя
      */
     function clearFormFields() {
@@ -198,6 +176,28 @@ function handleAddBtn() {
 }
 
 /**
+ * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
+ * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
+ * @param text - текст для вывода в алекрт
+ * @param field - поле на каком установить фокус
+ */
+function handleNotValidFormField(text, field) {
+    $('#alert-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>${text}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+    $('#' + field).focus()
+
+    window.setTimeout(function () {
+        $('.alert').alert('close');
+    }, 5000)
+}
+
+/**
  * функция обработки нажатия кнопки accept в модальном окне
  * @param event
  */
@@ -231,6 +231,24 @@ function handleAcceptButtonFromModalWindow(event) {
             if (response.ok){
                 fetchUsersAndRenderTable()
                 $('#userModalWindow').modal('hide')
+            } else {
+                response.text()
+                    .then(
+                        function (text) {
+                            if (text === "notValidEmailError") {
+                                field = "emailInputModal"
+                                handleNotValidFormField("Вы ввели некоректный Email адрес!", field)
+                            }
+                            if (text === "emptyRolesError") {
+                                field = "rolesSelectModal"
+                                handleNotValidFormField("Необходимо выбрать роль", field)
+                            }
+                            if (text === "duplicatedEmailError") {
+                                field = "addEmail"
+                                handleNotValidFormField("Такой email адрес уже существует", field)
+                            }
+                            console.log(text)
+                        })
             }
         })
     }
