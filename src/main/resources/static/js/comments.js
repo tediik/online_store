@@ -30,8 +30,8 @@ $(document).ready(function () {
                         "        <h5 class=\"mt-0\">" + response.customer.email + "  commented on  " + timeStamp + "</h5>\n" +
                         "        <div class=\"message\">" + response.content + "</div>\n" +
                         "        <button type='button' id='button" + response.id + "'  class='btn btn-link reply'>Reply</button>\n" +
-                        "    </div>\n" +
-                        "</div>"))
+                        "        <div class=\"replyDisplay\" id='replyDisplayId" + response.id + "'></div>\n" +
+                        "    </div>"))
 
                     $('#commentForm').find('input:text').val('');
 
@@ -40,6 +40,8 @@ $(document).ready(function () {
         });
 
         $(document).on('click', '.reply', function () {
+            $(this).off("click");
+
             //Reply to this id
             var commentId = $(this).attr("id");
             commentId = commentId.replace(/\D/g, '');
@@ -52,7 +54,8 @@ $(document).ready(function () {
                 "                        <button type=\"button\" id='submitReplyBtn' class=\"btn btn-primary\">Submit</button>\n" +
                 "                </div>")
 
-            $(this).replaceWith(commentBox);
+            $('#replyDisplayId' + commentId).append(commentBox);
+
 
             $('#submitReplyBtn').on('click', function (event) {
                 var parentId = commentId;
@@ -71,7 +74,7 @@ $(document).ready(function () {
                         var timeStamp = new Date(response.commentDate).toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
                         commentBox.remove();
 
-                        $('#mediaBody' + commentId).append($("<div class=\"media mt-4\">\n" +
+                        $('#replyDisplayId' + commentId).append($("<div class=\"media mt-4\">\n" +
                             "<div>\n" +
                             "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
                             "             height=\"52\" src=\"/uploads/images/" + response.customer.profilePicture + "\" width=\"52\"></div>\n" +
@@ -107,13 +110,12 @@ function showComments() {
                         "    <div class=\"media-body\" id='mediaBody" + comment.id + "'>\n" +
                         "        <h5 class=\"mt-0\">" + comment.customer.email + "  commented on  " + timeStamp + "</h5>\n" +
                         "        <div class=\"message\">  " + comment.content + " </div>\n" +
-                        "                        <div class=\"date\">" + timeStamp + "</div>\n" +
-
-                        "        <button type='button' id='button" + comment.id + "' class='btn btn-link reply'>Reply</button>"));
+                        "        <button type='button' id='button" + comment.id + "' class='btn btn-link reply'>Reply</button>\n"+
+                        "        <div class=\"replyDisplay\" id='replyDisplayId" + comment.id + "'></div>"));
                 }
                 if (comment.parentId !== null) {
                     // $('#button' + comment.parentId).hide();
-                    $('#button' + comment.id).hide();
+                    // $('#button' + comment.id).hide();
                     $('#mediaBody' + comment.parentId).append($("  <div class=\"media mt-4\">\n" +
                         "                        <div>\n" +
 
