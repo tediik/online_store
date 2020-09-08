@@ -65,6 +65,7 @@ public class CustomerController {
         updadeUser.setLastName(user.getLastName());
         updadeUser.setBirthdayDate(user.getBirthdayDate());
         updadeUser.setUserGender(user.getUserGender());
+        updadeUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         userService.updateUser(updadeUser);
         model.addAttribute("user", updadeUser);
 
