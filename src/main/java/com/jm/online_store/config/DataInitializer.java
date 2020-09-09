@@ -246,17 +246,17 @@ public class DataInitializer {
         Categories category13 = new Categories("Роутеры и сетевое оборудование", "Офис и сеть");
         Categories category14 = new Categories("Техника для кухни", "Бытовая техника");
 
-        Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer");
-        Product product2 = new Product("ACER-5432", 399.9, 10, 4.2, "Computer");
-        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer");
+        Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
+        Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
+        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer",false);
 
-        Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer");
-        Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer");
-        Product product6 = new Product("NY-2345-PC-453", 1223.9, 7, 4.7, "Computer");
+        Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer", false);
+        Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer", false);
+        Product product6 = new Product("NY-2345-PC-453", 1223.9, 7, 4.7, "Computer", false);
 
-        Product product7 = new Product("XIAOMI-Mi10", 599.9, 120, 4.9, "Cellphone");
-        Product product8 = new Product("LG-2145", 439.5, 78, 3.9, "Cellphone");
-        Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, "Cellphone");
+        Product product7 = new Product("XIAOMI-Mi10", 599.9, 120, 4.9, "Cellphone", false);
+        Product product8 = new Product("LG-2145", 439.5, 78, 3.9, "Cellphone", false);
+        Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, "Cellphone", false);
 
         Product product10 = new Product("Notebook 1", 99.9, 2, 0.0, "Computer");
         Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer");
