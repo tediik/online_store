@@ -135,6 +135,21 @@ function handleAddBtn() {
         $('#addRoles').selectedIndex = -1
         addRolesOnNewUserForm()
     }
+    function handleNotValidFormField(text, field) {
+        $('#alert-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>${text}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+        $('#' + field).focus()
+
+        window.setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000)
+    }
 
     fetch(adminRestUrl, {
         method: 'POST',
@@ -181,21 +196,6 @@ function handleAddBtn() {
  * @param text - текст для вывода в алекрт
  * @param field - поле на каком установить фокус
  */
-function handleNotValidFormField(text, field) {
-    $('#alert-div').empty().append(`
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>${text}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            `)
-    $('#' + field).focus()
-
-    window.setTimeout(function () {
-        $('.alert').alert('close');
-    }, 5000)
-}
 
 /**
  * функция обработки нажатия кнопки accept в модальном окне
@@ -210,6 +210,23 @@ function handleAcceptButtonFromModalWindow(event) {
         password: $('#passwordInputModal').val(),
         roles: getSelectValues(document.getElementById("rolesSelectModal")),
     };
+
+    function modalHandleNotValidFormField(text, field) {
+        $('#alert-modal-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>${text}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+        $('#userModalWindow').scrollTop(0);
+        $('#' + field).focus()
+
+        window.setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000)
+    }
 
     /**
      * Проверка кнопки delete или edit
@@ -237,15 +254,15 @@ function handleAcceptButtonFromModalWindow(event) {
                         function (text) {
                             if (text === "notValidEmailError") {
                                 field = "emailInputModal"
-                                handleNotValidFormField("Вы ввели некоректный Email адрес!", field)
+                                modalHandleNotValidFormField("Вы ввели некоректный Email адрес!", field)
                             }
                             if (text === "emptyRolesError") {
                                 field = "rolesSelectModal"
-                                handleNotValidFormField("Необходимо выбрать роль", field)
+                                modalHandleNotValidFormField("Необходимо выбрать роль", field)
                             }
                             if (text === "duplicatedEmailError") {
                                 field = "addEmail"
-                                handleNotValidFormField("Такой email адрес уже существует", field)
+                                modalHandleNotValidFormField("Такой email адрес уже существует", field)
                             }
                             console.log(text)
                         })
