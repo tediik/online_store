@@ -7,25 +7,57 @@ let unpublishedNewsDivId = $("#unpublishedNews")
 
 $(document).ready(function () {
 
-    $.ajax("/api/manager/news", {
-        dataType: 'json',
-        success: function (message) {
-            allNewsList = message
-            message.forEach(function (element) {
-                currentTime = moment().format("YYYY-MM-DD HH:mm")
-                postingDate = moment(element.postingDate).format("YYYY-MM-DD HH:mm")
-                if (currentTime >= postingDate) {
-                    fillingNews(element, publishedNewsDivId)
-                } else {
-                    fillingNews(element, unpublishedNewsDivId)
-                }
-                fillingNews(element, allNewsDivId)
-            })
-            clickButtonEditDelete()
-        }
-    })
+    showNewsPage();
 })
 
+function showNewsPage(page = 0) {
+    $.ajax("/api/manager/news", {
+        data: {'page': page},
+        success: function (data) {
+            $('#allNews').empty();
+            $('#publishedNews').empty();
+            $('#unpublishedNews').empty();
+            data.content.forEach(function (element) {
+                currentTime = moment().format("YYYY-MM-DD HH:mm");
+                postingDate = moment(element.postingDate).format("YYYY-MM-DD HH:mm");
+                if (currentTime >= postingDate) {
+                    fillingNews(element, publishedNewsDivId);
+                } else {
+                    fillingNews(element, unpublishedNewsDivId);
+                }
+                fillingNews(element, allNewsDivId);
+            })
+            clickButtonEditDelete();
+            addPaginationNav(data);
+        }
+    })
+}
+
+function addPaginationNav(data) {
+    let nav = $('#news-pagination-nav').empty();
+    let li = $('<li/>').addClass('page-item').append("<a class='page-link' href='#' aria-label='Previous'>" +
+        "<span aria-hidden='true'>&laquo;</span><span class='sr-only'>Previous</span></a>");
+    $(nav).append(li);
+    for (let i = 0; i < data.totalPages; i++) {
+        let li = $('<li/>').addClass('page-item');
+        if (i === data.number) {
+            $(li).addClass("active");
+        }
+        let a = $('<a/>').addClass('page-link').attr('href', '#').val(i).text(i + 1).click(changePage);
+        $(li).append(a);
+        $(nav).append(li);
+    }
+    li = $('<li/>').addClass('page-item').append("<a class='page-link' href='#' aria-label='Next'>" +
+        "<span aria-hidden='true'>&raquo;</span><span class='sr-only'>Next</span></a>");
+    $(nav).append(li);
+}
+
+function changePage() {
+    let val = $(this).val();
+    console.log("val");
+    console.log(val);
+    showNewsPage(val);
+}
 
 function fillingNews(element, parentDiv) {
     let elementDiv = $("<div></div>")
@@ -196,7 +228,7 @@ function updateNews() {
 }
 
 function deleteNews() {
-    $.ajax("/api/manager/news/" + $("#idNewsDelete").val() + "/delete/" , {
+    $.ajax("/api/manager/news/" + $("#idNewsDelete").val() + "/delete/", {
         method: "delete",
         dataType: "text",
         success: function (msg) {

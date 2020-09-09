@@ -1,15 +1,16 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.News;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface NewsService {
 
-    List<News> findAll();
+    Page<News> findAll(Pageable page);
 
     void save(News news);
 

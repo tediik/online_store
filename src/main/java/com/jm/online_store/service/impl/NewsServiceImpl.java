@@ -4,7 +4,11 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;
@@ -27,8 +32,8 @@ public class NewsServiceImpl implements NewsService {
      * @return List<News> возвращает список всех новостей
      */
     @Override
-    public List<News> findAll() {
-        return newsRepository.findAll();
+    public Page<News> findAll(Pageable page) {
+        return newsRepository.findAll(page);
     }
 
     /**
@@ -37,6 +42,7 @@ public class NewsServiceImpl implements NewsService {
      * @param news Сущность News c с заполненными полями
      */
     @Override
+    @Transactional
     public void save(News news) {
         newsRepository.save(news);
     }
@@ -69,6 +75,7 @@ public class NewsServiceImpl implements NewsService {
      *
      * @param news сушность для обновления в базе данных
      */
+    @Transactional
     public void updateById(News news) {
         newsRepository.save(news);
     }
@@ -79,6 +86,7 @@ public class NewsServiceImpl implements NewsService {
      * @param id уникальный идентификатор сущности News
      */
     @Override
+    @Transactional
     public void deleteById(Long id) {
         newsRepository.deleteById(id);
     }
