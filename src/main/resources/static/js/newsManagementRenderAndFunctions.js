@@ -82,7 +82,8 @@ function addNewNews() {
         title: document.getElementById('titleNewsUpdate').value,
         anons: document.getElementById('anonsNewsUpdate').value,
         fullText: document.getElementById('fullTextUpdate').value,
-        postingDate: moment(document.getElementById('postingDateUpdate').value).format("YYYY-MM-DD")
+        postingDate: moment(document.getElementById('postingDateUpdate').value).format("YYYY-MM-DD"),
+        archived: document.getElementById('archiveCheckbox').value
     }
 
     if (checkFields()) {
@@ -100,6 +101,8 @@ function addNewNews() {
         $('#editNewsModal').modal('hide')
         $('#editModalNews').on('hide.bs.modal', function () {
             fetchNews("/all")
+            fetchNews("/published")
+            fetchNews("/unpublished")
         })
     }
 }
@@ -152,6 +155,7 @@ function renderNewNewsModal() {
     clearModalFields()
     $('#idModalDiv').hide()
     $('#modalWindowTitle').text('Добавить новость')
+    $('#postingDateUpdate').attr('disabled', false)
     $('#editSave').text('Добавить')
     $('#editSave').attr('data-toggle-id', "add")
     $('#postingDateUpdate').attr('min', moment(new Date).format("yyyy-MM-DD"))
@@ -214,14 +218,7 @@ function clearModalFields() {
  * function check modal window fields to be filled
  * @returns {boolean}
  */
-//TODO доделать логику
 function checkFields() {
-    let now = new Date()
-    if (document.getElementById('postingDateUpdate').value !== '') {
-        let postingDate = new Date(document.getElementById('postingDateUpdate').value)
-    } else {
-        return false
-    }
     if (document.getElementById('titleNewsUpdate').value === '') {
         invalidModalField('Введите заголовок новости!', document.getElementById('titleNewsUpdate'))
         return false
@@ -231,11 +228,8 @@ function checkFields() {
     } else if (document.getElementById('fullTextUpdate').value === '') {
         invalidModalField('Введите новость!', document.getElementById('fullTextUpdate'))
         return false
-    } else if (postingDate.value === '') {
+    } else if (document.getElementById('postingDateUpdate').value === '') {
         invalidModalField('Введите дату публикации!', document.getElementById('postingDateUpdate'))
-        return false
-    } else if ($('#idNewsUpdate') === '' && moment(postingDate).isBefore(now, 'day')) {
-        invalidModalField('Дата публикации не может быть меньше текущей даты!', document.getElementById('postingDateUpdate'))
         return false
     }
     return true
@@ -277,6 +271,7 @@ function archiveCheckboxHandler() {
 /**
  * makes fetch request to manager rest controller
  * @param status news status can be:
+ * @param inputDiv div where to insert news
  *  - /all
  *  - /published
  *  - /unpublished
@@ -296,8 +291,8 @@ function fetchNews(status, inputDiv) {
 /**
  * function renders news page
  * @param news List of news
+ * @param inputDiv div where to insert news
  */
-//TODO Дописать java doc
 function renderNewsTable(news, inputDiv) {
     const allNewsUl = $(`${inputDiv}`)
     allNewsUl.empty()
@@ -372,7 +367,6 @@ function invalidModalField(text, focusField) {
                                                                      </button>
                                                                 </div>`
     focusField.focus()
-    //TODO не работает автозакрытие
     window.setTimeout(function () {
         $('.alert').alert('close')
     }, 3000)
