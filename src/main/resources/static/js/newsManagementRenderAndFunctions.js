@@ -10,6 +10,9 @@ $(document).ready(function () {
 });
 $('#editNewsModal').on('hidden.bs.modal', function () {
     fetchNews("/all", '#allNews')
+    fetchNews("/published", '#publishedNews')
+    fetchNews("/unpublished", '#unpublished')
+    fetchNews("/archived", '#archived')
 })
 
 /**
@@ -83,7 +86,7 @@ function addNewNews() {
         anons: document.getElementById('anonsNewsUpdate').value,
         fullText: document.getElementById('fullTextUpdate').value,
         postingDate: moment(document.getElementById('postingDateUpdate').value).format("YYYY-MM-DD"),
-        archived: document.getElementById('archiveCheckbox').value
+        archived: document.getElementById('archiveCheckbox').checked
     }
 
     if (checkFields()) {
@@ -100,9 +103,10 @@ function addNewNews() {
         })
         $('#editNewsModal').modal('hide')
         $('#editModalNews').on('hide.bs.modal', function () {
-            fetchNews("/all")
-            fetchNews("/published")
-            fetchNews("/unpublished")
+            fetchNews("/all", '#allNews')
+            fetchNews("/published", '#publishedNews')
+            fetchNews("/unpublished", '#unpublished')
+            fetchNews("/archived", '#archived')
         })
     }
 }
@@ -133,7 +137,10 @@ function updateNews() {
         })
         $('#editNewsModal').modal('hide')
         $('#editModalNews').on('hide.bs.modal', function () {
-            fetchNews("/all")
+            fetchNews("/all", '#all')
+            fetchNews("/published")
+            fetchNews("/unpublished")
+            fetchNews("/archived")
         })
     }
 }
@@ -160,6 +167,7 @@ function renderNewNewsModal() {
     $('#editSave').attr('data-toggle-id', "add")
     $('#postingDateUpdate').attr('min', moment(new Date).format("yyyy-MM-DD"))
     $('#archiveCheckboxDiv').hide()
+    // $('#archiveCheckbox').attr('checked', false)
 }
 
 /**
@@ -199,6 +207,7 @@ function renderEditModalWindow(newsId) {
         $('#anonsNewsUpdate').val(news.anons)
         $('#fullTextUpdate').summernote('code', news.fullText)
         $("#postingDateUpdate").val(moment(news.postingDate).format("yyyy-MM-DD"))
+        $('#archiveCheckbox').prop('checked', news.archived)
     }
 }
 
@@ -211,7 +220,7 @@ function clearModalFields() {
     document.getElementById('anonsNewsUpdate').value = ''
     $('#fullTextUpdate').summernote('code', '')
     document.getElementById('postingDateUpdate').value = ''
-
+    document.getElementById('archiveCheckbox').checked = false
 }
 
 /**
