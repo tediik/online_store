@@ -27,9 +27,10 @@ public class SubcategoryPageRestController {
     }
 
     /**
-     * Ищет категорию по имени, установленному из
+     * Ищет категорию по имени, установленному из {@link com.jm.online_store.controller.simple.SubcategoryPageController},
+     * переводя транслит латиницей на слово кириллицей с помощью утильного класса {@link Transliteration}
      *
-     * @return
+     * @return сущность Categories
      */
     @GetMapping("/category")
     public ResponseEntity<Categories> getCategory() {
@@ -37,6 +38,11 @@ public class SubcategoryPageRestController {
         return ResponseEntity.ok(category);
     }
 
+    /**
+     * Метод поиска всех категорий в БД
+     *
+     * @return список Categories
+     */
     @GetMapping("/categories")
     public ResponseEntity<List<Categories>> getAllCategories() {
         List<Categories> categories = categoriesService.getAllCategories();

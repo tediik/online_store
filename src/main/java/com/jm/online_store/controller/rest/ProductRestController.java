@@ -24,7 +24,9 @@ public class ProductRestController {
     }
 
     /**
-     * Возвращает продукт, найденный по id
+     * Ищет продукт по id, установленному из {@link com.jm.online_store.controller.simple.ProductController}
+     *
+     * @return сущность Product
      */
     @GetMapping("/product")
     public ResponseEntity<Product> getProduct() {

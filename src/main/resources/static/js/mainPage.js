@@ -5,6 +5,8 @@ $(document).ready(function ($) {
     });
 
     getCurrent();
+    fillCategories();
+    fillSomeProducts();
 });
 
 function getCurrent() {
@@ -52,24 +54,15 @@ function register() {
     });
 }
 
+f
+
 function close() {
     $('#openNewRegistrationModal').hide();
     $(".modal-backdrop.show").hide();
 }
 
-fetch("/api/categories")
-    .then(response => response.json())
-    .then(function (data) {
-        fillCategories(data);
-    });
-
-fetch("/api/products")
-    .then(response => response.json())
-    .then(function (data) {
-        fillSomeProducts(data);
-    });
-
-function fillCategories(data) {
+async function fillCategories() {
+    let data = await fetch("/api/categories").then(response => response.json());
     let siteMenu = document.getElementById('siteMenu');
     for (let key in data) {
         let item = `
@@ -87,7 +80,8 @@ function fillCategories(data) {
     }
 }
 
-function fillSomeProducts(data) {
+async function fillSomeProducts() {
+    let data = await fetch("/api/products").then(response => response.json());
     let prodsView = document.getElementById('someProductsView');
     let item = ``;
     for (let key = 0; key < data.length; key++) {

@@ -32,11 +32,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 
 /**
  * класс первичного заполнения таблиц.
- * <p>
+ *
  * для первичного заполнения базы данных раскомментировать аннотацию
  * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
  * в файле "application.yml" с "update" на "create" или "create-drop".
