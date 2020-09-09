@@ -24,7 +24,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ import java.util.Set;
 
 /**
  * класс первичного заполнения таблиц.
- *
+ * <p>
  * для первичного заполнения базы данных раскомментировать аннотацию
  * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
  * в файле "application.yml" с "update" на "create" или "create-drop".

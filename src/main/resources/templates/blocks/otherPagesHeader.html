@@ -11,7 +11,7 @@
             </form>
         </nav>
         <!-- Customer service -->
-        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
+        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn btn-outline-secondary font-weight-bold"
            href="/customer">Кабинет покупателя</a>
         <!-- Login -->
         <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton"
