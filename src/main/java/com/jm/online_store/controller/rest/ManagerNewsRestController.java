@@ -41,7 +41,6 @@ public class ManagerNewsRestController {
         News news;
         try {
             news = newsService.findById(id);
-
         } catch (NewsNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -59,10 +58,9 @@ public class ManagerNewsRestController {
         try {
             allNewsList = newsService.findAll();
             return ResponseEntity.ok(allNewsList);
-        } catch (NewsNotFoundException e){
+        } catch (NewsNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     /**
@@ -75,10 +73,10 @@ public class ManagerNewsRestController {
         List<News> publishedNews;
         try {
             publishedNews = newsService.getAllPublished(LocalDate.now());
+            return ResponseEntity.ok(publishedNews);
         } catch (NewsNotFoundException e) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(publishedNews);
     }
 
     /**
@@ -91,10 +89,21 @@ public class ManagerNewsRestController {
         List<News> unpublishedNews;
         try {
             unpublishedNews = newsService.getAllUnpublished(LocalDate.now());
+            return ResponseEntity.ok(unpublishedNews);
         } catch (NewsNotFoundException e) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(unpublishedNews);
+    }
+
+    @GetMapping("/archived")
+    public ResponseEntity<List<News>> getAllArchivedNews() {
+        List<News> archived;
+        try {
+            archived = newsService.getAllArchivedNews();
+            return ResponseEntity.ok(archived);
+        } catch (NewsNotFoundException e) {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     /**
@@ -136,6 +145,4 @@ public class ManagerNewsRestController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 }
