@@ -1,6 +1,5 @@
 package com.jm.online_store.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
@@ -48,6 +47,8 @@ public class Product {
     private Description descriptions;
     @NonNull
     private String productType;
+    @NonNull
+    private boolean deleted;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -59,5 +60,15 @@ public class Product {
         this.price = price;
         this.amount = amount;
         this.rating = rating;
+    }
+
+    public Product(String product, double price, int amount) {
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+    }
+
+    public @NonNull boolean getDeleteStatus(){
+        return this.deleted;
     }
 }
