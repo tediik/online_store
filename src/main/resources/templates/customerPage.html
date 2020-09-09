@@ -149,7 +149,7 @@
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="date_birthday_input" class="col-xs-2 col-form-label">День рождения</label>
                                             <div class="col-xs-10">
-                                                <input th:field="*{birthdayDate} " class="form-control"
+                                                <input th:field="*{birthdayDate}" class="form-control"
                                                        th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" type="date" id="date_birthday_input" name="birthdayDate">
                                             </div>
                                         </div>

@@ -7,22 +7,16 @@ import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Collections;
 
 /**
  * CustomerController контроллер для пользователя с ролью "Customer"
@@ -42,32 +36,28 @@ public class CustomerController {
      * метод получения данных зарегестрированного пользователя.
      * формирование модели для вывода в "view"
      * модель данных, построенных на основе зарегестрированного User
+     *
      * @return
      */
     @GetMapping
-    public String getPersonalInfo(Model model, Authentication auth) {
-        User user = (User) auth.getPrincipal();
+    public String getUserProfile(Model model, Authentication auth) {
+        User principal = (User) auth.getPrincipal();
+        User user = userService.findById(principal.getId()).get();
         model.addAttribute("user", user);
         return "customerPage";
     }
 
     /**
      * метод ля формирования данных для обновления User.
-     * @param user пользователь
+     *
+     * @param user  пользователь
      * @param model модель для view
      * @return
      */
     @PostMapping("/profile")
-    public String updateUserInfo(User user, Model model) {
-        user.setRoles(Collections.singleton(roleService.findByName("ROLE_CUSTOMER").get()));
-       User updadeUser = userService.findById(user.getId()).get();
-        updadeUser.setFirstName(user.getFirstName());
-        updadeUser.setLastName(user.getLastName());
-        updadeUser.setBirthdayDate(user.getBirthdayDate());
-        updadeUser.setUserGender(user.getUserGender());
-        updadeUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
-        userService.updateUser(updadeUser);
-        model.addAttribute("user", updadeUser);
+    public String updateUserProfile(User user, Model model) {
+        User updateUser = userService.updateUserProfile(user);
+        model.addAttribute("user", updateUser);
 
         return "customerPage";
     }
@@ -79,8 +69,9 @@ public class CustomerController {
 
     /**
      * метод обработки изменения пароля User.
-     * @param auth модель данных, построенных на основе зарегестрированного User
-     * @param model модель для view
+     *
+     * @param auth        модель данных, построенных на основе зарегестрированного User
+     * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
@@ -90,33 +81,14 @@ public class CustomerController {
                                  @RequestParam String oldPassword,
                                  @RequestParam String newPassword) {
         User user = (User) auth.getPrincipal();
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
             model.addAttribute("message", "Pls, double check previous password!");
-
-            return "redirect:/customer/profile" ;
         }
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userService.updateUser(user);
-
-        return "customerPage";
-    }
-
-    @PostMapping("/uploadImage")
-    @ResponseBody
-    public String handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.updateUserImage(userDetails.getId(), imageFile);
-    }
-
-    @DeleteMapping("/deleteImage")
-    @ResponseBody
-    public String deleteImage() throws IOException {
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.deleteUserImage(userDetails.getId());
+        return "redirect:/customer";
     }
 
     @GetMapping("/activatenewmail/{token}")
-    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request){
+    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateNewUsersMail(token, request);
         model.addAttribute("message", "Email address changes successfully");
         return "redirect:/customer";
