@@ -70,7 +70,7 @@ public class MainPageRestController {
             return new ResponseEntity("notValidEmailError", HttpStatus.OK);
         }
         userService.regNewAccount(userForm);
-        return ResponseEntity.ok().body("success");
+        return new ResponseEntity("success", HttpStatus.OK);
     }
 
     @GetMapping("/activate/{token}")
@@ -107,6 +107,6 @@ public class MainPageRestController {
     @GetMapping("api/products")
     public ResponseEntity<List<Product>> getSomeProducts() {
         List<Product> products = productService.findAllByIdBefore(16L);
-        return ResponseEntity.ok().body(products);
+        return ResponseEntity.ok(products);
     }
 }

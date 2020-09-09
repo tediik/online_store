@@ -10,6 +10,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,9 +34,6 @@ public class ProductInOrder {
 
     @NonNull
     @ManyToOne
-    //TODO @JsonManagedReference пока не удаляю, возможно придется менять обратно
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     private Product product;
 
     @NonNull
@@ -47,6 +45,9 @@ public class ProductInOrder {
 
     @NonNull
     private int amount;
+
+    @NonNull
+    private double buyPrice;
 
     public ProductInOrder(Product product, int count) {
         this.product = product;

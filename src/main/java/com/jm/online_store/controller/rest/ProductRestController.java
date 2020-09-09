@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Рест контроллер страницы продукта.
+ */
 @RestController
 @RequestMapping("/api/products")
 @AllArgsConstructor
@@ -20,9 +23,12 @@ public class ProductRestController {
         ProductRestController.productId = productId;
     }
 
+    /**
+     * Возвращает продукт, найденный по id
+     */
     @GetMapping("/product")
     public ResponseEntity<Product> getProduct() {
         Product product = productService.findProductById(productId).get();
-        return ResponseEntity.ok().body(product);
+        return ResponseEntity.ok(product);
     }
 }

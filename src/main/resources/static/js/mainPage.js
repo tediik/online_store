@@ -1,3 +1,34 @@
+$(document).ready(function ($) {
+    $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
+        $("#openNewRegistrationModal form")[0].reset();//reset modal fields
+        $("#openNewRegistrationModal .error").hide();//reset error spans
+    });
+
+    getCurrent();
+});
+
+function getCurrent() {
+    $.ajax({
+        url: '/users/getCurrent',
+        type: 'GET',
+        dataType: 'json',
+        success: function (user) {
+            let role = user.roles.map(role => role.name);
+            $('#user-email').append(user.email);
+            if (role.includes("ROLE_ADMIN") || role.includes("ROLE_MANAGER")) {
+                $('#role-redirect').text("Профиль").click(function () {
+                    $('#role-redirect').attr("href", "/boss/profile");
+                });
+            }
+            if (role.includes("ROLE_ADMIN")) {
+                $('#profile-main-link-manager, #profile-news, #profile-promotion').hide();
+            } else if (role.includes("ROLE_MANAGER")) {
+                $('#profile-main-link-admin').hide();
+            }
+        }
+    })
+}
+
 function register() {
     $(".alert").html("").hide();
     var formData = $('form').serialize();
@@ -9,6 +40,7 @@ function register() {
             if (data == "success") {
                 toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000})
                 close();
+                document.location.href = "/";
             } else if (data == "duplicatedEmailError") {
                 $("#duplicatedEmailError").show();
             } else if (data == "passwordError") {

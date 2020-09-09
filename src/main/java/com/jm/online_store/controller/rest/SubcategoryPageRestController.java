@@ -26,15 +26,20 @@ public class SubcategoryPageRestController {
         SubcategoryPageRestController.categoryName = categoryName;
     }
 
+    /**
+     * Ищет категорию по имени, установленному из
+     *
+     * @return
+     */
     @GetMapping("/category")
     public ResponseEntity<Categories> getCategory() {
         Categories category = categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName).replaceAll("_"," ")).get();
-        return ResponseEntity.ok().body(category);
+        return ResponseEntity.ok(category);
     }
 
     @GetMapping("/categories")
     public ResponseEntity<List<Categories>> getAllCategories() {
         List<Categories> categories = categoriesService.getAllCategories();
-        return ResponseEntity.ok().body(categories);
+        return ResponseEntity.ok(categories);
     }
 }

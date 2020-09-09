@@ -69,10 +69,11 @@
         <div class="col">
             <br>
             <div class="row">
-                <button class="btn btn-warning btn-lg" type="submit" style="width: 15rem">Купить</button>
+                <button class="btn btn-warning btn-lg" type="submit" style="width: 15rem"><h4
+                        class="font-weight-normal my-auto">Купить</h4></button>
             </div>
             <br>
-            <div class="row">
+            <div class="row mx-5">
                 <h5 class="font-weight-normal my-2">&ensp;В избранное </h5>
                 <button class="btn" type="submit"><i class="fa fa-heart-o"></i></button>
             </div>
@@ -93,12 +94,26 @@
                 <div class="tab-pane fade show active mx-5" id="description" role="tabpanel"
                      aria-labelledby="description-tab">
                     <hr class="mb-4">
-                    <h4>description</h4>
-                    <h4>descriptiondescriptiondescriptiondescriptiondescription</h4>
+                    <div class="container">
+                        <p class="text-justify font-weight-normal" id="text-description" style="font-size: 1.2rem;">
+                            <!-- from js -->
+                        </p>
+                    </div>
                 </div>
-                <div class="tab-pane fade mx-5" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                <div class="tab-pane fade mx-5" id="specifications" role="tabpanel"
+                     aria-labelledby="specifications-tab">
                     <hr class="mb-4">
-                    <h4>specifications</h4>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-5">
+                            <table class="table">
+                                <tbody id="text-specifications" style="font-size: 1.1rem;">
+                                    <!-- from js -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col"></div>
+                    </div>
                 </div>
                 <div class="tab-pane fade mx-5" id="comments" role="tabpanel" aria-labelledby="comments-tab">
                     <hr class="mb-4">

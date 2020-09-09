@@ -6,6 +6,7 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
+import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
@@ -16,6 +17,7 @@ import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
@@ -34,10 +36,10 @@ import java.util.Set;
 
 /**
  * класс первичного заполнения таблиц.
- *
+ * <p>
  * для первичного заполнения базы данных раскомментировать аннотацию
  * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
- * в файле "application.properties" с "update" на "create" или "create-drop".
+ * в файле "application.yml" с "update" на "create" или "create-drop".
  */
 @AllArgsConstructor
 @Component
@@ -53,6 +55,7 @@ public class DataInitializer {
     private final ProductInOrderService productInOrderService;
     private final BasketService basketService;
     private final StockService stockService;
+    private final SharedStockService sharedStockService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -66,6 +69,7 @@ public class DataInitializer {
         productInit();
         ordersInit();
         stockInit();
+        sharedStockInit();
     }
 
     /**
@@ -257,13 +261,13 @@ public class DataInitializer {
         Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer");
         Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, "Computer");
 
-        Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "some additional info here");
+        Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
         Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
         Description description3 = new Description("99966732", "Samsung", 3, "550x27x368", "white", 1.1, "some additional info here");
-        Description description4 = new Description("33311432NXU", "ATop corp.", 3, "698x785x368", "black", 3.1, "some additional info here");
+        Description description4 = new Description("33311432NXU", "ATop corp.", 3, "698x785x368", "black", 3.1, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim");
         Description description5 = new Description("33211678NXU", "ATop corp.", 3, "690x765x322", "black", 3.5, "some additional info here");
         Description description6 = new Description("333367653Rh", "Rhino corp.", 3, "612x678x315", "orange", 2.8, "some additional info here");
-        Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "some additional info here", 512, 512, "1920x960", true, "5.0");
+        Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim", 512, 512, "1920x960", true, "5.0");
         Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 256, "1920x960", false, "4.0");
         Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 128, "1024x480", true, "5.0");
 
@@ -377,5 +381,26 @@ public class DataInitializer {
         stockService.addStock(firstStock);
         stockService.addStock(secondStock);
         stockService.addStock(thirdStock);
+    }
+
+    public void sharedStockInit() {
+        String[] socialNetworkNames = {"facebook", "vk", "twitter"};
+        List<Stock> stocks = stockService.findAll();
+        List<User> users = userService.findAll();
+        Long firstNumber = stocks.get(0).getId();
+        Long lastNumber = stocks.get(stocks.size() - 1).getId();
+        Random random = new Random();
+        for (Stock stock : stocks) {
+            for (User user : users) {
+                long generatedLongForStock = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
+                SharedStock sharedStock = SharedStock.builder()
+                        .user(user)
+                        .stock(stockService.findStockById(generatedLongForStock))
+                        .socialNetworkName(socialNetworkNames[random.nextInt(socialNetworkNames.length)])
+                        .build();
+                sharedStockService.addSharedStock(sharedStock);
+            }
+        }
+
     }
 }

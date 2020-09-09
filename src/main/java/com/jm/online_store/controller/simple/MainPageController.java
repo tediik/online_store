@@ -15,4 +15,5 @@ public class MainPageController {
         model.addAttribute("userForm", new User());
         return "mainPage";
     }
+
 }

@@ -48,7 +48,20 @@ async function fillBreadcrumb(data) {
 
 async function fillAboutProduct(data) {
     let productName = document.getElementById('productName');
-
     $(productName).append(`<br><h2 class="font-weight-normal">${data.product}</h2>`);
     $(productName).append(`<br><h5 class="font-weight-normal">Оценка товара: ${data.rating} из 5</h5>`);
+
+    let description = document.getElementById('text-description');
+    $(description).append(`${data.descriptions.information}`);
+
+    let specifications = document.getElementById('text-specifications');
+    for (let key in data.descriptions) {
+        if (key != "id" && key != "information") {
+            let content = `<tr><td class="font-weight-bold">${key}</td>
+                           <td>${data.descriptions[key]}</td>
+                       </tr>`;
+            $(specifications).append(content);
+        }
+    }
+
 }
