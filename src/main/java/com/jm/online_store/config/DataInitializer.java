@@ -302,7 +302,7 @@ public class DataInitializer {
         List<Long> productsIds = new ArrayList<>();
         productsIds.add(productService.findProductByName("NX-7893-PC-09878").get().getId());
         productsIds.add(productService.findProductByName("Asus-NX4567").get().getId());
-        productsIds.add(productService.findProductByName("ACER-5432").get().getId());
+        productsIds.add(productService.findProductByName("ACER-543").get().getId());
         productsIds.add(productService.findProductByName("XIAOMI-Mi10").get().getId());
         productsIds.add(productService.findProductByName("LG-2145").get().getId());
         productsIds.add(productService.findProductByName("Apple-10").get().getId());

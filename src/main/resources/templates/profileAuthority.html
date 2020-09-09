@@ -28,7 +28,7 @@
                 <a class="btn btn-outline-primary" href="/manager/stocks"> Акции</a>
             </div>
             <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary active" href="/boss/profile">Профиль</a>
+                <a class="btn btn-outline-primary active" href="/authority/profile">Профиль</a>
             </div>
         </div>
         <div class="col-md-10"
@@ -76,7 +76,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <form th:action="@{/boss/profile}" th:object="${user}" th:value="${user.id}" method="post" data-role="personal-info-form">
+                                    <form th:action="@{/authority/profile}" th:object="${user}" th:value="${user.id}" method="post" data-role="personal-info-form">
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="id_update">ID</label>
                                             <input th:field="*{id}" type="text" class="form-control" id="id_update" name="id">
@@ -110,7 +110,7 @@
                                             <label for="date_birthday_input" class="col-xs-2 col-form-label">День рождения</label>
                                             <div class="col-xs-10">
                                                 <input th:field="*{birthdayDate}" class="form-control"
-                                                       type="date" id="date_birthday_input" name="birthdayDate">
+                                                       th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" type="date" id="date_birthday_input" name="birthdayDate">
                                             </div>
                                         </div>
                                         <div class="form-group-text-center">
@@ -171,7 +171,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:action="@{/boss/changemail}" method="post" class="form-group">
+                                                    <form th:action="@{/authority/changemail}" method="post" class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="new_mail">Введите новый адрес электронной почты</label>
                                                             <input type="email"
@@ -195,7 +195,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:action="@{/boss/change-password}" method="post" class="form-group">
+                                                    <form th:action="@{/authority/change-password}" method="post" class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="old_password">Старый пароль</label>
                                                             <input type="password" id="old_password" name="oldPassword" autofocus="autofocus"
