@@ -8,8 +8,8 @@ import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.Transliteration;
 import com.jm.online_store.util.ValidationUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -37,18 +37,14 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/")
 @Slf4j
+@RequiredArgsConstructor
 public class MainPageRestController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final CategoriesService categoriesService;
+    private final ProductService productService;
 
     private ValidationUtils validationUtils;
-
-    @Autowired
-    private CategoriesService categoriesService;
-
-    @Autowired
-    private ProductService productService;
 
     @PostMapping("/registration")
     @ResponseBody
@@ -98,7 +94,7 @@ public class MainPageRestController {
                     Transliteration.сyrillicToLatin(category.getCategory().replaceAll(" ", "_"))),
                     (oldV, newV) -> Stream.concat(oldV.stream(), newV.stream()).collect(Collectors.toList()));
         }
-        return ResponseEntity.ok().body(categoriesBySuperCategories);
+        return ResponseEntity.ok(categoriesBySuperCategories);
     }
 
     /**
