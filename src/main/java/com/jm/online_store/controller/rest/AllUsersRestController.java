@@ -2,15 +2,28 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.UserDto;
+import com.jm.online_store.service.interf.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/users")
-public class CurrentUserRestController {
+@RequiredArgsConstructor
+public class AllUsersRestController {
+
+    private final UserService userService;
 
     /**
      * Метод для получения имейла и ролей залогиненного пользователя,
@@ -30,5 +43,17 @@ public class CurrentUserRestController {
         return ResponseEntity.ok(new UserDto()
                 .setEmail(currentUser.getEmail())
                 .setRoles(currentUser.getRoles()));
+    }
+
+    @PostMapping("/uploadImage")
+    public ResponseEntity<String> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(userService.updateUserImage(userDetails.getId(), imageFile));
+    }
+
+    @DeleteMapping("/deleteImage")
+    public ResponseEntity<String> deleteImage() throws IOException {
+        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(userService.deleteUserImage(userDetails.getId()));
     }
 }
