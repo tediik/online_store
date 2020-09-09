@@ -23,5 +23,5 @@ public interface NewsService {
 
     List<News> getAllUnpublished(LocalDate timeNow);
 
-
+    List<News> getAllArchivedNews();
 }
