@@ -18,7 +18,7 @@ $('#editNewsModal').on('hidden.bs.modal', function () {
 /*event listener in news div of edit and delete buttons*/
 document.getElementById('newsTabContent').addEventListener('click', checkButton)
 /*modal window publish checkbox listener*/
-document.getElementById('publishCheckboxDiv').addEventListener('change', publishCheckboxHandler)
+document.getElementById('archiveCheckboxDiv').addEventListener('change', archiveCheckboxHandler)
 /*modal window footer */
 document.querySelector('.modal-footer').addEventListener('click', checkButtonClicked)
 /*left nav bar*/
@@ -113,7 +113,8 @@ function updateNews() {
         title: document.getElementById('titleNewsUpdate').value,
         anons: document.getElementById('anonsNewsUpdate').value,
         fullText: document.getElementById('fullTextUpdate').value,
-        postingDate: document.getElementById('postingDateUpdate').value
+        postingDate: document.getElementById('postingDateUpdate').value,
+        archived: document.getElementById('archiveCheckbox').checked
     }
     if (checkFields()) {
         fetch(newsApiUrl, {
@@ -153,6 +154,8 @@ function renderNewNewsModal() {
     $('#modalWindowTitle').text('Добавить новость')
     $('#editSave').text('Добавить')
     $('#editSave').attr('data-toggle-id', "add")
+    $('#postingDateUpdate').attr('min', moment(new Date).format("yyyy-MM-DD"))
+    $('#archiveCheckboxDiv').hide()
 }
 
 /**
@@ -163,6 +166,8 @@ function renderEditModalWindow(newsId) {
     $('#editSave').text('Обновить')
     $('#editSave').attr('data-toggle-id', "update")
     $('#editSave').attr('data-news-id', newsId)
+    $('#postingDateUpdate').attr('min', moment(new Date).format("yyyy-MM-DD"))
+    $('#archiveCheckboxDiv').show()
     fetch(newsApiUrl + `/${newsId}`, {
         headers: myHeaders
     }).then(function (response) {
@@ -261,14 +266,11 @@ function handleDeleteButton(newsId) {
 /**
  * function that handles publish checkbox
  */
-//TODO переделать логику
-function publishCheckboxHandler() {
-    if (document.getElementById('publishCheckbox').checked) {
-        document.getElementById('publishCheckboxLabel').innerHTML = 'Снять новость с публикации?'
-        document.getElementById('postingDateUpdate').setAttribute('disabled', 'true')
+function archiveCheckboxHandler() {
+    if (document.getElementById('archiveCheckbox').checked) {
+        document.getElementById('archiveCheckboxLabel').innerHTML = 'Убрать новость из архива?'
     } else {
-        document.getElementById('publishCheckboxLabel').innerHTML = 'Опубликовать новость?'
-        document.getElementById('postingDateUpdate').removeAttribute('disabled')
+        document.getElementById('archiveCheckboxLabel').innerHTML = 'Поместить новость в архив?'
     }
 }
 
