@@ -5,6 +5,7 @@ import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,22 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 @AllArgsConstructor
 public class ProductRestController {
-    private final ProductService productService;
 
-    private static Long productId;
-
-    public static void setProductId(Long productId) {
-        ProductRestController.productId = productId;
-    }
+    private ProductService productService;
 
     /**
-     * Ищет продукт по id, установленному из {@link com.jm.online_store.controller.simple.ProductController}
+     * Ищет продукт в БД по id из пути
      *
-     * @return сущность Product
+     * @param id продукта
+     * @return сущность Product, если продукт с таким id существует
      */
-    @GetMapping("/product")
-    public ResponseEntity<Product> getProduct() {
-        Product product = productService.findProductById(productId).get();
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
+        if (!productService.findProductById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Product product = productService.findProductById(id).get();
         return ResponseEntity.ok(product);
     }
 }
