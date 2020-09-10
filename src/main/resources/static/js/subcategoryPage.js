@@ -1,3 +1,10 @@
+let categoryNameFromPath = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+
+fetch("/api/categories/categoryName", {
+    method: "POST",
+    body: JSON.stringify(categoryNameFromPath)
+});
+
 fetch("/api/categories/category")
     .then(response => response.json())
     .then(function (data) {

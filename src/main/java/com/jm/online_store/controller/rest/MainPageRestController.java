@@ -90,8 +90,7 @@ public class MainPageRestController {
 
         for (Categories category : categoriesFromDB) {
             categoriesBySuperCategories.merge(category.getSuperCategory(), Arrays.asList(
-                    category.getCategory(),
-                    Transliteration.сyrillicToLatin(category.getCategory().replaceAll(" ", "_"))),
+                    category.getCategory(), Transliteration.сyrillicToLatin(category.getCategory())),
                     (oldV, newV) -> Stream.concat(oldV.stream(), newV.stream()).collect(Collectors.toList()));
         }
         return ResponseEntity.ok(categoriesBySuperCategories);

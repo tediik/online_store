@@ -3,9 +3,11 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.util.Transliteration;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,25 +18,34 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/categories")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SubcategoryPageRestController {
+
     private final CategoriesService categoriesService;
 
-    private static String categoryName;
+    private String categoryName;
 
-    public static void setCategoryName(String categoryName) {
-        SubcategoryPageRestController.categoryName = categoryName;
+    /**
+     * Получает имя подкатегории по адресу, на который его запостил метод js, получив последнюю чатсть URL
+     *
+     * @param name имя категории из тела запроса
+     */
+    @PostMapping("/categoryName")
+    public void getCategoryName(@RequestBody String name) {
+        categoryName = name.replaceAll("\"", "");
     }
 
     /**
-     * Ищет категорию по имени, установленному из {@link com.jm.online_store.controller.simple.SubcategoryPageController},
-     * переводя транслит латиницей на слово кириллицей с помощью утильного класса {@link Transliteration}
+     * Ищет категорию по имени из пути, переводя транслит латиницей на слово кириллицей с помощью утильного класса {@link Transliteration}
      *
      * @return сущность Categories
      */
     @GetMapping("/category")
     public ResponseEntity<Categories> getCategory() {
-        Categories category = categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName).replaceAll("_"," ")).get();
+        if (!categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName)).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Categories category = categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName)).get();
         return ResponseEntity.ok(category);
     }
 
