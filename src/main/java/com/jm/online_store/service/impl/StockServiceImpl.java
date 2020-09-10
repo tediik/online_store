@@ -19,12 +19,29 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> findAll() {
-        return stockRepository.findAll();
+        LocalDate presentDate = LocalDate.now();
+        List<Stock> stocks = stockRepository.findAll();
+        for (Stock stock : stocks) {
+            if (((stock.getStartDate()) != null)) {
+                if (presentDate.isBefore(stock.getStartDate())) {
+                    stock.setStockType(Stock.StockType.FUTURE);
+                } else if (stock.getEndDate() != null && presentDate.isAfter(stock.getEndDate())
+                        || (presentDate.equals(stock.getEndDate()))) {
+                    stock.setStockType(Stock.StockType.PAST);
+                } else if ((presentDate.isAfter(stock.getStartDate()) || (presentDate.equals(stock.getStartDate()))
+                        && stock.getEndDate() != null && (presentDate.isBefore(stock.getEndDate())))) {
+                    stock.setStockType(Stock.StockType.CURRENT);
+                } else {
+                    stock.setStockType(Stock.StockType.CURRENT);
+                }
+            }
+        }
+        return stocks;
     }
 
     @Override
     public Stock findStockById(Long id) {
-        if (stockRepository.findById(id).isEmpty()) {
+        if (stockRepository.findById(id) == null) {
             throw new StockNotFoundException();
         }
         return stockRepository.findById(id).get();
