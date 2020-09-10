@@ -186,7 +186,8 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now())
+                .postingDate(LocalDate.now())
+                .archived(true)
                 .build();
 
         News secondNews = News.builder()
@@ -204,7 +205,8 @@ public class DataInitializer {
                         "<i style=\"font-size: 1rem;\">Приятных покупок в Online-Shop!</i></p><p style=\"margin-right:" +
                         " 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px; color: rgb(0, 0, 0); font-family:" +
                         " &quot;PT Sans&quot;, Arial, sans-serif;\"><i style=\"font-size: 1rem;\">23<br></i><br></p>")
-                .postingDate(LocalDateTime.now().minusDays(5L))
+                .postingDate(LocalDate.now().minusDays(5L))
+                .archived(false)
                 .build();
 
         News thirdNews = News.builder()
@@ -218,7 +220,8 @@ public class DataInitializer {
                         "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
-                .postingDate(LocalDateTime.now().minusDays(13L))
+                .postingDate(LocalDate.now().minusDays(13L))
+                .archived(false)
                 .build();
 
         newsService.save(firstNews);
