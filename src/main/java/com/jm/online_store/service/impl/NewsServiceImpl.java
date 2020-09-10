@@ -53,8 +53,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public News findById(long id) {
-        News news = newsRepository.findById(id).orElseThrow(NewsNotFoundException::new);
-        return news;
+        return newsRepository.findById(id).orElseThrow(NewsNotFoundException::new);
     }
 
     /**
