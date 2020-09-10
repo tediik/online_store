@@ -9,10 +9,7 @@ $(document).ready(function () {
     fetchNews("/all", '#allNews')
 });
 $('#editNewsModal').on('hidden.bs.modal', function () {
-    fetchNews("/all", '#allNews')
-    fetchNews("/published", '#publishedNews')
-    fetchNews("/unpublished", '#unpublished')
-    fetchNews("/archived", '#archived')
+    location.reload()
 })
 
 /**
