@@ -130,11 +130,15 @@ function handleAddBtn() {
      * функция очистки полей формы нового пользователя
      */
     function clearFormFields() {
-        $('#addEmail').val("")
-        $('#addPassword').val("")
-        $('#addRoles').selectedIndex = -1
+        $('#addForm')[0].reset();
         addRolesOnNewUserForm()
     }
+    /**
+     * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
+     * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
+     * @param text - текст для вывода в алекрт
+     * @param field - поле на каком установить фокус
+     */
     function handleNotValidFormField(text, field) {
         $('#alert-div').empty().append(`
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -191,13 +195,6 @@ function handleAddBtn() {
 }
 
 /**
- * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
- * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
- * @param text - текст для вывода в алекрт
- * @param field - поле на каком установить фокус
- */
-
-/**
  * функция обработки нажатия кнопки accept в модальном окне
  * @param event
  */
@@ -211,6 +208,12 @@ function handleAcceptButtonFromModalWindow(event) {
         roles: getSelectValues(document.getElementById("rolesSelectModal")),
     };
 
+    /**
+     * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
+     * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
+     * @param text - текст для вывода в алекрт
+     * @param field - поле на каком установить фокус
+     */
     function modalHandleNotValidFormField(text, field) {
         $('#alert-modal-div').empty().append(`
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
