@@ -9,7 +9,7 @@ $(document).ready(function () {
             $.ajax(
                 {
                     type: 'POST',
-                    url: '/customer/uploadImage',
+                    url: '/users/uploadImage',
                     dataType: 'script',
                     data: form_data,
                     cache: false,
@@ -30,7 +30,7 @@ $(document).ready(function () {
             $.ajax(
                 {
                     type: 'DELETE',
-                    url: '/customer/deleteImage',
+                    url: '/users/deleteImage',
                     contentType: false,
                     processData: false,
                     cache: false,
