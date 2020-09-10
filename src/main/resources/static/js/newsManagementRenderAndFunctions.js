@@ -156,7 +156,7 @@ function handleLeftNavBarClick(event) {
  * function handles $('#addNewNews') ("Добавить новость") button click in left nav bar
  */
 function renderNewNewsModal() {
-    clearModalFields()
+    $('form[name=editNewsFormModal]').trigger('reset')
     $('#idModalDiv').hide()
     $('#modalWindowTitle').text('Добавить новость')
     $('#postingDateUpdate').attr('disabled', false)
@@ -164,7 +164,6 @@ function renderNewNewsModal() {
     $('#editSave').attr('data-toggle-id', "add")
     $('#postingDateUpdate').attr('min', moment(new Date).format("yyyy-MM-DD"))
     $('#archiveCheckboxDiv').hide()
-    // $('#archiveCheckbox').attr('checked', false)
 }
 
 /**
@@ -193,7 +192,7 @@ function renderEditModalWindow(newsId) {
 
         $('#idModalDiv').show()
         $('#modalWindowTitle').text('Редактировать новость')
-        clearModalFields()
+        $('form[name=editNewsFormModal]').trigger('reset')
         if (moment(news.postingDate).isBefore(now, 'day')) {
             $('#postingDateUpdate').attr('disabled', true)
         } else {
@@ -206,18 +205,6 @@ function renderEditModalWindow(newsId) {
         $("#postingDateUpdate").val(moment(news.postingDate).format("yyyy-MM-DD"))
         $('#archiveCheckbox').prop('checked', news.archived)
     }
-}
-
-/**
- * function clears modal window fields
- */
-function clearModalFields() {
-    document.getElementById('idNewsUpdate').value = ''
-    document.getElementById('titleNewsUpdate').value = ''
-    document.getElementById('anonsNewsUpdate').value = ''
-    $('#fullTextUpdate').summernote('code', '')
-    document.getElementById('postingDateUpdate').value = ''
-    document.getElementById('archiveCheckbox').checked = false
 }
 
 /**
