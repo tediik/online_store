@@ -4,10 +4,9 @@ let allNewsList
 let allNewsDivId = $("#allNews")
 let publishedNewsDivId = $("#publishedNews")
 let unpublishedNewsDivId = $("#unpublishedNews")
-let lastPage = {number:0, last: false};
+const lastPage = {number:0, last: false};
 
 $(document).ready(function () {
-
     showNewsPage();
     $(window).scroll(function () {
         yHandler()
