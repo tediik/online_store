@@ -48,7 +48,7 @@ public class ManagerNewsRestController {
     }
 
     /**
-     * Метод возвращающий всписок всех новостей
+     * Method returns all news
      *
      * @return List<News> возвращает список всех новстей из базы данных
      */
@@ -95,6 +95,11 @@ public class ManagerNewsRestController {
         }
     }
 
+    /**
+     * Method returns archived news
+     *
+     * @return - ResponseEntity<List<News>>
+     */
     @GetMapping("/archived")
     public ResponseEntity<List<News>> getAllArchivedNews() {
         List<News> archived;
