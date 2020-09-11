@@ -268,6 +268,23 @@ public class DataInitializer {
         newsService.save(fourthNews);
         newsService.save(fifthNews);
         newsService.save(sixthNews);
+
+        for(int i = 0; i < 50; i++) {
+            News sixthNews1 = News.builder()
+                    .title(i + " Сегодня стартует предзаказ на флагманские продукты Samsung!")
+                    .anons("Сделайте предзаказ и получите подарок.")
+                    .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                            "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                            "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\">Сегодня стартует предзаказ на новые флагманские продукты Samsung!<b></b>" +
+                            "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\"><br></p></h1>")
+                    .postingDate(LocalDateTime.now().minusDays(13L))
+                    .build();
+            newsService.save(sixthNews1);
+        }
     }
 
     /**

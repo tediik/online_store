@@ -4,52 +4,54 @@ let allNewsList
 let allNewsDivId = $("#allNews")
 let publishedNewsDivId = $("#publishedNews")
 let unpublishedNewsDivId = $("#unpublishedNews")
+let lastPage = {number:0, last: false};
 
 $(document).ready(function () {
 
     showNewsPage();
+    $(window).scroll(function () {
+        yHandler()
+    });
 })
+
+function yHandler() {
+    if (lastPage.last) {
+        return ;
+    }
+    let allNews = document.getElementById('allNews');
+    let contentHeight = allNews.offsetHeight;
+    let yOffset = window.pageYOffset;
+    let y = yOffset + window.innerHeight;
+    if (y >= contentHeight) {
+        $.ajax("/api/manager/news", {
+            data: {page: ++lastPage.number},
+            async: false,
+            success: showNews
+        });
+    }
+}
 
 function showNewsPage(page = 0) {
     $.ajax("/api/manager/news", {
-        data: {'page': page},
-        success: function (data) {
-            $('#allNews').empty();
-            $('#publishedNews').empty();
-            $('#unpublishedNews').empty();
-            data.content.forEach(function (element) {
-                currentTime = moment().format("YYYY-MM-DD HH:mm");
-                postingDate = moment(element.postingDate).format("YYYY-MM-DD HH:mm");
-                if (currentTime >= postingDate) {
-                    fillingNews(element, publishedNewsDivId);
-                } else {
-                    fillingNews(element, unpublishedNewsDivId);
-                }
-                fillingNews(element, allNewsDivId);
-            })
-            clickButtonEditDelete();
-            addPaginationNav(data);
-        }
+        data: {page: page},
+        success: showNews
     })
 }
 
-function addPaginationNav(data) {
-    let nav = $('#news-pagination-nav').empty();
-    let li = $('<li/>').addClass('page-item').append("<a class='page-link' href='#' aria-label='Previous'>" +
-        "<span aria-hidden='true'>&laquo;</span><span class='sr-only'>Previous</span></a>");
-    $(nav).append(li);
-    for (let i = 0; i < data.totalPages; i++) {
-        let li = $('<li/>').addClass('page-item');
-        if (i === data.number) {
-            $(li).addClass("active");
+function showNews(data) {
+    data.content.forEach(function (element) {
+        currentTime = moment().format("YYYY-MM-DD HH:mm");
+        postingDate = moment(element.postingDate).format("YYYY-MM-DD HH:mm");
+        if (currentTime >= postingDate) {
+            fillingNews(element, publishedNewsDivId);
+        } else {
+            fillingNews(element, unpublishedNewsDivId);
         }
-        let a = $('<a/>').addClass('page-link').attr('href', '#').val(i).text(i + 1).click(changePage);
-        $(li).append(a);
-        $(nav).append(li);
-    }
-    li = $('<li/>').addClass('page-item').append("<a class='page-link' href='#' aria-label='Next'>" +
-        "<span aria-hidden='true'>&raquo;</span><span class='sr-only'>Next</span></a>");
-    $(nav).append(li);
+        fillingNews(element, allNewsDivId);
+    })
+    clickButtonEditDelete();
+    lastPage.number = data.number;
+    lastPage.last = data.last;
 }
 
 function changePage() {

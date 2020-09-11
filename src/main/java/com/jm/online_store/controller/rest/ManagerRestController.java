@@ -41,7 +41,7 @@ public class ManagerRestController {
      * @return Page<News> возвращает страницу новостей из базы данных
      */
     @GetMapping("/news")
-    public ResponseEntity<Page<News>> allNews(@PageableDefault(size = 2) Pageable page) {
+    public ResponseEntity<Page<News>> allNews(@PageableDefault Pageable page) {
         Page<News> response = newsService.findAll(page);
         return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
     }
