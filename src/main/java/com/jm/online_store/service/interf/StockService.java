@@ -9,8 +9,6 @@ public interface StockService {
 
     Stock findStockById(Long id);
 
-    List<Stock> findAllStocks();
-
     void addStock(Stock stock);
 
     void deleteStockById(Long id);

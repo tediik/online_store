@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,37 +20,20 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> findAll() {
-        LocalDate presentDate = LocalDate.now();
-        List<Stock> stocks = stockRepository.findAll();
-        for (Stock stock : stocks) {
-            if (((stock.getStartDate()) != null)) {
-                if (presentDate.isBefore(stock.getStartDate())) {
-                    stock.setStockType(Stock.StockType.FUTURE);
-                } else if (stock.getEndDate() != null && presentDate.isAfter(stock.getEndDate())
-                        || (presentDate.equals(stock.getEndDate()))) {
-                    stock.setStockType(Stock.StockType.PAST);
-                } else if ((presentDate.isAfter(stock.getStartDate()) || (presentDate.equals(stock.getStartDate()))
-                        && stock.getEndDate() != null && (presentDate.isBefore(stock.getEndDate())))) {
-                    stock.setStockType(Stock.StockType.CURRENT);
-                } else {
-                    stock.setStockType(Stock.StockType.CURRENT);
-                }
-            }
+        List<Stock> stockList = stockRepository.findAll();
+        if (stockList.isEmpty()) {
+            throw new StockNotFoundException();
         }
-        return stocks;
+        return stockList;
     }
 
     @Override
     public Stock findStockById(Long id) {
-        if (stockRepository.findById(id) == null) {
+        Optional<Stock> stock = stockRepository.findById(id);
+        if (stock.isEmpty()) {
             throw new StockNotFoundException();
         }
-        return stockRepository.findById(id).get();
-    }
-
-    @Override
-    public List<Stock> findAllStocks() {
-        return stockRepository.findAll();
+        return stock.get();
     }
 
     @Override

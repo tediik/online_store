@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 /**
@@ -72,15 +73,21 @@ class StockServiceImplTest {
     }
 
     /**
-     * тест метода поиска всех акций и определения их статуса.
+     * тест метода поиска всех акций.
      */
     @Test
     void findAll() {
         when(stockRepository.findAll()).thenReturn(stockList);
-        List<Stock> resultStockList = stockService.findAll();
-        assertEquals(Stock.StockType.FUTURE, resultStockList.get(0).getStockType());
-        assertEquals(Stock.StockType.CURRENT, resultStockList.get(1).getStockType());
-        assertEquals(Stock.StockType.PAST, resultStockList.get(2).getStockType());
+        assertEquals(stockList, stockService.findAll(), "провал теста findAll() - неожидаемый результат");
+    }
+
+    /**
+     * тест метода поиска акции - пробрасывает исключение.
+     */
+    @Test
+    void findAllReturnExeption() {
+        when(stockRepository.findAll()).thenReturn(new ArrayList<>());
+        assertThrows(StockNotFoundException.class, () -> stockService.findAll());
     }
 
     /**
@@ -98,13 +105,8 @@ class StockServiceImplTest {
      */
     @Test
     void findStockByNoIdThenReturnExeption() {
-        when(stockRepository.findById(4L)).thenReturn(null);
-        try {
-            stockService.findStockById(4L);
-        } catch (StockNotFoundException e) {
-            return;
-        }
-        Assert.fail();
+        when(stockRepository.findById(4L)).thenReturn(Optional.empty());
+        assertThrows(StockNotFoundException.class, () -> stockService.findStockById(4L));
     }
 
     /**
@@ -117,23 +119,18 @@ class StockServiceImplTest {
         when(stockRepository
                 .findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrEndDateEquals(LocalDate.now(), LocalDate.now(), null))
                 .thenReturn(currentList);
-        assertEquals(currentList, stockService.findCurrentStocks());
+        assertEquals(currentList, stockService.findCurrentStocks(), "провал теста findCurrentStocks() - неожидаемый результат");
     }
 
     /**
      * тест поиска действующих акций - проброска исключения при пустом списке.
      */
     @Test
-    void findCurrentStocks_throwExeption() {
+    void findCurrentStocksThrowExeption() {
         when(stockRepository
                 .findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrEndDateEquals(LocalDate.now(), LocalDate.now(), null))
                 .thenReturn(new ArrayList<>());
-        try {
-            stockService.findCurrentStocks();
-        } catch (StockNotFoundException e) {
-            return;
-        }
-        Assert.fail();
+        assertThrows(StockNotFoundException.class, () -> stockService.findCurrentStocks());
     }
 
     /**
@@ -144,7 +141,7 @@ class StockServiceImplTest {
         List<Stock> futureList = new ArrayList<>();
         futureList.add(firstStock);
         when(stockRepository.findByStartDateAfter(LocalDate.now())).thenReturn(futureList);
-        assertEquals(futureList, stockService.findFutureStocks());
+        assertEquals(futureList, stockService.findFutureStocks(), "провал теста findFutureStocks() - неожидаемый результат");
     }
 
     /**
@@ -153,12 +150,7 @@ class StockServiceImplTest {
     @Test()
     void findFutureStocks_throwExeption() {
         when(stockRepository.findByStartDateAfter(LocalDate.now())).thenReturn(new ArrayList<>());
-        try {
-            stockService.findFutureStocks();
-        } catch (StockNotFoundException e) {
-            return;
-        }
-        Assert.fail();
+        assertThrows(StockNotFoundException.class, () -> stockService.findFutureStocks());
     }
 
     /**
@@ -169,21 +161,16 @@ class StockServiceImplTest {
         List<Stock> pastList = new ArrayList<>();
         pastList.add(thirdStock);
         when(stockRepository.findByEndDateBefore(LocalDate.now())).thenReturn(pastList);
-        assertEquals(pastList, stockService.findPastStocks());
+        assertEquals(pastList, stockService.findPastStocks(), "провал теста findPastStocks() - неожидаемый результат");
     }
 
     /**
      * тест поиска прошедших акций - проброска исключения при пустом списке.
      */
     @Test
-    void findPastStocks_throwExeption() {
+    void findPastStocksThrowExeption() {
         when(stockRepository.findByEndDateBefore(LocalDate.now())).thenReturn(new ArrayList<>());
-        try {
-            stockService.findPastStocks();
-        } catch (StockNotFoundException e) {
-            return;
-        }
-        Assert.fail();
+        assertThrows(StockNotFoundException.class, () -> stockService.findPastStocks());
     }
 
     /**
@@ -200,11 +187,12 @@ class StockServiceImplTest {
         updateStock.setStockImg("updateIMG");
         when(stockRepository.findById(1L)).thenReturn(Optional.ofNullable(firstStock));
         stockService.updateStock(updateStock);
-        assertEquals(1L, firstStock.getId());
-        assertEquals("updateText", firstStock.getStockText());
-        assertEquals("updateTitle", firstStock.getStockTitle());
-        assertEquals(LocalDate.now().minusDays(2L), firstStock.getStartDate());
-        assertEquals(LocalDate.now().minusDays(1L), firstStock.getEndDate());
-        assertEquals("updateIMG", firstStock.getStockImg());
+        assertEquals(1L, firstStock.getId(), "провал теста updateStock()- ошибка плоля: id");
+        assertEquals("updateText", firstStock.getStockText(), "провал теста updateStock()- ошибка плоля: stockText");
+        assertEquals("updateTitle", firstStock.getStockTitle(), "провал теста updateStock()- ошибка плоля: StockTitle");
+        assertEquals(LocalDate.now().minusDays(2L), firstStock.getStartDate(), "провал теста updateStock()- ошибка плоля: startDate");
+        assertEquals(LocalDate.now().minusDays(1L), firstStock.getEndDate(), "провал теста updateStock()- ошибка плоля: endDate");
+        assertEquals("updateIMG", firstStock.getStockImg(), "провал теста updateStock()- ошибка плоля: stockImg");
     }
+
 }
