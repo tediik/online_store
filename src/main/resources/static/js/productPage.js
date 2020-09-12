@@ -44,18 +44,7 @@ async function fillBreadcrumb(data) {
         }
 
     // поиск наименования категории на латинице
-    let subcategoryOfProductInLatin;
-    otherTop:
-        for (let key in categoriesWithLatin) {
-            if (key == categoryOfProduct) {
-                for (let value = 0; value < categoriesWithLatin[key].length; value += 2) {
-                    if (categoriesWithLatin[key][value] == subcategoryOfProduct) {
-                        subcategoryOfProductInLatin = categoriesWithLatin[key][value + 1];
-                        break otherTop;
-                    }
-                }
-            }
-        }
+    let subcategoryOfProductInLatin = categoriesWithLatin[categoryOfProduct][subcategoryOfProduct];
 
     // формирование навигационной цепочки
     $(breadcr).append(`<li class="breadcrumb-item"><a href="/">Главная</a></li>`);

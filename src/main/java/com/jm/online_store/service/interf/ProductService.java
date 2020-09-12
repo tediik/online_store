@@ -24,5 +24,5 @@ public interface ProductService {
 
     void importFromCSVFile(String fileName) throws FileNotFoundException;
 
-    List<Product> findAllByIdBefore(Long id);
+    List<Product> findNumProducts(Integer num);
 }

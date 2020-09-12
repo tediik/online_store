@@ -185,13 +185,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод выбора всех Product, идентификатор которых меньше переданного.
+     * Метод выбора из БД num первых продуктов
      *
-     * @param id идентификатор Product
-     * @return List<Product>
+     * @param num необходимое количество продуктов
+     * @return список из num продуктов
      */
-    @Override
-    public List<Product> findAllByIdBefore(Long id) {
-        return productRepository.findAllByIdBefore(id);
+    public List<Product> findNumProducts(Integer num) {
+        return productRepository.findNumProducts(num);
     }
 }

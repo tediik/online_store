@@ -23,20 +23,20 @@ public class SubcategoryPageRestController {
     private CategoriesService categoriesService;
 
     /**
-     * Ищет категорию в БД по имени из пути, переводя транслит латиницей на слово кириллицей с помощью утильного класса {@link Transliteration}
+     * Ищет категорию в БД по имени из пути, переводя транслит латиницей на слово кириллицей
+     * с помощью метода утильного класса {@link Transliteration}
      *
-     * @author Dmitriy (dshishkaryan)
      * @param name имя подкатегории
      * @return сущность Categories, если категория найдена
+     * @author Dmitriy (dshishkaryan)
      */
     @GetMapping("/{name}")
     public ResponseEntity<Categories> getCategory(@PathVariable String name) {
         String categoryName = name.replaceAll("\"", "");
-        if (!categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName)).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        Categories category = categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName)).get();
-        return ResponseEntity.ok(category);
+        ResponseEntity<Categories>[] answer = new ResponseEntity[1];
+        categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName)).ifPresentOrElse(
+                value -> answer[0] = ResponseEntity.ok(value), () -> answer[0] = ResponseEntity.notFound().build());
+        return answer[0];
     }
 
     /**
@@ -46,7 +46,6 @@ public class SubcategoryPageRestController {
      */
     @GetMapping("/categories")
     public ResponseEntity<List<Categories>> getAllCategories() {
-        List<Categories> categories = categoriesService.getAllCategories();
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(categoriesService.getAllCategories());
     }
 }

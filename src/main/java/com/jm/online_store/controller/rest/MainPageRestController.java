@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,32 +75,35 @@ public class MainPageRestController {
     }
 
     /**
-     * Возвращает названия подкатегорий, отсортированные по категориям.
-     * В листах с подкатегориями каждый 2й элемент является транслитом на латинице первого.
+     * Создаёт мапу - ключ - название категории, значение - мапа с названиями подкатегории.
+     * Во внутренних мапах - ключ - подкатегория кириллицей и значение - латиницей.
      *
-     * @return Пример:
-     *          {"Компьютеры":["Ноутбуки","Noutbuki","Компьютеры","Kompʹyutery","Комплектующие","Komplektuyushchiye"],
-     *           "Бытовая техника":["Техника для кухни","Tekhnika_dlya_kukhni"]}
+     * @return Пример: {"Компьютеры":{"Комплектующие":"Komplektuyushchiye",
+     *                                "Компьютеры":"Kompʹyutery",
+     *                                "Ноутбуки":"Noutbuki"},
+     *                  "Смартфоны и гаджеты":{"Планшеты":"Planshety",
+     *                                         "Смартфоны":"Smartfony"}}
      */
     @GetMapping("api/categories")
-    public ResponseEntity<Map<String, List<String>>> getCategories() {
+    public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.getAllCategories();
-        Map<String, List<String>> categoriesBySuperCategories = new HashMap<>();
+        Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
 
         for (Categories category : categoriesFromDB) {
-            categoriesBySuperCategories.merge(category.getSuperCategory(), Arrays.asList(
-                    category.getCategory(), Transliteration.сyrillicToLatin(category.getCategory())),
-                    (oldV, newV) -> Stream.concat(oldV.stream(), newV.stream()).collect(Collectors.toList()));
+            Map<String, String> innerMap = new HashMap<>();
+            innerMap.put(category.getCategory(), Transliteration.сyrillicToLatin(category.getCategory()));
+            categoriesBySuperCategories.merge(category.getSuperCategory(), innerMap,
+                    (oldV, newV) -> Stream.concat(oldV.entrySet().stream(), newV.entrySet().stream())
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
         return ResponseEntity.ok(categoriesBySuperCategories);
     }
 
     /**
-     * Возвращает список первых .findAllByIdBefore(16L) продуктов (в данном случае, первых 15ти).
+     * Возвращает список первых N продуктов - N передаётся в метод сервиса .findNumProducts(N)
      */
     @GetMapping("api/products")
     public ResponseEntity<List<Product>> getSomeProducts() {
-        List<Product> products = productService.findAllByIdBefore(16L);
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(productService.findNumProducts(15));
     }
 }

@@ -27,10 +27,9 @@ public class ProductRestController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id) {
-        if (!productService.findProductById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        Product product = productService.findProductById(id).get();
-        return ResponseEntity.ok(product);
+        ResponseEntity<Product>[] answer = new ResponseEntity[1];
+        productService.findProductById(id).ifPresentOrElse(
+                value -> answer[0] = ResponseEntity.ok(value), () -> answer[0] = ResponseEntity.notFound().build());
+        return answer[0];
     }
 }

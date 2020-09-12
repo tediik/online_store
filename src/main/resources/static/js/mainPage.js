@@ -69,9 +69,9 @@ async function fillCategories() {
                     href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${key}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
         let subItem = ``;
-        for (let value = 0; value < data[key].length; value += 2) {
-            subItem += `<a class="dropdown-item" href="/categories/${data[key][value + 1]}">
-                            ${data[key][value]}</a> `;
+        for (let innerKey in data[key]) {
+            subItem += `<a class="dropdown-item" href="/categories/${data[key][innerKey]}">
+                            ${innerKey}</a> `;
         }
         item += subItem;
         $(siteMenu).append(item);
