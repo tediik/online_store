@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -56,8 +57,10 @@ class ProductServiceImplTest {
 
     @Test
     void deleteProduct() {
+        when(productRepository.getOne(1L)).thenReturn(product);
         productService.deleteProduct(product.getId());
-        verify(productRepository, times(1)).deleteById(product.getId());
+        assertEquals(true, product.getDeleteStatus());
+        verify(productRepository, times(1)).save(product);
     }
 
     @AfterEach
