@@ -100,29 +100,26 @@ function showComments() {
                 var profilePicture = (comment.customer.profilePicture);
 
                 if (comment.parentId === null) {
-                    $('#showComments').append($("<div class=\"media mb-4\">\n" +
-                        "<div>\n" +
-                        "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
-                        "             height=\"52\" src=\"/uploads/images/" + profilePicture + "\" width=\"52\"></div>\n" +
-                        "    <div class=\"media-body\" id='mediaBody" + comment.id + "'>\n" +
-                        "        <h5 class=\"mt-0\">" + comment.customer.email + "  commented on  " + timeStamp + "</h5>\n" +
-                        "        <div class=\"message\">  " + comment.content + " </div>\n" +
-                        "        <button type='button' id='button" + comment.id + "' class='btn btn-link reply'>Reply</button>\n" +
-                        "        <div class=\"replyDisplay\" id='replyDisplayId" + comment.id + "'>  </div>\n" +
-                        "        <div class=\"commentBoxSpace\" id='commentBoxSpace" + comment.id + "'> </div>"));
+                    $('#showComments').append($(`
+                        <div class=\"media mb-4\"><div>
+                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${profilePicture}" width=\"52"></div>
+                        <div class="media-body" id='mediaBody" + ${comment.id} + "'>
+                        <h5 class="mt-0">${comment.customer.email} commented on ${timeStamp}</h5>
+                        <div class="message"> ${comment.content}  </div>
+                        <button type='button' id='button${comment.id}' class='btn btn-link reply'>Reply</button>
+                        <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
+                        <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>`))
                 }
 
                 var replyDisplayId = $('#replyDisplayId' + comment.parentId);
                 if (comment.parentId !== null) {
-                    $(replyDisplayId).append($("  <div class=\"media mt-4\">\n" +
-                        "                        <div>\n" +
-
-                        "        <img id=\"profilePic\" alt=\"UserPhoto\" class=\"rounded-circle img-responsive mt-2\"\n" +
-                        "             height=\"52\" src=\"/uploads/images/" + profilePicture + "\" width=\"52\"></div>\n" +
-                        "                    <div class=\"media-body\">\n" +
-                        "                        <h5 class=\"mt-0\">" + comment.customer.email + "  commented on  " + timeStamp + "</h5>\n" +
-                        "                        <div class=\"message\">  " + comment.content + " </div>\n" +
-                        "                        </div>\n"));
+                    $(replyDisplayId).append($(`<div class="media mt-4">
+                                                <div>
+                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${profilePicture}" width=\"52"></div>
+                                            <div class="media-body"> 
+                                                <h5 class="mt-0">${comment.customer.email} commented on ${timeStamp} </h5>
+                                                <div class="message"> ${comment.content} </div>
+                                                </div>`));
                 }
             })
         }

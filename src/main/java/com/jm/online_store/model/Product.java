@@ -53,10 +53,10 @@ public class Product {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+            property = "id")
     private List<ProductInOrder> productInOrders;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private Collection<ProductComment> comments = new ArrayList<>();
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
