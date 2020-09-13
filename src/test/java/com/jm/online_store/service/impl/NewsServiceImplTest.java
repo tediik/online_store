@@ -4,12 +4,21 @@ import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
 
 import java.time.LocalDate;
@@ -22,10 +31,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @Slf4j
+//@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
+@AllArgsConstructor
+@NoArgsConstructor
 class NewsServiceImplTest {
-    private final NewsRepository newsRepository = mock(NewsRepository.class);
-    private final NewsService newsService = new NewsServiceImpl(newsRepository);
+//    @MockBean
+//    private NewsRepository newsRepository;
+//    @Autowired
+//    private NewsService newsService;
+
+    @Mock
+    private NewsRepository newsRepository;
+    @InjectMocks
+    private NewsService newsService;
+
     private News publishedNews;
     private News notPublishedNews;
     private News archivedNews;
@@ -82,15 +102,6 @@ class NewsServiceImplTest {
         Throwable thrown = assertThrows(NewsNotFoundException.class, newsService::findAll, "Expected exception doesnt match actual");
         assertNotNull(thrown.getMessage(), "Expected message is empty");
         verify(newsRepository, times(1)).findAll();
-    }
-
-    @Test
-    //TODO
-    void save() {
-        when(newsRepository.save(publishedNews)).thenReturn(publishedNews);
-        newsService.save(publishedNews);
-        verify(newsRepository, times(1)).save(publishedNews);
-        verify(newsRepository).save(publishedNews);
     }
 
     @Test
