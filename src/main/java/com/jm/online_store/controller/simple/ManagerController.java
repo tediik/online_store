@@ -17,4 +17,9 @@ public class ManagerController {
     public String getNewsManagementPage() {
         return "newsManagement";
     }
+
+    @GetMapping("/settings")
+    public String getSettingsPage (){
+        return "manager_settings";
+    }
 }
