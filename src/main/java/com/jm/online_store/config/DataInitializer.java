@@ -425,6 +425,21 @@ public class DataInitializer {
         stockService.addStock(firstStock);
         stockService.addStock(secondStock);
         stockService.addStock(thirdStock);
+
+        for(int i = 0; i < 50; i++) {
+            Stock thirdStock1 = Stock.builder()
+                    .startDate(LocalDate.now().minusDays(i))
+                    .endDate(LocalDate.now().plusDays(i))
+                    .stockTitle("Скидки на игры ЕА!")
+                    .stockText(i + " В течение действия акции вы можете приобрести игры ЕА из списка по" +
+                            " очень привлекательным ценам!" +
+                            "Вы можете стать обладателем игр EA для Xbox One, Nintendo Switch и PS4" +
+                            " в различных жанрах. Ощутите всю радость победы в хоккейном матче, станьте" +
+                            " стремительным уличным автогонщиком, постройте дом мечты или очутитесь в" +
+                            " фантастическом мире и примите участие в битве галактических масштабов!")
+                    .build();
+            stockService.addStock(thirdStock1);
+        }
     }
 
     public void sharedStockInit() {

@@ -3,6 +3,7 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,6 +24,7 @@ import java.util.List;
 /**
  * Рест контроллер для crud операций с акциями
  */
+@Slf4j
 @RestController
 @AllArgsConstructor
 public class StockRest {
@@ -35,6 +37,7 @@ public class StockRest {
      */
     @GetMapping(value = "/rest/allStocks")
     public ResponseEntity<Page<Stock>> findAll(@PageableDefault Pageable page) {
+        log.warn("page: {}", page);
         LocalDate presentDate = LocalDate.now();
         Page<Stock> stocks = stockService.findAll(page);
         for (Stock stock : stocks) {

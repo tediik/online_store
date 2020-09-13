@@ -5,6 +5,9 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +47,18 @@ public class ManagerStockRestController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(allStocks);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<Stock>> getStockPage(@PageableDefault Pageable page) {
+        log.warn("page: {}", page);
+        Page<Stock> stockPage;
+        try {
+            stockPage = stockService.findAll(page);
+        } catch (StockNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(stockPage);
     }
 
     @GetMapping("/currentStocks")

@@ -1,11 +1,3 @@
-$(document).ready(function () {
-    handleSummernote()
-    fetchStockList("/allStocks")
-});
-$('#stockModal').on('hidden.bs.modal', function () {
-    fetchStockList("/allStocks")
-})
-
 /**
  * Declaration of global variables
  */
@@ -13,24 +5,43 @@ let myHeaders = new Headers()
 let sharedStockApiUrl = "/manager/api/sharedStock"
 let stockApiUrl = "/manager/api/stock"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
+const lastPage = {active: true, number: 0, last: false};
 
+$(document).ready(function () {
 
-/**
- * buttons 'click' event listeners
- */
-/*Sort Buttons*/
-document.getElementById('sortUp').addEventListener('click', handleSortButton)
-document.getElementById('sortDown').addEventListener('click', handleSortButton)
-/*Filter Buttons*/
-document.getElementById('stockFilters').addEventListener('click', defineFilterAndFetchList)
-/*New stock*/
-document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
-/*Modal window buttons*/
-document.getElementById('modalFooter').addEventListener('click', checkFields)
+    fetchStockList("/page")
 
+    /**
+     * buttons 'click' event listeners
+     */
+    /*Sort Buttons*/
+    document.getElementById('sortUp').addEventListener('click', handleSortButton)
+    document.getElementById('sortDown').addEventListener('click', handleSortButton)
+    /*Filter Buttons*/
+    document.getElementById('stockFilters').addEventListener('click', defineFilterAndFetchList)
+    /*New stock*/
+    document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
+    /*Modal window buttons*/
+    document.getElementById('modalFooter').addEventListener('click', checkFields)
+    document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
 
-document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
+    handleSummernote()
 
+    $(window).scroll(yHandler);
+});
+
+function yHandler() {
+    if (lastPage.last || !lastPage.active) {
+        return;
+    }
+    let stocksDiv = document.getElementById('stocksDiv');
+    let contentHeight = stocksDiv.offsetHeight;
+    let yOffset = window.pageYOffset;
+    let y = yOffset + window.innerHeight;
+    if (y >= contentHeight) {
+        fetchStockList('/page', false);
+    }
+}
 
 /**
  * function validate fields in modal window
@@ -70,6 +81,13 @@ function handleStockDivButtons(event) {
  */
 function defineFilterAndFetchList(event) {
     let filter = `/${event.target.dataset.toggleId}`
+    if (filter === '/page') {
+        lastPage.active = true;
+        lastPage.number = 0;
+        lastPage.last = false;
+    }else {
+        lastPage.active = false;
+    }
     fetchStockList(filter)
 }
 
@@ -82,14 +100,23 @@ function defineFilterAndFetchList(event) {
  *  - /pastStocks"
  */
 function fetchStockList(filter) {
-    fetch(stockApiUrl + filter, {headers: myHeaders})
-        .then(function (response) {
-            if (response.status === 200) {
-                response.json().then(futureStocks => renderStockList(futureStocks))
+    $.ajax(stockApiUrl + filter, {
+        headers: myHeaders,
+        data: {page: lastPage.number},
+        async: !lastPage.active,
+        success: function (data) {
+            console.log("typeof data: " + typeof data);
+            console.log(data);
+            if (Array.isArray(data)) {
+                renderStockList(data);
             } else {
-                printStocksNotFoundMessage()
+                lastPage.number = data.number + 1;
+                lastPage.last = data.last;
+                renderStockList(data.content);
             }
-        }).catch(error => console.log(error))
+        },
+        error: printStocksNotFoundMessage
+    });
 }
 
 /**
@@ -237,14 +264,19 @@ function stockModalClearFields() {
  * @param stocks stocks from db
  */
 function renderStockList(stocks) {
-    let stockDiv = $("#stocksDiv").empty()
-    fetch(sharedStockApiUrl, {headers: myHeaders}).then(function (response) {
-        if (response.ok) {
-            response.json().then(sharedStocks => render(sharedStocks))
-        }
-    }).catch(error => console.log(error))
+    let stockDiv = $("#stocksDiv");
+    if (!lastPage.active || lastPage.number === 0) {
+        $(stockDiv).empty();
+    }
+    $.ajax(sharedStockApiUrl, {
+        headers: myHeaders,
+        async: !lastPage.active,
+        success: render
+    });
 
     function render(sharedStocks) {
+        console.log("stocks:");
+        console.log(stocks);
         let sharedStocksQuantity = sharedStocks.length
         for (let i = 0; i < stocks.length; i++) {
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 10)
@@ -336,11 +368,11 @@ function successActionMainPage(inputField, text, messageStatus) {
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
                        </div>`
-    let message=''
+    let message = ''
 
-    if (messageStatus === "success"){
+    if (messageStatus === "success") {
         message = successMessage
-    } else  if (message === "error"){
+    } else if (message === "error") {
         message = alertMessage;
     }
 
