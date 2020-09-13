@@ -234,9 +234,20 @@ public class DataInitializer {
      */
     private void productInit() {
 
-        Categories category1 = new Categories("Laptop", "Computer");
-        Categories category2 = new Categories("PC", "Computer");
-        Categories category3 = new Categories("Smartphone", "Cellphone");
+        Categories category1 = new Categories("Ноутбуки", "Компьютеры");
+        Categories category2 = new Categories("Компьютеры", "Компьютеры");
+        Categories category3 = new Categories("Смартфоны", "Смартфоны и гаджеты");
+        Categories category4 = new Categories("Комплектующие", "Компьютеры");
+        Categories category5 = new Categories("Периферия", "Компьютеры");
+        Categories category6 = new Categories("Планшеты", "Смартфоны и гаджеты");
+        Categories category7 = new Categories("Электронные книги", "Смартфоны и гаджеты");
+        Categories category8 = new Categories("Аксессуары", "Смартфоны и гаджеты");
+        Categories category9 = new Categories("Телевизоры", "ТВ и развлечения");
+        Categories category10 = new Categories("Игры", "ТВ и развлечения");
+        Categories category11 = new Categories("Аудиотехника", "ТВ и развлечения");
+        Categories category12 = new Categories("Оргтехника", "Офис и сеть");
+        Categories category13 = new Categories("Роутеры и сетевое оборудование", "Офис и сеть");
+        Categories category14 = new Categories("Техника для кухни", "Бытовая техника");
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
@@ -250,13 +261,17 @@ public class DataInitializer {
         Product product8 = new Product("LG-2145", 439.5, 78, 3.9, "Cellphone", false);
         Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, "Cellphone", false);
 
-        Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "some additional info here");
+        Product product10 = new Product("Notebook 1", 99.9, 2, 0.0, "Computer");
+        Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer");
+        Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, "Computer");
+
+        Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
         Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
         Description description3 = new Description("99966732", "Samsung", 3, "550x27x368", "white", 1.1, "some additional info here");
-        Description description4 = new Description("33311432NXU", "ATop corp.", 3, "698x785x368", "black", 3.1, "some additional info here");
+        Description description4 = new Description("33311432NXU", "ATop corp.", 3, "698x785x368", "black", 3.1, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim");
         Description description5 = new Description("33211678NXU", "ATop corp.", 3, "690x765x322", "black", 3.5, "some additional info here");
         Description description6 = new Description("333367653Rh", "Rhino corp.", 3, "612x678x315", "orange", 2.8, "some additional info here");
-        Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "some additional info here", 512, 512, "1920x960", true, "5.0");
+        Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim", 512, 512, "1920x960", true, "5.0");
         Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 256, "1920x960", false, "4.0");
         Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 128, "1024x480", true, "5.0");
 
@@ -269,12 +284,16 @@ public class DataInitializer {
         product7.setDescriptions(description7);
         product8.setDescriptions(description8);
         product9.setDescriptions(description9);
+        product10.setDescriptions(description1);
+        product11.setDescriptions(description1);
+        product12.setDescriptions(description1);
 
-        category1.setProducts(Arrays.asList(product1, product2, product3));
+        category1.setProducts(Arrays.asList(product1, product2, product3, product10, product11, product12));
         category2.setProducts(Arrays.asList(product4, product5, product6));
         category3.setProducts(Arrays.asList(product7, product8, product9));
 
-        categoriesService.saveAll(Arrays.asList(category1, category2, category3));
+        categoriesService.saveAll(Arrays.asList(category1, category2, category3,
+                category4, category5, category6, category7, category8, category9, category10, category11, category12, category13, category14));
     }
 
     /**
