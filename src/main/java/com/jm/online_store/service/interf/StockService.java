@@ -1,9 +1,10 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Stock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface StockService {
 
@@ -15,7 +16,7 @@ public interface StockService {
 
     void deleteStockById(Long id);
 
-    List<Stock> findAll();
+    Page<Stock> findAll(Pageable pageable);
 
     List<Stock> findCurrentStocks();
 

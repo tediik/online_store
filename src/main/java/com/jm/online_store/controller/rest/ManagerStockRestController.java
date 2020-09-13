@@ -39,7 +39,7 @@ public class ManagerStockRestController {
     public ResponseEntity<List<Stock>> getAllStocks() {
         List<Stock> allStocks;
         try {
-            allStocks = stockService.findAll();
+            allStocks = stockService.findAllStocks();
         } catch (StockNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct
+    //@PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -428,7 +429,7 @@ public class DataInitializer {
 
     public void sharedStockInit() {
         String[] socialNetworkNames = {"facebook", "vk", "twitter"};
-        List<Stock> stocks = stockService.findAll();
+        List<Stock> stocks = stockService.findAllStocks();
         List<User> users = userService.findAll();
         Long firstNumber = stocks.get(0).getId();
         Long lastNumber = stocks.get(stocks.size() - 1).getId();

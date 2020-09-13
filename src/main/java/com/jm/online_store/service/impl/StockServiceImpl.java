@@ -5,6 +5,8 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +20,8 @@ public class StockServiceImpl implements StockService {
     private final StockRepository stockRepository;
 
     @Override
-    public List<Stock> findAll() {
-        return stockRepository.findAll();
+    public Page<Stock> findAll(Pageable page) {
+        return stockRepository.findAll(page);
     }
 
     @Override

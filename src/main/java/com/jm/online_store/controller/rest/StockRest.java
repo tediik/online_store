@@ -3,6 +3,11 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +34,9 @@ public class StockRest {
      * @return List<Stock> список всех акций
      */
     @GetMapping(value = "/rest/allStocks")
-    public List<Stock> findAll() {
+    public ResponseEntity<Page<Stock>> findAll(@PageableDefault Pageable page) {
         LocalDate presentDate = LocalDate.now();
-        List<Stock> stocks = stockService.findAll();
+        Page<Stock> stocks = stockService.findAll(page);
         for (Stock stock : stocks) {
             if (((stock.getStartDate()) != null)) {
                 if (presentDate.isBefore(stock.getStartDate())) {
@@ -47,7 +52,7 @@ public class StockRest {
                 }
             }
         }
-        return stockService.findAll();
+        return new ResponseEntity<>(stocks, new HttpHeaders(), HttpStatus.OK);
     }
 
     /**
