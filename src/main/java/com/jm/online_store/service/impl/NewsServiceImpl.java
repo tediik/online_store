@@ -5,6 +5,8 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,6 +35,21 @@ public class NewsServiceImpl implements NewsService {
             throw new NewsNotFoundException();
         }
         return allNews;
+    }
+
+    /**
+     * Метод извлекает страницу новостей
+     *
+     * @param page параметры страницы
+     * @return Page<News> возвращает страницу новостей
+     */
+    @Override
+    public Page<News> findAll(Pageable page) {
+        Page<News> newsPage = newsRepository.findAll(page);
+        if (newsPage.isEmpty()) {
+            throw new NewsNotFoundException();
+        }
+        return newsPage;
     }
 
     /**
