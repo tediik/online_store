@@ -54,13 +54,13 @@ html {
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */
 /* Carousel base class */
-.carousel {
+.carouselWithStock {
     margin-top: .3rem;
     margin-bottom: 1rem;
     min-width: 450px;
 }
 /* Declare heights because of positioning of img element */
-.carousel-item {
+.carousel-itemWithStock {
     height: 220px;
     background-color: #8bd0db;
 }

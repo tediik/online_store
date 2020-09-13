@@ -58,10 +58,7 @@ function fillSomeProducts(data) {
             <div class="col">
                 <div class="row no-gutters border rounded overflow-hidden flex-row mb-4 shadow-sm productView">
                     <div class="col-auto d-none d-lg-block productImg">
-                        <svg class="bd-placeholder-img" width="160" height="160" xmlns="http://www.w3.org/2000/svg" 
-                            preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
-                            <title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/>
-                            <text x="25%" y="50%" fill="#eceeef">Product img</text></svg>
+                        <img class="bd-placeholder-img" src="/uploads/images/products/0.jpg">
                     </div>
                     <div class="col p-4 d-flex flex-column position-static">
                         <p class="card-text mb-auto productName">${productsList[key].product}</p>
