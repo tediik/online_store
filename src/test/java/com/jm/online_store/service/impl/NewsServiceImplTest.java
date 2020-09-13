@@ -31,19 +31,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @Slf4j
-//@SpringBootTest
-@RunWith(MockitoJUnitRunner.class)
-@AllArgsConstructor
-@NoArgsConstructor
+@SpringBootTest
 class NewsServiceImplTest {
-//    @MockBean
-//    private NewsRepository newsRepository;
-//    @Autowired
-//    private NewsService newsService;
-
-    @Mock
+    @MockBean
     private NewsRepository newsRepository;
-    @InjectMocks
+    @Autowired
     private NewsService newsService;
 
     private News publishedNews;
