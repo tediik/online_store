@@ -3,6 +3,8 @@ package com.jm.online_store.controller.simple;
 import com.jm.online_store.model.News;
 import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +23,9 @@ public class NewsController {
     private final NewsService newsService;
 
     @GetMapping
-    public String newsPage(Model model) {
-
-        List<News> newsList = newsService.getAllPublished(LocalDate.now());
-        model.addAttribute("news", newsList);
+    public String newsPage(Model model, Pageable page) {
+        Page<News> newsPage = newsService.getAllPublished(page);
+        model.addAttribute("news", newsPage.getContent());
         return "newsPage";
     }
 

@@ -17,11 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -69,7 +66,7 @@ public class ManagerNewsRestController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<News>> allNews(@PageableDefault Pageable page) {
+    public ResponseEntity<Page<News>> getPage(@PageableDefault Pageable page) {
         Page<News> response = newsService.findAll(page);
         return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
     }
@@ -80,10 +77,9 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/published")
-    public ResponseEntity<List<News>> getAllPublishedNews() {
-        List<News> publishedNews;
+    public ResponseEntity<Page<News>> getPagePublishedNews(@PageableDefault Pageable page) {
         try {
-            publishedNews = newsService.getAllPublished(LocalDate.now());
+            Page<News> publishedNews = newsService.getAllPublished(page);
             return ResponseEntity.ok(publishedNews);
         } catch (NewsNotFoundException e) {
             return ResponseEntity.noContent().build();
@@ -96,10 +92,9 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/unpublished")
-    public ResponseEntity<List<News>> getAllUnpublishedNews() {
-        List<News> unpublishedNews;
+    public ResponseEntity<Page<News>> getPageUnpublishedNews(@PageableDefault Pageable page) {
         try {
-            unpublishedNews = newsService.getAllUnpublished(LocalDate.now());
+            Page<News> unpublishedNews = newsService.getAllUnpublished(page);
             return ResponseEntity.ok(unpublishedNews);
         } catch (NewsNotFoundException e) {
             return ResponseEntity.noContent().build();
@@ -107,10 +102,9 @@ public class ManagerNewsRestController {
     }
 
     @GetMapping("/archived")
-    public ResponseEntity<List<News>> getAllArchivedNews() {
-        List<News> archived;
+    public ResponseEntity<Page<News>> getPageArchivedNews(@PageableDefault Pageable page) {
         try {
-            archived = newsService.getAllArchivedNews();
+            Page<News> archived = newsService.getAllArchivedNews(page);
             return ResponseEntity.ok(archived);
         } catch (NewsNotFoundException e) {
             return ResponseEntity.noContent().build();

@@ -23,9 +23,9 @@ public interface NewsService {
 
     void deleteById(Long id);
 
-    List<News> getAllPublished(LocalDate timeNow);
+    Page<News> getAllPublished(Pageable page);
 
-    List<News> getAllUnpublished(LocalDate timeNow);
+    Page<News> getAllUnpublished(Pageable page);
 
-    List<News> getAllArchivedNews();
+    Page<News> getAllArchivedNews(Pageable page);
 }

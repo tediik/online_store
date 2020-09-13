@@ -4,13 +4,32 @@
 let myHeaders = new Headers()
 let newsApiUrl = "/api/manager/news"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
+const lastPage = {filter: '/page', div: '#allNews', number: 0, last: false};
 
 $(document).ready(function () {
-    fetchNews("/all", '#allNews')
+    fetchNews("/page", '#allNews')
+
+    $(window).scroll(function () {
+        yHandler('allNews');
+    });
+
 });
 $('#editNewsModal').on('hidden.bs.modal', function () {
     location.reload()
 })
+
+function yHandler(div) {
+    if (lastPage.last) {
+        return;
+    }
+    let allNews = document.getElementById(div);
+    let contentHeight = allNews.offsetHeight;
+    let yOffset = window.pageYOffset;
+    let y = yOffset + window.innerHeight;
+    if (y >= contentHeight) {
+        fetchNews(lastPage.filter, lastPage.div)
+    }
+}
 
 /**
  * Event listeners of all document
@@ -31,18 +50,41 @@ document.getElementById('upperNavTab').addEventListener('click', checkUpperNavBu
  * @param event
  */
 function checkUpperNavButton(event) {
+    $(window).unbind('scroll');
     let tab = event.target.dataset.toggleId
+    lastPage.number = 0
+    lastPage.last = false
     if (tab === 'publishedNews') {
+        lastPage.filter = '/published'
+        lastPage.div = '#publishedNews'
         fetchNews('/published', '#publishedNews')
+        $(window).scroll(function () {
+            yHandler('publishedNews');
+        })
     }
     if (tab === 'allNews') {
-        fetchNews('/all', '#allNews')
+        lastPage.filter = '/page'
+        lastPage.div = '#allNews'
+        fetchNews('/page', '#allNews')
+        $(window).scroll(function () {
+            yHandler('allNews');
+        })
     }
     if (tab === 'unpublishedNews') {
+        lastPage.filter = '/unpublished'
+        lastPage.div = '#unpublishedNews'
         fetchNews('/unpublished', '#unpublishedNews')
+        $(window).scroll(function () {
+            yHandler('unpublishedNews');
+        })
     }
     if (tab === 'archivedNews') {
+        lastPage.filter = '/archived'
+        lastPage.div = '#archivedNews'
         fetchNews('/archived', '#archivedNews')
+        $(window).scroll(function () {
+            yHandler('archivedNews');
+        })
     }
 }
 
@@ -270,13 +312,15 @@ function archiveCheckboxHandler() {
  *  - /unpublished
  */
 function fetchNews(status, inputDiv) {
-    fetch(newsApiUrl + status, {
-        headers: myHeaders
-    }).then(function (response) {
-        if (response.status !== 200) {
+    $.ajax(newsApiUrl + status, {
+        headers: myHeaders,
+        data: {page: lastPage.number},
+        async: false,
+        success: function (data) {
+            renderNewsTable(data, inputDiv)
+        },
+        error: function () {
             infoMessage('#infoMessageMainPage', 'В этом разделе нет новостей', 'error')
-        } else {
-            response.json().then(news => renderNewsTable(news, inputDiv))
         }
     })
 }
@@ -287,9 +331,14 @@ function fetchNews(status, inputDiv) {
  * @param inputDiv div where to insert news
  */
 function renderNewsTable(news, inputDiv) {
-    const allNewsUl = $(`${inputDiv}`)
-    allNewsUl.empty()
-    news.forEach(function (element) {
+    const allNewsUl = $(inputDiv)
+    if (news.number === 0) {
+        allNewsUl.empty()
+    }
+    console.log("news:");
+    console.log(news);
+    console.log("inputDiv: " + inputDiv);
+    news.content.forEach(function (element) {
         let postingDate = moment(element.postingDate).format("YYYY-MM-DD")
         let modifiedDateText = ''
         if (element.modifiedDate !== null) {
@@ -313,6 +362,8 @@ function renderNewsTable(news, inputDiv) {
                     </div>`
         allNewsUl.append(row)
     })
+    lastPage.number = news.number + 1;
+    lastPage.last = news.last;
 }
 
 /**

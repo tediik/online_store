@@ -108,12 +108,11 @@ public class NewsServiceImpl implements NewsService {
      * Метод делающий выборку из базы данных по заданному параметру,
      * где LocalDateTime postingDate > LocalDateTime timeNow.
      *
-     * @param timeNow параметр типа LocalDateTime относительно которого делается выборка данных их базы данных
      * @return возвращает список еще неопубликованных новостей List<News>
      */
     @Override
-    public List<News> getAllPublished(LocalDate timeNow) {
-        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(timeNow, false);
+    public Page<News> getAllPublished(Pageable page) {
+        Page<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(page, LocalDate.now(), false);
         if (publishedNews.isEmpty()) {
             throw new NewsNotFoundException();
         }
@@ -124,12 +123,11 @@ public class NewsServiceImpl implements NewsService {
      * Метод делающий выборку из базы данных по заданному параметру,
      * где LocalDateTime postingDate <= LocalDateTime timeNow.
      *
-     * @param timeNow параметр типа LocalDateTime относительно которого делается выборка данных их базы данных
      * @return возвращает список опубликованных новостей List<News>
      */
     @Override
-    public List<News> getAllUnpublished(LocalDate timeNow) {
-        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(timeNow, false);
+    public Page<News> getAllUnpublished(Pageable page) {
+        Page<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(page, LocalDate.now(), false);
         if (unpublishedNews.isEmpty()) {
             throw new NewsNotFoundException();
         }
@@ -137,8 +135,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<News> getAllArchivedNews() {
-        List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
+    public Page<News> getAllArchivedNews(Pageable page) {
+        Page<News> archivedNews = newsRepository.findAllByArchivedEquals(page,true);
         if (archivedNews.isEmpty()) {
             throw new NewsNotFoundException();
         }
