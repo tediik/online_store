@@ -6,7 +6,6 @@ import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@Slf4j
 @SpringBootTest
 class NewsServiceImplTest {
     @MockBean
@@ -91,7 +89,7 @@ class NewsServiceImplTest {
     @DisplayName("Testing method findAll() in class NewsServiceImpl to throw Exception if returned List is empty")
     void throwExceptionIfFindAllIsEmpty() {
         when(newsRepository.findAll()).thenReturn(emptyNewsList);
-        Throwable thrown = assertThrows(NewsNotFoundException.class, newsService::findAll, "Expected exception doesnt match actual");
+        NewsNotFoundException thrown = assertThrows(NewsNotFoundException.class, newsService::findAll, "Expected exception doesnt match actual");
         assertNotNull(thrown.getMessage(), "Expected message is empty");
         verify(newsRepository, times(1)).findAll();
     }
@@ -184,7 +182,7 @@ class NewsServiceImplTest {
     @DisplayName("Testing method getAllArchivedNews() in class NewsServiceImpl to throw Exception if returned List is empty")
     void throwExceptionIfGetAllArchivedNewsReturnsEmptyList() {
         when(newsRepository.findAllByArchivedEquals(true)).thenReturn(emptyNewsList);
-        Throwable thrown = assertThrows(NewsNotFoundException.class, newsService::getAllArchivedNews, "Expected exception doesnt match actual");
+        NewsNotFoundException thrown = assertThrows(NewsNotFoundException.class, newsService::getAllArchivedNews, "Expected exception doesnt match actual");
         assertNotNull(thrown.getMessage(), "Expected message is empty");
         verify(newsRepository, times(1)).findAllByArchivedEquals(true);
     }
