@@ -15,7 +15,7 @@ public interface NewsService {
 
     boolean existsById(Long id);
 
-    void update(News news);
+    News update(News news);
 
     void deleteById(Long id);
 
