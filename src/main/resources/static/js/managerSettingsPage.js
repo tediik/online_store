@@ -1,32 +1,60 @@
+/**
+ * Global variables declaration
+ * @type {string}
+ */
+let apiManagerSchedulingUrl = "/api/manager/scheduling"
 let myHeaders = new Headers()
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
-document.getElementById('emailDistributionCheckbox').addEventListener('change', distributionCheckboxHandler)
+/**
+ * event listener
+ */
 document.getElementById('saveChanges').addEventListener('click', handleAcceptButton)
-document.getElementById('stop').addEventListener('click', handleStopButton)
 
-function handleStopButton() {
-    fetch('/api/manager/scheduling/stop').then(response => console.log(response))
+$(document).ready(function () {
+    fetchStockMailDistributionSettings()
+})
+
+/**
+ * Function fills StockMailDistributionForm according to received settings
+ * @param settings received from db
+ */
+function fillStockMailDistributionForm(settings) {
+    document.getElementById('emailDistributionCheckbox').checked = settings.active
+    document.getElementById('distributionTimeInput').value = settings.startTime
 }
 
+/**
+ * function send fetch request to get StockMailDistributionTask settings
+ */
+function fetchStockMailDistributionSettings() {
+    fetch(apiManagerSchedulingUrl + '/stockMailDistribution', {}).then(function (response) {
+        if (response.status === 200) {
+            response.json().then(settings => fillStockMailDistributionForm(settings))
+        }
+    })
+}
 
+/**
+ * function handles accept form button if checkbox is checked it sends request to start utl
+ * else send request to stop url
+ */
 function handleAcceptButton() {
+    let actionUrl;
+    if (document.getElementById('emailDistributionCheckbox').checked) {
+        actionUrl = '/stockMailDistribution/start'
+    } else {
+        actionUrl = '/stockMailDistribution/stop'
+    }
+
     let taskSettings = {
-        id: 1,
-        taskName: "stockMailSending",
+        taskName: "stockMailDistribution",
+        active: document.getElementById('emailDistributionCheckbox').checked,
         startTime: document.getElementById('distributionTimeInput').value,
     }
-    fetch('/api/manager/scheduling/start', {
+    fetch(apiManagerSchedulingUrl + actionUrl, {
         method: 'POST',
         headers: myHeaders,
         body: JSON.stringify(taskSettings)
     }).then(response => console.log(response))
-}
-
-function distributionCheckboxHandler() {
-    if (document.getElementById('emailDistributionCheckbox').checked === true) {
-        document.getElementById('distributionTimeDiv').style.visibility = 'visible'
-    } else {
-        document.getElementById('distributionTimeDiv').style.visibility = 'hidden'
-    }
 }
