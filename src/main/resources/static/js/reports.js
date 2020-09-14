@@ -77,11 +77,11 @@ function renderUsersTable(users) {
 /**
  * функция изменения даты для отображения
  */
-$( ".form-control" ).change(function() {
+function onChangeDataInput() {
     var date = new Date (document.getElementById('date_for_table').value);
     fetchUsersAndRenderTable([7, 1, 2, 3, 4, 5, 6][date.getDay()]);
     document.getElementById('date_for_table').blur();
-});
+}
 /**
  * функция возвращает сегодняшний день
  */
@@ -89,4 +89,48 @@ function currentDay() {
     let now = new Date();
     return [7, 1, 2, 3, 4, 5, 6][now.getDay()];
 }
+function fetchSentStocks() {
+    var begin = new Date (document.getElementById('date_begin').value)
+        .toISOString()
+        .substr(0,10);
+    var end = new Date (document.getElementById('date_end').value)
+        .toISOString()
+        .substr(0,10);
+    fetch("/api/manager/report?param1="+begin+"&param2="+end, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    }).then(response => response.json()).then(sentStocks=> printChart(sentStocks));
+}
+/**
+ * Функция отрисовки графика
+ */
+function printChart(sentStocks) {
+    let ctx = document.getElementById('myChart').getContext('2d');
+    let chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            // Точки графиков
+            labels: Object.keys(sentStocks),
+            // График
+            datasets: [{
+                label: 'График рассылки',
+                borderColor: 'rgb(255, 99, 132)',
+                data: Object.values(sentStocks)
+            }]
+        },
+        options: {}
+    });
+}
+/**
+ * функция перерисовки графика
+ */
+function rePrintChart() {
+    fetchSentStocks();
+    document.getElementById('date_begin').blur();
+    document.getElementById('date_end').blur();
+}
+
+
 

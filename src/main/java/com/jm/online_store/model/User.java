@@ -117,6 +117,10 @@ public class User implements UserDetails {
     @JsonManagedReference(value = "user-sharedStock")
     private Set<SharedStock> sharedStocks;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonManagedReference(value = "user-sentStock")
+    private Set<SentStock> sentStocks;
+
     public User() {
         registerDate = LocalDate.now();
     }

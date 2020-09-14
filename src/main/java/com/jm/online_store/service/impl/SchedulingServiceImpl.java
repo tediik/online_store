@@ -1,11 +1,13 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.model.SentStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.SchedulingService;
+import com.jm.online_store.service.interf.SentStockService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,6 +27,7 @@ public class SchedulingServiceImpl implements SchedulingService {
     private final MailSenderService mailSenderService;
     private final UserRepository userRepository;
     private final StockRepository stockRepository;
+    private final SentStockService sentStockService;
 
     private final String EMAIL_TYPE = "Stock sender";
 
@@ -49,7 +52,14 @@ public class SchedulingServiceImpl implements SchedulingService {
 
         if (usersToSendStock.size() != 0) {
             for (User user : usersToSendStock) {
-
+                for (Stock stock : currentAndFutureStocks) {
+                    SentStock sentStock = SentStock.builder()
+                            .user(user)
+                            .stock(stock)
+                            .sentDate(LocalDate.now())
+                            .build();
+                    sentStockService.addSentStock(sentStock);
+                }
                 mailSenderService.send(user.getEmail(), messageSubject, messageBody, EMAIL_TYPE);
                 log.debug("Stock message was sent to {} with email {}", user, user.getEmail());
             }

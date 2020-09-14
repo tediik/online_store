@@ -6,6 +6,7 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
+import com.jm.online_store.model.SentStock;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
@@ -17,6 +18,7 @@ import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
@@ -57,13 +59,14 @@ public class DataInitializer {
     private final BasketService basketService;
     private final StockService stockService;
     private final SharedStockService sharedStockService;
+    private final SentStockService sentStockService;
 
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct
+   // @PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -71,6 +74,7 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
+        sentStockInit();
     }
 
     /**
@@ -406,5 +410,48 @@ public class DataInitializer {
             }
         }
 
+    }
+
+    public void sentStockInit() {
+        Random random = new Random();
+        List<Stock> stocks = stockService.findAll();
+        List<User> users = userService.findAll();
+
+        SentStock sentStock1 = SentStock.builder()
+                .sentDate(LocalDate.now())
+                .stock(stocks.get(random.nextInt(stocks.size())))
+                .user(users.get(random.nextInt(users.size())))
+                .build();
+        SentStock sentStock2 = SentStock.builder()
+                .sentDate(LocalDate.now().plusDays(1))
+                .stock(stocks.get(random.nextInt(stocks.size())))
+                .user(users.get(random.nextInt(users.size())))
+                .build();
+        SentStock sentStock3 = SentStock.builder()
+                .sentDate(LocalDate.now().plusDays(1))
+                .stock(stocks.get(random.nextInt(stocks.size())))
+                .user(users.get(random.nextInt(users.size())))
+                .build();
+        SentStock sentStock4 = SentStock.builder()
+                .sentDate(LocalDate.now().plusDays(1))
+                .stock(stocks.get(random.nextInt(stocks.size())))
+                .user(users.get(random.nextInt(users.size())))
+                .build();
+        SentStock sentStock5 = SentStock.builder()
+                .sentDate(LocalDate.now().plusDays(2))
+                .stock(stocks.get(random.nextInt(stocks.size())))
+                .user(users.get(random.nextInt(users.size())))
+                .build();
+        SentStock sentStock6 = SentStock.builder()
+                .sentDate(LocalDate.now().plusDays(2))
+                .stock(stocks.get(random.nextInt(stocks.size())))
+                .user(users.get(random.nextInt(users.size())))
+                .build();
+        sentStockService.addSentStock(sentStock1);
+        sentStockService.addSentStock(sentStock2);
+        sentStockService.addSentStock(sentStock3);
+        sentStockService.addSentStock(sentStock4);
+        sentStockService.addSentStock(sentStock5);
+        sentStockService.addSentStock(sentStock6);
     }
 }
