@@ -1,9 +1,8 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.TaskNotFoundException;
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.repository.TaskSettingsRepository;
-import com.jm.online_store.service.interf.StockMailSendingTask;
+import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ScheduledFuture;
@@ -25,20 +25,27 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
 
     private final TaskScheduler scheduler;
     private final TaskSettingsRepository taskSettingsRepository;
-    private final StockMailSendingTask stockMailSendingTask;
+    private final StockMailDistributionTask stockMailDistributionTask;
 
-    Map<Long, ScheduledFuture<?>> jobsMap;
+    private final Map<Long, ScheduledFuture<?>> jobsMap;
 
+    /**
+     * Method add {@link Runnable} tasks to {@link ScheduledFuture}
+     * @param taskSettings - task settings from db such as LocalTime, and task id
+     * @param task - task which are needed to schedule implements {@link Runnable}
+     */
     @Override
-    public void addTaskToScheduler(TaskSettings taskSettings) {
-//        TaskSettings taskSettingsToSchedule = taskSettingsRepository.findByTaskName(taskSettings.getTaskName()).orElseThrow(TaskNotFoundException::new);
-//        taskSettingsToSchedule.setStartTime(taskSettings.getStartTime());
+    public void addTaskToScheduler(TaskSettings taskSettings, Runnable task) {
         String cronExpression = DateTimeToCron(taskSettings.getStartTime());
-        ScheduledFuture<?> scheduledTask = scheduler.schedule(stockMailSendingTask,
+        ScheduledFuture<?> scheduledTask = scheduler.schedule(task,
                 new CronTrigger(cronExpression, TimeZone.getTimeZone(TimeZone.getDefault().getID())));
         jobsMap.put(taskSettings.getId(), scheduledTask);
     }
 
+    /**
+     * Method cancels scheduled task
+     * @param id - task id from db
+     */
     @Override
     public void removeTaskFromScheduler(Long id) {
         ScheduledFuture<?> scheduledTask = jobsMap.get(id);
@@ -48,12 +55,25 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
         }
     }
 
-    //TODO доделать рефреш заданий из бд при перезапуске приложения
+    /**
+     * Method checks db for active tasks after context refresh
+     */
     @Override
     @EventListener({ContextRefreshedEvent.class})
     public void contextRefreshedEvent() {
+        List<TaskSettings> allTasks = taskSettingsRepository.findAll();
+        for (TaskSettings taskSettings : allTasks) {
+            if (taskSettings.isActive()) {
+                addTaskToScheduler(taskSettings, stockMailDistributionTask);
+            }
+        }
     }
 
+    /**
+     * Util method which convert {@link LocalTime} to cron expression
+     * @param time - {@link LocalTime}
+     * @return - String with creon expression
+     */
     private String DateTimeToCron(LocalTime time) {
         return String.format("0 %S %S */1 * *", time.getMinute(), time.getHour());
     }
