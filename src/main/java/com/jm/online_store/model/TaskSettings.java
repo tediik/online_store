@@ -25,7 +25,7 @@ public class TaskSettings {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "task_name")
+    @Column(name = "task_name", unique = true)
     private String taskName;
 
     @Column(name = "active")
