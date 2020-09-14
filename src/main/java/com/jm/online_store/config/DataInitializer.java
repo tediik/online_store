@@ -9,6 +9,7 @@ import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
+import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
@@ -19,6 +20,7 @@ import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
+import com.jm.online_store.service.interf.TaskSettingsService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -57,6 +60,7 @@ public class DataInitializer {
     private final BasketService basketService;
     private final StockService stockService;
     private final SharedStockService sharedStockService;
+    private final TaskSettingsService taskSettingsService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -71,6 +75,7 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
+        taskSettingsInit();
     }
 
     /**
@@ -240,7 +245,7 @@ public class DataInitializer {
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
-        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer",false);
+        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer", false);
 
         Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer", false);
         Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer", false);
@@ -387,5 +392,14 @@ public class DataInitializer {
             }
         }
 
+    }
+
+    public void taskSettingsInit() {
+        TaskSettings taskSettings = TaskSettings.builder()
+                .taskName("stockMailDistribution")
+                .active(false)
+                .startTime(LocalTime.now())
+                .build();
+        taskSettingsService.addNewTaskSetting(taskSettings);
     }
 }
