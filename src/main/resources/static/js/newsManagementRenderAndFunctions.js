@@ -295,9 +295,6 @@ function archiveCheckboxHandler() {
 
 /**
  * makes fetch request to manager rest controller
- *  - /all
- *  - /published
- *  - /unpublished
  */
 function fetchNews() {
     $.ajax(newsApiUrl + '/page', {
