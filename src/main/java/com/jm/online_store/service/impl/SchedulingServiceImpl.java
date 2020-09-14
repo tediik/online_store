@@ -8,11 +8,19 @@ import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.SchedulingService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Класс планировщик заданий. В соответствии с заданным планом выполняет определенные действия(задания).
@@ -28,6 +36,27 @@ public class SchedulingServiceImpl implements SchedulingService {
 
     private final String EMAIL_TYPE = "Stock sender";
 
+    private final TaskScheduler scheduler;
+
+    Map<Long, ScheduledFuture<?>> jobsMap = new HashMap<>();
+
+    public void addTaskToScheduler(long id, Runnable task){
+        ScheduledFuture<?> scheduledTask = scheduler.schedule(task, new CronTrigger("0 0 0 * * ?", TimeZone.getTimeZone(TimeZone.getDefault().getID())));
+        jobsMap.put(id, scheduledTask);
+    }
+
+    public void removeTaskFromScheduler(Long id){
+        ScheduledFuture<?> scheduledTask = jobsMap.get(id);
+        if(scheduledTask != null) {
+            scheduledTask.cancel(true);
+            jobsMap.put(id, null);
+        }
+    }
+
+    @EventListener({ ContextRefreshedEvent.class })
+    public void contextRefreshedEvent() {
+        // Get all tasks from DB and reschedule them in case of context restarted
+    }
     /**
      * Метод выполняется с регулярностью заданным параметром ${emailStockSending.delay} в файле application.yml
      * берем текущий день, делаем выборку среди всех {@link User} у кого в поле DayOfWeekForStockSend
