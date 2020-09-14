@@ -5,6 +5,8 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,16 @@ public class StockServiceImpl implements StockService {
             throw new StockNotFoundException();
         }
         return stockList;
+    }
+
+    //mine
+    @Override
+    public Page<Stock> findPage(Pageable page) {
+        Page<Stock> pageList = stockRepository.findAll(page);
+        if (pageList.isEmpty()) {
+            throw new StockNotFoundException();
+        }
+        return pageList;
     }
 
     @Override

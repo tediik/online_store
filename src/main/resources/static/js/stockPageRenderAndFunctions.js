@@ -1,11 +1,3 @@
-$(document).ready(function () {
-    handleSummernote()
-    fetchStockList("/allStocks")
-});
-$('#stockModal').on('hidden.bs.modal', function () {
-    fetchStockList("/allStocks")
-})
-
 /**
  * Declaration of global variables
  */
@@ -13,24 +5,31 @@ let myHeaders = new Headers()
 let sharedStockApiUrl = "/manager/api/sharedStock"
 let stockApiUrl = "/manager/api/stock"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
+const lastPage = {active: true, number: 0, last: false};
 
+$(document).ready(function () {
+    handleSummernote()
+    fetchStockList("/page")
 
-/**
- * buttons 'click' event listeners
- */
-/*Sort Buttons*/
-document.getElementById('sortUp').addEventListener('click', handleSortButton)
-document.getElementById('sortDown').addEventListener('click', handleSortButton)
-/*Filter Buttons*/
-document.getElementById('stockFilters').addEventListener('click', defineFilterAndFetchList)
-/*New stock*/
-document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
-/*Modal window buttons*/
-document.getElementById('modalFooter').addEventListener('click', checkFields)
+    /**
+     * buttons 'click' event listeners
+     */
+    /*Sort Buttons*/
+    document.getElementById('sortUp').addEventListener('click', handleSortButton)
+    document.getElementById('sortDown').addEventListener('click', handleSortButton)
+    /*Filter Buttons*/
+    document.getElementById('stockFilters').addEventListener('click', defineFilterAndFetchList)
+    /*New stock*/
+    document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
+    /*Modal window buttons*/
+    document.getElementById('modalFooter').addEventListener('click', checkFields)
 
+    document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
 
-document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
-
+    $('#stockModal').on('hidden.bs.modal', function () {
+        fetchStockList("/page")
+    })
+});
 
 /**
  * function validate fields in modal window
@@ -84,7 +83,13 @@ function defineFilterAndFetchList(event) {
  *  - /pastStocks"
  */
 function fetchStockList(filter) {
-    fetch(stockApiUrl + filter, {headers: myHeaders})
+    $.ajax(stockApiUrl + filter, {
+        headers: myHeaders,
+        data: {page: lastPage.number},
+        success: function (data) {
+
+        }
+    })
         .then(function (response) {
             if (response.status === 200) {
                 response.json().then(futureStocks => renderStockList(futureStocks))
@@ -185,6 +190,7 @@ function handleSaveChangesButton() {
             }
         })
     }
+
     $('#stockModal').modal('hide')
 }
 

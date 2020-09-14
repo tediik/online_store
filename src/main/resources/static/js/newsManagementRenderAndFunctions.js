@@ -18,11 +18,11 @@ $('#editNewsModal').on('hidden.bs.modal', function () {
     location.reload()
 })
 
-function yHandler(div) {
+function yHandler(divId) {
     if (lastPage.last) {
         return;
     }
-    let allNews = document.getElementById(div);
+    let allNews = document.getElementById(divId);
     let contentHeight = allNews.offsetHeight;
     let yOffset = window.pageYOffset;
     let y = yOffset + window.innerHeight;
@@ -55,37 +55,26 @@ function checkUpperNavButton(event) {
     lastPage.number = 0
     lastPage.last = false
     if (tab === 'publishedNews') {
-        lastPage.filter = '/published'
-        lastPage.div = '#publishedNews'
-        fetchNews('/published', '#publishedNews')
-        $(window).scroll(function () {
-            yHandler('publishedNews');
-        })
+        initFetchNews('/published', tab);
     }
     if (tab === 'allNews') {
-        lastPage.filter = '/page'
-        lastPage.div = '#allNews'
-        fetchNews('/page', '#allNews')
-        $(window).scroll(function () {
-            yHandler('allNews');
-        })
+        initFetchNews('/page', tab);
     }
     if (tab === 'unpublishedNews') {
-        lastPage.filter = '/unpublished'
-        lastPage.div = '#unpublishedNews'
-        fetchNews('/unpublished', '#unpublishedNews')
-        $(window).scroll(function () {
-            yHandler('unpublishedNews');
-        })
+        initFetchNews('/unpublished', tab);
     }
     if (tab === 'archivedNews') {
-        lastPage.filter = '/archived'
-        lastPage.div = '#archivedNews'
-        fetchNews('/archived', '#archivedNews')
-        $(window).scroll(function () {
-            yHandler('archivedNews');
-        })
+        initFetchNews('/archivedNews', tab);
     }
+}
+
+function initFetchNews(filter, divId) {
+    lastPage.filter = filter;
+    lastPage.div = '#' + divId;
+    fetchNews(filter, '#' + divId)
+    $(window).scroll(function () {
+        yHandler(divId);
+    })
 }
 
 /**
@@ -317,6 +306,8 @@ function fetchNews(status, inputDiv) {
         data: {page: lastPage.number},
         async: false,
         success: function (data) {
+            lastPage.number = data.number + 1;
+            lastPage.last = data.last;
             renderNewsTable(data, inputDiv)
         },
         error: function () {
@@ -335,9 +326,6 @@ function renderNewsTable(news, inputDiv) {
     if (news.number === 0) {
         allNewsUl.empty()
     }
-    console.log("news:");
-    console.log(news);
-    console.log("inputDiv: " + inputDiv);
     news.content.forEach(function (element) {
         let postingDate = moment(element.postingDate).format("YYYY-MM-DD")
         let modifiedDateText = ''
@@ -362,8 +350,6 @@ function renderNewsTable(news, inputDiv) {
                     </div>`
         allNewsUl.append(row)
     })
-    lastPage.number = news.number + 1;
-    lastPage.last = news.last;
 }
 
 /**
