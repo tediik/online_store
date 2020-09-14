@@ -50,6 +50,12 @@ public class ManagerStockRestController {
         return ResponseEntity.ok(allStocks);
     }
 
+    /**
+     * Метод возвращает страницу акций
+     *
+     * @param page параметры страницы
+     * @return Page<Stock> возвращает страницу новостей
+     */
     @GetMapping("/page")
     public ResponseEntity<Page<Stock>> getStockPage(@PageableDefault Pageable page, StockFilterDto filterDto) {
         Page<Stock> stockPage;

@@ -389,6 +389,9 @@ public class DataInitializer {
 
     }
 
+    /**
+     * Метод инициализации новостей и акций в профиле менеджера для тестирования динамической пагинации.
+     */
     public void paginationNewsAndStocksInit() {
         for (int i = 0; i < 50; i++) {
             News news = News.builder()

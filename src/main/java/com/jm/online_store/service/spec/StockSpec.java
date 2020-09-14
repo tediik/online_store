@@ -7,6 +7,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 
+/**
+ Фильтр для отображения акций по соответствующим закладкам
+ */
 @UtilityClass
 public class StockSpec {
     public Specification<Stock> get(StockFilterDto filterDto) {

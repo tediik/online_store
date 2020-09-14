@@ -66,6 +66,12 @@ public class ManagerNewsRestController {
         }
     }
 
+    /**
+     * Метод возвращает страницу новостей
+     *
+     * @param page параметры страницы
+     * @return Page<News> возвращает страницу новостей
+     */
     @GetMapping("/page")
     public ResponseEntity<Page<News>> getPage(@PageableDefault Pageable page, NewsFilterDto filterDto) {
         Page<News> response = newsService.findAll(page, filterDto);

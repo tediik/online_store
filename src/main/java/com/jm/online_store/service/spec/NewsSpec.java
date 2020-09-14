@@ -7,6 +7,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 
+/**
+Фильтр для отображения новостей по соответствующим закладкам
+ */
 @UtilityClass
 public class NewsSpec {
     public Specification<News> get(NewsFilterDto filterDto) {

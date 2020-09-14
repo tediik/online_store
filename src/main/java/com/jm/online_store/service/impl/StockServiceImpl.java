@@ -32,6 +32,12 @@ public class StockServiceImpl implements StockService {
         return stockList;
     }
 
+    /**
+     * Метод извлекает страницу акций
+     *
+     * @param page параметры страницы
+     * @return Page<Stock> возвращает страницу новостей
+     */
     @Override
     public Page<Stock> findPage(Pageable page, StockFilterDto filterDto) {
         Specification<Stock> spec = StockSpec.get(filterDto);
