@@ -5,7 +5,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.MailSenderService;
-import com.jm.online_store.service.interf.StockMailSendingTask;
+import com.jm.online_store.service.interf.StockMailDistributionTask;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 @Service
-public class StockMailSendingTaskImpl implements StockMailSendingTask {
+public class StockMailDistributionTaskImpl implements StockMailDistributionTask {
 
     private final MailSenderService mailSenderService;
     private final UserRepository userRepository;
