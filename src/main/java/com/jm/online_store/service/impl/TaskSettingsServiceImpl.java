@@ -25,6 +25,11 @@ public class TaskSettingsServiceImpl implements TaskSettingsService {
 
     @Override
     public TaskSettings updateTask(TaskSettings taskSettings) {
-        return null;
+        TaskSettings taskSettingsToUpdate = taskSettingsRepository
+                .findByTaskName(taskSettings.getTaskName())
+                .orElseThrow(TaskNotFoundException::new);
+        taskSettingsToUpdate.setActive(taskSettings.isActive());
+        taskSettingsToUpdate.setStartTime(taskSettings.getStartTime());
+        return taskSettingsRepository.save(taskSettingsToUpdate);
     }
 }
