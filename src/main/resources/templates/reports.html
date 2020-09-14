@@ -19,10 +19,12 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.datepicker.extension.range.min.js"></script>
 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" type="text/css" href="/static/css/report.css">
     <title>Reports</title>
 </head>
 <body>
@@ -59,13 +61,13 @@
                 <div style="width: 50% ; height: 60%">
                     <canvas id="myChart"></canvas>
                 </div>
-                <label for="date_for_table" class="col-xs-2 col-form-label">Выберите дату начала</label>
-                <input th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" type="date" id="date_begin" name="date_for_table" class="form-control" onchange="rePrintChart()" style=" padding: 20px; width: 20%">
-                <label for="date_for_table" class="col-xs-2 col-form-label">Выберите дату конца</label>
-                <input th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" type="date" id="date_end" name="date_for_table" class="form-control" onchange="rePrintChart()" style=" padding: 20px; width: 20%">
-                <label for="date_for_table" class="col-xs-2 col-form-label">Выберите дату</label>
-                    <input th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
-                           th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" type="date" id="date_for_table" name="date_for_table" class="form-control" onchange="onChangeDataInput()" style=" padding: 20px; width: 20%">
+                Выберите период для построения графика:
+                <br>
+                <input id="date_range" readonly>
+                <br>
+                <label for="date_range2" class="col-xs-2 col-form-label">Выберите дату</label>
+                <br>
+                <input id="date_range2"  onchange="onChangeDataInput()" readonly>
                 <div style="background-color: white; padding: 20px; border: 1px solid #DDE1E4;">
                     <table  class="table table-striped" id="users-table">
 

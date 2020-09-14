@@ -78,9 +78,8 @@ function renderUsersTable(users) {
  * функция изменения даты для отображения
  */
 function onChangeDataInput() {
-    var date = new Date (document.getElementById('date_for_table').value);
+    var date = new Date (document.getElementById('date_range2').value);
     fetchUsersAndRenderTable([7, 1, 2, 3, 4, 5, 6][date.getDay()]);
-    document.getElementById('date_for_table').blur();
 }
 /**
  * функция возвращает сегодняшний день
@@ -89,13 +88,7 @@ function currentDay() {
     let now = new Date();
     return [7, 1, 2, 3, 4, 5, 6][now.getDay()];
 }
-function fetchSentStocks() {
-    var begin = new Date (document.getElementById('date_begin').value)
-        .toISOString()
-        .substr(0,10);
-    var end = new Date (document.getElementById('date_end').value)
-        .toISOString()
-        .substr(0,10);
+function fetchSentStocks(begin, end) {
     fetch("/api/manager/report?param1="+begin+"&param2="+end, {
         method: 'GET',
         headers: {
@@ -126,11 +119,45 @@ function printChart(sentStocks) {
 /**
  * функция перерисовки графика
  */
-function rePrintChart() {
-    fetchSentStocks();
-    document.getElementById('date_begin').blur();
-    document.getElementById('date_end').blur();
+function rePrintChart(begin, end) {
+    var dateBegin = new Date(begin);
+    var dateEnd = new Date(end);
+    fetchSentStocks(dateBegin.toISOString().substr(0,10),
+                    dateEnd.toISOString().substr(0,10));
 }
+/**
+ * функция инициализация datepickera для выбора периода
+ * построения графика
+ */
+$(function() {
+    $('#date_range').datepicker({
+        showButtonPanel: true,
+        range: 'period', // режим - выбор периода
+        numberOfMonths: 2,
+        onSelect: function(dateText, inst, extensionRange) {
+            // extensionRange - объект расширения
+            $('#date_range').val(extensionRange.startDateText + ' - ' + extensionRange.endDateText);
+        },
+        onClose: function() {
+            function isDonePressed(){
+                return ($('#ui-datepicker-div').html().indexOf('ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all ui-state-hover') > -1);
+            }
+            if (isDonePressed()){
+                var extensionRange = $('#date_range').datepicker('widget').data('datepickerExtensionRange');
+                rePrintChart(extensionRange.startDateText,extensionRange.endDateText);
+            }
+        }
+    })
+});
+/**
+ * функция инициализации 2 datepickera
+ */
+$(function() {
+    $('#date_range2').datepicker({
+        showButtonPanel: true,
+    })
+});
+
 
 
 

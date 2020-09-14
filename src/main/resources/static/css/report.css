@@ -1,0 +1,14 @@
+.ui-datepicker .selected-start:not(.selected-end) a,
+.ui-datepicker .selected-end:not(.selected-start) a {
+    background: #F3FDD5;
+}
+
+.ui-datepicker .selected.first-of-month:not(.selected-start) a {
+    border-left: 2px dotted #D4E7F6;
+    padding-left: 1px;
+}
+
+.ui-datepicker .selected.last-of-month:not(.selected-end) a {
+    border-right: 2px dotted #D4E7F6;
+    padding-right: 1px;
+}
