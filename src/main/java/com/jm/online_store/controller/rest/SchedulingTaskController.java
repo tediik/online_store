@@ -1,10 +1,9 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.TaskSettings;
-import com.jm.online_store.service.impl.StockMailSendingTaskImpl;
-import com.jm.online_store.service.interf.StockMailSendingTask;
+import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
+import com.jm.online_store.service.interf.TaskSettingsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,25 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class SchedulingTaskController {
     private final TaskSchedulingService schedulingService;
-//    private final StockMailSendingTask stockMailSendingTask;
+    private final TaskSettingsService taskSettingsService;
+    private final StockMailDistributionTask stockMailDistributionTask;
 
-    @PostMapping("/start")
-    public ResponseEntity<String> startTask(@RequestBody TaskSettings taskSettings) {
-        schedulingService.addTaskToScheduler(taskSettings);
-        return ResponseEntity.ok().build();
+    @PostMapping("/stockMailDistribution/start")
+    public ResponseEntity<TaskSettings> startMailDistributionTask(@RequestBody TaskSettings taskSettings) {
+        TaskSettings updatedTaskSettings = taskSettingsService.updateTask(taskSettings);
+        schedulingService.addTaskToScheduler(updatedTaskSettings, stockMailDistributionTask);
+        return ResponseEntity.ok(updatedTaskSettings);
     }
 
-    @GetMapping("/start")
-    public ResponseEntity<String> startTestTask() {
-
-
-//        schedulingService.addTaskToScheduler(1L, test);
-        return ResponseEntity.ok().build();
+    @PostMapping("/stockMailDistribution/stop")
+    public ResponseEntity<TaskSettings> stopMailDistributionTask(@RequestBody TaskSettings taskSettings) {
+        TaskSettings updatedTaskSettings = taskSettingsService.updateTask(taskSettings);
+        schedulingService.removeTaskFromScheduler(updatedTaskSettings.getId());
+        return ResponseEntity.ok(updatedTaskSettings);
     }
 
-    @GetMapping("/stop")
-    public ResponseEntity<String> stopTestTask() {
-        schedulingService.removeTaskFromScheduler(1L);
-        return ResponseEntity.ok().build();
+    @GetMapping("/{taskName}")
+    public ResponseEntity<TaskSettings> getMailDistributionSettings(@PathVariable String taskName) {
+        TaskSettings taskSettings = taskSettingsService.findTaskByName(taskName);
+        return ResponseEntity.ok(taskSettings);
     }
 }
