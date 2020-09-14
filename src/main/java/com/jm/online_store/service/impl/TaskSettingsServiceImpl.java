@@ -14,6 +14,11 @@ public class TaskSettingsServiceImpl implements TaskSettingsService {
     private final TaskSettingsRepository taskSettingsRepository;
 
     @Override
+    public TaskSettings addNewTaskSetting(TaskSettings taskSettings) {
+        return taskSettingsRepository.save(taskSettings);
+    }
+
+    @Override
     public TaskSettings findTaskById(Long id) {
         return taskSettingsRepository.findById(id).orElseThrow(TaskNotFoundException::new);
     }
