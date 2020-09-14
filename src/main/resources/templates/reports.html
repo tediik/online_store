@@ -56,7 +56,9 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane fade show active" id="description">
-                <canvas id="myChart"></canvas>
+                <div style="width: 50% ; height: 60%">
+                    <canvas id="myChart"></canvas>
+                </div>
                 <label for="date_for_table" class="col-xs-2 col-form-label">Выберите дату начала</label>
                 <input th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" type="date" id="date_begin" name="date_for_table" class="form-control" onchange="rePrintChart()" style=" padding: 20px; width: 20%">
                 <label for="date_for_table" class="col-xs-2 col-form-label">Выберите дату конца</label>
