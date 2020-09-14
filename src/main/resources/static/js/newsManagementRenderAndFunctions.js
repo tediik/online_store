@@ -7,16 +7,32 @@ myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), divId: '#allNews', number: 0, last: false};
 
 $(document).ready(function () {
-    fetchNews("/page", '#allNews')
+    fetchNews();
+
+    $('#editNewsModal').on('hidden.bs.modal', function () {
+        location.reload()
+    })
+
+    /**
+     * Event listeners of all document
+     */
+    /*event listener in news div of edit and delete buttons*/
+    document.getElementById('newsTabContent').addEventListener('click', checkButton)
+    /*modal window publish checkbox listener*/
+    document.getElementById('archiveCheckboxDiv').addEventListener('change', archiveCheckboxHandler)
+    /*modal window footer */
+    document.querySelector('.modal-footer').addEventListener('click', checkButtonClicked)
+    /*left nav bar*/
+    document.getElementById('leftNavBar').addEventListener('click', handleLeftNavBarClick)
+    /*upper nav tab*/
+    document.getElementById('upperNavTab').addEventListener('click', checkUpperNavButton)
 
     $(window).scroll(function () {
         yHandler('allNews');
     });
 
 });
-$('#editNewsModal').on('hidden.bs.modal', function () {
-    location.reload()
-})
+
 
 function yHandler(divId) {
     if (lastPage.last) {
@@ -27,23 +43,9 @@ function yHandler(divId) {
     let yOffset = window.pageYOffset;
     let y = yOffset + window.innerHeight;
     if (y >= contentHeight) {
-        fetchNews(lastPage.filter, lastPage.div)
+        fetchNews();
     }
 }
-
-/**
- * Event listeners of all document
- */
-/*event listener in news div of edit and delete buttons*/
-document.getElementById('newsTabContent').addEventListener('click', checkButton)
-/*modal window publish checkbox listener*/
-document.getElementById('archiveCheckboxDiv').addEventListener('change', archiveCheckboxHandler)
-/*modal window footer */
-document.querySelector('.modal-footer').addEventListener('click', checkButtonClicked)
-/*left nav bar*/
-document.getElementById('leftNavBar').addEventListener('click', handleLeftNavBarClick)
-/*upper nav tab*/
-document.getElementById('upperNavTab').addEventListener('click', checkUpperNavButton)
 
 /**
  * Function checks which button on top nav bar was clicked

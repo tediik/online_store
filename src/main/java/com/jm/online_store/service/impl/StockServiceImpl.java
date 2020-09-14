@@ -35,11 +35,11 @@ public class StockServiceImpl implements StockService {
     @Override
     public Page<Stock> findPage(Pageable page, StockFilterDto filterDto) {
         Specification<Stock> spec = StockSpec.get(filterDto);
-        Page<Stock> pageList = stockRepository.findAll(spec, page);
-        if (pageList.isEmpty()) {
+        Page<Stock> stockPage = stockRepository.findAll(spec, page);
+        if (stockPage.isEmpty()) {
             throw new StockNotFoundException();
         }
-        return pageList;
+        return stockPage;
     }
 
     @Override
