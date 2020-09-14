@@ -1,5 +1,7 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.StockNotFoundException;
+import com.jm.online_store.exception.TaskNotFoundException;
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
@@ -23,21 +25,33 @@ public class SchedulingTaskController {
 
     @PostMapping("/stockMailDistribution/start")
     public ResponseEntity<TaskSettings> startMailDistributionTask(@RequestBody TaskSettings taskSettings) {
-        TaskSettings updatedTaskSettings = taskSettingsService.updateTask(taskSettings);
-        schedulingService.addTaskToScheduler(updatedTaskSettings, stockMailDistributionTask);
-        return ResponseEntity.ok(updatedTaskSettings);
+        try {
+            TaskSettings updatedTaskSettings = taskSettingsService.updateTask(taskSettings);
+            schedulingService.addTaskToScheduler(updatedTaskSettings, stockMailDistributionTask);
+            return ResponseEntity.ok(updatedTaskSettings);
+        } catch (TaskNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/stockMailDistribution/stop")
     public ResponseEntity<TaskSettings> stopMailDistributionTask(@RequestBody TaskSettings taskSettings) {
-        TaskSettings updatedTaskSettings = taskSettingsService.updateTask(taskSettings);
-        schedulingService.removeTaskFromScheduler(updatedTaskSettings.getId());
-        return ResponseEntity.ok(updatedTaskSettings);
+        try {
+            TaskSettings updatedTaskSettings = taskSettingsService.updateTask(taskSettings);
+            schedulingService.removeTaskFromScheduler(updatedTaskSettings.getId());
+            return ResponseEntity.ok(updatedTaskSettings);
+        } catch (TaskNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{taskName}")
     public ResponseEntity<TaskSettings> getMailDistributionSettings(@PathVariable String taskName) {
-        TaskSettings taskSettings = taskSettingsService.findTaskByName(taskName);
-        return ResponseEntity.ok(taskSettings);
+        try {
+            TaskSettings taskSettings = taskSettingsService.findTaskByName(taskName);
+            return ResponseEntity.ok(taskSettings);
+        } catch (StockNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
