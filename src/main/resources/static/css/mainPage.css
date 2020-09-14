@@ -1,146 +1,125 @@
-header{
-    background: #deb887;
-    color: white;
-    text-align:center;
+html {
+    font-size: 14px;
+    min-height: 1200px;
 }
 
-.form-inline {
-    margin-left: 30%;
-    display:inline-block;
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
 }
 
-.loginbutton{
-    color: #f1f1f1;
-    float: right;
-    background: white;
+.container {
+    max-width: 1440px;
 }
 
-.registrationbutton{
-    color: #f1f1f1;
-    margin-left: 25px;
-    background: white;
+.border-top {
+    border-top: 1rem solid #e5e5e5;
 }
 
-.customerbutton{
-    color: #f1f1f1;
-    margin-left: 25px;
-    background: white;
+.border-bottom {
+    border-bottom: 1rem solid #e5e5e5;
 }
 
-.mega-menu{
-    font: bold 13px Arial, sans-serif;
-    line-height: 16px;
-    background: #deb887;
-    border-left: 1px solid #1B1B1B;
-    position: relative;
-    max-width: 20%;
-}
-.mega-menu li a {
-    display: block;
-    color:  #1B1B1B;
-    padding: 12px 38px 12px 25px;
-    text-shadow: 1px 1px 1px #f1f1f1;
-    text-decoration: none;
-    border-top: 1px solid #f1f1f1;
-    border-bottom: 1px solid #f1f1f1;
-    border-right: 1px solid #f1f1f1;
-}
-.mega-menu li a:hover, .mega-menu li.mega-hover a {
-    background: #4b4b4b;
-    color: #fff;
-    border-right: 1px solid #4b4b4b;
-}
-.mega-menu li a.dc-mega {
-    position: relative;
-}
-.mega-menu li a .dc-mega-icon {
-    display: block;
-    position: absolute;
-    top: 18px;
-    right: 15px;
-    width: 6px;
-    height: 8px;
-}
-.mega-menu li .sub-container {
-    position: absolute;
-    background: #4B4B4B;
-    padding: 10px 10px 0 10px;
-    overflow: hidden;
-    border: 1px solid #4b4b4b;
-    border-left: none;
-}
-.mega-menu li .sub .row {
-    width: 100%; overflow: hidden;
-}
-.mega-menu li .sub li {
-    float: none;
-    width: 150px;
-    font-size: 1em;
-    font-weight: normal;
-}
-.mega-menu li .sub li.mega-hdr {
-    float: left;
-    margin: 0 5px 10px 5px;
-}
-.mega-menu li .sub a, .mega-menu.left li .sub a {
-    background: none;
-    border: none;
-    text-shadow: none;
-    float: none;
-    color: #fff;
-    padding: 7px 10px;
-    display: block;
-    text-decoration: none;
-    font-size: 0.9em;
-}
-.mega-menu li .sub li.mega-hdr a.mega-hdr-a {
-    padding: 5px 5px 5px 15px;
-    margin-bottom: 5px;
-    background: #1B1B1B;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 1px 1px 1px #333;
-}
-.mega-menu li .sub li.mega-hdr a.mega-hdr-a:hover {
-    color: #1B1B1B;
-    text-shadow: none;
-}
-.mega-menu .sub li.mega-hdr li a {
-    padding: 4px 5px 4px 20px;
-    font-weight: normal;
-}
-.mega-menu .sub li.mega-hdr li a:hover {
-    color: #1B1B1B;
-}
-.mega-menu .sub ul li {
-    padding-right: 0;
-}
-.mega-menu li .sub-container.non-mega .sub {
-    padding: 10px;}
-.mega-menu li .sub-container.non-mega li {
-    padding: 0;
-    margin: 0;
-    width: 150px;
-}
-.mega-menu li .sub-container.non-mega li a {
-    padding: 7px 5px 7px 22px;
-}
-.mega-menu li .sub-container.non-mega li a:hover {
-    color: #1B1B1B;
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
-.submitRegButton{
-    border: 1px solid #333;
-    display: inline-block;
-    padding: 5px 15px;
-    text-decoration: none;
-    color: #000;
-    background: #098ddf;
+.siteHeader {
+    background: #ebc493;
 }
 
-.submitRegButton:hover {
-    box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
-    background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
-    color: #a00;
+.loginbutton {
+    margin-left: 1rem;
+}
+
+.secondarybtn {
+    margin-left: 20rem;
+}
+
+.formSearch {
+    margin-right: 28.9rem;
+}
+
+.dropdownbtn {
+    min-width: 218px;
+    font-size: 1rem;
+    background: #ebc493;
+}
+
+.promo {
+    margin-left: 2.4rem;
+}
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+/* Carousel base class */
+.carouselWithStock {
+    margin-top: .3rem;
+    margin-bottom: 1rem;
+    min-width: 450px;
+}
+/* Declare heights because of positioning of img element */
+.carousel-itemWithStock {
+    height: 220px;
+    background-color: #8bd0db;
+}
+/* MARKETING CONTENT
+-------------------------------------------------- */
+.featurette-divider {
+    margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+}
+/* Thin out the marketing headings */
+.featurette-heading {
+    font-weight: 100;
+    line-height: 1;
+    letter-spacing: -.05rem;
+}
+/*-------------------------------------------------- */
+
+.products {
+    padding-bottom: 1rem;
+}
+
+.productView {
+    margin-left: -.6rem;
+    margin-right: -.6rem;
+}
+
+.productName {
+    margin-left: -.8rem;
+    margin-right: -1rem;
+    padding-bottom: 1rem;
+}
+
+.productImg {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.producthref {
+    background: #ebc493;
+}
+
+/* TAB in productPage
+-------------------------------------------------- */
+.nav-masthead .nav-link {
+    padding: .25rem 0;
+    font-weight: 700;
+    color: rgba(43, 43, 43, 0.5);
+    background-color: transparent;
+    border-bottom: .25rem solid transparent;
+}
+
+.nav-masthead .nav-link:hover {
+    border-bottom-color: rgba(43, 43, 43, 0.25);
+}
+
+.nav-masthead .nav-link:focus {
+    border-bottom-color: rgb(43, 43, 43);
+}
+
+.nav-masthead .active {
+    color: #2b2b2b;
+    border-bottom-color: #2b2b2b;
 }

@@ -184,4 +184,13 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    /**
+     * Метод выбора из БД num первых продуктов
+     *
+     * @param num необходимое количество продуктов
+     * @return список из num продуктов
+     */
+    public List<Product> findNumProducts(Integer num) {
+        return productRepository.findNumProducts(num);
+    }
 }

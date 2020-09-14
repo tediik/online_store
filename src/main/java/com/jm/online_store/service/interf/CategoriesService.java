@@ -9,7 +9,9 @@ public interface CategoriesService {
 
     List<Categories> getAllCategories();
 
-    Optional<Categories> getProductByCategoryId(Long categoryId);
+    Optional<Categories> getCategoryById(Long categoryId);
+
+    Optional<Categories> getCategoryByCategoryName(String category);
 
     void saveCategory (Categories categories);
 
