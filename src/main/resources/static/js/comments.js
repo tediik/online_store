@@ -3,8 +3,6 @@ $(document).ready(function () {
         showComments();
         $('#commentForm').on('submit', function (event) {
             event.preventDefault();
-
-
             if ($("#commentForm").find('input:text').val().trim().length < 1) {
                 alert("Please Enter Text...");
                 return;
@@ -30,8 +28,8 @@ $(document).ready(function () {
                         $('#showComments').append($(`<div class="media mb-4">
                             <div>
                                     <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                                         height="52" src="/uploads/images/${response.customer.profilePicture}" width="52"></div>
-                                <div class="media-body" id='mediaBody${response.id}'>
+                                    height="52" src="/uploads/images/${response.customer.profilePicture}" width="52"></div>
+                                    <div class="media-body" id='mediaBody${response.id}'>
                                     <h5 class="mt-0">${response.customer.email} commented on ${timeStamp}</h5>
                                     <div class="message">${response.content}</div>
                                    <button type="button" id='button${response.id}' class='btn btn-link reply'>Reply</button>
@@ -56,7 +54,7 @@ $(document).ready(function () {
                                         <div class="form-group">
                                             <textarea class="form-control" id="replyText" rows="3"></textarea>
                                         </div>
-                                        <button type="button" id='submitReplyBtn' class="btn btn-primary">Submit</button>
+                                     <button type="button" id='submitReplyBtn' class="btn btn-primary">Submit</button>
                                 </div>`)
 
             $('#commentBoxSpace' + commentId).html(commentBox);
@@ -65,8 +63,7 @@ $(document).ready(function () {
                 if ($("#replyText").val().trim().length < 1) {
                     alert("Please Enter Text...");
                     return;
-                }
-                else {
+                } else {
                     var parentId = commentId;
                     event.preventDefault();
                     var content = $('#replyText').val();
@@ -86,20 +83,17 @@ $(document).ready(function () {
 
                             $(replyDisplayId).append($(`<div class="media mt-4">
                             <div>
-                                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                                         height="52" src="/uploads/images/${response.customer.profilePicture}" width="52"></div>
-                                        <div class="media-body">
-                                            <h5 class="mt-0">${response.customer.username} commented on ${timeStamp}</h5>
-                                            <div class="message">${response.content}</div>
-                                        </div>
-                                    </div>`).last());
+                            <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                            height="52" src="/uploads/images/${response.customer.profilePicture}" width="52"></div>
+                            <div class="media-body">
+                            <h5 class="mt-0">${response.customer.username} commented on ${timeStamp}</h5>
+                            <div class="message">${response.content}</div>
+                            </div>
+                            </div>`).last());
                         }
                     });
                 }
-
             });
-
-
         });
     });
 });
@@ -130,12 +124,12 @@ function showComments() {
                 var replyDisplayId = $('#replyDisplayId' + comment.parentId);
                 if (comment.parentId !== null) {
                     $(replyDisplayId).append($(`<div class="media mt-4">
-                                                <div>
-                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${profilePicture}" width=\"52"></div>
-                                            <div class="media-body"> 
-                                                <h5 class="mt-0">${comment.customer.email} commented on ${timeStamp} </h5>
-                                                <div class="message"> ${comment.content} </div>
-                                                </div>`));
+                    <div>
+                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${profilePicture}" width=\"52"></div>
+                    <div class="media-body"> 
+                    <h5 class="mt-0">${comment.customer.email} commented on ${timeStamp} </h5>
+                    <div class="message"> ${comment.content} </div>
+                     </div>`));
                 }
             })
         }

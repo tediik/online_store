@@ -7,7 +7,7 @@ let unpublishedNewsDivId = $("#unpublishedNews")
 
 $(document).ready(function () {
 
-    $.ajax("/api/manager/news", {
+    $.ajax("/api/manager/news/all", {
         dataType: 'json',
         success: function (message) {
             allNewsList = message

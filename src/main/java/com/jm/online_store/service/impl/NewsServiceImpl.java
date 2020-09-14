@@ -1,14 +1,14 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Сервис класс, имплементация интерфейса {@link NewsService}
@@ -28,7 +28,11 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public List<News> findAll() {
-        return newsRepository.findAll();
+        List<News> allNews = newsRepository.findAll();
+        if (allNews.isEmpty()) {
+            throw new NewsNotFoundException();
+        }
+        return allNews;
     }
 
     /**
@@ -42,15 +46,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод принимающий в качестве параметра идентификатор сущности,
-     * ищет сущность по идентификатору и возвращает сущность News
+     * Method accept Long id as parameter and returns {@link News} entity
      *
-     * @param id уникальный идентификатор сушности News
-     * @return Optional<News> возвращаемое значение в виде сущности, обернутой в Optional
+     * @param id - {@link Long}
+     * @return returns News entity or throws {@link NewsNotFoundException}
      */
     @Override
-    public Optional<News> findById(long id) {
-        return newsRepository.findById(id);
+    public News findById(long id) {
+        return newsRepository.findById(id).orElseThrow(NewsNotFoundException::new);
     }
 
     /**
@@ -65,11 +68,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод обновляет сущность News в базе данных по его уникальному идентификатору
+     * Метод обновляет сущность News в базе данных и изменяет modifiedDate на сегодняшнюю дату
      *
      * @param news сушность для обновления в базе данных
      */
-    public void updateById(News news) {
+    public void update(News news) {
+        news.setModifiedDate(LocalDate.now());
         newsRepository.save(news);
     }
 
@@ -91,8 +95,12 @@ public class NewsServiceImpl implements NewsService {
      * @return возвращает список еще неопубликованных новостей List<News>
      */
     @Override
-    public List<News> findAllByPostingDateBefore(LocalDateTime timeNow) {
-        return newsRepository.findAllByPostingDateBefore(timeNow);
+    public List<News> getAllPublished(LocalDate timeNow) {
+        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(timeNow, false);
+        if (publishedNews.isEmpty()) {
+            throw new NewsNotFoundException();
+        }
+        return publishedNews;
     }
 
     /**
@@ -103,7 +111,20 @@ public class NewsServiceImpl implements NewsService {
      * @return возвращает список опубликованных новостей List<News>
      */
     @Override
-    public List<News> findAllByPostingDateAfter(LocalDateTime timeNow) {
-        return newsRepository.findAllByPostingDateAfter(timeNow);
+    public List<News> getAllUnpublished(LocalDate timeNow) {
+        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(timeNow, false);
+        if (unpublishedNews.isEmpty()) {
+            throw new NewsNotFoundException();
+        }
+        return unpublishedNews;
+    }
+
+    @Override
+    public List<News> getAllArchivedNews() {
+        List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
+        if (archivedNews.isEmpty()) {
+            throw new NewsNotFoundException();
+        }
+        return archivedNews;
     }
 }

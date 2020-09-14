@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,20 +20,20 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> findAll() {
-        return stockRepository.findAll();
+        List<Stock> stockList = stockRepository.findAll();
+        if (stockList.isEmpty()) {
+            throw new StockNotFoundException();
+        }
+        return stockList;
     }
 
     @Override
     public Stock findStockById(Long id) {
-        if (stockRepository.findById(id).isEmpty()) {
+        Optional<Stock> stock = stockRepository.findById(id);
+        if (stock.isEmpty()) {
             throw new StockNotFoundException();
         }
-        return stockRepository.findById(id).get();
-    }
-
-    @Override
-    public List<Stock> findAllStocks() {
-        return stockRepository.findAll();
+        return stock.get();
     }
 
     @Override

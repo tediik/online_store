@@ -37,17 +37,19 @@ document.getElementById('stocksDiv').addEventListener('click', handleStockDivBut
  * @param event
  */
 function checkFields(event) {
-    let stockTitle = document.getElementById('stockTitle')
-    let stockText = document.getElementById('stockText')
-    let startDate = document.getElementById('startDate')
-    if (stockTitle.value === '') {
-        invalidModalField("Заполните заголовок акции", stockTitle)
-    } else if (stockText.value === "") {
-        invalidModalField("Заполните описание акции", stockText)
-    } else if (startDate.value === '') {
-        invalidModalField("Заполните начальную дату", startDate)
-    } else {
-        handleSaveChangesButton(event)
+    if (event.target.dataset.toggleId === 'submit') {
+        let stockTitle = document.getElementById('stockTitle')
+        let stockText = document.getElementById('stockText')
+        let startDate = document.getElementById('startDate')
+        if (stockTitle.value === '') {
+            invalidModalField("Заполните заголовок акции", stockTitle)
+        } else if (stockText.value === "") {
+            invalidModalField("Заполните описание акции", stockText)
+        } else if (startDate.value === '') {
+            invalidModalField("Заполните начальную дату", startDate)
+        } else {
+            handleSaveChangesButton(event)
+        }
     }
 }
 
@@ -183,7 +185,6 @@ function handleSaveChangesButton() {
             }
         })
     }
-
     $('#stockModal').modal('hide')
 }
 
@@ -325,6 +326,12 @@ function invalidModalField(text, focusField) {
     }, 3000)
 }
 
+/**
+ * function that shows success or error message
+ * @param inputField - location where message appears
+ * @param text - text of message
+ * @param messageStatus - status success or error
+ */
 function successActionMainPage(inputField, text, messageStatus) {
     let successMessage = `<div class="alert text-center alert-success alert-dismissible" role="alert">
                             <strong>${text}</strong>
@@ -336,11 +343,11 @@ function successActionMainPage(inputField, text, messageStatus) {
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
                        </div>`
-    let message=''
+    let message = ''
 
-    if (messageStatus === "success"){
+    if (messageStatus === "success") {
         message = successMessage
-    } else  if (message === "error"){
+    } else if (message === "error") {
         message = alertMessage;
     }
 

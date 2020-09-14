@@ -95,14 +95,27 @@ public class AdminRestController {
      * @return new ResponseEntity<>(HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
-    public ResponseEntity<User> editUser(@RequestBody User user) {
+    public ResponseEntity editUser(@RequestBody User user) {
         if (userService.findById(user.getId()).isEmpty()) {
             log.debug("There are no user with id: {}", user.getId());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
+        }
+        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+            log.debug("Wrong email! Не правильно введен email");
+            return ResponseEntity.badRequest().body("notValidEmailError");
+        }
+        if (user.getRoles().size() == 0) {
+            log.debug("Roles not selected");
+            return ResponseEntity.badRequest().body("emptyRolesError");
+        }
+        if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
+                && userService.isExist(user.getEmail())) {
+            log.debug("User with same email already exists");
+            return ResponseEntity.badRequest().body("duplicatedEmailError");
         }
         userService.updateUserFromAdminPage(user);
         log.debug("Changes to user with id: {} was successfully added", user.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     /**

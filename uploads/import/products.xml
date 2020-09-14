@@ -1,0 +1,13 @@
+<products>
+    <product id="11">
+        <productname>Iphone</productname>
+        <price>80000</price>
+        <amount>10</amount>
+    </product>
+    <product id="12">
+        <productname>Asus rog zephyrus</productname>
+        <price>120000</price>
+        <amount>5</amount>
+        <salary>200000</salary>
+    </product>
+</products>

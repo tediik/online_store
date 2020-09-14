@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -61,7 +62,6 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.server.url}")
     private String urlActivate;
 
-    @Transactional
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод добавления нового пользователя.
+     *
      * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
      *
      * @param user полученный объект User/
@@ -127,6 +128,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public User updateUserProfile(User user) {
+        User updateUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+        updateUser.setFirstName(user.getFirstName());
+        updateUser.setLastName(user.getLastName());
+        updateUser.setBirthdayDate(user.getBirthdayDate());
+        updateUser.setUserGender(user.getUserGender());
+        updateUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
+        return userRepository.save(updateUser);
+    }
+
+    @Override
+    @Transactional
     public void updateUserAdminPanel(@NotNull User user) {
         User editUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
         if (!editUser.getEmail().equals(user.getEmail())) {
@@ -138,7 +151,6 @@ public class UserServiceImpl implements UserService {
             editUser.setEmail(user.getEmail());
         }
         editUser.setRoles(persistRoles(user.getRoles()));
-        editUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
     }
@@ -182,16 +194,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void changeUsersMail(User user, String newMail) {
-
+        String address = user.getAuthorities().toString().contains("ROLE_CUSTOMER") ? "/customer" : "/authority";
         user.setEmail(newMail);
-
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
                 "Hello, %s! \n" +
                         "You have requested the email change. Please, confirm via link: " +
-                        urlActivate + "/customer/activatenewmail/%s",
+                        urlActivate + address + "/activatenewmail/%s",
                 user.getEmail(),
                 confirmationToken.getConfirmationToken()
 
@@ -270,24 +281,21 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String updateUserImage(Long userId, MultipartFile file) {
         User user = userRepository.findById(userId).get();
-        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+        String uniqueFilename = StringUtils.cleanPath(UUID.randomUUID() + "." + file.getOriginalFilename());
         if (!file.isEmpty()) {
-            if (user.getProfilePicture() != null) {
-                deleteUserImage(userId);
-            }
-            Path fileNameAndPath = Paths.get(uploadDirectory, originalFilename);
+            Path fileNameAndPath = Paths.get(uploadDirectory, uniqueFilename);
             try {
                 byte[] bytes = file.getBytes();
                 Files.write(fileNameAndPath, bytes);
                 //Set user's profile picture
-                user.setProfilePicture(originalFilename);
+                user.setProfilePicture(uniqueFilename);
                 userRepository.save(user);
             } catch (IOException e) {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }
         }
-        log.debug("Failed to store file - file is not present {}", originalFilename);
-        return File.separator + "uploads" + File.separator + "images" + File.separator + file.getOriginalFilename();
+        log.debug("Failed to store file - file is not present {}", uniqueFilename);
+        return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
     }
 
     /**
@@ -325,6 +333,7 @@ public class UserServiceImpl implements UserService {
     public void addNewUserFromAdmin(User newUser) {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
+        newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
         log.debug("User with email: {} was saved successfully", newUser.getEmail());
         userRepository.save(newUser);
     }
@@ -368,5 +377,16 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         return userRepository.findById(((User) auth.getPrincipal()).getId()).get();
+    }
+
+    @Override
+    @Transactional
+    public boolean changePassword(Long id, String oldPassword, String newPassword) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return true;
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @AllArgsConstructor
-public class StockRest {
+public class StockRestController {
     private final StockService stockService;
 
     /**
@@ -30,23 +30,6 @@ public class StockRest {
      */
     @GetMapping(value = "/rest/allStocks")
     public List<Stock> findAll() {
-        LocalDate presentDate = LocalDate.now();
-        List<Stock> stocks = stockService.findAll();
-        for (Stock stock : stocks) {
-            if (((stock.getStartDate()) != null)) {
-                if (presentDate.isBefore(stock.getStartDate())) {
-                    stock.setStockType(Stock.StockType.FUTURE);
-                } else if (stock.getEndDate() != null && presentDate.isAfter(stock.getEndDate())
-                        || (presentDate.equals(stock.getEndDate()))) {
-                    stock.setStockType(Stock.StockType.PAST);
-                } else if ((presentDate.isAfter(stock.getStartDate()) || (presentDate.equals(stock.getStartDate()))
-                        && stock.getEndDate() != null && (presentDate.isBefore(stock.getEndDate())))) {
-                    stock.setStockType(Stock.StockType.CURRENT);
-                } else {
-                    stock.setStockType(Stock.StockType.CURRENT);
-                }
-            }
-        }
         return stockService.findAll();
     }
 

@@ -20,6 +20,8 @@ public interface UserService {
 
     void updateUser(User user);
 
+    User updateUserProfile(User user);
+
     void updateUserFromController(User user);
 
     void updateUserAdminPanel(User user);
@@ -47,6 +49,8 @@ public interface UserService {
     void addNewUserFromAdmin(User newUser);
 
     User getCurrentLoggedInUser();
+
+    boolean changePassword(Long id, String oldPassword, String newPassword);
 }
 
 
