@@ -5,30 +5,18 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.MailSenderService;
-import com.jm.online_store.service.interf.SchedulingService;
+import com.jm.online_store.service.interf.StockMailSendingTask;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.concurrent.ScheduledFuture;
 
-/**
- * Класс планировщик заданий. В соответствии с заданным планом выполняет определенные действия(задания).
- */
 @AllArgsConstructor
 @Slf4j
 @Service
-public class SchedulingServiceImpl implements SchedulingService {
+public class StockMailSendingTaskImpl implements StockMailSendingTask {
 
     private final MailSenderService mailSenderService;
     private final UserRepository userRepository;
@@ -36,27 +24,6 @@ public class SchedulingServiceImpl implements SchedulingService {
 
     private final String EMAIL_TYPE = "Stock sender";
 
-    private final TaskScheduler scheduler;
-
-    Map<Long, ScheduledFuture<?>> jobsMap = new HashMap<>();
-
-    public void addTaskToScheduler(long id, Runnable task){
-        ScheduledFuture<?> scheduledTask = scheduler.schedule(task, new CronTrigger("0 0 0 * * ?", TimeZone.getTimeZone(TimeZone.getDefault().getID())));
-        jobsMap.put(id, scheduledTask);
-    }
-
-    public void removeTaskFromScheduler(Long id){
-        ScheduledFuture<?> scheduledTask = jobsMap.get(id);
-        if(scheduledTask != null) {
-            scheduledTask.cancel(true);
-            jobsMap.put(id, null);
-        }
-    }
-
-    @EventListener({ ContextRefreshedEvent.class })
-    public void contextRefreshedEvent() {
-        // Get all tasks from DB and reschedule them in case of context restarted
-    }
     /**
      * Метод выполняется с регулярностью заданным параметром ${emailStockSending.delay} в файле application.yml
      * берем текущий день, делаем выборку среди всех {@link User} у кого в поле DayOfWeekForStockSend
@@ -66,8 +33,7 @@ public class SchedulingServiceImpl implements SchedulingService {
      * - день старта акции должен попадать в этот промежуток и день окончания акции должен быть после текущего дня.
      */
     @Override
-    @Scheduled(cron = "${emailStockSending.delay}")
-    public void sendStocksToCustomers() {
+    public void run() {
         User.DayOfWeekForStockSend dayOfWeek = User.DayOfWeekForStockSend.valueOf(LocalDate.now().getDayOfWeek().toString());
         List<User> usersToSendStock = userRepository.findByDayOfWeekForStockSend(dayOfWeek);
         List<Stock> currentAndFutureStocks = stockRepository
@@ -78,8 +44,7 @@ public class SchedulingServiceImpl implements SchedulingService {
 
         if (usersToSendStock.size() != 0) {
             for (User user : usersToSendStock) {
-
-                mailSenderService.send(user.getEmail(), messageSubject, messageBody, EMAIL_TYPE);
+//                mailSenderService.send(user.getEmail(), messageSubject, messageBody, EMAIL_TYPE);
                 log.debug("Stock message was sent to {} with email {}", user, user.getEmail());
             }
             log.debug("{} stock emails were sent", usersToSendStock.size());
@@ -112,4 +77,6 @@ public class SchedulingServiceImpl implements SchedulingService {
         }
         return messageForEmail.toString();
     }
+
+
 }
