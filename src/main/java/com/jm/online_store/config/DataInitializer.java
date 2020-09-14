@@ -70,6 +70,7 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
+        paginationNewsAndStocksInit();
     }
 
     /**
@@ -226,24 +227,6 @@ public class DataInitializer {
         newsService.save(firstNews);
         newsService.save(secondNews);
         newsService.save(thirdNews);
-
-        for (int i = 0; i < 50; i++) {
-            News news = News.builder()
-                    .title(i + " Сегодня стартует предзаказ на флагманские продукты Samsung!")
-                    .anons("Сделайте предзаказ и получите подарок.")
-                    .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
-                            "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
-                            "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
-                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
-                            " font-size: 16px;\">Сегодня стартует предзаказ на новые флагманские продукты Samsung!<b></b>" +
-                            "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
-                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
-                            " font-size: 16px;\"><br></p></h1>")
-                    .postingDate(LocalDate.now().minusDays(Math.round(Math.random() * 20)))
-                    .archived(false)
-                    .build();
-            newsService.save(news);
-        }
     }
 
     /**
@@ -383,21 +366,6 @@ public class DataInitializer {
         stockService.addStock(firstStock);
         stockService.addStock(secondStock);
         stockService.addStock(thirdStock);
-
-        for (int i = 0; i < 50; i++) {
-            Stock thirdStock1 = Stock.builder()
-                    .startDate(LocalDate.now().minusDays(20L))
-                    .endDate(LocalDate.now().minusDays(5L))
-                    .stockTitle("Скидки на игры ЕА!")
-                    .stockText("В течение действия акции вы можете приобрести игры ЕА из списка по" +
-                            " очень привлекательным ценам!" +
-                            "Вы можете стать обладателем игр EA для Xbox One, Nintendo Switch и PS4" +
-                            " в различных жанрах. Ощутите всю радость победы в хоккейном матче, станьте" +
-                            " стремительным уличным автогонщиком, постройте дом мечты или очутитесь в" +
-                            " фантастическом мире и примите участие в битве галактических масштабов!")
-                    .build();
-            stockService.addStock(thirdStock1);
-        }
     }
 
     public void sharedStockInit() {
@@ -419,5 +387,40 @@ public class DataInitializer {
             }
         }
 
+    }
+
+    public void paginationNewsAndStocksInit() {
+        for (int i = 0; i < 50; i++) {
+            News news = News.builder()
+                    .title(i + " Сегодня стартует предзаказ на флагманские продукты Samsung!")
+                    .anons("Сделайте предзаказ и получите подарок.")
+                    .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                            "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                            "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\">Сегодня стартует предзаказ на новые флагманские продукты Samsung!<b></b>" +
+                            "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\"><br></p></h1>")
+                    .postingDate(LocalDate.now().minusDays(Math.round(Math.random() * 20)))
+                    .archived(false)
+                    .build();
+            newsService.save(news);
+        }
+
+        for (int i = 0; i < 50; i++) {
+            Stock stock = Stock.builder()
+                    .startDate(LocalDate.now().minusDays(20L))
+                    .endDate(LocalDate.now().minusDays(5L))
+                    .stockTitle("Скидки на игры ЕА!")
+                    .stockText("В течение действия акции вы можете приобрести игры ЕА из списка по" +
+                            " очень привлекательным ценам!" +
+                            "Вы можете стать обладателем игр EA для Xbox One, Nintendo Switch и PS4" +
+                            " в различных жанрах. Ощутите всю радость победы в хоккейном матче, станьте" +
+                            " стремительным уличным автогонщиком, постройте дом мечты или очутитесь в" +
+                            " фантастическом мире и примите участие в битве галактических масштабов!")
+                    .build();
+            stockService.addStock(stock);
+        }
     }
 }
