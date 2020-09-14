@@ -52,7 +52,6 @@ public class ManagerStockRestController {
 
     @GetMapping("/page")
     public ResponseEntity<Page<Stock>> getStockPage(@PageableDefault Pageable page, StockFilterDto filterDto) {
-        log.warn("page: {}", page);
         Page<Stock> stockPage;
         try {
             stockPage = stockService.findPage(page, filterDto);
