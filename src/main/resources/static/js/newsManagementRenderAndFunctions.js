@@ -4,7 +4,7 @@
 let myHeaders = new Headers()
 let newsApiUrl = "/api/manager/news"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
-const lastPage = {filter: '/page', div: '#allNews', number: 0, last: false};
+const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), divId: '#allNews', number: 0, last: false};
 
 $(document).ready(function () {
     fetchNews("/page", '#allNews')
@@ -54,24 +54,25 @@ function checkUpperNavButton(event) {
     let tab = event.target.dataset.toggleId
     lastPage.number = 0
     lastPage.last = false
+    lastPage.currentDate = new Date().toLocaleDateString();
     if (tab === 'publishedNews') {
-        initFetchNews('/published', tab);
+        initFetchNews('PUBLISHED', tab);
     }
     if (tab === 'allNews') {
-        initFetchNews('/page', tab);
+        initFetchNews('ALL', tab);
     }
     if (tab === 'unpublishedNews') {
-        initFetchNews('/unpublished', tab);
+        initFetchNews('UNPUBLISHED', tab);
     }
     if (tab === 'archivedNews') {
-        initFetchNews('/archivedNews', tab);
+        initFetchNews('ARCHIVED', tab);
     }
 }
 
-function initFetchNews(filter, divId) {
-    lastPage.filter = filter;
-    lastPage.div = '#' + divId;
-    fetchNews(filter, '#' + divId)
+function initFetchNews(type, divId) {
+    lastPage.type = type;
+    lastPage.divId = '#' + divId;
+    fetchNews();
     $(window).scroll(function () {
         yHandler(divId);
     })
@@ -294,21 +295,19 @@ function archiveCheckboxHandler() {
 
 /**
  * makes fetch request to manager rest controller
- * @param status news status can be:
- * @param inputDiv div where to insert news
  *  - /all
  *  - /published
  *  - /unpublished
  */
-function fetchNews(status, inputDiv) {
-    $.ajax(newsApiUrl + status, {
+function fetchNews() {
+    $.ajax(newsApiUrl + '/page', {
         headers: myHeaders,
-        data: {page: lastPage.number},
+        data: {page: lastPage.number, sort: 'postingDate,DESC', type: lastPage.type, currentDate: lastPage.currentDate},
         async: false,
         success: function (data) {
             lastPage.number = data.number + 1;
             lastPage.last = data.last;
-            renderNewsTable(data, inputDiv)
+            renderNewsTable(data)
         },
         error: function () {
             infoMessage('#infoMessageMainPage', 'В этом разделе нет новостей', 'error')
@@ -318,11 +317,10 @@ function fetchNews(status, inputDiv) {
 
 /**
  * function renders news page
- * @param news List of news
- * @param inputDiv div where to insert news
+ * @param news Page of news
  */
-function renderNewsTable(news, inputDiv) {
-    const allNewsUl = $(inputDiv)
+function renderNewsTable(news) {
+    const allNewsUl = $(lastPage.divId);
     if (news.number === 0) {
         allNewsUl.empty()
     }

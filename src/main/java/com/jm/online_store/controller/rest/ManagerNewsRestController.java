@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.dto.NewsFilterDto;
 import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -66,8 +67,8 @@ public class ManagerNewsRestController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<News>> getPage(@PageableDefault Pageable page) {
-        Page<News> response = newsService.findAll(page);
+    public ResponseEntity<Page<News>> getPage(@PageableDefault Pageable page, NewsFilterDto filterDto) {
+        Page<News> response = newsService.findAll(page, filterDto);
         return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
     }
 
@@ -77,9 +78,9 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/published")
-    public ResponseEntity<Page<News>> getPagePublishedNews(@PageableDefault Pageable page) {
+    public ResponseEntity<List<News>> getPublishedNews() {
         try {
-            Page<News> publishedNews = newsService.getAllPublished(page);
+            List<News> publishedNews = newsService.getAllPublished();
             return ResponseEntity.ok(publishedNews);
         } catch (NewsNotFoundException e) {
             return ResponseEntity.noContent().build();
@@ -92,9 +93,9 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/unpublished")
-    public ResponseEntity<Page<News>> getPageUnpublishedNews(@PageableDefault Pageable page) {
+    public ResponseEntity<List<News>> getUnpublishedNews() {
         try {
-            Page<News> unpublishedNews = newsService.getAllUnpublished(page);
+            List<News> unpublishedNews = newsService.getAllUnpublished();
             return ResponseEntity.ok(unpublishedNews);
         } catch (NewsNotFoundException e) {
             return ResponseEntity.noContent().build();
@@ -102,9 +103,9 @@ public class ManagerNewsRestController {
     }
 
     @GetMapping("/archived")
-    public ResponseEntity<Page<News>> getPageArchivedNews(@PageableDefault Pageable page) {
+    public ResponseEntity<List<News>> getArchivedNews() {
         try {
-            Page<News> archived = newsService.getAllArchivedNews(page);
+            List<News> archived = newsService.getAllArchivedNews();
             return ResponseEntity.ok(archived);
         } catch (NewsNotFoundException e) {
             return ResponseEntity.noContent().build();

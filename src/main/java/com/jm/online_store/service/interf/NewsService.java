@@ -1,6 +1,7 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.dto.NewsFilterDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,7 +12,7 @@ public interface NewsService {
 
     List<News> findAll();
 
-    Page<News> findAll(Pageable page);
+    Page<News> findAll(Pageable page, NewsFilterDto filterDto);
 
     void save(News news);
 
@@ -23,9 +24,9 @@ public interface NewsService {
 
     void deleteById(Long id);
 
-    Page<News> getAllPublished(Pageable page);
+    List<News> getAllPublished();
 
-    Page<News> getAllUnpublished(Pageable page);
+    List<News> getAllUnpublished();
 
-    Page<News> getAllArchivedNews(Pageable page);
+    List<News> getAllArchivedNews();
 }

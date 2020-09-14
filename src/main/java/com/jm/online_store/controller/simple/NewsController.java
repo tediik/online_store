@@ -23,9 +23,9 @@ public class NewsController {
     private final NewsService newsService;
 
     @GetMapping
-    public String newsPage(Model model, Pageable page) {
-        Page<News> newsPage = newsService.getAllPublished(page);
-        model.addAttribute("news", newsPage.getContent());
+    public String newsPage(Model model) {
+        List<News> newsPage = newsService.getAllPublished();
+        model.addAttribute("news", newsPage);
         return "newsPage";
     }
 

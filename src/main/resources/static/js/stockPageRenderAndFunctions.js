@@ -5,7 +5,7 @@ let myHeaders = new Headers()
 let sharedStockApiUrl = "/manager/api/sharedStock"
 let stockApiUrl = "/manager/api/stock"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
-const lastPage = {type: 'ALL', number: 0, last: false};
+const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), number: 0, last: false};
 
 $(document).ready(function () {
     handleSummernote()
@@ -86,6 +86,7 @@ function handleStockDivButtons(event) {
  */
 function defineFilterAndFetchList(event) {
     lastPage.type = event.target.dataset.toggleId;
+    lastPage.currentDate = new Date().toLocaleDateString();
     lastPage.number = 0;
     lastPage.last = false;
     fetchStockList();
@@ -93,17 +94,12 @@ function defineFilterAndFetchList(event) {
 
 /**
  * Fetch request to stock list
- * @param filter - one of the following filters:
- *  - /allStocks
- *  - /currentStocks
- *  - /futureStocks"
- *  - /pastStocks"
  */
 function fetchStockList() {
     $.ajax(stockApiUrl + '/page', {
         headers: myHeaders,
         async: false,
-        data: {page: lastPage.number, type: lastPage.type},
+        data: {page: lastPage.number, type: lastPage.type, currentDate: lastPage.currentDate},
         success: renderStockList,
         error: printStocksNotFoundMessage
     })

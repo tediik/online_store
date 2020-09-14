@@ -2,11 +2,14 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.dto.NewsFilterDto;
 import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
+import com.jm.online_store.service.spec.NewsSpec;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -44,8 +47,9 @@ public class NewsServiceImpl implements NewsService {
      * @return Page<News> возвращает страницу новостей
      */
     @Override
-    public Page<News> findAll(Pageable page) {
-        Page<News> newsPage = newsRepository.findAll(page);
+    public Page<News> findAll(Pageable page, NewsFilterDto filterDto) {
+        Specification<News> spec = NewsSpec.get(filterDto);
+        Page<News> newsPage = newsRepository.findAll(spec, page);
         if (newsPage.isEmpty()) {
             throw new NewsNotFoundException();
         }
@@ -111,8 +115,8 @@ public class NewsServiceImpl implements NewsService {
      * @return возвращает список еще неопубликованных новостей List<News>
      */
     @Override
-    public Page<News> getAllPublished(Pageable page) {
-        Page<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(page, LocalDate.now(), false);
+    public List<News> getAllPublished() {
+        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now(), false);
         if (publishedNews.isEmpty()) {
             throw new NewsNotFoundException();
         }
@@ -126,8 +130,8 @@ public class NewsServiceImpl implements NewsService {
      * @return возвращает список опубликованных новостей List<News>
      */
     @Override
-    public Page<News> getAllUnpublished(Pageable page) {
-        Page<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(page, LocalDate.now(), false);
+    public List<News> getAllUnpublished() {
+        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
         if (unpublishedNews.isEmpty()) {
             throw new NewsNotFoundException();
         }
@@ -135,8 +139,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public Page<News> getAllArchivedNews(Pageable page) {
-        Page<News> archivedNews = newsRepository.findAllByArchivedEquals(page,true);
+    public List<News> getAllArchivedNews() {
+        List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
         if (archivedNews.isEmpty()) {
             throw new NewsNotFoundException();
         }

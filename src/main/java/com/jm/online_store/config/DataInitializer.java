@@ -24,7 +24,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -227,6 +226,24 @@ public class DataInitializer {
         newsService.save(firstNews);
         newsService.save(secondNews);
         newsService.save(thirdNews);
+
+        for (int i = 0; i < 50; i++) {
+            News news = News.builder()
+                    .title(i + " Сегодня стартует предзаказ на флагманские продукты Samsung!")
+                    .anons("Сделайте предзаказ и получите подарок.")
+                    .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                            "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                            "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\">Сегодня стартует предзаказ на новые флагманские продукты Samsung!<b></b>" +
+                            "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\"><br></p></h1>")
+                    .postingDate(LocalDate.now().minusDays(Math.round(Math.random() * 20)))
+                    .archived(false)
+                    .build();
+            newsService.save(news);
+        }
     }
 
     /**
@@ -240,7 +257,7 @@ public class DataInitializer {
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
-        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer",false);
+        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer", false);
 
         Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer", false);
         Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer", false);
