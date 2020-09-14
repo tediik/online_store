@@ -4,6 +4,7 @@ import com.jm.online_store.model.News;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface NewsService {
 
@@ -15,7 +16,7 @@ public interface NewsService {
 
     boolean existsById(Long id);
 
-    void update(News news);
+    News update(News news);
 
     void deleteById(Long id);
 

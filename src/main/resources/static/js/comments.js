@@ -1,12 +1,18 @@
 $(document).ready(function () {
     $(function () {
+        let productIdFromPath = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+
+
         showComments();
-        $('#commentForm').on('submit', function (event) {
+        $('#submitCommentBtn').on('click', function (event) {
             event.preventDefault();
             if ($("#commentForm").find('input:text').val().trim().length < 1) {
                 alert("Please Enter Text...");
                 return;
             } else {
+
+                var content = $("#commentForm").find('input:text').val();
+
                 var formData = $(this).serializeArray();
                 var formDataObject = {};
                 $.each(formData,

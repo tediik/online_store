@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Сервис класс, имплементация интерфейса {@link NewsService}
@@ -30,7 +31,7 @@ public class NewsServiceImpl implements NewsService {
     public List<News> findAll() {
         List<News> allNews = newsRepository.findAll();
         if (allNews.isEmpty()) {
-            throw new NewsNotFoundException();
+            throw new NewsNotFoundException("findAll returns empty List<News>");
         }
         return allNews;
     }
@@ -53,7 +54,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public News findById(long id) {
-        return newsRepository.findById(id).orElseThrow(NewsNotFoundException::new);
+        return newsRepository.findById(id).orElseThrow(() -> new NewsNotFoundException("There are no news with such id"));
     }
 
     /**
@@ -72,9 +73,9 @@ public class NewsServiceImpl implements NewsService {
      *
      * @param news сушность для обновления в базе данных
      */
-    public void update(News news) {
+    public News update(News news) {
         news.setModifiedDate(LocalDate.now());
-        newsRepository.save(news);
+        return newsRepository.save(news);
     }
 
     /**
@@ -98,7 +99,7 @@ public class NewsServiceImpl implements NewsService {
     public List<News> getAllPublished(LocalDate timeNow) {
         List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(timeNow, false);
         if (publishedNews.isEmpty()) {
-            throw new NewsNotFoundException();
+            throw new NewsNotFoundException("There are no published news");
         }
         return publishedNews;
     }
@@ -114,16 +115,20 @@ public class NewsServiceImpl implements NewsService {
     public List<News> getAllUnpublished(LocalDate timeNow) {
         List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(timeNow, false);
         if (unpublishedNews.isEmpty()) {
-            throw new NewsNotFoundException();
+            throw new NewsNotFoundException("There are no unpublished news");
         }
         return unpublishedNews;
     }
 
+    /**
+     * Method returns list of all archived news ot throw {@link NewsNotFoundException}
+     * @return - List<News>
+     */
     @Override
     public List<News> getAllArchivedNews() {
         List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
         if (archivedNews.isEmpty()) {
-            throw new NewsNotFoundException();
+            throw new NewsNotFoundException("There are no archived news");
         }
         return archivedNews;
     }

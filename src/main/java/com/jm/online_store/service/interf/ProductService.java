@@ -24,4 +24,6 @@ public interface ProductService {
     void importFromXMLFile(String fileName);
 
     void importFromCSVFile(String fileName) throws FileNotFoundException;
+
+    List<Product> findNumProducts(Integer num);
 }

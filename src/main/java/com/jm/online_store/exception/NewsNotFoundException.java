@@ -1,7 +1,11 @@
 package com.jm.online_store.exception;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class NewsNotFoundException extends RuntimeException {
-    public NewsNotFoundException() {
-        super("News not found");
+    public NewsNotFoundException(String message) {
+        super(message);
     }
+
 }

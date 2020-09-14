@@ -1,45 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>Интернет магазин техники</title>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-
-<header>
-    <div><a th:href="@{/}"> Logo place </a></div>
-    <div id="user-email" style="position: absolute; top: 0; right: 10px; color: #1B1B1B"></div>
-    <!-- Search -->
-    <form class="form-inline">
-        <div class="md-form my-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-        </div>
-    </form>
-    <!-- Customer service -->
-    <a class="p-2 text-dark" href="/news">Новости</a>
-    <div sec:authorize="isAuthenticated()" class="btn customerbutton">
-        <a th:href="@{/customer}" id="role-redirect"> Кабинет покупателя </a>
-    </div>
-    <!-- Registration -->
-    <div sec:authorize="!isAuthenticated()" class="btn registrationbutton"
-         data-toggle="modal" data-target="#openNewRegistrationModal">
-        <a> Регистрация </a>
-    </div>
-    <!-- Login -->
-    <div sec:authorize="!isAuthenticated()" class="btn loginbutton">
-        <a th:href="@{/login}"> Войти </a>
-    </div>
-    <div sec:authorize="isAuthenticated()" class="btn loginbutton">
-        <a th:href="@{/logout}"> Выйти </a>
-    </div>
-</header>
+<header th:insert="/blocks/mainHeader :: header"></header>
 
 <div id="openNewRegistrationModal" class="modal">
     <div class="modal-dialog">
@@ -100,73 +81,114 @@
     </div>
 </div>
 
-<div class="demo-container clear">
-    <div class="test">
-        <ul id="mega-1" class="mega-menu">
-            <li><a href="#">Смартфоны и гаджеты</a>
-                <ul>
-                    <li><a href="#">Смартфоны</a>
-                        <ul>
-                            <li><a href="#">Смартфоны</a></li>
-                            <li><a href="#">Электронные часы</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Планшеты</a>
-                        <ul>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Электронные книги</a>
-                        <ul>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li><a href="#">Компьютеры</a>
-                <ul>
-                    <li><a href="#">Компьютеры</a>
-                        <ul>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Комплектующие</a>
-                        <ul>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Периферия</a>
-                        <ul>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                            <li><a href="#">Menu Link</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-2">
+            <ul class="navbar-nav mr-auto shadow" aria-orientation="vertical" id="siteMenu">
+                <!-- menu from mainPage.js -->
+            </ul>
+        </div>
+        <!-- Carousel -->
+        <div class="col-5 promo">
+            <h4 class="my-0 font-weight-normal">Акции / <a class="text-secondary" href="/manager/stocks">(все акции)</a>
+            </h4>
+            <div id="myCarousel" class="carousel slide carouselWithStock" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active carousel-itemWithStock">
+                        <img class="first-slide"
+                             src="/uploads/images/stocks/1.jpg"
+                             alt="First slide">
+                        <div class="container">
+                            <div class="carousel-caption text-left">
+                                <h4>Акция - класс!</h4>
+                                <p>Бери, что тут думать!?</p>
+                                <p><a class="btn btn-secondary promobtn" href="#" role="button">Подробнее &raquo;</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item carousel-itemWithStock">
+                        <img class="second-slide"
+                             src="/uploads/images/stocks/3.jpg"
+                             alt="Second slide">
+                        <div class="container">
+                            <div class="carousel-caption">
+                                <h4> </h4>
+                                <p> </p>
+                                <p><a class="btn btn-secondary" href="#" role="button">Подробнее &raquo;</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item carousel-itemWithStock">
+                        <img class="third-slide"
+                             src="/uploads/images/stocks/2.jpg"
+                             alt="Third slide">
+                        <div class="container">
+                            <div class="carousel-caption text-right">
+                                <h4>Предзаказ!</h4>
+                                <p>Сами в шоке</p>
+                                <p><a class="btn btn-secondary" href="#" role="button">Подробнее &raquo;</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <!-- News card -->
+        <div class="col-4 news">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Новости / <a class="text-secondary" href="/news">(все
+                        новости)</a></h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title pricing-card-title my-0 font-weight-normal">breaking news</h5>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>10 users included</li>
+                        <li>2 GB of storage</li>
+                        <li>Email support</li>
+                        <li>Help center access</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+    <!-- Products -->
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-10">
+            <h4 class="my-0 font-weight-normal products">Актуальные предложения</h4>
+            <div id="someProductsView">
+                <!-- products view from mainPage.js-->
+            </div>
+        </div>
+    </div>
+</main><!-- /.container -->
 
-<!-- Include all compiled plugins (below), or include individual files as needed -->
+<!-- Optional JavaScript -->
+<script src="../static/js/mainPage.js"></script>
+<script src="/static/js/jquery.hoverIntent.minified.js"></script>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-<link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
-
-<script src="/static/js/mainPage.js"></script>
-<script src="/static/js/jquery.hoverIntent.minified.js"></script>
 </body>
 </html>

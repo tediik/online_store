@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.server.url}")
     private String urlActivate;
 
+    @Transactional
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
@@ -365,6 +366,17 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAndFlush(user);
     }
 
+    @Override
+    @Transactional
+    public boolean changePassword(Long id, String oldPassword, String newPassword) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return true;
+    }
+
     /**
      * Service method which builds and returns currently logged in User from Authentication
      *
@@ -379,14 +391,4 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(((User) auth.getPrincipal()).getId()).get();
     }
 
-    @Override
-    @Transactional
-    public boolean changePassword(Long id, String oldPassword, String newPassword) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            return false;
-        }
-        user.setPassword(passwordEncoder.encode(newPassword));
-        return true;
-    }
 }

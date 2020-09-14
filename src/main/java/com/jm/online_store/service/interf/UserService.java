@@ -51,6 +51,8 @@ public interface UserService {
     User getCurrentLoggedInUser();
 
     boolean changePassword(Long id, String oldPassword, String newPassword);
+
+
 }
 
 
