@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.model.Stock;
+import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,13 +50,12 @@ public class ManagerStockRestController {
         return ResponseEntity.ok(allStocks);
     }
 
-    //mine
     @GetMapping("/page")
-    public ResponseEntity<Page<Stock>> getStockPage(@PageableDefault Pageable page) {
+    public ResponseEntity<Page<Stock>> getStockPage(@PageableDefault Pageable page, StockFilterDto filterDto) {
         log.warn("page: {}", page);
         Page<Stock> stockPage;
         try {
-            stockPage = stockService.findPage(page);
+            stockPage = stockService.findPage(page, filterDto);
         } catch (StockNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

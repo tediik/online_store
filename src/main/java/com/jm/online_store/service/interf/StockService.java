@@ -1,6 +1,7 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Stock;
+import com.jm.online_store.model.dto.StockFilterDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,8 +18,7 @@ public interface StockService {
 
     List<Stock> findAll();
 
-    //mine
-    Page<Stock> findPage(Pageable page);
+    Page<Stock> findPage(Pageable page, StockFilterDto filterDto);
 
     List<Stock> findCurrentStocks();
 

@@ -5,11 +5,11 @@ let myHeaders = new Headers()
 let sharedStockApiUrl = "/manager/api/sharedStock"
 let stockApiUrl = "/manager/api/stock"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
-const lastPage = {active: true, number: 0, last: false};
+const lastPage = {type: 'ALL', number: 0, last: false};
 
 $(document).ready(function () {
     handleSummernote()
-    fetchStockList("/page")
+    fetchStockList()
 
     /**
      * buttons 'click' event listeners
@@ -27,9 +27,24 @@ $(document).ready(function () {
     document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
 
     $('#stockModal').on('hidden.bs.modal', function () {
-        fetchStockList("/page")
+        fetchStockList()
     })
+
+    $(window).scroll(yHandler);
 });
+
+function yHandler() {
+    if (lastPage.last) {
+        return;
+    }
+    let stocksDiv = document.getElementById('stocksDiv');
+    let contentHeight = stocksDiv.offsetHeight;
+    let yOffset = window.pageYOffset;
+    let y = yOffset + window.innerHeight;
+    if (y >= contentHeight) {
+        fetchStockList();
+    }
+}
 
 /**
  * function validate fields in modal window
@@ -70,8 +85,10 @@ function handleStockDivButtons(event) {
  * @param event
  */
 function defineFilterAndFetchList(event) {
-    let filter = `/${event.target.dataset.toggleId}`
-    fetchStockList(filter)
+    lastPage.type = event.target.dataset.toggleId;
+    lastPage.number = 0;
+    lastPage.last = false;
+    fetchStockList();
 }
 
 /**
@@ -82,21 +99,14 @@ function defineFilterAndFetchList(event) {
  *  - /futureStocks"
  *  - /pastStocks"
  */
-function fetchStockList(filter) {
-    $.ajax(stockApiUrl + filter, {
+function fetchStockList() {
+    $.ajax(stockApiUrl + '/page', {
         headers: myHeaders,
-        data: {page: lastPage.number},
-        success: function (data) {
-
-        }
+        async: false,
+        data: {page: lastPage.number, type: lastPage.type},
+        success: renderStockList,
+        error: printStocksNotFoundMessage
     })
-        .then(function (response) {
-            if (response.status === 200) {
-                response.json().then(futureStocks => renderStockList(futureStocks))
-            } else {
-                printStocksNotFoundMessage()
-            }
-        }).catch(error => console.log(error))
 }
 
 /**
@@ -241,20 +251,29 @@ function stockModalClearFields() {
 
 /**
  * Stock list render
- * @param stocks stocks from db
+ * @param data
  */
-function renderStockList(stocks) {
-    let stockDiv = $("#stocksDiv").empty()
-    fetch(sharedStockApiUrl, {headers: myHeaders}).then(function (response) {
-        if (response.ok) {
-            response.json().then(sharedStocks => render(sharedStocks))
+function renderStockList(data) {
+    lastPage.number = data.number + 1;
+    lastPage.last = data.last;
+    let stockDiv = $("#stocksDiv");
+    if (data.number === 0) {
+        $(stockDiv).empty();
+    }
+    let stocks = data.content;
+    $.ajax(sharedStockApiUrl, {
+        headers: myHeaders,
+        async: false,
+        success: render,
+        error: function (error) {
+            console.log(error);
         }
-    }).catch(error => console.log(error))
+    });
 
     function render(sharedStocks) {
         let sharedStocksQuantity = sharedStocks.length
         for (let i = 0; i < stocks.length; i++) {
-            let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 10)
+            let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
             let endDate = stocks[i].endDate
             if (endDate === null) {
                 endDate = "бессрочно"
