@@ -146,6 +146,12 @@ public class User implements UserDetails {
         this.roles = roleSet;
     }
 
+    public User(@Email @NotBlank String email, DayOfWeekForStockSend dayOfWeekForStockSend, String password) {
+        this.email = email;
+        this.dayOfWeekForStockSend = dayOfWeekForStockSend;
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

@@ -62,7 +62,7 @@ function renderUsersTable(users) {
           }
       }).then(function (response) {
           if(response.ok) {
-              console.log("succes")
+              handleSucces("Подписка успешно отменена")
           }
           else {
               console.log("bad")
@@ -100,20 +100,43 @@ function fetchSentStocks(begin, end) {
  * Функция отрисовки графика
  */
 function printChart(sentStocks) {
-    let ctx = document.getElementById('myChart').getContext('2d');
-    let chart = new Chart(ctx, {
+    let ctx = document.getElementById('myChart');
+    Chart.defaults.global.defaultFontFamily = "Lato";
+    Chart.defaults.global.defaultFontSize = 18;
+
+    var speedData = {
+        labels: Object.keys(sentStocks),
+        datasets: [{
+            label: "Количество отправленных акция по дням",
+            data: Object.values(sentStocks),
+            lineTension: 0,
+            fill: false,
+            borderColor: 'orange',
+            backgroundColor: 'transparent',
+            borderDash: [5, 5],
+            pointBorderColor: 'orange',
+            pointBackgroundColor: 'rgba(255,150,0,0.5)',
+            pointRadius: 5,
+            pointHoverRadius: 10,
+            pointHitRadius: 30,
+            pointBorderWidth: 2,
+            pointStyle: 'rectRounded'
+        }]
+    };
+    var chartOptions = {
+        legend: {
+            display: true,
+            position: 'top',
+            labels: {
+                boxWidth: 80,
+                fontColor: 'black'
+            }
+        }
+    };
+    var lineChart = new Chart(ctx, {
         type: 'line',
-        data: {
-            // Точки графиков
-            labels: Object.keys(sentStocks),
-            // График
-            datasets: [{
-                label: 'График рассылки',
-                borderColor: 'rgb(255, 99, 132)',
-                data: Object.values(sentStocks)
-            }]
-        },
-        options: {}
+        data: speedData,
+        options: chartOptions
     });
 }
 /**
@@ -157,6 +180,24 @@ $(function() {
         showButtonPanel: true,
     })
 });
+/**
+ * Сообщение об успешной отмене подписки
+ * @param text - текст для вывода в алекрт
+ */
+function handleSucces(text) {
+    $('#success-div').empty().append(`
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>${text}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+
+    window.setTimeout(function () {
+        $('.alert').alert('close');
+    }, 5000)
+}
 
 
 

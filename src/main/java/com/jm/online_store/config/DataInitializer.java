@@ -146,6 +146,13 @@ public class DataInitializer {
         subBasketList.add(subBasket_2);
         customer.setUserBasket(subBasketList);
         userService.updateUser(customer);
+
+        Random random = new Random();
+        for (int i = 1; i < 20 ; i++) {
+            userService.addUser(new User("customer" + i + "@mail.ru",
+                                        User.DayOfWeekForStockSend.values()[random.nextInt(6)],
+                                        String.valueOf(i)));
+        }
     }
 
     /**
