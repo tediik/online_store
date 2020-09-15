@@ -51,9 +51,8 @@ public class UserServiceImpl implements UserService {
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
-    @Autowired
-    @Setter
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
     @Value("${spring.server.url}")
     private String urlActivate;
 
