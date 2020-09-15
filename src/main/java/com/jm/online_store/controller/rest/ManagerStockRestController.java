@@ -2,9 +2,13 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.model.Stock;
+import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +48,23 @@ public class ManagerStockRestController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(allStocks);
+    }
+
+    /**
+     * Метод возвращает страницу акций
+     *
+     * @param page параметры страницы
+     * @return Page<Stock> возвращает страницу новостей
+     */
+    @GetMapping("/page")
+    public ResponseEntity<Page<Stock>> getStockPage(@PageableDefault Pageable page, StockFilterDto filterDto) {
+        Page<Stock> stockPage;
+        try {
+            stockPage = stockService.findPage(page, filterDto);
+        } catch (StockNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(stockPage);
     }
 
     @GetMapping("/currentStocks")
