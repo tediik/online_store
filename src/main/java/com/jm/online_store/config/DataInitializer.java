@@ -66,7 +66,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   // @PostConstruct
+   //@PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -75,6 +75,7 @@ public class DataInitializer {
         stockInit();
         sharedStockInit();
         sentStockInit();
+        paginationNewsAndStocksInit();
     }
 
     /**
@@ -255,7 +256,7 @@ public class DataInitializer {
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
-        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer",false);
+        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer", false);
 
         Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer", false);
         Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer", false);
@@ -453,5 +454,42 @@ public class DataInitializer {
         sentStockService.addSentStock(sentStock4);
         sentStockService.addSentStock(sentStock5);
         sentStockService.addSentStock(sentStock6);
+    }
+    /**
+     * Метод инициализации новостей и акций в профиле менеджера для тестирования динамической пагинации.
+     */
+    public void paginationNewsAndStocksInit() {
+            for (int i = 0; i < 50; i++) {
+                News news = News.builder()
+                        .title(i + " Сегодня стартует предзаказ на флагманские продукты Samsung!")
+                        .anons("Сделайте предзаказ и получите подарок.")
+                        .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                                "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                                "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                                " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                                " font-size: 16px;\">Сегодня стартует предзаказ на новые флагманские продукты Samsung!<b></b>" +
+                                "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                                " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                                " font-size: 16px;\"><br></p></h1>")
+                        .postingDate(LocalDate.now().minusDays(Math.round(Math.random() * 20)))
+                        .archived(false)
+                        .build();
+                newsService.save(news);
+            }
+
+        for (int i = 0; i < 50; i++) {
+            Stock stock = Stock.builder()
+                    .startDate(LocalDate.now().minusDays(20L))
+                    .endDate(LocalDate.now().minusDays(5L))
+                    .stockTitle("Скидки на игры ЕА!")
+                    .stockText("В течение действия акции вы можете приобрести игры ЕА из списка по" +
+                            " очень привлекательным ценам!" +
+                            "Вы можете стать обладателем игр EA для Xbox One, Nintendo Switch и PS4" +
+                            " в различных жанрах. Ощутите всю радость победы в хоккейном матче, станьте" +
+                            " стремительным уличным автогонщиком, постройте дом мечты или очутитесь в" +
+                            " фантастическом мире и примите участие в битве галактических масштабов!")
+                    .build();
+            stockService.addStock(stock);
+        }
     }
 }
