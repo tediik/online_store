@@ -17,3 +17,15 @@ spring:
           facebook:
             client-id: 933203153853320
             client-secret: c422a6fd091ef86806c2c1ea5b072811
+  auth:
+    vk:
+      client_id: 7575777
+      secure_key: PRLPSCHx4XO7881zgg3b
+      scope: email,offline
+      redirect_uri: http://localhost:9999/auth-vk
+      display: popup
+      response_type: code
+      version: 5.122
+      authorize_host: http://oauth.vk.com/authorize
+      token_host: https://oauth.vk.com/access_token
+      user-info-url-host: https://api.vk.com/method/users.get?fields=email

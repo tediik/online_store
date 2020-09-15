@@ -5,11 +5,11 @@
  * если галку убрать, то скрывается dropdownlist
  * и удаляется значение
  */
-$('#stockMailingCheckbox').change(function () {
-    if (this.checked !== true) {
+function chekboxChanges(o) {
+    if (o.checked != true) {
         $(".day-of-the-week-drop-list").addClass("d-none")
         $("#dayOfWeekDropList").val('')
     } else {
         $(".day-of-the-week-drop-list").removeClass("d-none")
     }
-});
+};

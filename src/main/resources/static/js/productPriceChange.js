@@ -1,21 +1,22 @@
-$(document).ready(takePriceChangeMonitor())
+let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
 let maxDateValue;
 let minDateValue;
 let content;
 let dataPoints = [];
+let chart;
 
 async function takePriceChangeMonitor() {
+
     let response = await fetch("/manager/productChangeMonitor", {
         method: "POST",
-        body: 1,
+        body: productId,
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
 
     content = await response.json();
     let key;
-
+    dataPoints = [];
     for (key in content) {
-        console.log(content[key]);
         dataPoints.push({
             x: new Date(key),
             y: content[key]
@@ -30,7 +31,6 @@ async function takePriceChangeMonitor() {
     if (!minDateValue) {
         minDateValue = new Date(dataPoints[0].x);
     }
-    fillPriceChange();
     $(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'center',
@@ -39,40 +39,42 @@ async function takePriceChangeMonitor() {
         }, function (start, end) {
             minDateValue = new Date(start);
             maxDateValue = new Date(end);
+            chart.destroy();
             fillPriceChange();
         });
     });
+    fillPriceChange();
 }
 
 async function fillPriceChange() {
+    Date.prototype.formatMMDDYYYY = function () {
+        return (this.getMonth() + 1) +
+            "/" + this.getDate() +
+            "/" + this.getFullYear();
+    };
+
     await $("#chartContainer").empty();
 
-    let resultDataPoints = []
+    let resultLabels = [], resultDataPoints = [];
     for (key in dataPoints) {
         if (dataPoints[key].x >= minDateValue && dataPoints[key].x <= maxDateValue) {
-            resultDataPoints.push(dataPoints[key]);
+            resultDataPoints.push(dataPoints[key].y);
+            resultLabels.push(new Date(dataPoints[key].x).formatMMDDYYYY());
         }
     }
 
-    var options = {
-        animationEnabled: true,
-        theme: "light2",
-        title: {
-            text: "Изменение цены на товар"
-        },
-        axisX: {
-            valueFormatString: "DD MMM YYYY",
-        },
-        axisY: {
-            title: "Руб.",
-            titleFontSize: 24
-        },
-        data: [{
-            type: "spline",
-            yValueFormatString: "#,###.##",
-            dataPoints: resultDataPoints
-        }]
-    };
-    $("#chartContainer").CanvasJSChart(options);
+    let ctx = document.getElementById('chartContainer').getContext("2d");
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: resultLabels,
+            datasets: [{
+                backgroundColor: 'red',
+                label: "изменение цены на товар",
+                data: resultDataPoints
+            }]
+        }
+    });
 }
 

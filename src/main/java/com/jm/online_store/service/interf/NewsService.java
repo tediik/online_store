@@ -1,11 +1,9 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.News;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface NewsService {
 
@@ -13,15 +11,17 @@ public interface NewsService {
 
     void save(News news);
 
-    Optional<News> findById(long id);
+    News findById(long id);
 
     boolean existsById(Long id);
 
-    void updateById(News news);
+    News update(News news);
 
     void deleteById(Long id);
 
-    List<News> findAllByPostingDateBefore(LocalDateTime timeNow);
+    List<News> getAllPublished(LocalDate timeNow);
 
-    List<News> findAllByPostingDateAfter(LocalDateTime timeNow);
+    List<News> getAllUnpublished(LocalDate timeNow);
+
+    List<News> getAllArchivedNews();
 }
