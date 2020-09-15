@@ -424,7 +424,7 @@ public class DataInitializer {
                             "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                             " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                             " font-size: 16px;\"><br></p></h1>")
-                    .postingDate(LocalDate.now().minusDays(Math.round(Math.random() * 20)))
+                    .postingDate(LocalDateTime.now().minusDays(Math.round(Math.random() * 20)))
                     .archived(false)
                     .build();
             newsService.save(news);

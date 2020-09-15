@@ -126,41 +126,41 @@ class NewsServiceImplTest {
     void getAllPublished() {
         List<News> publishedNewsList = new ArrayList<>();
         publishedNewsList.add(publishedNews);
-        when(newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now(), false)).thenReturn(publishedNewsList);
-        assertEquals(publishedNewsList, newsService.getAllPublished(LocalDate.now()), "Expected list doesnt match actual");
-        assertEquals(publishedNewsList.size(), newsService.getAllPublished(LocalDate.now()).size(), "Expected List size doesn't match actual size");
-        verify(newsRepository, times(2)).findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now(), false);
+        when(newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime.now(), false)).thenReturn(publishedNewsList);
+        assertEquals(publishedNewsList, newsService.getAllPublished(), "Expected list doesnt match actual");
+        assertEquals(publishedNewsList.size(), newsService.getAllPublished().size(), "Expected List size doesn't match actual size");
+        verify(newsRepository, times(2)).findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime.now(), false);
     }
 
     @Test
     @DisplayName("Testing method getAllPublished() in class NewsServiceImpl to throw Exception if returned List is empty")
     void throwExceptionIfGetAllPublishedReturnsEmptyList() {
-        when(newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now(), false)).thenReturn(emptyNewsList);
+        when(newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime.now(), false)).thenReturn(emptyNewsList);
         NewsNotFoundException thrown =
-                assertThrows(NewsNotFoundException.class, () -> newsService.getAllPublished(LocalDate.now()), "Expected exception doesnt match actual");
+                assertThrows(NewsNotFoundException.class, () -> newsService.getAllPublished(), "Expected exception doesnt match actual");
         assertNotNull(thrown.getMessage(), "Expected message is empty");
-        verify(newsRepository, times(1)).findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now(), false);
+        verify(newsRepository, times(1)).findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime.now(), false);
     }
 
     @Test
     void getAllUnpublished() {
         List<News> unpublishedNewsList = new ArrayList<>();
         unpublishedNewsList.add(notPublishedNews);
-        when(newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false)).thenReturn(unpublishedNewsList);
-        List<News> unpublishedNewsListTest = newsService.getAllUnpublished(LocalDate.now());
+        when(newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDateTime.now(), false)).thenReturn(unpublishedNewsList);
+        List<News> unpublishedNewsListTest = newsService.getAllUnpublished();
         assertEquals(unpublishedNewsList, unpublishedNewsListTest, "Expected list doesnt match actual");
         assertEquals(unpublishedNewsList.size(), unpublishedNewsListTest.size(), "Expected List size doesn't match actual size");
-        verify(newsRepository, times(1)).findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
+        verify(newsRepository, times(1)).findAllByPostingDateAfterAndArchivedEquals(LocalDateTime.now(), false);
     }
 
     @Test
     @DisplayName("Testing method getAllUnpublished() in class NewsServiceImpl to throw Exception if returned List is empty")
     void throwExceptionIfGetAllUnpublishedReturnsEmptyList() {
-        when(newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false)).thenReturn(emptyNewsList);
+        when(newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDateTime.now(), false)).thenReturn(emptyNewsList);
         NewsNotFoundException thrown =
-                assertThrows(NewsNotFoundException.class, () -> newsService.getAllUnpublished(LocalDate.now()), "Expected exception doesnt match actual");
+                assertThrows(NewsNotFoundException.class, () -> newsService.getAllUnpublished(), "Expected exception doesnt match actual");
         assertNotNull(thrown.getMessage(), "Expected message is empty");
-        verify(newsRepository, times(1)).findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
+        verify(newsRepository, times(1)).findAllByPostingDateAfterAndArchivedEquals(LocalDateTime.now(), false);
     }
 
     @Test

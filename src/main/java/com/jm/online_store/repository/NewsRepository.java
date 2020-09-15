@@ -23,9 +23,9 @@ public interface NewsRepository extends JpaRepository<News, Long>, JpaSpecificat
 
     boolean existsById(Long id);
 
-    List<News> findAllByPostingDateBeforeAndArchivedEquals(LocalDate timeNow, boolean archived);
+    List<News> findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime timeNow, boolean archived);
 
-    List<News> findAllByPostingDateAfterAndArchivedEquals(LocalDate timeNow, boolean archived);
+    List<News> findAllByPostingDateAfterAndArchivedEquals(LocalDateTime timeNow, boolean archived);
 
     List<News> findAllByArchivedEquals(boolean archived);
 }

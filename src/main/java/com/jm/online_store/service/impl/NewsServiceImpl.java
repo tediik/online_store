@@ -117,7 +117,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public List<News> getAllPublished() {
-        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now(), false);
+        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime.now(), false);
         if (publishedNews.isEmpty()) {
             throw new NewsNotFoundException("There are no published news");
         }
@@ -132,7 +132,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public List<News> getAllUnpublished() {
-        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
+        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDateTime.now(), false);
         if (unpublishedNews.isEmpty()) {
             throw new NewsNotFoundException("There are no unpublished news");
         }
