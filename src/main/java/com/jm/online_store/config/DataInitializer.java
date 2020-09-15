@@ -30,6 +30,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -398,7 +399,7 @@ public class DataInitializer {
         TaskSettings taskSettings = TaskSettings.builder()
                 .taskName("stockMailDistribution")
                 .active(false)
-                .startTime(LocalTime.now())
+                .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings);
     }
