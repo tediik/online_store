@@ -5,6 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<!--    summernote-->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -73,14 +75,12 @@
                     <hr>
                     <form id="emailTemplateEditForm">
                         <div class="form-group">
-                            <div class="row" id="headerTemplateDiv">
-                                <h5>Редактирование шаблона рассылки</h5>
-                            </div>
-                            <div class="form-row">
-                                <textarea id="summernote" name="editordata"></textarea>
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона рассылки</label>
+                                <textarea id="editTemplateSummernote"></textarea>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="saveTemplateChanges">Сохранить</button>
+                        <button type="submit" class="btn btn-primary" id="saveTemplateChanges">Сохранить шаблон</button>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="nav-2" role="tabpanel" aria-labelledby="nav-2-tab">2</div>
@@ -96,6 +96,9 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+<script src="/static/js/summernote.js"></script>
+<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
+<link href="/static/css/summernote.css" rel="stylesheet">
 <script src="/static/js/managerSettingsPage.js"></script>
 </body>
 </html>
