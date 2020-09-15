@@ -15,12 +15,15 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class commonSettings {
+public class CommonSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email_template")
+    @Column(name = "setting_name", unique = true)
+    private String settingName;
+
+    @Column(name = "text_value")
     @Type(type = "text")
-    private String emailTemplate;
+    private String textValue;
 }
