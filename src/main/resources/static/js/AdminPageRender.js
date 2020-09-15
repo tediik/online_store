@@ -33,7 +33,7 @@ function renderRolesSelectOnNewUserForm(allRoles) {
  * @param allRoles все роли из бд
  */
 function editModalWindowRender(user, allRoles) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off('click').on('click', '#acceptButton', handleAcceptButtonFromModalWindow)
     $('#rolesSelectModal').empty()
     $('#idInputModal').val(user.id)
     $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-user')
@@ -55,7 +55,7 @@ function editModalWindowRender(user, allRoles) {
             if (userRoles[i].name === roleNameToCheck) {
                 return true
             }
-        }
+           }
     }
 }
 
@@ -64,15 +64,15 @@ function editModalWindowRender(user, allRoles) {
  * @param userToDelete
  */
 function deleteModalWindowRender(userToDelete) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off('click').on('click', '#acceptButton', handleAcceptButtonFromModalWindow)
     $('#rolesSelectModal').empty()
-    $('.modal-title').text("Delete user")
-    $('#acceptButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-user')
+    $('.modal-title').text('Delete user')
+    $('#acceptButton').text('Delete').removeClass().toggleClass('btn btn-danger delete-user')
     $('#idInputModal').val(userToDelete.id)
     $('#emailInputModal').val(userToDelete.email).prop('readonly', true)
     $('#firstNameInputModal').val(userToDelete.firstName).prop('readonly', true)
     $('#lastNameInputModal').val(userToDelete.lastName).prop('readonly', true)
-    $('#passwordInputModal').val("").prop('readonly', true)
+    $('#passwordInputModal').val('').prop('readonly', true)
     $.each(userToDelete.roles, function (i, role) {
         $('#rolesSelectModal').append(`<option disabled>${role.name}</option>>`)
     })
@@ -270,8 +270,7 @@ function renderUsersTable(users) {
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>`)
-    table.on('click', '.edit-button', handleEditButton)
-    table.on('click', '.delete-button', handleDeleteButton)
+
 
     /**
      * Функция принимает объект roles,
@@ -315,6 +314,9 @@ function renderUsersTable(users) {
                 `;
         table.append(row)
     }
+
+    $('.edit-button').click(handleEditButton)
+    $('.delete-button').click(handleDeleteButton)
 }
 
 /**
