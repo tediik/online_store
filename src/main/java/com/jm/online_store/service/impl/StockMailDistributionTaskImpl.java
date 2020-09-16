@@ -1,17 +1,25 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 @AllArgsConstructor
 @Slf4j
@@ -21,6 +29,8 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
     private final MailSenderService mailSenderService;
     private final UserRepository userRepository;
     private final StockRepository stockRepository;
+    private final SpringTemplateEngine thymeleafTemplateEngine;
+    private final CommonSettingsService commonSettingsService;
 
     private final String EMAIL_TYPE = "Stock sender";
 
@@ -32,6 +42,7 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
      * - Задается период +- 7 дней от текущего.
      * - день старта акции должен попадать в этот промежуток и день окончания акции должен быть после текущего дня.
      */
+    @SneakyThrows
     @Override
     public void run() {
         User.DayOfWeekForStockSend dayOfWeek = User.DayOfWeekForStockSend.valueOf(LocalDate.now().getDayOfWeek().toString());
@@ -39,12 +50,11 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
         List<Stock> currentAndFutureStocks = stockRepository
                 .findAllByStartDateBetweenAndEndDateIsAfter(LocalDate.now().minusDays(7L), LocalDate.now().plusDays(7L), LocalDate.now());
 
-        String messageBody = prepareMessageBody(currentAndFutureStocks);
-        String messageSubject = "Внимание Акции!!!";
-
         if (usersToSendStock.size() != 0) {
             for (User user : usersToSendStock) {
-//                mailSenderService.send(user.getEmail(), messageSubject, messageBody, EMAIL_TYPE);
+                String messageSubject = user.getFirstName() + ", мы подобрали вам список актуальных акций!!!";
+                String messageBody = prepareMessageBody(currentAndFutureStocks, user);
+                mailSenderService.sendHtmlMessage(user.getEmail(), messageSubject, messageBody, "stock mail distribution");
                 log.debug("Stock message was sent to {} with email {}", user, user.getEmail());
             }
             log.debug("{} stock emails were sent", usersToSendStock.size());
@@ -57,26 +67,27 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
      * Метод создает messageBody для рассылки акций
      *
      * @param currentAndFutureStocks лист актуальных акций
+     * @param user пользователь для которого подготавливается рассылка
      * @return Строка с текстом.
      */
-    private String prepareMessageBody(List<Stock> currentAndFutureStocks) {
+    private String prepareMessageBody(List<Stock> currentAndFutureStocks, User user) {
+        String templateBody = commonSettingsService.getSettingByName("stock_email_distribution_template").getTextValue();
+        String messageBody = templateBody.replace("@@user@@", user.getFirstName());
         StringBuilder messageForEmail = new StringBuilder();
         for (Stock stock : currentAndFutureStocks) {
             messageForEmail
                     .append(stock.getStockTitle())
-                    .append("\n")
+                    .append("<br>")
                     .append(stock.getStockText())
-                    .append("\n")
-                    .append("\n")
+                    .append("<br>")
                     .append("Акция проходит с: ")
                     .append(stock.getStartDate())
                     .append(" по: ")
                     .append(stock.getEndDate())
-                    .append("\n")
-                    .append("\n");
+                    .append("<br>")
+                    .append("<br>")
+                    .append("<hr>");
         }
-        return messageForEmail.toString();
+        return messageBody.replace("@@stockList@@", messageForEmail);
     }
-
-
 }
