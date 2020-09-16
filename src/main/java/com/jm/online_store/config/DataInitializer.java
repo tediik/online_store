@@ -1,6 +1,7 @@
 package com.jm.online_store.config;
 
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Description;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
@@ -395,6 +396,11 @@ public class DataInitializer {
 
     }
 
+    /**
+     * ini method for email stock distribution settings.
+     * creates task for stock distribution with status not active
+     * and current time
+     */
     public void taskSettingsInit() {
         TaskSettings taskSettings = TaskSettings.builder()
                 .taskName("stockMailDistribution")
@@ -402,5 +408,17 @@ public class DataInitializer {
                 .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings);
+    }
+
+    /**
+     * init method for email stock distribution template
+     * creates template for email.
+     */
+    public void commonSettingsInit() {
+        CommonSettings emailStockDistributionTemplate = CommonSettings.builder()
+                .settingName("stock_email_distribution_template")
+                .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о новых Акциях!" +
+                        "</p><p>@@stockList@@</p><p>С Уважением</p><p>Online-store.ru</p>")
+                .build();
     }
 }
