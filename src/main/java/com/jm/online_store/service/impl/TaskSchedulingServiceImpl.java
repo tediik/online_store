@@ -58,9 +58,8 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     /**
      * Method checks db for active tasks after context refresh
      */
-    @Override
     @EventListener({ContextRefreshedEvent.class})
-    public void contextRefreshedEvent() {
+    private void contextRefreshedEvent() {
         List<TaskSettings> allTasks = taskSettingsRepository.findAll();
         for (TaskSettings taskSettings : allTasks) {
             if (taskSettings.isActive()) {
