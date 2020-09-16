@@ -55,6 +55,14 @@ public class Product {
         property = "id")
     private List<ProductInOrder> productInOrders;
 
+    public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+        this.rating = rating;
+        this.productType = productType;
+    }
+
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
         this.product = product;
         this.price = price;
