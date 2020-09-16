@@ -24,7 +24,6 @@ $(document).ready(function () {
 /**
  * function handled
  */
-//TODO добавить проверку что бы шаблон не был пустым
 function handleSaveTemplateButton() {
     if (document.getElementById('editTemplateSummernote').value !== '') {
         let commonSetting = {
@@ -95,11 +94,16 @@ function handleAcceptButton() {
         active: document.getElementById('emailDistributionCheckbox').checked,
         startTime: document.getElementById('distributionTimeInput').value,
     }
-    fetch(apiManagerSchedulingUrl + actionUrl, {
-        method: 'POST',
-        headers: myHeaders,
-        body: JSON.stringify(taskSettings)
-    }).then(response => console.log(response))
+    if (document.getElementById('distributionTimeInput').value !== ''){
+        fetch(apiManagerSchedulingUrl + actionUrl, {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify(taskSettings)
+        }).then(response => console.log(response))
+        successAction('#infoDiv', 'Настройки успешно изменены', 'success')
+    } else {
+        successAction('#infoDiv', 'Выбирите время рассылки', 'error')
+    }
 }
 
 /**
@@ -108,7 +112,7 @@ function handleAcceptButton() {
  * @param focusField - field to focus
  */
 function invalidField(text, focusField) {
-    document.querySelector('#templateAlert').innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    document.querySelector('#infoDiv').innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                     <strong>${text}</strong>
                                                                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                          <span aria-hidden="true">&times;</span>
@@ -118,4 +122,35 @@ function invalidField(text, focusField) {
     window.setTimeout(function () {
         $('.alert').alert('close');
     }, 3000)
+}
+
+/**
+ * function that shows success or error message
+ * @param inputField - location where message appears
+ * @param text - text of message
+ * @param messageStatus - status success or error
+ */
+function successAction(inputField, text, messageStatus) {
+    let successMessage = `<div class="alert text-center alert-success alert-dismissible" role="alert">
+                            <strong>${text}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                       </div>`
+    let alertMessage = `<div class="alert text-center alert-danger alert-dismissible" role="alert">
+                            <strong>${text}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                       </div>`
+    let message = ''
+
+    if (messageStatus === "success") {
+        message = successMessage
+    } else if (messageStatus === "error") {
+        message = alertMessage;
+    }
+
+    document.querySelector(`${inputField}`).innerHTML = message
+    window.setTimeout(function () {
+        $('.alert').alert('close');
+    }, 5000)
 }
