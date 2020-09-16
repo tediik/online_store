@@ -43,6 +43,9 @@ public class ProductComment {
     private LocalDateTime commentDate;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product")
     private Product product;
+
+    private Long productId;
+
 }

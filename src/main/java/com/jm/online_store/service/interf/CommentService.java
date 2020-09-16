@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CommentService {
     
-    List<ProductComment> findAll();
+    List<ProductComment> findAll(Long productId);
     
     ProductComment addComment(@RequestBody ProductComment productComment);
 

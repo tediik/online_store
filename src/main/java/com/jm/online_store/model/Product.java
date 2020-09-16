@@ -59,7 +59,7 @@ public class Product {
             property = "id")
     private List<ProductInOrder> productInOrders;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE)
     private Collection<ProductComment> comments = new ArrayList<>();
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {

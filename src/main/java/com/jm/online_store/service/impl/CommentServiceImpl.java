@@ -23,8 +23,8 @@ public class CommentServiceImpl implements CommentService {
      * @return List<ProductComment>
      */
     @Override
-    public List<ProductComment> findAll() {
-        return commentRepository.findAll();
+    public List<ProductComment> findAll(Long productId) {
+        return commentRepository.findAllByProductId(productId);
     }
 
     /**

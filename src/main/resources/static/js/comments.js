@@ -1,17 +1,14 @@
 $(document).ready(function () {
     $(function () {
-        let productIdFromPath = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
-
+        let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
 
         showComments();
-        $('#submitCommentBtn').on('click', function (event) {
+        $('#commentForm').on('submit', function (event) {
             event.preventDefault();
             if ($("#commentForm").find('input:text').val().trim().length < 1) {
                 alert("Please Enter Text...");
                 return;
             } else {
-
-                var content = $("#commentForm").find('input:text').val();
 
                 var formData = $(this).serializeArray();
                 var formDataObject = {};
@@ -19,6 +16,7 @@ $(document).ready(function () {
                     function (i, v) {
                         formDataObject[v.name] = v.value;
                     });
+                formDataObject["productId"] = productId;
                 console.log(formDataObject);
                 $.ajax({
                     //Post comment
@@ -29,18 +27,18 @@ $(document).ready(function () {
                     cache: false,
                     contentType: "application/json; charset=utf-8",
                     success: function (response) {
-                        var timeStamp = new Date(response.commentDate).toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
-
+                        var comment = response.comments[0];
+                        var timeStamp = new Date(comment.commentDate).toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
                         $('#showComments').append($(`<div class="media mb-4">
                             <div>
                                     <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                                    height="52" src="/uploads/images/${response.customer.profilePicture}" width="52"></div>
+                                    height="52" src="/uploads/images/${comment.customer.profilePicture}" width="52"></div>
                                     <div class="media-body" id='mediaBody${response.id}'>
-                                    <h5 class="mt-0">${response.customer.email} commented on ${timeStamp}</h5>
-                                    <div class="message">${response.content}</div>
-                                   <button type="button" id='button${response.id}' class='btn btn-link reply'>Reply</button>
-                                   <div class="replyDisplay" id='replyDisplayId${response.id}'> </div>
-                                   <div class="commentBoxSpace" id='commentBoxSpace${response.id}'></div>
+                                    <h5 class="mt-0">${comment.customer.email} commented on ${timeStamp}</h5>
+                                    <div class="message">${comment.content}</div>
+                                   <button type="button" id='button${comment.id}' class='btn btn-link reply'>Reply</button>
+                                   <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
+                                   <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
                                </div>`))
 
                         $('#commentForm').find('input:text').val('');
@@ -66,14 +64,17 @@ $(document).ready(function () {
             $('#commentBoxSpace' + commentId).html(commentBox);
 
             $('#submitReplyBtn').on('click', function (event) {
+                let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+
                 if ($("#replyText").val().trim().length < 1) {
                     alert("Please Enter Text...");
                     return;
                 } else {
+
                     var parentId = commentId;
                     event.preventDefault();
                     var content = $('#replyText').val();
-                    var productComment = {parentId, content};
+                    var productComment = {parentId, content,productId};
                     $.ajax({
                         //Post comment
                         url: '/api/comments',
@@ -83,17 +84,19 @@ $(document).ready(function () {
                         cache: false,
                         contentType: "application/json; charset=utf-8",
                         success: function (response) {
-                            var timeStamp = new Date(response.commentDate).toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
+                            var comment = response.comments[0];
+
+                            var timeStamp = new Date(comment.commentDate).toISOString().replace(/T/, " ").replace(/:00.000Z/, "").split('.')[0];
                             commentBox.remove();
                             var replyDisplayId = $('#replyDisplayId' + commentId);
 
                             $(replyDisplayId).append($(`<div class="media mt-4">
                             <div>
                             <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                            height="52" src="/uploads/images/${response.customer.profilePicture}" width="52"></div>
+                            height="52" src="/uploads/images/${comment.customer.profilePicture}" width="52"></div>
                             <div class="media-body">
-                            <h5 class="mt-0">${response.customer.username} commented on ${timeStamp}</h5>
-                            <div class="message">${response.content}</div>
+                            <h5 class="mt-0">${comment.customer.username} commented on ${timeStamp}</h5>
+                            <div class="message">${comment.content}</div>
                             </div>
                             </div>`).last());
                         }
@@ -105,10 +108,12 @@ $(document).ready(function () {
 });
 
 function showComments() {
+    let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+
     $.ajax({
         //Get comment html code
         type: "GET",
-        url: '/api/comments',
+        url: '/api/comments/'+productId,
         dataType: "json",
         success: function (response) {
             $.each(response, function (i, comment) {
