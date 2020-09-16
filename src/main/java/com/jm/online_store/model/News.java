@@ -13,7 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -36,11 +36,11 @@ public class News {
     private String fullText;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate postingDate;
+    private LocalDateTime postingDate;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "modified_date")
-    private LocalDate modifiedDate;
+    private LocalDateTime modifiedDate;
 
     @Column(name = "archived")
     private boolean archived;

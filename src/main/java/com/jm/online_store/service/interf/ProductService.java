@@ -4,6 +4,7 @@ import com.jm.online_store.model.Product;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ProductService {
@@ -25,4 +26,6 @@ public interface ProductService {
     void importFromCSVFile(String fileName) throws FileNotFoundException;
 
     List<Product> findNumProducts(Integer num);
+
+    Map getProductPriceChange(Long idProduct);
 }
