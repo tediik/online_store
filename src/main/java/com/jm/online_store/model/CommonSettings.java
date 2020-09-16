@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -15,6 +16,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class CommonSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
