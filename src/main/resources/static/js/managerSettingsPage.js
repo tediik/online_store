@@ -3,17 +3,48 @@
  * @type {string}
  */
 let apiManagerSchedulingUrl = "/api/manager/scheduling"
+let apiCommonSettingsUrl = "/api/commonSettings"
 let myHeaders = new Headers()
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
 /**
  * event listener
  */
-document.getElementById('saveChanges').addEventListener('click', handleAcceptButton)
+document.getElementById('saveSettingsChanges').addEventListener('click', handleAcceptButton)
+document.getElementById('saveTemplateChanges').addEventListener('click', handleSaveTemplateButton)
 
 $(document).ready(function () {
     fetchStockMailDistributionSettings()
+    fetchEmailTemplate()
+    $('#editTemplateSummernote').summernote({
+        height: 500
+    });
 })
+
+/**
+ * function handled
+ */
+//TODO добавить проверку что бы шаблон не был пустым
+function handleSaveTemplateButton() {
+    if (document.getElementById('editTemplateSummernote').value !== '') {
+        let commonSetting = {
+            settingName: "stock_email_distribution_template",
+            textValue: document.getElementById('editTemplateSummernote').value
+        }
+        fetch(apiCommonSettingsUrl, {
+            headers: myHeaders,
+            method: 'PUT',
+            body: JSON.stringify(commonSetting)
+
+        }).then(function (response) {
+            if (response.status === 200) {
+                console.log("setting modified")
+            }
+        })
+    } else {
+        invalidField("Заполните поля редактирования шаблона", document.getElementById('editTemplateSummernote'))
+    }
+}
 
 /**
  * Function fills StockMailDistributionForm according to received settings
@@ -28,9 +59,21 @@ function fillStockMailDistributionForm(settings) {
  * function send fetch request to get StockMailDistributionTask settings
  */
 function fetchStockMailDistributionSettings() {
-    fetch(apiManagerSchedulingUrl + '/stockMailDistribution', {}).then(function (response) {
+    fetch(apiManagerSchedulingUrl + '/stockMailDistribution').then(function (response) {
         if (response.status === 200) {
             response.json().then(settings => fillStockMailDistributionForm(settings))
+        }
+    })
+}
+
+/**
+ * function send fetch request to get Email template for StockMailDistributionTask
+ */
+function fetchEmailTemplate() {
+    fetch(apiCommonSettingsUrl + '/stock_email_distribution_template').then(function (response) {
+        if (response.status === 200) {
+            response.json()
+                .then(emailTemplate => $('#editTemplateSummernote').summernote('code', emailTemplate.textValue))
         }
     })
 }
@@ -57,4 +100,22 @@ function handleAcceptButton() {
         headers: myHeaders,
         body: JSON.stringify(taskSettings)
     }).then(response => console.log(response))
+}
+
+/**
+ * Function creates alert message when fields in modal are invalid
+ * @param text - text of message
+ * @param focusField - field to focus
+ */
+function invalidField(text, focusField) {
+    document.querySelector('#templateAlert').innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                    <strong>${text}</strong>
+                                                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                         <span aria-hidden="true">&times;</span>
+                                                                     </button>
+                                                                </div>`
+    focusField.focus()
+    window.setTimeout(function () {
+        $('.alert').alert('close');
+    }, 3000)
 }
