@@ -14,6 +14,7 @@ import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
@@ -63,6 +64,7 @@ public class DataInitializer {
     private final StockService stockService;
     private final SharedStockService sharedStockService;
     private final TaskSettingsService taskSettingsService;
+    private final CommonSettingsService commonSettingsService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -78,6 +80,7 @@ public class DataInitializer {
         stockInit();
         sharedStockInit();
         taskSettingsInit();
+        commonSettingsInit();
     }
 
     /**
@@ -329,45 +332,160 @@ public class DataInitializer {
         Stock firstStock = Stock.builder()
                 .startDate(LocalDate.now().plusDays(2))
                 .endDate(LocalDate.now().plusDays(12L))
-                .stockTitle("Собери персональный компьютер на базе Intel® Core™ – получи скидку!")
-                .stockText("оберите свой мощный компьютер на базе процессоров Intel® Core™! Корпуса,карты памяти, " +
-                        "твердотельные накопители от именитых производителей, материнские платы MSI и процессоры " +
-                        "Intel® Core™ помогут вам создать свою мощную машину! Работайте максимально эффективно на " +
-                        "ПК с процессором Intel® Core™. Этот процессор обеспечивает впечатляющую производительность " +
-                        "для развлечений и многозадачности. Улучшенная продуктивность, бесперебойная потоковая " +
-                        "трансляция и превосходные развлечения в формате HD — это и многое другое с Intel® Core™! " +
-                        "Используйте свое умное и продвинутое «железо» в работе и будьте эффективными и быстрыми в " +
-                        "решении задач или же с азартом побеждайте врагов в «тяжелых» играх!" +
-                        "Приобретая комплектующие для сборки ПК и процессоры Intel® Core™, вы получаете скидку 10 %!")
+                .stockTitle("Команда Online-Store сообщает о начале акции – «Рассрочка или бонусы! HD-" +
+                        " и UltraHD-телевизоры Samsung»")
+                .stockText("<b style=\"font-weight: bold; color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;," +
+                        " Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
+                        "Телевизоры Samsung&nbsp;</b><span style=\"color: rgb(51, 51, 51); font-family: &quot;PT" +
+                        " Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; " +
+                        "text-align: start;\">обеспечивают четкое, реалистичное изображение и точную цветопередачу." +
+                        " Вы сможете разглядеть мельчайшие детали транслируемой картинки и насладиться объемным " +
+                        "звучанием, которое можно настроить под любой контент. Технологии Smart TV, которыми " +
+                        "обладают почти все модели из списка, делают из телевизора настоящий мультимедийный " +
+                        "центр с доступом к различным фильмам, сериалам и передачам, мессенджерам и соцсетям." +
+                        "</span><br style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, " +
+                        "Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\"><span " +
+                        "style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, " +
+                        "sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">Оформите " +
+                        "беспроцентный кредит</span><span style=\"position: relative; font-size: 12px; " +
+                        "line-height: normal; vertical-align: baseline; top: -0.5em; color: rgb(51, 51, 51);" +
+                        " font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; letter-spacing: " +
+                        "0.23px; text-align: start;\">1</span><span style=\"color: rgb(51, 51, 51); font-family:" +
+                        " &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: " +
+                        "0.23px; text-align: start;\">&nbsp;на&nbsp;</span><b style=\"font-weight: bold; color:" +
+                        " rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; " +
+                        "font-size: 18px; letter-spacing: 0.23px; text-align: start;\">телевизоры Samsung</b>" +
+                        "<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, " +
+                        "Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">&nbsp;" +
+                        "из списка в любом магазине нашей сети или получите до 70 000 рублей на бонусную карту " +
+                        "ProZaPass</span><span style=\"position: relative; font-size: 12px; line-height: normal;" +
+                        " vertical-align: baseline; top: -0.5em; color: rgb(51, 51, 51); font-family: &quot;PT" +
+                        " Sans&quot;, Helvetica, Arial, sans-serif; letter-spacing: 0.23px; text-align: start;\">" +
+                        "2</span><span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
+                        " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">&nbsp;–" +
+                        " выбор за вами!</span><br>")
+
                 .build();
 
         Stock secondStock = Stock.builder()
                 .startDate(LocalDate.now().minusDays(5L))
                 .endDate(LocalDate.now().plusDays(3L))
-                .stockTitle("Рассрочка или бонусы! Смартфоны Samsung Galaxy M-серии")
-                .stockText("Смартфон Samsung Galaxy M21 обладает тройной камерой на 48+8+5 Мп, а M31 и M31s – " +
-                        "квадрокамерами на 64+8+5+5 Мп и 64+12+5+5 соответственно. Такие параметры позволят вам " +
-                        "совершенствовать мастерство в мобильной фотографии или видеосъемке в формате Ultra HD 4K." +
-                        " Фронтальные камеры смартфонов порадуют любителей селфи – снимки будут получаться детальными" +
-                        " и сочными. Galaxy M-серии работают с аккумуляторами емкостью 6 000 мА*ч. Система" +
-                        " распознавания лица и сканер отпечатка пальца гарантируют сохранность ваших данных" +
-                        " – доступ к информации будете иметь только вы. Выберите Samsung Galaxy M-серии," +
-                        " отвечающий всем вашим требованиям." +
-                        "Оформите беспроцентный кредит1 на смартфоны Samsung Galaxy M-серии из списка в" +
-                        " любом магазине нашей сети или получите до 2 300 рублей на бонусную карту" +
-                        " ProZaPass2 – выбор за вами!")
+                .stockTitle("Команда Online-Store сообщает о начале акции – «Выгодный онлайн-шопинг с Visa!»")
+                .stockText("<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, " +
+                        "Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">С " +
+                        "Visa за скидками далеко ходить не надо! Visa и DNS подготовили для вас выгодное " +
+                        "предложение – оплачивая покупки онлайн картами Visa в период с 15 сентября по 15 " +
+                        "ноября 2020 года вы получаете «Специальные цены» на выборочный ассортимент.</span>" +
+                        "<br style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, " +
+                        "Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
+                        "<br style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, " +
+                        "Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
+                        "<b style=\"font-weight: bold; color: rgb(51, 51, 51); font-family: &quot;PT " +
+                        "Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: " +
+                        "0.23px; text-align: start;\">Что надо сделать:</b><br style=\"color: rgb(51, 51, 51);" +
+                        " font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\"><br style=\"color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\"><span style=\"color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\">1. Выберите товар из списка, " +
+                        "участвующих в акции.</span><br style=\"color: rgb(51, 51, 51); font-family: &quot;PT" +
+                        " Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; " +
+                        "text-align: start;\"><span style=\"color: rgb(51, 51, 51); font-family: &quot;PT " +
+                        "Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; " +
+                        "text-align: start;\">2. Добавьте выбранный товар в корзину.</span><br style=\"color: " +
+                        "rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; " +
+                        "font-size: 18px; letter-spacing: 0.23px; text-align: start;\"><span style=\"color: " +
+                        "rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; " +
+                        "font-size: 18px; letter-spacing: 0.23px; text-align: start;\">3. Нажмите «Получить " +
+                        "скидку за оплату картой Visa» при оформлении заказа.</span><br style=\"color: " +
+                        "rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif;" +
+                        " font-size: 18px; letter-spacing: 0.23px; text-align: start;\"><span style=\"color:" +
+                        " rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; " +
+                        "font-size: 18px; letter-spacing: 0.23px; text-align: start;\">4. Выберите способ " +
+                        "оплаты «Оплатить онлайн» – «Банковская карта».</span><br style=\"color: rgb(51, 51, 51);" +
+                        " font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\"><br style=\"color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\"><b style=\"font-weight: bold; color: " +
+                        "rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; " +
+                        "font-size: 18px; letter-spacing: 0.23px; text-align: start;\">ВАЖНО!</b><span " +
+                        "style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, " +
+                        "Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
+                        "</span><br style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, " +
+                        "Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: " +
+                        "start;\"><br style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, " +
+                        "Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: " +
+                        "start;\"><span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, " +
+                        "Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: " +
+                        "start;\">Скидка будет предоставлена только в том случае, если вы оплачиваете товар " +
+                        "картой платежной системы Visa.</span><br style=\"color: rgb(51, 51, 51); font-family: " +
+                        "&quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: " +
+                        "0.23px; text-align: start;\"><span style=\"color: rgb(51, 51, 51); font-family: " +
+                        "&quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: " +
+                        "0.23px; text-align: start;\">Если в заказ будет добавлена: дополнительная гарантия, " +
+                        "услуга или опциональный товар, то воспользоваться скидкой не возможно.</span><br " +
+                        "style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, " +
+                        "sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
+                        "<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, " +
+                        "Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; " +
+                        "text-align: start;\">Юридические лица и индивидуальные предприниматели " +
+                        "не вправе принимать участие в акции.</span><br style=\"color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px;" +
+                        " letter-spacing: 0.23px; text-align: start;\">")
                 .build();
 
         Stock thirdStock = Stock.builder()
                 .startDate(LocalDate.now().minusDays(20L))
                 .endDate(LocalDate.now().minusDays(5L))
-                .stockTitle("Скидки на игры ЕА!")
-                .stockText("В течение действия акции вы можете приобрести игры ЕА из списка по" +
-                        " очень привлекательным ценам!" +
-                        "Вы можете стать обладателем игр EA для Xbox One, Nintendo Switch и PS4" +
-                        " в различных жанрах. Ощутите всю радость победы в хоккейном матче, станьте" +
-                        " стремительным уличным автогонщиком, постройте дом мечты или очутитесь в" +
-                        " фантастическом мире и примите участие в битве галактических масштабов!")
+                .stockTitle("Команда DNS сообщает о начале акции – «Рассрочка или бонусы! Инверторные холодильники LG»")
+                .stockText("<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial," +
+                        " sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">Благодаря " +
+                        "инверторным компрессорам</span><b style=\"font-weight: bold; color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\">&nbsp;холодильники LG&nbsp;</b><span " +
+                        "style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, " +
+                        "sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">работают " +
+                        "практически бесшумно. Технология No Frost позволит вам не тратить время и силы на " +
+                        "разморозку и ограничит образование плесени и неприятных запахов внутри камер. " +
+                        "Вместительные и стильные&nbsp;</span><b style=\"font-weight: bold; color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\">холодильники</b><span style=\"color: " +
+                        "rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; " +
+                        "font-size: 18px; letter-spacing: 0.23px; text-align: start;\">&nbsp;</span>" +
+                        "<b style=\"font-weight: bold; color: rgb(51, 51, 51); font-family: &quot;PT " +
+                        "Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: " +
+                        "0.23px; text-align: start;\">LG</b><span style=\"color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: " +
+                        "18px; letter-spacing: 0.23px; text-align: start;\">&nbsp;с классами энергопотребления " +
+                        "A+ и A++ (в зависимости от модели)помогут сохранить ваши запасы свежими продолжительное " +
+                        "время и украсят интерьер вашей кухни.</span><br style=\"color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\"><span style=\"color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\">Оформите беспроцентный кредит</span>" +
+                        "<span style=\"position: relative; font-size: 12px; line-height: normal; vertical-align:" +
+                        " baseline; top: -0.5em; color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, " +
+                        "Helvetica, Arial, sans-serif; letter-spacing: 0.23px; text-align: start;\">1</span>" +
+                        "<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
+                        " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
+                        "&nbsp;на&nbsp;</span><b style=\"font-weight: bold; color: rgb(51, 51, 51); " +
+                        "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px;" +
+                        " letter-spacing: 0.23px; text-align: start;\">инверторные</b><span style=\"color:" +
+                        " rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif;" +
+                        " font-size: 18px; letter-spacing: 0.23px; text-align: start;\">&nbsp;</span>" +
+                        "<b style=\"font-weight: bold; color: rgb(51, 51, 51); font-family: &quot;PT " +
+                        "Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: " +
+                        "0.23px; text-align: start;\">холодильники LG</b><span style=\"color: rgb(51, 51, 51);" +
+                        " font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px; " +
+                        "letter-spacing: 0.23px; text-align: start;\">&nbsp;из списка в любом магазине нашей" +
+                        " сети или получите 10% от стоимости покупки на бонусную карту ProZaPass</span>" +
+                        "<span style=\"position: relative; font-size: 12px; line-height: normal; vertical-align:" +
+                        " baseline; top: -0.5em; color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, " +
+                        "Helvetica, Arial, sans-serif; letter-spacing: 0.23px; text-align: start;\">2</span>" +
+                        "<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
+                        " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
+                        "&nbsp;– выбор за вами!</span>")
                 .build();
 
         stockService.addStock(firstStock);
@@ -420,5 +538,6 @@ public class DataInitializer {
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о новых Акциях!" +
                         "</p><p>@@stockList@@</p><p>С Уважением</p><p>Online-store.ru</p>")
                 .build();
+        commonSettingsService.addSetting(emailStockDistributionTemplate);
     }
 }
