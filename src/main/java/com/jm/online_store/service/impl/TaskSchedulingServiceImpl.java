@@ -26,13 +26,13 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     private final TaskScheduler scheduler;
     private final TaskSettingsRepository taskSettingsRepository;
     private final StockMailDistributionTask stockMailDistributionTask;
-
     private final Map<Long, ScheduledFuture<?>> jobsMap;
 
     /**
      * Method add {@link Runnable} tasks to {@link ScheduledFuture}
+     *
      * @param taskSettings - task settings from db such as LocalTime, and task id
-     * @param task - task which are needed to schedule implements {@link Runnable}
+     * @param task         - task which are needed to schedule implements {@link Runnable}
      */
     @Override
     public void addTaskToScheduler(TaskSettings taskSettings, Runnable task) {
@@ -44,6 +44,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
 
     /**
      * Method cancels scheduled task
+     *
      * @param id - task id from db
      */
     @Override
@@ -59,7 +60,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
      * Method checks db for active tasks after context refresh
      */
     @EventListener({ContextRefreshedEvent.class})
-    private void contextRefreshedEvent() {
+    public void contextRefreshedEvent() {
         List<TaskSettings> allTasks = taskSettingsRepository.findAll();
         for (TaskSettings taskSettings : allTasks) {
             if (taskSettings.isActive()) {
@@ -70,6 +71,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
 
     /**
      * Util method which convert {@link LocalTime} to cron expression
+     *
      * @param time - {@link LocalTime}
      * @return - String with creon expression
      */
