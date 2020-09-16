@@ -5,6 +5,12 @@ let content;
 let dataPoints = [];
 let chart;
 
+/**
+ * функция подготовки основных данных для построения графика
+ * выборка продукта присходит по идентификатору, который получаем из строки адреса.
+ *
+ * @returns {Promise<void>}
+ */
 async function takePriceChangeMonitor() {
 
     let response = await fetch("/manager/productChangeMonitor", {
@@ -25,6 +31,7 @@ async function takePriceChangeMonitor() {
     dataPoints.sort(function (a, b) {
         return a.x - b.x
     });
+
     if (!maxDateValue) {
         maxDateValue = new Date(dataPoints[dataPoints.length - 1].x);
     }
@@ -45,6 +52,14 @@ async function takePriceChangeMonitor() {
     });
     fillPriceChange();
 }
+
+/**
+ * функция заполнения данными с выборкой по датам с построением графика
+ для построения графика используется chart.js
+ начало и конец периода можно выбрать с помошью dateTimePicker
+
+ * @returns {Promise<void>}
+ */
 
 async function fillPriceChange() {
     Date.prototype.formatMMDDYYYY = function () {
