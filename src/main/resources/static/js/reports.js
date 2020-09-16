@@ -62,7 +62,7 @@ function renderUsersTable(users) {
           }
       }).then(function (response) {
           if(response.ok) {
-              handleSucces("Подписка успешно отменена")
+              handleSuccess("Подписка успешно отменена")
           }
           else {
               console.log("bad")
@@ -181,22 +181,13 @@ $(function() {
     })
 });
 /**
- * Сообщение об успешной отмене подписки
+ * Сообщение об успешной отмене подписки на 5 сек
  * @param text - текст для вывода в алекрт
  */
-function handleSucces(text) {
-    $('#success-div').empty().append(`
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-              <strong>${text}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            `)
 
-    window.setTimeout(function () {
-        $('.alert').alert('close');
-    }, 5000)
+function handleSuccess(text) {
+    jQuery('#alert-div').show();
+    setTimeout(function(){ jQuery('#alert-div').hide(); }, 5000);
 }
 
 

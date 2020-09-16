@@ -38,7 +38,6 @@
             <div class="navbar-text"><a th:href="@{/logout}">Logout</a></div>
         </nav>
     </header>
-    <div id="success-div"></div>
     <div class="container-fluid" style="padding-right: 0px; padding-left: 0px">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -69,7 +68,16 @@
                 <label for="date_range2" class="col-xs-2 col-form-label">Выберите дату</label>
                 <br>
                 <input id="date_range2"  onchange="onChangeDataInput()" readonly>
+                <div id="alert-div" style="display: none">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Подписка успешно отменена!</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
                 <div style="background-color: white; padding: 20px; border: 1px solid #DDE1E4;">
+
                     <table  class="table table-striped" id="users-table">
 
                     </table>

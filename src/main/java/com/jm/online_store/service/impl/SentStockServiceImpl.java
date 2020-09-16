@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.SentStockNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.repository.SentStockRepository;
@@ -26,9 +27,13 @@ public class SentStockServiceImpl implements SentStockService {
 
     @Override
     public List<SentStock> findAllByInterval(LocalDate begin, LocalDate end) {
-        return sentStockRepository.findAllBySentDateAfterAndSentDateBefore(
+        List<SentStock> sentStocks = sentStockRepository.findAllBySentDateAfterAndSentDateBefore(
                 begin.minusDays(1L),
                 end.plusDays(1L));
+        if(sentStocks.isEmpty()) {
+            throw new SentStockNotFoundException();
+        }
+        return sentStocks;
     }
 
     @Override

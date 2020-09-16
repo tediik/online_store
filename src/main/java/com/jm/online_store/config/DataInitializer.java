@@ -66,7 +66,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   //@PostConstruct
+  // @PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -425,42 +425,12 @@ public class DataInitializer {
         List<Stock> stocks = stockService.findAll();
         List<User> users = userService.findAll();
 
-        SentStock sentStock1 = SentStock.builder()
-                .sentDate(LocalDate.now())
-                .stock(stocks.get(random.nextInt(stocks.size())))
-                .user(users.get(random.nextInt(users.size())))
-                .build();
-        SentStock sentStock2 = SentStock.builder()
-                .sentDate(LocalDate.now().plusDays(1))
-                .stock(stocks.get(random.nextInt(stocks.size())))
-                .user(users.get(random.nextInt(users.size())))
-                .build();
-        SentStock sentStock3 = SentStock.builder()
-                .sentDate(LocalDate.now().plusDays(1))
-                .stock(stocks.get(random.nextInt(stocks.size())))
-                .user(users.get(random.nextInt(users.size())))
-                .build();
-        SentStock sentStock4 = SentStock.builder()
-                .sentDate(LocalDate.now().plusDays(1))
-                .stock(stocks.get(random.nextInt(stocks.size())))
-                .user(users.get(random.nextInt(users.size())))
-                .build();
-        SentStock sentStock5 = SentStock.builder()
-                .sentDate(LocalDate.now().plusDays(2))
-                .stock(stocks.get(random.nextInt(stocks.size())))
-                .user(users.get(random.nextInt(users.size())))
-                .build();
-        SentStock sentStock6 = SentStock.builder()
-                .sentDate(LocalDate.now().plusDays(2))
-                .stock(stocks.get(random.nextInt(stocks.size())))
-                .user(users.get(random.nextInt(users.size())))
-                .build();
-        sentStockService.addSentStock(sentStock1);
-        sentStockService.addSentStock(sentStock2);
-        sentStockService.addSentStock(sentStock3);
-        sentStockService.addSentStock(sentStock4);
-        sentStockService.addSentStock(sentStock5);
-        sentStockService.addSentStock(sentStock6);
+        for (int i = 0; i < 20; i++) {
+            sentStockService.addSentStock(SentStock.builder().user(users.get(random.nextInt(users.size())))
+                    .stock(stocks.get(random.nextInt(stocks.size())))
+                    .sentDate(LocalDate.now().plusDays(random.nextInt(8)))
+                    .build());
+        }
     }
     /**
      * Метод инициализации новостей и акций в профиле менеджера для тестирования динамической пагинации.
