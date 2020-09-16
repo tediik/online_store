@@ -2,7 +2,6 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.News;
 import com.jm.online_store.service.interf.NewsService;
-import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,13 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Рест контроллер для управления новостями из кабинете менеджера, а также публикации новостей
@@ -38,9 +34,7 @@ public class ManagerRestController {
      */
     @GetMapping("/news")
     public ResponseEntity<List<News>> allNews() {
-
-        List<News> allNewsList = newsService.findAll();
-        return ResponseEntity.ok().body(allNewsList);
+        return ResponseEntity.ok().body(newsService.findAll());
     }
 
     /**
@@ -55,7 +49,6 @@ public class ManagerRestController {
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
             news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
         }
-
         newsService.save(news);
         return ResponseEntity.ok().body(news);
     }
@@ -72,7 +65,6 @@ public class ManagerRestController {
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
             news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
         }
-
         newsService.save(news);
         return ResponseEntity.ok().body(news);
     }
@@ -85,7 +77,6 @@ public class ManagerRestController {
      */
     @DeleteMapping("/news/{id}/delete")
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
-
         newsService.deleteById(id);
         return ResponseEntity.ok().body(id);
     }

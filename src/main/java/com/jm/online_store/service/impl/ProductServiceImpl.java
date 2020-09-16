@@ -206,7 +206,7 @@ public class ProductServiceImpl implements ProductService {
      * @return Map<LocalDateTime, Double> changePriceHistory
      */
     @Override
-    public Map getProductPriceChange(Long idProduct) {
+    public Map<LocalDateTime, Double> getProductPriceChange(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
         return product.getChangePriceHistory();
     }

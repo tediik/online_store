@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +19,6 @@ import java.util.List;
  * Сервис класс, имплементация интерфейса {@link NewsService}
  * Содержит бизнес логику, использует методы репозитория {@link NewsRepository}
  */
-
 @Service
 @AllArgsConstructor
 public class NewsServiceImpl implements NewsService {
@@ -151,4 +149,5 @@ public class NewsServiceImpl implements NewsService {
         }
         return archivedNews;
     }
+
 }

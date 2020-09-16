@@ -13,7 +13,7 @@ let chart;
  */
 async function takePriceChangeMonitor() {
 
-    let response = await fetch("/manager/productChangeMonitor", {
+    let response = await fetch("/api/products/productChangeMonitor", {
         method: "POST",
         body: productId,
         headers: {"Content-Type": "application/json; charset=utf-8"}

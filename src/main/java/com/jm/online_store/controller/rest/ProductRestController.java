@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
  */
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api/products")
 public class ProductRestController {
 
     private ProductService productService;
@@ -27,7 +29,7 @@ public class ProductRestController {
      * @param id продукта
      * @return сущность Product, если продукт с таким id существует
      */
-    @GetMapping("/api/products/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id) {
         ResponseEntity<Product>[] answer = new ResponseEntity[1];
         productService.findProductById(id).ifPresentOrElse(
@@ -41,7 +43,7 @@ public class ProductRestController {
      * @param id идентификатор продукта
      * @return map содержащая значения по изменению цены на товар.
      */
-    @PostMapping("manager/productChangeMonitor")
+    @PostMapping("/productChangeMonitor")
     public ResponseEntity<Map> priceMonitor(@RequestBody Long id) {
         return ResponseEntity.ok(productService.getProductPriceChange(id));
     }
