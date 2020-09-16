@@ -6,6 +6,4 @@ public interface TaskSchedulingService {
     void addTaskToScheduler(TaskSettings taskSettings, Runnable task);
 
     void removeTaskFromScheduler(Long id);
-
-    void contextRefreshedEvent();
 }
