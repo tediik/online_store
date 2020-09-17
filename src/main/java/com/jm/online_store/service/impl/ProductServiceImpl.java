@@ -19,6 +19,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.time.LocalDateTime;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -78,6 +80,9 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long saveProduct(Product product) {
+        Map<LocalDateTime, Double> map = product.getChangePriceHistory();
+        map.put(LocalDateTime.now(), product.getPrice());
+        product.setChangePriceHistory(map);
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
     }
@@ -193,4 +198,17 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findNumProducts(Integer num) {
         return productRepository.findNumProducts(num);
     }
+
+    /**
+     * метод получения коллекции по мониторингу изменения цены на Product.
+     *
+     * @param idProduct идентификатор Product
+     * @return Map<LocalDateTime, Double> changePriceHistory
+     */
+    @Override
+    public Map<LocalDateTime, Double> getProductPriceChange(Long idProduct) {
+        Product product = productRepository.getOne(idProduct);
+        return product.getChangePriceHistory();
+    }
+
 }
