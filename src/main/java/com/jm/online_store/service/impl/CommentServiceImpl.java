@@ -18,6 +18,7 @@ public class CommentServiceImpl implements CommentService {
     private final ProductCommentRepository commentRepository;
     private final UserService userService;
 
+
     /**
      * Fetches an arrayList of all Comments from database
      * @return List<ProductComment>

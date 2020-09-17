@@ -1,6 +1,5 @@
 package com.jm.online_store.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,6 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
-public class Product {
+public class Product extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,7 +57,7 @@ public class Product {
             property = "id")
     private List<ProductInOrder> productInOrders;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private Collection<ProductComment> comments = new ArrayList<>();
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {

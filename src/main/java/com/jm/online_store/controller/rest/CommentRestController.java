@@ -2,8 +2,10 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.ProductComment;
+import com.jm.online_store.model.dto.ProductCommentDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CommentService;
+import com.jm.online_store.model.mapper.ProductCommentMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ public class CommentRestController {
 
     private final CommentService commentService;
     private final ProductRepository productRepository;
+    private final ProductCommentMapper productCommentMapper;
 
     /**
      * Fetches an arrayList of all Comments from database and returns JSON representation response
@@ -36,6 +39,8 @@ public class CommentRestController {
      */
     @GetMapping("/{productId}")
     public ResponseEntity<List<ProductComment>> findAll(@PathVariable Long productId) {
+
+
         return ResponseEntity.ok(commentService.findAll(productId));
     }
 
@@ -47,12 +52,12 @@ public class CommentRestController {
      * @return ResponseEntity<ProductComment>
      */
     @PostMapping
-    public ResponseEntity<Product> addComment(@RequestBody @Valid ProductComment productComment, BindingResult bindingResult) {
+    public ResponseEntity<ProductCommentDto> addComment(@RequestBody @Valid ProductComment productComment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(productComment.getProductId()).get();
         if (!bindingResult.hasErrors()) {
             ProductComment savedComment = commentService.addComment(productComment);
             productFromDb.setComments(List.of(savedComment));
-            return ResponseEntity.ok().body(productFromDb);
+            return ResponseEntity.ok().body(productCommentMapper.toDto(productFromDb));
         } else
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
     }

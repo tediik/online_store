@@ -43,7 +43,6 @@ $(document).ready(function () {
 
                         $('#commentForm').find('input:text').val('');
                     }
-
                 })
             }
         });
