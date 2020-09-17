@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <title>Manager Settings</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -9,7 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 </head>
 <body>
-
 <header>
     <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
 
@@ -20,7 +19,8 @@
         <div class="navbar-text"><a th:href="@{/logout}">Выйти</a></div>
     </nav>
 </header>
-
+<div id="infoDiv">
+</div>
 <div class="container-fluid">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
@@ -70,26 +70,26 @@
                             <label for="distributionTimeInput">Выбирите время для рассылки</label>
                             <input class="form-control" type="time" id="distributionTimeInput" style="width: 10%">
                         </div>
-                        <div id="infoDiv">
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="saveSettingsChanges">Сохранить</button>
+                        <button class="btn btn-primary" id="saveSettingsChanges">Сохранить</button>
                     </form>
                     <hr>
                     <form id="emailTemplateEditForm">
                         <div class="form-group">
                             <div class="form-col">
-                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона рассылки</label>
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки</label>
                                 <textarea id="editTemplateSummernote"></textarea>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="saveTemplateChanges">Сохранить шаблон</button>
+                        <button class="btn btn-primary" id="saveTemplateChanges">Сохранить шаблон</button>
                     </form>
                     <hr>
                     <h2>Важная информация!</h2>
                     <ul>
                         <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
                         <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
-                        <li>@@stockList@@ - вместо этого тега в письме подставляется List действующих и будующих акций</li>
+                        <li>@@stockList@@ - вместо этого тега в письме подставляется List действующих и будующих акций
+                        </li>
                     </ul>
                 </div>
                 <div class="tab-pane fade" id="nav-2" role="tabpanel" aria-labelledby="nav-2-tab">2</div>

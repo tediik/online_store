@@ -14,17 +14,18 @@ document.getElementById('saveSettingsChanges').addEventListener('click', handleA
 document.getElementById('saveTemplateChanges').addEventListener('click', handleSaveTemplateButton)
 
 $(document).ready(function () {
-    fetchStockMailDistributionSettings()
-    fetchEmailTemplate()
     $('#editTemplateSummernote').summernote({
         height: 500
     });
+    fetchStockMailDistributionSettings()
+    fetchEmailTemplate()
 })
 
 /**
  * function handled
  */
-function handleSaveTemplateButton() {
+function handleSaveTemplateButton(event) {
+    event.preventDefault()
     if (document.getElementById('editTemplateSummernote').value !== '') {
         let commonSetting = {
             settingName: "stock_email_distribution_template",
@@ -37,7 +38,7 @@ function handleSaveTemplateButton() {
 
         }).then(function (response) {
             if (response.status === 200) {
-                console.log("setting modified")
+                popupWindow('#infoDiv','Шаблон успешно сохранен', 'success')
             }
         })
     } else {
@@ -81,7 +82,8 @@ function fetchEmailTemplate() {
  * function handles accept form button if checkbox is checked it sends request to start utl
  * else send request to stop url
  */
-function handleAcceptButton() {
+function handleAcceptButton(event) {
+    event.preventDefault()
     let actionUrl;
     if (document.getElementById('emailDistributionCheckbox').checked) {
         actionUrl = '/stockMailDistribution/start'
@@ -94,15 +96,21 @@ function handleAcceptButton() {
         active: document.getElementById('emailDistributionCheckbox').checked,
         startTime: document.getElementById('distributionTimeInput').value,
     }
-    if (document.getElementById('distributionTimeInput').value !== ''){
+    if (document.getElementById('distributionTimeInput').value !== '') {
         fetch(apiManagerSchedulingUrl + actionUrl, {
             method: 'POST',
             headers: myHeaders,
             body: JSON.stringify(taskSettings)
-        }).then(response => console.log(response))
-        successAction('#infoDiv', 'Настройки успешно изменены', 'success')
+        }).then(function (response) {
+            if (response.status === 200) {
+                popupWindow('#infoDiv', 'Настройки успешно изменены', 'success')
+            } else {
+                popupWindow('#infoDiv', 'Настройки не были сохранены', 'error')
+            }
+        })
+
     } else {
-        successAction('#infoDiv', 'Выбирите время рассылки', 'error')
+        invalidField('Введите время', document.getElementById('distributionTimeInput'))
     }
 }
 
@@ -112,7 +120,7 @@ function handleAcceptButton() {
  * @param focusField - field to focus
  */
 function invalidField(text, focusField) {
-    document.querySelector('#infoDiv').innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    document.querySelector('#infoDiv').innerHTML = `<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
                                                                     <strong>${text}</strong>
                                                                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                          <span aria-hidden="true">&times;</span>
@@ -130,7 +138,7 @@ function invalidField(text, focusField) {
  * @param text - text of message
  * @param messageStatus - status success or error
  */
-function successAction(inputField, text, messageStatus) {
+function popupWindow(inputField, text, messageStatus) {
     let successMessage = `<div class="alert text-center alert-success alert-dismissible" role="alert">
                             <strong>${text}</strong>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -152,5 +160,5 @@ function successAction(inputField, text, messageStatus) {
     document.querySelector(`${inputField}`).innerHTML = message
     window.setTimeout(function () {
         $('.alert').alert('close');
-    }, 5000)
+    }, 3000)
 }
