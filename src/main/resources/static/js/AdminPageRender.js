@@ -308,8 +308,6 @@ function renderUsersTable(users) {
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>`)
-    table.on('click', '.edit-button', handleEditButton)
-    table.on('click', '.delete-button', handleDeleteButton)
 
     /**
      * Функция принимает объект roles,
@@ -353,6 +351,8 @@ function renderUsersTable(users) {
                 `;
         table.append(row)
     }
+    $('.edit-button').click(handleEditButton)
+    $('.delete-button').click(handleDeleteButton)
 }
 
 /**
