@@ -1,6 +1,6 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.SettingsNotFound;
+import com.jm.online_store.exception.CommonSettingsNotFoundException;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.repository.CommonSettingsRepository;
 import com.jm.online_store.service.interf.CommonSettingsService;
@@ -15,19 +15,19 @@ public class CommonSettingsServiceImpl implements CommonSettingsService {
 
     @Override
     public CommonSettings getSettingById(Long id) {
-        return commonSettingsRepository.findById(id).orElseThrow(SettingsNotFound::new);
+        return commonSettingsRepository.findById(id).orElseThrow(CommonSettingsNotFoundException::new);
     }
 
     @Override
     public CommonSettings getSettingByName(String name) {
-        return commonSettingsRepository.findBySettingName(name).orElseThrow(SettingsNotFound::new);
+        return commonSettingsRepository.findBySettingName(name).orElseThrow(CommonSettingsNotFoundException::new);
     }
 
     @Override
     public CommonSettings updateSetting(CommonSettings setting) {
         CommonSettings settingToUpdate = commonSettingsRepository
                 .findBySettingName(setting.getSettingName())
-                .orElseThrow(SettingsNotFound::new);
+                .orElseThrow(CommonSettingsNotFoundException::new);
         settingToUpdate.setTextValue(setting.getTextValue());
         return commonSettingsRepository.save(settingToUpdate);
     }

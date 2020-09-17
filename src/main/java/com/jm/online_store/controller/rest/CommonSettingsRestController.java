@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.exception.SettingsNotFound;
+import com.jm.online_store.exception.CommonSettingsNotFoundException;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class CommonSettingsRestController {
     public ResponseEntity<CommonSettings> updateSetting(@RequestBody CommonSettings commonSettings) {
         try {
             return ResponseEntity.ok(commonSettingsService.updateSetting(commonSettings));
-        } catch (SettingsNotFound e) {
+        } catch (CommonSettingsNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -38,7 +38,7 @@ public class CommonSettingsRestController {
     public ResponseEntity<CommonSettings> getCommonSettingByName(@PathVariable String settingName) {
         try {
             return ResponseEntity.ok(commonSettingsService.getSettingByName(settingName));
-        } catch (SettingsNotFound e) {
+        } catch (CommonSettingsNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
