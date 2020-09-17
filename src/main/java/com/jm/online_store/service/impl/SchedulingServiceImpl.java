@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.User;
@@ -58,7 +59,11 @@ public class SchedulingServiceImpl implements SchedulingService {
                             .stock(stock)
                             .sentDate(LocalDate.now())
                             .build();
-                    sentStockService.addSentStock(sentStock);
+                    try {
+                        sentStockService.addSentStock(sentStock);
+                    } catch (UserNotFoundException e) {
+                        log.debug("Cannot add Stock {} for user {}", stock.getId(), user.getEmail());
+                    }
                 }
                 mailSenderService.send(user.getEmail(), messageSubject, messageBody, EMAIL_TYPE);
                 log.debug("Stock message was sent to {} with email {}", user, user.getEmail());

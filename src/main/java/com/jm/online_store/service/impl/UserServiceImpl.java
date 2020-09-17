@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
     /**
      * метод получения пользователей, подписанных на рассылку, по дню недели
      *
@@ -68,7 +69,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> findByDayOfWeekForStockSend(byte dayNumber) {
-        return userRepository.findByDayOfWeekForStockSend(User.DayOfWeekForStockSend.values()[dayNumber-1]);
+        List<User> users = userRepository.findByDayOfWeekForStockSend(User.DayOfWeekForStockSend.values()[dayNumber - 1]);
+        if (users.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        return users;
     }
 
     @Override
@@ -93,7 +98,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод добавления нового пользователя.
-     *
+     * <p>
      * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
      *
      * @param user полученный объект User/
@@ -379,6 +384,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         return true;
     }
+
     /**
      * Service method to cancel subscription
      *
@@ -387,7 +393,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void cancelSubscription(Long id) {
-        User user = userRepository.findById(id).get();
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         user.setDayOfWeekForStockSend(null);
         updateUserProfile(user);
     }

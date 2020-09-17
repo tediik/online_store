@@ -15,8 +15,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.TreeMap;
 
 @Service
 @AllArgsConstructor
@@ -58,6 +57,6 @@ public class SentStockServiceImpl implements SentStockService {
                 result.put(sentStock.getSentDate(), 1L);
             }
         }
-        return result;
+        return new TreeMap<LocalDate, Long>(result);
     }
 }

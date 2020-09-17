@@ -17,4 +17,9 @@ public class ManagerController {
     public String getNewsManagementPage() {
         return "newsManagement";
     }
+
+    @GetMapping("/reports")
+    public String getReportsPage() {
+        return "reports";
+    }
 }

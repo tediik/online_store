@@ -66,7 +66,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-  // @PostConstruct
+  //@PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
