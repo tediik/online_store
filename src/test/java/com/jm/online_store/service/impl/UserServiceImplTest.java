@@ -1,5 +1,8 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.exception.InvalidEmailException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
@@ -9,6 +12,7 @@ import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,12 +21,9 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
-
 import static org.easymock.EasyMock.createMock;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -34,11 +35,15 @@ public class UserServiceImplTest {
     private ConfirmationTokenRepository confirmTokenRepository = mock(ConfirmationTokenRepository.class);
     private MailSenderServiceImpl mailSenderService = mock(MailSenderServiceImpl.class);
     private AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
-    PasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
+    private PasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
     private UserService userService = new UserServiceImpl(userRepository, roleRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder);
 
+    private User user1;
     private User user2;
     private User user3;
+    private User user4;
+    private User user5;
+    private User user6;
 
     @BeforeEach
     void init() {
@@ -48,42 +53,77 @@ public class UserServiceImplTest {
         user2.setEmail("pochta@google.com");
         user2.setPassword("2");
 
-        user3 = new User("masha@mail.ru", "123",
+        user1 = new User("masha@mail.ru", "123",
                 "Masha", "Ivanova", Collections.singleton(new Role(1L, "ROLE_CUSTOMER")));
+
         user3 = new User("ira@mail.ru", "123",
                 "Ira", "Vasina", Collections.singleton(new Role(1L, "ROLE_CUSTOMER")));
-        Role customerRole111 = new Role("ROLE_CUSTOMER");
-        Optional<Role> custRole = Optional.of(customerRole111);
-        Set<Role> customerRoles = new HashSet<>();
-        customerRoles.add(custRole.get());
-        user3.setRoles(customerRoles);
         user3.setId(3L);
         user3.setProfilePicture("def.jpg");
+
+        user4 = new User();
+        user4.setEmail("куцук!!!!!!5@ваваы@fds.eew");
+
+        user5 = new User(null, null,
+                null, null);
+
+        user6 = new User("masha@mail.ru", "324",
+                "Misha", "Ivanov", Collections.singleton(new Role(1L, "ROLE_MANAGER")));
     }
 
     @Test
     public void shouldAddUserSuccessfully() {
         when(passwordEncoder.encode(user3.getPassword())).thenReturn("Encoded password");
         when(userRepository.save(user3)).thenReturn(user3);
+        when(userRepository.findByEmail(user1.getEmail())).thenReturn(Optional.ofNullable(user1));
+
         userService.addUser(user3);
+
+        assertThrows(InvalidEmailException.class, () -> {
+            userService.addUser(user4);
+        });
+        assertThrows(EmailAlreadyExistsException.class, () -> {
+            userService.addUser(user1);
+        });
+
         verify(userRepository, times(1)).save(any(User.class));
-        verify(passwordEncoder, times(1)).encode(any());
+        verify(userRepository, times(2)).findByEmail(any(String.class));
+        verify(passwordEncoder, times(3)).encode(any());
     }
 
     @Test
     public void updateUserProfileTest() {
-        when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
-        when(userRepository.save(user3)).thenReturn(user3);
-        assertNotNull(userService.updateUserProfile(user3));
-        verify(userRepository, times(1)).save(any(User.class));
+
+        assertThrows(UserNotFoundException.class, () -> {
+            userService.updateUserProfile(user3);
+        });
+
+        verify(userRepository, times(1)).findById(any());
     }
 
     @Test
     public void updateUserAdminPanelTest() {
-        when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
-        when(userRepository.save(user3)).thenReturn(user2);
-        userService.updateUserAdminPanel(user3);
-        verify(userRepository, times(1)).save(any(User.class));
+
+        when(userRepository.findById(user2.getId())).thenReturn(Optional.ofNullable(user5));
+        when(userRepository.findById(user4.getId())).thenReturn(Optional.ofNullable(user1));
+        when(userRepository.findById(user6.getId())).thenReturn(Optional.ofNullable(user2));
+        when(userRepository.findByEmail(user6.getEmail())).thenReturn(Optional.ofNullable(user6));
+
+        assertThrows(UserNotFoundException.class, () -> {
+            userService.updateUserAdminPanel(user3);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            userService.updateUserAdminPanel(user2);
+        });
+        assertThrows(InvalidEmailException.class, () -> {
+            userService.updateUserAdminPanel(user4);
+        });
+        assertThrows(EmailAlreadyExistsException.class, () -> {
+            userService.updateUserAdminPanel(user6);
+        });
+
+        verify(userRepository, times(4)).findById(any());
+        verify(userRepository, times(2)).findByEmail(any());
     }
 
     @Test
@@ -95,10 +135,15 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void changeUsersMailTest(){
+    public void changeUsersMailTest() {
+        User newUser = Mockito.spy(user3);
         when(confirmTokenRepository.save(new ConfirmationToken())).thenReturn(null);
         doNothing().when(mailSenderService).send(user3.getEmail(), "Activation code", "message", "emailType");
-        userService.changeUsersMail(user3, "");
+
+        userService.changeUsersMail(newUser, "newMail");
+
+        assertEquals("newMail", newUser.getEmail());
+
         verify(confirmTokenRepository, times(1)).save(any());
     }
 
@@ -109,7 +154,9 @@ public class UserServiceImplTest {
         when(confirmTokenRepository.findByConfirmationToken(token)).thenReturn(new ConfirmationToken());
         when(passwordEncoder.encode(user3.getPassword())).thenReturn("password encoded");
         boolean res = userService.activateUser(token, request);
+
         assertTrue(res);
+
         verify(confirmTokenRepository, times(1)).findByConfirmationToken(any());
         verify(passwordEncoder, times(1)).encode(any());
     }
@@ -120,8 +167,9 @@ public class UserServiceImplTest {
         when((userRepository.findById(any()))).thenReturn(Optional.ofNullable(user3));
         when(confirmTokenRepository.findByConfirmationToken(" ")).thenReturn(new ConfirmationToken());
         when(userRepository.saveAndFlush(user3)).thenReturn(user3);
-        boolean res = userService.activateNewUsersMail(" ", request);
-        assertTrue(res);
+
+        assertTrue(userService.activateNewUsersMail(" ", request));
+
         verify(confirmTokenRepository, times(1)).findByConfirmationToken(any());
         verify(userRepository, times(1)).findById(any());
         verify(userRepository, times(1)).saveAndFlush(any());
@@ -129,68 +177,76 @@ public class UserServiceImplTest {
 
     @Test
     public void updateUserImageTest() throws IOException {
-        byte[] array = new byte[]{1,2,3,4,5,66,7,7,8,9,77,8,9,0};
-        MockMultipartFile file2 = new MockMultipartFile("File","file.jpg","img", array);
-        when(userRepository.findById(3L)).thenReturn(Optional.ofNullable(user3));
+
+        byte[] array = new byte[]{1, 2, 3, 4, 5, 66, 7, 7, 8, 9, 77, 8, 9, 0};
+        MockMultipartFile file2 = new MockMultipartFile("File", "file.jpg", "img", array);
+        MockMultipartFile file3 = mock(MockMultipartFile.class);
+
+        when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
+        when(userRepository.findById(user1.getId())).thenReturn(Optional.ofNullable(user1));
+        when(userRepository.findById(user2.getId())).thenReturn(Optional.ofNullable(user1));
         when(userRepository.save(user3)).thenReturn(user3);
-        String result = userService.updateUserImage(user3.getId(), file2);
-        assertNotNull(result);
+
+        assertThrows(NullPointerException.class, () -> {
+            userService.updateUserImage(user1.getId(), file3);
+        });
+        assertNotNull(userService.updateUserImage(user3.getId(), file2));
+
         verify(userRepository, times(1)).findById(3L);
         verify(userRepository, times(1)).save(user3);
     }
 
     @Test
     public void deleteUserImageTest() throws IOException {
-        when(userRepository.findById(3L)).thenReturn(Optional.ofNullable(user3));
+        when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
+
         assertNotNull(userService.deleteUserImage(3L));
+
         verify(userRepository, times(1)).findById(3L);
     }
 
     @Test
-    public void addNewUserFromAdminTest(){
+    public void addNewUserFromAdminTest() {
         Role role = new Role("ROLE_CUSTOMER");
         Optional<Role> cust = Optional.of(role);
         when(passwordEncoder.encode(user3.getPassword())).thenReturn("password encoded");
         when(roleRepository.findByName(role.getName())).thenReturn(cust);
         when(userRepository.save(user3)).thenReturn(user3);
+
         userService.addNewUserFromAdmin(user3);
+
         verify(passwordEncoder, times(1)).encode(any());
         verify(roleRepository, times(1)).findByName(any());
         verify(userRepository, times(1)).save(any());
     }
 
     @Test
-    public void updateUserFromAdminPageTest(){
+    public void updateUserFromAdminPageTest() {
         when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
         when(passwordEncoder.encode(user3.getPassword())).thenReturn("password encoded");
         when(userService.updateUserFromAdminPage(user3)).thenReturn(new User());
-        User updateUser = userService.updateUserFromAdminPage(user3);
-        Assert.notNull(updateUser,"Проверка, что NotNull");
+
+        Assert.notNull(userService.updateUserFromAdminPage(user3), "Проверка, что NotNull");
+
         verify(passwordEncoder, times(2)).encode(any());
         verify(userRepository, times(1)).save(any());
     }
 
-
-
     @Test
-    public void changePasswordTest_when_old_and_new_passwords_are_same(){
-        when(userRepository.findById(3L)).thenReturn(Optional.ofNullable(user3));
-        when(passwordEncoder.matches("oldPassword", user3.getPassword())).thenReturn(false);
+    public void changePasswordTest() {
+        when(userRepository.findById(user1.getId())).thenReturn(Optional.ofNullable(user1));
+        when(passwordEncoder.matches("oldPassword", user1.getPassword())).thenReturn(true);
+        when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
+        when(passwordEncoder.matches("ollllldPassword", user3.getPassword())).thenReturn(false);
         when(passwordEncoder.encode("newPassword")).thenReturn("password encoded");
-        boolean result = userService.changePassword(3L, "oldPassword", "newPassword");
-        assertFalse(result);
-        verify(userRepository, times(1)).findById(3L);
-        verify(passwordEncoder, times(1)).matches("oldPassword", "123");
-    }
 
-    @Test
-    public void changePasswordTest_when_old_and_new_passwords_are_different(){
-        when(userRepository.findById(3L)).thenReturn(Optional.ofNullable(user3));
-        when(passwordEncoder.matches("oldPassword", user3.getPassword())).thenReturn(true);
-        when(passwordEncoder.encode("newPassword")).thenReturn("password encoded");
-        boolean result = userService.changePassword(3L, "oldPassword", "newPassword");
-        assertTrue(result);
-        verify(userRepository, times(1)).findById(3L);
-        verify(passwordEncoder, times(1)).encode("newPassword");
+        assertThrows(UserNotFoundException.class, () -> {
+            userService.changePassword(7L, "oldPassword", "newPassword");
+        });
+        assertFalse(userService.changePassword(user3.getId(), "ollllldPassword", "newPassword"));
+        assertTrue(userService.changePassword(user1.getId(), "oldPassword", "newPassword"));
+
+        verify(userRepository, times(3)).findById(any());
+        verify(passwordEncoder, times(1)).encode(any());
     }
 }
