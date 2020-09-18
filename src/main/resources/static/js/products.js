@@ -31,11 +31,26 @@ function create(showDeleted) {
                 for (let i = 0; i < products.length; i++){
                     if(products[i].deleted == true){
                         delete products[i]
-
                     }
                 }
             }
+            /*Добовление картинок в графу "Удаление товара", скрытие кнопок deleted and restore*/
+            var ssd;
+            var showDelete;
+            var showRestore;
             for (let i = 0; i < products.length; i++) {
+                if (products[i].deleted == true) {
+                    var ssd = "https://img.icons8.com/fluent/48/000000/checkmark.png"
+                }else {
+                    var ssd = "https://img.icons8.com/cute-clipart/64/000000/delete-sign.png"
+                }
+                if (products[i].amount > 0) {
+                    showDelete = "display: block"
+                    showRestore = "display: none"
+                } else {
+                    showDelete = "display: none"
+                    showRestore = "display: block"
+                }
                     let out = $("<li>").attr("id", products[i].id);
                     out.append(
                         `<div class=\"card mb-3\">
@@ -44,13 +59,13 @@ function create(showDeleted) {
                                 <div class=\"card-body\">
                                     <h4 class='card-title'>${products[i].product}</h4>
                                     <h4 class='card-title'>Цена товара</h4>
-                                    <p class=\"card-text\">${products[i].price}</p>
-                                    <h4 class='card-title'>Кол-во товара</h4>
-                                    <p class=\"card-text\">${products[i].amount}</p>
+                                    <p class=\"card-text\">${products[i].price}</p>                                
                                     <h4 class='card-title'>Кол-во товара</h4>
                                     <p class=\\"card-text\\">${products[i].amount}</p>
-                                    <h4 class='card-title'>Статус удаления</h4>
-                                    <p class=\\"card-text\\">${products[i].deleted}</p>
+                                    <h4 class='card-title'>Товар удалён</h4>
+                                    <p class=\\"card-text\\">
+                                        <img src="${ssd}">
+                                    </p>
                                 </div>
                             </div>
                             <div class="col-md-2 flex-row align-items-center">
@@ -59,10 +74,10 @@ function create(showDeleted) {
                                             data-target='#editProductModal'>Edit</button>
                                 </div>
                                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button onclick='deleteProduct(${products[i].id})' class="btn btn-danger">Delete</button>
+                                    <button onclick='deleteProduct(${products[i].id})' style="${showDelete}" class="btn btn-danger">Delete</button>
                                 </div>
-                                <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button id="restorebutton" onclick='restoreProduct(${products[i].id})' class="btn btn-info">Restore</button>
+                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                                    <button id="restorebutton" onclick='restoreProduct(${products[i].id})' style="${showRestore}" class="btn btn-info">Restore</button>
                                 </div>
                             </div>
                         </div>
@@ -70,6 +85,7 @@ function create(showDeleted) {
                 </li> `);
                     $("#productsDiv").append(out)
                 }
+
             }
     })
 }
