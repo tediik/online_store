@@ -73,7 +73,6 @@ public class UserServiceImplTest {
 
     @Test
     public void shouldAddUserSuccessfully() {
-        when(passwordEncoder.encode(user3.getPassword())).thenReturn("Encoded password");
         when(userRepository.save(user3)).thenReturn(user3);
         when(userRepository.findByEmail(user1.getEmail())).thenReturn(Optional.ofNullable(user1));
 
@@ -163,12 +162,11 @@ public class UserServiceImplTest {
 
     @Test
     public void activateNewUsersMailTest() {
-        HttpServletRequest request = createMock(HttpServletRequest.class);
         when((userRepository.findById(any()))).thenReturn(Optional.ofNullable(user3));
         when(confirmTokenRepository.findByConfirmationToken(" ")).thenReturn(new ConfirmationToken());
         when(userRepository.saveAndFlush(user3)).thenReturn(user3);
 
-        assertTrue(userService.activateNewUsersMail(" ", request));
+        assertTrue(userService.activateNewUsersMail(" ", createMock(HttpServletRequest.class)));
 
         verify(confirmTokenRepository, times(1)).findByConfirmationToken(any());
         verify(userRepository, times(1)).findById(any());
@@ -179,8 +177,7 @@ public class UserServiceImplTest {
     public void updateUserImageTest() throws IOException {
 
         byte[] array = new byte[]{1, 2, 3, 4, 5, 66, 7, 7, 8, 9, 77, 8, 9, 0};
-        MockMultipartFile file2 = new MockMultipartFile("File", "file.jpg", "img", array);
-        MockMultipartFile file3 = mock(MockMultipartFile.class);
+        MockMultipartFile file = new MockMultipartFile("File", "file.jpg", "img", array);
 
         when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
         when(userRepository.findById(user1.getId())).thenReturn(Optional.ofNullable(user1));
@@ -188,9 +185,9 @@ public class UserServiceImplTest {
         when(userRepository.save(user3)).thenReturn(user3);
 
         assertThrows(NullPointerException.class, () -> {
-            userService.updateUserImage(user1.getId(), file3);
+            userService.updateUserImage(user1.getId(), mock(MockMultipartFile.class));
         });
-        assertNotNull(userService.updateUserImage(user3.getId(), file2));
+        assertNotNull(userService.updateUserImage(user3.getId(), file), "check validness of whole updateUserImage() method");
 
         verify(userRepository, times(1)).findById(3L);
         verify(userRepository, times(1)).save(user3);
@@ -200,7 +197,7 @@ public class UserServiceImplTest {
     public void deleteUserImageTest() throws IOException {
         when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
 
-        assertNotNull(userService.deleteUserImage(3L));
+        assertNotNull(userService.deleteUserImage(3L), "Ожидается корректность выполения метода при удалении картинки");
 
         verify(userRepository, times(1)).findById(3L);
     }
@@ -208,9 +205,9 @@ public class UserServiceImplTest {
     @Test
     public void addNewUserFromAdminTest() {
         Role role = new Role("ROLE_CUSTOMER");
-        Optional<Role> cust = Optional.of(role);
+        Optional<Role> customer = Optional.of(role);
         when(passwordEncoder.encode(user3.getPassword())).thenReturn("password encoded");
-        when(roleRepository.findByName(role.getName())).thenReturn(cust);
+        when(roleRepository.findByName(role.getName())).thenReturn(customer);
         when(userRepository.save(user3)).thenReturn(user3);
 
         userService.addNewUserFromAdmin(user3);
