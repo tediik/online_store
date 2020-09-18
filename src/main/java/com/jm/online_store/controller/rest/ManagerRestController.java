@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.Order;
 import com.jm.online_store.service.interf.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -81,5 +82,9 @@ public class ManagerRestController {
         return ResponseEntity.ok().body(id);
     }
 
+    @GetMapping("/sales/")
+    public ResponseEntity<List<Order>> getSalesForCustomRange(){
+        return ResponseEntity.ok().build();
+    }
 
 }
