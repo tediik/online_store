@@ -126,7 +126,6 @@ class NewsServiceImplTest {
     void getAllPublished() {
         List<News> publishedNewsList = new ArrayList<>();
         publishedNewsList.add(publishedNews);
-
         when(newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime.now(), false)).thenReturn(publishedNewsList);
         assertEquals(publishedNewsList, newsService.getAllPublished(), "Expected list doesnt match actual");
         assertEquals(publishedNewsList.size(), newsService.getAllPublished().size(), "Expected List size doesn't match actual size");

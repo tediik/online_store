@@ -115,9 +115,11 @@ function fetchSentStocks(begin, end) {
         }
     }).then(function (response) {
         if (response.ok) {
-            response.json().then(sentStocks => printChart(sentStocks));
+            response.json()
+                .then(sentStocks => printChart(sentStocks));
         } else {
             handleBad("#chart-div");
+            clearChart();
         }
     })
 }
@@ -222,7 +224,7 @@ function handleSuccess() {
 }
 
 /**
- * Сообщение об неудавшейся отмене подписки
+ * Сообщение о неудаче
  * @param text - текст для вывода в алекрт
  */
 function handleBad(field) {
@@ -232,6 +234,7 @@ function handleBad(field) {
     }, 5000);
 }
 
-
-
-
+function clearChart() {
+    $('#myChart').remove();
+    $('#chartcontainer').append(`<canvas id="myChart"></canvas>`);
+}
