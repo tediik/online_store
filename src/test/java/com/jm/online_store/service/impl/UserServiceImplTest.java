@@ -47,43 +47,37 @@ public class UserServiceImplTest {
 
     @BeforeEach
     void init() {
-
         user2 = new User();
         user2.setId(2L);
         user2.setEmail("pochta@google.com");
         user2.setPassword("2");
-
         user1 = new User("masha@mail.ru", "123",
                 "Masha", "Ivanova", Collections.singleton(new Role(1L, "ROLE_CUSTOMER")));
-
         user3 = new User("ira@mail.ru", "123",
                 "Ira", "Vasina", Collections.singleton(new Role(1L, "ROLE_CUSTOMER")));
         user3.setId(3L);
         user3.setProfilePicture("def.jpg");
-
         user4 = new User();
         user4.setEmail("куцук!!!!!!5@ваваы@fds.eew");
-
         user5 = new User(null, null,
                 null, null);
-
         user6 = new User("masha@mail.ru", "324",
                 "Misha", "Ivanov", Collections.singleton(new Role(1L, "ROLE_MANAGER")));
     }
 
     @Test
     public void shouldAddUserSuccessfully() {
+        //проверяет работоспособность метода в целом
         when(userRepository.save(user3)).thenReturn(user3);
+        //при выполнении данного условия выбрасывается исключение EmailAlreadyExistsException
         when(userRepository.findByEmail(user1.getEmail())).thenReturn(Optional.ofNullable(user1));
 
         userService.addUser(user3);
 
-        assertThrows(InvalidEmailException.class, () -> {
-            userService.addUser(user4);
-        });
-        assertThrows(EmailAlreadyExistsException.class, () -> {
-            userService.addUser(user1);
-        });
+        assertThrows(InvalidEmailException.class, () ->
+            userService.addUser(user4));
+        assertThrows(EmailAlreadyExistsException.class, () ->
+            userService.addUser(user1));
 
         verify(userRepository, times(1)).save(any(User.class));
         verify(userRepository, times(2)).findByEmail(any(String.class));
@@ -93,33 +87,31 @@ public class UserServiceImplTest {
     @Test
     public void updateUserProfileTest() {
 
-        assertThrows(UserNotFoundException.class, () -> {
-            userService.updateUserProfile(user3);
-        });
+        assertThrows(UserNotFoundException.class, () ->
+            userService.updateUserProfile(user3));
 
         verify(userRepository, times(1)).findById(any());
     }
 
     @Test
     public void updateUserAdminPanelTest() {
-
+        //условия при которых выбрасыватся InvalidEmailException
         when(userRepository.findById(user2.getId())).thenReturn(Optional.ofNullable(user5));
+        //условия при которых выбрасывается InvalidEmailException
         when(userRepository.findById(user4.getId())).thenReturn(Optional.ofNullable(user1));
+        //условия при которых выбрасывается EmailAlreadyExistsException
         when(userRepository.findById(user6.getId())).thenReturn(Optional.ofNullable(user2));
+        //притворствует выбрасыванию предыдущего исключения обеспечивая совпадение адресов почты
         when(userRepository.findByEmail(user6.getEmail())).thenReturn(Optional.ofNullable(user6));
 
-        assertThrows(UserNotFoundException.class, () -> {
-            userService.updateUserAdminPanel(user3);
-        });
-        assertThrows(NullPointerException.class, () -> {
-            userService.updateUserAdminPanel(user2);
-        });
-        assertThrows(InvalidEmailException.class, () -> {
-            userService.updateUserAdminPanel(user4);
-        });
-        assertThrows(EmailAlreadyExistsException.class, () -> {
-            userService.updateUserAdminPanel(user6);
-        });
+        assertThrows(UserNotFoundException.class, () ->
+            userService.updateUserAdminPanel(user3));
+        assertThrows(NullPointerException.class, () ->
+            userService.updateUserAdminPanel(user2));
+        assertThrows(InvalidEmailException.class, () ->
+            userService.updateUserAdminPanel(user4));
+        assertThrows(EmailAlreadyExistsException.class, () ->
+            userService.updateUserAdminPanel(user6));
 
         verify(userRepository, times(4)).findById(any());
         verify(userRepository, times(2)).findByEmail(any());
@@ -178,15 +170,13 @@ public class UserServiceImplTest {
 
         byte[] array = new byte[]{1, 2, 3, 4, 5, 66, 7, 7, 8, 9, 77, 8, 9, 0};
         MockMultipartFile file = new MockMultipartFile("File", "file.jpg", "img", array);
-
+        //обеспечивает условия проверки работы всего метода в целом
         when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
+        //обеспечивает условия выбрасывания исключения NullPointerException
         when(userRepository.findById(user1.getId())).thenReturn(Optional.ofNullable(user1));
-        when(userRepository.findById(user2.getId())).thenReturn(Optional.ofNullable(user1));
-        when(userRepository.save(user3)).thenReturn(user3);
 
-        assertThrows(NullPointerException.class, () -> {
-            userService.updateUserImage(user1.getId(), mock(MockMultipartFile.class));
-        });
+        assertThrows(NullPointerException.class, () ->
+            userService.updateUserImage(user1.getId(), mock(MockMultipartFile.class)));
         assertNotNull(userService.updateUserImage(user3.getId(), file), "check validness of whole updateUserImage() method");
 
         verify(userRepository, times(1)).findById(3L);
@@ -231,15 +221,15 @@ public class UserServiceImplTest {
 
     @Test
     public void changePasswordTest() {
+        //проверка условия возврата метода True, при сохранении нового пароля
         when(userRepository.findById(user1.getId())).thenReturn(Optional.ofNullable(user1));
         when(passwordEncoder.matches("oldPassword", user1.getPassword())).thenReturn(true);
+        //проверка условия возврата метода False, при совпадении старого и присваиваемого пароля
         when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
         when(passwordEncoder.matches("ollllldPassword", user3.getPassword())).thenReturn(false);
-        when(passwordEncoder.encode("newPassword")).thenReturn("password encoded");
 
-        assertThrows(UserNotFoundException.class, () -> {
-            userService.changePassword(7L, "oldPassword", "newPassword");
-        });
+        assertThrows(UserNotFoundException.class, () ->
+            userService.changePassword(7L, "oldPassword", "newPassword"));
         assertFalse(userService.changePassword(user3.getId(), "ollllldPassword", "newPassword"));
         assertTrue(userService.changePassword(user1.getId(), "oldPassword", "newPassword"));
 
