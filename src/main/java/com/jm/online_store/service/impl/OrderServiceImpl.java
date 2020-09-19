@@ -1,13 +1,17 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.dto.OrderDTO;
+import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.repository.OrderRepository;
 import com.jm.online_store.service.interf.OrderService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,4 +84,14 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
     }
 
+    @Override
+    public List<SalesReportDto> findAllSalesBetween(LocalDate startDate, LocalDate endDate) {
+        List<Order> completedOrders = orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, startDate.atStartOfDay(), endDate.atStartOfDay());
+        if (completedOrders.isEmpty()){
+            throw new OrdersNotFoundException("There are no completed orders in custom date range");
+        }
+        List<SalesReportDto> salesList = new ArrayList<>();
+        completedOrders.forEach(order -> salesList.add(SalesReportDto.orderToSalesReportDto(order)));
+        return salesList;
+    }
 }
