@@ -45,7 +45,7 @@ $('#managerSalesReportRange').on('apply.daterangepicker', function (ev, picker) 
             if (response.status === 200){
                 response.json().then(sales => renderSalesTable(sales))
             } else {
-                infoMessage('#infoMessageDiv', 'За указанный период продаж не найдено', 'error')
+                popupWindow('#infoMessageDiv', 'За указанный период, продаж не найдено', 'error')
             }
         })
     console.log(picker.startDate.format('YYYY-MM-DD'));
@@ -95,7 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
 });
 
-function infoMessage(inputField, text, messageStatus) {
+/**
+ * function that shows success or error message
+ * @param inputField - location where message appears
+ * @param text - text of message
+ * @param messageStatus - status success or error
+ */
+function popupWindow(inputField, text, messageStatus) {
     let successMessage = `<div class="alert text-center alert-success alert-dismissible" role="alert">
                             <strong>${text}</strong>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -110,7 +116,7 @@ function infoMessage(inputField, text, messageStatus) {
 
     if (messageStatus === "success") {
         message = successMessage
-    } else if (message === "error") {
+    } else if (messageStatus === "error") {
         message = alertMessage;
     }
 
