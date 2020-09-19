@@ -1,9 +1,12 @@
 package com.jm.online_store.repository;
 
 import com.jm.online_store.model.Order;
+import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,4 +20,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllByUserIdAndStatus(Long userId, Order.Status status);
 
     Optional<Order> findById(Long id);
+
+    List<Order> findAllByStatusEqualsAndDateTimeBetween(Order.@NonNull Status status, @NonNull LocalDateTime dateTime, @NonNull LocalDateTime dateTime2);
 }
