@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "api/manager", method = RequestMethod.GET)
+@RequestMapping(value = "api/manager")
 public class ManagerRestController {
 
     private final NewsService newsService;
@@ -35,9 +34,7 @@ public class ManagerRestController {
      */
     @GetMapping("/news")
     public ResponseEntity<List<News>> allNews() {
-
-        List<News> allNewsList = newsService.findAll();
-        return ResponseEntity.ok().body(allNewsList);
+        return ResponseEntity.ok().body(newsService.findAll());
     }
 
     /**
@@ -52,7 +49,6 @@ public class ManagerRestController {
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
             news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
         }
-
         newsService.save(news);
         return ResponseEntity.ok().body(news);
     }
@@ -69,7 +65,6 @@ public class ManagerRestController {
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
             news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
         }
-
         newsService.save(news);
         return ResponseEntity.ok().body(news);
     }
@@ -82,8 +77,9 @@ public class ManagerRestController {
      */
     @DeleteMapping("/news/{id}/delete")
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
-
         newsService.deleteById(id);
         return ResponseEntity.ok().body(id);
     }
+
+
 }

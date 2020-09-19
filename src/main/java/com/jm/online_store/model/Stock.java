@@ -57,16 +57,8 @@ public class Stock {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
 
-    @Enumerated(EnumType.STRING)
-    private StockType stockType;
-
     @OneToMany(mappedBy = "stock", orphanRemoval = true)
     @JsonManagedReference(value = "stock-sharedStock")
     private Set<SharedStock> sharedStocks;
 
-    public enum StockType {
-        CURRENT,
-        PAST,
-        FUTURE
-    }
 }

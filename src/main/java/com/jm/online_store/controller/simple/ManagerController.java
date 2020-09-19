@@ -17,4 +17,5 @@ public class ManagerController {
     public String getNewsManagementPage() {
         return "newsManagement";
     }
+
 }

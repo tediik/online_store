@@ -1,11 +1,3 @@
-$(document).ready(function () {
-    handleSummernote()
-    fetchStockList("/allStocks")
-});
-$('#stockModal').on('hidden.bs.modal', function () {
-    fetchStockList("/allStocks")
-})
-
 /**
  * Declaration of global variables
  */
@@ -13,41 +5,65 @@ let myHeaders = new Headers()
 let sharedStockApiUrl = "/manager/api/sharedStock"
 let stockApiUrl = "/manager/api/stock"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
+const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), number: 0, last: false};
 
+$(document).ready(function () {
+    handleSummernote()
+    fetchStockList()
 
-/**
- * buttons 'click' event listeners
- */
-/*Sort Buttons*/
-document.getElementById('sortUp').addEventListener('click', handleSortButton)
-document.getElementById('sortDown').addEventListener('click', handleSortButton)
-/*Filter Buttons*/
-document.getElementById('stockFilters').addEventListener('click', defineFilterAndFetchList)
-/*New stock*/
-document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
-/*Modal window buttons*/
-document.getElementById('modalFooter').addEventListener('click', checkFields)
+    /**
+     * buttons 'click' event listeners
+     */
+    /*Sort Buttons*/
+    document.getElementById('sortUp').addEventListener('click', handleSortButton)
+    document.getElementById('sortDown').addEventListener('click', handleSortButton)
+    /*Filter Buttons*/
+    document.getElementById('stockFilters').addEventListener('click', defineFilterAndFetchList)
+    /*New stock*/
+    document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
+    /*Modal window buttons*/
+    document.getElementById('modalFooter').addEventListener('click', checkFields)
 
+    document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
 
-document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
+    $('#stockModal').on('hidden.bs.modal', function () {
+        fetchStockList()
+    })
 
+    $(window).scroll(yHandler);
+});
+
+function yHandler() {
+    if (lastPage.last) {
+        return;
+    }
+    let stocksDiv = document.getElementById('stocksDiv');
+    let contentHeight = stocksDiv.offsetHeight;
+    let yOffset = window.pageYOffset;
+    let y = yOffset + window.innerHeight;
+    if (y >= contentHeight) {
+        fetchStockList();
+    }
+}
 
 /**
  * function validate fields in modal window
  * @param event
  */
 function checkFields(event) {
-    let stockTitle = document.getElementById('stockTitle')
-    let stockText = document.getElementById('stockText')
-    let startDate = document.getElementById('startDate')
-    if (stockTitle.value === '') {
-        invalidModalField("Заполните заголовок акции", stockTitle)
-    } else if (stockText.value === "") {
-        invalidModalField("Заполните описание акции", stockText)
-    } else if (startDate.value === '') {
-        invalidModalField("Заполните начальную дату", startDate)
-    } else {
-        handleSaveChangesButton(event)
+    if (event.target.dataset.toggleId === 'submit') {
+        let stockTitle = document.getElementById('stockTitle')
+        let stockText = document.getElementById('stockText')
+        let startDate = document.getElementById('startDate')
+        if (stockTitle.value === '') {
+            invalidModalField("Заполните заголовок акции", stockTitle)
+        } else if (stockText.value === "") {
+            invalidModalField("Заполните описание акции", stockText)
+        } else if (startDate.value === '') {
+            invalidModalField("Заполните начальную дату", startDate)
+        } else {
+            handleSaveChangesButton(event)
+        }
     }
 }
 
@@ -69,27 +85,24 @@ function handleStockDivButtons(event) {
  * @param event
  */
 function defineFilterAndFetchList(event) {
-    let filter = `/${event.target.dataset.toggleId}`
-    fetchStockList(filter)
+    lastPage.type = event.target.dataset.toggleId;
+    lastPage.currentDate = new Date().toLocaleDateString();
+    lastPage.number = 0;
+    lastPage.last = false;
+    fetchStockList();
 }
 
 /**
  * Fetch request to stock list
- * @param filter - one of the following filters:
- *  - /allStocks
- *  - /currentStocks
- *  - /futureStocks"
- *  - /pastStocks"
  */
-function fetchStockList(filter) {
-    fetch(stockApiUrl + filter, {headers: myHeaders})
-        .then(function (response) {
-            if (response.status === 200) {
-                response.json().then(futureStocks => renderStockList(futureStocks))
-            } else {
-                printStocksNotFoundMessage()
-            }
-        }).catch(error => console.log(error))
+function fetchStockList() {
+    $.ajax(stockApiUrl + '/page', {
+        headers: myHeaders,
+        async: false,
+        data: {page: lastPage.number, type: lastPage.type, currentDate: lastPage.currentDate},
+        success: renderStockList,
+        error: printStocksNotFoundMessage
+    })
 }
 
 /**
@@ -234,20 +247,29 @@ function stockModalClearFields() {
 
 /**
  * Stock list render
- * @param stocks stocks from db
+ * @param data
  */
-function renderStockList(stocks) {
-    let stockDiv = $("#stocksDiv").empty()
-    fetch(sharedStockApiUrl, {headers: myHeaders}).then(function (response) {
-        if (response.ok) {
-            response.json().then(sharedStocks => render(sharedStocks))
+function renderStockList(data) {
+    lastPage.number = data.number + 1;
+    lastPage.last = data.last;
+    let stockDiv = $("#stocksDiv");
+    if (data.number === 0) {
+        $(stockDiv).empty();
+    }
+    let stocks = data.content;
+    $.ajax(sharedStockApiUrl, {
+        headers: myHeaders,
+        async: false,
+        success: render,
+        error: function (error) {
+            console.log(error);
         }
-    }).catch(error => console.log(error))
+    });
 
     function render(sharedStocks) {
         let sharedStocksQuantity = sharedStocks.length
         for (let i = 0; i < stocks.length; i++) {
-            let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 10)
+            let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
             let endDate = stocks[i].endDate
             if (endDate === null) {
                 endDate = "бессрочно"
@@ -325,6 +347,12 @@ function invalidModalField(text, focusField) {
     }, 3000)
 }
 
+/**
+ * function that shows success or error message
+ * @param inputField - location where message appears
+ * @param text - text of message
+ * @param messageStatus - status success or error
+ */
 function successActionMainPage(inputField, text, messageStatus) {
     let successMessage = `<div class="alert text-center alert-success alert-dismissible" role="alert">
                             <strong>${text}</strong>
@@ -336,11 +364,11 @@ function successActionMainPage(inputField, text, messageStatus) {
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
                        </div>`
-    let message=''
+    let message = ''
 
-    if (messageStatus === "success"){
+    if (messageStatus === "success") {
         message = successMessage
-    } else  if (message === "error"){
+    } else if (message === "error") {
         message = alertMessage;
     }
 

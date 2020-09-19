@@ -127,6 +127,13 @@ function handleAddBtn() {
     }
 
     /**
+     * функция очистки полей формы нового пользователя
+     */
+    function clearFormFields() {
+        $('#addForm')[0].reset();
+        addRolesOnNewUserForm()
+    }
+    /**
      * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
      * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
      * @param text - текст для вывода в алекрт
@@ -146,16 +153,6 @@ function handleAddBtn() {
         window.setTimeout(function () {
             $('.alert').alert('close');
         }, 5000)
-    }
-
-    /**
-     * функция очистки полей формы нового пользователя
-     */
-    function clearFormFields() {
-        $('#addEmail').val("")
-        $('#addPassword').val("")
-        $('#addRoles').selectedIndex = -1
-        addRolesOnNewUserForm()
     }
 
     fetch(adminRestUrl, {
@@ -212,6 +209,29 @@ function handleAcceptButtonFromModalWindow(event) {
     };
 
     /**
+     * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
+     * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
+     * @param text - текст для вывода в алекрт
+     * @param field - поле на каком установить фокус
+     */
+    function modalHandleNotValidFormField(text, field) {
+        $('#alert-modal-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>${text}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+        $('#userModalWindow').scrollTop(0);
+        $('#' + field).focus()
+
+        window.setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000)
+    }
+
+    /**
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-user')) {
@@ -231,6 +251,24 @@ function handleAcceptButtonFromModalWindow(event) {
             if (response.ok){
                 fetchUsersAndRenderTable()
                 $('#userModalWindow').modal('hide')
+            } else {
+                response.text()
+                    .then(
+                        function (text) {
+                            if (text === "notValidEmailError") {
+                                field = "emailInputModal"
+                                modalHandleNotValidFormField("Вы ввели некоректный Email адрес!", field)
+                            }
+                            if (text === "emptyRolesError") {
+                                field = "rolesSelectModal"
+                                modalHandleNotValidFormField("Необходимо выбрать роль", field)
+                            }
+                            if (text === "duplicatedEmailError") {
+                                field = "addEmail"
+                                modalHandleNotValidFormField("Такой email адрес уже существует", field)
+                            }
+                            console.log(text)
+                        })
             }
         })
     }
@@ -270,8 +308,6 @@ function renderUsersTable(users) {
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>`)
-    table.on('click', '.edit-button', handleEditButton)
-    table.on('click', '.delete-button', handleDeleteButton)
 
     /**
      * Функция принимает объект roles,
@@ -315,6 +351,8 @@ function renderUsersTable(users) {
                 `;
         table.append(row)
     }
+    $('.edit-button').click(handleEditButton)
+    $('.delete-button').click(handleDeleteButton)
 }
 
 /**

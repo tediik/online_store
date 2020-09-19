@@ -1,20 +1,24 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.dto.NewsFilterDto;
 import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
+import com.jm.online_store.service.spec.NewsSpec;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Сервис класс, имплементация интерфейса {@link NewsService}
  * Содержит бизнес логику, использует методы репозитория {@link NewsRepository}
  */
-
 @Service
 @AllArgsConstructor
 public class NewsServiceImpl implements NewsService {
@@ -28,7 +32,27 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public List<News> findAll() {
-        return newsRepository.findAll();
+        List<News> allNews = newsRepository.findAll();
+        if (allNews.isEmpty()) {
+            throw new NewsNotFoundException("findAll returns empty List<News>");
+        }
+        return allNews;
+    }
+
+    /**
+     * Метод извлекает страницу новостей
+     *
+     * @param page параметры страницы
+     * @return Page<News> возвращает страницу новостей
+     */
+    @Override
+    public Page<News> findAll(Pageable page, NewsFilterDto filterDto) {
+        Specification<News> spec = NewsSpec.get(filterDto);
+        Page<News> newsPage = newsRepository.findAll(spec, page);
+        if (newsPage.isEmpty()) {
+            throw new NewsNotFoundException();
+        }
+        return newsPage;
     }
 
     /**
@@ -42,15 +66,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод принимающий в качестве параметра идентификатор сущности,
-     * ищет сущность по идентификатору и возвращает сущность News
+     * Method accept Long id as parameter and returns {@link News} entity
      *
-     * @param id уникальный идентификатор сушности News
-     * @return Optional<News> возвращаемое значение в виде сущности, обернутой в Optional
+     * @param id - {@link Long}
+     * @return returns News entity or throws {@link NewsNotFoundException}
      */
     @Override
-    public Optional<News> findById(long id) {
-        return newsRepository.findById(id);
+    public News findById(long id) {
+        return newsRepository.findById(id).orElseThrow(() -> new NewsNotFoundException("There are no news with such id"));
     }
 
     /**
@@ -65,12 +88,13 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод обновляет сущность News в базе данных по его уникальному идентификатору
+     * Метод обновляет сущность News в базе данных и изменяет modifiedDate на сегодняшнюю дату
      *
      * @param news сушность для обновления в базе данных
      */
-    public void updateById(News news) {
-        newsRepository.save(news);
+    public News update(News news) {
+        news.setModifiedDate(LocalDateTime.now());
+        return newsRepository.save(news);
     }
 
     /**
@@ -87,23 +111,43 @@ public class NewsServiceImpl implements NewsService {
      * Метод делающий выборку из базы данных по заданному параметру,
      * где LocalDateTime postingDate > LocalDateTime timeNow.
      *
-     * @param timeNow параметр типа LocalDateTime относительно которого делается выборка данных их базы данных
      * @return возвращает список еще неопубликованных новостей List<News>
      */
     @Override
-    public List<News> findAllByPostingDateBefore(LocalDateTime timeNow) {
-        return newsRepository.findAllByPostingDateBefore(timeNow);
+    public List<News> getAllPublished() {
+        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime.now(), false);
+        if (publishedNews.isEmpty()) {
+            throw new NewsNotFoundException("There are no published news");
+        }
+        return publishedNews;
     }
 
     /**
      * Метод делающий выборку из базы данных по заданному параметру,
      * где LocalDateTime postingDate <= LocalDateTime timeNow.
      *
-     * @param timeNow параметр типа LocalDateTime относительно которого делается выборка данных их базы данных
      * @return возвращает список опубликованных новостей List<News>
      */
     @Override
-    public List<News> findAllByPostingDateAfter(LocalDateTime timeNow) {
-        return newsRepository.findAllByPostingDateAfter(timeNow);
+    public List<News> getAllUnpublished() {
+        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDateTime.now(), false);
+        if (unpublishedNews.isEmpty()) {
+            throw new NewsNotFoundException("There are no unpublished news");
+        }
+        return unpublishedNews;
     }
+
+    /**
+     * Method returns list of all archived news ot throw {@link NewsNotFoundException}
+     * @return - List<News>
+     */
+    @Override
+    public List<News> getAllArchivedNews() {
+        List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
+        if (archivedNews.isEmpty()) {
+            throw new NewsNotFoundException("There are no archived news");
+        }
+        return archivedNews;
+    }
+
 }
