@@ -69,45 +69,26 @@
                         <span></span> <i class="fa fa-caret-down"></i>
                     </div>
                     <hr>
-                    <table class="table">
+                    <div id="infoMessageDiv">
+
+                    </div>
+                    <table class="table table_sort">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
+                            <th scope="col">Логин(email)</th>
                             <th scope="col">Имя</th>
                             <th scope="col">Дата заказа</th>
-                            <th scope="col">Количество</th>
-                            <th scope="col">Список товаров</th>
+                            <th scope="col">Общее количество</th>
+                            <th scope="col">Список товаров в заказе(кол-во)</th>
                             <th scope="col">Сумма заказа</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>Thornton</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>the Bird</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
+                        <tbody id="salesTableBody">
+
                         </tbody>
                     </table>
-
+                    <button type="button" id="exportCsvButton" class="btn btn-primary">Выгрузить в csv</button>
                 </div>
                 <div class="tab-pane fade" id="nav-2" role="tabpanel" aria-labelledby="nav-2-tab">2</div>
                 <div class="tab-pane fade" id="nav-3" role="tabpanel" aria-labelledby="nav-3-tab">3</div>
@@ -124,9 +105,6 @@
         crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<!--<script src="/static/js/summernote.js"></script>-->
-<!--<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>-->
-<!--<link href="/static/css/summernote.css" rel="stylesheet">-->
 <script src="/static/js/manager-sales-report.js"></script>
 </body>
 </html>
