@@ -2,7 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.User;
-import com.jm.online_store.repository.ProductCommentRepository;
+import com.jm.online_store.repository.CommentRepository;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
@@ -15,13 +15,14 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final ProductCommentRepository commentRepository;
+    private final CommentRepository commentRepository;
     private final UserService userService;
 
     /**
-     * Fetches an arrayList of all Comments from database
+     * Fetches an arrayList of all Comments by productId
      *
-     * @return List<ProductComment>
+     * @param productId
+     * @return List<comment>
      */
     @Override
     public List<Comment> findAll(Long productId) {
@@ -29,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Method checks if productComment is a new post or reply to previous comment
+     * Method checks if Comment is a new post or reply to previous comment
      * then sets a current user as author of a comment and saves to dataBase
      *
      * @param comment

@@ -29,10 +29,10 @@ public class CommentRestController {
     private final CommentService commentService;
     private final ProductRepository productRepository;
 
-
     /**
-     * Fetches an arrayList of all Comments from database and returns JSON representation response
+     * Fetches an arrayList of all product Comments by productId and returns JSON representation response
      *
+     * @param productId
      * @return ResponseEntity<List < ProductComment>>
      */
     @GetMapping("/{productId}")

@@ -47,5 +47,6 @@ public class Comment   {
     @JoinColumn(name = "product")
     private Product product;
 
+    @Column(name = "product_id")
     private Long productId;
 }
