@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -113,7 +113,7 @@
                         <div class="col-5">
                             <table class="table">
                                 <tbody id="text-specifications" style="font-size: 1.1rem;">
-                                    <!-- from js -->
+                                <!-- from js -->
                                 </tbody>
                             </table>
                         </div>
@@ -122,23 +122,25 @@
                 </div>
                 <div class="tab-pane fade mx-5" id="comments" role="tabpanel" aria-labelledby="comments-tab">
                     <hr class="mb-4">
-                    <h4>comments</h4>
                     <div class="container">
                         <!-- Compiled and minified CSS -->
                         <div class="container">
-                            <form method="POST" id="commentForm">
-                                <div class="form-group">
-                                    <input name="content" id="content" class="form-control" placeholder="Enter Comment">
-                                </div>
-                                <span id="message"></span>
-                                <div class="form-group">
-                                    <input type="hidden" name="parent_id" id="parent_id" value=""/>
-                                    <input type="submit" name="submit" id="submitCommentBtn" class="btn btn-primary" value="Post Comment"/>
-                                </div>
-                            </form>
-                            <div id="showComments"></div>
+                            <div sec:authorize="isAuthenticated()">
+
+                                <form method="POST" id="commentForm">
+                                    <div class="form-group">
+                                        <input name="content" id="content" class="form-control" placeholder="Enter Comment">
+                                    </div>
+                                    <span id="message"></span>
+                                    <div class="form-group">
+                                        <input type="hidden" name="parent_id" id="parent_id" value=""/>
+                                        <input type="submit" name="submit" id="submitCommentBtn" class="btn btn-primary" value="Post Comment"/>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
+                    <div id="showComments"></div>
                 </div>
             </div>
         </div>
@@ -148,16 +150,12 @@
 
 <!-- Optional JavaScript -->
 <script src="../static/js/productPage.js"></script>
-<script src="/static/js/comments.js"></script>
+<script src="../static/js/comments.js"></script>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
 </body>
 </html>

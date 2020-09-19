@@ -1,11 +1,11 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Comment;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.dto.ProductCommentDto;
+import com.jm.online_store.model.mapper.ProductCommentMapper;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CommentService;
-import com.jm.online_store.model.mapper.ProductCommentMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

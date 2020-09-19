@@ -20,6 +20,7 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Fetches an arrayList of all Comments from database
+     *
      * @return List<ProductComment>
      */
     @Override
@@ -30,8 +31,9 @@ public class CommentServiceImpl implements CommentService {
     /**
      * Method checks if productComment is a new post or reply to previous comment
      * then sets a current user as author of a comment and saves to dataBase
+     *
      * @param comment
-     * @return ProductComment
+     * @return Comment
      */
     @Override
     @Transactional
@@ -46,6 +48,7 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Find and retrieve ProductComment from database by Id
+     *
      * @return ProductComment
      */
     @Override
