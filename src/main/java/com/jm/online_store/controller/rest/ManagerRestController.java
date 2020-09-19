@@ -1,8 +1,11 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
+import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.service.interf.NewsService;
+import com.jm.online_store.service.interf.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,8 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,6 +32,7 @@ import java.util.List;
 public class ManagerRestController {
 
     private final NewsService newsService;
+    private final OrderService orderService;
 
     /**
      * Метод возвращающий всписок всех новостей
@@ -82,9 +88,20 @@ public class ManagerRestController {
         return ResponseEntity.ok().body(id);
     }
 
-    @GetMapping("/sales/")
-    public ResponseEntity<List<Order>> getSalesForCustomRange(){
-        return ResponseEntity.ok().build();
+    /**
+     * Get mapping for get request to response with sales during the custom date range
+     * @param stringStartDate - start of custom date range
+     * @param stringEndDate - end of custom date range
+     * @return - {@link ResponseEntity} with list of Orders with status complete
+     */
+    @GetMapping("/sales")
+    public ResponseEntity<List<SalesReportDto>> getSalesForCustomRange(@RequestParam String stringStartDate, @RequestParam String stringEndDate){
+        LocalDate startDate = LocalDate.parse(stringStartDate);
+        LocalDate endDate = LocalDate.parse(stringEndDate);
+        try {
+            return ResponseEntity.ok(orderService.findAllSalesBetween(startDate, endDate));
+        } catch (OrdersNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
     }
-
 }
