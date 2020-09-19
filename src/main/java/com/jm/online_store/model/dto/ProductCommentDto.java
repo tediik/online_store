@@ -1,6 +1,6 @@
 package com.jm.online_store.model.dto;
 
-import com.jm.online_store.model.ProductComment;
+import com.jm.online_store.model.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ public class ProductCommentDto extends AbstractDto {
 
     private Long id;
 
-    private Collection<ProductComment> comments = new ArrayList<>();
+    private Collection<Comment> comments = new ArrayList<>();
 
 
 }

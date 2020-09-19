@@ -1,6 +1,6 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.model.ProductComment;
+import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ProductCommentRepository;
 import com.jm.online_store.service.interf.CommentService;
@@ -18,31 +18,30 @@ public class CommentServiceImpl implements CommentService {
     private final ProductCommentRepository commentRepository;
     private final UserService userService;
 
-
     /**
      * Fetches an arrayList of all Comments from database
      * @return List<ProductComment>
      */
     @Override
-    public List<ProductComment> findAll(Long productId) {
+    public List<Comment> findAll(Long productId) {
         return commentRepository.findAllByProductId(productId);
     }
 
     /**
      * Method checks if productComment is a new post or reply to previous comment
      * then sets a current user as author of a comment and saves to dataBase
-     * @param productComment
+     * @param comment
      * @return ProductComment
      */
     @Override
     @Transactional
-    public ProductComment addComment(ProductComment productComment) {
+    public Comment addComment(Comment comment) {
         User loggedInUser = userService.getCurrentLoggedInUser();
-        if (productComment.getParentId() != null) {
-            productComment.setParentComment(commentRepository.findById(productComment.getParentId()).get());
+        if (comment.getParentId() != null) {
+            comment.setParentComment(commentRepository.findById(comment.getParentId()).get());
         }
-        productComment.setCustomer(userService.findById(loggedInUser.getId()).get());
-        return commentRepository.save(productComment);
+        comment.setCustomer(userService.findById(loggedInUser.getId()).get());
+        return commentRepository.save(comment);
     }
 
     /**
@@ -50,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
      * @return ProductComment
      */
     @Override
-    public ProductComment findById(Long commentId) {
+    public Comment findById(Long commentId) {
         return commentRepository.findById(commentId).get();
     }
 }

@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.ProductComment;
+import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.dto.ProductCommentDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CommentService;
@@ -38,9 +38,7 @@ public class CommentRestController {
      * @return ResponseEntity<List < ProductComment>>
      */
     @GetMapping("/{productId}")
-    public ResponseEntity<List<ProductComment>> findAll(@PathVariable Long productId) {
-
-
+    public ResponseEntity<List<Comment>> findAll(@PathVariable Long productId) {
         return ResponseEntity.ok(commentService.findAll(productId));
     }
 
@@ -48,14 +46,14 @@ public class CommentRestController {
      * Receives productComment requestBody and passes it to Service layer for processing
      * Returns JSON representation
      *
-     * @param productComment
+     * @param comment
      * @return ResponseEntity<ProductComment>
      */
     @PostMapping
-    public ResponseEntity<ProductCommentDto> addComment(@RequestBody @Valid ProductComment productComment, BindingResult bindingResult) {
-        Product productFromDb = productRepository.findById(productComment.getProductId()).get();
+    public ResponseEntity<ProductCommentDto> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
+        Product productFromDb = productRepository.findById(comment.getProductId()).get();
         if (!bindingResult.hasErrors()) {
-            ProductComment savedComment = commentService.addComment(productComment);
+            Comment savedComment = commentService.addComment(comment);
             productFromDb.setComments(List.of(savedComment));
             return ResponseEntity.ok().body(productCommentMapper.toDto(productFromDb));
         } else

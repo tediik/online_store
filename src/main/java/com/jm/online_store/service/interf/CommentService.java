@@ -1,15 +1,15 @@
 package com.jm.online_store.service.interf;
 
-import com.jm.online_store.model.ProductComment;
+import com.jm.online_store.model.Comment;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 public interface CommentService {
     
-    List<ProductComment> findAll(Long productId);
+    List<Comment> findAll(Long productId);
     
-    ProductComment addComment(@RequestBody ProductComment productComment);
+    Comment addComment(@RequestBody Comment comment);
 
-    ProductComment findById(Long parentId);
+    Comment findById(Long parentId);
 }

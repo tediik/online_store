@@ -58,7 +58,7 @@ public class Product extends AbstractEntity {
     private List<ProductInOrder> productInOrders;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
-    private Collection<ProductComment> comments = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {
         this.product = product;

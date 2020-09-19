@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -14,11 +15,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductComment extends AbstractEntity {
+public class Comment extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +34,7 @@ public class ProductComment extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "parent_comment")
-    private ProductComment parentComment;
+    private Comment parentComment;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

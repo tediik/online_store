@@ -12,5 +12,4 @@ public class ProductCommentMapper extends AbstractMapper <Product, ProductCommen
     public ProductCommentMapper(){
         super(Product.class, ProductCommentDto.class);
     }
-
 }
