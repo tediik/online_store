@@ -100,3 +100,7 @@ async function addToFavouritsGoods(id, heartId) {
     $(b).toggleClass('filled');
 
 }
+
+function test() {
+    $("#dismissButton").click();
+}
