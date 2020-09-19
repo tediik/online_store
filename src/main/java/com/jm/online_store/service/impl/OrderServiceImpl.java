@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,5 +95,34 @@ public class OrderServiceImpl implements OrderService {
         List<SalesReportDto> salesList = new ArrayList<>();
         completedOrders.forEach(order -> salesList.add(SalesReportDto.orderToSalesReportDto(order)));
         return salesList;
+    }
+
+    @Override
+    public String findAllSalesBetweenAndExportToCSV(LocalDate startDate, LocalDate endDate){
+        List<Order> completedOrders = orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, startDate.atStartOfDay(), endDate.atStartOfDay());
+        if (completedOrders.isEmpty()){
+            throw new OrdersNotFoundException("There are no completed orders in custom date range");
+        }
+        List<SalesReportDto> salesList = new ArrayList<>();
+        completedOrders.forEach(order -> salesList.add(SalesReportDto.orderToSalesReportDto(order)));
+        String filePath = "uploads/reports/"+LocalDate.now().toString()+"-sales.csv";
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath))){
+            fileWriter.write("order_number;login(email);user_initials;date_of_purchase;summary_quantity;list_of_products;summary_cost");
+            for (SalesReportDto order : salesList) {
+                String line = String.format("%d; %s; %s; %s; %d; %s; %.1f",
+                        order.getOrderNumber(),
+                        order.getUserEmail(),
+                        order.getCustomerInitials(),
+                        order.getPurchaseDate(),
+                        order.getQuantity(),
+                        order.getListOfProducts(),
+                        order.getOrderSummaryPrice());
+                fileWriter.newLine();
+                fileWriter.write(line);
+            }
+        } catch (Exception e){
+            //TODO do something
+        }
+        return filePath;
     }
 }

@@ -38,28 +38,50 @@ function dateRangePickerForSalesReport() {
  * fetch GET request to server to receive list of sales for custom range date
  */
 $('#managerSalesReportRange').on('apply.daterangepicker', function (ev, picker) {
-    let StartDate = picker.startDate.format('YYYY-MM-DD')
-    let EndDate = picker.endDate.format('YYYY-MM-DD')
-    fetch(managerSalesApiUrl + `?stringStartDate=${StartDate}&stringEndDate=${EndDate}`)
-        .then(function (response){
-            if (response.status === 200){
+    $('#salesTableBody').empty()
+    let startDate = picker.startDate.format('YYYY-MM-DD')
+    let endDate = picker.endDate.format('YYYY-MM-DD')
+    fetch(managerSalesApiUrl + `?stringStartDate=${startDate}&stringEndDate=${endDate}`)
+        .then(function (response) {
+            if (response.status === 200) {
                 response.json().then(sales => renderSalesTable(sales))
+                showElementsOfReport()
+            } else {
+                popupWindow('#infoMessageDiv', 'За указанный период, продаж не найдено', 'error')
+                hideElementsOfSalesReport()
+            }
+        })
+    $('#exportCsvButton').attr('startDate', startDate).attr('endDate', endDate)
+});
+
+$('#exportCsvButton').on('click', function () {
+    let StartDate = $('#exportCsvButton').attr('startDate')
+    let EndDate = $('#exportCsvButton').attr('endDate')
+    fetch(managerSalesApiUrl + `/exportCSV?stringStartDate=${StartDate}&stringEndDate=${EndDate}`)
+        .then(function (response) {
+            if (response.status === 200) {
+                popupWindow('#infoMessageDiv', 'Данные успешно выгружены', 'success')
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let file = document.createElement('a');
+                    file.href = url;
+                    file.download = `sales_report_${StartDate}-${EndDate}.csv`;
+                    file.click();
+                })
             } else {
                 popupWindow('#infoMessageDiv', 'За указанный период, продаж не найдено', 'error')
             }
         })
-    console.log(picker.startDate.format('YYYY-MM-DD'));
-    console.log(picker.endDate.format('YYYY-MM-DD'));
 });
 
 /**
  * Function that renders sales report table
  * @param sales
  */
-function renderSalesTable(sales){
+function renderSalesTable(sales) {
     let salesTableBody = $('#salesTableBody')
     salesTableBody.empty()
-    for (let i = 0; i < sales.length; i++){
+    for (let i = 0; i < sales.length; i++) {
         let row = `<tr id=tr-${sales[i].id}>
                         <th scope="row">${sales[i].orderNumber}</th>
                         <td>${sales[i].userEmail}</td>
@@ -77,19 +99,19 @@ function renderSalesTable(sales){
  * function that sorts the table by header
  */
 document.addEventListener('DOMContentLoaded', () => {
-    const getSort = ({ target }) => {
+    const getSort = ({target}) => {
         const order = (target.dataset.order = -(target.dataset.order || -1));
         const index = [...target.parentNode.cells].indexOf(target);
-        const collator = new Intl.Collator(['en', 'ru'], { numeric: true });
+        const collator = new Intl.Collator(['en', 'ru'], {numeric: true});
         const comparator = (index, order) => (a, b) => order * collator.compare(
             a.children[index].innerHTML,
             b.children[index].innerHTML
         );
 
-        for(const tBody of target.closest('table').tBodies)
+        for (const tBody of target.closest('table').tBodies)
             tBody.append(...[...tBody.rows].sort(comparator(index, order)));
 
-        for(const cell of target.parentNode.cells)
+        for (const cell of target.parentNode.cells)
             cell.classList.toggle('sorted', cell === target);
     };
     document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
@@ -124,4 +146,14 @@ function popupWindow(inputField, text, messageStatus) {
     window.setTimeout(function () {
         $('.alert').alert('close');
     }, 3000)
+}
+
+function hideElementsOfSalesReport() {
+    document.getElementById("salesReportTable").style.visibility = "hidden";
+    document.getElementById("exportCsvButton").style.visibility = "hidden";
+}
+
+function showElementsOfReport() {
+    document.getElementById("salesReportTable").style.visibility = "visible";
+    document.getElementById("exportCsvButton").style.visibility = "visible";
 }

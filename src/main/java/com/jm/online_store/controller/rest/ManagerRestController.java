@@ -2,11 +2,11 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.News;
-import com.jm.online_store.model.Order;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -90,18 +91,35 @@ public class ManagerRestController {
 
     /**
      * Get mapping for get request to response with sales during the custom date range
+     *
      * @param stringStartDate - start of custom date range
-     * @param stringEndDate - end of custom date range
+     * @param stringEndDate   - end of custom date range
      * @return - {@link ResponseEntity} with list of Orders with status complete
      */
     @GetMapping("/sales")
-    public ResponseEntity<List<SalesReportDto>> getSalesForCustomRange(@RequestParam String stringStartDate, @RequestParam String stringEndDate){
+    public ResponseEntity<List<SalesReportDto>> getSalesForCustomRange(@RequestParam String stringStartDate, @RequestParam String stringEndDate) {
         LocalDate startDate = LocalDate.parse(stringStartDate);
         LocalDate endDate = LocalDate.parse(stringEndDate);
         try {
             return ResponseEntity.ok(orderService.findAllSalesBetween(startDate, endDate));
-        } catch (OrdersNotFoundException e){
+        } catch (OrdersNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/sales/exportCSV")
+    public ResponseEntity<FileSystemResource> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate, @RequestParam String stringEndDate) {
+        LocalDate startDate = LocalDate.parse(stringStartDate);
+        LocalDate endDate = LocalDate.parse(stringEndDate);
+        try {
+            String filePath = orderService.findAllSalesBetweenAndExportToCSV(startDate, endDate);
+//            InputStreamResource resource = new InputStreamResource(new FileInputStream(filePath));
+
+            return ResponseEntity.ok(new FileSystemResource(filePath));
+        } catch (OrdersNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }

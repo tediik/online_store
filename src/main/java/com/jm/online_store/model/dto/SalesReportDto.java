@@ -34,7 +34,7 @@ public class SalesReportDto {
                 .getProductInOrders()
                 .stream()
                 .map(product -> String.valueOf(product.getProduct().getProduct() + " - (" + product.getAmount() + ")"))
-                .collect(Collectors.joining( "; ")));
+                .collect(Collectors.joining( ", ")));
         salesReportDto.setOrderSummaryPrice(order.getOrderPrice());
         return salesReportDto;
     }
