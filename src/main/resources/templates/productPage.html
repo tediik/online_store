@@ -11,7 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -68,19 +67,31 @@
                 </div>
             </div>
         </div>
+
         <div class="col" id="productName">
             <!-- from productPage.js -->
         </div>
         <div class="col">
             <br>
-            <div class="row">
+            <div class="row mx-5">
                 <button class="btn btn-warning btn-lg" type="submit" style="width: 15rem"><h4
                         class="font-weight-normal my-auto">Купить</h4></button>
+
             </div>
             <br>
             <div class="row mx-5">
                 <h5 class="font-weight-normal my-2">&ensp;В избранное </h5>
                 <button class="btn" type="submit"><i class="fa fa-heart-o"></i></button>
+
+            </div>
+            <br>
+            <div class="row mx-5">
+                <button sec:authorize="hasAnyAuthority('ROLE_MANAGER')"
+                        class="btn btn-primary btn-lg font-weight-normal my-auto"
+                        data-toggle="modal"
+                        data-target="#productPriceMonitor"
+                        onclick="takePriceChangeMonitor()">изменение цены
+                </button>
             </div>
         </div>
     </div>
@@ -152,10 +163,25 @@
 <script src="../static/js/productPage.js"></script>
 <script src="../static/js/comments.js"></script>
 
+
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+<!--<script src="../static/js/productPriceChange.js"></script>-->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script src="../static/js/productPage.js"></script>
+<script src="../static/js/productPriceChange.js"></script>
 </body>
 </html>

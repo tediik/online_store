@@ -17,4 +17,5 @@ public class ProductController {
     public String getProductPage() {
         return "productPage";
     }
+
 }

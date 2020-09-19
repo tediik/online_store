@@ -2,9 +2,14 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.model.Stock;
+import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.service.interf.StockService;
+import com.jm.online_store.service.spec.StockSpec;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +30,22 @@ public class StockServiceImpl implements StockService {
             throw new StockNotFoundException();
         }
         return stockList;
+    }
+
+    /**
+     * Метод извлекает страницу акций
+     *
+     * @param page параметры страницы
+     * @return Page<Stock> возвращает страницу новостей
+     */
+    @Override
+    public Page<Stock> findPage(Pageable page, StockFilterDto filterDto) {
+        Specification<Stock> spec = StockSpec.get(filterDto);
+        Page<Stock> stockPage = stockRepository.findAll(spec, page);
+        if (stockPage.isEmpty()) {
+            throw new StockNotFoundException();
+        }
+        return stockPage;
     }
 
     @Override

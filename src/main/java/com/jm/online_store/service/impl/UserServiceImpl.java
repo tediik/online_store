@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.server.url}")
     private String urlActivate;
 
-    @Transactional
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
@@ -390,5 +389,4 @@ public class UserServiceImpl implements UserService {
         }
         return userRepository.findById(((User) auth.getPrincipal()).getId()).get();
     }
-
 }

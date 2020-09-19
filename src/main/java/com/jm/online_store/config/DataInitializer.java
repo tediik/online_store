@@ -71,6 +71,7 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
+        paginationNewsAndStocksInit();
     }
 
     /**
@@ -186,7 +187,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDate.now())
+                .postingDate(LocalDateTime.now())
                 .archived(true)
                 .build();
 
@@ -205,7 +206,7 @@ public class DataInitializer {
                         "<i style=\"font-size: 1rem;\">Приятных покупок в Online-Shop!</i></p><p style=\"margin-right:" +
                         " 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px; color: rgb(0, 0, 0); font-family:" +
                         " &quot;PT Sans&quot;, Arial, sans-serif;\"><i style=\"font-size: 1rem;\">23<br></i><br></p>")
-                .postingDate(LocalDate.now().minusDays(5L))
+                .postingDate(LocalDateTime.now().minusDays(5L))
                 .archived(false)
                 .build();
 
@@ -220,7 +221,7 @@ public class DataInitializer {
                         "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
-                .postingDate(LocalDate.now().minusDays(13L))
+                .postingDate(LocalDateTime.now().minusDays(13L))
                 .archived(false)
                 .build();
 
@@ -251,7 +252,7 @@ public class DataInitializer {
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
-        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer",false);
+        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer", false);
 
         Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer", false);
         Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer", false);
@@ -268,10 +269,10 @@ public class DataInitializer {
         Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
         Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
         Description description3 = new Description("99966732", "Samsung", 3, "550x27x368", "white", 1.1, "some additional info here");
-        Description description4 = new Description("33311432NXU", "ATop corp.", 3, "698x785x368", "black", 3.1, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim");
+        Description description4 = new Description("33311432NXU", "ATop corp.", 3, "698x785x368", "black", 3.1, "some additional info here");
         Description description5 = new Description("33211678NXU", "ATop corp.", 3, "690x765x322", "black", 3.5, "some additional info here");
         Description description6 = new Description("333367653Rh", "Rhino corp.", 3, "612x678x315", "orange", 2.8, "some additional info here");
-        Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim", 512, 512, "1920x960", true, "5.0");
+        Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "some additional info here", 512, 512, "1920x960", true, "5.0");
         Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 256, "1920x960", false, "4.0");
         Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 128, "1024x480", true, "5.0");
 
@@ -406,5 +407,43 @@ public class DataInitializer {
             }
         }
 
+    }
+
+    /**
+     * Метод инициализации новостей и акций в профиле менеджера для тестирования динамической пагинации.
+     */
+    public void paginationNewsAndStocksInit() {
+        for (int i = 0; i < 50; i++) {
+            News news = News.builder()
+                    .title(i + " Сегодня стартует предзаказ на флагманские продукты Samsung!")
+                    .anons("Сделайте предзаказ и получите подарок.")
+                    .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                            "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                            "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\">Сегодня стартует предзаказ на новые флагманские продукты Samsung!<b></b>" +
+                            "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\"><br></p></h1>")
+                    .postingDate(LocalDateTime.now().minusDays(Math.round(Math.random() * 20)))
+                    .archived(false)
+                    .build();
+            newsService.save(news);
+        }
+
+        for (int i = 0; i < 50; i++) {
+            Stock stock = Stock.builder()
+                    .startDate(LocalDate.now().minusDays(20L))
+                    .endDate(LocalDate.now().minusDays(5L))
+                    .stockTitle("Скидки на игры ЕА!")
+                    .stockText("В течение действия акции вы можете приобрести игры ЕА из списка по" +
+                            " очень привлекательным ценам!" +
+                            "Вы можете стать обладателем игр EA для Xbox One, Nintendo Switch и PS4" +
+                            " в различных жанрах. Ощутите всю радость победы в хоккейном матче, станьте" +
+                            " стремительным уличным автогонщиком, постройте дом мечты или очутитесь в" +
+                            " фантастическом мире и примите участие в битве галактических масштабов!")
+                    .build();
+            stockService.addStock(stock);
+        }
     }
 }

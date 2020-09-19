@@ -48,11 +48,9 @@ public interface UserService {
 
     void addNewUserFromAdmin(User newUser);
 
-    User getCurrentLoggedInUser();
-
     boolean changePassword(Long id, String oldPassword, String newPassword);
 
-
+    User getCurrentLoggedInUser();
 }
 
 

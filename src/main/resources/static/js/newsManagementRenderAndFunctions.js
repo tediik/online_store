@@ -4,46 +4,80 @@
 let myHeaders = new Headers()
 let newsApiUrl = "/api/manager/news"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
+const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), divId: '#allNews', number: 0, last: false};
 
 $(document).ready(function () {
-    fetchNews("/all", '#allNews')
-});
-$('#editNewsModal').on('hidden.bs.modal', function () {
-    location.reload()
-})
+    fetchNews();
 
-/**
- * Event listeners of all document
- */
-/*event listener in news div of edit and delete buttons*/
-document.getElementById('newsTabContent').addEventListener('click', checkButton)
-/*modal window publish checkbox listener*/
-document.getElementById('archiveCheckboxDiv').addEventListener('change', archiveCheckboxHandler)
-/*modal window footer */
-document.querySelector('.modal-footer').addEventListener('click', checkButtonClicked)
-/*left nav bar*/
-document.getElementById('leftNavBar').addEventListener('click', handleLeftNavBarClick)
-/*upper nav tab*/
-document.getElementById('upperNavTab').addEventListener('click', checkUpperNavButton)
+    $('#editNewsModal').on('hidden.bs.modal', function () {
+        location.reload()
+    })
+
+    /**
+     * Event listeners of all document
+     */
+    /*event listener in news div of edit and delete buttons*/
+    document.getElementById('newsTabContent').addEventListener('click', checkButton)
+    /*modal window publish checkbox listener*/
+    document.getElementById('archiveCheckboxDiv').addEventListener('change', archiveCheckboxHandler)
+    /*modal window footer */
+    document.querySelector('.modal-footer').addEventListener('click', checkButtonClicked)
+    /*left nav bar*/
+    document.getElementById('leftNavBar').addEventListener('click', handleLeftNavBarClick)
+    /*upper nav tab*/
+    document.getElementById('upperNavTab').addEventListener('click', checkUpperNavButton)
+
+    $(window).scroll(function () {
+        yHandler('allNews');
+    });
+
+});
+
+
+function yHandler(divId) {
+    if (lastPage.last) {
+        return;
+    }
+    let allNews = document.getElementById(divId);
+    let contentHeight = allNews.offsetHeight;
+    let yOffset = window.pageYOffset;
+    let y = yOffset + window.innerHeight;
+    if (y >= contentHeight) {
+        fetchNews();
+    }
+}
 
 /**
  * Function checks which button on top nav bar was clicked
  * @param event
  */
 function checkUpperNavButton(event) {
+    $(window).unbind('scroll');
     let tab = event.target.dataset.toggleId
+    lastPage.number = 0
+    lastPage.last = false
+    lastPage.currentDate = new Date().toLocaleDateString();
     if (tab === 'publishedNews') {
-        fetchNews('/published', '#publishedNews')
+        initFetchNews('PUBLISHED', tab);
     }
     if (tab === 'allNews') {
-        fetchNews('/all', '#allNews')
+        initFetchNews('ALL', tab);
     }
     if (tab === 'unpublishedNews') {
-        fetchNews('/unpublished', '#unpublishedNews')
+        initFetchNews('UNPUBLISHED', tab);
     }
     if (tab === 'archivedNews') {
-        fetchNews('/archived', '#archivedNews')
+        initFetchNews('ARCHIVED', tab);
     }
+}
+
+function initFetchNews(type, divId) {
+    lastPage.type = type;
+    lastPage.divId = '#' + divId;
+    fetchNews();
+    $(window).scroll(function () {
+        yHandler(divId);
+    })
 }
 
 /**
@@ -263,33 +297,33 @@ function archiveCheckboxHandler() {
 
 /**
  * makes fetch request to manager rest controller
- * @param status news status can be:
- * @param inputDiv div where to insert news
- *  - /all
- *  - /published
- *  - /unpublished
  */
-function fetchNews(status, inputDiv) {
-    fetch(newsApiUrl + status, {
-        headers: myHeaders
-    }).then(function (response) {
-        if (response.status !== 200) {
+function fetchNews() {
+    $.ajax(newsApiUrl + '/page', {
+        headers: myHeaders,
+        data: {page: lastPage.number, sort: 'postingDate,DESC', type: lastPage.type, currentDate: lastPage.currentDate},
+        async: false,
+        success: function (data) {
+            lastPage.number = data.number + 1;
+            lastPage.last = data.last;
+            renderNewsTable(data)
+        },
+        error: function () {
             infoMessage('#infoMessageMainPage', 'В этом разделе нет новостей', 'error')
-        } else {
-            response.json().then(news => renderNewsTable(news, inputDiv))
         }
     })
 }
 
 /**
  * function renders news page
- * @param news List of news
- * @param inputDiv div where to insert news
+ * @param news Page of news
  */
-function renderNewsTable(news, inputDiv) {
-    const allNewsUl = $(`${inputDiv}`)
-    allNewsUl.empty()
-    news.forEach(function (element) {
+function renderNewsTable(news) {
+    const allNewsUl = $(lastPage.divId);
+    if (news.number === 0) {
+        allNewsUl.empty()
+    }
+    news.content.forEach(function (element) {
         let postingDate = moment(element.postingDate).format("YYYY-MM-DD")
         let modifiedDateText = ''
         if (element.modifiedDate !== null) {

@@ -10,16 +10,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 
 @Entity
 @Getter
@@ -59,6 +67,17 @@ public class Product extends AbstractEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
+    /**
+     * поле для возможности отслеживания изменения цены на Product.
+     * при изменении цены добавлять элемент данной коллекции.
+     */
+    @ElementCollection
+    @CollectionTable(name = "product_price_mapping",
+            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "price_dateChange")
+    @Column(name = "price")
+    private Map<LocalDateTime, Double> changePriceHistory = new LinkedHashMap<>();
+
     public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {
         this.product = product;
         this.price = price;
@@ -80,7 +99,7 @@ public class Product extends AbstractEntity {
         this.amount = amount;
     }
 
-    public @NonNull boolean getDeleteStatus(){
+    public @NonNull boolean getDeleteStatus() {
         return this.deleted;
     }
 }
