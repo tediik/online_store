@@ -20,6 +20,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
+/**
+ * Сущность служит для связи {@link Stock} и {@link User}
+ * при отправлении письма на почту с акциями, с таблицу добавляется новая строка
+ */
 @Entity
 @Data
 @Builder

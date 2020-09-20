@@ -419,7 +419,9 @@ public class DataInitializer {
         }
 
     }
-
+    /**
+     * Метод первичного тестового акциой отправленных пользователям
+     */
     public void sentStockInit() {
         Random random = new Random();
         List<Stock> stocks = stockService.findAll();

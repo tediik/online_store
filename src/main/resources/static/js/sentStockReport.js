@@ -33,11 +33,11 @@ function renderUsersTable(users) {
     let table = $('#users-table');
     table.empty();
     table.append(`<thead>
-        '           <tr>
-        '               <th scope="col" >ID</th>
-        '               <th scope="col" >Email</th>
-        '               <th scope="col" >Day</th>
-        '               <th scope="col" >Отменить подписку</th>
+                    <tr>
+        '               <th scope="col">ID</th>
+        '               <th scope="col">Email</th>
+        '               <th scope="col">Day</th>
+        '               <th scope="col">Отменить подписку</th>
         '           </tr>
         '        </thead>`);
     if (users.length != 0) {
@@ -108,7 +108,7 @@ function currentDay() {
 }
 
 function fetchSentStocks(begin, end) {
-    fetch("/api/manager/report?param1=" + begin + "&param2=" + end, {
+    fetch("/api/manager/report?beginDate=" + begin + "&endDate=" + end, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
@@ -135,7 +135,7 @@ function printChart(sentStocks) {
     var speedData = {
         labels: Object.keys(sentStocks),
         datasets: [{
-            label: "Количество отправленных акция по дням",
+            label: "Количество отправленных акций по дням",
             data: Object.values(sentStocks),
             lineTension: 0,
             fill: false,

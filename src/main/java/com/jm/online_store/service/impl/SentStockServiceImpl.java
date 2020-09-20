@@ -3,7 +3,9 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.SentStockNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SentStock;
+import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.repository.SentStockRepository;
+import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
@@ -16,7 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
+/**
+ * Сервис класс, имплементация интерфейса {@link SentStockService}
+ * Содержит бизнес логику, использует методы репозитория
+ * {@link SentStockRepository
+ * @link UserService
+ * @link StockService
+ * }
+ */
 @Service
 @AllArgsConstructor
 public class SentStockServiceImpl implements SentStockService {
@@ -24,6 +33,14 @@ public class SentStockServiceImpl implements SentStockService {
     private final UserService userService;
     private final SentStockRepository sentStockRepository;
 
+    /**
+     * Метод находит отправленные акции в заданном интервале
+     *
+     * @param begin начало интервала
+     * @param end  конец интервала
+     *
+     * @return List<SentStock>
+     */
     @Override
     public List<SentStock> findAllByInterval(LocalDate begin, LocalDate end) {
         List<SentStock> sentStocks = sentStockRepository.findAllBySentDateAfterAndSentDateBefore(
@@ -34,7 +51,13 @@ public class SentStockServiceImpl implements SentStockService {
         }
         return sentStocks;
     }
-
+    /**
+     * Метод добавления отправленной акции
+     *
+     * @param sentStock отправленная акция
+     *
+     * @return SentStock
+     */
     @Override
     @Transactional
     public SentStock addSentStock(SentStock sentStock) {
@@ -45,7 +68,14 @@ public class SentStockServiceImpl implements SentStockService {
                 .build();
         return sentStockRepository.save(sentStockToAdd);
     }
-
+    /**
+     * Метод строит словарь, словарь где ключом является дата, а значением частота повторений
+     *
+     * @param begin начало интервала
+     * @param end  конец интервала
+     *
+     * @return Map<LocalDate,Long>
+     */
     @Override
     public Map<LocalDate, Long> getSentStocksMap(LocalDate begin, LocalDate end) {
         List<SentStock> sentStocks = findAllByInterval(begin, end);

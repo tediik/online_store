@@ -66,6 +66,8 @@ public class UserServiceImpl implements UserService {
      * метод получения пользователей, подписанных на рассылку, по дню недели
      *
      * @param dayNumber день недели
+     *
+     * @return List<User>
      */
     @Override
     public List<User> findByDayOfWeekForStockSend(byte dayNumber) {
