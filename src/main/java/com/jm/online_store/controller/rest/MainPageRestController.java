@@ -62,7 +62,9 @@ public class MainPageRestController {
         }
         if (validationUtils.isNotValidEmail(userForm.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
+
             return new ResponseEntity("notValidEmailError", HttpStatus.OK);
+//            return new ResponseEntity("notValidEmailError", HttpStatus.NOT_ACCEPTABLE);
         }
         userService.regNewAccount(userForm);
         return new ResponseEntity("success", HttpStatus.OK);

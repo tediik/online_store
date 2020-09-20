@@ -39,15 +39,16 @@ function register() {
         type: 'POST',
         data: formData,
         success: function (data) {
-            if (data == "success") {
-                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000})
-                close();
+            if (data === "success") {
+                // toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', 'success', {timeOut: 5000});
+                alert('Ссылка для подтверждения регистрации отправлена на вашу почту')
+                // close();
                 document.location.href = "/";
-            } else if (data == "duplicatedEmailError") {
+            } else if (data === "duplicatedEmailError") {
                 $("#duplicatedEmailError").show();
-            } else if (data == "passwordError") {
+            } else if (data === "passwordError") {
                 $("#passwordError").show();
-            } else if (data == "notValidEmailError") {
+            } else if (data === "notValidEmailError") {
                 $("#notValidEmailError").show();
             }
         }
