@@ -38,80 +38,70 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
     private UserService userService = new UserServiceImpl(userRepository, roleRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder);
 
-    private User user1;
-    private User user2;
-    private User user3;
-    private User user4;
-    private User user5;
-    private User user6;
+    private User userFullParameter;
+    private User userWithIdEmailPassword;
+    private User userFullParameterAndIdPicture;
+    private User userWithInvalidEmail;
+    private User userWithNull;
+    private User userWithTheSameEmail;
 
     @BeforeEach
     void init() {
-        user2 = new User();
-        user2.setId(2L);
-        user2.setEmail("pochta@google.com");
-        user2.setPassword("2");
-        user1 = new User("masha@mail.ru", "123",
+        userWithIdEmailPassword = new User();
+        userWithIdEmailPassword.setId(2L);
+        userWithIdEmailPassword.setEmail("pochta@google.com");
+        userWithIdEmailPassword.setPassword("2");
+        userFullParameter = new User("masha@mail.ru", "123",
                 "Masha", "Ivanova", Collections.singleton(new Role(1L, "ROLE_CUSTOMER")));
-        user3 = new User("ira@mail.ru", "123",
+        userFullParameterAndIdPicture = new User("ira@mail.ru", "123",
                 "Ira", "Vasina", Collections.singleton(new Role(1L, "ROLE_CUSTOMER")));
-        user3.setId(3L);
-        user3.setProfilePicture("def.jpg");
-        user4 = new User();
-        user4.setEmail("куцук!!!!!!5@ваваы@fds.eew");
-        user5 = new User(null, null,
+        userFullParameterAndIdPicture.setId(3L);
+        userFullParameterAndIdPicture.setProfilePicture("def.jpg");
+        userWithInvalidEmail = new User();
+        userWithInvalidEmail.setEmail("куцук!!!!!!5@ваваы@fds.eew");
+        userWithNull = new User(null, null,
                 null, null);
-        user6 = new User("masha@mail.ru", "324",
+        userWithTheSameEmail = new User("masha@mail.ru", "324",
                 "Misha", "Ivanov", Collections.singleton(new Role(1L, "ROLE_MANAGER")));
     }
 
     @Test
     public void shouldAddUserSuccessfully() {
-        //проверяет работоспособность метода в целом
-        when(userRepository.save(user3)).thenReturn(user3);
-        //при выполнении данного условия выбрасывается исключение EmailAlreadyExistsException
-        when(userRepository.findByEmail(user1.getEmail())).thenReturn(Optional.ofNullable(user1));
-
-        userService.addUser(user3);
+        when(userRepository.findByEmail(userFullParameter.getEmail())).thenReturn(Optional.ofNullable(userFullParameter));
 
         assertThrows(InvalidEmailException.class, () ->
-            userService.addUser(user4));
+            userService.addUser(userWithInvalidEmail));
         assertThrows(EmailAlreadyExistsException.class, () ->
-            userService.addUser(user1));
+            userService.addUser(userFullParameter));
 
-        verify(userRepository, times(1)).save(any(User.class));
-        verify(userRepository, times(2)).findByEmail(any(String.class));
-        verify(passwordEncoder, times(3)).encode(any());
+        verify(userRepository, times(1)).findByEmail(any(String.class));
+        verify(passwordEncoder, times(2)).encode(any());
     }
 
     @Test
     public void updateUserProfileTest() {
 
         assertThrows(UserNotFoundException.class, () ->
-            userService.updateUserProfile(user3));
+            userService.updateUserProfile(userFullParameterAndIdPicture));
 
         verify(userRepository, times(1)).findById(any());
     }
 
     @Test
     public void updateUserAdminPanelTest() {
-        //условия при которых выбрасыватся InvalidEmailException
-        when(userRepository.findById(user2.getId())).thenReturn(Optional.ofNullable(user5));
-        //условия при которых выбрасывается InvalidEmailException
-        when(userRepository.findById(user4.getId())).thenReturn(Optional.ofNullable(user1));
-        //условия при которых выбрасывается EmailAlreadyExistsException
-        when(userRepository.findById(user6.getId())).thenReturn(Optional.ofNullable(user2));
-        //притворствует выбрасыванию предыдущего исключения обеспечивая совпадение адресов почты
-        when(userRepository.findByEmail(user6.getEmail())).thenReturn(Optional.ofNullable(user6));
+        when(userRepository.findById(userWithIdEmailPassword.getId())).thenReturn(Optional.ofNullable(userWithNull));
+        when(userRepository.findById(userWithInvalidEmail.getId())).thenReturn(Optional.ofNullable(userFullParameter));
+        when(userRepository.findById(userWithTheSameEmail.getId())).thenReturn(Optional.ofNullable(userWithIdEmailPassword));
+        when(userRepository.findByEmail(userWithTheSameEmail.getEmail())).thenReturn(Optional.ofNullable(userWithTheSameEmail));
 
         assertThrows(UserNotFoundException.class, () ->
-            userService.updateUserAdminPanel(user3));
+            userService.updateUserAdminPanel(userFullParameterAndIdPicture));
         assertThrows(NullPointerException.class, () ->
-            userService.updateUserAdminPanel(user2));
+            userService.updateUserAdminPanel(userWithIdEmailPassword));
         assertThrows(InvalidEmailException.class, () ->
-            userService.updateUserAdminPanel(user4));
+            userService.updateUserAdminPanel(userWithInvalidEmail));
         assertThrows(EmailAlreadyExistsException.class, () ->
-            userService.updateUserAdminPanel(user6));
+            userService.updateUserAdminPanel(userWithTheSameEmail));
 
         verify(userRepository, times(4)).findById(any());
         verify(userRepository, times(2)).findByEmail(any());
@@ -120,16 +110,16 @@ public class UserServiceImplTest {
     @Test
     public void regNewAccountTest() {
         when(confirmTokenRepository.save(new ConfirmationToken())).thenReturn(null);
-        doNothing().when(mailSenderService).send(user3.getEmail(), "Activation code", "message", "emailType");
-        userService.regNewAccount(user3);
+        doNothing().when(mailSenderService).send(userFullParameterAndIdPicture.getEmail(), "Activation code", "message", "emailType");
+        userService.regNewAccount(userFullParameterAndIdPicture);
         verify(confirmTokenRepository, times(1)).save(any());
     }
 
     @Test
     public void changeUsersMailTest() {
-        User newUser = Mockito.spy(user3);
+        User newUser = Mockito.spy(userFullParameterAndIdPicture);
         when(confirmTokenRepository.save(new ConfirmationToken())).thenReturn(null);
-        doNothing().when(mailSenderService).send(user3.getEmail(), "Activation code", "message", "emailType");
+        doNothing().when(mailSenderService).send(userFullParameterAndIdPicture.getEmail(), "Activation code", "message", "emailType");
 
         userService.changeUsersMail(newUser, "newMail");
 
@@ -143,10 +133,9 @@ public class UserServiceImplTest {
         String token = "";
         HttpServletRequest request = createMock(HttpServletRequest.class);
         when(confirmTokenRepository.findByConfirmationToken(token)).thenReturn(new ConfirmationToken());
-        when(passwordEncoder.encode(user3.getPassword())).thenReturn("password encoded");
-        boolean res = userService.activateUser(token, request);
+        when(passwordEncoder.encode(userFullParameterAndIdPicture.getPassword())).thenReturn("password encoded");
 
-        assertTrue(res);
+        assertTrue(userService.activateUser(token, request));
 
         verify(confirmTokenRepository, times(1)).findByConfirmationToken(any());
         verify(passwordEncoder, times(1)).encode(any());
@@ -154,9 +143,9 @@ public class UserServiceImplTest {
 
     @Test
     public void activateNewUsersMailTest() {
-        when((userRepository.findById(any()))).thenReturn(Optional.ofNullable(user3));
+        when((userRepository.findById(any()))).thenReturn(Optional.ofNullable(userFullParameterAndIdPicture));
         when(confirmTokenRepository.findByConfirmationToken(" ")).thenReturn(new ConfirmationToken());
-        when(userRepository.saveAndFlush(user3)).thenReturn(user3);
+        when(userRepository.saveAndFlush(userFullParameterAndIdPicture)).thenReturn(userFullParameterAndIdPicture);
 
         assertTrue(userService.activateNewUsersMail(" ", createMock(HttpServletRequest.class)));
 
@@ -170,22 +159,20 @@ public class UserServiceImplTest {
 
         byte[] array = new byte[]{1, 2, 3, 4, 5, 66, 7, 7, 8, 9, 77, 8, 9, 0};
         MockMultipartFile file = new MockMultipartFile("File", "file.jpg", "img", array);
-        //обеспечивает условия проверки работы всего метода в целом
-        when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
-        //обеспечивает условия выбрасывания исключения NullPointerException
-        when(userRepository.findById(user1.getId())).thenReturn(Optional.ofNullable(user1));
+        when(userRepository.findById(userFullParameterAndIdPicture.getId())).thenReturn(Optional.ofNullable(userFullParameterAndIdPicture));
+        when(userRepository.findById(userFullParameter.getId())).thenReturn(Optional.ofNullable(userFullParameter));
 
         assertThrows(NullPointerException.class, () ->
-            userService.updateUserImage(user1.getId(), mock(MockMultipartFile.class)));
-        assertNotNull(userService.updateUserImage(user3.getId(), file), "check validness of whole updateUserImage() method");
+            userService.updateUserImage(userFullParameter.getId(), mock(MockMultipartFile.class)));
+        assertNotNull(userService.updateUserImage(userFullParameterAndIdPicture.getId(), file), "check validness of whole updateUserImage() method");
 
         verify(userRepository, times(1)).findById(3L);
-        verify(userRepository, times(1)).save(user3);
+        verify(userRepository, times(1)).save(userFullParameterAndIdPicture);
     }
 
     @Test
     public void deleteUserImageTest() throws IOException {
-        when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
+        when(userRepository.findById(userFullParameterAndIdPicture.getId())).thenReturn(Optional.ofNullable(userFullParameterAndIdPicture));
 
         assertNotNull(userService.deleteUserImage(3L), "Ожидается корректность выполения метода при удалении картинки");
 
@@ -196,11 +183,11 @@ public class UserServiceImplTest {
     public void addNewUserFromAdminTest() {
         Role role = new Role("ROLE_CUSTOMER");
         Optional<Role> customer = Optional.of(role);
-        when(passwordEncoder.encode(user3.getPassword())).thenReturn("password encoded");
+        when(passwordEncoder.encode(userFullParameterAndIdPicture.getPassword())).thenReturn("password encoded");
         when(roleRepository.findByName(role.getName())).thenReturn(customer);
-        when(userRepository.save(user3)).thenReturn(user3);
+        when(userRepository.save(userFullParameterAndIdPicture)).thenReturn(userFullParameterAndIdPicture);
 
-        userService.addNewUserFromAdmin(user3);
+        userService.addNewUserFromAdmin(userFullParameterAndIdPicture);
 
         verify(passwordEncoder, times(1)).encode(any());
         verify(roleRepository, times(1)).findByName(any());
@@ -209,11 +196,11 @@ public class UserServiceImplTest {
 
     @Test
     public void updateUserFromAdminPageTest() {
-        when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
-        when(passwordEncoder.encode(user3.getPassword())).thenReturn("password encoded");
-        when(userService.updateUserFromAdminPage(user3)).thenReturn(new User());
+        when(userRepository.findById(userFullParameterAndIdPicture.getId())).thenReturn(Optional.ofNullable(userFullParameterAndIdPicture));
+        when(passwordEncoder.encode(userFullParameterAndIdPicture.getPassword())).thenReturn("password encoded");
+        when(userService.updateUserFromAdminPage(userFullParameterAndIdPicture)).thenReturn(new User());
 
-        Assert.notNull(userService.updateUserFromAdminPage(user3), "Проверка, что NotNull");
+        Assert.notNull(userService.updateUserFromAdminPage(userFullParameterAndIdPicture), "Проверка, что NotNull");
 
         verify(passwordEncoder, times(2)).encode(any());
         verify(userRepository, times(1)).save(any());
@@ -221,17 +208,15 @@ public class UserServiceImplTest {
 
     @Test
     public void changePasswordTest() {
-        //проверка условия возврата метода True, при сохранении нового пароля
-        when(userRepository.findById(user1.getId())).thenReturn(Optional.ofNullable(user1));
-        when(passwordEncoder.matches("oldPassword", user1.getPassword())).thenReturn(true);
-        //проверка условия возврата метода False, при совпадении старого и присваиваемого пароля
-        when(userRepository.findById(user3.getId())).thenReturn(Optional.ofNullable(user3));
-        when(passwordEncoder.matches("ollllldPassword", user3.getPassword())).thenReturn(false);
+        when(userRepository.findById(userFullParameter.getId())).thenReturn(Optional.ofNullable(userFullParameter));
+        when(passwordEncoder.matches("oldPassword", userFullParameter.getPassword())).thenReturn(true);
+        when(userRepository.findById(userFullParameterAndIdPicture.getId())).thenReturn(Optional.ofNullable(userFullParameterAndIdPicture));
+        when(passwordEncoder.matches("ollllldPassword", userFullParameterAndIdPicture.getPassword())).thenReturn(false);
 
         assertThrows(UserNotFoundException.class, () ->
             userService.changePassword(7L, "oldPassword", "newPassword"));
-        assertFalse(userService.changePassword(user3.getId(), "ollllldPassword", "newPassword"));
-        assertTrue(userService.changePassword(user1.getId(), "oldPassword", "newPassword"));
+        assertFalse(userService.changePassword(userFullParameterAndIdPicture.getId(), "ollllldPassword", "newPassword"));
+        assertTrue(userService.changePassword(userFullParameter.getId(), "oldPassword", "newPassword"));
 
         verify(userRepository, times(3)).findById(any());
         verify(passwordEncoder, times(1)).encode(any());
