@@ -6,7 +6,6 @@ $(document).ready(function () {
         $("#newProductImportModal form")[0].reset();//reset modal fields
     });
 });
-
 // Функция обрабатывает действия с чекбоксом, вызывает создание таблицы в зависимости от статуса чекбокса
 function toggle(check)
 { if(!check.checked)
@@ -18,7 +17,6 @@ else
     create(false)
 }
 }
-
 /*Создаем таблицу товаров без метки "удален"*/
 function create(showDeleted) {
     $("#productsDiv").empty();
@@ -31,11 +29,26 @@ function create(showDeleted) {
                 for (let i = 0; i < products.length; i++){
                     if(products[i].deleted == true){
                         delete products[i]
-
                     }
                 }
             }
+            /*Добовление картинок в графу "Товар удален" и скрытие кнопок delete and restore*/
+            var img;
+            var showDelete;
+            var showRestore;
             for (let i = 0; i < products.length; i++) {
+                if (products[i].deleted == true) {
+                    var img = "/uploads/images/stocks/4.png"
+                } else {
+                    var img  = "/uploads/images/stocks/5.png"
+                }
+                if (products[i].amount > 0) {
+                    showDelete = "display: block"
+                    showRestore = "display: none"
+                } else {
+                    showDelete = "display: none"
+                    showRestore = "display: block"
+                }
                     let out = $("<li>").attr("id", products[i].id);
                     out.append(
                         `<div class=\"card mb-3\">
@@ -49,8 +62,10 @@ function create(showDeleted) {
                                     <p class=\"card-text\">${products[i].amount}</p>
                                     <h4 class='card-title'>Кол-во товара</h4>
                                     <p class=\\"card-text\\">${products[i].amount}</p>
-                                    <h4 class='card-title'>Статус удаления</h4>
-                                    <p class=\\"card-text\\">${products[i].deleted}</p>
+                                    <h4 class='card-title'>Товар удалён</h4>
+                                    <p class=\\"card-text\\">
+                                        <img src="${img}">
+                                    </p>
                                 </div>
                             </div>
                             <div class="col-md-2 flex-row align-items-center">
@@ -58,11 +73,11 @@ function create(showDeleted) {
                                     <button onclick='getProductForEdit(${products[i].id})' class="btn btn-info" data-toggle='modal'
                                             data-target='#editProductModal'>Edit</button>
                                 </div>
-                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button onclick='deleteProduct(${products[i].id})' class="btn btn-danger">Delete</button>
+                                <div class="nav flex-column nav-pills mt-2 container-fluid"  role="tablist" aria-orientation="vertical">
+                                    <button onclick='deleteProduct(${products[i].id})' style="${showDelete}" class="btn btn-danger">Delete</button>
                                 </div>
-                                <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button id="restorebutton" onclick='restoreProduct(${products[i].id})' class="btn btn-info">Restore</button>
+                                <div class="nav flex-column nav-pills mt-2 container-fluid"  role="tablist" aria-orientation="vertical">
+                                    <button id="restorebutton" style="${showRestore}" onclick='restoreProduct(${products[i].id})' class="btn btn-info">Restore</button>
                                 </div>
                             </div>
                         </div>
@@ -73,7 +88,6 @@ function create(showDeleted) {
             }
     })
 }
-
 /*Добавление товара вручную*/
 function addProduct() {
 
