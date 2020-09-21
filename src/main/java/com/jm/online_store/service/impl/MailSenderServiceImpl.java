@@ -24,7 +24,6 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     public void send(String emailTo, String subject, String message, String emailType) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-
         mailMessage.setFrom(username);
         mailMessage.setTo(emailTo);
         mailMessage.setSubject(subject);
@@ -33,6 +32,17 @@ public class MailSenderServiceImpl implements MailSenderService {
         mailSender.send(mailMessage);
     }
 
+    /**
+     * Method which prepares and sends email with HTML body format
+     * @param emailTo - {@link String} String with email address of recipient
+     * @param subject - {@link String} String with subject of email message
+     * @param htmlBody - {@link} String with body in HTML format
+     * @param emailType - {@link} String email type, actually for logging information about sent email it can be for example:
+     *                          - stock distribution email
+     *                          - news distribution email
+     *                          - e t.c.
+     * @throws MessagingException - can throw MessagingException
+     */
     @Override
     public void sendHtmlMessage(String emailTo, String subject, String htmlBody, String emailType) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
