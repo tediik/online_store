@@ -66,7 +66,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-  //@PostConstruct
+    //@PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -148,10 +148,10 @@ public class DataInitializer {
         userService.updateUser(customer);
 
         Random random = new Random();
-        for (int i = 1; i < 20 ; i++) {
+        for (int i = 1; i < 20; i++) {
             userService.addUser(new User("customer" + i + "@mail.ru",
-                                        User.DayOfWeekForStockSend.values()[random.nextInt(6)],
-                                        String.valueOf(i)));
+                    User.DayOfWeekForStockSend.values()[random.nextInt(6)],
+                    String.valueOf(i)));
         }
     }
 
@@ -419,8 +419,9 @@ public class DataInitializer {
         }
 
     }
+
     /**
-     * Метод первичного тестового акциой отправленных пользователям
+     * Метод первичного заполнения акция, которые были отправлены пользователям
      */
     public void sentStockInit() {
         Random random = new Random();
@@ -434,27 +435,28 @@ public class DataInitializer {
                     .build());
         }
     }
+
     /**
      * Метод инициализации новостей и акций в профиле менеджера для тестирования динамической пагинации.
      */
     public void paginationNewsAndStocksInit() {
-            for (int i = 0; i < 50; i++) {
-                News news = News.builder()
-                        .title(i + " Сегодня стартует предзаказ на флагманские продукты Samsung!")
-                        .anons("Сделайте предзаказ и получите подарок.")
-                        .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
-                                "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
-                                "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
-                                " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
-                                " font-size: 16px;\">Сегодня стартует предзаказ на новые флагманские продукты Samsung!<b></b>" +
-                                "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
-                                " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
-                                " font-size: 16px;\"><br></p></h1>")
-                        .postingDate(LocalDateTime.now().minusDays(Math.round(Math.random() * 20)))
-                        .archived(false)
-                        .build();
-                newsService.save(news);
-            }
+        for (int i = 0; i < 50; i++) {
+            News news = News.builder()
+                    .title(i + " Сегодня стартует предзаказ на флагманские продукты Samsung!")
+                    .anons("Сделайте предзаказ и получите подарок.")
+                    .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                            "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                            "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\">Сегодня стартует предзаказ на новые флагманские продукты Samsung!<b></b>" +
+                            "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                            " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                            " font-size: 16px;\"><br></p></h1>")
+                    .postingDate(LocalDateTime.now().minusDays(Math.round(Math.random() * 20)))
+                    .archived(false)
+                    .build();
+            newsService.save(news);
+        }
 
         for (int i = 0; i < 50; i++) {
             Stock stock = Stock.builder()

@@ -35,11 +35,10 @@ public class SentStockServiceImpl implements SentStockService {
 
     /**
      * Метод находит отправленные акции в заданном интервале
-     *
      * @param begin начало интервала
      * @param end  конец интервала
-     *
      * @return List<SentStock>
+     * @throws SentStockNotFoundException если не найдена ни одна акция в заданном интервале
      */
     @Override
     public List<SentStock> findAllByInterval(LocalDate begin, LocalDate end) {
@@ -53,9 +52,7 @@ public class SentStockServiceImpl implements SentStockService {
     }
     /**
      * Метод добавления отправленной акции
-     *
      * @param sentStock отправленная акция
-     *
      * @return SentStock
      */
     @Override
@@ -69,11 +66,10 @@ public class SentStockServiceImpl implements SentStockService {
         return sentStockRepository.save(sentStockToAdd);
     }
     /**
-     * Метод строит словарь, словарь где ключом является дата, а значением частота повторений
-     *
+     * Метод строит словарь, словарь где ключом является дата,
+     *      а значением частота повторений
      * @param begin начало интервала
      * @param end  конец интервала
-     *
      * @return Map<LocalDate,Long>
      */
     @Override

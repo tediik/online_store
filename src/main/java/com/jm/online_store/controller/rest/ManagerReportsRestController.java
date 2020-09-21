@@ -30,7 +30,6 @@ public class ManagerReportsRestController {
 
     /**
      * метод получения списка пользователей, подписанных на рассылку по номеру дня
-     *
      * @param dayNumber день недели
      * @return список пользователей
      */
@@ -41,7 +40,6 @@ public class ManagerReportsRestController {
 
     /**
      * метод отмены подписки со страницы менеджера
-     *
      * @param id пользователя
      * @return Статус ответа зависящий от успешности отмены подписки для пользователя
      */
@@ -52,10 +50,9 @@ public class ManagerReportsRestController {
         return ResponseEntity.ok().build();
     }
     /**
-     * метод отмены подписки со страницы менеджера
-     *
-     * @param beginDate дата от которой бует осуществлятсья поиск
-     * @param endDate дата до которой будет оуществлятсья поиск
+     * метод поиска отправленных акций в интервале дат
+     * @param beginDate дата от которой бует осуществляться
+     * @param endDate дата до которой будет осуществляться
      * @return Словарь, где ключом является объект LocalDate, а значением его частота
      */
     @GetMapping("/report")
@@ -66,13 +63,8 @@ public class ManagerReportsRestController {
         LocalDate end = LocalDate.parse(endDate);
         return ResponseEntity.ok(sentStockService.getSentStocksMap(begin, end));
     }
-    @ExceptionHandler(SentStockNotFoundException.class)
-    public ResponseEntity handlerSentStockNotFoundControllerExceptions(){
-        return ResponseEntity.notFound().build();
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity handlerUserNotFoundControllerExceptions(){
+    @ExceptionHandler({SentStockNotFoundException.class, UserNotFoundException.class})
+    public ResponseEntity handlerControllerExceptions(){
         return ResponseEntity.notFound().build();
     }
 }
