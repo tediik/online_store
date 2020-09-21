@@ -103,7 +103,7 @@ function handleAcceptButton(event) {
             body: JSON.stringify(taskSettings)
         }).then(function (response) {
             if (response.status === 200) {
-                popupWindow('#infoDiv', 'Настройки успешно изменены', 'success')
+                popupWindow('#infoDiv', 'Настройки времени рассылки, сохранены.', 'success')
             } else {
                 popupWindow('#infoDiv', 'Настройки не были сохранены', 'error')
             }
