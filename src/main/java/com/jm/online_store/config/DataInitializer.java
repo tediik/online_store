@@ -6,6 +6,7 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Role;
+import com.jm.online_store.model.SentStock;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
@@ -17,6 +18,7 @@ import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RoleService;
+import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
@@ -24,6 +26,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,13 +59,14 @@ public class DataInitializer {
     private final BasketService basketService;
     private final StockService stockService;
     private final SharedStockService sharedStockService;
+    private final SentStockService sentStockService;
 
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct
+    //@PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -70,6 +74,7 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
+        sentStockInit();
         paginationNewsAndStocksInit();
     }
 
@@ -141,6 +146,13 @@ public class DataInitializer {
         subBasketList.add(subBasket_2);
         customer.setUserBasket(subBasketList);
         userService.updateUser(customer);
+
+        Random random = new Random();
+        for (int i = 1; i < 20; i++) {
+            userService.addUser(new User("customer" + i + "@mail.ru",
+                    User.DayOfWeekForStockSend.values()[random.nextInt(6)],
+                    String.valueOf(i)));
+        }
     }
 
     /**
@@ -406,6 +418,22 @@ public class DataInitializer {
             }
         }
 
+    }
+
+    /**
+     * Метод первичного заполнения акций, которые были отправлены пользователям
+     */
+    public void sentStockInit() {
+        Random random = new Random();
+        List<Stock> stocks = stockService.findAll();
+        List<User> users = userService.findAll();
+
+        for (int i = 0; i < 20; i++) {
+            sentStockService.addSentStock(SentStock.builder().user(users.get(random.nextInt(users.size())))
+                    .stock(stocks.get(random.nextInt(stocks.size())))
+                    .sentDate(LocalDate.now().plusDays(random.nextInt(8)))
+                    .build());
+        }
     }
 
     /**
