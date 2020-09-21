@@ -12,6 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * This class contains settings for common tasks
+ */
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

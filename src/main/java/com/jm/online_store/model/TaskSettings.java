@@ -13,6 +13,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalTime;
 
+/**
+ * Class which contains settings of tasks such as:
+ *  - task name
+ *  - active
+ *  - start time
+ *  This class is used for scheduling.
+ */
 @Entity
 @Data
 @Builder
