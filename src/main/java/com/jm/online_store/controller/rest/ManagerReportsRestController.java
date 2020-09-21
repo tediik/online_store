@@ -51,8 +51,8 @@ public class ManagerReportsRestController {
     }
     /**
      * метод поиска отправленных акций в интервале дат
-     * @param beginDate дата от которой бует осуществляться
-     * @param endDate дата до которой будет осуществляться
+     * @param beginDate дата, от которой будет осуществляться поиск
+     * @param endDate дата, до которой будет осуществляться поиск
      * @return Словарь, где ключом является объект LocalDate, а значением его частота
      */
     @GetMapping("/report")
