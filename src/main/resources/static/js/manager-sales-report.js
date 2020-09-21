@@ -54,6 +54,9 @@ $('#managerSalesReportRange').on('apply.daterangepicker', function (ev, picker) 
     $('#exportCsvButton').attr('startDate', startDate).attr('endDate', endDate)
 });
 
+/**
+ * fetch request to export to csv
+ */
 $('#exportCsvButton').on('click', function () {
     let StartDate = $('#exportCsvButton').attr('startDate')
     let EndDate = $('#exportCsvButton').attr('endDate')
@@ -126,11 +129,17 @@ function popupWindow(inputField, text, messageStatus) {
     }, 3000)
 }
 
+/**
+ * function hides elements of report
+ */
 function hideElementsOfSalesReport() {
     document.getElementById("salesReportTable").style.visibility = "hidden";
     document.getElementById("exportCsvButton").style.visibility = "hidden";
 }
 
+/**
+ * function shows elements of report
+ */
 function showElementsOfReport() {
     document.getElementById("salesReportTable").style.visibility = "visible";
     document.getElementById("exportCsvButton").style.visibility = "visible";
