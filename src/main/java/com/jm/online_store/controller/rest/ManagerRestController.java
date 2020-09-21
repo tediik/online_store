@@ -11,9 +11,8 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -39,6 +37,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "api/manager")
+@Slf4j
 public class ManagerRestController {
 
     private final NewsService newsService;
@@ -116,26 +115,34 @@ public class ManagerRestController {
         }
     }
 
+    /**
+     * Mapping for csv export.
+     *
+     * @param stringStartDate - beginning of the period that receives from frontend in as String
+     * @param stringEndDate   - end of the period that receives from frontend in as String
+     * @param response        - response to write back stream with csv
+     * @return - ResponseEntity
+     */
     @GetMapping("/sales/exportCSV")
     public ResponseEntity<FileSystemResource> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate, @RequestParam String stringEndDate, HttpServletResponse response) {
         LocalDate startDate = LocalDate.parse(stringStartDate);
         LocalDate endDate = LocalDate.parse(stringEndDate);
         try {
-            String filePath = orderService.findAllSalesBetweenAndExportToCSV(startDate, endDate);
-//            InputStreamResource resource = new InputStreamResource(new FileInputStream(filePath));
-            //TODO Generate another name
+            response.setContentType("text/html; charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
             StatefulBeanToCsv<SalesReportDto> writer = new StatefulBeanToCsvBuilder<SalesReportDto>(response.getWriter())
                     .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-                    .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
-                    .withOrderedResults(false)
+                    .withSeparator(';')
+                    .withOrderedResults(true)
                     .build();
-            writer.write(orderService.findAllSalesBetween(startDate,endDate));
+            writer.write(orderService.findAllSalesBetween(startDate, endDate));
 
             return ResponseEntity.ok().build();
-
         } catch (OrdersNotFoundException e) {
+            log.debug("csv file was successfully sent");
             return ResponseEntity.notFound().build();
-        } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
+        } catch (CsvRequiredFieldEmptyException | IOException | CsvDataTypeMismatchException e) {
+            log.debug("Problem with writing csv file");
             return ResponseEntity.badRequest().build();
         }
     }

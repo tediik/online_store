@@ -2,6 +2,8 @@ package com.jm.online_store.model.dto;
 
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,12 +17,19 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SalesReportDto {
+    @CsvBindByPosition(position = 0)
     private Long orderNumber;
+    @CsvBindByPosition(position = 2)
     private String userEmail;
+    @CsvBindByPosition(position = 3)
     private String customerInitials;
+    @CsvBindByPosition(position = 1)
     private LocalDate purchaseDate;
+    @CsvBindByPosition(position = 5)
     private Long quantity;
+    @CsvBindByPosition(position = 4)
     private String listOfProducts;
+    @CsvBindByPosition(position = 6)
     private Double orderSummaryPrice;
 
     public static SalesReportDto orderToSalesReportDto(Order order) {
@@ -47,9 +56,9 @@ public class SalesReportDto {
      */
     private static String createUserInitialsString(User user) {
         StringBuilder userInitials = new StringBuilder();
-        if (user.getFirstName() != null) {
+        if (user.getFirstName() != null && !user.getFirstName().equals("")) {
             userInitials.append(user.getFirstName());
-            if (user.getLastName() != null) {
+            if (user.getLastName() != null && !user.getLastName().equals("")) {
                 userInitials.append(" ");
                 userInitials.append(user.getLastName());
                 return userInitials.toString();
