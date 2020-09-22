@@ -1,8 +1,8 @@
 package com.jm.online_store.model.dto;
 
 import com.jm.online_store.model.Order;
+import com.jm.online_store.model.ProductInOrder;
 import com.jm.online_store.model.User;
-import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
@@ -43,10 +44,39 @@ public class SalesReportDto {
                 .getProductInOrders()
                 .stream()
                 .map(product -> String.valueOf(product.getProduct().getProduct() + " - (" + product.getAmount() + ")"))
-                .collect(Collectors.joining( ", ")));
+                .collect(Collectors.joining(", ")));
         salesReportDto.setOrderSummaryPrice(order.getOrderPrice());
         return salesReportDto;
     }
+
+    public SalesReportDto(Long orderNumber, String userEmail, String firstName, String lastName,
+                          LocalDate purchaseDate, Long quantity, List<ProductInOrder> productInOrder,
+                          Double orderSummaryPrice) {
+        this.orderNumber = orderNumber;
+        this.userEmail = userEmail;
+        this.customerInitials = createUserInitialsFromFirstNameAndLastName(firstName, lastName);
+        this.purchaseDate = purchaseDate;
+        this.quantity = quantity;
+        this.listOfProducts = productInOrder.stream()
+                .map(product -> String.valueOf(product.getProduct().getProduct() + " - (" + product.getAmount() + ")"))
+                .collect(Collectors.joining(", "));
+        this.orderSummaryPrice = orderSummaryPrice;
+    }
+
+    private static String createUserInitialsFromFirstNameAndLastName(String firstName, String lastName) {
+        StringBuilder userInitials = new StringBuilder();
+        if (firstName != null && !firstName.equals("")) {
+            userInitials.append(firstName);
+            if (lastName != null && !lastName.equals("")) {
+                userInitials.append(" ");
+                userInitials.append(lastName);
+                return userInitials.toString();
+            }
+            return userInitials.toString();
+        }
+        return "Покупатель";
+    }
+
 
     /**
      * Static method that creates String with customer initials for dto
