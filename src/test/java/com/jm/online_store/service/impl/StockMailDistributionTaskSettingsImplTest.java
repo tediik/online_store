@@ -25,10 +25,10 @@ import static org.mockito.Mockito.when;
  */
 @Slf4j
 @SpringBootTest
-public class SchedulingServiceImplTest {
+public class StockMailDistributionTaskSettingsImplTest {
 
     @Autowired
-    SchedulingServiceImpl schedulingService;
+    StockMailDistributionTaskImpl schedulingService;
     @MockBean
     private UserRepository userRepository;
     @MockBean
@@ -64,8 +64,7 @@ public class SchedulingServiceImplTest {
 
         Mockito.verify(userRepository, Mockito.times(1))
                 .findByDayOfWeekForStockSend(any());
-
-        schedulingService.sendStocksToCustomers();
+        schedulingService.run();
 
         log.info("After sending Stock");
     }
@@ -84,8 +83,7 @@ public class SchedulingServiceImplTest {
 
         Mockito.verify(userRepository, Mockito.times(0))
                 .findByDayOfWeekForStockSend(any());
-
-        schedulingService.sendStocksToCustomers();
+        schedulingService.run();
 
         log.info("After sending Stock");
     }
