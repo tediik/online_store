@@ -1,23 +1,21 @@
-jQuery(document).ready(function ($) {
-    $("#openNewMailModal").on('hidden.bs.modal', function (e) {
-        $("#openNewMailModal form")[0].reset();//reset modal fields
-        $("#openNewMailModal .error").hide();//reset error spans
-    });
+$(document).ready(function() {
+    $(document).delegate("#buttonChangeMail", "click", changeMail);
 });
 
 function changeMail() {
-    var formData = $('form').serialize();
+    var formData = $('#formChangeMail').serialize();
     $.ajax({
         url: '/customer/changemail',
         type: 'POST',
         data: formData,
-        success: function (data) {
-            if (data == "success") {
-                toastr.success('На вашу почту отправлена ссылка для подтверждения смены почты!', {timeOut: 5000})
-                close();
-            } else if (data == "duplicatedEmailError") {
-                $("#duplicatedEmailError").show();
-            }
+        success: function (res) {
+            alert ("Подтвердите смену email. Вам на почту отправлено письмо.");
+            document.location.href = "/customer";
+            //$('#mytabs a[href="#tab3"]').tab('show')
+        },
+        error: function (){
+            alert("Вы ввели тот же email");
+            document.location.href = "/customer";
         }
     });
 }
