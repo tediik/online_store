@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.CommonSettingsNotFoundException;
 import com.jm.online_store.exception.TaskNotFoundException;
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
@@ -23,6 +24,11 @@ public class SchedulingTaskController {
     private final TaskSettingsService taskSettingsService;
     private final StockMailDistributionTask stockMailDistributionTask;
 
+    /**
+     * Exception handler method that catches all {@link TaskNotFoundException}
+     * in current class and return ResponseEntity with not found status
+     * @return - {@link ResponseEntity<String>}
+     */
     @ExceptionHandler({TaskNotFoundException.class})
     public ResponseEntity<String> taskNotFoundExceptionHandler() {
         return ResponseEntity.notFound().build();

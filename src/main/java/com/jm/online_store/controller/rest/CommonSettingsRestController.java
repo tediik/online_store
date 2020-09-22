@@ -5,6 +5,7 @@ import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class CommonSettingsRestController {
     private final CommonSettingsService commonSettingsService;
+
+    /**
+     * Exception handler method that catches all {@link CommonSettingsNotFoundException}
+     * in current class and return ResponseEntity with not found status
+     * @return - {@link ResponseEntity<String>}
+     */
+    @ExceptionHandler(CommonSettingsNotFoundException.class)
+    public ResponseEntity<String> commonSettingsNotFoundExceptionHandler() {
+        return ResponseEntity.notFound().build();
+    }
 
     @PostMapping
     public ResponseEntity<String> addNewSetting(@RequestBody CommonSettings commonSetting) {
