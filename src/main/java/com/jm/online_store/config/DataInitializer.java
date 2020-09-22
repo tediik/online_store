@@ -236,9 +236,57 @@ public class DataInitializer {
                 .archived(false)
                 .build();
 
+        News forthNews = News.builder()
+                .title("Будь в плюсе вместе с нами!")
+                .anons("Мы дарим дополнительный кэшбэк!")
+                .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\">Кэшбэк 3% — стандартные начисления и 7% — за онлайн-оплату!<b></b>" +
+                        "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\"><br></p></h1>")
+                .postingDate(LocalDateTime.now().minusDays(10L))
+                .archived(false)
+                .build();
+
+        News fifthNews = News.builder()
+                .title("Старт продаж Honor30i")
+                .anons("Только у нас эксклюзивный смартфон!")
+                .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\">Супервыгода на HONOR 30i: получи кэшбэк 15% на свой Бонусный счёт<b></b>" +
+                        "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\"><br></p></h1>")
+                .postingDate(LocalDateTime.now().minusDays(1L))
+                .archived(false)
+                .build();
+
+        News sixthNews = News.builder()
+                .title("Отличная новость!")
+                .anons("Online_store открывает продлёнку на скидки!")
+                .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\">Успей воспользоваться лучшим предложением, пока мы чистим стоки.<b></b>" +
+                        "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\"><br></p></h1>")
+                .postingDate(LocalDateTime.now().plusDays(30L))
+                .archived(false)
+                .build();
+
         newsService.save(firstNews);
         newsService.save(secondNews);
         newsService.save(thirdNews);
+        newsService.save(forthNews);
+        newsService.save(fifthNews);
+        newsService.save(sixthNews);
     }
 
     /**
@@ -260,6 +308,9 @@ public class DataInitializer {
         Categories category12 = new Categories("Оргтехника", "Офис и сеть");
         Categories category13 = new Categories("Роутеры и сетевое оборудование", "Офис и сеть");
         Categories category14 = new Categories("Техника для кухни", "Бытовая техника");
+        Categories category15 = new Categories("Техника для уборки", "Бытовая техника");
+        Categories category16 = new Categories("Стиральные и сушильные машины", "Бытовая техника");
+        Categories category17 = new Categories("Климатическая техника", "Бытовая техника");
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
@@ -277,6 +328,18 @@ public class DataInitializer {
         Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer");
         Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, "Computer");
 
+        Product product13 = new Product("Roomba 698", 299.9, 6, 4.3, "Cleaning");
+        Product product14 = new Product("Bosch BWD41720", 329.9, 8, 4.1, "Cleaning");
+        Product product15 = new Product("Samsung SC4131", 69.9, 28, 4.6, "Cleaning");
+
+        Product product16 = new Product("Samsung WW60K40G00W", 549.9, 3, 4.8, "Washing");
+        Product product17 = new Product("Hotpoint-Ariston BI WDHG 75148 EU", 999.9, 2, 4.3, "Washing");
+        Product product18 = new Product("Whirlpool TDLR 60111", 499.9, 6, 3.9, "Washing");
+
+        Product product19 = new Product("Hotpoint-Ariston SPOWHA 409-K", 399.9, 2, 3.8, "Air_conditioner");
+        Product product20 = new Product("LG P09EP2", 529.9, 2, 4.1, "Air_conditioner");
+        Product product21 = new Product("LG Mega Plus P12EP1", 584.9, 2, 4.7, "Air_conditioner");
+
         Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
         Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
         Description description3 = new Description("99966732", "Samsung", 3, "550x27x368", "white", 1.1, "some additional info here");
@@ -286,6 +349,18 @@ public class DataInitializer {
         Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim", 512, 512, "1920x960", true, "5.0");
         Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 256, "1920x960", false, "4.0");
         Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 128, "1024x480", true, "5.0");
+        Description description10 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
+        Description description11 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
+        Description description12 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
+        Description description13 = new Description("XYZ270011101230600001", "iRobot", 2, "300x75x300", "silver", 3.0, "Standard suction for an every day clean. Provides personalized cleaning suggestions.");
+        Description description14 = new Description("CFE867594316856743201", "Bosch", 1, "360x350x490", "violet", 10.9, "Моющий пылесос Bosch BWD41720 — надежное устройство, позволяющее поддерживать чистоту напольных покрытий любого типа.");
+        Description description15 = new Description("08UV8NEM703511M", "Samsung", 1, "365x230x275", "blue", 3.8, "Пылесос Samsung SC4131 используется для сухой уборки многокомнатных квартир и жилых домов.");
+        Description description16 = new Description("X54355543455", "Samsung", 2, "850x600x450", "white", 54.0, "Позволяет бережно очищать от загрязнений одежду и текстильные изделия из хлопка, льна, синтетических волокон и деликатных тканей");
+        Description description17 = new Description("A886UW16575632", "Whirlpool Corp.", 1, "815x595x540", "white", 65.0, "Встраиваемая стиральная машина способна за один цикл постирать и высушить до 7 кг вещей", 1024, 256, "1920x960", false, "4.0");
+        Description description18 = new Description("A88563902273", "Whirlpool Corp.", 1, "900x420x600", "white", 49.0, "Автоматически определяется тип белья, расход воды и моющих средств. Устройство бережно относится к ткани и обеспечивает превосходный результат стирки.");
+        Description description19 = new Description("AHP4388843455", "Whirlpool Corp.", 1, "270x835x210", "white", 6.5, "Кондиционер Hotpoint-Ariston SPOWHA 409-K используется для создания благоприятного микроклимата в помещениях площадью 27 м²");
+        Description description20 = new Description("L856XZ11564632", "LG", 1, "265x756x184", "white", 7.4, "Кондиционер LG P09EP2 используется для установки оптимальной температуры в помещении дома или офиса площадью 20 м²");
+        Description description21 = new Description("L014ZZ10018974", "LG", 1, "302x837x189; 483x717x230", "white", 8.7, "Модель LG Mega Plus P12EP1 будет оптимальна для установки в помещении площадью 35 м²");
 
         product1.setDescriptions(description1);
         product2.setDescriptions(description2);
@@ -296,16 +371,29 @@ public class DataInitializer {
         product7.setDescriptions(description7);
         product8.setDescriptions(description8);
         product9.setDescriptions(description9);
-        product10.setDescriptions(description1);
-        product11.setDescriptions(description1);
-        product12.setDescriptions(description1);
+        product10.setDescriptions(description10);
+        product11.setDescriptions(description11);
+        product12.setDescriptions(description12);
+        product13.setDescriptions(description13);
+        product14.setDescriptions(description14);
+        product15.setDescriptions(description15);
+        product16.setDescriptions(description16);
+        product17.setDescriptions(description17);
+        product18.setDescriptions(description18);
+        product18.setDescriptions(description19);
+        product18.setDescriptions(description20);
+        product18.setDescriptions(description21);
 
         category1.setProducts(Arrays.asList(product1, product2, product3, product10, product11, product12));
         category2.setProducts(Arrays.asList(product4, product5, product6));
         category3.setProducts(Arrays.asList(product7, product8, product9));
+        category15.setProducts(Arrays.asList(product13, product14, product15));
+        category16.setProducts(Arrays.asList(product16, product17, product18));
+        category17.setProducts(Arrays.asList(product19, product20, product21));
 
         categoriesService.saveAll(Arrays.asList(category1, category2, category3,
-                category4, category5, category6, category7, category8, category9, category10, category11, category12, category13, category14));
+                category4, category5, category6, category7, category8, category9, category10, category11,
+                category12, category13, category14, category15, category16, category17));
     }
 
     /**
@@ -321,12 +409,22 @@ public class DataInitializer {
         productsIds.add(productService.findProductByName("XIAOMI-Mi10").get().getId());
         productsIds.add(productService.findProductByName("LG-2145").get().getId());
         productsIds.add(productService.findProductByName("Apple-10").get().getId());
+        productsIds.add(productService.findProductByName("Roomba 698").get().getId());
+        productsIds.add(productService.findProductByName("Bosch BWD41720").get().getId());
+        productsIds.add(productService.findProductByName("Hotpoint-Ariston BI WDHG 75148 EU").get().getId());
+        productsIds.add(productService.findProductByName("LG Mega Plus P12EP1").get().getId());
+        productsIds.add(productService.findProductByName("Hotpoint-Ariston SPOWHA 409-K").get().getId());
 
         List<Order> orders = new ArrayList<>();
         orders.add(new Order(LocalDateTime.of(2019, 12, 31, 22, 10), Order.Status.COMPLETED));
         orders.add(new Order(LocalDateTime.of(2020, 1, 23, 13, 37), Order.Status.COMPLETED));
         orders.add(new Order(LocalDateTime.of(2020, 3, 10, 16, 51), Order.Status.INCARTS));
         orders.add(new Order(LocalDateTime.of(2020, 6, 13, 15, 3), Order.Status.CANCELED));
+        orders.add(new Order(LocalDateTime.of(2020, 7, 18, 16, 18), Order.Status.COMPLETED));
+        orders.add(new Order(LocalDateTime.of(2020, 7, 24, 11, 9), Order.Status.CANCELED));
+        orders.add(new Order(LocalDateTime.of(2020, 8, 3, 15, 43), Order.Status.COMPLETED));
+        orders.add(new Order(LocalDateTime.of(2020, 8, 18, 17, 33), Order.Status.CANCELED));
+        orders.add(new Order(LocalDateTime.of(2020, 9, 16, 10, 21), Order.Status.INCARTS));
         orders.add(new Order(LocalDateTime.now(), Order.Status.INCARTS));
 
         List<Long> ordersIds = new ArrayList<>();
@@ -342,6 +440,12 @@ public class DataInitializer {
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
+        productInOrderService.addToOrder(productsIds.get(6), ordersIds.get(5), 1);
+        productInOrderService.addToOrder(productsIds.get(6), ordersIds.get(6), 4);
+        productInOrderService.addToOrder(productsIds.get(7), ordersIds.get(7), 1);
+        productInOrderService.addToOrder(productsIds.get(8), ordersIds.get(8), 1);
+        productInOrderService.addToOrder(productsIds.get(9), ordersIds.get(9), 2);
+        productInOrderService.addToOrder(productsIds.get(10), ordersIds.get(9), 1);
         customer.setOrders(Set.copyOf(orderService.findAll()));
         userService.updateUser(customer);
     }
@@ -394,9 +498,44 @@ public class DataInitializer {
                         " фантастическом мире и примите участие в битве галактических масштабов!")
                 .build();
 
+        Stock forthStock = Stock.builder()
+                .startDate(LocalDate.now().plusDays(3))
+                .endDate(LocalDate.now().plusDays(10L))
+                .stockTitle("«Рассрочка или бонусы!")
+                .stockText("Стиральные машины Whirlpool помогут привести в порядок ваши вещи из различных тканей. " +
+                        " Эта техника предлагает множество программ для деликатной и эффективной стирки и сушки." +
+                        " Оформите беспроцентный кредит на бытовую технику Whirlpool или получите 10% от стоимости" +
+                        " покупки на бонусную карту – выбор за вами!")
+                .build();
+
+        Stock fifthStock = Stock.builder()
+                .startDate(LocalDate.now().plusDays(3))
+                .endDate(LocalDate.now().plusDays(10L))
+                .stockTitle("«3 года защиты за 990")
+                .stockText("Самое время обновить компьютер! Выбери подходящую модель с Windows 10 и добавь" +
+                        " надёжную защиту от вирусов Kaspersky Internet Security на три года всего за 990 рублей." +
+                        " Закажи компьютер с Windows 10. Забери товар и получи промокод на Kaspersky Internet Security" +
+                        " за 990 рублей на свой Email и в личный кабинет в течение трёх дней после получения заказа." +
+                        " Обязательно используй Бонусную карту – её можно оформить прямо на сайте.")
+                .build();
+
+        Stock sixthStock = Stock.builder()
+                .startDate(LocalDate.now().plusDays(3))
+                .endDate(LocalDate.now().plusDays(10L))
+                .stockTitle("«Требуй скидку!")
+                .stockText("До 31 декабря требуй и получай скидку на смартфоны, телевизоры" +
+                        " и бытовую технику из акционного списка." +
+                        " Активируй свою скидку на странице товара." +
+                        " Товары из акционного списка отмечены специальным знаком \"Требуй скидку!\" на сайте." +
+                        " На товары из акционного перечня распространяются правила программы лояльности.")
+                .build();
+
         stockService.addStock(firstStock);
         stockService.addStock(secondStock);
         stockService.addStock(thirdStock);
+        stockService.addStock(forthStock);
+        stockService.addStock(fifthStock);
+        stockService.addStock(sixthStock);
     }
 
     public void sharedStockInit() {
