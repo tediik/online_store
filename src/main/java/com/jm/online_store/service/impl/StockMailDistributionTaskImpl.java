@@ -72,7 +72,7 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
         if (user.getFirstName() != null) {
             messageBody = templateBody.replace("@@user@@", user.getFirstName());
         } else {
-            messageBody = templateBody.replace("@@user@@", "Подписчек");
+            messageBody = templateBody.replace("@@user@@", "Подписчик");
         }
         StringBuilder messageForEmail = new StringBuilder();
         for (Stock stock : currentAndFutureStocks) {
