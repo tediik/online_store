@@ -26,9 +26,9 @@ public class SchedulingTaskController {
     @PostMapping("/stockMailDistribution/start")
     public ResponseEntity<TaskSettings> startMailDistributionTask(@RequestBody TaskSettings taskSettings) {
         try {
-            TaskSettings updatedTaskSettings = taskSettingsService.updateTask(taskSettings);
-            schedulingService.addTaskToScheduler(updatedTaskSettings, stockMailDistributionTask);
-            return ResponseEntity.ok(updatedTaskSettings);
+            taskSettingsService.updateTask(taskSettings);
+            schedulingService.addTaskToScheduler(taskSettings, stockMailDistributionTask);
+            return ResponseEntity.ok().build();
         } catch (TaskNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -37,9 +37,9 @@ public class SchedulingTaskController {
     @PostMapping("/stockMailDistribution/stop")
     public ResponseEntity<TaskSettings> stopMailDistributionTask(@RequestBody TaskSettings taskSettings) {
         try {
-            TaskSettings updatedTaskSettings = taskSettingsService.updateTask(taskSettings);
-            schedulingService.removeTaskFromScheduler(updatedTaskSettings.getId());
-            return ResponseEntity.ok(updatedTaskSettings);
+            taskSettingsService.updateTask(taskSettings);
+            schedulingService.removeTaskFromScheduler(taskSettings.getId());
+            return ResponseEntity.ok().build();
         } catch (TaskNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

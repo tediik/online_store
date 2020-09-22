@@ -28,7 +28,8 @@ public class CommonSettingsRestController {
     @PutMapping
     public ResponseEntity<CommonSettings> updateSetting(@RequestBody CommonSettings commonSettings) {
         try {
-            return ResponseEntity.ok(commonSettingsService.updateSetting(commonSettings));
+            commonSettingsService.updateTextValue(commonSettings);
+            return ResponseEntity.ok().build();
         } catch (CommonSettingsNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

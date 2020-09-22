@@ -7,7 +7,7 @@ public interface CommonSettingsService {
 
     CommonSettings getSettingByName(String name);
 
-    CommonSettings updateSetting(CommonSettings setting);
+    void updateTextValue(CommonSettings settings);
 
     CommonSettings addSetting(CommonSettings setting);
 }

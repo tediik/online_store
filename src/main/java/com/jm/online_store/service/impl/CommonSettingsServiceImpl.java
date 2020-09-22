@@ -7,6 +7,8 @@ import com.jm.online_store.service.interf.CommonSettingsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @AllArgsConstructor
 public class CommonSettingsServiceImpl implements CommonSettingsService {
@@ -24,17 +26,22 @@ public class CommonSettingsServiceImpl implements CommonSettingsService {
     }
 
     @Override
-    public CommonSettings updateSetting(CommonSettings setting) {
-        CommonSettings settingToUpdate = commonSettingsRepository
-                .findBySettingName(setting.getSettingName())
-                .orElseThrow(CommonSettingsNotFoundException::new);
-        settingToUpdate.setTextValue(setting.getTextValue());
-        return commonSettingsRepository.save(settingToUpdate);
-    }
-
-    @Override
     public CommonSettings addSetting(CommonSettings setting) {
         return commonSettingsRepository.save(setting);
     }
 
+    /**
+     * method update row in common_settings table.
+     * if repository returns int 1, that means that 1 row was updated.
+     * if it will be 0 that means that there is no row with such name
+     * and method throws {@link CommonSettingsNotFoundException}
+     * @param settings - settings to be updated
+     */
+    @Transactional
+    @Override
+    public void updateTextValue(CommonSettings settings) {
+       if(commonSettingsRepository.updateTextValue(settings.getTextValue(), settings.getSettingName()) != 1){
+           throw new CommonSettingsNotFoundException();
+       }
+    }
 }

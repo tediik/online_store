@@ -9,5 +9,5 @@ public interface TaskSettingsService {
 
     TaskSettings findTaskByName(String name);
 
-    TaskSettings updateTask(TaskSettings taskSettings);
+    void updateTask(TaskSettings taskSettings);
 }
