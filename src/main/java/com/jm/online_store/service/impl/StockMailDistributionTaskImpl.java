@@ -9,10 +9,8 @@ import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
-import com.jm.online_store.service.interf.SchedulingService;
 import com.jm.online_store.service.interf.SentStockService;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,39 +45,6 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
      * - Задается период +- 7 дней от текущего.
      * - день старта акции должен попадать в этот промежуток и день окончания акции должен быть после текущего дня.
      */
-    @Override
-    @Scheduled(cron = "${emailStockSending.delay}")
-    public void sendStocksToCustomers() {
-        User.DayOfWeekForStockSend dayOfWeek = User.DayOfWeekForStockSend.valueOf(LocalDate.now().getDayOfWeek().toString());
-        List<User> usersToSendStock = userRepository.findByDayOfWeekForStockSend(dayOfWeek);
-        List<Stock> currentAndFutureStocks = stockRepository
-                .findAllByStartDateBetweenAndEndDateIsAfter(LocalDate.now().minusDays(7L), LocalDate.now().plusDays(7L), LocalDate.now());
-
-        String messageBody = prepareMessageBody(currentAndFutureStocks);
-        String messageSubject = "Внимание Акции!!!";
-
-        if (usersToSendStock.size() != 0) {
-            for (User user : usersToSendStock) {
-                for (Stock stock : currentAndFutureStocks) {
-                    SentStock sentStock = SentStock.builder()
-                            .user(user)
-                            .stock(stock)
-                            .sentDate(LocalDate.now())
-                            .build();
-                    try {
-                        sentStockService.addSentStock(sentStock);
-                    } catch (UserNotFoundException e) {
-                        log.debug("Cannot add Stock {} for user {}", stock.getId(), user.getEmail());
-                    }
-                }
-                mailSenderService.send(user.getEmail(), messageSubject, messageBody, EMAIL_TYPE);
-                log.debug("Stock message was sent to {} with email {}", user, user.getEmail());
-            }
-            log.debug("{} stock emails were sent", usersToSendStock.size());
-        } else {
-            log.debug("There are no users in db with DayOfWeekForStockSend field equals {}", dayOfWeek);
-        }
-    }
 
     @SneakyThrows
     @Override
@@ -91,6 +56,18 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
         if (currentAndFutureStocks.size() != 0) {
             if (usersToSendStock.size() != 0) {
                 for (User user : usersToSendStock) {
+                    for (Stock stock : currentAndFutureStocks) {
+                        SentStock sentStock = SentStock.builder()
+                                .user(user)
+                                .stock(stock)
+                                .sentDate(LocalDate.now())
+                                .build();
+                        try {
+                            sentStockService.addSentStock(sentStock);
+                        } catch (UserNotFoundException e) {
+                            log.debug("Cannot add Stock {} for user {}", stock.getId(), user.getEmail());
+                        }
+                    }
                     String messageSubject = user.getFirstName() + ", мы подобрали вам список актуальных акций!!!";
                     String messageBody = prepareMessageBody(currentAndFutureStocks, user);
                     mailSenderService.sendHtmlMessage(user.getEmail(), messageSubject, messageBody, EMAIL_TYPE);

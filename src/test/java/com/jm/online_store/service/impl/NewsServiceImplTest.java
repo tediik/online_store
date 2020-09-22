@@ -118,7 +118,7 @@ class NewsServiceImplTest {
         News updatedNews = publishedNews;
         updatedNews.setModifiedDate(LocalDateTime.now());
         when(newsRepository.save(publishedNews)).thenReturn(updatedNews);
-        assertEquals(updatedNews.getModifiedDate(), newsService.update(publishedNews).getModifiedDate(), "Expected date doesn't match actual");
+        assertEquals(updatedNews.getModifiedDate().toLocalDate(), newsService.update(publishedNews).getModifiedDate().toLocalDate(), "Expected date doesn't match actual");
         verify(newsRepository, times(1)).save(publishedNews);
     }
 
