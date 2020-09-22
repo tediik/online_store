@@ -181,6 +181,13 @@
             <artifactId>icu4j</artifactId>
             <version>67.1</version>
         </dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>4.2</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
