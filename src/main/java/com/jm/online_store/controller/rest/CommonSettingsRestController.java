@@ -23,6 +23,7 @@ public class CommonSettingsRestController {
     /**
      * Exception handler method that catches all {@link CommonSettingsNotFoundException}
      * in current class and return ResponseEntity with not found status
+     *
      * @return - {@link ResponseEntity<String>}
      */
     @ExceptionHandler(CommonSettingsNotFoundException.class)
@@ -38,20 +39,12 @@ public class CommonSettingsRestController {
 
     @PutMapping
     public ResponseEntity<CommonSettings> updateSetting(@RequestBody CommonSettings commonSettings) {
-        try {
-            commonSettingsService.updateTextValue(commonSettings);
-            return ResponseEntity.ok().build();
-        } catch (CommonSettingsNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        commonSettingsService.updateTextValue(commonSettings);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{settingName}")
     public ResponseEntity<CommonSettings> getCommonSettingByName(@PathVariable String settingName) {
-        try {
-            return ResponseEntity.ok(commonSettingsService.getSettingByName(settingName));
-        } catch (CommonSettingsNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(commonSettingsService.getSettingByName(settingName));
     }
 }
