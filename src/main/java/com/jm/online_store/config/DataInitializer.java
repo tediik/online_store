@@ -75,6 +75,7 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
+        addressInit();
         paginationNewsAndStocksInit();
     }
 
@@ -337,11 +338,6 @@ public class DataInitializer {
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
         customer.setOrders(Set.copyOf(orderService.findAll()));
         userService.updateUser(customer);
-        Address address = new Address("420078","Средиземье","Город дорог","25");
-        addressService.addAddress(address);
-        Order order = orderService.findOrderById(5L).get();
-        order.setAddress(addressService.findAddressById(1L).get());
-        orderService.updateOrder(order);
     }
 
     /**
@@ -454,5 +450,16 @@ public class DataInitializer {
                     .build();
             stockService.addStock(stock);
         }
+    }
+    private void addressInit() {
+        Address address1 = new Address("420077","Татарстан","Казань","Революционная","25",true);
+        Address address2 = new Address("420078","Московская область","Москва","Ленина","126",true);
+        Address address3 = new Address("420079","Тамбовская область","Тамбов","Запорожская","11",false);
+        addressService.addAddress(address1);
+        addressService.addAddress(address2);
+        addressService.addAddress(address3);
+        Order order = orderService.findOrderById(5L).get();
+        order.setAddress(addressService.findAddressById(3L).get());
+        orderService.updateOrder(order);
     }
 }

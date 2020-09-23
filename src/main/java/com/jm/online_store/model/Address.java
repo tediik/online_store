@@ -44,20 +44,29 @@ public class Address {
     private String city;
 
     @NonNull
+    @Column(name = "street")
+    private String street;
+
+    @NonNull
     @Column(name = "building")
     private String building;
 
     @Column(name = "flat")
     private String flat;
 
+    @Column(name = "shop")
+    private boolean shop;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Set<Order> orders;
 
-    public Address(@NonNull String index, @NonNull String region, @NonNull String city, @NonNull String building) {
-        this.zip = index;
+    public Address(@NonNull String zip, @NonNull String region, @NonNull String city, @NonNull String street, @NonNull String building, boolean shop) {
+        this.zip = zip;
         this.region = region;
         this.city = city;
+        this.street = street;
         this.building = building;
+        this.shop = shop;
     }
 }

@@ -14,6 +14,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="../static/js/jquery.fias.min.js" type="text/javascript"></script>
     <!-- Optional JavaScript -->
+    <script src="../static/js/orderPlacement.js"></script>
     <script src="../static/js/customer.js"></script>
     <script src="../static/js/busket.js"></script>
     <script src="../static/js/customerProfilePageFunctions.js"></script>
@@ -179,13 +180,13 @@
                                             <input type="checkbox" class="form-check-input"
                                                    id="stockMailingCheckbox"
                                                    th:checked="*{dayOfWeekForStockSend != null}"
-                                            onchange="chekboxChanges(this)">
+                                                   onchange="chekboxChanges(this)">
                                             <label class="form-check-label" for="stockMailingCheckbox">Хотите ли вы
                                                 получать рассылку?</label>
                                         </div>
                                         <br>
                                         <div
-                                             th:class="*{dayOfWeekForStockSend != null} ? 'form-group day-of-the-week-drop-list' : 'form-group day-of-the-week-drop-list d-none' ">
+                                                th:class="*{dayOfWeekForStockSend != null} ? 'form-group day-of-the-week-drop-list' : 'form-group day-of-the-week-drop-list d-none' ">
                                             <label for="dayOfWeekDropList">Выберите день недели</label>
                                             <select class="form-control" id="dayOfWeekDropList"
                                                     th:field="*{dayOfWeekForStockSend}">
@@ -276,71 +277,6 @@
                     </div>
 
                 </div>
-                <div class="modal fade" id="orderModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditUserModalWindows"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <in class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="Edit user">Адрес доставки</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div id="alert-modal-div">
-                            </div>
-                            <div class="modal-body" id="modalBody">
-                                <label>
-                                    <input class="checkbox" type="checkbox" />Заберу заказ сам!
-                                </label>
-                                <div align="right">
-                                    <button type="button" class="btn btn-secondary">Clear Fields</button>
-                                </div>
-                                <div class="row justify-content-center">
-                                    <div class="col">
-                                        <div class="address">
-                                            <div class="h3">Введите адрес доставки</div>
-                                            <form class="js-form-address">
-                                                <div class="field">
-                                                    <label>Регион</label>
-                                                    <input type="text" name="region">
-                                                </div>
-                                                <div class="field">
-                                                    <label>Район</label>
-                                                    <input type="text" name="district">
-                                                </div>
-                                                <div class="field">
-                                                    <label>Город</label>
-                                                    <input type="text" name="city">
-                                                </div>
-                                                <div class="field">
-                                                    <label>Улица</label>
-                                                    <input type="text" name="street">
-                                                </div>
-                                                <div class="field">
-                                                    <label>Дом</label>
-                                                    <input type="text" name="building">
-                                                </div>
-                                                <div class="field">
-                                                    <label>Индекс</label>
-                                                    <input type="text" name="zip">
-                                                </div>
-                                                <div class="tooltip" style="display: none;"><b></b><span></span></div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">
-                                    Close
-                                </button>
-                                <button id="acceptButton" type="button"  class="btn btn-success edit-button" onclick="test()" >
-                                    Confirm order
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
                     <h3>корзина</h3>
                     <div class="row min-vh-100">
@@ -364,6 +300,74 @@
 
                             <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#orderModalWindow">купить
                             </button>
+<!--                            onclick="buildOrderFromBasket()-->
+                        </div>
+                    </div>
+                    <div class="modal fade" id="orderModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditUserModalWindows"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="orderAdress">Адрес доставки</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="alert-modal-div">
+                                </div>
+                                <div class="modal-body" id="modalBody">
+                                    <label>
+                                        <input class="checkbox" type="checkbox" onchange="addressChange()"/>Самовывоз
+                                    </label>
+                                    <div align="right">
+                                        <button type="button" class="btn btn-secondary"onclick="clearFields()">Clear Fields</button>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <div id="shopAddress" hidden="true">
+                                            </div>
+                                            <div class="address" id="addressId">
+                                                <div class="h3">Введите адрес доставки</div>
+                                                <form id ="addressForm" class="js-form-address">
+                                                    <div class="field">
+                                                        <label>Регион</label>
+                                                        <input type="text" name="region">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Район</label>
+                                                        <input type="text" name="district">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Город</label>
+                                                        <input type="text" name="city">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Улица</label>
+                                                        <input type="text" name="street">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Дом</label>
+                                                        <input type="text" name="building">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Индекс</label>
+                                                        <input type="text" name="zip">
+                                                    </div>
+                                                    <div class="tooltip" style="display: none;"><b></b><span></span></div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button id="acceptButton" type="button"  class="btn btn-success edit-button" onclick="confirmOrder()" >
+                                        Confirm order
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -458,10 +462,5 @@
         </div>
     </div>
 </div>
-<!--<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>-->
-<!--<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>-->
 </body>
 </html>
-
-
-
