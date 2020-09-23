@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,9 +27,8 @@ public class MyUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("Email '%s' not found.", email));
         } else {
-            return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                     mapRolesToAuthorities(user.getRoles()));
-//            return userRepository.findByEmail(email).get();
         }
     }
 
@@ -38,6 +36,3 @@ public class MyUserDetailsService implements UserDetailsService {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getAuthority())).collect(Collectors.toList());
     }
 }
-
-
-

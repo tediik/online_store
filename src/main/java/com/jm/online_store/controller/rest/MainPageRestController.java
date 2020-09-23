@@ -64,7 +64,6 @@ public class MainPageRestController {
             log.debug("Wrong email! Не правильно введен email");
 
             return new ResponseEntity("notValidEmailError", HttpStatus.OK);
-//            return new ResponseEntity("notValidEmailError", HttpStatus.NOT_ACCEPTABLE);
         }
         userService.regNewAccount(userForm);
         return new ResponseEntity("success", HttpStatus.OK);
@@ -81,10 +80,10 @@ public class MainPageRestController {
      * Во внутренних мапах - ключ - подкатегория кириллицей и значение - латиницей.
      *
      * @return Пример: {"Компьютеры":{"Комплектующие":"Komplektuyushchiye",
-     *                                "Компьютеры":"Kompʹyutery",
-     *                                "Ноутбуки":"Noutbuki"},
-     *                  "Смартфоны и гаджеты":{"Планшеты":"Planshety",
-     *                                         "Смартфоны":"Smartfony"}}
+     * "Компьютеры":"Kompʹyutery",
+     * "Ноутбуки":"Noutbuki"},
+     * "Смартфоны и гаджеты":{"Планшеты":"Planshety",
+     * "Смартфоны":"Smartfony"}}
      */
     @GetMapping("api/categories")
     public ResponseEntity<Map<String, Map<String, String>>> getCategories() {

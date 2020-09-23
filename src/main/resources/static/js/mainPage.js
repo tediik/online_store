@@ -40,9 +40,9 @@ function register() {
         data: formData,
         success: function (data) {
             if (data === "success") {
-                // toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', 'success', {timeOut: 5000});
-                alert('Ссылка для подтверждения регистрации отправлена на вашу почту')
-                // close();
+                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', 'success', {timeOut: 5000});
+                // alert('Ссылка для подтверждения регистрации отправлена на вашу почту')
+                close();
                 document.location.href = "/";
             } else if (data === "duplicatedEmailError") {
                 $("#duplicatedEmailError").show();
