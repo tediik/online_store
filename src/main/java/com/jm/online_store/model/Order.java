@@ -57,10 +57,10 @@ public class Order {
             property = "id")
     private List<ProductInOrder> productInOrders;
 
-//    @ManyToOne (cascade=CascadeType.ALL)
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-//            property = "id")
-//    private Address address;
+    @ManyToOne (cascade=CascadeType.ALL)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
+    private Address address;
 
     // Список статусов заказа
     public enum Status {

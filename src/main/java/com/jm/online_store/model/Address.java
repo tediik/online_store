@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
@@ -21,14 +22,15 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "address")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
-    @Column(name = "index")
-    private String index;
+    @Column(name = "zip")
+    private String zip;
 
     @NonNull
     @Column(name = "region")
@@ -51,4 +53,11 @@ public class Address {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Set<Order> orders;
+
+    public Address(@NonNull String index, @NonNull String region, @NonNull String city, @NonNull String building) {
+        this.zip = index;
+        this.region = region;
+        this.city = city;
+        this.building = building;
+    }
 }

@@ -1,5 +1,6 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Description;
 import com.jm.online_store.model.News;
@@ -10,6 +11,7 @@ import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.NewsService;
@@ -24,10 +26,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -56,13 +60,14 @@ public class DataInitializer {
     private final BasketService basketService;
     private final StockService stockService;
     private final SharedStockService sharedStockService;
+    private final AddressService addressService;
 
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct
+    //@PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -332,6 +337,11 @@ public class DataInitializer {
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
         customer.setOrders(Set.copyOf(orderService.findAll()));
         userService.updateUser(customer);
+        Address address = new Address("420078","Средиземье","Город дорог","25");
+        addressService.addAddress(address);
+        Order order = orderService.findOrderById(5L).get();
+        order.setAddress(addressService.findAddressById(1L).get());
+        orderService.updateOrder(order);
     }
 
     /**
