@@ -29,10 +29,10 @@ public class CustomerRestController {
                                                 @RequestParam String newMail) {
         User user = (User) auth.getPrincipal();
         if (userService.isExist(newMail)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("duplicatedEmailError");
         } else {
             userService.changeUsersMail(user, newMail);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok().body("ok");
         }
     }
 }

@@ -9,12 +9,11 @@ function changeMail() {
         type: 'POST',
         data: formData,
         success: function (res) {
-            alert ("Подтвердите смену email. Вам на почту отправлено письмо.");
+            toastr.success('Подтвердите смену email. Вам на почту отправлено письмо.', {timeOut: 5000});
             document.location.href = "/customer";
-            //$('#mytabs a[href="#tab3"]').tab('show')
         },
-        error: function (){
-            alert("Вы ввели тот же email");
+        error: function (res){
+            toastr.error('Вы ввели тот же email', {timeOut: 5000});
             document.location.href = "/customer";
         }
     });
