@@ -14,6 +14,8 @@ import org.springframework.util.Assert;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import static com.jm.online_store.model.User.DayOfWeekForStockSend.SUNDAY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -23,10 +25,10 @@ import static org.mockito.Mockito.when;
  */
 @Slf4j
 @SpringBootTest
-public class SchedulingServiceImplTest {
+public class StockMailDistributionTaskSettingsImplTest {
 
     @Autowired
-    SchedulingServiceImpl schedulingService;
+    StockMailDistributionTaskImpl schedulingService;
     @MockBean
     private UserRepository userRepository;
     @MockBean
@@ -54,13 +56,15 @@ public class SchedulingServiceImplTest {
                 .thenReturn(testUserList);
         when(stockRepository.findAllByStartDateBetweenAndEndDateIsAfter(any(), any(), any()))
                 .thenReturn(testStockList);
-
+        when(stockRepository.findById(any()))
+                .thenReturn(Optional.of(testStock));
+        when(userRepository.findById(any()))
+                .thenReturn(Optional.of(testUser));
         Assert.notNull(userRepository.findByDayOfWeekForStockSend(any()),"Проверка, что NotNull");
 
         Mockito.verify(userRepository, Mockito.times(1))
                 .findByDayOfWeekForStockSend(any());
-
-        schedulingService.sendStocksToCustomers();
+        schedulingService.run();
 
         log.info("After sending Stock");
     }
@@ -79,8 +83,7 @@ public class SchedulingServiceImplTest {
 
         Mockito.verify(userRepository, Mockito.times(0))
                 .findByDayOfWeekForStockSend(any());
-
-        schedulingService.sendStocksToCustomers();
+        schedulingService.run();
 
         log.info("After sending Stock");
     }

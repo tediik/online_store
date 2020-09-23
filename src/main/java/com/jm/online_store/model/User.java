@@ -117,6 +117,10 @@ public class User implements UserDetails {
     @JsonManagedReference(value = "user-sharedStock")
     private Set<SharedStock> sharedStocks;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonManagedReference(value = "user-sentStock")
+    private Set<SentStock> sentStocks;
+
     public User() {
         registerDate = LocalDate.now();
     }
@@ -140,6 +144,12 @@ public class User implements UserDetails {
         this.firstName = firstName;
         this.lastName = lastName;
         this.roles = roleSet;
+    }
+
+    public User(@Email @NotBlank String email, DayOfWeekForStockSend dayOfWeekForStockSend, String password) {
+        this.email = email;
+        this.dayOfWeekForStockSend = dayOfWeekForStockSend;
+        this.password = password;
     }
 
     @Override
