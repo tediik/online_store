@@ -1,3 +1,4 @@
+let shops={};
 /**
  * Функция отчистки полей формы
  */
@@ -108,10 +109,11 @@ function getShopAddress() {
     }).then(response => response.json()).then(shops => showShops(shops))
 }
 
-function showShops(shops) {
+function showShops(shops1) {
     $('#shopAddress').empty().append(`
             <h3>Заберу заказ по адресу:</h3>
         `);
+    shops = shops1;
     for (let i = 0; i < shops.length; i++) {
         var address = shops[i]
         $('#shopAddress').append(`
@@ -130,5 +132,28 @@ function confirmOrder() {
 
     } else {
         let id = $("input[name=shops]").filter(":checked").val();
+        let address = shops[id-1];
+        let addressToAdd = {
+            id: id,
+            region: address.region,
+            city: address.city,
+            street: address.street,
+            building: address.building,
+            zip: address.zip,
+            shop: address.shop
+        };
+        fetch("/customer/busketGoods", {
+            method: 'POST',
+            body: JSON.stringify(addressToAdd),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            }
+        }).then(function (response) {
+            if (response.ok) {
+                // response.json().then(users => renderUsersTable(users))
+            } else {
+                // renderUsersTable(new Array)
+            }
+        })
     }
 }
