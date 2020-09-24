@@ -9,4 +9,5 @@ public interface AddressService {
     Optional<Address> findAddressById(Long idAddress);
     Address addAddress(Address address);
     List<Address> findAllShops();
+    Optional<Address> findSameAddress(Address address);
 }

@@ -84,6 +84,7 @@ public class BusketRestController {
      * контроллер для формирования заказа из корзины.
      *
      * @param authentication авторизованный пользователь.
+     * @param address        адрес с формы
      * @return ResponseEntity(HttpStatus.OK)
      */
     @PostMapping(value = "/customer/busketGoods")
@@ -92,7 +93,11 @@ public class BusketRestController {
         if (address.isShop()) {
             addressToAdd = addressService.findAddressById(address.getId()).orElseThrow(AddressNotFoundException::new);
         } else {
-            addressToAdd = addressService.addAddress(address);
+            if (addressService.findSameAddress(address).isPresent()) {
+                addressToAdd = addressService.findSameAddress(address).get();
+            } else {
+                addressToAdd = addressService.addAddress(address);
+            }
         }
         User autorityUser = getAutorityUser(authentication);
         List<SubBasket> subBasketList = autorityUser.getUserBasket();
@@ -126,7 +131,7 @@ public class BusketRestController {
     /**
      * Контроллер для удаления сущности SubBasket (корзина) из списка корзин User.
      *
-     * @param id идентификатор миникорзины
+     * @param id             идентификатор миникорзины
      * @param authentication авторизованный пользователь User
      * @return ResponseEntity(HttpStatus.OK)
      */

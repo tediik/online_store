@@ -451,6 +451,9 @@ public class DataInitializer {
             stockService.addStock(stock);
         }
     }
+    /**
+     * Метод первичной инициалзации адресов, 2 адреса для магазина и 1 адрес прикрепляется к заказу
+     */
     private void addressInit() {
         Address address1 = new Address("420077","Татарстан","Казань","Революционная","25",true);
         Address address2 = new Address("420078","Московская область","Москва","Ленина","126",true);

@@ -68,9 +68,8 @@ input, button {
     border-right-color: #f2dede;
 }
 .kladr-error {
-    color: #cb3e27
+    background-color: #ff5860 !important;
 }
-
 #kladr_autocomplete ul {
     position: absolute;
     display: block;

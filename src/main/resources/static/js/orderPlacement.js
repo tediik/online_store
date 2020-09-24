@@ -1,10 +1,15 @@
-let shops={};
+/**
+ * Адреса магазинов
+ */
+let shops = {};
+
 /**
  * Функция отчистки полей формы
  */
 function clearFields() {
     $('#addressForm')[0].reset();
 }
+
 /**
  * Функция для заполнения полей адреса
  * с использование плагина https://github.com/fias-api/jquery
@@ -29,8 +34,7 @@ $(function () {
 
             if (obj) {
                 setLabel($input, obj.type);
-            }
-            else {
+            } else {
                 showError($input, 'Введено неверно');
             }
         },
@@ -42,11 +46,11 @@ $(function () {
             }
         },
         change: function (obj) {
-            if(obj && obj.parents){
+            if (obj && obj.parents) {
                 $.fias.setValues(obj.parents, '.js-form-address');
             }
 
-            if(obj && obj.zip){
+            if (obj && obj.zip) {
                 $('[name="zip"]').val(obj.zip);
             }
         },
@@ -61,7 +65,7 @@ $(function () {
     $district.fias('withParents', true);
     $city.fias('withParents', true);
     $street.fias('withParents', true);
-    $building.fias('withParents',true);
+    $building.fias('withParents', true);
 
 
     function setLabel($input, text) {
@@ -85,21 +89,25 @@ $(function () {
     }
 });
 
-function test() {
-
-}
-
+/**
+ * Функция смены зачения чекбокса доставка/самовывоз
+ */
 function addressChange() {
     if (document.getElementById("shopAddress").hidden) {
         getShopAddress()
-        $('#addressId').attr("hidden",true);
-        $('#shopAddress').attr("hidden",false);
+        $('#addressId').attr("hidden", true);
+        $('#shopAddress').attr("hidden", false);
+        $('#clear-button').attr("hidden", true);
     } else {
-        $('#addressId').attr("hidden",false);
-        $('#shopAddress').attr("hidden",true);
+        $('#addressId').attr("hidden", false);
+        $('#shopAddress').attr("hidden", true);
+        $('#clear-button').attr("hidden", false);
     }
 }
 
+/**
+ * Функция полчуает адреса магазинов
+ */
 function getShopAddress() {
     fetch("customer/rest/allShops", {
         method: 'GET',
@@ -109,6 +117,10 @@ function getShopAddress() {
     }).then(response => response.json()).then(shops => showShops(shops))
 }
 
+/**
+ * Заполняет radio button адресами магазинов
+ * @param shops1 адреса магазинов из базы
+ */
 function showShops(shops1) {
     $('#shopAddress').empty().append(`
             <h3>Заберу заказ по адресу:</h3>
@@ -127,12 +139,73 @@ function showShops(shops1) {
         `);
     }
 }
-function confirmOrder() {
-    if(document.getElementById("shopAddress").hidden){
 
+/**
+ * Функция подтверждения оформления заказа на указанный адрес
+ * При ошибке получим сообщение об ошибке
+ */
+function confirmOrder() {
+    if (document.getElementById("shopAddress").hidden) {
+        if ($('[class="kladr-error"]').attr('name')) {
+            $('#alert-modal-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Заполните поля выделенные красным Корректно!</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+            $('#orderModalWindow').scrollTop(0);
+            window.setTimeout(function () {
+                $('.alert').alert('close');
+            }, 5000)
+        } else if ($('[name="zip"]').val() !== "" &&
+            $('[name="region"]').val() !== "" &&
+            $('[name="city"]').val() !== "" &&
+            $('[name="street"]').val() !== "" &&
+            $('[name="building"]').val() !== "") {
+            address = {
+                region: $('[name="region"]').val(),
+                city: $('[name="city"]').val(),
+                district: $('[name="district"]').val(),
+                street: $('[name="street"]').val(),
+                building: $('[name="building"]').val(),
+                zip: $('[name="zip"]').val(),
+                flat: $('[name="flat"]').val(),
+                shop: false
+            };
+
+            fetch("/customer/busketGoods", {
+                method: 'POST',
+                body: JSON.stringify(address),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            }).then(function (response) {
+                if (response.ok) {
+                    $('#dismissButton').click();
+                    showInformation(true, "Заказ успешно оформлен!")
+                } else {
+                    showInformation(false, "Не удалось оформить заказ по указанному адресу!")
+                }
+            })
+        } else {
+            $('#alert-modal-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Заполните все поля отмеченные звёздочкой</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+            $('#orderModalWindow').scrollTop(0);
+            window.setTimeout(function () {
+                $('.alert').alert('close');
+            }, 5000)
+        }
     } else {
         let id = $("input[name=shops]").filter(":checked").val();
-        let address = shops[id-1];
+        let address = shops[id - 1];
         let addressToAdd = {
             id: id,
             region: address.region,
@@ -150,10 +223,44 @@ function confirmOrder() {
             }
         }).then(function (response) {
             if (response.ok) {
-                // response.json().then(users => renderUsersTable(users))
+                $('#dismissButton').click();
+                showInformation(true, "Заказ успешно оформлен!")
             } else {
-                // renderUsersTable(new Array)
+                showInformation(false, "Не удалось оформить заказ по указанному адресу!")
             }
         })
+    }
+}
+
+/**
+ * Функция информаицонного сообщения, сообщает о успешности оформления заказа или неудаче
+ * @param success успех или неудача
+ * @param message Сообщение для вывода
+ */
+function showInformation(success, message) {
+    if (success) {
+        $('#order-div').empty().append(`
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>${message}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+        window.setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000)
+    } else {
+        $('#order-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>${message}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+        window.setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000)
     }
 }

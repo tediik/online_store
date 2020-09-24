@@ -16,7 +16,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
-
+/**
+ * Сущность адрес, связана с сущностью {@link Order}
+ */
 @Entity
 @Data
 @NoArgsConstructor
