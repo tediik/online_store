@@ -1,6 +1,5 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.config.security.MyUserDetailsService;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CommentRepository;
@@ -9,34 +8,16 @@ import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.transaction.AfterTransaction;
-import org.springframework.test.context.transaction.BeforeTransaction;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 @SpringBootTest
@@ -80,7 +61,7 @@ public class CommentServiceImplTest {
         assertThat(comment, notNullValue());
         assertThat(loggedInUser, notNullValue());
         verify(commentRepository, times(1)).save(comment);
-        assertThat(comment.getCustomer(), notNullValue());
+        assertThat(comment.getCustomer(),notNullValue());
         assertThat(comment.getContent(), notNullValue());
         assertThat(comment.getContent(), is(argumentComment.getContent()));
         assertThat(comment.getCustomer(),is(argumentComment.getCustomer()));
