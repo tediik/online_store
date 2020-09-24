@@ -9,11 +9,15 @@ function changeMail() {
         type: 'POST',
         data: formData,
         success: function (res) {
-            toastr.success('Подтвердите смену email. Вам на почту отправлено письмо.', {timeOut: 5000});
+            toastr.success(res.body, {timeOut: 5000});
             document.location.href = "/customer";
         },
         error: function (res){
-            toastr.error('Вы ввели тот же email', {timeOut: 5000});
+            if (res.status == 400) {
+                toastr.error(res.body, {timeOut: 5000});
+            } else {
+                console.log(res.status);
+            }
             document.location.href = "/customer";
         }
     });
