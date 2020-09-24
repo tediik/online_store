@@ -12,6 +12,8 @@ public interface UserService {
 
     List<User> findAll();
 
+    List<User> findByDayOfWeekForStockSend(byte dayNumber);
+
     Optional<User> findById(Long id);
 
     void addUser(User user);
@@ -49,6 +51,8 @@ public interface UserService {
     void addNewUserFromAdmin(User newUser);
 
     boolean changePassword(Long id, String oldPassword, String newPassword);
+
+    void cancelSubscription(Long id);
 }
 
 
