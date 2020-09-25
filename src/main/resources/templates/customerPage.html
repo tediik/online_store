@@ -21,6 +21,7 @@
     <script src="../static/js/customerProfilePageFunctions.js"></script>
     <script src="../static/js/profilePicture.js"></script>
     <script src="../static/js/orders.js"></script>
+    <script src="../static/js/profile.js"></script>
 </head>
 <body>
 <header th:insert="/blocks/header :: header"></header>
@@ -230,15 +231,14 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h3 class="modal-title">Название</h3>
+                                                    <h3 class="modal-title">Изменяем электронную почту:</h3>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
                                                         <span aria-hidden="true">x</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:action="@{/customer/changemail}" method="post"
-                                                          class="form-group">
+                                                    <form id="formChangeMail" th:action="@{/customer/changemail}" method="post" class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="new_mail">Введите новый адрес электронной
                                                                 почты</label>
@@ -247,7 +247,7 @@
                                                                    name="newMail"
                                                                    class="form-control" required/>
                                                         </div>
-                                                        <button type="submit" class="btn btn-primary btn-sm btn-block">
+                                                        <button type="submit" id="buttonChangeMail" class="btn btn-primary btn-sm btn-block">
                                                             Подтвердить
                                                         </button>
                                                     </form>
