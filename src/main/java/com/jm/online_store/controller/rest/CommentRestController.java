@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CommentService;
 import lombok.AllArgsConstructor;
