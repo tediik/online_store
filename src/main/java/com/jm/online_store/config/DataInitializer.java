@@ -465,7 +465,7 @@ public class DataInitializer {
      */
     private void stockInit() {
         Stock firstStock = Stock.builder()
-                .startDate(LocalDate.now().plusDays(2))
+                .startDate(LocalDate.now().plusDays(2L))
                 .endDate(LocalDate.now().plusDays(12L))
                 .stockTitle("Команда Online-Store сообщает о начале акции – «Рассрочка или бонусы! HD-" +
                         " и UltraHD-телевизоры Samsung»")
@@ -624,7 +624,7 @@ public class DataInitializer {
                 .build();
 
         Stock forthStock = Stock.builder()
-                .startDate(LocalDate.now().plusDays(3))
+                .startDate(LocalDate.now().minusDays(3L))
                 .endDate(LocalDate.now().plusDays(10L))
                 .stockTitle("«Рассрочка или бонусы!")
                 .stockText("Стиральные машины Whirlpool помогут привести в порядок ваши вещи из различных тканей. " +
@@ -634,7 +634,7 @@ public class DataInitializer {
                 .build();
 
         Stock fifthStock = Stock.builder()
-                .startDate(LocalDate.now().plusDays(3))
+                .startDate(LocalDate.now().minusDays(10L))
                 .endDate(LocalDate.now().plusDays(10L))
                 .stockTitle("«3 года защиты за 990")
                 .stockText("Самое время обновить компьютер! Выбери подходящую модель с Windows 10 и добавь" +
@@ -645,8 +645,8 @@ public class DataInitializer {
                 .build();
 
         Stock sixthStock = Stock.builder()
-                .startDate(LocalDate.now().plusDays(3))
-                .endDate(LocalDate.now().plusDays(10L))
+                .startDate(LocalDate.now().minusDays(2L))
+                .endDate(LocalDate.now().plusDays(30L))
                 .stockTitle("«Требуй скидку!")
                 .stockText("До 31 декабря требуй и получай скидку на смартфоны, телевизоры" +
                         " и бытовую технику из акционного списка." +
