@@ -12,12 +12,13 @@
     <script type="text/javascript" src="https://vk.com/js/api/share.js?93" charset="windows-1251"></script>
 </head>
 <body>
+<!--facebook init script-->
 <script>
     window.fbAsyncInit = function () {
         FB.init({
             appId: '933203153853320',
             autoLogAppEvents: true,
-            xfbml: true,categories
+            xfbml: true,categories,
             version: 'v8.0'
         });
     };
@@ -42,6 +43,19 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <a class="btn btn-link" href="/news"><---обратно</a>
+        </div>
+        <div class="col-sm-8 text-left">
+            <div th:each="stock : ${stocks}" class="alert alert-info mt-2">
+                <h3 th:text="${stock.title}"></h3>
+                <p th:utext="${stock.fullText}"></p>
             </div>
         </div>
     </div>
