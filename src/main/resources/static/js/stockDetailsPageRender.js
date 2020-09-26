@@ -7,8 +7,8 @@ let stockId = 58
 /**
  * Global variables declaration
  */
-const sharedStockApiUrl = "/customer/api/sharedStock/"
-const stockApiUrl = "/customer/api/stock/"
+const sharedStockApiUrl = "/global/api/sharedStock/"
+const stockApiUrl = "/global/api/stock/"
 let urlToShare = document.location.href
 let myHeaders = new Headers()
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')

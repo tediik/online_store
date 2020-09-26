@@ -16,8 +16,8 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/customer/api/stock")
-public class CustomerStockRestController {
+@RequestMapping("/global/api/stock")
+public class GlobalStockRestController {
     private final StockService stockService;
 
     @GetMapping("/{id}")
