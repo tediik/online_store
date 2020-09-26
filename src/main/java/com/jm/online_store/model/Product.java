@@ -23,7 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false, updatable = false, nullable = false)
-    private Long id;
+    private long id;
     @NonNull
     @Column(name = "product", nullable = false)
     private String product;
@@ -64,7 +64,7 @@ public class Product {
     private List<ProductInOrder> productInOrders;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
     /**
      *поле для возможности отслеживания изменения цены на Product.

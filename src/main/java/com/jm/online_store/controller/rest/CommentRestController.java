@@ -2,7 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.dto.ProductDto;
+import com.jm.online_store.model.dto.ProductForCommentDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CommentService;
 import lombok.AllArgsConstructor;
@@ -49,12 +49,12 @@ public class CommentRestController {
      * @return ResponseEntity<ProductComment>
      */
     @PostMapping
-    public ResponseEntity<Product> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
+    public ResponseEntity<ProductForCommentDto> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
         if (!bindingResult.hasErrors()) {
             Comment savedComment = commentService.addComment(comment);
             productFromDb.setComments(List.of(savedComment));
-            return ResponseEntity.ok().body(productFromDb);
+            return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
         } else
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
     }

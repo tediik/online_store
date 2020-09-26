@@ -3,7 +3,6 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CommentRepository;
-import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,10 +30,6 @@ public class CommentServiceImplTest {
 
     @MockBean
     CommentRepository commentRepository;
-
-    @MockBean
-    UserRepository userRepository;
-
 
     User loggedInUser;
     Comment argumentComment;
