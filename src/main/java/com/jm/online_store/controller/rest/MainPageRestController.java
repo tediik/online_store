@@ -56,6 +56,10 @@ public class MainPageRestController {
             log.debug("Passwords do not match : passwordConfirmError");
             return new ResponseEntity("passwordError", HttpStatus.OK);
         }
+        if (validationUtils.isNotValidPassword(userForm.getPassword())) {
+            log.debug("Passwords do not match : passwordValidError");
+            return new ResponseEntity("passwordValidError", HttpStatus.OK);
+        }
         if (userService.isExist(userForm.getEmail())) {
             log.debug("User with same email already exists");
             return new ResponseEntity("duplicatedEmailError", HttpStatus.OK);
@@ -79,10 +83,10 @@ public class MainPageRestController {
      * Во внутренних мапах - ключ - подкатегория кириллицей и значение - латиницей.
      *
      * @return Пример: {"Компьютеры":{"Комплектующие":"Komplektuyushchiye",
-     *                                "Компьютеры":"Kompʹyutery",
-     *                                "Ноутбуки":"Noutbuki"},
-     *                  "Смартфоны и гаджеты":{"Планшеты":"Planshety",
-     *                                         "Смартфоны":"Smartfony"}}
+     * "Компьютеры":"Kompʹyutery",
+     * "Ноутбуки":"Noutbuki"},
+     * "Смартфоны и гаджеты":{"Планшеты":"Planshety",
+     * "Смартфоны":"Smartfony"}}
      */
     @GetMapping("api/categories")
     public ResponseEntity<Map<String, Map<String, String>>> getCategories() {

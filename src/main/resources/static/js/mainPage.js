@@ -47,6 +47,8 @@ function register() {
                 $("#duplicatedEmailError").show();
             } else if (data == "passwordError") {
                 $("#passwordError").show();
+            } else if (data == "passwordValidError") {
+                $("#passwordValidError").show();
             } else if (data == "notValidEmailError") {
                 $("#notValidEmailError").show();
             }
