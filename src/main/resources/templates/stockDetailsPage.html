@@ -53,9 +53,9 @@
             <a class="btn btn-link" href="/news"><---обратно</a>
         </div>
         <div class="col-sm-8 text-left">
-            <div th:each="stock : ${stocks}" class="alert alert-info mt-2">
-                <h3 th:text="${stock.title}"></h3>
-                <p th:utext="${stock.fullText}"></p>
+            <div th:each="stocks : ${stock}" class="alert alert-info mt-2">
+                <h3 th:text="${stocks.stockTitle}"></h3>
+                <p th:utext="${stocks.stockText}"></p>
             </div>
         </div>
     </div>
