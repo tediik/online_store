@@ -61,21 +61,25 @@
             <a th:href="@{/authority/profile}" class="btn btn-primary ml-auto">Profile</a>
             <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
         </nav>
-        <div class="card" >
+        <div class="card">
             <h5 class="card-header">Admin Panel</h5>
             <div id="alert-div">
 
             </div>
-            <div class="card-body" >
+            <div class="card-body">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">User Table</a>
-                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add User</a>
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                           role="tab" aria-controls="nav-home" aria-selected="true">User Table</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                           role="tab" aria-controls="nav-profile" aria-selected="false">Add User</a>
+
                         <!--                select                -->
                         <div class="form-group">
                             <select class="form-control form-control-sm" id="filterRole">
                                 <option value="" disabled selected>User filter by Role</option>
-                                <option th:each="dropDownItem : ${listRoles}" th:value="${dropDownItem.name}" th:text="${dropDownItem.name}"></option>
+                                <option th:each="dropDownItem : ${listRoles}" th:value="${dropDownItem.name}"
+                                        th:text="${dropDownItem.name}"></option>
                                 <div class="dropdown-divider"></div>
                                 <option value="default">show all users</option>
                             </select>
@@ -97,11 +101,13 @@
                                 <div class="panel-body">
                                     <div id="add-email-form-group" class="form-group">
                                         <label for="addEmail">Email:</label>
-                                        <input type="email" id="addEmail" name="email" placeholder="E-mail" class="form-control">
+                                        <input type="email" id="addEmail" name="email" placeholder="E-mail"
+                                               class="form-control">
                                     </div>
                                     <div class="form-group addPasswordDiv">
                                         <label for="addPassword">Пароль:</label>
-                                        <input type="password" id="addPassword" name="password" placeholder="Password" class="form-control">
+                                        <input type="password" id="addPassword" name="password" placeholder="Password"
+                                               class="form-control">
                                     </div>
                                     <div class="form-group">
                                         <label>Роли:</label>
@@ -119,8 +125,12 @@
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
 <!--<script type="text/javascript" src="static/main.js"></script>-->
 <script src="/static/js/AdminPageRender.js"></script>
 </body>

@@ -15,7 +15,7 @@ $('#filterRole').on("change", function() {
     if(roleSelect !== 'default') {
         $.ajax({
             type: 'PUT',
-            url: '/api/filter/' + roleSelect,
+            url: '/api/admin/' + roleSelect,
             success: function (filteredUsers) {
                 renderUsersTable(filteredUsers)
             }
