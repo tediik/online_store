@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -49,7 +51,7 @@ public class CommentServiceImplTest {
     @Test
     void addComment() {
         given(userService.getCurrentLoggedInUser()).willReturn(loggedInUser);
-        given(userService.findById(1L)).willReturn(java.util.Optional.ofNullable(loggedInUser));
+        given(userService.findById(1L)).willReturn(Optional.ofNullable(loggedInUser));
         given(commentRepository.save(argumentComment)).willReturn(argumentComment);
 
         Comment comment = commentService.addComment(argumentComment);

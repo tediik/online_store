@@ -13,8 +13,8 @@ $(document).ready(function () {
 
                     if (comment.parentId === null) {
                         $('#showComments').append($(`
-                        <div class=\"media mb-4\"><div>
-                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${profilePicture}" width=\"52"></div>
+                        <div class="media mb-4"><div>
+                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${profilePicture}" width="52"></div>
                         <div class="media-body" id='mediaBody" + ${comment.id} + "'>
                         <h5 class="mt-0">${comment.customer.email} commented on ${timeStamp}</h5>
                         <div class="message"> ${comment.content}  </div>
@@ -27,7 +27,7 @@ $(document).ready(function () {
                     if (comment.parentId !== null) {
                         $(replyDisplayId).append($(`<div class="media mt-4">
                     <div>
-                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${profilePicture}" width=\"52"></div>
+                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${profilePicture}" width="52"></div>
                     <div class="media-body"> 
                     <h5 class="mt-0">${comment.customer.email} commented on ${timeStamp} </h5>
                     <div class="message"> ${comment.content} </div>
