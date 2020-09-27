@@ -61,4 +61,8 @@ public class Stock {
     @JsonManagedReference(value = "stock-sharedStock")
     private Set<SharedStock> sharedStocks;
 
+    @OneToMany(mappedBy = "stock", orphanRemoval = true)
+    @JsonManagedReference(value = "stock-sentStock")
+    private Set<SentStock> sentStocks;
+
 }
