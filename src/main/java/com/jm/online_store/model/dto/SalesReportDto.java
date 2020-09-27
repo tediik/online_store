@@ -1,7 +1,6 @@
 package com.jm.online_store.model.dto;
 
 import com.jm.online_store.model.Order;
-import com.jm.online_store.model.ProductInOrder;
 import com.jm.online_store.model.User;
 import com.opencsv.bean.CsvBindByPosition;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
@@ -33,11 +31,16 @@ public class SalesReportDto {
     @CsvBindByPosition(position = 6)
     private Double orderSummaryPrice;
 
+    /**
+     * Static method which converts {@link Order} into SalesReportDto
+     * @param order - {@link Order}
+     * @return - {@link SalesReportDto}
+     */
     public static SalesReportDto orderToSalesReportDto(Order order) {
         SalesReportDto salesReportDto = new SalesReportDto();
         salesReportDto.setOrderNumber(order.getId());
         salesReportDto.setUserEmail(order.getUser().getEmail());
-        salesReportDto.setCustomerInitials(createUserInitialsString(order.getUser()));
+        salesReportDto.setCustomerInitials(createUserInitialsFromUser(order.getUser()));
         salesReportDto.setPurchaseDate(order.getDateTime().toLocalDate());
         salesReportDto.setQuantity(order.getAmount());
         salesReportDto.setListOfProducts(order
@@ -49,42 +52,13 @@ public class SalesReportDto {
         return salesReportDto;
     }
 
-    public SalesReportDto(Long orderNumber, String userEmail, String firstName, String lastName,
-                          LocalDate purchaseDate, Long quantity, List<ProductInOrder> productInOrder,
-                          Double orderSummaryPrice) {
-        this.orderNumber = orderNumber;
-        this.userEmail = userEmail;
-        this.customerInitials = createUserInitialsFromFirstNameAndLastName(firstName, lastName);
-        this.purchaseDate = purchaseDate;
-        this.quantity = quantity;
-        this.listOfProducts = productInOrder.stream()
-                .map(product -> String.valueOf(product.getProduct().getProduct() + " - (" + product.getAmount() + ")"))
-                .collect(Collectors.joining(", "));
-        this.orderSummaryPrice = orderSummaryPrice;
-    }
-
-    private static String createUserInitialsFromFirstNameAndLastName(String firstName, String lastName) {
-        StringBuilder userInitials = new StringBuilder();
-        if (firstName != null && !firstName.equals("")) {
-            userInitials.append(firstName);
-            if (lastName != null && !lastName.equals("")) {
-                userInitials.append(" ");
-                userInitials.append(lastName);
-                return userInitials.toString();
-            }
-            return userInitials.toString();
-        }
-        return "Покупатель";
-    }
-
-
     /**
      * Static method that creates String with customer initials for dto
      *
      * @param user - {@link User} which made purchase
      * @return - String with initials if user have First and Last name or return "Покупатель"
      */
-    private static String createUserInitialsString(User user) {
+    private static String createUserInitialsFromUser(User user) {
         StringBuilder userInitials = new StringBuilder();
         if (user.getFirstName() != null && !user.getFirstName().equals("")) {
             userInitials.append(user.getFirstName());
