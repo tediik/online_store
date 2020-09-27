@@ -317,9 +317,8 @@
                             </tr>
 
                             <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
-                                    data-target="#orderModalWindow">купить
+                                    data-target="#orderModalWindow" onclick="userAdresses()">купить
                             </button>
-                            <!--                            onclick="buildOrderFromBasket()-->
                         </div>
                     </div>
                     <div class="modal fade" id="orderModalWindow" tabindex="-1" role="dialog"
@@ -336,12 +335,6 @@
                                 <div id="alert-modal-div">
                                 </div>
                                 <div class="modal-body" id="modalBody">
-                                    <div>
-                                        <h6>
-                                            Поля помеченные *
-                                            обязательны к заполнению.
-                                        </h6>
-                                    </div>
                                     <div class="raw">
                                     <label style="font-size: medium; vertical-align: unset">
                                         <input class="checkbox" type="checkbox" onchange="addressChange()"/>
@@ -349,17 +342,20 @@
                                     </label>
 
                                     <div align="right">
-                                        <button id="clear-button" type="button" class="btn btn-secondary"
-                                                onclick="clearFields()">Clear Fields
-                                        </button>
                                     </div>
                                     </div>
                                     <div class="row justify-content-center">
                                         <div class="col">
                                             <div id="shopAddress" hidden="true">
                                             </div>
-                                            <div class="address" id="addressId">
+                                            <div id="userAddresses">
+                                            </div>
+                                            <div class="address" id="addressId" hidden="true">
                                                 <div class="h3">Введите адрес доставки</div>
+                                                <h6>
+                                                    Поля помеченные *
+                                                    обязательны к заполнению.
+                                                </h6>
                                                 <form id="addressForm" class="js-form-address">
                                                     <div class="field">
                                                         <label>Регион*</label>
@@ -392,6 +388,12 @@
                                                     <div class="tooltip" style="display: none;"><b></b><span></span>
                                                     </div>
                                                 </form>
+                                                <button id="clear-button" type="button" class="btn btn-secondary"
+                                                        onclick="clearFields()">Отчистить поля
+                                                </button>
+                                                <button  id="add-adress-button" type="button" class="btn btn-success"
+                                                        onclick="addAddress()">Добавить адрес
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -399,11 +401,11 @@
                                 <div class="modal-footer">
                                     <button id="dismissButton" type="button" class="btn btn-secondary"
                                             data-dismiss="modal">
-                                        Close
+                                        Закрыть
                                     </button>
-                                    <button id="acceptButton" type="button" class="btn btn-success edit-button"
+                                    <button style="float: right" id="acceptButton" type="button" class="btn btn-success edit-button"
                                             onclick="confirmOrder()">
-                                        Confirm order
+                                        Оформить заказ
                                     </button>
                                 </div>
                             </div>

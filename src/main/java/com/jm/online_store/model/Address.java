@@ -9,15 +9,18 @@ import lombok.NonNull;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
 /**
  * Сущность адрес, связана с сущностью {@link Order}
+ * и сущностью {@link User}
  */
 @Entity
 @Data
@@ -31,35 +34,28 @@ public class Address {
     private Long id;
 
     @NonNull
-    @Column(name = "zip")
     private String zip;
 
     @NonNull
-    @Column(name = "region")
     private String region;
 
-    @Column(name = "district")
     private String district;
 
     @NonNull
-    @Column(name = "city")
     private String city;
 
     @NonNull
-    @Column(name = "street")
     private String street;
 
     @NonNull
-    @Column(name = "building")
     private String building;
 
-    @Column(name = "flat")
     private String flat;
 
     @Column(name = "shop")
     private boolean shop;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Set<Order> orders;
 

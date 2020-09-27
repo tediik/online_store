@@ -84,21 +84,12 @@ public class BusketRestController {
      * контроллер для формирования заказа из корзины.
      *
      * @param authentication авторизованный пользователь.
-     * @param address        адрес с формы
+     * @param id        адрес с формы
      * @return ResponseEntity(HttpStatus.OK)
      */
     @PostMapping(value = "/customer/busketGoods")
-    public ResponseEntity buildOrderFromBasket(Authentication authentication, @RequestBody Address address) {
-        Address addressToAdd;
-        if (address.isShop()) {
-            addressToAdd = addressService.findAddressById(address.getId()).orElseThrow(AddressNotFoundException::new);
-        } else {
-            if (addressService.findSameAddress(address).isPresent()) {
-                addressToAdd = addressService.findSameAddress(address).get();
-            } else {
-                addressToAdd = addressService.addAddress(address);
-            }
-        }
+    public ResponseEntity buildOrderFromBasket(Authentication authentication, @RequestBody Long id) {
+        Address addressToAdd = addressService.findAddressById(id).get();
         User autorityUser = getAutorityUser(authentication);
         List<SubBasket> subBasketList = autorityUser.getUserBasket();
         Product product;
