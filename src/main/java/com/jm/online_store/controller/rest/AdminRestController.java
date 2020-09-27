@@ -32,6 +32,7 @@ public class AdminRestController {
 
     /**
      * Rest mapping to  receive authenticated user. from admin page
+     *
      * @param authentication
      * @return ResponseEntity(authUser, HttpStatus) {@link ResponseEntity}
      */
@@ -44,6 +45,7 @@ public class AdminRestController {
 
     /**
      * Rest mapping to receive all users from db. from admin page
+     *
      * @return ResponseEntity(allUsers, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/allUsers")
@@ -58,6 +60,7 @@ public class AdminRestController {
 
     /**
      * rest mapping to receive user by id from db. from admin page
+     *
      * @param id - user id (Long)
      * @return ResponseEntity(user, HttpStatus) {@link ResponseEntity}
      */
@@ -74,6 +77,7 @@ public class AdminRestController {
 
     /**
      * Rest mapping to delete user from db by his id from admin page
+     *
      * @param id - id of User to delete {@link Long}
      * @return ResponseEntity<>(HttpStatus) {@link ResponseEntity}
      */
@@ -91,6 +95,7 @@ public class AdminRestController {
 
     /**
      * rest mapping to modify user from admin page
+     *
      * @param user {@link User}
      * @return new ResponseEntity<>(HttpStatus) {@link ResponseEntity}
      */
@@ -120,6 +125,7 @@ public class AdminRestController {
 
     /**
      * Rest mapping to add new user from admin page
+     *
      * @param newUser {@link User}
      * @return new ResponseEntity<>(String, HttpStatus) {@link ResponseEntity}
      */
@@ -143,5 +149,16 @@ public class AdminRestController {
         }
         userService.addNewUserFromAdmin(newUser);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Rest mapping to filter list on users by choosen role
+     *
+     * @param role - choosen role
+     * @return List<User> filtered user's list
+     */
+    @PutMapping(value = "/{role}")
+    public List<User> filterByRoles(@PathVariable String role) {
+        return userService.findByRole(role);
     }
 }
