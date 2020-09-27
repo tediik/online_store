@@ -18,4 +18,5 @@ public class ProductForCommentDto {
         productForCommentDto.setComments(product.getComments());
         return productForCommentDto;
     }
+
 }
