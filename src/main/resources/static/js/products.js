@@ -1,237 +1,284 @@
-/*Стартовый скрипт при загрузке страницы, первый вызов построения таблицы
-  Вызов функции, очищающей модалки при закрытии*/
-$(document).ready(function () {
-    create();
-    $("#newProductImportModal").on('hidden.bs.modal', function (e) {
-        $("#newProductImportModal form")[0].reset();//reset modal fields
-    });
-});
-// Функция обрабатывает действия с чекбоксом, вызывает создание таблицы в зависимости от статуса чекбокса
-function toggle(check)
-{ if(!check.checked)
-{
-    create(true)
-}
-else
-{
-    create(false)
-}
-}
-/*Создаем таблицу товаров без метки "удален"*/
-function create(showDeleted) {
-    $("#productsDiv").empty();
-    moment.locale('ru');
-    $.ajax("/rest/products/allProducts", {
-        dataType: "json",
-        success: function (data) {
-            const products = JSON.parse(JSON.stringify(data))
-            if (showDeleted != true){
-                for (let i = 0; i < products.length; i++){
-                    if(products[i].deleted == true){
-                        delete products[i]
-                    }
-                }
-            }
-            /*Добовление картинок в графу "Товар удален" и скрытие кнопок delete and restore*/
-            var img;
-            var showDelete;
-            var showRestore;
-            for (let i = 0; i < products.length; i++) {
-                if (products[i].deleted == true) {
-                    var img = "/uploads/images/stocks/4.png"
-                } else {
-                    var img  = "/uploads/images/stocks/5.png"
-                }
-                if (products[i].amount > 0) {
-                    showDelete = "display: block"
-                    showRestore = "display: none"
-                } else {
-                    showDelete = "display: none"
-                    showRestore = "display: block"
-                }
-                    let out = $("<li>").attr("id", products[i].id);
-                    out.append(
-                        `<div class=\"card mb-3\">
-                        <div class=\"row no-gutters\">
-                            <div class=\"col-md-6\">
-                                <div class=\"card-body\">
-                                    <h4 class='card-title'>${products[i].product}</h4>
-                                    <h4 class='card-title'>Цена товара</h4>
-                                    <p class=\"card-text\">${products[i].price}</p>
-                                    <h4 class='card-title'>Кол-во товара</h4>
-                                    <p class=\"card-text\">${products[i].amount}</p>
-                                    <h4 class='card-title'>Кол-во товара</h4>
-                                    <p class=\\"card-text\\">${products[i].amount}</p>
-                                    <h4 class='card-title'>Товар удалён</h4>
-                                    <p class=\\"card-text\\">
-                                        <img src="${img}">
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-md-2 flex-row align-items-center">
-                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button onclick='getProductForEdit(${products[i].id})' class="btn btn-info" data-toggle='modal'
-                                            data-target='#editProductModal'>Edit</button>
-                                </div>
-                                <div class="nav flex-column nav-pills mt-2 container-fluid"  role="tablist" aria-orientation="vertical">
-                                    <button onclick='deleteProduct(${products[i].id})' style="${showDelete}" class="btn btn-danger">Delete</button>
-                                </div>
-                                <div class="nav flex-column nav-pills mt-2 container-fluid"  role="tablist" aria-orientation="vertical">
-                                    <button id="restorebutton" style="${showRestore}" onclick='restoreProduct(${products[i].id})' class="btn btn-info">Restore</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li> `);
-                    $("#productsDiv").append(out)
-                }
-            }
-    })
-}
-/*Добавление товара вручную*/
-function addProduct() {
+let productRestUrl = "/rest/products/allProducts"
+let headers = new Headers()
+headers.append('Content-type', 'application/json; charset=UTF-8')
+document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
-    const productAdd = {
-        product: $('#addProductTitle').val(),
-        price: $('#addProductPrice').val(),
-        amount: $('#addProductAmount').val(),
+getAllProducts()
+fetchProductsAndRenderTable()
+
+/**
+ * fetch запрос на allProducts для получения всех продуктов из бд
+ *
+ */
+function getAllProducts() {
+    fetch(productRestUrl, {headers: headers}).then(response => response.json())
+        .then(allProducts => renderProductsTable(allProducts))
+}
+
+/**
+ * Функция рендера модального окна Edit product
+ * @param product продукта из таблицы
+ */
+function editModalWindowRender(product) {
+    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('#idInputModal').val(product.id)
+    $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
+    $('.modal-title').text("Edit product")
+    $('#productInputModal').val(product.product).prop('readonly', false)
+    $('#productPriceInputModal').val(product.price).prop('readonly', false)
+    $('#productAmountInputModal').val(product.amount).prop('readonly', false)
+}
+
+/**
+ * Функция рендера модального окна Delete product
+ * @param productToEdit
+ */
+function deleteModalWindowRender(productToEdit) {
+    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-title').text("Delete product")
+    $('#acceptButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
+    $('#idInputModal').val(productToEdit.id)
+    $('#productInputModal').val(productToEdit.product).prop('readonly', true)
+    $('#productPriceInputModal').val(productToEdit.price).prop('readonly', true)
+    $('#productAmountInputModal').val(productToEdit.amount).prop('readonly', true)
+}
+
+/**
+ * Функция обраотки нажатия кнопки Edit в таблице продукта
+ * @param event
+ */
+function handleEditButton(event) {
+    const productId = event.target.dataset["productId"]
+    Promise.all([
+        fetch("/rest/products/" + productId, {headers: headers}),
+    ])
+        .then(([response]) => Promise.all([response.json()]))
+        .then(([productToEdit]) => editModalWindowRender(productToEdit))
+}
+
+/**
+ * Функция обработки нажатия кнопки Delete в таблице продуктов
+ * @param productId
+ */
+function handleDeleteButton(productId) {
+    fetch("/rest/products/" + productId, {headers: headers})
+        .then(response => response.json())
+        .then(productToDelete => deleteModalWindowRender(productToDelete))
+}
+
+/**
+ * Функция обработки нажатия кнопки Restore в таблице продуктов
+ * @param productId
+ */
+function handleRestoreButton(productId) {
+    fetch("/rest/products/restoredeleted" + "/" + productId, {
+        headers: headers,
+        method: 'POST'
+    }).then(response => response.text())
+        .then(restoreProduct => console.log('User: ' + restoreProduct + ' was successfully restored'))
+        .then(showTable => showAndRefreshHomeTab(showTable))
+}
+
+/**
+ * функция делает активным таблицу с продуктами
+ * и обновляет в ней данные
+ */
+function showAndRefreshHomeTab() {
+    fetchProductsAndRenderTable()
+    $('#nav-home').addClass('tab-pane fade active show')
+    $('#nav-profile').removeClass('active show')
+    $('#nav-profile-tab').removeClass('active')
+    $('#nav-home-tab').addClass('active')
+}
+
+/**
+ * функция обработки кнопки add на форме нового продукта
+ */
+function handleAddBtn() {
+    let product = {
+        product: $('#addProduct').val(),
+        price: $('#addPrice').val(),
+        amount: $('#addAmount').val(),
+    }
+
+    /**
+     * функция очистки полей формы нового продукта
+     */
+    function clearFormFields() {
+        $('#addForm')[0].reset();
+    }
+
+    /**
+     * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
+     * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
+     * @param text - текст для вывода в алекрт
+     * @param field - поле на каком установить фокус
+     */
+    function handleNotValidFormField(text, field) {
+        $('#alert-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>${text}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+        $('#' + field).focus()
+
+        window.setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000)
+    }
+
+    fetch("/rest/products/addProduct", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json;charset=utf-8'},
+        body: JSON.stringify(product)
+    }).then(
+        function (response) {
+            let field;
+            if (response.status !== 200) {
+                response.text()
+                    .then(
+                        function (text) {
+                            if (text === "notValidNameProduct") {
+                                field = "addEmail"
+                                handleNotValidFormField("Вы ввели некоректное Наименование товара!", field)
+                            }
+                            if (text === "duplicatedNameProductError") {
+                                field = "addEmail"
+                                handleNotValidFormField("Такой наименование уже существует", field)
+                            }
+                            if (text === "emptyPriceError") {
+                                field = "addPrice"
+                                handleNotValidFormField("Заполните поле цены", field)
+                            }
+                            if (text === "amountError") {
+                                field = "addAmount"
+                                handleNotValidFormField("Необходимо выбрать количество", field)
+                            }
+                            console.log(text)
+                        })
+            } else {
+                response.text().then(function () {
+                    showAndRefreshHomeTab();
+                    clearFormFields();
+                })
+            }
+        }
+    )
+}
+
+/**
+ * функция обработки нажатия кнопки accept в модальном окне
+ * @param event
+ */
+function handleAcceptButtonFromModalWindow(event) {
+    const product = {
+        id: $('#idInputModal').val(),
+        product: $('#productInputModal').val(),
+        price: $('#productPriceInputModal').val(),
+        amount: $('#productAmountInputModal').val(),
     };
 
-    $.ajax({
-        url: "/rest/products/addProduct",
-        data: JSON.stringify(productAdd),
-        dataType: 'json',
-        type: 'POST',
-        contentType: 'application/JSON; charset=utf-8',
-        success: function () {
-            create(false);
-            $('.modal-body').find('input,textarea').val('');
-            toastr.success('Новый товар добавлен!', {timeOut: 5000})
-        },
-        error: function () {
-            alert("Заполните все поля!")
-        }
-    })
-}
-
-//Добавление товара из файла
-function importProductsFromFile(){
-
-    var fileData = new FormData();
-    fileData.append('file', $('#file')[0].files[0]);
-
-    $.ajax({
-        url: '/rest/products/uploadProductsFile',
-        data: fileData,
-        processData: false,
-        contentType: false,
-        type: 'POST',
-        success: function(data){
-            create(false);
-            toastr.info('Импорт товаров завершен!', {timeOut: 5000})
-        },
-        error: function () {
-            alert("Некорретный путь к файлу!")
-        }
-    });
-}
-
-/*Редактировать товар*/
-function getProductForEdit(id) {
-    $.ajax({
-        type: "GET",
-        url: "/rest/products/" + id,
-        dataType: 'json',
-        success: function (products) {
-            $(".modal-body #Eid").val(products.id)
-            $(".modal-body #editProductTitle").val(products.product)
-            $(".modal-body #editProductPrice").val(products.price)
-            $(".modal-body #editProductAmount").val(products.amount)
-        }
-    });
-}
-
-/*Сохранение заполненных полей*/
-function updateProduct() {
-    const productEdit = {
-        id: $('#Eid').val(),
-        product: $('#editProductTitle').val(),
-        price: $('#editProductPrice').val(),
-        amount: $('#editProductAmount').val(),
-    };
-    $.ajax({
-        url: "/rest/products/editProduct",
-        data: JSON.stringify(productEdit),
-        dataType: 'json',
-        type: 'PUT',
-        contentType: 'application/JSON; charset=utf-8',
-        success: function () {
-            create(false);
-            toastr.info('Товар успешно отредактирован!', {timeOut: 5000})
-        },
-        error: function () {
-            alert("Заполните все поля!")
-        }
-    })
-}
-
-/*Удалить товар из таблицы*/
-function deleteProduct(id) {
-    $.ajax({
-            url: "/rest/products/" + id,
-            type: "DELETE",
-            contentType: "application/json",
-            success: function (data) {
-                $("#productsDiv #" + id).remove();
-                toastr.error('Товар успешно удален!', {timeOut: 5000})
-            },
-            error: function (er) {
-                console.log(er)
-            }
-        }
-    );
-}
-
-// Восстановить товар из удаленных
-function restoreProduct(id) {
-    $.ajax({
-            url: "/rest/products/restoredeleted/" + id,
-            type: "POST",
-            contentType: "application/json",
-            success: function (data) {
-                create(false);
-                toastr.info('Товар успешно восстановлен!', {timeOut: 5000})
-            },
-            error: function (er) {
-                console.log(er)
-            }
-        }
-    );
-}
-
-//Работа модалки добавления товара
-$("#productAddModal").ready(function () {
-    var click = document.getElementById("save");
-    click.onclick = function () {
-        $("#newProductModal").modal('hide');
-        addProduct()
+    /**
+     * Проверка кнопки delete или edit
+     */
+    if ($('#acceptButton').hasClass('delete-product')) {
+        fetch("/rest/products" + "/" + product.id, {
+            headers: headers,
+            method: 'DELETE'
+        }).then(response => response.text())
+            .then(deletedProduct => console.log('User: ' + deletedProduct + ' was successfully deleted'))
+            .then(showTable => showAndRefreshHomeTab(showTable))
+        $('#productModalWindow').modal('hide')
+    } else {
+        fetch("/rest/products/editProduct/", {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify(product)
+        }).then(function (response) {
+            fetchProductsAndRenderTable()
+            $('#productModalWindow').modal('hide')
+        })
     }
-})
+}
 
-//Работа модалки изменения товара
-$("#productEditModal").ready(function () {
-    var click = document.getElementById("editSave");
-    click.onclick = function () {
-        $("#editProductModal").modal('hide');
-        updateProduct()
+/**
+ * функция проверки id button на кнопке
+ * @param event
+ */
+function checkActionButton(event) {
+    const productId = event.target.dataset["productId"]
+    if (event.target.dataset.toggleId === 'delete') {
+        handleDeleteButton(productId)
+        $('')
+    } else {
+        handleRestoreButton(productId)
     }
-})
+}
 
-//Работа модалки импорта из файла
-$("#productImportModal").ready(function () {
-    var click = document.getElementById("inputFileSubmit");
-    click.onclick = function () {
-        $("#newProductImportModal").modal('hide');
-         importProductsFromFile()
+/**
+ * функция рендера таблицы продуктов
+ * @param products
+ */
+function renderProductsTable(products) {
+    let table = $('#products-table')
+    table.empty()
+        .append(`<tr>
+                <th>ID</th>
+                <th>Наименование товара</th>
+                <th>Цена</th>
+                <th>Колличество</th>
+                <th>Edit</th>
+                <th>Delete</th>
+              </tr>`)
+    for (let i = 0; i < products.length; i++) {
+        const product = products[i];
+        let row = `
+                <tr id="tr-${product.id}">
+                    <td>${product.id}</td>
+                    <td>${product.product}</td>
+                    <td>${product.price}</td>
+                    <td>${product.amount}</td>              
+                    
+                    <td>
+            <!-- Buttons of the right column of main table-->
+                        <button data-product-id="${product.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#productModalWindow">
+                                 Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button data-product-id="${product.id}" type="button" id="action-button-${product.id}" class="btn action" data-target="#productModalWindow">
+                                 Delete
+                        </button>
+                    </td>
+                </tr>
+                `;
+        table.append(row)
+        if (product.deleted === false) {
+            $(`#action-button-${product.id}`).attr('data-toggle-id', 'delete')
+            $(`#action-button-${product.id}`).attr('data-toggle', 'modal')
+            $(`#action-button-${product.id}`).text("Delete").removeClass().toggleClass('btn btn-danger delete-product action')
+        } else {
+            $(`#action-button-${product.id}`).attr('data-toggle-id', 'restore')
+            $(`#action-button-${product.id}`).text("Restore").removeClass().toggleClass('btn btn-info restore-product action')
+            $('#tr-' + product.id).toggleClass('table-dark')
+        }
     }
-})
+    $('.edit-button').click(handleEditButton)
+    $('.action').click(checkActionButton)
+}
+
+/**
+ * функция делает fetch запрос на рест контроллер, преобразует полученный объект в json
+ * и передает функции рендера таблицы renderProductsTable
+ */
+function fetchProductsAndRenderTable() {
+    fetch("/rest/products/allProducts", {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    }).then(response => response.json()).then(products => renderProductsTable(products))
+}
