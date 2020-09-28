@@ -5,13 +5,17 @@
     <title>Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/static/css/customer.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.fias.min.css">
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="../static/js/jquery.fias.min.js" type="text/javascript"></script>
     <!-- Optional JavaScript -->
+    <script src="../static/js/orderPlacement.js"></script>
     <script src="../static/js/customer.js"></script>
     <script src="../static/js/busket.js"></script>
     <script src="../static/js/customerProfilePageFunctions.js"></script>
@@ -25,9 +29,13 @@
     <div class="row min-vh-100">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
             <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary mt-2 active" id="customerMain-tab" data-toggle="pill" href="#customerMain" role="tab"  aria-controls="customerMain" aria-selected="true">Главная</a>
-                <a class="btn btn-outline-primary mt-2" id="profile-tab" data-toggle="pill" href="#profile" role="tab"  aria-controls="profile" aria-selected="false">Профиль</a>
-                <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill" href="#favouritesGoods" role="tab"  aria-controls="favouritesGoods" aria-selected="false" onclick="fillFavouritesGoods()">Избранное</a>
+                <a class="btn btn-outline-primary mt-2 active" id="customerMain-tab" data-toggle="pill"
+                   href="#customerMain" role="tab" aria-controls="customerMain" aria-selected="true">Главная</a>
+                <a class="btn btn-outline-primary mt-2" id="profile-tab" data-toggle="pill" href="#profile" role="tab"
+                   aria-controls="profile" aria-selected="false">Профиль</a>
+                <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
+                   href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
+                   onclick="fillFavouritesGoods()">Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false" onclick="fillBusket()">Корзина</a>
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
@@ -119,19 +127,23 @@
                                           method="post" data-role="personal-info-form">
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="id_update">ID</label>
-                                            <input th:field="*{id}" type="text" class="form-control" id="id_update" name="id">
+                                            <input th:field="*{id}" type="text" class="form-control" id="id_update"
+                                                   name="id">
                                         </div>
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="password_update">Пароль</label>
-                                            <input th:field="*{password}" type="text" class="form-control" id="password_update" name="password">
+                                            <input th:field="*{password}" type="text" class="form-control"
+                                                   id="password_update" name="password">
                                         </div>
                                         <div class="form-group text-center font-weight-bold">
                                             <label class="input-row_label" for="first_name_update">Имя</label>
-                                            <input th:field="*{firstName}" type="text" class="form-control" id="first_name_update" name="firstName">
+                                            <input th:field="*{firstName}" type="text" class="form-control"
+                                                   id="first_name_update" name="firstName">
                                         </div>
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="last_name_input">Фамилия</label>
-                                            <input th:field="*{lastName}" type="text" class="form-control" id="last_name_input" name="lastName">
+                                            <input th:field="*{lastName}" type="text" class="form-control"
+                                                   id="last_name_input" name="lastName">
                                         </div>
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="email_input">Email</label>
@@ -150,25 +162,30 @@
                                             </button>
                                         </div>
                                         <div class="form-group text-center font-weight-bold">
-                                            <label for="date_birthday_input" class="col-xs-2 col-form-label">День рождения</label>
+                                            <label for="date_birthday_input" class="col-xs-2 col-form-label">День
+                                                рождения</label>
                                             <div class="col-xs-10">
                                                 <input th:field="*{birthdayDate}" class="form-control"
-                                                       th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" type="date" id="date_birthday_input" name="birthdayDate">
+                                                       th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                                                       type="date" id="date_birthday_input" name="birthdayDate">
                                             </div>
                                         </div>
                                         <div class="form-group-text-center">
                                             <label for="gender_radio" class="text-center font-weight-bold">Пол</label>
                                             <div id="gender_radio">
                                                 <div class="custom-control custom-radio">
-                                                    <input th:field="*{userGender}" value="" type="radio" id="option1" name="genderRadio" class="custom-control-input">
+                                                    <input th:field="*{userGender}" value="" type="radio" id="option1"
+                                                           name="genderRadio" class="custom-control-input">
                                                     <label class="custom-control-label" for="option1">Не выбрано</label>
                                                 </div>
                                                 <div class="custom-control custom-radio">
-                                                    <input th:field="*{userGender}" value="MAN" type="radio" id="option2" name="genderRadio" class="custom-control-input">
+                                                    <input th:field="*{userGender}" value="MAN" type="radio"
+                                                           id="option2" name="genderRadio" class="custom-control-input">
                                                     <label class="custom-control-label" for="option2">Мужской</label>
                                                 </div>
                                                 <div class="custom-control custom-radio">
-                                                    <input th:field="*{userGender}" value="WOMAN" type="radio" id="option3" name="genderRadio" class="custom-control-input">
+                                                    <input th:field="*{userGender}" value="WOMAN" type="radio"
+                                                           id="option3" name="genderRadio" class="custom-control-input">
                                                     <label class="custom-control-label" for="option3">Женский</label>
                                                 </div>
                                             </div>
@@ -178,13 +195,13 @@
                                             <input type="checkbox" class="form-check-input"
                                                    id="stockMailingCheckbox"
                                                    th:checked="*{dayOfWeekForStockSend != null}"
-                                            onchange="chekboxChanges(this)">
+                                                   onchange="chekboxChanges(this)">
                                             <label class="form-check-label" for="stockMailingCheckbox">Хотите ли вы
                                                 получать рассылку?</label>
                                         </div>
                                         <br>
                                         <div
-                                             th:class="*{dayOfWeekForStockSend != null} ? 'form-group day-of-the-week-drop-list' : 'form-group day-of-the-week-drop-list d-none' ">
+                                                th:class="*{dayOfWeekForStockSend != null} ? 'form-group day-of-the-week-drop-list' : 'form-group day-of-the-week-drop-list d-none' ">
                                             <label for="dayOfWeekDropList">Выберите день недели</label>
                                             <select class="form-control" id="dayOfWeekDropList"
                                                     th:field="*{dayOfWeekForStockSend}">
@@ -199,8 +216,11 @@
                                             </select>
                                         </div>
                                         <hr/>
-                                        <button type="submit" style="background-color: #ff8e05" class="m-2 btn btn-success d-block mx-auto">Сохранить</button>
-                                        <div class="m-2 text-center personal-info_register-container" style="background-color: #f9f9f9">
+                                        <button type="submit" style="background-color: #ff8e05"
+                                                class="m-2 btn btn-success d-block mx-auto">Сохранить
+                                        </button>
+                                        <div class="m-2 text-center personal-info_register-container"
+                                             style="background-color: #f9f9f9">
                                             Дата регистрации:
                                             <a th:field="*{registerDate}" th:text="*{registerDate}"
                                                class="personal-info_register-date font-weight-bold"
@@ -275,6 +295,7 @@
 
                 </div>
                 <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
+                    <div id="order-div"></div>
                     <h3>корзина</h3>
                     <div class="row min-vh-100">
                         <div class="col-md-9" style="padding-right: 0px; padding-left: 0px">
@@ -295,8 +316,99 @@
                                 <h3 id="sumBasketGoods"></h3>
                             </tr>
 
-                            <button class="btn btn-lg btn-primary btn-block" onclick="buildOrderFromBasket()">купить
+                            <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
+                                    data-target="#orderModalWindow" onclick="userAdresses()">купить
                             </button>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="orderModalWindow" tabindex="-1" role="dialog"
+                         aria-labelledby="EditUserModalWindows"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="orderAdress">Адрес доставки</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="alert-modal-div">
+                                </div>
+                                <div class="modal-body" id="modalBody">
+                                    <div class="raw">
+                                    <label style="font-size: medium; vertical-align: unset">
+                                        <input class="checkbox" type="checkbox" onchange="addressChange()"/>
+                                        Самовывоз
+                                    </label>
+
+                                    <div align="right">
+                                    </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <div id="shopAddress" hidden="true">
+                                            </div>
+                                            <div id="userAddresses">
+                                            </div>
+                                            <div class="address" id="addressId" hidden="true">
+                                                <div class="h3">Введите адрес доставки</div>
+                                                <h6>
+                                                    Поля помеченные *
+                                                    обязательны к заполнению.
+                                                </h6>
+                                                <form id="addressForm" class="js-form-address">
+                                                    <div class="field">
+                                                        <label>Регион*</label>
+                                                        <input type="text" name="region">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Район</label>
+                                                        <input type="text" name="district">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Город/населённый пункт*</label>
+                                                        <input type="text" name="city">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Улица*</label>
+                                                        <input type="text" name="street">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Дом*</label>
+                                                        <input type="text" name="building">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Квартира(необязательно)</label>
+                                                        <input type="text" name="flat">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Индекс</label>
+                                                        <input type="text" name="zip">
+                                                    </div>
+                                                    <div class="tooltip" style="display: none;"><b></b><span></span>
+                                                    </div>
+                                                </form>
+                                                <button id="clear-button" type="button" class="btn btn-secondary"
+                                                        onclick="clearFields()">Отчистить поля
+                                                </button>
+                                                <button  id="add-adress-button" type="button" class="btn btn-success"
+                                                        onclick="addAddress()">Добавить адрес
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="dismissButton" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">
+                                        Закрыть
+                                    </button>
+                                    <button style="float: right" id="acceptButton" type="button" class="btn btn-success edit-button"
+                                            onclick="confirmOrder()">
+                                        Оформить заказ
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -391,10 +503,5 @@
         </div>
     </div>
 </div>
-<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
-<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
 </body>
 </html>
-
-
-

@@ -132,7 +132,29 @@
                 </div>
                 <div class="tab-pane fade mx-5" id="comments" role="tabpanel" aria-labelledby="comments-tab">
                     <hr class="mb-4">
-                    <h4>comments</h4>
+                    <div class="container">
+                        <!-- Compiled and minified CSS -->
+                        <div class="container">
+
+                            <div sec:authorize="isAuthenticated()">
+                                <form method="POST" id="commentForm">
+                                    <div class="form-group">
+                                        <input name="content" id="content" class="form-control" placeholder="Enter Comment">
+                                    </div>
+                                    <span id="message"></span>
+                                    <div class="form-group">
+                                        <input type="hidden" name="parent_id" id="parent_id" value=""/>
+                                        <input type="submit" name="submit" id="submitCommentBtn" class="btn btn-primary" value="Post Comment"/>
+                                    </div>
+                                </form>
+                            </div>
+                            <div sec:authorize="isAnonymous()">
+                                <h3 style="color: blue">Log in or register to add comments</h3>
+                                <br>
+                            </div>
+                        </div>
+                        <div id="showComments"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,6 +212,7 @@
 <!--<script src="../static/js/productPriceChange.js"></script>-->
 
 <script src="../static/js/productPage.js"></script>
+<script src="../static/js/comments.js"></script>
 <script src="../static/js/productPriceChange.js"></script>
 </body>
 </html>

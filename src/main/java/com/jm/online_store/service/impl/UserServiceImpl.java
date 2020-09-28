@@ -3,12 +3,14 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,10 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +58,7 @@ public class UserServiceImpl implements UserService {
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final AddressService addressService;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -406,5 +412,53 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         user.setDayOfWeekForStockSend(null);
         updateUserProfile(user);
+    }
+    /**
+     * Метод сервиа для добавления нового адреса пользователю
+     * @param user
+     * @param address
+     * @throws UserNotFoundException
+     */
+    @Transactional
+    @Override
+    public boolean addNewAddressForUser(User user, Address address) {
+        User usertoUpdate = findById(user.getId()).orElseThrow(UserNotFoundException::new);
+        Optional<Address> addressFromDB = addressService.findSameAddress(address);
+        if (addressFromDB.isPresent() && !usertoUpdate.getUserAddresses().contains(addressFromDB.get())) {
+            Address addressToAdd = addressFromDB.get();
+            if (usertoUpdate.getUserAddresses() != null) {
+                usertoUpdate.getUserAddresses().add(addressToAdd);
+            } else {
+                usertoUpdate.setUserAddresses(Collections.singleton(address));
+            }
+            updateUser(usertoUpdate);
+            return true;
+        }
+        if (!addressFromDB.isPresent()) {
+            Address addressToAdd = addressService.addAddress(address);
+            if (usertoUpdate.getUserAddresses() != null) {
+                usertoUpdate.getUserAddresses().add(addressToAdd);
+            } else {
+                usertoUpdate.setUserAddresses(Collections.singleton(address));
+            }
+            updateUser(usertoUpdate);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Service method which builds and returns currently logged in User from Authentication
+     *
+     * @return User
+     */
+    public User getCurrentLoggedInUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // AnonymousAuthenticationToken happens when anonymous authentication is enabled
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        String username = ((User) auth.getPrincipal()).getUsername();
+        return findByEmail(username).get();
     }
 }
