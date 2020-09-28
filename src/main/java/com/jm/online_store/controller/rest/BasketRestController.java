@@ -1,6 +1,8 @@
 package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.jm.online_store.exception.ProductNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.SubBasket;
@@ -161,8 +163,12 @@ public class BasketRestController {
 
     @PutMapping("/api/basket/add/{id}")
     public ResponseEntity<String> addProductToBasket(@PathVariable Long id, Authentication auth){
-        User user = (User) auth.getPrincipal();
-        basketService.addProductToBasket(user, id);
-        return ResponseEntity.ok().build();
+        try {
+            User user = (User) auth.getPrincipal();
+            basketService.addProductToBasket(user, id);
+            return ResponseEntity.ok().build();
+        } catch (UserNotFoundException | ProductNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 }
