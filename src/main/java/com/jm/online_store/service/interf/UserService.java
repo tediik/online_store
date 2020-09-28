@@ -57,5 +57,7 @@ public interface UserService {
 
     void cancelSubscription(Long id);
 
+    User getCurrentLoggedInUser();
+
     boolean addNewAddressForUser(User user, Address address);
 }

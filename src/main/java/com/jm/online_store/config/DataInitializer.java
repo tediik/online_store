@@ -32,7 +32,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -350,13 +349,19 @@ public class DataInitializer {
 
         productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
         productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
+
         productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
+
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
+
         productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
         productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
+
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
+
         customer.setOrders(Set.copyOf(orderService.findAll()));
+
         userService.updateUser(customer);
     }
 
