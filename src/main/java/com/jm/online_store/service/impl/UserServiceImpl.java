@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +76,25 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    /**
+     * метод получения списка пользователей, отсортированных в соответствии с выбранной ролью
+     * @param roleString роль, по которой фильтруется список пользователей
+     * @return List<User> отфильтрованный список пользователей
+     */
+    @Override
+    public List<User> findByRole(String roleString) {
+
+        List<User> filteredUsers = new ArrayList<>();
+
+        for (User user : userRepository.findAll()) {
+            for (Role roles : user.getRoles()) {
+                if (roles.getName().equals(roleString)) {
+                    filteredUsers.add(user);
+                }
+            }
+        }
+        return filteredUsers;
+    }
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);

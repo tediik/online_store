@@ -12,6 +12,8 @@ public interface UserService {
 
     List<User> findAll();
 
+    List<User> findByRole(String role);
+
     List<User> findByDayOfWeekForStockSend(byte dayNumber);
 
     Optional<User> findById(Long id);
