@@ -3,12 +3,15 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
+import com.jm.online_store.repository.AddressRepository;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +39,9 @@ public class UserServiceImplTest {
     private MailSenderServiceImpl mailSenderService = mock(MailSenderServiceImpl.class);
     private AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
     private PasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
-    private UserService userService = new UserServiceImpl(userRepository, roleRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder);
+    private AddressService addressService = mock(AddressService.class);
+    private AddressRepository addressRepository = mock(AddressRepository.class);
+    private UserService userService = new UserServiceImpl(userRepository, roleRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder,addressService);
 
     private User userFullParameter;
     private User userWithIdEmailPassword;
@@ -220,5 +225,19 @@ public class UserServiceImplTest {
 
         verify(userRepository, times(3)).findById(any());
         verify(passwordEncoder, times(1)).encode(any());
+    }
+    @Test
+    public void addNewAddressForUserTest() {
+        Address addressToAdd = new Address("420077","Татарстан","Казань","Революционная","25",false);
+        when(addressService.findSameAddress(any())).thenReturn(Optional.of(addressToAdd));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(userWithIdEmailPassword));
+        assertTrue(userService.addNewAddressForUser(userWithIdEmailPassword,addressToAdd));
+        verify(addressRepository,times(0)).save(any());
+        verify(userRepository,times(1)).save(any());
+
+        userWithIdEmailPassword.setUserAddresses(Collections.singleton(addressToAdd));
+        when(addressService.findSameAddress(any())).thenReturn(Optional.of(addressToAdd));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(userWithIdEmailPassword));
+        assertFalse(userService.addNewAddressForUser(userWithIdEmailPassword,addressToAdd));
     }
 }

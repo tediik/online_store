@@ -1,5 +1,6 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Description;
@@ -13,6 +14,7 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
@@ -64,6 +66,7 @@ public class DataInitializer {
     private final BasketService basketService;
     private final StockService stockService;
     private final SharedStockService sharedStockService;
+    private final AddressService addressService;
     private final SentStockService sentStockService;
     private final TaskSettingsService taskSettingsService;
     private final CommonSettingsService commonSettingsService;
@@ -73,7 +76,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct
+    //@PostConstruct
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -81,6 +84,7 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
+        addressInit();
         sentStockInit();
         paginationNewsAndStocksInit();
         taskSettingsInit();
@@ -603,7 +607,26 @@ public class DataInitializer {
             stockService.addStock(stock);
         }
     }
+    /**
+     * Метод первичной инициалзации адресов, 2 адреса для магазина и 1 адрес прикрепляется к заказу
+     */
+    private void addressInit() {
+        Address address1 = new Address("420077","Татарстан","Казань","Революционная","25",true);
+        Address address2 = new Address("420078","Московская область","Москва","Ленина","126",true);
+        Address address3 = new Address("420079","Тамбовская область","Тамбов","Запорожская","11",false);
+        Address address4 = new Address("420080","Тамбовская область","Тамбов","Запорожская","12",false);
+        addressService.addAddress(address1);
+        addressService.addAddress(address2);
+        addressService.addAddress(address3);
+        addressService.addAddress(address4);
 
+        Set<Address> userAddresses = new HashSet<>();
+        userAddresses.add(addressService.findAddressById(3L).get());
+        userAddresses.add(addressService.findAddressById(4L).get());
+        User userToUpdate = userService.findByEmail("customer@mail.ru").get();
+        userToUpdate.setUserAddresses(userAddresses);
+        userService.updateUser(userToUpdate);
+    }
     /**
      * ini method for email stock distribution settings.
      * creates task for stock distribution with status not active
