@@ -56,7 +56,7 @@ public class BasketServiceImpl implements BasketService {
                 .orElseThrow(ProductNotFoundException::new);
         List<SubBasket> userBasket = userWhoseBasketToModify.getUserBasket();
         for (SubBasket basket : userBasket) {
-            if (basket.getProduct().getId().equals(id)) {
+            if (basket.getProduct().getId() == id) {
                 basket.setCount(basket.getCount() + 1);
                 return;
             }
