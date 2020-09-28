@@ -55,6 +55,9 @@ public interface UserService {
     boolean changePassword(Long id, String oldPassword, String newPassword);
 
     void cancelSubscription(Long id);
+
+    User getCurrentLoggedInUser();
+
 }
 
 
