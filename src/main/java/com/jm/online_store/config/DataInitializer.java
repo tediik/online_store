@@ -39,7 +39,6 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -615,19 +614,13 @@ public class DataInitializer {
         addressService.addAddress(address2);
         addressService.addAddress(address3);
         addressService.addAddress(address4);
-        Address addressToAdd = addressService.findAddressById(3L).get();
+
+        Set<Address> userAddresses = new HashSet<>();
+        userAddresses.add(addressService.findAddressById(3L).get());
+        userAddresses.add(addressService.findAddressById(4L).get());
         User userToUpdate = userService.findByEmail("customer@mail.ru").get();
-        userToUpdate.setUserAddresses(Collections.singleton(addressToAdd));
+        userToUpdate.setUserAddresses(userAddresses);
         userService.updateUser(userToUpdate);
-        userToUpdate = userService.findByEmail("customer@mail.ru").get();
-        Set<Address> userAdresses = userToUpdate.getUserAddresses();
-        System.out.println();
-        userAdresses.add(addressService.findAddressById(4L).get());
-        userToUpdate.setUserAddresses(userAdresses);
-        userService.updateUser(userToUpdate);
-        Order order = orderService.findOrderById(5L).get();
-        order.setAddress(addressService.findAddressById(3L).get());
-        orderService.updateOrder(order);
     }
     /**
      * ini method for email stock distribution settings.

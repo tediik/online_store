@@ -55,9 +55,9 @@ public class Address {
     @Column(name = "shop")
     private boolean shop;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id")
-    private Set<Order> orders;
+//    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+//    @JoinColumn(name = "order_id")
+//    private Set<Order> orders;
 
     public Address(@NonNull String zip, @NonNull String region, @NonNull String city, @NonNull String street, @NonNull String building, boolean shop) {
         this.zip = zip;
