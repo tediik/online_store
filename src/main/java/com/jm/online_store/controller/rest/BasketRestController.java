@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +32,7 @@ import java.util.Set;
  */
 @AllArgsConstructor
 @RestController
-public class BusketRestController {
+public class BasketRestController {
     private final UserService userService;
     private final BasketService basketService;
     private final OrderService orderService;
@@ -156,5 +157,12 @@ public class BusketRestController {
         }
         basketService.updateBasket(subBasket);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping("/api/basket/add/{id}")
+    public ResponseEntity<String> addProductToBasket(@PathVariable Long id, Authentication auth){
+        User user = (User) auth.getPrincipal();
+        basketService.addProductToBasket(user, id);
+        return ResponseEntity.ok().build();
     }
 }
