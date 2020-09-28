@@ -44,13 +44,16 @@ public class BasketServiceImpl implements BasketService {
 
     /**
      * Method add product to basket. If product already in subBasket increases by 1
-     * @param user - principal
+     *
      * @param id - id of product to add
      */
     @Override
     @Transactional
-    public void addProductToBasket(User user, Long id) {
-        User userWhoseBasketToModify = userService.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+    public void addProductToBasket(Long id) {
+        User userWhoseBasketToModify = userService.getCurrentLoggedInUser();
+        if (userWhoseBasketToModify == null) {
+            throw new UserNotFoundException();
+        }
         Product productToAdd = productService
                 .findProductById(id)
                 .orElseThrow(ProductNotFoundException::new);

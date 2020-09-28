@@ -169,10 +169,9 @@ public class BasketRestController {
     }
 
     @PutMapping("/api/basket/add/{id}")
-    public ResponseEntity<String> addProductToBasket(@PathVariable Long id, Authentication auth){
+    public ResponseEntity<String> addProductToBasket(@PathVariable Long id){
         try {
-            User user = (User) auth.getPrincipal();
-            basketService.addProductToBasket(user, id);
+            basketService.addProductToBasket(id);
             return ResponseEntity.ok().build();
         } catch (UserNotFoundException | ProductNotFoundException e){
             return ResponseEntity.notFound().build();

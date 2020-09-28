@@ -9,5 +9,5 @@ public interface BasketService {
     SubBasket updateBasket(SubBasket subBasket);
     void deleteBasket(SubBasket subBasket);
 
-    void addProductToBasket(User user, Long id);
+    void addProductToBasket(Long id);
 }
