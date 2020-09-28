@@ -1,5 +1,6 @@
 package com.jm.online_store.service.interf;
 
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +12,10 @@ import java.util.Optional;
 public interface UserService {
 
     List<User> findAll();
+
+    List<User> findByRole(String role);
+
+    List<User> findByDayOfWeekForStockSend(byte dayNumber);
 
     Optional<User> findById(Long id);
 
@@ -49,7 +54,10 @@ public interface UserService {
     void addNewUserFromAdmin(User newUser);
 
     boolean changePassword(Long id, String oldPassword, String newPassword);
+
+    void cancelSubscription(Long id);
+
+    User getCurrentLoggedInUser();
+
+    boolean addNewAddressForUser(User user, Address address);
 }
-
-
-

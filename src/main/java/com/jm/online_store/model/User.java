@@ -86,6 +86,13 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favouritesGoods = new HashSet<>();
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_adresses",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id"))
+    private Set<Address> userAddresses = new HashSet<>();
+
     /**
      * поле корзина клиента.
      * "Корзина клиента" состоит из подкорзин "SubBasket", сотоящих в свою очередь
@@ -117,6 +124,10 @@ public class User implements UserDetails {
     @JsonManagedReference(value = "user-sharedStock")
     private Set<SharedStock> sharedStocks;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonManagedReference(value = "user-sentStock")
+    private Set<SentStock> sentStocks;
+
     public User() {
         registerDate = LocalDate.now();
     }
@@ -140,6 +151,12 @@ public class User implements UserDetails {
         this.firstName = firstName;
         this.lastName = lastName;
         this.roles = roleSet;
+    }
+
+    public User(@Email @NotBlank String email, DayOfWeekForStockSend dayOfWeekForStockSend, String password) {
+        this.email = email;
+        this.dayOfWeekForStockSend = dayOfWeekForStockSend;
+        this.password = password;
     }
 
     @Override

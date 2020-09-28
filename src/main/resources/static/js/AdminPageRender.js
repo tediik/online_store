@@ -7,6 +7,24 @@ document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 addRolesOnNewUserForm()
 fetchUsersAndRenderTable()
 
+/**
+ * Обработка события с выбором роли для фильтрации списка зарегистрированных пользователей по роли
+ */
+$('#filterRole').on("change", function() {
+    var roleSelect = $('#filterRole').val();
+    if(roleSelect !== 'default') {
+        $.ajax({
+            type: 'PUT',
+            url: '/api/admin/' + roleSelect,
+            success: function (filteredUsers) {
+                renderUsersTable(filteredUsers)
+            }
+        });
+    }
+    else{
+        showAndRefreshHomeTab()
+    }
+});
 
 /**
  * fetch запрос на roleRestUrl для получения всех ролей из бд

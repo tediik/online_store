@@ -1,4 +1,8 @@
 spring:
+  session:
+    jdbc:
+      initialize-schema: always
+      table-name: SPRING_SESSION
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/online_store?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow

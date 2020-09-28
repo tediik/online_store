@@ -63,21 +63,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 .antMatchers("/auth-vk").permitAll()
+                .antMatchers("/api/comments/**").permitAll()
                 .antMatchers("/oauth/**", "/oauthTwitter/**", "/TwitterRegistrationPage/**").permitAll()
                 .antMatchers("/", "/login", "/news/**", "/registration", "/css/**", "/api/sharedStock").permitAll()
                 .antMatchers("/api/products/productChangeMonitor").access("hasAnyRole('ROLE_MANAGER')")
                 .antMatchers("/api/categories/**", "/api/products/**").permitAll()
                 .antMatchers("/categories/**", "/products/**").permitAll()
-                .antMatchers("/uploads/images/stocks/**", "/uploads/images/products/**").permitAll()
+                .antMatchers("/uploads/images/**").permitAll()
                 .antMatchers("/users/**").permitAll()
                 .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**", "/404").permitAll()
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
-                .antMatchers("/authority/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+                .antMatchers("/authority/**", "/api/commonSettings/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
                 .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
                 .antMatchers("/manager/**").access("hasAnyRole('ROLE_MANAGER')")
                 .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated()
                 .and()
-                .exceptionHandling().accessDeniedPage("/denied");
+                .exceptionHandling().accessDeniedPage("/denied")
+                .and()
+                .rememberMe();
     }
 
     @Bean
