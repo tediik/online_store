@@ -84,16 +84,22 @@ async function fillAboutProduct(data) {
     $('#addToCartButton').attr('data-toggle-id', data.id)
 }
 
+/**
+ * function add product to cart
+ * @param event
+ */
 function addToProductToCart(event) {
     let productId = event.target.dataset.toggleId
     fetch(basketApiAddUrl + productId, {
         headers: myHeaders,
         method: 'PUT'
-    }).then(function (response){
-        if (response.status === 200){
-            console.log('добавили')
+    }).then(function (response) {
+        if (response.status === 200) {
+            toastr.success('Продукт добавлен в корзину', '', {timeOut: 1000})
+        } else if (response.status === 405) {
+            toastr.warning('Необходимо авторизоваться что бы добавить в корзину', '', {timeOut: 1000})
         } else {
-            console.log('не добавилось')
+            toastr.warning('Товар не найден', '', {timeOut: 1000})
         }
     })
 }
