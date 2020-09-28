@@ -77,7 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/manager/**").access("hasAnyRole('ROLE_MANAGER')")
                 .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated()
                 .and()
-                .exceptionHandling().accessDeniedPage("/denied");
+                .exceptionHandling().accessDeniedPage("/denied")
+                .and()
+                .rememberMe();
     }
 
     @Bean
