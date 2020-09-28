@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
      * @param order объект order.
      * @return объект OrderDTO.
      */
-    private OrderDTO convertOrderToOrderDTO(Order order){
+    private OrderDTO convertOrderToOrderDTO(Order order) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(order, OrderDTO.class);
     }
@@ -86,14 +86,15 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * Method finds all orders with status Status.COMPLETED between start and end date
+     *
      * @param startDate - {@link LocalDate} beginning of period
-     * @param endDate - {@link LocalDate} end of period
+     * @param endDate   - {@link LocalDate} end of period
      * @return - returns {@link List<SalesReportDto>}
      */
     @Override
     public List<SalesReportDto> findAllSalesBetween(LocalDate startDate, LocalDate endDate) {
         List<Order> completedOrders = orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, startDate.atStartOfDay(), endDate.atStartOfDay());
-        if (completedOrders.isEmpty()){
+        if (completedOrders.isEmpty()) {
             throw new OrdersNotFoundException("There are no completed orders in custom date range");
         }
         List<SalesReportDto> salesList = new ArrayList<>();
