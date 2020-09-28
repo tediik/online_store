@@ -1,4 +1,7 @@
 let productIdFromPath = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+let basketApiAddUrl = "/api/basket/add/"
+let myHeaders = new Headers()
+myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
 /**
  * Get-запрос - если получаем продукт, то вызываем заполняющие страницу функции,
@@ -78,4 +81,21 @@ async function fillAboutProduct(data) {
             $(specifications).append(content);
         }
     }
+    $('#addToCartButton').attr('data-toggle-id', data.id)
 }
+
+function addToProductToCart(event) {
+    let productId = event.target.dataset.toggleId
+    fetch(basketApiAddUrl + productId, {
+        headers: myHeaders,
+        method: 'PUT'
+    }).then(function (response){
+        if (response.status === 200){
+            console.log('добавили')
+        } else {
+            console.log('не добавилось')
+        }
+    })
+}
+
+document.getElementById('addToCartButton').addEventListener('click', addToProductToCart)
