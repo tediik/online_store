@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForCommentDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CommentService;
@@ -34,11 +35,14 @@ public class CommentRestController {
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
      *
      * @param productId
-     * @return ResponseEntity<List < ProductComment>>
+     * @return ResponseEntity<List < CommentDto>>
      */
     @GetMapping("/{productId}")
-    public ResponseEntity<List<Comment>> findAll(@PathVariable Long productId) {
-        return ResponseEntity.ok(commentService.findAll(productId));
+    public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
+        List<CommentDto> commentDtos = commentService.findAll(productId).stream()
+                .map(CommentDto::commentEntityToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(commentDtos);
     }
 
     /**
@@ -65,4 +69,3 @@ public class CommentRestController {
                 .collect(Collectors.joining(", "));
     }
 }
-
