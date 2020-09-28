@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.ProductNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
@@ -11,6 +12,7 @@ import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -40,18 +42,31 @@ public class BasketServiceImpl implements BasketService {
         basketRepository.delete(subBasket);
     }
 
+    /**
+     * Method add product to basket. If product already in subBasket increases by 1
+     * @param user - principal
+     * @param id - id of product to add
+     */
     @Override
+    @Transactional
     public void addProductToBasket(User user, Long id) {
-        User userToModify = userService.findById(user.getId()).get();
+        User userWhoseBasketToModify = userService.findById(user.getId()).orElseThrow(UserNotFoundException::new);
         Product productToAdd = productService
                 .findProductById(id)
                 .orElseThrow(ProductNotFoundException::new);
+        List<SubBasket> userBasket = userWhoseBasketToModify.getUserBasket();
+        for (SubBasket basket : userBasket) {
+            if (basket.getProduct().getId().equals(id)) {
+                basket.setCount(basket.getCount() + 1);
+                return;
+            }
+        }
         SubBasket subBasket = SubBasket.builder()
                 .product(productToAdd)
                 .count(1)
                 .build();
-        List<SubBasket> userBasket = userToModify.getUserBasket();
+        basketRepository.save(subBasket);
         userBasket.add(subBasket);
-
+        userService.updateUser(userWhoseBasketToModify);
     }
 }
