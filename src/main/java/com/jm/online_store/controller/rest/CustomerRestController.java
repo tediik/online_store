@@ -1,10 +1,12 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
@@ -24,12 +26,13 @@ public class CustomerRestController {
 
     @PostMapping("/changemail")
     public ResponseEntity<String> changeMailReq(Authentication auth, Model model,
-                                        @RequestParam String newMail) {
+                                                @RequestParam String newMail) {
         User user = (User) auth.getPrincipal();
         if (userService.isExist(newMail)) {
-            return ResponseEntity.ok("duplicatedEmailError");
+            return ResponseEntity.badRequest().body("Ой! Вы ввели такой же Email.");
+        } else {
+            userService.changeUsersMail(user, newMail);
+            return ResponseEntity.ok("Email будет изменен после подтверждения.");
         }
-        userService.changeUsersMail(user, newMail);
-        return ResponseEntity.ok("success");
     }
 }
