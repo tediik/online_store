@@ -43,14 +43,15 @@ async function fillBreadcrumb(data) {
             }
         }
 
-    // поиск наименования категории на латинице
-    console.log(categoriesWithLatin);
-    let subcategoryOfProductInLatin = categoriesWithLatin[categoryOfProduct][subcategoryOfProduct];
-
     // формирование навигационной цепочки
     $(breadcr).append(`<li class="breadcrumb-item"><a href="/">Главная</a></li>`);
-    $(breadcr).append(`<li class="breadcrumb-item"><a>${categoryOfProduct}</a></li>`);
-    $(breadcr).append(`<li class="breadcrumb-item"><a href="/categories/${subcategoryOfProductInLatin}">${subcategoryOfProduct}</a></li>`);
+
+    // поиск наименования категории на латинице
+    if (categoryOfProduct != undefined) {
+        let subcategoryOfProductInLatin = categoriesWithLatin[categoryOfProduct][subcategoryOfProduct];
+        $(breadcr).append(`<li class="breadcrumb-item"><a>${categoryOfProduct}</a></li>`);
+        $(breadcr).append(`<li class="breadcrumb-item"><a href="/categories/${subcategoryOfProductInLatin}">${subcategoryOfProduct}</a></li>`);
+    }
     $(breadcr).append(`<li class="breadcrumb-item"><a>${data.product}</a></li>`);
 }
 
