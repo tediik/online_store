@@ -27,8 +27,12 @@
     <div class="row content justify-content-center">
         <div class="col-sm-8 text-left">
             <div class="alert alert-info mt-2">
-                <h3 id="stockHeader"></h3>
-                <p id="stockBody"></p>
+                <div th:each="stock : ${stock}" class="alert alert-info mt-2">
+                    <h3 th:text="${stock.stockImg}"></h3>
+                    <p th:text="${stock.stockTitle}"></p>
+                    <p th:text="${stock.stockText}"></p>
+                </div>
+
                 <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                     <div class="btn-group" role="group">
                         <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
@@ -36,9 +40,9 @@
                             Поделиться
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                            <a class="dropdown-item" id="shareFacebookLink" data-socialNetworkName="facebook">Поделиться
+                            <a class="dropdown-item" id="shareFacebookLink" data-socialNetworkName="facebook" th:attr="data-id=${stock.id}">Поделиться
                                 на Facebook</a>
-                            <a class="dropdown-item" id="shareVKLink" data-socialNetworkName="vk">Поделиться на VK</a>
+                            <a class="dropdown-item" id="shareVKLink" data-socialNetworkName="vk" th:attr="data-id=${stock.id}">Поделиться на VK</a>
                         </div>
                     </div>
                 </div>

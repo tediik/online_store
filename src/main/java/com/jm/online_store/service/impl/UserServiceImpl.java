@@ -398,6 +398,9 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             return false;
         }
+        if (!ValidationUtils.isValidPassword(newPassword)) {
+            return false;
+        }
         user.setPassword(passwordEncoder.encode(newPassword));
         return true;
     }
