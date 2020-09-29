@@ -16,12 +16,7 @@ public class ValidationUtils {
 
     public boolean isValidPassword(String password) {
         Matcher matcher = VALID_PASSWORD_REGEX.matcher(password);
-        System.out.println(matcher.matches());
         return matcher.matches();
-    }
-
-    public boolean isNotValidPassword(String password) {
-        return !isValidPassword(password);
     }
 
     public boolean isValidEmail(String email) {

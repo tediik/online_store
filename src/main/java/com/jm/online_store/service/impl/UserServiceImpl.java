@@ -43,8 +43,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -397,12 +395,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean changePassword(Long id, String oldPassword, String newPassword) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        Pattern valid_password_regex = Pattern.compile("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = valid_password_regex.matcher(newPassword);
-        if (!matcher.matches()){
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             return false;
         }
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        if (!ValidationUtils.isValidPassword(newPassword)) {
             return false;
         }
         user.setPassword(passwordEncoder.encode(newPassword));

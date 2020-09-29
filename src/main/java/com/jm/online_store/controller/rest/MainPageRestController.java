@@ -43,8 +43,6 @@ public class MainPageRestController {
     private final CategoriesService categoriesService;
     private final ProductService productService;
 
-    private ValidationUtils validationUtils;
-
     @PostMapping("/registration")
     @ResponseBody
     public ResponseEntity registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
@@ -54,19 +52,19 @@ public class MainPageRestController {
         }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())) {
             log.debug("Passwords do not match : passwordConfirmError");
-            return new ResponseEntity("passwordError", HttpStatus.OK);
+            return ResponseEntity.ok("passwordError");
         }
-        if (validationUtils.isNotValidPassword(userForm.getPassword())) {
+        if (!ValidationUtils.isValidPassword(userForm.getPassword())) {
             log.debug("Passwords do not match : passwordValidError");
-            return new ResponseEntity("passwordValidError", HttpStatus.OK);
+            return ResponseEntity.ok("passwordValidError");
         }
         if (userService.isExist(userForm.getEmail())) {
             log.debug("User with same email already exists");
             return new ResponseEntity("duplicatedEmailError", HttpStatus.OK);
         }
-        if (validationUtils.isNotValidEmail(userForm.getEmail())) {
+        if (!ValidationUtils.isValidEmail(userForm.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
-            return new ResponseEntity("notValidEmailError", HttpStatus.OK);
+            return ResponseEntity.ok("notValidEmailError");
         }
         userService.regNewAccount(userForm);
         return new ResponseEntity("success", HttpStatus.OK);
