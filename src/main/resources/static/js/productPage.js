@@ -44,6 +44,7 @@ async function fillBreadcrumb(data) {
         }
 
     // поиск наименования категории на латинице
+    console.log(categoriesWithLatin);
     let subcategoryOfProductInLatin = categoriesWithLatin[categoryOfProduct][subcategoryOfProduct];
 
     // формирование навигационной цепочки
@@ -66,7 +67,11 @@ async function fillAboutProduct(data) {
 
     // заполнение вкладки с описанием продукта
     let description = document.getElementById('text-description');
-    $(description).append(`${data.descriptions.information}`);
+    if (data.descriptions == null) {
+        $(description).append("Извините, описание пока не заполнено.");
+    } else {
+        $(description).append(`${data.descriptions.information}`);
+    }
 
     // заполнение вкладки с характеристиками продукта
     let specifications = document.getElementById('text-specifications');
