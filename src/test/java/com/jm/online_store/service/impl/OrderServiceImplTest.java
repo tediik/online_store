@@ -1,40 +1,55 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.Order;
+import com.jm.online_store.model.Product;
+import com.jm.online_store.model.ProductInOrder;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.repository.OrderRepository;
 import com.jm.online_store.service.interf.OrderService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@SpringBootTest
 class OrderServiceImplTest {
-    private final OrderRepository orderRepository = mock(OrderRepository.class);
-    private final OrderService orderService = new OrderServiceImpl(orderRepository);
+    @MockBean
+    private OrderRepository orderRepository;
+    @Autowired
+    private OrderService orderService;
+//    private final OrderRepository orderRepository = mock(OrderRepository.class);
+//    private final OrderService orderService = new OrderServiceImpl(orderRepository);
     private List<Order> orderList;
     Order order1;
     Order order2;
     User user;
+    LocalDateTime now;
 
     @BeforeEach
     void init() {
         orderList = new ArrayList<>();
         user = new User();
         user.setId(1L);
+        user.setFirstName("Ivan");
+        user.setLastName("Petrov");
+        user.setEmail("ivan@mail.ru");
         order1 = new Order(LocalDateTime.now(), Order.Status.COMPLETED);
         order1.setId(1L);
         order1.setUser(user);
@@ -47,6 +62,7 @@ class OrderServiceImplTest {
         order2.setOrderPrice((double) 0);
         orderList.add(order1);
         orderList.add(order2);
+        now = LocalDateTime.now();
     }
 
     @Test
@@ -114,6 +130,65 @@ class OrderServiceImplTest {
     void updateOrder() {
         orderService.updateOrder(order1);
         verify(orderRepository, times(1)).save(order1);
+    }
+
+    @Test
+    void findAllSalesBetween(){
+        LocalDate now1 = LocalDate.now();
+        /*Создаем продукт*/
+        Product product = new Product();
+        product.setId(1L);
+        product.setProduct("iPhone");
+        /*Создаем ProductInOrder*/
+        ProductInOrder productInOrder = new ProductInOrder();
+        productInOrder.setProduct(product);
+        productInOrder.setAmount(1);
+        /*Создаем лист ProductInOrder*/
+        List<ProductInOrder> productInOrderList = new ArrayList<>();
+        productInOrderList.add(productInOrder);
+        /*Создаем 2 ордера и подставляем все что насоздавали выше*/
+        Order completedOrder1 = Order.builder()
+                .id(10L)
+                .orderPrice(123D)
+                .amount(2L)
+                .dateTime(now)
+                .status(Order.Status.COMPLETED)
+                .user(user)
+                .productInOrders(productInOrderList)
+                .build();
+        Order completedOrder2 = Order.builder()
+                .id(11L)
+                .orderPrice(12.3)
+                .amount(1L)
+                .dateTime(now.plusDays(1))
+                .status(Order.Status.COMPLETED)
+                .user(user)
+                .productInOrders(productInOrderList)
+                .build();
+        /*делаем лист ордеров и добавляем туда 2 ордера которые сделали выше*/
+        List<Order> completedOrders = new ArrayList<>();
+        completedOrders.add(completedOrder1);
+        completedOrders.add(completedOrder2);
+        /*Создаем лист dto предполагаемый*/
+        List<SalesReportDto> expectedSalesList = new ArrayList<>();
+        completedOrders.forEach(order -> expectedSalesList.add(SalesReportDto.orderToSalesReportDto(order)));
+        /*эмулируем возвращение репозиторием листа с выполнеными ордерами*/
+        when(orderRepository
+                .findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, now1.atStartOfDay().minusDays(2), now1.atStartOfDay().plusDays(2)))
+                .thenReturn(completedOrders);
+        assertEquals(expectedSalesList, orderService.findAllSalesBetween(now.minusDays(2).toLocalDate(), now.plusDays(2).toLocalDate()));
+    }
+
+    @Test
+    @DisplayName("Testing method findAllSalesBetween in class OrderServiceImpl to throw Exception if returned List is empty")
+    void throwExceptionIfFindAllSalesBetweenReturnsEmptyList() {
+        now = LocalDateTime.now();
+        List<Order> emptyOrderList = new ArrayList<>();
+        when(orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, now.minusDays(2), now.plusDays(2))).thenReturn(emptyOrderList);
+        OrdersNotFoundException thrownException =
+                assertThrows(OrdersNotFoundException.class, () -> orderService
+                                .findAllSalesBetween(now.minusDays(2).toLocalDate(), now.plusDays(2).toLocalDate()),
+                        "Expected exception doesnt match actual");
     }
 
     @AfterEach
