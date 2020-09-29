@@ -47,20 +47,21 @@ function register() {
             if (data == "duplicatedEmailError") {
                 $("#duplicatedEmailError").show();
             }
-            if (data == "passwordError") {
-                $("#passwordError").show();
-                $("#passwordValidError").hide();
-            }
-            if (data == "passwordValidError") {
-                $("#passwordValidError").show();
-                $("#passwordError").hide();
-            }
             if (data == "notValidEmailError") {
                 $("#notValidEmailError").show();
             }
         },
         error: function (data) {
-                console.log(data.status);
+                if(data.status == 400){
+                    if (data == "passwordError") {
+                        $("#passwordError").show();
+                        $("#passwordValidError").hide();
+                    }
+                    if (data == "passwordValidError") {
+                        $("#passwordValidError").show();
+                        $("#passwordError").hide();
+                    }
+                }
         }
     });
 }
