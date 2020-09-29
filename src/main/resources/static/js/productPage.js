@@ -108,10 +108,10 @@ function newRateForProduct(rating) {
         if (response.ok) {
             res = response.json();
             res.then(function (value) {
-                $("#rateNumber").empty().append(`<h5>${value}<h5>`)
+                $("#rateNumber").empty().append(`<h5>${value.toFixed(2)}<h5>`)
                 toastr.success('Ваш голос учтён', {timeOut: 5000})
                 close();
-                rateInitialize(value)
+                rateInitialize(value.toFixed(2))
             })
         } else {
             toastr.error('Ваш голос не учтён', {timeOut: 5000})
