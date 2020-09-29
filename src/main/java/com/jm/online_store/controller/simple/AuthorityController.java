@@ -54,7 +54,7 @@ public class AuthorityController {
                                  @RequestParam String newPassword) {
         User user = (User) auth.getPrincipal();
         if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
-            model.addAttribute("message", "Pls, double check previous password!");
+            model.addAttribute("message", "Pls, check your old password!");
         }
         return "redirect:/authority/profile";
     }

@@ -4,6 +4,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
+import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -81,7 +82,7 @@ public class CustomerController {
                                  @RequestParam String newPassword) {
         User user = (User) auth.getPrincipal();
         if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
-            model.addAttribute("message", "Pls, double check previous password!");
+            model.addAttribute("message", "Pls, check your old password!");
         }
         return "redirect:/customer";
     }
