@@ -93,10 +93,4 @@ public class CustomerController {
         model.addAttribute("message", "Email address changes successfully");
         return "redirect:/customer";
     }
-
-    //временная заглушка пока нет акций на главной
-    @GetMapping("/stockDetails")
-    public String showStockDetailsPage(){
-        return "stockDetailsPage";
-    }
 }
