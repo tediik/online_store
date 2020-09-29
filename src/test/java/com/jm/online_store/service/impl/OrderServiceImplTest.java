@@ -24,18 +24,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 @SpringBootTest
 class OrderServiceImplTest {
     @MockBean
     private OrderRepository orderRepository;
     @Autowired
     private OrderService orderService;
-//    private final OrderRepository orderRepository = mock(OrderRepository.class);
-//    private final OrderService orderService = new OrderServiceImpl(orderRepository);
     private List<Order> orderList;
     Order order1;
     Order order2;
@@ -78,8 +74,8 @@ class OrderServiceImplTest {
     void findAllByUserId() {
         when(orderRepository.findAllByUserId(1L))
                 .thenReturn(orderList.stream()
-                    .filter(order -> order.getUser().getId().equals(1L))
-                    .collect(Collectors.toList()));
+                        .filter(order -> order.getUser().getId().equals(1L))
+                        .collect(Collectors.toList()));
 
         List<Order> userOrdersList = orderRepository.findAllByUserId(1L);
         assertEquals(2, userOrdersList.size());
@@ -91,9 +87,9 @@ class OrderServiceImplTest {
     void findAllByUserIdAndStatus() {
         when(orderRepository.findAllByUserIdAndStatus(1L, Order.Status.COMPLETED))
                 .thenReturn(orderList.stream()
-                    .filter(order -> order.getUser().getId().equals(1L))
-                    .filter(order -> order.getStatus().equals(Order.Status.COMPLETED))
-                    .collect(Collectors.toList()));
+                        .filter(order -> order.getUser().getId().equals(1L))
+                        .filter(order -> order.getStatus().equals(Order.Status.COMPLETED))
+                        .collect(Collectors.toList()));
 
         List<Order> orderListByUserIdAndStatus = orderService
                 .findAllByUserIdAndStatus(1L, Order.Status.COMPLETED);
@@ -133,8 +129,8 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void findAllSalesBetween(){
-        LocalDate now1 = LocalDate.now();
+    void findAllSalesBetween() {
+        LocalDate nowLocalDate = LocalDate.now();
         /*Создаем продукт*/
         Product product = new Product();
         product.setId(1L);
@@ -174,9 +170,11 @@ class OrderServiceImplTest {
         completedOrders.forEach(order -> expectedSalesList.add(SalesReportDto.orderToSalesReportDto(order)));
         /*эмулируем возвращение репозиторием листа с выполнеными ордерами*/
         when(orderRepository
-                .findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, now1.atStartOfDay().minusDays(2), now1.atStartOfDay().plusDays(2)))
+                .findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, nowLocalDate.atStartOfDay().minusDays(2),
+                        nowLocalDate.atStartOfDay().plusDays(2)))
                 .thenReturn(completedOrders);
-        assertEquals(expectedSalesList, orderService.findAllSalesBetween(now.minusDays(2).toLocalDate(), now.plusDays(2).toLocalDate()));
+        assertEquals(expectedSalesList, orderService.findAllSalesBetween(now.minusDays(2).toLocalDate(), now.plusDays(2).toLocalDate()),
+                "Expected Sales List doesn't match actual");
     }
 
     @Test
@@ -184,7 +182,9 @@ class OrderServiceImplTest {
     void throwExceptionIfFindAllSalesBetweenReturnsEmptyList() {
         now = LocalDateTime.now();
         List<Order> emptyOrderList = new ArrayList<>();
-        when(orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, now.minusDays(2), now.plusDays(2))).thenReturn(emptyOrderList);
+        when(orderRepository
+                .findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, now.minusDays(2), now.plusDays(2)))
+                .thenReturn(emptyOrderList);
         OrdersNotFoundException thrownException =
                 assertThrows(OrdersNotFoundException.class, () -> orderService
                                 .findAllSalesBetween(now.minusDays(2).toLocalDate(), now.plusDays(2).toLocalDate()),
