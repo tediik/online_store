@@ -40,16 +40,28 @@ function register() {
         data: formData,
         success: function (data) {
             if (data == "success") {
-                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000})
+                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000});
                 close();
                 document.location.href = "/";
-            } else if (data == "duplicatedEmailError") {
+            }
+            if (data == "duplicatedEmailError") {
                 $("#duplicatedEmailError").show();
-            } else if (data == "passwordError") {
-                $("#passwordError").show();
-            } else if (data == "notValidEmailError") {
+            }
+            if (data == "notValidEmailError") {
                 $("#notValidEmailError").show();
             }
+        },
+        error: function (data) {
+                if(data.status == 400){
+                    if (data == "passwordError") {
+                        $("#passwordError").show();
+                        $("#passwordValidError").hide();
+                    }
+                    if (data == "passwordValidError") {
+                        $("#passwordValidError").show();
+                        $("#passwordError").hide();
+                    }
+                }
         }
     });
 }

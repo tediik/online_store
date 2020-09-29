@@ -43,8 +43,6 @@ public class MainPageRestController {
     private final CategoriesService categoriesService;
     private final ProductService productService;
 
-    private ValidationUtils validationUtils;
-
     @PostMapping("/registration")
     @ResponseBody
     public ResponseEntity registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
@@ -54,15 +52,19 @@ public class MainPageRestController {
         }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())) {
             log.debug("Passwords do not match : passwordConfirmError");
-            return new ResponseEntity("passwordError", HttpStatus.OK);
+            return ResponseEntity.badRequest().body("passwordError");
+        }
+        if (!ValidationUtils.isValidPassword(userForm.getPassword())) {
+            log.debug("Passwords do not match : passwordValidError");
+            return ResponseEntity.badRequest().body("passwordValidError");
         }
         if (userService.isExist(userForm.getEmail())) {
             log.debug("User with same email already exists");
             return new ResponseEntity("duplicatedEmailError", HttpStatus.OK);
         }
-        if (validationUtils.isNotValidEmail(userForm.getEmail())) {
+        if (!ValidationUtils.isValidEmail(userForm.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
-            return new ResponseEntity("notValidEmailError", HttpStatus.OK);
+            return ResponseEntity.ok("notValidEmailError");
         }
         userService.regNewAccount(userForm);
         return new ResponseEntity("success", HttpStatus.OK);
@@ -79,10 +81,10 @@ public class MainPageRestController {
      * Во внутренних мапах - ключ - подкатегория кириллицей и значение - латиницей.
      *
      * @return Пример: {"Компьютеры":{"Комплектующие":"Komplektuyushchiye",
-     *                                "Компьютеры":"Kompʹyutery",
-     *                                "Ноутбуки":"Noutbuki"},
-     *                  "Смартфоны и гаджеты":{"Планшеты":"Planshety",
-     *                                         "Смартфоны":"Smartfony"}}
+     * "Компьютеры":"Kompʹyutery",
+     * "Ноутбуки":"Noutbuki"},
+     * "Смартфоны и гаджеты":{"Планшеты":"Planshety",
+     * "Смартфоны":"Smartfony"}}
      */
     @GetMapping("api/categories")
     public ResponseEntity<Map<String, Map<String, String>>> getCategories() {

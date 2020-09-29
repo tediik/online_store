@@ -278,10 +278,15 @@
                                                             <label for="new_password">Новый пароль</label>
                                                             <input type="password" id="new_password" name="newPassword"
                                                                    class="form-control" required/>
+                                                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                                                Your password must be 8-20 characters long, contain
+                                                                letters and numbers, and must not contain spaces and emoji.
+                                                            </small>
                                                         </div>
-                                                        <button type="submit" class="btn btn-primary btn-sm btn-block">
+                                                        <button id="submitNewPassword" type="submit" class="btn btn-primary btn-sm btn-block">
                                                             Сохранить
                                                         </button>
+
                                                     </form>
 
                                                 </div>
