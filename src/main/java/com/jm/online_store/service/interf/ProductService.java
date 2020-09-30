@@ -28,4 +28,6 @@ public interface ProductService {
     List<Product> findNumProducts(Integer num);
 
     Map getProductPriceChange(Long idProduct);
+
+    List<Product> findProductsByNameContains(String searchString);
 }

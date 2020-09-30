@@ -8,7 +8,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvValidationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,13 +18,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.nio.file.ProviderNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -211,4 +210,18 @@ public class ProductServiceImpl implements ProductService {
         return product.getChangePriceHistory();
     }
 
+    /**
+     * Method that finds search string in Product name if there are no such products, throws
+     * {@link ProviderNotFoundException} with message "No products were found for this search query."
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
+    @Override
+    public List<Product> findProductsByNameContains(String searchString) {
+        List<Product> productList = productRepository.findProductByProductContains(searchString);
+        if (productList.isEmpty()){
+            throw new ProviderNotFoundException("No products were found for this search query.");
+        }
+        return productList;
+    }
 }
