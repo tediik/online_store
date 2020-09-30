@@ -2,14 +2,17 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -50,6 +53,18 @@ public class ProductRestController {
         return ResponseEntity.ok(productService.getProductPriceChange(id));
     }
 
+    /**
+     *контроллер для получения обновлённого рейтинга товара
+     * @param rating оценка пользователя
+     * @param id id товара
+     * @param user авторизованный пользователь
+     */
+    @PostMapping("/rating")
+    public ResponseEntity getNewRating(@RequestParam(value = "rating", required = false) float rating,
+                                       @RequestParam(value = "id", required = false) Long id,
+                                       @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(productService.changeProductRating(id, rating, user));
+    }
     /**
      * Mapping for search in {@link Product} by name contains search string
      * @param searchString - {@link String} string to find in product name

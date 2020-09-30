@@ -1,6 +1,7 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.User;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -28,6 +29,8 @@ public interface ProductService {
     List<Product> findNumProducts(Integer num);
 
     Map getProductPriceChange(Long idProduct);
+
+    double changeProductRating(Long productId, double rating, User user);
 
     List<Product> findProductsByNameContains(String searchString);
 }
