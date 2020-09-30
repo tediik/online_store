@@ -10,6 +10,8 @@ import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @AllArgsConstructor
 public class ProductInOrderServiceImpl implements ProductInOrderService {
@@ -29,6 +31,7 @@ public class ProductInOrderServiceImpl implements ProductInOrderService {
      * @param orderId   id заказа, в который добавляется продукт, в таблице "orders"
      * @param amount    количество продукта в заказе
      */
+    @Transactional
     public void addToOrder(long productId, long orderId, int amount) {
         Product product = productService.findProductById(productId).get();
         Order order = orderService.findOrderById(orderId).get();
