@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,4 +50,19 @@ public class ProductRestController {
         return ResponseEntity.ok(productService.getProductPriceChange(id));
     }
 
+    /**
+     * Mapping for search in {@link Product} by name contains search string
+     * @param searchString - {@link String} string to find in product name
+     * @return - {@link ResponseEntity<List<Product>>} response entity with List of {@link Product} or
+     * if there are no such products returns notFound
+     */
+    @GetMapping("/searchByName/{searchString}")
+    public ResponseEntity<List<Product>> findProductsByName(@PathVariable String searchString){
+        try {
+            List<Product> productsByNameContains = productService.findProductsByNameContains(searchString);
+            return ResponseEntity.ok(productsByNameContains);
+        } catch (ProductsNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
