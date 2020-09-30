@@ -17,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findNumProducts(@Param("num") Integer num);
 
     List<Product> findProductByProductContains(String searchString);
+
+    List<Product> findProductByDescriptionsContains(String searchString);
 }

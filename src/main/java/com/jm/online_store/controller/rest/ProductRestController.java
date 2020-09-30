@@ -83,4 +83,14 @@ public class ProductRestController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/searchByDescription/{searchString}")
+    public ResponseEntity<List<Product>> findProductsByDescription(@PathVariable String searchString) {
+        try {
+            List<Product> productsByDescriptionContains = productService.findProductsByDescriptionContains(searchString);
+            return ResponseEntity.ok(productsByDescriptionContains);
+        } catch (ProductsNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

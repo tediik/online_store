@@ -269,4 +269,11 @@ public class ProductServiceImpl implements ProductService {
         }
         return productList;
     }
+
+    @Override
+    public List<Product> findProductsByDescriptionContains(String searchString) {
+        List<Product> productList = productRepository
+                .findProductByDescriptionsContains(searchString);
+        return productList;
+    }
 }
