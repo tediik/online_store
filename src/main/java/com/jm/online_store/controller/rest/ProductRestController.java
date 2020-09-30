@@ -43,7 +43,7 @@ public class ProductRestController {
     }
 
     /**
-     *контроллер для получения Map содержащим ключ-значение: дата.время изменения цены - цена.
+     * контроллер для получения Map содержащим ключ-значение: дата.время изменения цены - цена.
      *
      * @param id идентификатор продукта
      * @return map содержащая значения по изменению цены на товар.
@@ -54,10 +54,11 @@ public class ProductRestController {
     }
 
     /**
-     *контроллер для получения обновлённого рейтинга товара
+     * контроллер для получения обновлённого рейтинга товара
+     *
      * @param rating оценка пользователя
-     * @param id id товара
-     * @param user авторизованный пользователь
+     * @param id     id товара
+     * @param user   авторизованный пользователь
      */
     @PostMapping("/rating")
     public ResponseEntity getNewRating(@RequestParam(value = "rating", required = false) float rating,
@@ -65,18 +66,20 @@ public class ProductRestController {
                                        @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(productService.changeProductRating(id, rating, user));
     }
+
     /**
      * Mapping for search in {@link Product} by name contains search string
+     *
      * @param searchString - {@link String} string to find in product name
      * @return - {@link ResponseEntity<List<Product>>} response entity with List of {@link Product} or
      * if there are no such products returns notFound
      */
     @GetMapping("/searchByName/{searchString}")
-    public ResponseEntity<List<Product>> findProductsByName(@PathVariable String searchString){
+    public ResponseEntity<List<Product>> findProductsByName(@PathVariable String searchString) {
         try {
             List<Product> productsByNameContains = productService.findProductsByNameContains(searchString);
             return ResponseEntity.ok(productsByNameContains);
-        } catch (ProductsNotFoundException e){
+        } catch (ProductsNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
