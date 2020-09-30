@@ -1,7 +1,7 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
+import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
@@ -10,11 +10,9 @@ import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
-import com.opencsv.CSVReader;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvValidationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,9 +23,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.net.UnknownServiceException;
-import java.time.LocalDateTime;
-import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -228,9 +223,10 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * метод изменения рейтинга товара
+     *
      * @param productId id товара
-     * @param rating оценка польователем товара
-     * @param user пользователь оценивший товар
+     * @param rating    оценка польователем товара
+     * @param user      пользователь оценивший товар
      * @return double новый рейтинг
      * @throws UserNotFoundException,ProductNotFoundException
      */
@@ -257,16 +253,18 @@ public class ProductServiceImpl implements ProductService {
         product.setRating(newRating);
         return newRating;
     }
+
     /**
      * Method that finds search string in Product name if there are no such products, throws
      * {@link ProviderNotFoundException} with message "No products were found for this search query."
+     *
      * @param searchString - {@link String} search string
      * @return - list of {@link Product} with search result
      */
     @Override
     public List<Product> findProductsByNameContains(String searchString) {
         List<Product> productList = productRepository.findProductByProductContains(searchString);
-        if (productList.isEmpty()){
+        if (productList.isEmpty()) {
             throw new ProductsNotFoundException("No products were found for this search query.");
         }
         return productList;
