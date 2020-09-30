@@ -40,9 +40,22 @@
                             Поделиться
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                                <a class="dropdown-item" id="shareFacebookLink" data-socialNetworkName="facebook" th:attr="data-id=${stock.id}">Поделиться
+                                    на Facebook</a>
+                                <a class="dropdown-item" id="shareVKLink" data-socialNetworkName="vk" th:attr="data-id=${stock.id}">Поделиться на VK</a>
+                            </div>
+
+                            <div th:unless="${#authorization.expression('isAuthenticated()')}">
+                                <a class="dropdown-item" href="/login">Поделиться на Facebook</a>
+                                <a class="dropdown-item" href="/login">Поделиться на VK</a>
+                            </div>
+
+
+                            <!--
                             <a class="dropdown-item" id="shareFacebookLink" data-socialNetworkName="facebook" th:attr="data-id=${stock.id}">Поделиться
                                 на Facebook</a>
-                            <a class="dropdown-item" id="shareVKLink" data-socialNetworkName="vk" th:attr="data-id=${stock.id}">Поделиться на VK</a>
+                            <a class="dropdown-item" id="shareVKLink" data-socialNetworkName="vk" th:attr="data-id=${stock.id}">Поделиться на VK</a>-->
                         </div>
                     </div>
                 </div>
