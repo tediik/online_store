@@ -101,6 +101,7 @@ async function fillSomeProducts() {
                     <div class="col-auto d-none d-lg-block productImg">
                         <img class="bd-placeholder-img" src="/uploads/images/products/0.jpg">
                     </div>
+                    <div id="rate${data[key].id}"></div>
                     <div class="col p-4 d-flex flex-column position-static">
                         <p class="card-text mb-auto productName">${data[key].product}</p>
                         <a class="btn btn-sm btn-outline-light producthref" href="/products/${data[key].id}" role="button">Подробнее &raquo;</a>
@@ -113,5 +114,11 @@ async function fillSomeProducts() {
         } else if ((key + 1) == data.length) {
             $(prodsView).append(`<div class="row">` + item);
         }
+        $(function () {
+            $(`#rate${data[key].id}`).rateYo({
+                rating: data[key].rating,
+                readOnly: true
+            });
+        });
     }
 }

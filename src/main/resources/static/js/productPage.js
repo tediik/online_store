@@ -62,8 +62,8 @@ async function fillBreadcrumb(data) {
 async function fillAboutProduct(data) {
     let productName = document.getElementById('productName');
     $(productName).append(`<br><h2 class="font-weight-normal">${data.product}</h2>`);
-    $(productName).append(`<br><h5 class="font-weight-normal">Оценка товара: ${data.rating} из 5</h5>`);
-
+    $("#rateNumber").empty().append(`<h5>${data.rating}<h5>`)
+    rateInitialize(data.rating)
     // заполнение вкладки с описанием продукта
     let description = document.getElementById('text-description');
     $(description).append(`${data.descriptions.information}`);
@@ -78,4 +78,44 @@ async function fillAboutProduct(data) {
             $(specifications).append(content);
         }
     }
+}
+
+/**
+ * Отрисовка звёзд рейтинга
+ * @param rating текущий рейтинг товара
+ */
+function rateInitialize(rating) {
+    $("#rate").rateYo({
+        onSet: function (rating) {
+            newRateForProduct(rating);
+        },
+        rating: rating,
+        halfStar: true
+    });
+}
+
+/**
+ * Вычисление рейтинга и добавление его в базу к товару
+ * @param rating оценка товара текущим пользователем
+ */
+function newRateForProduct(rating) {
+    $("#rate").rateYo("destroy");
+    let res;
+    fetch(`/api/products/rating?id=${productIdFromPath}&rating=${rating}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json;charset=utf-8'}
+    }).then(function (response) {
+        if (response.ok) {
+            res = response.json();
+            res.then(function (value) {
+                $("#rateNumber").empty().append(`<h5>${value.toFixed(2)}<h5>`)
+                toastr.success('Ваш голос учтён', {timeOut: 5000})
+                close();
+                rateInitialize(value.toFixed(2))
+            })
+        } else {
+            toastr.error('Ваш голос не учтён', {timeOut: 5000})
+            close();
+        }
+    })
 }
