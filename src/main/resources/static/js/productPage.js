@@ -43,14 +43,15 @@ async function fillBreadcrumb(data) {
             }
         }
 
-    // поиск наименования категории на латинице
-    let subcategoryOfProductInLatin = categoriesWithLatin[categoryOfProduct][subcategoryOfProduct];
-
     // формирование навигационной цепочки
     $(breadcr).append(`<li class="breadcrumb-item"><a href="/">Главная</a></li>`);
-    $(breadcr).append(`<li class="breadcrumb-item"><a>${categoryOfProduct}</a></li>`);
-    $(breadcr).append(`<li class="breadcrumb-item"><a href="/categories/${subcategoryOfProductInLatin}">${subcategoryOfProduct}</a></li>`);
-    $(breadcr).append(`<li class="breadcrumb-item"><a>${data.product}</a></li>`);
+
+    // поиск наименования категории на латинице
+    if (categoryOfProduct != undefined) {
+        let subcategoryOfProductInLatin = categoriesWithLatin[categoryOfProduct][subcategoryOfProduct];
+        $(breadcr).append(`<li class="breadcrumb-item"><a>${categoryOfProduct}</a></li>`);
+        $(breadcr).append(`<li class="breadcrumb-item"><a href="/categories/${subcategoryOfProductInLatin}">${subcategoryOfProduct}</a></li>`);
+    }
 }
 
 /**
@@ -66,7 +67,12 @@ async function fillAboutProduct(data) {
     rateInitialize(data.rating)
     // заполнение вкладки с описанием продукта
     let description = document.getElementById('text-description');
-    $(description).append(`${data.descriptions.information}`);
+    if (data.descriptions == null) {
+        $(description).append("Извините, описание пока не заполнено.");
+    } else {
+        $(description).append(`${data.descriptions.information}`);
+    }
+
 
     // заполнение вкладки с характеристиками продукта
     let specifications = document.getElementById('text-specifications');
