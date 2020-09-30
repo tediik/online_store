@@ -20,8 +20,7 @@ public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "topic")
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private FeedbackTopic topic;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -29,7 +28,7 @@ public class Feedback {
     private LocalDateTime feedbackPostDate;
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private String status;
+    private Status status;
 
     public enum Status {
         TO_DO,
