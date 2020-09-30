@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<SalesReportDto> findAllSalesBetween(LocalDate startDate, LocalDate endDate) {
-        List<Order> completedOrders = orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, startDate.atStartOfDay(), endDate.atStartOfDay());
+        List<Order> completedOrders = orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, startDate.atStartOfDay(), endDate.atTime(23,59,59));
         if (completedOrders.isEmpty()) {
             throw new OrdersNotFoundException("There are no completed orders in custom date range");
         }
