@@ -4,11 +4,24 @@ $(document).ready(function ($) {
         $("#openNewRegistrationModal form")[0].reset();//reset modal fields
         $("#openNewRegistrationModal .error").hide();//reset error spans
     });
-
+    preventDefaultEventForEnterKeyPress()
     getCurrent();
     fillCategories();
     fetchAndRenderSomeProducts();
 });
+
+/**
+ * function that prevents submit event on Enter keypress in search input
+ */
+function preventDefaultEventForEnterKeyPress() {
+    $(window).keydown(function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            handleSearchButton()
+            return false;
+        }
+    })
+}
 
 function fetchAndRenderSomeProducts() {
     fetch("/api/products").then(response => response.json()).then(data => fillSomeProducts(data));
