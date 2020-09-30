@@ -1,3 +1,4 @@
+let productSearchUrl = '/api/products/searchByName/'
 $(document).ready(function ($) {
     $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
         $("#openNewRegistrationModal form")[0].reset();//reset modal fields
@@ -6,8 +7,33 @@ $(document).ready(function ($) {
 
     getCurrent();
     fillCategories();
-    fillSomeProducts();
+    fetchAndRenderSomeProducts();
 });
+
+function fetchAndRenderSomeProducts() {
+    fetch("/api/products").then(response => response.json()).then(data => fillSomeProducts(data));
+}
+
+/**
+ * event listener for search button
+ */
+document.getElementById('mainPageSearchButton').addEventListener('click', handleSearchButton)
+
+/**
+ * function that handles search button in headder of main page
+ */
+function handleSearchButton() {
+    fetch(productSearchUrl + $('#mainPageSearchInput').val())
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(searchResult => fillSomeProducts(searchResult))
+            } else {
+                console.log('error no: ' + response.status)
+                fillSomeProducts("error")
+            }
+        })
+        .catch(error => console.log(error))
+}
 
 function getCurrent() {
     $.ajax({
@@ -52,16 +78,16 @@ function register() {
             }
         },
         error: function (data) {
-                if(data.status == 400){
-                    if (data == "passwordError") {
-                        $("#passwordError").show();
-                        $("#passwordValidError").hide();
-                    }
-                    if (data == "passwordValidError") {
-                        $("#passwordValidError").show();
-                        $("#passwordError").hide();
-                    }
+            if (data.status == 400) {
+                if (data == "passwordError") {
+                    $("#passwordError").show();
+                    $("#passwordValidError").hide();
                 }
+                if (data == "passwordValidError") {
+                    $("#passwordValidError").show();
+                    $("#passwordError").hide();
+                }
+            }
         }
     });
 }
@@ -90,12 +116,17 @@ async function fillCategories() {
     }
 }
 
-async function fillSomeProducts() {
-    let data = await fetch("/api/products").then(response => response.json());
+/**
+ * function that fills main page with products
+ * @param data - products list
+ */
+function fillSomeProducts(data) {
     let prodsView = document.getElementById('someProductsView');
-    let item = ``;
-    for (let key = 0; key < data.length; key++) {
-        item += `
+    prodsView.innerHTML = ''
+    if (data !== 'error') {
+        let item = ``;
+        for (let key = 0; key < data.length; key++) {
+            item += `
             <div class="col-2">
                 <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
                     <div class="col-auto d-none d-lg-block productImg">
@@ -107,11 +138,14 @@ async function fillSomeProducts() {
                     </div>
                 </div>
             </div>`;
-        if ((key + 1) % 5 == 0) {
-            $(prodsView).append(`<div class="row">` + item);
-            item = ``;
-        } else if ((key + 1) == data.length) {
-            $(prodsView).append(`<div class="row">` + item);
+            if ((key + 1) % 5 == 0) {
+                $(prodsView).append(`<div class="row">` + item);
+                item = ``;
+            } else if ((key + 1) == data.length) {
+                $(prodsView).append(`<div class="row">` + item);
+            }
         }
+    } else {
+        prodsView.innerHTML = 'Продуктов не найденно'
     }
 }
