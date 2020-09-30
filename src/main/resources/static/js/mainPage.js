@@ -25,6 +25,8 @@ function preventDefaultEventForEnterKeyPress() {
 
 function fetchAndRenderSomeProducts() {
     fetch("/api/products").then(response => response.json()).then(data => fillSomeProducts(data));
+    $('#headerForSomeProductsView').text('Актуальные предложения')
+
 }
 
 /**
@@ -46,6 +48,7 @@ function handleSearchButton() {
             }
         })
         .catch(error => console.log(error))
+    $('#headerForSomeProductsView').text('Результаты поиска')
 }
 
 function getCurrent() {
