@@ -1,10 +1,9 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.ProductService;
-import com.opencsv.CSVReader;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -18,9 +17,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.nio.file.ProviderNotFoundException;
-import java.time.LocalDateTime;
-import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -29,8 +25,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.ProviderNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -220,7 +219,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findProductsByNameContains(String searchString) {
         List<Product> productList = productRepository.findProductByProductContains(searchString);
         if (productList.isEmpty()){
-            throw new ProviderNotFoundException("No products were found for this search query.");
+            throw new ProductsNotFoundException("No products were found for this search query.");
         }
         return productList;
     }
