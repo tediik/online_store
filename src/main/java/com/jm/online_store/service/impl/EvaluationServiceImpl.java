@@ -18,6 +18,7 @@ import java.util.Optional;
 public class EvaluationServiceImpl implements EvaluationService {
     private final EvaluationRepository evaluationRepository;
     private final UserService userService;
+
     /**
      * Метод получения всех оценок для продукта
      * @param product продукт
@@ -27,6 +28,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     public List<Evaluation> getAllProductEvaluation(Product product) {
         return evaluationRepository.findAllByProduct(product);
     }
+
     /**
      * Метод добавления оценки
      * @param evaluation оценка
@@ -36,6 +38,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     public Evaluation addEvaluation(Evaluation evaluation) {
         return evaluationRepository.save(evaluation);
     }
+
     /**
      * Метод получения оценки из базs для конкретного товара и пользователя
      * @param user текущий пользователь

@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.ProductService;
@@ -51,6 +50,7 @@ public class ProductRestController {
     public ResponseEntity<Map> priceMonitor(@RequestBody Long id) {
         return ResponseEntity.ok(productService.getProductPriceChange(id));
     }
+
     /**
      *контроллер для получения обновлённого рейтинга товара
      * @param rating оценка пользователя
