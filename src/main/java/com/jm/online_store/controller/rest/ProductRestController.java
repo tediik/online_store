@@ -71,26 +71,23 @@ public class ProductRestController {
      * Mapping for search in {@link Product} by name contains search string
      *
      * @param searchString - {@link String} string to find in product name
-     * @return - {@link ResponseEntity<List<Product>>} response entity with List of {@link Product} or
+     * @return - {@link ResponseEntity} response entity with List of {@link Product} or
      * if there are no such products returns notFound
      */
     @GetMapping("/searchByName/{searchString}")
     public ResponseEntity<List<Product>> findProductsByName(@PathVariable String searchString) {
-        try {
-            List<Product> productsByNameContains = productService.findProductsByNameContains(searchString);
-            return ResponseEntity.ok(productsByNameContains);
-        } catch (ProductsNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(productService.findProductsByNameContains(searchString));
     }
 
+    /**
+     * Mapping for search in {@link Product} by description contains search string
+     *
+     * @param searchString - {@link String} string to find in product name
+     * @return - {@link ResponseEntity} response entity with List of {@link Product} or
+     * if there are no such products returns notFound
+     */
     @GetMapping("/searchByDescription/{searchString}")
     public ResponseEntity<List<Product>> findProductsByDescription(@PathVariable String searchString) {
-        try {
-            List<Product> productsByDescriptionContains = productService.findProductsByDescriptionContains(searchString);
-            return ResponseEntity.ok(productsByDescriptionContains);
-        } catch (ProductsNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(productService.findProductsByDescriptionContains(searchString));
     }
 }
