@@ -86,6 +86,13 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favouritesGoods = new HashSet<>();
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_adresses",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id"))
+    private Set<Address> userAddresses = new HashSet<>();
+
     /**
      * поле корзина клиента.
      * "Корзина клиента" состоит из подкорзин "SubBasket", сотоящих в свою очередь

@@ -40,16 +40,28 @@ function register() {
         data: formData,
         success: function (data) {
             if (data == "success") {
-                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000})
+                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000});
                 close();
                 document.location.href = "/";
-            } else if (data == "duplicatedEmailError") {
+            }
+            if (data == "duplicatedEmailError") {
                 $("#duplicatedEmailError").show();
-            } else if (data == "passwordError") {
-                $("#passwordError").show();
-            } else if (data == "notValidEmailError") {
+            }
+            if (data == "notValidEmailError") {
                 $("#notValidEmailError").show();
             }
+        },
+        error: function (data) {
+                if(data.status == 400){
+                    if (data == "passwordError") {
+                        $("#passwordError").show();
+                        $("#passwordValidError").hide();
+                    }
+                    if (data == "passwordValidError") {
+                        $("#passwordValidError").show();
+                        $("#passwordError").hide();
+                    }
+                }
         }
     });
 }
@@ -89,6 +101,7 @@ async function fillSomeProducts() {
                     <div class="col-auto d-none d-lg-block productImg">
                         <img class="bd-placeholder-img" src="/uploads/images/products/0.jpg">
                     </div>
+                    <div id="rate${data[key].id}"></div>
                     <div class="col p-4 d-flex flex-column position-static">
                         <p class="card-text mb-auto productName">${data[key].product}</p>
                         <a class="btn btn-sm btn-outline-light producthref" href="/products/${data[key].id}" role="button">Подробнее &raquo;</a>
@@ -101,5 +114,11 @@ async function fillSomeProducts() {
         } else if ((key + 1) == data.length) {
             $(prodsView).append(`<div class="row">` + item);
         }
+        $(function () {
+            $(`#rate${data[key].id}`).rateYo({
+                rating: data[key].rating,
+                readOnly: true
+            });
+        });
     }
 }

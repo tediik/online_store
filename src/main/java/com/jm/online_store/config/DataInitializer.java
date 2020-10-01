@@ -1,5 +1,6 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Description;
@@ -13,6 +14,7 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
@@ -30,6 +32,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -64,6 +67,7 @@ public class DataInitializer {
     private final BasketService basketService;
     private final StockService stockService;
     private final SharedStockService sharedStockService;
+    private final AddressService addressService;
     private final SentStockService sentStockService;
     private final TaskSettingsService taskSettingsService;
     private final CommonSettingsService commonSettingsService;
@@ -73,7 +77,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct
+//    @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -81,8 +85,9 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
-        sentStockInit();
-        paginationNewsAndStocksInit();
+        addressInit();
+//        sentStockInit();  // метод нужен только для тестирования рассылки акций
+//        paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
         taskSettingsInit();
         commonSettingsInit();
     }
@@ -245,9 +250,316 @@ public class DataInitializer {
                 .archived(false)
                 .build();
 
+        News forthNews = News.builder()
+                .title("Будь в плюсе вместе с нами!")
+                .anons("Мы дарим дополнительный кэшбэк!")
+                .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\">Кэшбэк 3% — стандартные начисления и 7% — за онлайн-оплату!<b></b>" +
+                        "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\"><br></p></h1>")
+                .postingDate(LocalDateTime.now().minusDays(10L))
+                .archived(false)
+                .build();
+
+        News fifthNews = News.builder()
+                .title("Старт продаж Honor30i")
+                .anons("Только у нас эксклюзивный смартфон!")
+                .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\">Супервыгода на HONOR 30i: получи кэшбэк 15% на свой Бонусный счёт<b></b>" +
+                        "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\"><br></p></h1>")
+                .postingDate(LocalDateTime.now().minusDays(1L))
+                .archived(false)
+                .build();
+
+        News sixthNews = News.builder()
+                .title("Отличная новость!")
+                .anons("Online_store открывает продлёнку на скидки!")
+                .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\">Успей воспользоваться лучшим предложением, пока мы чистим стоки.<b></b>" +
+                        "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
+                        " font-size: 16px;\"><br></p></h1>")
+                .postingDate(LocalDateTime.now().plusDays(30L))
+                .archived(false)
+                .build();
+
+        News seventhNews = News.builder()
+                .title("Как проверить ноутбук при покупке?")
+                .anons("9 простых шагов")
+                .fullText("<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " font-family: &quot;PT Sans&quot;, Arial, sans-serif;\"><b style=\"color: rgb(255, 0, 0);" +
+                        " font-size: 1rem;\">Какой бы совершенной ни была сборка, всегда есть маленькая вероятность " +
+                        "заводского брака. Как проверить работоспособность ноутбука при покупке — разбираемся вместе " +
+                        "с online_store.</b><br></p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left:\"" +
+                        " 0px; padding: 0px; color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial,\" +\n" +
+                        " sans-serif;\">1. Визуальный осмотр\n" +
+                        "Покрутите ноутбук в руках. На его корпусе не должно быть царапин и потертостей. Любые " +
+                        "повреждения говорят о том, что устройство хранилось и перевозилось в ненадлежащих условиях. " +
+                        "Взгляните на петли экрана и панели корпуса рядом с ними. Если вы видите следы износа, " +
+                        "портативный компьютер явно побывал в чьих-то руках. Обратите особое внимание на вентиляционные " +
+                        "решетки сбоку или сзади. Если в этих местах материал изменил цвет или деформировался, " +
+                        "устройство перегревалось ранее. Это важно для моделей с дискретной видеокартой.\n" +
+                        "2. Проверка комплектации\n" +
+                        "Если вы покупаете ноутбук в магазине, попросите продавца показать все аксессуары. " +
+                        "Если устройство приобретено онлайн, распаковку нужно снимать на видео, обязательно фиксируя " +
+                        "целостность пломб и наклеек. Все ноутбуки должны комплектоваться зарядным устройством, " +
+                        "гарантийным талоном и инструкцией по эксплуатации. К отдельным компьютерам прилагаются диски " +
+                        "и флешки с дополнительным программным обеспечением, а вместе с геймерскими девайсами — " +
+                        "мышки, наушники или сумки.\n" +
+                        "3. Общая проверка работоспособности\n" +
+                        "Если на ноутбуке установлена операционная система, запустите его. Модели с винчестером " +
+                        "полностью загружаются в течение 30–45 секунд, а с SSD — за 15–20 секунд. Если операционной " +
+                        "системы нет, вам стоит воспользоваться загрузочным образом Windows> 10, заранее записанным " +
+                        "на USB-флешку. А вот продукция Apple всегда поставляется с предустановленной ОС, поэтому " +
+                        "дополнительные инструменты вам не понадобятся.\n" +
+                        "Если флешки с загрузочным образом под рукой не оказалось, проверка значительно сокращается. " +
+                        "Попросите запустить ноутбук. Убедитесь, что лампочки питания и работы накопителя загораются. " +
+                        "Присмотритесь к экрану — на нем не должно быть полос, разноцветных квадратов и других " +
+                        "дефектов. Если в устройстве есть оптический привод, выдвиньте лоток и проверьте, насколько " +
+                        "легко он вставляется обратно.\n" +
+                        "4. Производительность\n" +
+                        "Запустите «тяжелое» приложение — для этих целей подойдет бесплатный графический редактор " +
+                        "GIMP, утилита для монтажа видео Lightworks или медиаплеер с фильмом в формате 4K. Если " +
+                        "ничего перечисленного под рукой нет, запустите онлайн-сервис Google Maps и перейдите в " +
+                        "режим просмотра улиц. Даже при таких нагрузках ноутбук должен быстро реагировать на ваши " +
+                        "команды — зависания и долгие фризы говорят о явных неисправностях. Если в устройстве более " +
+                        "8 ГБ оперативной памяти, попробуйте запустить несколько приложений одновременно. Нажмите " +
+                        "Ctrl+Alt+Del, откройте «диспетчер задач» и посмотрите, насколько загружены системные " +
+                        "ресурсы. Если цифра достигает 100%, девайс уже работает на пределе своих возможностей.\n" +
+                        "5. Экран\n" +
+                        "Заранее подготовьте картинки с однотонной заливкой. Белая позволит проверить однородность " +
+                        "подсветки, зеленая — выявить битые пиксели, а черная — обнаружить светлые пятна. Взгляните " +
+                        "на углы обзора — у матриц IPS и VA они близки к 178°. Это означает, что картинка должна " +
+                        "оставаться четкой независимо от вашего положения — допускается лишь небольшое снижение " +
+                        "цветовой насыщенности. У матриц TN могут наблюдаться сильные искажения при изменении угла " +
+                        "наклона экрана. Это допустимо и не считается дефектом.\n" +
+                        "6. Разрядка батареи\n" +
+                        "Запустите ноутбук и позвольте поработать около 10–15 минут. Без нагрузки аккумулятор " +
+                        "должен разрядиться на 2–5% в зависимости от технических характеристик конкретной модели. " +
+                        "Если цифра превышает 10%, это должно быть поводом для беспокойства. Подключите сетевой " +
+                        "адаптер. Батарея зарядится до 100% в течение следующих 5–10 минут. Если цифра не меняется, " +
+                        "система питания неисправна.\n" +
+                        "7. Накопитель\n" +
+                        "Запишите на флешку несколько файлов общим объемом около 1 ГБ. Попытайтесь скопировать " +
+                        "их на внутренний жесткий диск и обратно. Если в устройстве установлен как винчестер, так " +
+                        "и SSD, перекиньте файлы с одного накопителя на другой. Процесс копирования должен идти " +
+                        "равномерно, без долгих пауз и прерываний.\n" +
+                        "8. Клавиатура\n" +
+                        "Откройте приложение «Блокнот» или другой текстовый редактор. Понажимайте на кнопки и " +
+                        "проследите, как быстро устройство реагирует на ваши действия. Клавиши должны нажиматься " +
+                        "легко и мгновенно возвращаться на место. Сильное сопротивление, залипание внизу, посторонние " +
+                        "звуки и дребезг — повод для беспокойства. Обязательно включите подсветку, если она " +
+                        "предусмотрена в конкретной модели.\n" +
+                        "9. Коммуникации\n" +
+                        "Проверьте порты USB и аудиоразъем. Для этого вам понадобится проводная мышка и гарнитура. " +
+                        "В магазине также можно будет проверить интерфейсы HDMI и Ethernet для трансляции видео и " +
+                        "подключения к Сети. Попытайтесь синхронизировать смартфон с ноутбуком по Bluetooth и " +
+                        "Wi-Fi — во втором случае вам нужно будет выбрать функцию точки доступа в мобильном девайсе.\n" +
+                        "Что в итоге\n" +
+                        "Для проверки ноутбука с Windows или Mac OS своими силами понадобятся:\n" +
+                        "• флешка с видео и картинками\n" +
+                        "• мышка\n" +
+                        "• наушники\n" +
+                        "• портативная версия «тяжелой» программы\n" +
+                        "Если ОС отсутствует, в список придется включить загрузочный образ.\n" +
+                        "В online_store представлен огромный выбор ноутбуков. Также у нас вы найдете все " +
+                        "необходимые аксессуары, чтобы проверить и опробовать в деле новый гаджет.</b><br></p>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "Online-shop желает всем удачи!</p>")
+                .postingDate(LocalDateTime.now().plusDays(30L))
+                .archived(false)
+                .build();
+
+        News eighthNews = News.builder()
+                .title("Как выбрать телевизор")
+                .anons("На что обращать вниание при покупке TV")
+                .fullText("<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " font-family: &quot;PT Sans&quot;, Arial, sans-serif;\"><b style=\"color: rgb(255, 0, 0);" +
+                        " font-size: 1rem;\">За свою почти вековую историю телевизор стал незаменимым " +
+                        "многофункциональным устройством. Он магическим образом собирает у экрана всю семью, " +
+                        "может считывать информацию с различных носителей и синхронизироваться со смартфоном, " +
+                        "подключаться к интернету и управлять умным домом. Online_store подскажет, на что " +
+                        "обратить внимание при покупке телевизора.</b><br></p><p style=\"margin-right: 0px; " +
+                        "margin-bottom: 1em; margin-left:\" +\n\" 0px; padding: 0px; color: rgb(0, 0, 0); font-family: " +
+                        "&quot;PT Sans&quot;, Arial,\" sans-serif;\">" +
+                        "1. Соотношение размера и разрешения — от этого зависит качество изображения. " +
+                        "Для телевизоров с диагональю от 24 до 32 дюймов оптимальный формат картинки — " +
+                        "Full HD (1920×1080), от 40 до 65 дюймов — UHD 4K (3840×2160).\n" +
+                        "\n" +
+                        "2. Wi-Fi и Smart TV. Если вы планируете использовать телевизор как основной " +
+                        "мультимедийный центр, без «умных» функций не обойтись. Также выбирайте модели с " +
+                        "подключением к интернету через сети Wi-Fi a/c. Они стабильнее и быстрее, чем предыдущие " +
+                        "стандарты — например, Wi-Fi n.\n" +
+                        "\n" +
+                        "3. Операционная система. Основные программные платформы — Android TV (самый большой выбор " +
+                        "приложений), Samsung Tizen (предельно простой интерфейс), LG WebOS (интеллектуальный " +
+                        "подбор контента).\n" +
+                        "\n" +
+                        "4. Технология HDR. Расширенный динамический диапазон создает эффект глубины картинки " +
+                        "и делает спецэффекты суперреалистичными.\n" +
+                        "\n" +
+                        "5. Дополнительные возможности:\n" +
+                        "\n" +
+                        "• поиск контента, переключение каналов и регулировка громкости голосовым управлением\n" +
+                        "\n" +
+                        "• синхронизация с умным домом (полный контроль над работой кондиционера, стиральной машины, " +
+                        "теплого пола и видеодомофона) с помощью пульта от телевизора\n" +
+                        "\n" +
+                        "• экран на основе квантовых точек для расширения цветовой гаммы" +
+                        "В online_store представлен огромный выбор телевизоров. Также у нас вы найдете все " +
+                        "необходимые аксессуары, чтобы в полной мере наслаждаться просмотром телепередач.</b><br></p>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "Online-shop желает всем удачи!</p>")
+                .postingDate(LocalDateTime.now().plusDays(30L))
+                .archived(false)
+                .build();
+
+        News ninthNews = News.builder()
+                .title("Выбор пароварки")
+                .anons("Или технология умного приготовления пищи")
+                .fullText("<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " font-family: &quot;PT Sans&quot;, Arial, sans-serif;\"><b style=\"color: rgb(255, 0, 0);" +
+                        " font-size: 1rem;\">Самый полезный способ приготовления пищи — на пару. " +
+                        "Продукты минимально теряют пищевую ценность, сохраняя микроэлементы и витамины. " +
+                        "Для этого необходим особый прибор — пароварка.\n" +
+                        "Online_store подскажет, на что обратить внимание при выборе.\n" +
+                        "</b><br></p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left:\" +\n" +
+                        " 0px; padding: 0px; color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial,\" +\n" +
+                        " sans-serif;\">Тип управления\n" +
+                        "Механические пароварки\n" +
+                        "Устройства такого типа управляются поворотным селектором. Это ограничивает количество " +
+                        "доступных функций — остаются температура и время приготовления, но позволяет выбрать " +
+                        "точные значения.<br>\n" +
+                        "Электронные пароварки\n" +
+                        "В них встроен дисплей для дополнительного контроля над процессом. Управление происходит " +
+                        "при помощи кнопок или сенсорной панели. Есть дополнительные функции — отложенный старт и " +
+                        "программы приготовления отдельных блюд — рыбы, птицы и даже выпечки.<br>\n" +
+                        "Мощность\n" +
+                        "От мощности зависит скорость превращения воды в пар и, соответственно, время, необходимое " +
+                        "для приготовления пищи. Чем мощнее устройство, тем быстрее оно будет работать с большим " +
+                        "числом отсеков. Большинство пароварок обладают мощностью до 1000 Вт — хватит для небольшой " +
+                        "семьи из 2-4 человек. Для большой семьи, когда еда готовится сразу в 3-4 отсеках, стоит " +
+                        "поискать пароварку мощнее: 1500-2000 Вт, а то и более 2000 Вт.<br>\n" +
+                        "Объем\n" +
+                        "Каждый прибор состоит из одного или нескольких лотков для продуктов, со своей емкостью. " +
+                        "Чем больше лотков, тем больше будет суммарный объем пароварки. Как правило, в характеристиках " +
+                        "указывается именно общая сумма — менее 6 литров, до 10 литров и даже более 10 литров. Чем " +
+                        "больше надо готовить за один раз, тем более объемную пароварку стоит выбрать. Количество " +
+                        "ярусов пропорционально объему продуктов, готовящихся одновременно. Есть пароварки с одним " +
+                        "ярусом, двумя, тремя, пятью или даже больше.\n" +
+                        "В пароварках с большим количеством чаш обращайте внимание на число поддонов для сока. Если " +
+                        "он один, блюдо, готовящееся в нижней чаше, может собирать запахи с верхних. Если для каждой " +
+                        "чаши предусмотрен свой поддон, этого не произойдет.<br>\n" +
+                        "Материал чаши\n" +
+                        "Пластиковые лотки\n" +
+                        "Мнение, что они позволяют следить за процессом приготовления, не снимая крышку, — иллюзия. " +
+                        "Прозрачные стенки достаточно быстро запотевают. У пластиковых чаш другое преимущество — " +
+                        "они легче и гораздо быстрее отмываются. Но более хрупкие.\n" +
+                        "Чаши из нержавеющей стали\n" +
+                        "Такие устройства сложнее мыть, несмотря на антипригарное покрытие. Но они надежнее и лучше " +
+                        "подходят для тушения мяса или птицы в собственном соку.\n" +
+                        "Функция отложенного старта позволяет приготовить блюдо к определенному времени — закинули " +
+                        "продукты с вечера, получили блюдо утром.<br>\n" +
+                        "Дополнительные приспособления\n" +
+                        "Некоторые пароварки поставляются со специальной чашей для приготовления риса — подходит " +
+                        "и для других круп. Ее можно купить отдельно, главное — соответствие ее размера и лотка " +
+                        "выбранной пароварки. Существуют пароварки с углублениями для варки яиц.\n" +
+                        "У нас можно приобрести пароварку любого из представленных типов, в том числе купить в " +
+                        "кредит или с использованием бонусных карт. В online_store представлен огромный выбор " +
+                        "пароварок. Выбирайте с учетом представленных рекомендаций. </b><br></p>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "Online-shop желает всем удачи!</p>")
+                .postingDate(LocalDateTime.now().plusDays(30L))
+                .archived(false)
+                .build();
+
+        News tenthNews = News.builder()
+                .title("Помощники в путешествии")
+                .anons("Что взять с собой в поездку на автомобиле")
+                .fullText("<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " font-family: &quot;PT Sans&quot;, Arial, sans-serif;\"><b style=\"color: rgb(255, 0, 0);" +
+                        " font-size: 1rem;\">Свобода передвижения, неизведанные дали, неограниченный объем багажа — " +
+                        "многие обожают путешествовать машиной! Однако легкомысленные сборы могут привести к " +
+                        "сложностям в дороге. Поэтому первый шаг к идеальной автомобильной поездке — составить " +
+                        "чек-лист необходимых вещей.\n" +
+                        "\n" +
+                        "Какие гаджеты взять с собой и как подготовиться к поездке — подскажет online_store.</b><br>" +
+                        "</p><p style=\"margin-right: 0px; \" +\n" +
+                        "margin-bottom: 1em; margin-left:\" +\n\" 0px; padding: 0px; color: rgb(0, 0, 0); " +
+                        "font-family: \" +\n" +
+                        "&quot;PT Sans&quot;, Arial,\" sans-serif;\">" +
+                        "Путеводитель\n" +
+                        "Бумажные карты — очередной проезд нужного поворота, лишние 50 километров по автобану и " +
+                        "потраченное время на поиски верного пути. Есть вещи, сэкономив на которых придется " +
+                        "заплатить слишком высокую цену. Поэтому заранее позаботьтесь о вашем проводнике — " +
+                        "GPS-навигаторе, чтобы избежать пробки, ремонтные работы и не проглядеть дорожные знаки.\n" +
+                        "Подручные инструменты\n" +
+                        "Малейший ухаб на дороге может спровоцировать поломку машины или прокол колеса. Представьте: " +
+                        "на улице темно, ближайшая цивилизация и СТО в 70 километрах, а связь предательски «не ловит». " +
+                        "Никто не застрахован от такого случая и правильный набор инструментов в багажнике будет кстати.\n" +
+                        "Заранее позаботьтесь о запасной шине и домкрате — так вы легко замените колесо. За пределами " +
+                        "крупных городов сложно найти услуги по подкачке шин — электрический автомобильный насос в " +
+                        "багажнике решит эту проблему. Также обзаведитесь базовым набором инструментов в виде " +
+                        "буксировочного троса, разветвителя для прикуривателя, автомобильного инвертора, знака " +
+                        "аварийной остановки, фонарика, ключей и отверток. Вы никогда не знаете, в какой ситуации " +
+                        "они спасут вас, ваше время и нервы!\n" +
+                        "Мобильные девайсы\n" +
+                        "«Как банально» — возможно, подумаете вы. Однако мониторить прогноз погоды и симпатичные " +
+                        "локации невозможно без смартфона. Не забывайте: «карманное турагентство» выполняет десяток " +
+                        "дел одновременно, поэтому его батарея может разрядиться за несколько часов. Просто не " +
+                        "забудьте Power Bank и USB-переходник: телефон не «умрет» в самый неподходящий момент! " +
+                        "Чтобы запечатлеть новые места и потрясающие виды, возьмите палку для селфи или фотоаппарат, " +
+                        "желательно со специальной сумкой. Фотографируйте сколько угодно — место найдется, особенно " +
+                        "если будет дополнительная карта памяти или внешний жесткий диск.\n" +
+                        "Планируете поездку с детьми? Без лишних слов: планшет с мультфильмами спасет вас.\n" +
+                        "Развлечения и активный отдых\n" +
+                        "Как развлечь ребенка в дороге помимо гаджетов? Помогут любимые игрушки и настольные игры. " +
+                        "Главное, не забудьте, — в поездке с малышами детское автокресло — must-have.\n" +
+                        "Мечтаете после длительного переезда размяться и насладиться живописными пейзажами? " +
+                        "Мы точно знаем, как это совместить. Любители велоспорта, эта информация для вас! Все, что " +
+                        "вам нужно — повесить велокрепление на крышу автомобиля.\n" +
+                        "Вкусная и правильная пища\n" +
+                        "Согласитесь, в дороге все вкуснее! Можно захватить лапшу быстрого приготовления и консервы. " +
+                        "Однако после таких приемов пищи просьбы остановить автотранспорт участятся. Правильное " +
+                        "питание — залог хорошего самочувствия. Продумайте рацион заранее и присмотрите портативный " +
+                        "холодильник. В нем пару дней легко продержатся запеченная куриная грудка или индейка, а чуть " +
+                        "дольше — вкусные домашние бутерброды с вяленым мясом и сыром. Для любителей чая пригодится " +
+                        "термос или дорожный чайник. И конечно, кофе в дорогу в любимой термокружке!\n" +
+                        "Уже решили, куда отправитесь на автомобиле? Тогда обязательно посмотрите, каких товаров в " +
+                        "дорогу вам не хватает. Заходите в online_store, покупайте и путешествуйте с комфортом!</b><br></p>" +
+                        "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
+                        " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
+                        "Online-shop желает всем удачи!</p>")
+                .postingDate(LocalDateTime.now().plusDays(30L))
+                .archived(false)
+                .build();
+
+
         newsService.save(firstNews);
         newsService.save(secondNews);
         newsService.save(thirdNews);
+        newsService.save(forthNews);
+        newsService.save(fifthNews);
+        newsService.save(sixthNews);
+        newsService.save(seventhNews);
+        newsService.save(eighthNews);
+        newsService.save(ninthNews);
+        newsService.save(tenthNews);
     }
 
     /**
@@ -269,6 +581,9 @@ public class DataInitializer {
         Categories category12 = new Categories("Оргтехника", "Офис и сеть");
         Categories category13 = new Categories("Роутеры и сетевое оборудование", "Офис и сеть");
         Categories category14 = new Categories("Техника для кухни", "Бытовая техника");
+        Categories category15 = new Categories("Техника для уборки", "Бытовая техника");
+        Categories category16 = new Categories("Стиральные и сушильные машины", "Бытовая техника");
+        Categories category17 = new Categories("Климатическая техника", "Бытовая техника");
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
@@ -286,6 +601,18 @@ public class DataInitializer {
         Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer");
         Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, "Computer");
 
+        Product product13 = new Product("Roomba 698", 299.9, 6, 4.3, "Cleaning");
+        Product product14 = new Product("Bosch BWD41720", 329.9, 8, 4.1, "Cleaning");
+        Product product15 = new Product("Samsung SC4131", 69.9, 28, 4.6, "Cleaning");
+
+        Product product16 = new Product("Samsung WW60K40G00W", 549.9, 3, 4.8, "Washing");
+        Product product17 = new Product("Hotpoint-Ariston BI WDHG 75148 EU", 999.9, 2, 4.3, "Washing");
+        Product product18 = new Product("Whirlpool TDLR 60111", 499.9, 6, 3.9, "Washing");
+
+        Product product19 = new Product("Hotpoint-Ariston SPOWHA 409-K", 399.9, 2, 3.8, "Air_conditioner");
+        Product product20 = new Product("LG P09EP2", 529.9, 2, 4.1, "Air_conditioner");
+        Product product21 = new Product("LG Mega Plus P12EP1", 584.9, 2, 4.7, "Air_conditioner");
+
         Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
         Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
         Description description3 = new Description("99966732", "Samsung", 3, "550x27x368", "white", 1.1, "some additional info here");
@@ -295,6 +622,18 @@ public class DataInitializer {
         Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim", 512, 512, "1920x960", true, "5.0");
         Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 256, "1920x960", false, "4.0");
         Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 128, "1024x480", true, "5.0");
+        Description description10 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
+        Description description11 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
+        Description description12 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
+        Description description13 = new Description("XYZ270011101230600001", "iRobot", 2, "300x75x300", "silver", 3.0, "Standard suction for an every day clean. Provides personalized cleaning suggestions.");
+        Description description14 = new Description("CFE867594316856743201", "Bosch", 1, "360x350x490", "violet", 10.9, "Моющий пылесос Bosch BWD41720 — надежное устройство, позволяющее поддерживать чистоту напольных покрытий любого типа.");
+        Description description15 = new Description("08UV8NEM703511M", "Samsung", 1, "365x230x275", "blue", 3.8, "Пылесос Samsung SC4131 используется для сухой уборки многокомнатных квартир и жилых домов.");
+        Description description16 = new Description("X54355543455", "Samsung", 2, "850x600x450", "white", 54.0, "Позволяет бережно очищать от загрязнений одежду и текстильные изделия из хлопка, льна, синтетических волокон и деликатных тканей");
+        Description description17 = new Description("A886UW16575632", "Whirlpool Corp.", 1, "815x595x540", "white", 65.0, "Встраиваемая стиральная машина способна за один цикл постирать и высушить до 7 кг вещей", 1024, 256, "1920x960", false, "4.0");
+        Description description18 = new Description("A88563902273", "Whirlpool Corp.", 1, "900x420x600", "white", 49.0, "Автоматически определяется тип белья, расход воды и моющих средств. Устройство бережно относится к ткани и обеспечивает превосходный результат стирки.");
+        Description description19 = new Description("AHP4388843455", "Whirlpool Corp.", 1, "270x835x210", "white", 6.5, "Кондиционер Hotpoint-Ariston SPOWHA 409-K используется для создания благоприятного микроклимата в помещениях площадью 27 м²");
+        Description description20 = new Description("L856XZ11564632", "LG", 1, "265x756x184", "white", 7.4, "Кондиционер LG P09EP2 используется для установки оптимальной температуры в помещении дома или офиса площадью 20 м²");
+        Description description21 = new Description("L014ZZ10018974", "LG", 1, "302x837x189; 483x717x230", "white", 8.7, "Модель LG Mega Plus P12EP1 будет оптимальна для установки в помещении площадью 35 м²");
 
         product1.setDescriptions(description1);
         product2.setDescriptions(description2);
@@ -305,16 +644,29 @@ public class DataInitializer {
         product7.setDescriptions(description7);
         product8.setDescriptions(description8);
         product9.setDescriptions(description9);
-        product10.setDescriptions(description1);
-        product11.setDescriptions(description1);
-        product12.setDescriptions(description1);
+        product10.setDescriptions(description10);
+        product11.setDescriptions(description11);
+        product12.setDescriptions(description12);
+        product13.setDescriptions(description13);
+        product14.setDescriptions(description14);
+        product15.setDescriptions(description15);
+        product16.setDescriptions(description16);
+        product17.setDescriptions(description17);
+        product18.setDescriptions(description18);
+        product18.setDescriptions(description19);
+        product18.setDescriptions(description20);
+        product18.setDescriptions(description21);
 
         category1.setProducts(Arrays.asList(product1, product2, product3, product10, product11, product12));
         category2.setProducts(Arrays.asList(product4, product5, product6));
         category3.setProducts(Arrays.asList(product7, product8, product9));
+        category15.setProducts(Arrays.asList(product13, product14, product15));
+        category16.setProducts(Arrays.asList(product16, product17, product18));
+        category17.setProducts(Arrays.asList(product19, product20, product21));
 
         categoriesService.saveAll(Arrays.asList(category1, category2, category3,
-                category4, category5, category6, category7, category8, category9, category10, category11, category12, category13, category14));
+                category4, category5, category6, category7, category8, category9, category10, category11,
+                category12, category13, category14, category15, category16, category17));
     }
 
     /**
@@ -330,12 +682,22 @@ public class DataInitializer {
         productsIds.add(productService.findProductByName("XIAOMI-Mi10").get().getId());
         productsIds.add(productService.findProductByName("LG-2145").get().getId());
         productsIds.add(productService.findProductByName("Apple-10").get().getId());
+        productsIds.add(productService.findProductByName("Roomba 698").get().getId());
+        productsIds.add(productService.findProductByName("Bosch BWD41720").get().getId());
+        productsIds.add(productService.findProductByName("Hotpoint-Ariston BI WDHG 75148 EU").get().getId());
+        productsIds.add(productService.findProductByName("LG Mega Plus P12EP1").get().getId());
+        productsIds.add(productService.findProductByName("Hotpoint-Ariston SPOWHA 409-K").get().getId());
 
         List<Order> orders = new ArrayList<>();
         orders.add(new Order(LocalDateTime.of(2019, 12, 31, 22, 10), Order.Status.COMPLETED));
         orders.add(new Order(LocalDateTime.of(2020, 1, 23, 13, 37), Order.Status.COMPLETED));
         orders.add(new Order(LocalDateTime.of(2020, 3, 10, 16, 51), Order.Status.INCARTS));
         orders.add(new Order(LocalDateTime.of(2020, 6, 13, 15, 3), Order.Status.CANCELED));
+        orders.add(new Order(LocalDateTime.of(2020, 7, 18, 16, 18), Order.Status.COMPLETED));
+        orders.add(new Order(LocalDateTime.of(2020, 7, 24, 11, 9), Order.Status.CANCELED));
+        orders.add(new Order(LocalDateTime.of(2020, 8, 3, 15, 43), Order.Status.COMPLETED));
+        orders.add(new Order(LocalDateTime.of(2020, 8, 18, 17, 33), Order.Status.CANCELED));
+        orders.add(new Order(LocalDateTime.of(2020, 9, 16, 10, 21), Order.Status.INCARTS));
         orders.add(new Order(LocalDateTime.now(), Order.Status.INCARTS));
 
         List<Long> ordersIds = new ArrayList<>();
@@ -355,7 +717,12 @@ public class DataInitializer {
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
 
         productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
-
+        productInOrderService.addToOrder(productsIds.get(6), ordersIds.get(5), 1);
+        productInOrderService.addToOrder(productsIds.get(6), ordersIds.get(6), 4);
+        productInOrderService.addToOrder(productsIds.get(7), ordersIds.get(7), 1);
+        productInOrderService.addToOrder(productsIds.get(8), ordersIds.get(8), 1);
+        productInOrderService.addToOrder(productsIds.get(9), ordersIds.get(9), 2);
+        productInOrderService.addToOrder(productsIds.get(10), ordersIds.get(9), 1);
         customer.setOrders(Set.copyOf(orderService.findAll()));
 
         userService.updateUser(customer);
@@ -366,7 +733,7 @@ public class DataInitializer {
      */
     private void stockInit() {
         Stock firstStock = Stock.builder()
-                .startDate(LocalDate.now().plusDays(2))
+                .startDate(LocalDate.now().plusDays(2L))
                 .endDate(LocalDate.now().plusDays(12L))
                 .stockTitle("Команда Online-Store сообщает о начале акции – «Рассрочка или бонусы! HD-" +
                         " и UltraHD-телевизоры Samsung»")
@@ -524,9 +891,44 @@ public class DataInitializer {
                         "&nbsp;– выбор за вами!</span>")
                 .build();
 
+        Stock forthStock = Stock.builder()
+                .startDate(LocalDate.now().minusDays(3L))
+                .endDate(LocalDate.now().plusDays(10L))
+                .stockTitle("«Рассрочка или бонусы!")
+                .stockText("Стиральные машины Whirlpool помогут привести в порядок ваши вещи из различных тканей. " +
+                        " Эта техника предлагает множество программ для деликатной и эффективной стирки и сушки." +
+                        " Оформите беспроцентный кредит на бытовую технику Whirlpool или получите 10% от стоимости" +
+                        " покупки на бонусную карту – выбор за вами!")
+                .build();
+
+        Stock fifthStock = Stock.builder()
+                .startDate(LocalDate.now().minusDays(10L))
+                .endDate(LocalDate.now().plusDays(10L))
+                .stockTitle("«3 года защиты за 990")
+                .stockText("Самое время обновить компьютер! Выбери подходящую модель с Windows 10 и добавь" +
+                        " надёжную защиту от вирусов Kaspersky Internet Security на три года всего за 990 рублей." +
+                        " Закажи компьютер с Windows 10. Забери товар и получи промокод на Kaspersky Internet Security" +
+                        " за 990 рублей на свой Email и в личный кабинет в течение трёх дней после получения заказа." +
+                        " Обязательно используй Бонусную карту – её можно оформить прямо на сайте.")
+                .build();
+
+        Stock sixthStock = Stock.builder()
+                .startDate(LocalDate.now().minusDays(2L))
+                .endDate(LocalDate.now().plusDays(30L))
+                .stockTitle("«Требуй скидку!")
+                .stockText("До 31 декабря требуй и получай скидку на смартфоны, телевизоры" +
+                        " и бытовую технику из акционного списка." +
+                        " Активируй свою скидку на странице товара." +
+                        " Товары из акционного списка отмечены специальным знаком \"Требуй скидку!\" на сайте." +
+                        " На товары из акционного перечня распространяются правила программы лояльности.")
+                .build();
+
         stockService.addStock(firstStock);
         stockService.addStock(secondStock);
         stockService.addStock(thirdStock);
+        stockService.addStock(forthStock);
+        stockService.addStock(fifthStock);
+        stockService.addStock(sixthStock);
     }
 
     public void sharedStockInit() {
@@ -603,7 +1005,26 @@ public class DataInitializer {
             stockService.addStock(stock);
         }
     }
+    /**
+     * Метод первичной инициалзации адресов, 2 адреса для магазина и 1 адрес прикрепляется к заказу
+     */
+    private void addressInit() {
+        Address address1 = new Address("420077","Татарстан","Казань","Революционная","25",true);
+        Address address2 = new Address("420078","Московская область","Москва","Ленина","126",true);
+        Address address3 = new Address("420079","Тамбовская область","Тамбов","Запорожская","11",false);
+        Address address4 = new Address("420080","Тамбовская область","Тамбов","Запорожская","12",false);
+        addressService.addAddress(address1);
+        addressService.addAddress(address2);
+        addressService.addAddress(address3);
+        addressService.addAddress(address4);
 
+        Set<Address> userAddresses = new HashSet<>();
+        userAddresses.add(addressService.findAddressById(3L).get());
+        userAddresses.add(addressService.findAddressById(4L).get());
+        User userToUpdate = userService.findByEmail("customer@mail.ru").get();
+        userToUpdate.setUserAddresses(userAddresses);
+        userService.updateUser(userToUpdate);
+    }
     /**
      * ini method for email stock distribution settings.
      * creates task for stock distribution with status not active

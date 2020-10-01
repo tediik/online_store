@@ -1,5 +1,7 @@
 $(document).ready(function() {
     $(document).delegate("#buttonChangeMail", "click", changeMail);
+    $(document).delegate("#new_password", "keyup", checkPassword);
+    $("#submitNewPassword").attr('disabled', true);
 });
 
 function changeMail() {
@@ -31,4 +33,12 @@ function close() {
 function successChangePass() {
     toastr.success('Пароль успешно изменен!', {timeOut: 5000})
 
+}
+
+function checkPassword(){
+    regularExpression = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}");
+    newPassword = document.getElementById("new_password").value;
+    if(regularExpression.test(newPassword)) {
+        $("#submitNewPassword").attr('disabled', false);
+    }
 }
