@@ -1,5 +1,3 @@
-let productSearchByNameUrl = '/api/products/searchByName/'
-let productSearchByDescription = '/api/products/searchByDescription'
 $(document).ready(function ($) {
     $("#openNewRegistrationModal").on('hidden.bs.modal', function (e) {
         $("#openNewRegistrationModal form")[0].reset();//reset modal fields
@@ -39,25 +37,9 @@ document.getElementById('mainPageSearchButton').addEventListener('click', handle
  * function that handles search button in headder of main page
  */
 function handleSearchButton() {
-    fetch(productSearchByNameUrl + $('#mainPageSearchInput').val())
-        .then(function (response) {
-            if (response.ok) {
-                response.json().then(searchResult => fillSomeProducts(searchResult))
-            } else {
-                console.log('error no: ' + response.status)
-                fillSomeProducts("error")
-            }
-        })
-        .catch(error => console.log(error))
-    $('#headerForSomeProductsView').text('Результаты поиска')
-}
-//TODO сделать 2 фетча
-function replaceHandleSearchButton() {
-    Promise.all([
-        fetch(productSearchByNameUrl + $('#mainPageSearchInput').val()),
-        fetch(productSearchByDescription + $('#mainPageSearchInput').val())
-
-    ]).then(responseByName => fillSomeProducts())
+    if ($('#mainPageSearchInput').val() !== '') {
+        window.location.href = "/search/" + $('#mainPageSearchInput').val()
+    }
 }
 
 function getCurrent() {
