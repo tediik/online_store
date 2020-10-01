@@ -43,14 +43,15 @@ async function fillBreadcrumb(data) {
             }
         }
 
-    // поиск наименования категории на латинице
-    let subcategoryOfProductInLatin = categoriesWithLatin[categoryOfProduct][subcategoryOfProduct];
-
     // формирование навигационной цепочки
     $(breadcr).append(`<li class="breadcrumb-item"><a href="/">Главная</a></li>`);
-    $(breadcr).append(`<li class="breadcrumb-item"><a>${categoryOfProduct}</a></li>`);
-    $(breadcr).append(`<li class="breadcrumb-item"><a href="/categories/${subcategoryOfProductInLatin}">${subcategoryOfProduct}</a></li>`);
-    $(breadcr).append(`<li class="breadcrumb-item"><a>${data.product}</a></li>`);
+
+    // поиск наименования категории на латинице
+    if (categoryOfProduct != undefined) {
+        let subcategoryOfProductInLatin = categoriesWithLatin[categoryOfProduct][subcategoryOfProduct];
+        $(breadcr).append(`<li class="breadcrumb-item"><a>${categoryOfProduct}</a></li>`);
+        $(breadcr).append(`<li class="breadcrumb-item"><a href="/categories/${subcategoryOfProductInLatin}">${subcategoryOfProduct}</a></li>`);
+    }
 }
 
 /**
@@ -60,11 +61,11 @@ async function fillBreadcrumb(data) {
  * @returns {Promise<void>}
  */
 async function fillAboutProduct(data) {
+    console.log(data);
     let productName = document.getElementById('productName');
     $(productName).append(`<br><h2 class="font-weight-normal">${data.product}</h2>`);
-    $(productName).append(`<br><h5 class="font-weight-normal">Оценка товара: ${data.rating} из 5</h5>`);
     $("#favouriteContainer").append(`<div id="favoriteLabel"><h5 class="font-weight-normal my-2">&ensp;В избранное </h5></div>
-    <svg width="640" height="480" viewbox="0 0 640 480" id="heartSvg">
+    <svg width="640" height="480" viewbox="0 0 640 480" id="heartSvg" class="heartSvg">
         <path id="heart"
     d="m219.28949,21.827393c-66.240005,0 -119.999954,53.76001 -119.999954,
     120c0,134.755524 135.933151,170.08728 228.562454,303.308044c87.574219,
@@ -73,11 +74,21 @@ async function fillAboutProduct(data) {
         69.1875c-19.160797,-40.817078 -60.514496,-69.1875 -108.5625,-69.1875z"
     onclick="addToFavourite()"/>
         </svg>`);
-
+    if(data.favourite) {
+        $("#heart").toggleClass("filled");
+        $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
+    }
+    $("#rateNumber").empty().append(`<h5>${data.rating}<h5>`)
+    rateInitialize(data.rating)
 
     // заполнение вкладки с описанием продукта
     let description = document.getElementById('text-description');
-    $(description).append(`${data.descriptions.information}`);
+    if (data.descriptions == null) {
+        $(description).append("Извините, описание пока не заполнено.");
+    } else {
+        $(description).append(`${data.descriptions.information}`);
+    }
+
 
     // заполнение вкладки с характеристиками продукта
     let specifications = document.getElementById('text-specifications');
@@ -89,7 +100,13 @@ async function fillAboutProduct(data) {
             $(specifications).append(content);
         }
     }
-}function addToFavourite() {
+
+}
+
+/**
+ * Функиця добавления/удаления товара из избранного
+ */
+function addToFavourite() {
     if($("path").is('[class="filled"]')) {
         fetch("/customer/favouritesGoods", {
             method: "DELETE",
@@ -97,13 +114,13 @@ async function fillAboutProduct(data) {
             headers: {"Content-Type": "application/json; charset=utf-8"}
         }).then(function (response) {
             if(response.ok) {
+                $("#heart").toggleClass("filled");
+                $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;В избранное</h5>`)
                 toastr.success("Товар успешно удалён из избранного");
             } else {
-                toastr.error("Товар успешно удалён из избранного");
+                toastr.error("Авторизуйтесь/зарегестрируйтесь");
             }
         })
-        $("#heart").toggleClass("filled");
-        $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;В избранное</h5>`)
     } else {
         fetch("/customer/favouritesGoods", {
             method: "PUT",
@@ -111,12 +128,52 @@ async function fillAboutProduct(data) {
             headers: {"Content-Type": "application/json; charset=utf-8"}
         }).then(function (response) {
             if(response.ok) {
+                $("#heart").toggleClass("filled");
+                $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
                 toastr.success("Товар успешно добавлен в избранное");
             } else {
-                toastr.error("Не удалось добавить в избранное");
+                toastr.error("Авторизуйтесь/зарегестрируйтесь");
             }
         })
-        $("#heart").toggleClass("filled");
-        $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
     }
+}
+
+/**
+ * Отрисовка звёзд рейтинга
+ * @param rating текущий рейтинг товара
+ */
+function rateInitialize(rating) {
+    $("#rate").rateYo({
+        onSet: function (rating) {
+            newRateForProduct(rating);
+        },
+        rating: rating,
+        halfStar: true
+    });
+}
+
+/**
+ * Вычисление рейтинга и добавление его в базу к товару
+ * @param rating оценка товара текущим пользователем
+ */
+function newRateForProduct(rating) {
+    $("#rate").rateYo("destroy");
+    let res;
+    fetch(`/api/products/rating?id=${productIdFromPath}&rating=${rating}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json;charset=utf-8'}
+    }).then(function (response) {
+        if (response.ok) {
+            res = response.json();
+            res.then(function (value) {
+                $("#rateNumber").empty().append(`<h5>${value.toFixed(2)}<h5>`)
+                toastr.success('Ваш голос учтён', {timeOut: 5000})
+                close();
+                rateInitialize(value.toFixed(2))
+            })
+        } else {
+            toastr.error('Ваш голос не учтён', {timeOut: 5000})
+            close();
+        }
+    })
 }

@@ -123,13 +123,13 @@ html {
     color: #2b2b2b;
     border-bottom-color: #2b2b2b;
 }
-svg{
+svg.heartSvg{
     display: block;
     width: 50px;
     height: auto;
 }
 
-*{
+.heartSvg{
     fill:transparent;
     stroke:#f00;
     stroke-width:6px;
@@ -137,6 +137,6 @@ svg{
     transition:fill .3s;
 }
 
-*.filled{
+path.filled{
     fill:#f00;
 }

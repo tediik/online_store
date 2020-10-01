@@ -1,14 +1,18 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -27,12 +31,12 @@ public class ProductRestController {
      * Ищет продукт в БД по id из пути
      *
      * @param id продукта
-     * @return сущность Product, если продукт с таким id существует
+     * @return сущность ProductDto, если продукт с таким id существует
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
-        ResponseEntity<Product>[] answer = new ResponseEntity[1];
-        productService.findProductById(id).ifPresentOrElse(
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        ResponseEntity<ProductDto>[] answer = new ResponseEntity[1];
+        productService.getProductDto(id, user).ifPresentOrElse(
                 value -> answer[0] = ResponseEntity.ok(value), () -> answer[0] = ResponseEntity.notFound().build());
         return answer[0];
     }
@@ -48,4 +52,16 @@ public class ProductRestController {
         return ResponseEntity.ok(productService.getProductPriceChange(id));
     }
 
+    /**
+     *контроллер для получения обновлённого рейтинга товара
+     * @param rating оценка пользователя
+     * @param id id товара
+     * @param user авторизованный пользователь
+     */
+    @PostMapping("/rating")
+    public ResponseEntity getNewRating(@RequestParam(value = "rating", required = false) float rating,
+                                       @RequestParam(value = "id", required = false) Long id,
+                                       @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(productService.changeProductRating(id, rating, user));
+    }
 }
