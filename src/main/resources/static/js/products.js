@@ -168,6 +168,31 @@ function handleAddBtn() {
         }
     )
 }
+/**
+ * Добавление товара из файла
+ */
+
+$('#inputFileSubmit').click(importProductsFromFile)
+function importProductsFromFile(){
+
+    let  fileData = new FormData();
+    fileData.append('file', $('#file')[0].files[0]);
+
+    $.ajax({
+        url: '/rest/products/uploadProductsFile',
+        data: fileData,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(data){
+            getAllProducts();
+            toastr.info('Импорт товаров завершен!', {timeOut: 5000})
+        },
+        error: function () {
+            alert("Некорретный путь к файлу!")
+        }
+    });
+}
 
 /**
  * функция обработки нажатия кнопки accept в модальном окне

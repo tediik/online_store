@@ -102,6 +102,50 @@
                         <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
                     </div>
                 </nav>
+
+                <!-- Модалка добовления из файла -->
+
+                <div class="modal fade" id="newProductImportModal" data-backdrop="static" tabindex="-1"
+                     role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productImportModalLabel">Добавить товар</h5>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="container-fluid col-sm-12">
+                                    <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
+                                        <label for="file">Выберите файл:</label>
+                                        <input id="file" type="file" name="file">
+                                        <br />
+                                        <br />
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer actions">
+                                <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">
+                                    Close
+                                </button>
+
+                                <button id="inputFileSubmit" type="submit"
+                                        class="btn btn-primary">
+                                    Загрузить данные из файла
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <!--                main tab -->
@@ -128,6 +172,10 @@
                                         <input type="number" id="addAmount" name="amount" placeholder="Количество" class="form-control">
                                     </div>
                                     <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Add</button>
+                                    <button type="button" class="btn btn-primary" data-toggle='modal'
+                                            data-target='#newProductImportModal'>
+                                        Загрузить товары из файла
+                                    </button>
                                 </div>
                             </div>
                         </form>
