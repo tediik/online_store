@@ -1,7 +1,6 @@
 /**
  * Declaration of global variables
  */
-
 let myHeaders = new Headers()
 let newsApiUrl = "/api/manager/news"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
