@@ -1,7 +1,6 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.ProductNotFoundException;
-import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
@@ -31,7 +30,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.ProviderNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
@@ -255,8 +253,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Method that finds search string in Product name if there are no such products, throws
-     * {@link ProviderNotFoundException} with message "No products were found for this search query."
+     * Method that finds search string in Product name.
      *
      * @param searchString - {@link String} search string
      * @return - list of {@link Product} with search result
@@ -266,6 +263,12 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findProductByProductContains(searchString);
     }
 
+    /**
+     * Method that finds search string in Product description.
+     *
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
     @Override
     public List<Product> findProductsByDescriptionContains(String searchString) {
         return productRepository.findProductByDescriptionsContains(searchString);
