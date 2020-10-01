@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.service.interf.ProductService;
@@ -31,6 +30,7 @@ public class ProductRestController {
      * Ищет продукт в БД по id из пути
      *
      * @param id продукта
+     * @param user текущий пользователь
      * @return сущность ProductDto, если продукт с таким id существует
      */
     @GetMapping("/{id}")
