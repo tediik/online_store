@@ -263,17 +263,11 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> findProductsByNameContains(String searchString) {
-        List<Product> productList = productRepository.findProductByProductContains(searchString);
-        if (productList.isEmpty()) {
-            throw new ProductsNotFoundException("No products were found for this search query.");
-        }
-        return productList;
+        return productRepository.findProductByProductContains(searchString);
     }
 
     @Override
     public List<Product> findProductsByDescriptionContains(String searchString) {
-        List<Product> productList = productRepository
-                .findProductByDescriptionsContains(searchString);
-        return productList;
+        return productRepository.findProductByDescriptionsContains(searchString);
     }
 }
