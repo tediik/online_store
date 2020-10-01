@@ -89,10 +89,19 @@ async function fillAboutProduct(data) {
             $(specifications).append(content);
         }
     }
-}
-
-function addToFavourite() {
+}function addToFavourite() {
     if($("path").is('[class="filled"]')) {
+        fetch("/customer/favouritesGoods", {
+            method: "DELETE",
+            body: productIdFromPath,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(function (response) {
+            if(response.ok) {
+                toastr.success("Товар успешно удалён из избранного");
+            } else {
+                toastr.error("Товар успешно удалён из избранного");
+            }
+        })
         $("#heart").toggleClass("filled");
         $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;В избранное</h5>`)
     } else {
@@ -100,7 +109,13 @@ function addToFavourite() {
             method: "PUT",
             body: productIdFromPath,
             headers: {"Content-Type": "application/json; charset=utf-8"}
-        });
+        }).then(function (response) {
+            if(response.ok) {
+                toastr.success("Товар успешно добавлен в избранное");
+            } else {
+                toastr.error("Не удалось добавить в избранное");
+            }
+        })
         $("#heart").toggleClass("filled");
         $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
     }
