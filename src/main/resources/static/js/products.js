@@ -185,7 +185,7 @@ function importProductsFromFile(){
         contentType: false,
         type: 'POST',
         success: function(data){
-            getAllProducts();
+            showAndRefreshHomeTab()
             toastr.info('Импорт товаров завершен!', {timeOut: 5000})
         },
         error: function () {
