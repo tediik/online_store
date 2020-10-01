@@ -1,17 +1,16 @@
 /**
  * Declaration of global variables
  */
+
+let url = "http://localhost:9999/api/manager/news/published"
 let myHeaders = new Headers()
 let newsApiUrl = "/api/manager/news"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), divId: '#allNews', number: 0, last: false};
+let clickUpperNavButton = 'allNews'
 
 $(document).ready(function () {
     fetchNews();
-
-    $('#editNewsModal').on('hidden.bs.modal', function () {
-        location.reload()
-    })
 
     /**
      * Event listeners of all document
@@ -20,8 +19,8 @@ $(document).ready(function () {
     document.getElementById('newsTabContent').addEventListener('click', checkButton)
     /*modal window publish checkbox listener*/
     document.getElementById('archiveCheckboxDiv').addEventListener('change', archiveCheckboxHandler)
-    /*modal window footer */
-    document.querySelector('.modal-footer').addEventListener('click', checkButtonClicked)
+    /*modal window editSave */
+    document.getElementById('editSave').addEventListener('click', checkButtonClicked)
     /*left nav bar*/
     document.getElementById('leftNavBar').addEventListener('click', handleLeftNavBarClick)
     /*upper nav tab*/
@@ -30,7 +29,6 @@ $(document).ready(function () {
     $(window).scroll(function () {
         yHandler('allNews');
     });
-
 });
 
 
@@ -58,18 +56,42 @@ function checkUpperNavButton(event) {
     lastPage.last = false
     lastPage.currentDate = new Date().toLocaleDateString();
     if (tab === 'publishedNews') {
+        clickUpperNavButton = tab
         initFetchNews('PUBLISHED', tab);
     }
     if (tab === 'allNews') {
+        clickUpperNavButton = tab
         initFetchNews('ALL', tab);
     }
     if (tab === 'unpublishedNews') {
+        clickUpperNavButton = tab
         initFetchNews('UNPUBLISHED', tab);
     }
     if (tab === 'archivedNews') {
+        clickUpperNavButton = tab
         initFetchNews('ARCHIVED', tab);
     }
 }
+
+/**
+ * Function checks which button on top nav bar was clicked
+ * and click suitable nav bar
+ */
+function checkAndClickUpperNavButton() {
+    if (clickUpperNavButton === 'publishedNews') {
+        document.getElementById('nav-link_publishedNews').click()
+    }
+    if (clickUpperNavButton === 'allNews') {
+        document.getElementById('nav-link_allNews').click()
+    }
+    if (clickUpperNavButton === 'unpublishedNews') {
+        document.getElementById('nav-link_unpublishedNews').click()
+    }
+    if (clickUpperNavButton === 'archivedNews') {
+        document.getElementById('nav-link_archivedNews').click()
+    }
+}
+
 
 function initFetchNews(type, divId) {
     lastPage.type = type;
@@ -116,7 +138,7 @@ function addNewNews() {
         title: document.getElementById('titleNewsUpdate').value,
         anons: document.getElementById('anonsNewsUpdate').value,
         fullText: document.getElementById('fullTextUpdate').value,
-        postingDate: moment(document.getElementById('postingDateUpdate').value).format("YYYY-MM-DD"),
+        postingDate: moment(document.getElementById('postingDateUpdate').value).format("yyyy-MM-DD"),
         archived: document.getElementById('archiveCheckbox').checked
     }
 
@@ -131,14 +153,13 @@ function addNewNews() {
             } else {
                 infoMessage('#infoMessageMainPage', 'Новость не добавлена', 'alert')
             }
+
+        }).finally(() => {
+            $('#editNewsModal').modal('hide')
+            checkAndClickUpperNavButton()
         })
-        $('#editNewsModal').modal('hide')
-        $('#editModalNews').on('hide.bs.modal', function () {
-            fetchNews("/all", '#allNews')
-            fetchNews("/published", '#publishedNews')
-            fetchNews("/unpublished", '#unpublished')
-            fetchNews("/archived", '#archived')
-        })
+
+
     }
 }
 
@@ -146,6 +167,7 @@ function addNewNews() {
  * function makes PUT request to update news
  */
 function updateNews() {
+
     let news = {
         id: document.getElementById('idNewsUpdate').value,
         title: document.getElementById('titleNewsUpdate').value,
@@ -166,15 +188,13 @@ function updateNews() {
                 infoMessage('#infoMessageMainPage', 'Новость не найдена', 'error')
             }
         })
-        $('#editNewsModal').modal('hide')
-        $('#editModalNews').on('hide.bs.modal', function () {
-            fetchNews("/all", '#all')
-            fetchNews("/published")
-            fetchNews("/unpublished")
-            fetchNews("/archived")
-        })
+            .finally(() => {
+                $('#editNewsModal').modal('hide')
+                checkAndClickUpperNavButton()
+            })
     }
 }
+
 
 /**
  * function checks which button was pressed in left nav bar
@@ -223,7 +243,6 @@ function renderEditModalWindow(newsId) {
 
     function renderEditModal(news) {
         let now = new Date()
-
         $('#idModalDiv').show()
         $('#modalWindowTitle').text('Редактировать новость')
         $('form[name=editNewsFormModal]').trigger('reset')
@@ -324,10 +343,10 @@ function renderNewsTable(news) {
         allNewsUl.empty()
     }
     news.content.forEach(function (element) {
-        let postingDate = moment(element.postingDate).format("YYYY-MM-DD")
+        let postingDate = moment(element.postingDate).format("yyyy-MM-DD")
         let modifiedDateText = ''
         if (element.modifiedDate !== null) {
-            modifiedDateText = `Дата последнего изменения: ` + moment(element.modifiedDate).format("YYYY-MM-DD")
+            modifiedDateText = `Дата последнего изменения: ` + moment(element.modifiedDate).format("yyyy-MM-DD")
         }
         let row = `<div id="div-${element.id}" class="alert alert-info mt-2">
                         <h2 id="title">${element.title}</h2>

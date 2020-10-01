@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -93,7 +95,7 @@ public class NewsServiceImpl implements NewsService {
      * @param news сушность для обновления в базе данных
      */
     public News update(News news) {
-        news.setModifiedDate(LocalDateTime.now());
+        news.setModifiedDate(LocalDate.now());
         return newsRepository.save(news);
     }
 
@@ -109,13 +111,14 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * Метод делающий выборку из базы данных по заданному параметру,
-     * где LocalDateTime postingDate > LocalDateTime timeNow.
+     * где LocalDate postingDate <= LocalDate timeNow.
      *
-     * @return возвращает список еще неопубликованных новостей List<News>
+     * @return возвращает список опубликованных новостей List<News>
      */
     @Override
     public List<News> getAllPublished() {
-        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime.now(), false);
+        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now().plusDays(1), false);
+        publishedNews.sort((o1,o2) -> o2.getPostingDate().compareTo(o1.getPostingDate()));
         if (publishedNews.isEmpty()) {
             throw new NewsNotFoundException("There are no published news");
         }
@@ -124,13 +127,13 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * Метод делающий выборку из базы данных по заданному параметру,
-     * где LocalDateTime postingDate <= LocalDateTime timeNow.
+     * где LocalDate postingDate > LocalDate timeNow.
      *
-     * @return возвращает список опубликованных новостей List<News>
+     * @return возвращает список еще неопубликованных новостей List<News>
      */
     @Override
     public List<News> getAllUnpublished() {
-        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDateTime.now(), false);
+        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
         if (unpublishedNews.isEmpty()) {
             throw new NewsNotFoundException("There are no unpublished news");
         }

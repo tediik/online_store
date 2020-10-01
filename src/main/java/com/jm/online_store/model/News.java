@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,11 +9,13 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -36,11 +39,11 @@ public class News {
     private String fullText;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDateTime postingDate;
+    private LocalDate postingDate;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "modified_date")
-    private LocalDateTime modifiedDate;
+    private LocalDate modifiedDate;
 
     @Column(name = "archived")
     private boolean archived;
