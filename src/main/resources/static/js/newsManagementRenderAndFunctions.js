@@ -2,7 +2,6 @@
  * Declaration of global variables
  */
 
-let url = "http://localhost:9999/api/manager/news/published"
 let myHeaders = new Headers()
 let newsApiUrl = "/api/manager/news"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
@@ -92,7 +91,6 @@ function checkAndClickUpperNavButton() {
     }
 }
 
-
 function initFetchNews(type, divId) {
     lastPage.type = type;
     lastPage.divId = '#' + divId;
@@ -133,7 +131,6 @@ function checkButtonClicked(event) {
  * function makes POST request to add news to news api
  */
 function addNewNews() {
-
     let newNews = {
         title: document.getElementById('titleNewsUpdate').value,
         anons: document.getElementById('anonsNewsUpdate').value,
@@ -141,7 +138,6 @@ function addNewNews() {
         postingDate: moment(document.getElementById('postingDateUpdate').value).format("yyyy-MM-DD"),
         archived: document.getElementById('archiveCheckbox').checked
     }
-
     if (checkFields()) {
         fetch(newsApiUrl, {
             method: 'POST',
@@ -153,13 +149,10 @@ function addNewNews() {
             } else {
                 infoMessage('#infoMessageMainPage', 'Новость не добавлена', 'alert')
             }
-
-        }).finally(() => {
+        }).then(() => {
             $('#editNewsModal').modal('hide')
             checkAndClickUpperNavButton()
         })
-
-
     }
 }
 
@@ -167,7 +160,6 @@ function addNewNews() {
  * function makes PUT request to update news
  */
 function updateNews() {
-
     let news = {
         id: document.getElementById('idNewsUpdate').value,
         title: document.getElementById('titleNewsUpdate').value,
@@ -187,14 +179,12 @@ function updateNews() {
             } else {
                 infoMessage('#infoMessageMainPage', 'Новость не найдена', 'error')
             }
+        }).then(() => {
+            $('#editNewsModal').modal('hide')
+            checkAndClickUpperNavButton()
         })
-            .finally(() => {
-                $('#editNewsModal').modal('hide')
-                checkAndClickUpperNavButton()
-            })
     }
 }
-
 
 /**
  * function checks which button was pressed in left nav bar
@@ -218,6 +208,10 @@ function renderNewNewsModal() {
     $('#editSave').attr('data-toggle-id', "add")
     $('#postingDateUpdate').attr('min', moment(new Date).format("yyyy-MM-DD"))
     $('#archiveCheckboxDiv').hide()
+    $('#fullTextUpdate').summernote('code', '')
+    document.getElementById('titleNewsUpdate').value = ''
+    document.getElementById('anonsNewsUpdate').value = ''
+    document.getElementById('postingDateUpdate').value = ''
 }
 
 /**
@@ -299,6 +293,8 @@ function handleDeleteButton(newsId) {
                 console.log('news not found')
                 infoMessage('#infoMessageMainPage', 'Новость не удалена', 'error')
             }
+        }).finally(() => {
+            checkAndClickUpperNavButton()
         })
     }
 }

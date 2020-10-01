@@ -13,8 +13,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -52,7 +50,7 @@ public class NewsServiceImpl implements NewsService {
         Specification<News> spec = NewsSpec.get(filterDto);
         Page<News> newsPage = newsRepository.findAll(spec, page);
         if (newsPage.isEmpty()) {
-            throw new NewsNotFoundException();
+            System.out.println("There are no news");
         }
         return newsPage;
     }
@@ -118,9 +116,8 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> getAllPublished() {
         List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now().plusDays(1), false);
-        publishedNews.sort((o1,o2) -> o2.getPostingDate().compareTo(o1.getPostingDate()));
         if (publishedNews.isEmpty()) {
-            throw new NewsNotFoundException("There are no published news");
+            System.out.println("There are no published news");
         }
         return publishedNews;
     }
@@ -135,7 +132,7 @@ public class NewsServiceImpl implements NewsService {
     public List<News> getAllUnpublished() {
         List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
         if (unpublishedNews.isEmpty()) {
-            throw new NewsNotFoundException("There are no unpublished news");
+            System.out.println("There are no unpublished news");
         }
         return unpublishedNews;
     }
@@ -148,7 +145,7 @@ public class NewsServiceImpl implements NewsService {
     public List<News> getAllArchivedNews() {
         List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
         if (archivedNews.isEmpty()) {
-            throw new NewsNotFoundException("There are no archived news");
+            System.out.println("There are no archived news");
         }
         return archivedNews;
     }

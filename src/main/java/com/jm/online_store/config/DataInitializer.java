@@ -261,7 +261,7 @@ public class DataInitializer {
                         "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
-                .postingDate(LocalDateTime.now().minusDays(10L))
+                .postingDate(LocalDate.now().minusDays(10L))
                 .archived(false)
                 .build();
 
@@ -276,7 +276,7 @@ public class DataInitializer {
                         "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
-                .postingDate(LocalDateTime.now().minusDays(1L))
+                .postingDate(LocalDate.now().minusDays(1L))
                 .archived(false)
                 .build();
 
@@ -291,7 +291,7 @@ public class DataInitializer {
                         "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
@@ -379,7 +379,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
@@ -424,7 +424,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
@@ -484,7 +484,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
@@ -545,7 +545,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
