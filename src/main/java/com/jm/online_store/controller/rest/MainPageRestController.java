@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.print.attribute.standard.PresentationDirection;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -66,15 +67,23 @@ public class MainPageRestController {
             log.debug("Wrong email! Не правильно введен email");
             return ResponseEntity.ok("notValidEmailError");
         }
+        System.out.println("Try ti send email to confirm registration");
         userService.regNewAccount(userForm);
         return new ResponseEntity("success", HttpStatus.OK);
     }
 
-    @GetMapping("/activate/{token}")
-    public String activate(Model model, @PathVariable String token, HttpServletRequest request) {
-        userService.activateUser(token, request);
-        return "redirect:/customer";
-    }
+//    @GetMapping("/activate/{token}")
+//    public ResponseEntity activate(Model model, @PathVariable String token, HttpServletRequest request) {
+//        System.out.println("GetMapping(\"/activate/{token}\") ");
+//        try {
+//            userService.activateUser(token, request);
+//        } catch (Exception ex) {
+//            System.out.println("catch (Exception ex) {Ваш Email уже был подтвержден.}");
+//            return new ResponseEntity("Ваш Email уже был подтвержден.", HttpStatus.FOUND);
+//        }
+////        return "redirect:/customer";
+//        return ResponseEntity.ok("Ваш Email подтвержден.");
+//    }
 
     /**
      * Создаёт мапу - ключ - название категории, значение - мапа с названиями подкатегории.

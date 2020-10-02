@@ -213,7 +213,9 @@ public class UserServiceImpl implements UserService {
                 userForm.getEmail(),
                 confirmationToken.getConfirmationToken()
         );
+        System.out.println(message);
         mailSenderService.send(userForm.getEmail(), "Activation code", message, "Confirmation");
+
     }
 
     /**
@@ -463,5 +465,20 @@ public class UserServiceImpl implements UserService {
         }
         String username = ((User) auth.getPrincipal()).getUsername();
         return findByEmail(username).get();
+    }
+
+    /**
+     * Service method which finds and returns the User by token after email confirmation
+     *
+     * @return User
+     */
+    @Transactional
+    @Override
+    public User getUserByToken(String token) {
+        ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
+        if (confirmationToken == null) {
+            throw new UserNotFoundException();
+        }
+        return userRepository.findByEmail(confirmationToken.getUserEmail()).orElseThrow(UserNotFoundException::new);
     }
 }

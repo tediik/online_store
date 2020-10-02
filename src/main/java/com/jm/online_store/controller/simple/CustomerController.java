@@ -1,6 +1,8 @@
 package com.jm.online_store.controller.simple;
 
+import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.User;
+import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
@@ -8,6 +10,7 @@ import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,8 +45,11 @@ public class CustomerController {
      */
     @GetMapping
     public String getUserProfile(Model model, Authentication auth) {
-        User principal = (User) auth.getPrincipal();
-        User user = userService.findById(principal.getId()).get();
+//        User principal = (User) auth.getPrincipal();
+//        User user = userService.findById(principal.getId()).get();
+        String username = ((UserDetails) auth.getPrincipal()).getUsername();
+        User user = userService.findByEmail(username).get();
+
         model.addAttribute("user", user);
         return "customerPage";
     }
@@ -91,6 +97,15 @@ public class CustomerController {
     public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateNewUsersMail(token, request);
         model.addAttribute("message", "Email address changes successfully");
+        return "redirect:/customer";
+    }
+
+    @GetMapping("/{token}")
+    public String confirmEmail(Model model, @PathVariable String token) {
+        User user = userService.getUserByToken(token);
+        model.addAttribute("message", "Email address confirmed successfully");
+        model.addAttribute("user", user);
+        System.out.println("Activating token. Step 2. Customer");
         return "redirect:/customer";
     }
 }

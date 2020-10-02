@@ -39,10 +39,12 @@ function register() {
         type: 'POST',
         data: formData,
         success: function (data) {
-            if (data == "success") {
-                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000});
+            if (data === "success") {
+                $("#emailConfirmationSent").show();
+                // toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000});
+                toastr.info('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000});
                 close();
-                document.location.href = "/";
+                document.location.href = "redirect:/";
             }
             if (data == "duplicatedEmailError") {
                 $("#duplicatedEmailError").show();
@@ -64,6 +66,25 @@ function register() {
                 }
         }
     });
+    // $.ajax({
+    //     url: '/activate',
+    //     type: 'GET',
+    //     data: 'json',
+    //     success: function (data) {
+    //         if (data === "Ваш Email уже был подтвержден.") {
+    //             toastr.success('Ваш Email уже был подтвержден.', {timeOut: 5000});
+    //             close();
+    //             document.location.href = "/";
+    //         }
+    //     },
+    //     error: function (data) {
+    //         if(data.status == 400){
+    //                 $("#passwordError").show();
+    //                 $("#passwordValidError").hide();
+    //             }
+    //     }
+    // });
+
 }
 
 function close() {

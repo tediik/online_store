@@ -31,7 +31,8 @@ public class FavouritesGoodsRestController {
      * @return объект авторизованного пользователя
      */
     private User getAutorityUser(Authentication authentication) {
-        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
+        return userService.findByEmail(authentication.getName()).get();
+//        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
     }
 
     /**

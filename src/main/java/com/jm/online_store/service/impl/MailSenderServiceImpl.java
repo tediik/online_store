@@ -29,8 +29,6 @@ public class MailSenderServiceImpl implements MailSenderService {
         mailMessage.setTo(emailTo);
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
-        log.info("{} email was sent from {} to {} with subject {} and message {}", emailType, username, emailTo, subject, mailMessage);
-        mailSender.send(mailMessage);
         log.info("{} email was sent from {} to {} with subject {} and message {}",emailType, username, emailTo, subject, mailMessage);
         try {
             mailSender.send(mailMessage);
@@ -58,7 +56,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         helper.setTo(emailTo);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
-        log.info("{} email was sent from {} to {} with subject {} and message {}", emailType, username, emailTo, subject, mimeMessage);
+        log.info("{} Html-email was sent from {} to {} with subject {} and message {}", emailType, username, emailTo, subject, mimeMessage);
         mailSender.send(mimeMessage);
     }
 }
