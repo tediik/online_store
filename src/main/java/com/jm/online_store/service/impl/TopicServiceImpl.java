@@ -6,6 +6,8 @@ import com.jm.online_store.service.interf.TopicService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class TopicServiceImpl implements TopicService {
@@ -14,5 +16,15 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public void addTopic(Topic topic) {
         topicRepository.save(topic);
+    }
+
+    @Override
+    public List<String> getAllCategories() {
+        return topicRepository.findAllCategories();
+    }
+
+    @Override
+    public List<String> getTopicsByCategory(String category) {
+        return topicRepository.findTopicsByCategory(category);
     }
 }
