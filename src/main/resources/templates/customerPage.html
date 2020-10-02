@@ -507,12 +507,16 @@
                             <div class="col">
                                 <form id="feedbackFrom">
                                     <div class="form-group">
-                                        <p>Чтобы заполнить форму обращения, пожалуйста, выберите раздел.</p>
-                                        <label for="topicFeedbackFormSelect" class="feedback-form">Тема</label>
-                                        <select type="" class="form-control" id="topicFeedbackFormSelect">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
+                                        <p>Чтобы заполнить форму обращения, пожалуйста, выберите категорию вопроса.</p>
+                                        <label for="feedbackTopicCategorySelect" class="feedback-form">Категория:</label>
+                                        <select class="form-control" id="feedbackTopicCategorySelect">
+
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="feedbackTopicNameSelect" class="feedback-form">Тема:</label>
+                                        <select class="form-control" id="feedbackTopicNameSelect" disabled>
+
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -521,7 +525,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="firstNameFeedbackFormInput" class="feedback-form">Имя</label>
-                                        <input class="form-control" type="text" id="firstNameFeedbackFormInput" disabled>
+                                        <input class="form-control" type="text" id="firstNameFeedbackFormInput"
+                                               disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="emailFeedbackFormInput" class="feedback-form">Email address</label>
@@ -584,5 +589,6 @@
 <!--summernote-->
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
+<script src="/static/js/customer-feedback-form.js"></script>
 </body>
 </html>
