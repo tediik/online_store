@@ -128,9 +128,6 @@ public class User implements UserDetails {
     @JsonManagedReference(value = "user-sentStock")
     private Set<SentStock> sentStocks;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private Set<Feedback> feedbacks;
-
     public User() {
         registerDate = LocalDate.now();
     }
