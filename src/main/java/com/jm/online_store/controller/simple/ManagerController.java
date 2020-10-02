@@ -22,6 +22,7 @@ public class ManagerController {
     public String getReportsPage() {
         return "reports";
     }
+
     @GetMapping("/settings")
     public String getSettingsPage (){
         return "manager_settings";
