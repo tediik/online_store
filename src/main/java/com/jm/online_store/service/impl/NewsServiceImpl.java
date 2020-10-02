@@ -48,11 +48,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public Page<News> findAll(Pageable page, NewsFilterDto filterDto) {
         Specification<News> spec = NewsSpec.get(filterDto);
-        Page<News> newsPage = newsRepository.findAll(spec, page);
-        if (newsPage.isEmpty()) {
-            System.out.println("There are no news");
-        }
-        return newsPage;
+        return newsRepository.findAll(spec, page);
     }
 
     /**
@@ -117,7 +113,7 @@ public class NewsServiceImpl implements NewsService {
     public List<News> getAllPublished() {
         List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now().plusDays(1), false);
         if (publishedNews.isEmpty()) {
-            System.out.println("There are no published news");
+            throw new NewsNotFoundException("There are no published news");
         }
         return publishedNews;
     }
@@ -132,7 +128,7 @@ public class NewsServiceImpl implements NewsService {
     public List<News> getAllUnpublished() {
         List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
         if (unpublishedNews.isEmpty()) {
-            System.out.println("There are no unpublished news");
+            throw new NewsNotFoundException("There are no unpublished news");
         }
         return unpublishedNews;
     }
@@ -145,9 +141,8 @@ public class NewsServiceImpl implements NewsService {
     public List<News> getAllArchivedNews() {
         List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
         if (archivedNews.isEmpty()) {
-            System.out.println("There are no archived news");
+            throw new NewsNotFoundException("There are no archived news");
         }
         return archivedNews;
     }
-
 }
