@@ -1,7 +1,6 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Feedback;
-import com.jm.online_store.model.dto.FeedbackRequestDto;
 import com.jm.online_store.repository.FeedbackRepository;
 import com.jm.online_store.repository.TopicRepository;
 import com.jm.online_store.service.interf.FeedbackService;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
 @Service
 @AllArgsConstructor
