@@ -508,7 +508,8 @@
                                 <form id="feedbackFrom">
                                     <div class="form-group">
                                         <p>Чтобы заполнить форму обращения, пожалуйста, выберите категорию вопроса.</p>
-                                        <label for="feedbackTopicCategorySelect" class="feedback-form">Категория:</label>
+                                        <label for="feedbackTopicCategorySelect"
+                                               class="feedback-form">Категория:</label>
                                         <select class="form-control" id="feedbackTopicCategorySelect">
 
                                         </select>
@@ -520,8 +521,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="messageText" class="feedback-form">Текст сообщения</label>
-                                        <textarea class="form-control" id="messageText" disabled></textarea>
+                                        <label for="messageFeedbackForm" class="feedback-form">Текст сообщения</label>
+                                        <textarea class="form-control" id="messageFeedbackForm" disabled></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="firstNameFeedbackFormInput" class="feedback-form">Имя</label>
@@ -544,8 +545,9 @@
                                             <option>3</option>
                                         </select>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
+                                <button class="btn btn-primary" id="feedbackSubmitButton">Отправить</button>
+
                             </div>
                         </div>
                     </div>
@@ -589,6 +591,8 @@
 <!--summernote-->
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
+<!--&lt;!&ndash;toastr&ndash;&gt;-->
+<!--<script src="/static/js/toastr.min.js"></script>-->
 <script src="/static/js/customer-feedback-form.js"></script>
 </body>
 </html>
