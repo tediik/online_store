@@ -1,7 +1,10 @@
+let myHeaders = new Headers()
+myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 let feedBackTopicCategorySelect = $('#feedbackTopicCategorySelect')
 let feedBackTopicSelect = $('#feedbackTopicNameSelect')
 
 document.getElementById('feedback-tab').addEventListener('click', fetchAndFillCategorySelect)
+document.getElementById('feedbackSubmitButton').addEventListener('click', submitFeedbackForm)
 
 /**
  * function that fetches categories list from db
@@ -22,6 +25,7 @@ function fetchAndFillCategorySelect() {
             .forEach(category => feedBackTopicCategorySelect
                 .append(`<option>${category}</option>`))
     }
+
     document.getElementById('feedbackTopicCategorySelect').addEventListener('change', fetchAndFillTopicSelect)
 }
 
@@ -40,24 +44,44 @@ function fetchAndFillTopicSelect() {
         feedBackTopicSelect
             .empty()
             .append(`<option selected="selected" disabled>Выберите тему</option>`)
-        topics.forEach(topic => feedBackTopicSelect.append(`<option>${topic}</option>`))
+        topics.forEach(topic => feedBackTopicSelect.append(`<option value="${topic.id}">${topic.topicName}</option>`))
     }
     feedBackTopicSelect.removeAttr('disabled')
-    document.getElementById('feedbackTopicNameSelect').addEventListener('change', enableFeedbackForm)
-    fetchCustomerInfoAndFillForm()
+    document.getElementById('feedbackTopicNameSelect').addEventListener('change', enableFormFields)
 }
 
 /**
- * function enables form fields
+ * function enables feedback from fields
  */
-function enableFeedbackForm(){
-    $('#messageText').removeAttr('disabled')
+function enableFormFields() {
+    $('#messageFeedbackForm').removeAttr('disabled')
     $('#firstNameFeedbackFormInput').removeAttr('disabled')
     $('#emailFeedbackFormInput').removeAttr('disabled')
     $('#phoneFeedbackFormInput').removeAttr('disabled')
+    $('#cityFeedbackFormSelect').removeAttr('disabled')
 }
 
-
-function fetchCustomerInfoAndFillForm() {
-
+/**
+ * function submit feedback form
+ */
+function submitFeedbackForm() {
+    let feedback = {
+        email: $('#emailFeedbackFormInput').val(),
+        firstName: $('#firstNameFeedbackFormInput').val(),
+        message: $('#messageFeedbackForm').val(),
+        phoneNumber: $('#phoneFeedbackFormInput').val(),
+        topic: {
+            id: $('#feedbackTopicNameSelect').val()
+        },
+    }
+    fetch('/api/feedback/', {
+        headers: myHeaders,
+        method: 'POST',
+        body: JSON.stringify(feedback)
+    }).then(function (response) {
+        if (response.ok) {
+            console.log('ok')
+            toastr.success('Сообщение отправленно')
+        }
+    })
 }
