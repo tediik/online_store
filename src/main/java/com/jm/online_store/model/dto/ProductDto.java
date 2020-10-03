@@ -3,6 +3,7 @@ package com.jm.online_store.model.dto;
 import com.jm.online_store.model.Description;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
 /**
  * DTO для передачи на страницу товара
  */

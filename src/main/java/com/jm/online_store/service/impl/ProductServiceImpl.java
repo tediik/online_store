@@ -255,11 +255,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод построения DTO для продукта
      *
-     * @param productId id товара
-     * @param currentUser текущий пользовтель
-     * @throws UserNotFoundException;
+     * @param productId
+     * @param currentUser
+     * @return OrderDto для переачи на страницу товара
+     * @throws {@link UserNotFoundException}
      */
     @Override
     public Optional<ProductDto> getProductDto(Long productId, User currentUser) {

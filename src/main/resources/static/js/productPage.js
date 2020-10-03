@@ -61,7 +61,6 @@ async function fillBreadcrumb(data) {
  * @returns {Promise<void>}
  */
 async function fillAboutProduct(data) {
-    console.log(data);
     let productName = document.getElementById('productName');
     $(productName).append(`<br><h2 class="font-weight-normal">${data.product}</h2>`);
     $("#favouriteContainer").append(`<div id="favoriteLabel"><h5 class="font-weight-normal my-2">&ensp;В избранное </h5></div>
