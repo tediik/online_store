@@ -41,7 +41,6 @@ function register() {
         success: function (data) {
             if (data === "success") {
                 $("#emailConfirmationSent").show();
-                // toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000});
                 toastr.info('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000});
                 close();
                 document.location.href = "redirect:/";
