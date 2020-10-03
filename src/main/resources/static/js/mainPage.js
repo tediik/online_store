@@ -66,25 +66,6 @@ function register() {
                 }
         }
     });
-    // $.ajax({
-    //     url: '/activate',
-    //     type: 'GET',
-    //     data: 'json',
-    //     success: function (data) {
-    //         if (data === "Ваш Email уже был подтвержден.") {
-    //             toastr.success('Ваш Email уже был подтвержден.', {timeOut: 5000});
-    //             close();
-    //             document.location.href = "/";
-    //         }
-    //     },
-    //     error: function (data) {
-    //         if(data.status == 400){
-    //                 $("#passwordError").show();
-    //                 $("#passwordValidError").hide();
-    //             }
-    //     }
-    // });
-
 }
 
 function close() {
