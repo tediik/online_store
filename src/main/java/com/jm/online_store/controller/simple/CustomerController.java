@@ -1,12 +1,9 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.User;
-import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
-import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
