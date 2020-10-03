@@ -28,7 +28,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "api/manager/news")
+@RequestMapping(value = "/api/manager/news")
 public class ManagerNewsRestController {
 
     private final NewsService newsService;
@@ -53,7 +53,7 @@ public class ManagerNewsRestController {
     /**
      * Method returns all news
      *
-     * @return List<News> возвращает список всех новстей из базы данных
+     * @return List<News> возвращает список всех новостей из базы данных
      */
     @GetMapping("/all")
     public ResponseEntity<List<News>> allNews() {

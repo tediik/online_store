@@ -45,7 +45,7 @@
             <br>
             <h1 class="text-center">Управление новостями</h1>
             <div id="infoMessageMainPage">
-                <!--                place where info message appears-->
+                <!--place where info message appears-->
             </div>
             <ul class="nav nav-tabs" id="upperNavTab">
                 <!-- Первая вкладка (активная) -->
@@ -55,14 +55,16 @@
                 </li>
                 <!-- Вторая вкладка -->
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab_published_news" data-toggle-id="publishedNews">Опубликованные</a>
+                    <a class="nav-link" id="nav-link_publishedNews" data-toggle="tab" href="#tab_published_news" data-toggle-id="publishedNews">Опубликованные</a>
                 </li>
+                <!-- Третья вкладка -->
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab_unpublished_news" data-toggle-id="unpublishedNews">Не
+                    <a class="nav-link" id="nav-link_unpublishedNews" data-toggle="tab" href="#tab_unpublished_news" data-toggle-id="unpublishedNews">Не
                         опубликованные</a>
                 </li>
+                <!-- Четвертая вкладка -->
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab_archived_news" data-toggle-id="archivedNews">Архивные</a>
+                    <a class="nav-link" id="nav-link_archivedNews" data-toggle="tab" href="#tab_archived_news" data-toggle-id="archivedNews">Архивные</a>
                 </li>
             </ul>
             <!-- Блоки с контентом -->
@@ -82,7 +84,7 @@
                     <div id="unpublishedNews">
                     </div>
                 </div>
-                <!--                Четвертый блок-->
+                <!--Четвертый блок-->
                 <div class="tab-pane fade" id="tab_archived_news">
                     <div id="archivedNews">
                     </div>
@@ -94,9 +96,7 @@
 
 <!---------------------- News Modal window ------------------->
 <div class="modal fade" id="editNewsModal" data-backdrop="static" tabindex="-1"
-     role="dialog"
-     aria-labelledby="editNewsFormModal"
-     aria-hidden="true">
+     role="dialog" aria-labelledby="editNewsFormModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -107,7 +107,7 @@
                 </button>
             </div>
             <div id="modal-alert">
-                <!--alert messages                -->
+                <!--alert messages-->
             </div>
             <form id="editNewsFormModal">
                 <div class="modal-body">
@@ -149,13 +149,11 @@
                     </div>
                 </div>
             </form>
-            <div class="modal-footer actions">
-
+            <div id="modalFooterEditSave" class="modal-footer actions">
                 <button type="button" class="btn btn-secondary"
                         data-dismiss="modal" data-toggle-id="close">
                     Закрыть
                 </button>
-
                 <button id="editSave" data-toggle-id="save" class="btn btn-primary">
                     Обновить
                 </button>
