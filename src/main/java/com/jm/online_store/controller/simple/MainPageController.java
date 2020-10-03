@@ -33,7 +33,6 @@ public class MainPageController {
         User user = userService.getUserByToken(token);
         model.addAttribute("message", "User email address confirmed successfully");
         model.addAttribute("user", user);
-        System.out.println("Activating token. Step 1. Main Page");
         return "redirect:/customer";
     }
 

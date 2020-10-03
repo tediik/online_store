@@ -75,19 +75,4 @@ public class LoginController {
     public String deniedPage() {
         return "denied";
     }
-
-//    @RequestMapping(value = "/login/{token}", method = RequestMethod.POST)
-//    public ResponseEntity<?> loginByToken(@RequestParam(value = "token", required = false) String token,
-//                                          @RequestBody HttpServletRequest request) {
-//        User user = userService.getUserByToken(token);
-//        System.out.println("Try to login with token. User = " + user.toString());
-//        System.out.println("Try to login with token. User email = " + user.getEmail());
-//        System.out.println("Try to login with token. User password = " + user.getPassword());
-//        Map<Object, Object> response = new HashMap<>();
-//        response.put("name", user.getEmail());
-//        response.put("password", user.getPassword());
-//        System.out.println("Activating token. Step 3. Login controller");
-////        return "redirect:/customer";
-//        return ResponseEntity.ok(response);
-//    }
 }

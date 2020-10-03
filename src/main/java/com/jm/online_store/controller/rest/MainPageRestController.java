@@ -67,7 +67,6 @@ public class MainPageRestController {
             log.debug("Wrong email! Не правильно введен email");
             return ResponseEntity.ok("notValidEmailError");
         }
-        System.out.println("Try ti send email to confirm registration");
         userService.regNewAccount(userForm);
         return new ResponseEntity("success", HttpStatus.OK);
     }

@@ -213,7 +213,6 @@ public class UserServiceImpl implements UserService {
                 userForm.getEmail(),
                 confirmationToken.getConfirmationToken()
         );
-        System.out.println(message);
         mailSenderService.send(userForm.getEmail(), "Activation code", message, "Confirmation");
 
     }
