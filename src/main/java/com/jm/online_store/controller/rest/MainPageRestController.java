@@ -71,19 +71,6 @@ public class MainPageRestController {
         return new ResponseEntity("success", HttpStatus.OK);
     }
 
-//    @GetMapping("/activate/{token}")
-//    public ResponseEntity activate(Model model, @PathVariable String token, HttpServletRequest request) {
-//        System.out.println("GetMapping(\"/activate/{token}\") ");
-//        try {
-//            userService.activateUser(token, request);
-//        } catch (Exception ex) {
-//            System.out.println("catch (Exception ex) {Ваш Email уже был подтвержден.}");
-//            return new ResponseEntity("Ваш Email уже был подтвержден.", HttpStatus.FOUND);
-//        }
-////        return "redirect:/customer";
-//        return ResponseEntity.ok("Ваш Email подтвержден.");
-//    }
-
     /**
      * Создаёт мапу - ключ - название категории, значение - мапа с названиями подкатегории.
      * Во внутренних мапах - ключ - подкатегория кириллицей и значение - латиницей.

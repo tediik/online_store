@@ -214,7 +214,6 @@ public class UserServiceImpl implements UserService {
                 confirmationToken.getConfirmationToken()
         );
         mailSenderService.send(userForm.getEmail(), "Activation code", message, "Confirmation");
-
     }
 
     /**

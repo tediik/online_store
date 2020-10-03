@@ -22,7 +22,9 @@ public class MainPageController {
         model.addAttribute("userForm", new User());
         return "mainPage";
     }
-
+    /**
+     * Method gets confirmation token after registering mail and returns customer page
+     */
     @GetMapping("/activate/{token}")
     public String registerMail(Model model, @PathVariable String token, HttpServletRequest request) {
         try {

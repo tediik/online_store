@@ -99,13 +99,4 @@ public class CustomerController {
         model.addAttribute("message", "Email address changes successfully");
         return "redirect:/customer";
     }
-
-//    @GetMapping("/{token}")
-//    public String confirmEmail(Model model, @PathVariable String token) {
-//        User user = userService.getUserByToken(token);
-//        model.addAttribute("message", "Email address confirmed successfully");
-//        model.addAttribute("user", user);
-//        System.out.println("Activating token. Step 2. Customer");
-//        return "redirect:/customer";
-//    }
 }
