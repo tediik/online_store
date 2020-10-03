@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Результаты поиска</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Rate YO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+</head>
+<body>
+<header th:insert="/blocks/mainHeader :: header"></header>
+
+<div id="openNewRegistrationModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Регистрация</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/registration" method="POST" enctype="utf8">
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="email">Email</label>
+                        <input name="email"
+                               value=""
+                               id="email"
+                               placeholder="email"
+                               type="email"
+                               autofocus
+                               class="form-control"/>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="password">Пароль</label>
+                        <input name="password"
+                               value=""
+                               id="password"
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            Your password must be 8-20 characters long, contain letters and numbers, and must not
+                            contain spaces and emoji.
+                        </small>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="passwordConfirm">Повторите пароль</label>
+                        <input name="passwordConfirm"
+                               value=""
+                               id="passwordConfirm"
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
+                    </div>
+                    <div>
+                        <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
+                    </div>
+                    <div>
+                        <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
+                    </div>
+                    <div>
+                        <span id="passwordValidError" style="display:none" class="error">Пароль не соответствует требованиям</span>
+                    </div>
+                    <div>
+                        <span id="notValidEmailError" style="display:none" class="error">Неверный формат электронной почты</span>
+                    </div>
+                    <div>
+                        <a onclick="register()" class="btn btn-primary btn-sm btn-block"> submit</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-10">
+            <h4 class="my-0 font-weight-normal products" id="headerForSearchInNameDiv">Результаты поиска</h4>
+            <div id="searchInNameDiv">
+                <!-- Search results-->
+            </div>
+            <hr>
+            <h4 class="my-0 font-weight-normal products" id="headerForSearchInDescriptionDiv">Похожие товары</h4>
+            <div id="searchInDescriptionDiv">
+                <!-- Search results-->
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Optional JavaScript -->
+<script src="../static/js/search.js"></script>
+<script src="/static/js/jquery.hoverIntent.minified.js"></script>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+</body>
+</html>

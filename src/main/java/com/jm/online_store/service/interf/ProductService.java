@@ -34,4 +34,8 @@ public interface ProductService {
     double changeProductRating(Long productId, double rating, User user);
 
     Optional<ProductDto> getProductDto(Long productI, User user);
+
+    List<Product> findProductsByNameContains(String searchString);
+
+    List<Product> findProductsByDescriptionContains(String searchString);
 }

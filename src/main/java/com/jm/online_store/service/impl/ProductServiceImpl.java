@@ -255,7 +255,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     *
+     * метод формирющий DTO из заказа
      * @param productId
      * @param currentUser
      * @return OrderDto для переачи на страницу товара
@@ -296,5 +296,26 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return Optional.empty();
+    }
+    /**
+     * Method that finds search string in Product name.
+     *
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
+    @Override
+    public List<Product> findProductsByNameContains(String searchString) {
+        return productRepository.findProductByProductContains(searchString);
+    }
+
+    /**
+     * Method that finds search string in Product description.
+     *
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
+    @Override
+    public List<Product> findProductsByDescriptionContains(String searchString) {
+        return productRepository.findProductByDescriptionsContains(searchString);
     }
 }
