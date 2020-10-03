@@ -9,11 +9,9 @@ import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
-import com.opencsv.CSVReader;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvValidationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,20 +22,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.net.UnknownServiceException;
-import java.time.LocalDateTime;
-import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -225,9 +221,10 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * метод изменения рейтинга товара
+     *
      * @param productId id товара
-     * @param rating оценка польователем товара
-     * @param user пользователь оценивший товар
+     * @param rating    оценка польователем товара
+     * @param user      пользователь оценивший товар
      * @return double новый рейтинг
      * @throws UserNotFoundException,ProductNotFoundException
      */
@@ -253,5 +250,27 @@ public class ProductServiceImpl implements ProductService {
         Product product = findProductById(productId).orElseThrow(ProductNotFoundException::new);
         product.setRating(newRating);
         return newRating;
+    }
+
+    /**
+     * Method that finds search string in Product name.
+     *
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
+    @Override
+    public List<Product> findProductsByNameContains(String searchString) {
+        return productRepository.findProductByProductContains(searchString);
+    }
+
+    /**
+     * Method that finds search string in Product description.
+     *
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
+    @Override
+    public List<Product> findProductsByDescriptionContains(String searchString) {
+        return productRepository.findProductByDescriptionsContains(searchString);
     }
 }

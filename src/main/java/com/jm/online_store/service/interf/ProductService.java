@@ -31,4 +31,8 @@ public interface ProductService {
     Map getProductPriceChange(Long idProduct);
 
     double changeProductRating(Long productId, double rating, User user);
+
+    List<Product> findProductsByNameContains(String searchString);
+
+    List<Product> findProductsByDescriptionContains(String searchString);
 }
