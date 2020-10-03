@@ -52,9 +52,7 @@ public class LoginController {
     }
 
     @GetMapping(value = "/login")
-    public String loginPage(Model model,
-                            @RequestParam(value = "token", required = false) String token)
-                            throws InterruptedException, ExecutionException, IOException {
+    public String loginPage(Model model) throws InterruptedException, ExecutionException, IOException {
         String authUrlOK = oAuth2Odnoklassniki.getAuthorizationUrl();
         model.addAttribute("authUrlOK", authUrlOK);
 
