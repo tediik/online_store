@@ -49,8 +49,8 @@ public class LoginController {
         String authUrlOK = oAuth2Odnoklassniki.getAuthorizationUrl();
         model.addAttribute("authUrlOK", authUrlOK);
 
-        String twitterUrl = twitterAuth.twitterAuth();
-        model.addAttribute("twitterUrl", twitterUrl);
+        //String twitterUrl = twitterAuth.twitterAuth();
+        //model.addAttribute("twitterUrl", twitterUrl);
 
         model.addAttribute("authUrlVK", vkApiClient.getVkAuthUrl());
         return "login";
