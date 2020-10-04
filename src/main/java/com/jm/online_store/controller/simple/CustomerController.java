@@ -1,13 +1,14 @@
 package com.jm.online_store.controller.simple;
 
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
+import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,11 +43,7 @@ public class CustomerController {
      */
     @GetMapping
     public String getUserProfile(Model model, Authentication auth) {
-//        User principal = (User) auth.getPrincipal();
-//        User user = userService.findById(principal.getId()).get();
-        String username = ((UserDetails) auth.getPrincipal()).getUsername();
-        User user = userService.findByEmail(username).get();
-
+        User user = userService.findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
         model.addAttribute("user", user);
         return "customerPage";
     }

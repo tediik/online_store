@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.ProductService;
@@ -31,8 +32,7 @@ public class FavouritesGoodsRestController {
      * @return объект авторизованного пользователя
      */
     private User getAutorityUser(Authentication authentication) {
-        return userService.findByEmail(authentication.getName()).get();
-//        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
+        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
     }
 
     /**

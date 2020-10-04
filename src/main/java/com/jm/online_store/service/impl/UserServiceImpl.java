@@ -467,7 +467,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which finds and returns the User by token after email confirmation
-     *
      * @return User
      */
     @Transactional

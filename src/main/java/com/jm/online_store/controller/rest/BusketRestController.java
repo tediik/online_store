@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.AddressNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
@@ -49,7 +50,7 @@ public class BusketRestController {
      * @return авторизванный пользователь.
      */
     private User getAutorityUser(Authentication authentication) {
-        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
+        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
     }
 
     /**

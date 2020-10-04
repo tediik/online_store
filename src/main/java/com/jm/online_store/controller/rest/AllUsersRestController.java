@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.UserService;
@@ -7,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,9 +37,7 @@ public class AllUsersRestController {
         if (authentication == null) {
             return ResponseEntity.badRequest().build();
         }
-//        User currentUser = (User) authentication.getPrincipal();
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        User currentUser = userService.findByEmail(username).get();
+        User currentUser = userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
         if (currentUser == null) {
             return ResponseEntity.badRequest().build();
         }

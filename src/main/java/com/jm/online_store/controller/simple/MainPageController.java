@@ -22,8 +22,14 @@ public class MainPageController {
         model.addAttribute("userForm", new User());
         return "mainPage";
     }
+
     /**
-     * Method gets confirmation token after registering mail and returns customer page
+     *     Method gets confirmation token after registering mail and returns customer page
+     *
+     * @param model
+     * @param token
+     * @param request
+     * @return
      */
     @GetMapping("/activate/{token}")
     public String registerMail(Model model, @PathVariable String token, HttpServletRequest request) {
