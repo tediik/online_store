@@ -38,4 +38,6 @@ public interface ProductService {
     List<Product> findProductsByNameContains(String searchString);
 
     List<Product> findProductsByDescriptionContains(String searchString);
+
+    boolean addNewSubscriber(Long id, String email);
 }

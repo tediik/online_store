@@ -73,7 +73,7 @@ async function fillAboutProduct(data) {
         69.1875c-19.160797,-40.817078 -60.514496,-69.1875 -108.5625,-69.1875z"
     onclick="addToFavourite()"/>
         </svg>`);
-    if(data.favourite) {
+    if (data.favourite) {
         $("#heart").toggleClass("filled");
         $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
     }
@@ -106,13 +106,13 @@ async function fillAboutProduct(data) {
  * Функиця добавления/удаления товара из избранного
  */
 function addToFavourite() {
-    if($("path").is('[class="filled"]')) {
+    if ($("path").is('[class="filled"]')) {
         fetch("/customer/favouritesGoods", {
             method: "DELETE",
             body: productIdFromPath,
             headers: {"Content-Type": "application/json; charset=utf-8"}
         }).then(function (response) {
-            if(response.ok) {
+            if (response.ok) {
                 $("#heart").toggleClass("filled");
                 $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;В избранное</h5>`)
                 toastr.success("Товар успешно удалён из избранного");
@@ -126,7 +126,7 @@ function addToFavourite() {
             body: productIdFromPath,
             headers: {"Content-Type": "application/json; charset=utf-8"}
         }).then(function (response) {
-            if(response.ok) {
+            if (response.ok) {
                 $("#heart").toggleClass("filled");
                 $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
                 toastr.success("Товар успешно добавлен в избранное");
@@ -175,4 +175,47 @@ function newRateForProduct(rating) {
             close();
         }
     })
+}
+
+/**
+ * Функция добавления email в список подписчиков товара
+ */
+function priceChangeSubscribe() {
+    let email = $("#emailInputModal").val();
+    fetch(`/api/products/subscribe?id=${productIdFromPath}&email=${email}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json;charset=utf-8'}
+    }).then(function (response) {
+        if (response.ok) {
+            $('#dismissButton').click();
+            toastr.success("На ваш email оформлена подписка")
+        } else {
+            response.text().then(function (text) {
+                if(text == "incorrectEmail") {
+                    showModalError("Введён некорректный Email")
+                } else {
+                    showModalError("На введёный Email уже оформлена подписка")
+                }
+            })
+        }
+    })
+}
+
+/**
+ * Функция сообщений об ошибке
+ * @param message текст сообщения
+ */
+function showModalError(message) {
+    $('#alert-modal-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>${message}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+    $('#orderModalWindow').scrollTop(0);
+    window.setTimeout(function () {
+        $('.alert').alert('close');
+    }, 5000)
 }

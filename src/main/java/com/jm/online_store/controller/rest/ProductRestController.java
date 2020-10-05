@@ -91,4 +91,20 @@ public class ProductRestController {
     public ResponseEntity<List<Product>> findProductsByDescription(@PathVariable String searchString) {
         return ResponseEntity.ok(productService.findProductsByDescriptionContains(searchString));
     }
+
+    /**
+     * Контроллер для добавления нового email в лист рассылок
+     * @param email введёный пользователем
+     * @param id товара
+     * @return ResponseEntity
+     */
+    @PostMapping("/subscribe")
+    public ResponseEntity addNewSubscriber(@RequestParam(value = "email", required = false) String email,
+                                           @RequestParam(value = "id", required = false) Long id) {
+        if(productService.addNewSubscriber(id, email)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body("incorrectEmail");
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Evaluation;
@@ -10,6 +11,7 @@ import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
+import com.jm.online_store.util.ValidationUtils;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -256,6 +258,7 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * метод формирующий DTO для передачи на страниу товара
+     *
      * @param productId
      * @param currentUser
      * @return Optional<ProductDto> для передачи на страницу товара
@@ -297,6 +300,7 @@ public class ProductServiceImpl implements ProductService {
         }
         return Optional.empty();
     }
+
     /**
      * Method that finds search string in Product name.
      *
@@ -317,5 +321,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findProductsByDescriptionContains(String searchString) {
         return productRepository.findProductByDescriptionsContains(searchString);
+    }
+
+    @Override
+    public boolean addNewSubscriber(Long id, String email) {
+        if (ValidationUtils.isValidEmail(email)) {
+            Product product = findProductById(id).orElseThrow(ProductNotFoundException::new);
+            Set<String> emails = product.getPriceChangeSubscribers();
+            if (emails.contains(email)) {
+                throw new EmailAlreadyExistsException();
+            } else {
+                emails.add(email);
+                product.setPriceChangeSubscribers(emails);
+                saveProduct(product);
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 }
