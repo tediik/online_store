@@ -5,6 +5,7 @@ import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.ProductService;
@@ -35,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -252,6 +254,49 @@ public class ProductServiceImpl implements ProductService {
         return newRating;
     }
 
+    /**
+     * метод формирующий DTO для передачи на страниу товара
+     * @param productId
+     * @param currentUser
+     * @return Optional<ProductDto> для передачи на страницу товара
+     * @throws {@link UserNotFoundException}
+     */
+    @Override
+    public Optional<ProductDto> getProductDto(Long productId, User currentUser) {
+        Optional<Product> product = findProductById(productId);
+        if (currentUser != null) {
+            User userFromDB = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
+            if (product.isPresent()) {
+                Set<Product> productSet = userFromDB.getFavouritesGoods();
+                Product presentProduct = product.get();
+                ProductDto productDto = new ProductDto(
+                        presentProduct.getId(),
+                        presentProduct.getProduct(),
+                        presentProduct.getPrice(),
+                        presentProduct.getRating(),
+                        presentProduct.getDescriptions(),
+                        presentProduct.getProductType(),
+                        productSet.contains(presentProduct)
+                );
+                return Optional.of(productDto);
+            }
+        } else {
+            if (product.isPresent()) {
+                Product presentProduct = product.get();
+                ProductDto productDto = new ProductDto(
+                        presentProduct.getId(),
+                        presentProduct.getProduct(),
+                        presentProduct.getPrice(),
+                        presentProduct.getRating(),
+                        presentProduct.getDescriptions(),
+                        presentProduct.getProductType(),
+                        false
+                );
+                return Optional.of(productDto);
+            }
+        }
+        return Optional.empty();
+    }
     /**
      * Method that finds search string in Product name.
      *

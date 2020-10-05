@@ -1,8 +1,8 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +32,13 @@ public class ProductRestController {
      * Ищет продукт в БД по id из пути
      *
      * @param id продукта
-     * @return сущность Product, если продукт с таким id существует
+     * @param user текущий пользователь
+     * @return сущность ProductDto, если продукт с таким id существует
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
-        ResponseEntity<Product>[] answer = new ResponseEntity[1];
-        productService.findProductById(id).ifPresentOrElse(
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        ResponseEntity<ProductDto>[] answer = new ResponseEntity[1];
+        productService.getProductDto(id, user).ifPresentOrElse(
                 value -> answer[0] = ResponseEntity.ok(value), () -> answer[0] = ResponseEntity.notFound().build());
         return answer[0];
     }

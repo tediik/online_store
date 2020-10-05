@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth-vk").permitAll()
                 .antMatchers("/api/comments/**").permitAll()
                 .antMatchers("/oauth/**", "/oauthTwitter/**", "/TwitterRegistrationPage/**").permitAll()
-                .antMatchers("/", "/login", "/news/**", "/registration", "/css/**", "api/sharedStock","/global/**","/stocks/**").permitAll()
+                .antMatchers("/", "/login", "/news/**", "/registration", "/css/**","/global/**","/stocks/**").permitAll()
                 .antMatchers("/api/products/productChangeMonitor").access("hasAnyRole('ROLE_MANAGER')")
                 .antMatchers("/api/categories/**", "/api/products/**").permitAll()
                 .antMatchers("/categories/**", "/products/**", "/search/**").permitAll()
