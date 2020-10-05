@@ -13,6 +13,8 @@
 
     <!-- Custom styles for this template -->
     <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
+    <!--toastr CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- CSS fot rate YO -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
@@ -115,7 +117,7 @@
             <br>
             <div class="row mx-5">
                 <button class="btn btn-warning btn-lg" type="submit" style="width: 15rem"><h4
-                        class="font-weight-normal my-auto">Купить</h4></button>
+                        class="font-weight-normal my-auto" id="addToCartButton">Купить</h4></button>
 
             </div>
             <br>
@@ -231,27 +233,23 @@
                                         <input type="text" name="daterange" id="daterangeg"/>
 
                                     </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary"
-                    data-dismiss="modal">Close
-            </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close
+                </button>
+            </div>
         </div>
     </div>
 </div>
-</div>
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
@@ -261,9 +259,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <!--<script src="../static/js/productPriceChange.js"></script>-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <script src="../static/js/productPage.js"></script>
 <script src="../static/js/comments.js"></script>

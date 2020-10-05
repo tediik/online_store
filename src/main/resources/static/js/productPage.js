@@ -1,4 +1,7 @@
 let productIdFromPath = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+let basketApiAddUrl = "/api/basket/add/"
+let myHeaders = new Headers()
+myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
 /**
  * Get-запрос - если получаем продукт, то вызываем заполняющие страницу функции,
@@ -103,7 +106,7 @@ async function fillAboutProduct(data) {
             $(specifications).append(content);
         }
     }
-
+    $('#addToCartButton').attr('data-toggle-id', data.id)
 }
 
 /**
@@ -206,12 +209,32 @@ function priceChangeSubscribe() {
             $("#emailInputModal").val("");
         } else {
             response.text().then(function (text) {
-                if(text == "incorrectEmail") {
+                if (text == "incorrectEmail") {
                     showModalError("Введён некорректный Email")
                 } else {
                     showModalError("На введёный Email уже оформлена подписка")
                 }
             })
+        }
+    })
+}
+
+/**
+ * function add product to cart
+ * @param event
+ */
+function addToProductToCart(event) {
+    let productId = event.target.dataset.toggleId
+    fetch(basketApiAddUrl + productId, {
+        headers: myHeaders,
+        method: 'PUT'
+    }).then(function (response) {
+        if (response.status === 200) {
+            toastr.success('Продукт добавлен в корзину', '', {timeOut: 1000})
+        } else if (response.status === 405) {
+            toastr.warning('Необходимо авторизоваться что бы добавить в корзину', '', {timeOut: 1000})
+        } else {
+            toastr.warning('Товар не найден', '', {timeOut: 1000})
         }
     })
 }
@@ -234,3 +257,5 @@ function showModalError(message) {
         $('.alert').alert('close');
     }, 5000)
 }
+
+document.getElementById('addToCartButton').addEventListener('click', addToProductToCart)
