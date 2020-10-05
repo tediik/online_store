@@ -15,10 +15,6 @@ function chekboxChanges(o) {
 };
 
 $(document).ready(function () {
-
-    /**
-     * Event listeners
-     */
     document.getElementById('deleteProfileCustomer').addEventListener('click', deleteProfile)
 });
 
