@@ -4,11 +4,18 @@
     <meta charset="UTF-8">
     <title>Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--toastr CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/static/css/customer.css">
     <link rel="stylesheet" type="text/css" href="/static/css/jquery.fias.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <!-- CSS fot toaster -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+          integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" />
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
@@ -18,7 +25,6 @@
     <script src="../static/js/orderPlacement.js"></script>
     <script src="../static/js/customer.js"></script>
     <script src="../static/js/busket.js"></script>
-    <script src="../static/js/customerProfilePageFunctions.js"></script>
     <script src="../static/js/profilePicture.js"></script>
     <script src="../static/js/orders.js"></script>
     <script src="../static/js/profile.js"></script>
@@ -40,7 +46,7 @@
                    role="tab" aria-controls="basketGoods" aria-selected="false" onclick="fillBusket()">Корзина</a>
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
-                <a class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
+                <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
             </div>
         </div>
         <div class="col-md-10" style="background: #edeef0">
@@ -219,6 +225,14 @@
                                         <button type="submit" style="background-color: #ff8e05"
                                                 class="m-2 btn btn-success d-block mx-auto">Сохранить
                                         </button>
+                                        <div>
+                                            <button type="button" style="color: #a94442"
+                                                    class="m-2 btn btn-link d-block mx-auto"
+                                                    data-toggle="modal"
+                                                    data-target="#deleteProfile"
+                                                    th:data-del-id="${user.id}">Удалить профиль
+                                            </button>
+                                        </div>
                                         <div class="m-2 text-center personal-info_register-container"
                                              style="background-color: #f9f9f9">
                                             Дата регистрации:
@@ -238,7 +252,8 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form id="formChangeMail" th:action="@{/customer/changemail}" method="post" class="form-group">
+                                                    <form id="formChangeMail" th:action="@{/customer/changemail}"
+                                                          method="post" class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="new_mail">Введите новый адрес электронной
                                                                 почты</label>
@@ -247,7 +262,8 @@
                                                                    name="newMail"
                                                                    class="form-control" required/>
                                                         </div>
-                                                        <button type="submit" id="buttonChangeMail" class="btn btn-primary btn-sm btn-block">
+                                                        <button type="submit" id="buttonChangeMail"
+                                                                class="btn btn-primary btn-sm btn-block">
                                                             Подтвердить
                                                         </button>
                                                     </form>
@@ -280,24 +296,54 @@
                                                                    class="form-control" required/>
                                                             <small id="passwordHelpBlock" class="form-text text-muted">
                                                                 Your password must be 8-20 characters long, contain
-                                                                letters and numbers, and must not contain spaces and emoji.
+                                                                letters and numbers, and must not contain spaces and
+                                                                emoji.
                                                             </small>
                                                         </div>
-                                                        <button id="submitNewPassword" type="submit" class="btn btn-primary btn-sm btn-block">
+                                                        <button id="submitNewPassword" type="submit"
+                                                                class="btn btn-primary btn-sm btn-block">
                                                             Сохранить
                                                         </button>
-
                                                     </form>
-
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!---------------------- Delete Profile Modal window ------------------->
+                                    <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
+                                         aria-labelledby="titleDeleteProfile" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="titleDeleteProfile">Удалить профиль</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Вы уверены что хотите удалить свой профиль?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">
+                                                        Отмена
+                                                    </button>
+                                                    <button id="deleteProfileCustomer" type="button"
+                                                            class="btn btn-danger" th:data-del-id="${user.id}"
+                                                            data-dismiss="modal">
+                                                        Удалить
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!---------------------- End Delete Profile Modal window ------------------->
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
                     <div id="order-div"></div>
@@ -341,13 +387,13 @@
                                 </div>
                                 <div class="modal-body" id="modalBody">
                                     <div class="raw">
-                                    <label style="font-size: medium; vertical-align: unset">
-                                        <input class="checkbox" type="checkbox" onchange="addressChange()"/>
-                                        Самовывоз
-                                    </label>
+                                        <label style="font-size: medium; vertical-align: unset">
+                                            <input class="checkbox" type="checkbox" onchange="addressChange()"/>
+                                            Самовывоз
+                                        </label>
 
-                                    <div align="right">
-                                    </div>
+                                        <div align="right">
+                                        </div>
                                     </div>
                                     <div class="row justify-content-center">
                                         <div class="col">
@@ -396,7 +442,7 @@
                                                 <button id="clear-button" type="button" class="btn btn-secondary"
                                                         onclick="clearFields()">Отчистить поля
                                                 </button>
-                                                <button  id="add-adress-button" type="button" class="btn btn-success"
+                                                <button id="add-adress-button" type="button" class="btn btn-success"
                                                         onclick="addAddress()">Добавить адрес
                                                 </button>
                                             </div>
@@ -408,7 +454,8 @@
                                             data-dismiss="modal">
                                         Закрыть
                                     </button>
-                                    <button style="float: right" id="acceptButton" type="button" class="btn btn-success edit-button"
+                                    <button style="float: right" id="acceptButton" type="button"
+                                            class="btn btn-success edit-button"
                                             onclick="confirmOrder()">
                                         Оформить заказ
                                     </button>
@@ -476,7 +523,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modalfor order -->
 <div class="modal fade" id="orderModal" tabindex="-1"
      role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -508,5 +554,13 @@
         </div>
     </div>
 </div>
+<!-- Rate YO -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script src="../static/js/customerProfilePageFunctions.js"></script>
 </body>
 </html>
