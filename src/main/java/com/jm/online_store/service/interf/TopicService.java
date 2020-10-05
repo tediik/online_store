@@ -10,8 +10,4 @@ public interface TopicService {
     List<String> getAllCategories();
 
     List<Topic> getTopicsByCategory(String category);
-
-    Topic getTopicByName(String topicName);
-
-    Topic findTopicById(Long id);
 }
