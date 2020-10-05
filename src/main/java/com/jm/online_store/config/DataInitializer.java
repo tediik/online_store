@@ -1049,6 +1049,13 @@ public class DataInitializer {
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о новых Акциях!" +
                         "</p><p>@@stockList@@</p><p>С Уважением</p><p>Online-store.ru</p>")
                 .build();
-        commonSettingsService.addSetting(emailStockDistributionTemplate);
+        CommonSettings priceChangeDistributionTemplate = CommonSettings.builder()
+                .settingName("price_change_distribution_template")
+                .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о снижении цены</p>" +
+                        "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
+                        "<p>С Уважением</p><p>Online-store.ru</p>")
+                .build();
+//        commonSettingsService.addSetting(emailStockDistributionTemplate);
+        commonSettingsService.addSetting(priceChangeDistributionTemplate);
     }
 }

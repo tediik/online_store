@@ -2,7 +2,9 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
+import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,9 @@ class ProductServiceImplTest {
     private final ProductRepository productRepository = mock(ProductRepository.class);
     private final EvaluationService evaluationService = mock(EvaluationService.class);
     private final UserService userService = mock(UserService.class);
-    private final ProductService productService = new ProductServiceImpl(productRepository,evaluationService,userService);
+    private final MailSenderService mailSenderService = mock(MailSenderService.class);
+    private final CommonSettingsService commonSettingsService = mock(CommonSettingsService.class);
+    private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService, mailSenderService);
     private Product product;
 
     @BeforeEach

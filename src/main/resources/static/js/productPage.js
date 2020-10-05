@@ -178,7 +178,7 @@ function newRateForProduct(rating) {
 }
 
 /**
- * Функция добавления email в список подписчиков товара
+ * Функция добавления email в список подписанных на рассылку при изменении цены товара
  */
 function priceChangeSubscribe() {
     let email = $("#emailInputModal").val();
@@ -189,6 +189,7 @@ function priceChangeSubscribe() {
         if (response.ok) {
             $('#dismissButton').click();
             toastr.success("На ваш email оформлена подписка")
+            $("#emailInputModal").val("");
         } else {
             response.text().then(function (text) {
                 if(text == "incorrectEmail") {
