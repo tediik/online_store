@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
 /**
  * класс тестирования для методов FavouriteGoodsService
  */
