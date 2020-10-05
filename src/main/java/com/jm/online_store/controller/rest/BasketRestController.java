@@ -1,10 +1,9 @@
 package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.jm.online_store.exception.AddressNotFoundException;
-import com.jm.online_store.model.Address;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.SubBasket;
@@ -87,7 +86,7 @@ public class BasketRestController {
      * контроллер для формирования заказа из корзины.
      *
      * @param authentication авторизованный пользователь.
-     * @param id        адрес с формы
+     * @param id             адрес с формы
      * @return ResponseEntity(HttpStatus.OK)
      */
     @PostMapping(value = "/customer/busketGoods")
@@ -169,11 +168,11 @@ public class BasketRestController {
     }
 
     @PutMapping("/api/basket/add/{id}")
-    public ResponseEntity<String> addProductToBasket(@PathVariable Long id){
+    public ResponseEntity<String> addProductToBasket(@PathVariable Long id) {
         try {
             basketService.addProductToBasket(id);
             return ResponseEntity.ok().build();
-        } catch (UserNotFoundException | ProductNotFoundException e){
+        } catch (UserNotFoundException | ProductNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
