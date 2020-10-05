@@ -38,7 +38,7 @@ function deleteProfile(event) {
         if (response.ok) {
             document.location.href = "/logout";
         } else {
-            console.log("Удаление не удалось:" + response.status)
+            toastr.error('Ваш профиль не был удален.', {timeOut: 3000});
         }
     })
 }
