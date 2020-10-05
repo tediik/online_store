@@ -28,17 +28,17 @@ $(document).ready(function () {
  */
 function deleteProfile(event) {
     let id = event.target.dataset.delId
-    fetch("/customer/deleteProfile" + `/${id}`, {
+    fetch(`/customer/deleteProfile/${id}`, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-type': 'application/json'
         }
     }).then(function (response) {
-        if (response.status === 200) {
-            document.getElementById('outFromCustomerProfile').click()
+        if (response.ok) {
+            document.location.href = "/logout";
+        } else {
+            console.log("Удаление не удалось:" + response.status)
         }
     })
 }
-
-

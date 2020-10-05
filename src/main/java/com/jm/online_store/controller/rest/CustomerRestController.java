@@ -41,12 +41,11 @@ public class CustomerRestController {
     /**
      * Метод удаления профиля покупателя
      * @param id индентификатор покупателя
-     * @return ResponseEntity<>(HttpStatus.OK)
+     * @return ResponseEntity.ok()
      */
     @DeleteMapping("/deleteProfile/{id}")
-    public ResponseEntity<Void> deleteProfile(@PathVariable Long id) {
+    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
         userService.deleteByID(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok("Delete profile");
     }
-
 }
