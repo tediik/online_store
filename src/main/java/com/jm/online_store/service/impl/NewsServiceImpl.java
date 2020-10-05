@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -48,11 +48,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public Page<News> findAll(Pageable page, NewsFilterDto filterDto) {
         Specification<News> spec = NewsSpec.get(filterDto);
-        Page<News> newsPage = newsRepository.findAll(spec, page);
-        if (newsPage.isEmpty()) {
-            throw new NewsNotFoundException();
-        }
-        return newsPage;
+        return newsRepository.findAll(spec, page);
     }
 
     /**
@@ -93,7 +89,7 @@ public class NewsServiceImpl implements NewsService {
      * @param news сушность для обновления в базе данных
      */
     public News update(News news) {
-        news.setModifiedDate(LocalDateTime.now());
+        news.setModifiedDate(LocalDate.now());
         return newsRepository.save(news);
     }
 
@@ -109,13 +105,13 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * Метод делающий выборку из базы данных по заданному параметру,
-     * где LocalDateTime postingDate > LocalDateTime timeNow.
+     * где LocalDate postingDate <= LocalDate timeNow.
      *
-     * @return возвращает список еще неопубликованных новостей List<News>
+     * @return возвращает список опубликованных новостей List<News>
      */
     @Override
     public List<News> getAllPublished() {
-        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDateTime.now(), false);
+        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now().plusDays(1), false);
         if (publishedNews.isEmpty()) {
             throw new NewsNotFoundException("There are no published news");
         }
@@ -124,13 +120,13 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * Метод делающий выборку из базы данных по заданному параметру,
-     * где LocalDateTime postingDate <= LocalDateTime timeNow.
+     * где LocalDate postingDate > LocalDate timeNow.
      *
-     * @return возвращает список опубликованных новостей List<News>
+     * @return возвращает список еще неопубликованных новостей List<News>
      */
     @Override
     public List<News> getAllUnpublished() {
-        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDateTime.now(), false);
+        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
         if (unpublishedNews.isEmpty()) {
             throw new NewsNotFoundException("There are no unpublished news");
         }
@@ -149,5 +145,4 @@ public class NewsServiceImpl implements NewsService {
         }
         return archivedNews;
     }
-
 }

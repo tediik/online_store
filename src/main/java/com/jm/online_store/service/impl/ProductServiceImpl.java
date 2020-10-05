@@ -1,14 +1,18 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.ProductNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.ProductService;
-import com.opencsv.CSVReader;
+import com.jm.online_store.service.interf.UserService;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvValidationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,20 +23,20 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.time.LocalDateTime;
-import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -40,9 +44,12 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final EvaluationService evaluationService;
+    private final UserService userService;
 
     /**
      * метод получения списка товаров
+     *
      * @return List<Product>
      */
     @Transactional
@@ -50,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAll() {
         return productRepository.findAll();
     }
+
     /**
      * метод поиска Product по иденификатору.
      *
@@ -98,13 +106,14 @@ public class ProductServiceImpl implements ProductService {
         product.setDeleted(true);
         productRepository.save(product);
     }
+
     /**
      * метод восстановления удаленного Product.
      *
      * @param idProduct идентификатор Product
      */
     @Override
-    public void restoreProduct(Long idProduct){
+    public void restoreProduct(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
         product.setDeleted(false);
         productRepository.save(product);
@@ -159,6 +168,7 @@ public class ProductServiceImpl implements ProductService {
      * Записывает товары в БД
      * Для правильного считывания используется кастомная MappingStrategy
      * чтобы не перегружать Products лишними аннотациями
+     *
      * @param fileName имя скачанного файла
      */
     public void importFromCSVFile(String fileName) throws FileNotFoundException {
@@ -211,4 +221,101 @@ public class ProductServiceImpl implements ProductService {
         return product.getChangePriceHistory();
     }
 
+    /**
+     * метод изменения рейтинга товара
+     *
+     * @param productId id товара
+     * @param rating    оценка польователем товара
+     * @param user      пользователь оценивший товар
+     * @return double новый рейтинг
+     * @throws UserNotFoundException,ProductNotFoundException
+     */
+    @Transactional
+    @Override
+    public double changeProductRating(Long productId, double rating, User user) {
+        Optional<Evaluation> evaluation = evaluationService.getEvaluation(
+                user,
+                findProductById(productId).orElseThrow(ProductNotFoundException::new));
+        if (evaluation.isPresent()) {
+            evaluation.get().setRating(rating);
+            evaluationService.addEvaluation(evaluation.get());
+        } else {
+            evaluationService.addEvaluation(new Evaluation(
+                    rating,
+                    userService.findById(user.getId()).orElseThrow(UserNotFoundException::new),
+                    findProductById(productId).orElseThrow(ProductNotFoundException::new)
+            ));
+        }
+        List<Evaluation> evaluations = evaluationService.getAllProductEvaluation(findProductById(productId)
+                .orElseThrow(ProductNotFoundException::new));
+        double newRating = evaluations.stream().mapToDouble(s -> s.getRating()).sum() / evaluations.size();
+        Product product = findProductById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setRating(newRating);
+        return newRating;
+    }
+
+    /**
+     * метод формирующий DTO для передачи на страниу товара
+     * @param productId
+     * @param currentUser
+     * @return Optional<ProductDto> для передачи на страницу товара
+     * @throws {@link UserNotFoundException}
+     */
+    @Override
+    public Optional<ProductDto> getProductDto(Long productId, User currentUser) {
+        Optional<Product> product = findProductById(productId);
+        if (currentUser != null) {
+            User userFromDB = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
+            if (product.isPresent()) {
+                Set<Product> productSet = userFromDB.getFavouritesGoods();
+                Product presentProduct = product.get();
+                ProductDto productDto = new ProductDto(
+                        presentProduct.getId(),
+                        presentProduct.getProduct(),
+                        presentProduct.getPrice(),
+                        presentProduct.getRating(),
+                        presentProduct.getDescriptions(),
+                        presentProduct.getProductType(),
+                        productSet.contains(presentProduct)
+                );
+                return Optional.of(productDto);
+            }
+        } else {
+            if (product.isPresent()) {
+                Product presentProduct = product.get();
+                ProductDto productDto = new ProductDto(
+                        presentProduct.getId(),
+                        presentProduct.getProduct(),
+                        presentProduct.getPrice(),
+                        presentProduct.getRating(),
+                        presentProduct.getDescriptions(),
+                        presentProduct.getProductType(),
+                        false
+                );
+                return Optional.of(productDto);
+            }
+        }
+        return Optional.empty();
+    }
+    /**
+     * Method that finds search string in Product name.
+     *
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
+    @Override
+    public List<Product> findProductsByNameContains(String searchString) {
+        return productRepository.findProductByProductContains(searchString);
+    }
+
+    /**
+     * Method that finds search string in Product description.
+     *
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
+    @Override
+    public List<Product> findProductsByDescriptionContains(String searchString) {
+        return productRepository.findProductByDescriptionsContains(searchString);
+    }
 }
