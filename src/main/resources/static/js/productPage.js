@@ -77,7 +77,11 @@ async function fillAboutProduct(data) {
         $("#heart").toggleClass("filled");
         $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
     }
-    $("#rateNumber").empty().append(`<h5>${data.rating}<h5>`)
+    if(data.rating !== null) {
+        $("#rateNumber").empty().append(`<h5>${data.rating}<h5>`)
+    } else {
+        $("#rateNumber").empty().append(`<h5>Товар ещё никто не оценил<h5>`)
+    }
     rateInitialize(data.rating)
 
     // заполнение вкладки с описанием продукта
@@ -142,13 +146,23 @@ function addToFavourite() {
  * @param rating текущий рейтинг товара
  */
 function rateInitialize(rating) {
-    $("#rate").rateYo({
-        onSet: function (rating) {
-            newRateForProduct(rating);
-        },
-        rating: rating,
-        halfStar: true
-    });
+    if(rating !== null) {
+        $("#rate").rateYo({
+            onSet: function (rating) {
+                newRateForProduct(rating);
+            },
+            rating: rating,
+            halfStar: true
+        });
+    } else {
+        $("#rate").rateYo({
+            onSet: function (rating) {
+                newRateForProduct(rating);
+            },
+            rating: 0,
+            halfStar: true
+        });
+    }
 }
 
 /**
