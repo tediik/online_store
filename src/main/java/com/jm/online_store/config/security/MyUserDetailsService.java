@@ -1,5 +1,7 @@
 package com.jm.online_store.config.security;
 
+import com.jm.online_store.exception.InvalidEmailException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.UserRepository;
@@ -23,13 +25,10 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("Email '%s' not found.", email));
-        } else {
-            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                    mapRolesToAuthorities(user.getRoles()));
-        }
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException("User Not Found with -> username or email: " + email));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                mapRolesToAuthorities(user.getRoles()));
     }
 
     public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {

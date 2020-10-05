@@ -33,7 +33,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         try {
             mailSender.send(mailMessage);
         } catch (MailSendException ex) {
-            System.out.println("Warning! Message rejected under suspicion of SPAM!");
+            log.debug("Warning! Message rejected under suspicion of SPAM!");
         }
     }
 
