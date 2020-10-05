@@ -99,7 +99,7 @@ public class FavouriteGoodsServiceImplTest {
     }
 
     /**
-     * тест того, что метод добавления товара в избранное бросает ислючение
+     * тест того, что метод добавления товара в избранное бросает исключение
      */
     @Test
     public void addFavouriteGoodsThrowsExceptions() {
@@ -113,7 +113,7 @@ public class FavouriteGoodsServiceImplTest {
     }
 
     /**
-     * тест того, что метод удаления товара из избранного бросает ислючение
+     * тест того, что метод удаления товара из избранного бросает исключение
      */
     @Test
     public void deleteFavouriteGoodsThrowsExceptions() {
