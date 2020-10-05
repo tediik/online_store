@@ -69,6 +69,35 @@ public class FavouriteGoodsServiceImplTest {
     }
 
     /**
+     * Тест метода добавления товара в избранное
+     */
+    @Test
+    public void addFavouriteGoods() {
+        when(userService.findById(any())).thenReturn(Optional.of(user));
+        when(productService.findProductById(any())).thenReturn(Optional.of(product1));
+        Product testProduct = new Product("productTest", 500, 10);
+        favouriteGoodsService.addToFavouriteGoods(3L, user);
+        verify(userService,times(1)).findById(any());
+        verify(productService,times(1)).findProductById(any());
+        favouriteGoods.add(testProduct);
+        assertEquals(user.getFavouritesGoods(),favouriteGoods);
+    }
+
+    /**
+     * тест метода удаления товара из избранного
+     */
+    @Test
+    public void deleteFavouriteGoods() {
+        when(userService.findById(any())).thenReturn(Optional.of(user));
+        when(productService.findProductById(any())).thenReturn(Optional.of(product1));
+        favouriteGoodsService.deleteFromFavouriteGoods(1L,user);
+        verify(userService,times(1)).findById(any());
+        verify(productService,times(1)).findProductById(any());
+        favouriteGoods.remove(product1);
+        assertEquals(favouriteGoods,user.getFavouritesGoods());
+    }
+
+    /**
      * тест того, что метод добавления товара в избранное бросает ислючение
      */
     @Test
@@ -76,12 +105,10 @@ public class FavouriteGoodsServiceImplTest {
         when(userService.findById(any())).thenReturn(Optional.empty());
         when(productService.findProductById(any())).thenReturn(Optional.of(product1));
         assertThrows(UserNotFoundException.class,() -> favouriteGoodsService.addToFavouriteGoods(any(),user));
-        verify(userService,times(1)).findById(any());
 
         when(userService.findById(any())).thenReturn(Optional.of(user));
         when(productService.findProductById(any())).thenReturn(Optional.empty());
         assertThrows(ProductNotFoundException.class,() -> favouriteGoodsService.addToFavouriteGoods(any(),user));
-        verify(productService,times(1)).findProductById(any());
     }
 
     /**
@@ -108,5 +135,4 @@ public class FavouriteGoodsServiceImplTest {
         when(userService.findById(any())).thenReturn(Optional.empty());
         assertThrows(UserNotFoundException.class,() -> favouriteGoodsService.getFavouriteGoods(user));
     }
-
 }
