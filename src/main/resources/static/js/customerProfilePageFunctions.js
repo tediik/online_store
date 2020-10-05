@@ -13,3 +13,32 @@ function chekboxChanges(o) {
         $(".day-of-the-week-drop-list").removeClass("d-none")
     }
 };
+
+$(document).ready(function () {
+
+    /**
+     * Event listeners
+     */
+    document.getElementById('deleteProfileCustomer').addEventListener('click', deleteProfile)
+});
+
+/**
+ * function delete profile customer
+ * @param event
+ */
+function deleteProfile(event) {
+    let id = event.target.dataset.delId
+    fetch("/customer/deleteProfile" + `/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+        }
+    }).then(function (response) {
+        if (response.status === 200) {
+            document.getElementById('outFromCustomerProfile').click()
+        }
+    })
+}
+
+
