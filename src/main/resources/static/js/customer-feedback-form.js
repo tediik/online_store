@@ -1,18 +1,25 @@
+/**
+ * Global variables
+ */
 let myHeaders = new Headers()
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 let feedBackTopicCategorySelect = $('#feedbackTopicCategorySelect')
 let feedBackTopicSelect = $('#feedbackTopicNameSelect')
 
+/**
+ * event listeners
+ */
 document.getElementById('feedback-tab').addEventListener('click', fetchAndFillCategorySelect)
 document.getElementById('feedbackSubmitButton').addEventListener('click', submitFeedbackForm)
 
+/**
+ * Creating mask for phone input using inputmask.js lib
+ * @type {HTMLElement}
+ */
 let phoneNumberInput = document.getElementById('phoneFeedbackFormInput')
 let phoneMask = new Inputmask("9(999)999-99-99")
 phoneMask.mask(phoneNumberInput)
 
-$(document).ready(function (){
-
-})
 
 /**
  * function that fetches categories list from db
@@ -33,6 +40,7 @@ function fetchAndFillCategorySelect() {
             .forEach(category => feedBackTopicCategorySelect
                 .append(`<option>${category}</option>`))
     }
+
     document.getElementById('feedbackTopicCategorySelect').addEventListener('change', fetchAndFillTopicSelect)
 }
 
@@ -53,11 +61,12 @@ function fetchAndFillTopicSelect() {
             .append(`<option selected="selected" disabled>Выберите тему</option>`)
         topics.forEach(topic => feedBackTopicSelect.append(`<option value="${topic.id}">${topic.topicName}</option>`))
     }
+
     feedBackTopicSelect.removeAttr('disabled')
     document.getElementById('feedbackTopicNameSelect').addEventListener('change', enableFormFields)
 
-    fetch('/api/feedback/userInfo').then(function (response){
-        if (response.ok){
+    fetch('/api/feedback/userInfo').then(function (response) {
+        if (response.ok) {
             response.json().then(user => {
                 $('#firstNameFeedbackFormInput').val(user.firstName)
                 $('#emailFeedbackFormInput').val(user.email)
@@ -126,8 +135,4 @@ function submitFeedbackForm() {
     } else {
         toastr.error('Заполните все поля формы')
     }
-}
-
-function checkIfUserLoggedIn() {
-    fetch()
 }
