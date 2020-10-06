@@ -51,9 +51,10 @@ public class BasketRestController {
      * @param authentication модель данных, построенная на основе залогированного User.
      * @return авторизванный пользователь.
      */
-    private User getAutorityUser(Authentication authentication) {
-        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
-    }
+//    private User getAutorityUser(Authentication authentication) {
+////        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
+//        return userService.getCurrentLoggedInUser();
+//    }
 
     /**
      * контроллер для получения товаров в корзине для авторизованного User.
@@ -65,7 +66,8 @@ public class BasketRestController {
      */
     @GetMapping(value = "/customer/busketGoods")
     public ResponseEntity<List<SubBasket>> getBasket(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
+//        User autorityUser = getAutorityUser(authentication);
         List<SubBasket> subBaskets = autorityUser.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {
@@ -93,7 +95,8 @@ public class BasketRestController {
     @PostMapping(value = "/customer/busketGoods")
     public ResponseEntity buildOrderFromBasket(Authentication authentication, @RequestBody Long id) {
         Address addressToAdd = addressService.findAddressById(id).get();
-        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
+//        User autorityUser = getAutorityUser(authentication);
         List<SubBasket> subBasketList = autorityUser.getUserBasket();
         Product product;
         int count = 0;
@@ -131,7 +134,8 @@ public class BasketRestController {
      */
     @DeleteMapping(value = "/customer/busketGoods")
     public ResponseEntity deleteBasket(@RequestBody Long id, Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+//        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
         List<SubBasket> subBasketList = autorityUser.getUserBasket();
         subBasketList.remove(basketService.findBasketById(id));
         autorityUser.setUserBasket(subBasketList);

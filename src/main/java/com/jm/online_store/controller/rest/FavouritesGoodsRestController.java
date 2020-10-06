@@ -5,6 +5,7 @@ import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FavouriteGoodsService;
+import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +25,7 @@ import java.util.Set;
 @RestController
 public class FavouritesGoodsRestController {
     FavouriteGoodsService favouriteGoodsService;
+    private final UserService userService;
 
     /**
      * контроллер для получения товаров "избранное" для авторизованного User.
@@ -42,11 +44,13 @@ public class FavouritesGoodsRestController {
      *контроллер добавления товара в избранное.
      *
      * @param id идентификатор товара
-     * @param user модель данных, построенная на основе залогированного User.
+//     * @param user модель данных, построенная на основе залогированного User.
      * @return ResponseEntity.ok()
      */
     @PutMapping(value = "/customer/favouritesGoods")
-    public ResponseEntity addFavouritesGoods(@RequestBody Long id, @AuthenticationPrincipal User user) {
+//    public ResponseEntity addFavouritesGoods(@RequestBody Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
+        User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.addToFavouriteGoods(id, user);
         return ResponseEntity.ok().build();
     }

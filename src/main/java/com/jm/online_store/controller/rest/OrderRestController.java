@@ -34,10 +34,10 @@ public class OrderRestController {
      * @param authentication модель данных, построенная на основе залогированного User.
      * @return авторизванный пользователь.
      */
-    private User getAutorityUser(Authentication authentication) {
-//        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
-        return userService.getCurrentLoggedInUser();
-    }
+//    private User getAutorityUser(Authentication authentication) {
+////        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+//        return userService.getCurrentLoggedInUser();
+//    }
 
     /**
      * метод получения списка всех заказов авторизованного пользователя.
@@ -47,7 +47,8 @@ public class OrderRestController {
      */
     @GetMapping("/getAllOrders")
     public ResponseEntity<Set<Order>> getAllOrders(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+//        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
         Set<Order> orders = autorityUser.getOrders();
         return ResponseEntity.ok(orders);
     }
@@ -60,7 +61,8 @@ public class OrderRestController {
      */
     @GetMapping("/getIncartsOrders")
     public ResponseEntity<List<Order>> getIncartsOrders(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
+//        User autorityUser = getAutorityUser(authentication);
         List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.INCARTS);
         return ResponseEntity.ok(orders);
     }
@@ -73,7 +75,8 @@ public class OrderRestController {
      */
     @GetMapping("/getCompletedOrders")
     public ResponseEntity<List<Order>> getCompletedOrders(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+//        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
         List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.COMPLETED);
         return ResponseEntity.ok(orders);
     }
@@ -86,7 +89,8 @@ public class OrderRestController {
      */
     @GetMapping("/getCanceledOrders")
     public ResponseEntity<List<Order>> getCanceledOrders(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+//        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
         List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.CANCELED);
         return ResponseEntity.ok(orders);
     }
