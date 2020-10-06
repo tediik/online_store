@@ -21,7 +21,7 @@ function fetchAndFillCategorySelect() {
             if (response.ok) {
                 response.json().then(categories => fillCategorySelect(categories))
             }
-        })
+        }).catch(error => console.log(error))
 
     function fillCategorySelect(categories) {
         feedBackTopicCategorySelect
