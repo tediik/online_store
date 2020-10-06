@@ -12,7 +12,7 @@ $(document).ready(function () {
  */
 function fetchEmailPriceTemplate() {
     fetch(apiCommonSettingsUrl + '/price_change_distribution_template').then(function (response) {
-        if (response.status === 200) {
+        if (response.ok=== 200) {
             response.json()
                 .then(emailTemplate => $('#editPriceChangeTemplateSummernote').summernote('code', emailTemplate.textValue))
         }
@@ -34,7 +34,7 @@ function handleSaveTemplateButton() {
             body: JSON.stringify(commonSetting)
 
         }).then(function (response) {
-            if (response.status === 200) {
+            if (response.ok) {
                 toastr.success("Шаблон успешно сохранён")
             }
         })

@@ -116,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
         String messageBody;
         for (String email : emails) {
             Optional<User> user = userService.findByEmail(email);
-            if (user.isPresent()) {
+            if (user.isPresent() && user.get().getFirstName() != null) {
                 messageBody = templateBody.replace("@@user@@", user.get().getFirstName());
             } else {
                 messageBody = templateBody.replace("@@user@@", "Подписчик");
@@ -360,36 +360,39 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * добавляет новые email в рассылку при измененеии цены на товар
+     *
      * @param id    товара
      * @param email для рассылки
      * @return true если удалось добавить email, false если не удалось
      */
     @Override
     public boolean addNewSubscriber(Long id, String email) {
-        if (ValidationUtils.isValidEmail(email)) {
-            Product product = findProductById(id).orElseThrow(ProductNotFoundException::new);
-            Set<String> emails = product.getPriceChangeSubscribers();
-            if (emails.contains(email)) {
-                throw new EmailAlreadyExistsException();
-            } else {
-                emails.add(email);
-                product.setPriceChangeSubscribers(emails);
-                saveProduct(product);
-                return true;
-            }
-        } else {
+        if (!ValidationUtils.isValidEmail(email)) {
             return false;
+        }
+        Product product = findProductById(id).orElseThrow(ProductNotFoundException::new);
+        Set<String> emails = product.getPriceChangeSubscribers();
+        if (emails.contains(email)) {
+            throw new EmailAlreadyExistsException();
+        } else {
+            emails.add(email);
+            product.setPriceChangeSubscribers(emails);
+            saveProduct(product);
+            return true;
         }
     }
 
     /**
      * Метод для редактирования информации о товаре
+     *
      * @param product изменённый товар
      * @return id изменённого товара
      */
     @Override
     public Long editProduct(Product product) {
-        Map<LocalDateTime, Double> map = findProductById(product.getId()).get().getChangePriceHistory();
+        Map<LocalDateTime, Double> map = findProductById(product.getId())
+                .orElseThrow(ProductNotFoundException::new)
+                .getChangePriceHistory();
         map.put(LocalDateTime.now(), product.getPrice());
         product.setChangePriceHistory(map);
         double oldPrice = findProductById(product.getId()).get().getPrice();
@@ -397,7 +400,9 @@ public class ProductServiceImpl implements ProductService {
         if (newPrice < oldPrice) {
             sendNewPrice(product, oldPrice, newPrice);
         }
-        product.setPriceChangeSubscribers(findProductById(product.getId()).orElseThrow(ProductNotFoundException::new).getPriceChangeSubscribers());
+        product.setPriceChangeSubscribers(findProductById(product.getId())
+                .orElseThrow(ProductNotFoundException::new)
+                .getPriceChangeSubscribers());
         return saveProduct(product);
     }
 }

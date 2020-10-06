@@ -99,8 +99,8 @@ public class ProductRestController {
      * @return ResponseEntity
      */
     @PostMapping("/subscribe")
-    public ResponseEntity addNewSubscriber(@RequestParam(value = "email", required = false) String email,
-                                           @RequestParam(value = "id", required = false) Long id) {
+    public ResponseEntity<String> addNewSubscriber(@RequestParam(value = "email", required = true) String email,
+                                                   @RequestParam(value = "id", required = true) Long id) {
         if(productService.addNewSubscriber(id, email)) {
             return ResponseEntity.ok().build();
         } else {
