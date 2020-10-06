@@ -90,7 +90,7 @@ class ProductServiceImplTest {
     }
 
     /**
-     * метод тестирования добаления новых подписчиков на изменение цены
+     * метод тестирования добавления новых подписчиков на изменение цены
      */
     @Test
     void addNewSubscriberTest() {
@@ -122,6 +122,9 @@ class ProductServiceImplTest {
         assertThrows(ProductNotFoundException.class, () -> productService.editProduct(product));
     }
 
+    /**
+     * тест метода изменения товара
+     */
     @Test
     void editProductTest() {
         Product updateProduct = new Product();
