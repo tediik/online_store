@@ -37,7 +37,8 @@ public class AllUsersRestController {
         if (authentication == null) {
             return ResponseEntity.badRequest().build();
         }
-        User currentUser = userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+//        User currentUser = userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+        User currentUser = userService.getCurrentLoggedInUser();
         if (currentUser == null) {
             return ResponseEntity.badRequest().build();
         }

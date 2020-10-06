@@ -457,12 +457,14 @@ public class UserServiceImpl implements UserService {
      */
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        log.debug("getCurrentLoggedInUser.auth = " + auth.getPrincipal().toString());
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
-        String username = ((User) auth.getPrincipal()).getUsername();
-        return findByEmail(username).get();
+//        String username = ((User) auth.getPrincipal()).getUsername();
+//        return findByEmail(username).get();
+        return findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
     }
 
     /**

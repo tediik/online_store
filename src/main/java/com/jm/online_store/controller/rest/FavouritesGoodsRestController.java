@@ -32,7 +32,8 @@ public class FavouritesGoodsRestController {
      * @return объект авторизованного пользователя
      */
     private User getAutorityUser(Authentication authentication) {
-        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+//        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+        return userService.getCurrentLoggedInUser();
     }
 
     /**
@@ -45,7 +46,8 @@ public class FavouritesGoodsRestController {
      */
     @GetMapping(value = "/customer/favouritesGoods")
     public ResponseEntity<Set<Product>> getFavouritesGoods(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
+//        User autorityUser = getAutorityUser(authentication);
         Set<Product> favouritesGoods = autorityUser.getFavouritesGoods();
         return ResponseEntity.ok(favouritesGoods);
     }
@@ -59,7 +61,8 @@ public class FavouritesGoodsRestController {
      */
     @PutMapping(value = "/customer/favouritesGoods")
     public ResponseEntity addFavouritesGoods(@RequestBody Long id, Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+//        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
         Product product = productService.findProductById(id).get();
         Set<Product> favouritesGoods = autorityUser.getFavouritesGoods();
         favouritesGoods.add(product);
@@ -77,7 +80,8 @@ public class FavouritesGoodsRestController {
      */
     @DeleteMapping(value = "/customer/favouritesGoods")
     public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id, Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+//        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
         Product product = productService.findProductById(id).get();
         Set<Product> favouritesGoods = autorityUser.getFavouritesGoods();
         if (favouritesGoods.contains(product)) {

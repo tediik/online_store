@@ -42,8 +42,10 @@ public class CustomerController {
      * @return
      */
     @GetMapping
-    public String getUserProfile(Model model, Authentication auth) {
-        User user = userService.findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+    public String getUserProfile(Model model, Authentication authentication) {
+//        User user = userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+        User user = userService.getCurrentLoggedInUser();
+        log.debug("Customer controller.getUserProfile.authentication.getPrincipal = " + authentication.getPrincipal().toString());
         model.addAttribute("user", user);
         return "customerPage";
     }

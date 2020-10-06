@@ -35,7 +35,8 @@ public class OrderRestController {
      * @return авторизванный пользователь.
      */
     private User getAutorityUser(Authentication authentication) {
-        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+//        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+        return userService.getCurrentLoggedInUser();
     }
 
     /**
