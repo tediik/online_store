@@ -27,5 +27,4 @@ public class TopicServiceImpl implements TopicService {
     public List<Topic> getTopicsByCategory(String category) {
         return topicRepository.findTopicByTopicCategoryEquals(category);
     }
-
 }
