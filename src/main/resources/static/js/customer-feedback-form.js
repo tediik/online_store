@@ -13,15 +13,6 @@ document.getElementById('feedback-tab').addEventListener('click', fetchAndFillCa
 document.getElementById('feedbackSubmitButton').addEventListener('click', submitFeedbackForm)
 
 /**
- * Creating mask for phone input using inputmask.js lib
- * @type {HTMLElement}
- */
-let phoneNumberInput = document.getElementById('phoneFeedbackFormInput')
-let phoneMask = new Inputmask("9(999)999-99-99")
-phoneMask.mask(phoneNumberInput)
-
-
-/**
  * function that fetches categories list from db
  */
 function fetchAndFillCategorySelect() {
@@ -40,7 +31,6 @@ function fetchAndFillCategorySelect() {
             .forEach(category => feedBackTopicCategorySelect
                 .append(`<option>${category}</option>`))
     }
-
     document.getElementById('feedbackTopicCategorySelect').addEventListener('change', fetchAndFillTopicSelect)
 }
 
@@ -64,17 +54,6 @@ function fetchAndFillTopicSelect() {
 
     feedBackTopicSelect.removeAttr('disabled')
     document.getElementById('feedbackTopicNameSelect').addEventListener('change', enableFormFields)
-
-    fetch('/api/feedback/userInfo').then(function (response) {
-        if (response.ok) {
-            response.json().then(user => {
-                $('#firstNameFeedbackFormInput').val(user.firstName)
-                $('#emailFeedbackFormInput').val(user.email)
-            })
-        } else {
-            console.log('user not logged in')
-        }
-    })
 }
 
 /**
@@ -82,10 +61,6 @@ function fetchAndFillTopicSelect() {
  */
 function enableFormFields() {
     $('#messageFeedbackForm').removeAttr('disabled')
-    $('#firstNameFeedbackFormInput').removeAttr('disabled')
-    $('#emailFeedbackFormInput').removeAttr('disabled')
-    $('#phoneFeedbackFormInput').removeAttr('disabled')
-    $('#cityFeedbackFormSelect').removeAttr('disabled')
     $('#feedbackSubmitButton').removeAttr('disabled')
 }
 
@@ -94,10 +69,6 @@ function enableFormFields() {
  */
 function disableFormFields() {
     $('#messageFeedbackForm').attr('disabled', 'true')
-    $('#firstNameFeedbackFormInput').attr('disabled', 'true')
-    $('#emailFeedbackFormInput').attr('disabled', 'true')
-    $('#phoneFeedbackFormInput').attr('disabled', 'true')
-    $('#cityFeedbackFormSelect').attr('disabled', 'true')
     $('#feedbackSubmitButton').attr('disabled', 'true')
     $('#feedbackTopicNameSelect').attr('disabled', 'true')
 }
@@ -107,26 +78,18 @@ function disableFormFields() {
  */
 function submitFeedbackForm() {
     let feedback = {
-        email: $('#emailFeedbackFormInput').val(),
-        firstName: $('#firstNameFeedbackFormInput').val(),
         message: $('#messageFeedbackForm').val(),
-        phoneNumber: $('#phoneFeedbackFormInput').val(),
         topic: {
             id: $('#feedbackTopicNameSelect').val()
         },
     }
-    if ($('#emailFeedbackFormInput') !== ''
-        && $('#firstNameFeedbackFormInput').val() !== ''
-        && $('#messageFeedbackForm').val() !== ''
-        && $('#phoneFeedbackFormInput').val() !== '') {
-
+    if ($('#messageFeedbackForm').val() !== '') {
         fetch('/api/feedback/', {
             headers: myHeaders,
             method: 'POST',
             body: JSON.stringify(feedback)
         }).then(function (response) {
             if (response.ok) {
-                console.log('ok')
                 toastr.success('Сообщение отправленно')
                 document.getElementById('feedbackFrom').reset()
                 disableFormFields()
