@@ -61,6 +61,8 @@ public class User implements UserDetails {
 
     private String lastName;
 
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private Gender userGender;
 
@@ -127,6 +129,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonManagedReference(value = "user-sentStock")
     private Set<SentStock> sentStocks;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<Feedback> feedbacks;
 
     public User() {
         registerDate = LocalDate.now();

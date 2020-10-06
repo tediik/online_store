@@ -31,15 +31,18 @@ public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Topic topic;
-    private String message;
-    private String firstName;
-    private String email;
-    private String phoneNumber;
-    private LocalDateTime feedbackPostDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    private String message;
+    private LocalDateTime feedbackPostDate;
 
     public enum Status {
         TO_DO,
