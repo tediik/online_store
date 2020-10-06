@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
@@ -131,6 +132,7 @@ public class User implements UserDetails {
     private Set<SentStock> sentStocks;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonIgnore
     private Set<Feedback> feedbacks;
 
     public User() {
