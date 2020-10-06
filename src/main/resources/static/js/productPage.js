@@ -199,20 +199,24 @@ function newRateForProduct(rating) {
  */
 function priceChangeSubscribe() {
     let email = $("#emailInputModal").val();
-    fetch(`/api/products/subscribe?id=${productIdFromPath}&email=${email}`, {
+    fetch(`/api/products/subscribe`, {
         method: 'POST',
+        body: JSON.stringify({
+            email: email,
+            id: productIdFromPath
+        }),
         headers: {'Content-Type': 'application/json;charset=utf-8'}
     }).then(function (response) {
         if (response.ok) {
             $('#dismissButton').click();
-            toastr.success("На ваш email оформлена подписка")
+            toastr.success("Мы уведомим вас об изменении цены на товар")
             $("#emailInputModal").val("");
         } else {
             response.text().then(function (text) {
                 if (text == "incorrectEmail") {
                     showModalError("Введён некорректный Email")
                 } else {
-                    showModalError("На введёный Email уже оформлена подписка")
+                    showModalError("Вы уже подписались на изменение цены этого товара")
                 }
             })
         }

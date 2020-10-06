@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
@@ -94,14 +95,12 @@ public class ProductRestController {
 
     /**
      * Контроллер для добавления нового email в лист рассылок
-     * @param email введёный пользователем
-     * @param id товара
+     * @param body тело запроса
      * @return ResponseEntity
      */
     @PostMapping("/subscribe")
-    public ResponseEntity<String> addNewSubscriber(@RequestParam(value = "email", required = true) String email,
-                                                   @RequestParam(value = "id", required = true) Long id) {
-        if(productService.addNewSubscriber(id, email)) {
+    public ResponseEntity<String> addNewSubscriber(@RequestBody ObjectNode body) {
+        if(productService.addNewSubscriber(body.get("id").asLong(), body.get("email").asText())) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().body("incorrectEmail");

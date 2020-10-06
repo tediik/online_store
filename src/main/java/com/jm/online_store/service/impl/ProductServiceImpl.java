@@ -117,13 +117,13 @@ public class ProductServiceImpl implements ProductService {
         for (String email : emails) {
             Optional<User> user = userService.findByEmail(email);
             if (user.isPresent() && user.get().getFirstName() != null) {
-                messageBody = templateBody.replace("@@user@@", user.get().getFirstName());
+                messageBody = templateBody.replaceAll("@@user@@", user.get().getFirstName());
             } else {
-                messageBody = templateBody.replace("@@user@@", "Подписчик");
+                messageBody = templateBody.replaceAll("@@user@@", "Покупатель");
             }
-            messageBody = messageBody.replace("@@oldPrice@@", String.valueOf(oldPrice));
-            messageBody = messageBody.replace("@@newPrice@@", String.valueOf(newPrice));
-            messageBody = messageBody.replace("@@product@@", product.getProduct());
+            messageBody = messageBody.replaceAll("@@oldPrice@@", String.valueOf(oldPrice));
+            messageBody = messageBody.replaceAll("@@newPrice@@", String.valueOf(newPrice));
+            messageBody = messageBody.replaceAll("@@product@@", product.getProduct());
             try {
                 mailSenderService.sendHtmlMessage(email, "Снижена цена на товар!", messageBody, "Price change");
             } catch (MessagingException e) {
