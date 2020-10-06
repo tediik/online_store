@@ -134,6 +134,7 @@ public class BasketRestController {
         List<SubBasket> subBasketList = autorityUser.getUserBasket();
         subBasketList.remove(basketService.findBasketById(id));
         autorityUser.setUserBasket(subBasketList);
+        basketService.deleteBasket(basketService.findBasketById(id));
         userService.updateUser(autorityUser);
         return new ResponseEntity(HttpStatus.OK);
     }
