@@ -20,7 +20,7 @@ public class NewsSpec {
         switch (filterDto.getType()) {
             case PUBLISHED:
                 return Specification.<News>where((root, query, criteriaBuilder) ->
-                        criteriaBuilder.lessThan(root.get("postingDate"), currentDate))
+                        criteriaBuilder.lessThanOrEqualTo(root.get("postingDate"), currentDate))
                         .and((root, query, criteriaBuilder) ->
                                 criteriaBuilder.equal(root.get("archived"), false));
             case UNPUBLISHED:
