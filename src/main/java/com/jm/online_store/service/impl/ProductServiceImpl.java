@@ -95,9 +95,6 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long saveProduct(Product product) {
-        Map<LocalDateTime, Double> map = product.getChangePriceHistory();
-        map.put(LocalDateTime.now(), product.getPrice());
-        product.setChangePriceHistory(map);
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
     }
@@ -392,6 +389,9 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long editProduct(Product product) {
+        Map<LocalDateTime, Double> map = findProductById(product.getId()).get().getChangePriceHistory();
+        map.put(LocalDateTime.now(), product.getPrice());
+        product.setChangePriceHistory(map);
         double oldPrice = findProductById(product.getId()).get().getPrice();
         double newPrice = product.getPrice();
         if (newPrice < oldPrice) {
