@@ -29,9 +29,12 @@ public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String topicCategory;
+
     @Column(unique = true)
     private String topicName;
+
     @OneToMany(mappedBy = "topic")
     private Set<Feedback> feedbacks;
+
+    private String topicCategory;
 }
