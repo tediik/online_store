@@ -1,7 +1,8 @@
 package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.jm.online_store.exception.AddressNotFoundException;
+import com.jm.online_store.exception.ProductNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Order;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +37,7 @@ import java.util.Set;
  */
 @AllArgsConstructor
 @RestController
-public class BusketRestController {
+public class BasketRestController {
     private final UserService userService;
     private final BasketService basketService;
     private final OrderService orderService;
@@ -49,10 +51,9 @@ public class BusketRestController {
      * @param authentication модель данных, построенная на основе залогированного User.
      * @return авторизванный пользователь.
      */
-//    private User getAutorityUser(Authentication authentication) {
-////        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
-//        return userService.getCurrentLoggedInUser();
-//    }
+    private User getAutorityUser(Authentication authentication) {
+        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
+    }
 
     /**
      * контроллер для получения товаров в корзине для авторизованного User.
@@ -64,8 +65,7 @@ public class BusketRestController {
      */
     @GetMapping(value = "/customer/busketGoods")
     public ResponseEntity<List<SubBasket>> getBasket(Authentication authentication) {
-//        User autorityUser = getAutorityUser(authentication);
-        User autorityUser = userService.getCurrentLoggedInUser();
+        User autorityUser = getAutorityUser(authentication);
         List<SubBasket> subBaskets = autorityUser.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {
@@ -87,14 +87,13 @@ public class BusketRestController {
      * контроллер для формирования заказа из корзины.
      *
      * @param authentication авторизованный пользователь.
-     * @param id        адрес с формы
+     * @param id             адрес с формы
      * @return ResponseEntity(HttpStatus.OK)
      */
     @PostMapping(value = "/customer/busketGoods")
     public ResponseEntity buildOrderFromBasket(Authentication authentication, @RequestBody Long id) {
         Address addressToAdd = addressService.findAddressById(id).get();
-        User autorityUser = userService.getCurrentLoggedInUser();
-//        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = getAutorityUser(authentication);
         List<SubBasket> subBasketList = autorityUser.getUserBasket();
         Product product;
         int count = 0;
@@ -132,11 +131,11 @@ public class BusketRestController {
      */
     @DeleteMapping(value = "/customer/busketGoods")
     public ResponseEntity deleteBasket(@RequestBody Long id, Authentication authentication) {
-//        User autorityUser = getAutorityUser(authentication);
-        User autorityUser = userService.getCurrentLoggedInUser();
+        User autorityUser = getAutorityUser(authentication);
         List<SubBasket> subBasketList = autorityUser.getUserBasket();
         subBasketList.remove(basketService.findBasketById(id));
         autorityUser.setUserBasket(subBasketList);
+        basketService.deleteBasket(basketService.findBasketById(id));
         userService.updateUser(autorityUser);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -168,5 +167,15 @@ public class BusketRestController {
         }
         basketService.updateBasket(subBasket);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping("/api/basket/add/{id}")
+    public ResponseEntity<String> addProductToBasket(@PathVariable Long id) {
+        try {
+            basketService.addProductToBasket(id);
+            return ResponseEntity.ok().build();
+        } catch (UserNotFoundException | ProductNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

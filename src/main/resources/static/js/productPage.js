@@ -1,4 +1,7 @@
 let productIdFromPath = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+let basketApiAddUrl = "/api/basket/add/"
+let myHeaders = new Headers()
+myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
 /**
  * Get-запрос - если получаем продукт, то вызываем заполняющие страницу функции,
@@ -63,8 +66,23 @@ async function fillBreadcrumb(data) {
 async function fillAboutProduct(data) {
     let productName = document.getElementById('productName');
     $(productName).append(`<br><h2 class="font-weight-normal">${data.product}</h2>`);
+    $("#favouriteContainer").append(`<div id="favoriteLabel"><h5 class="font-weight-normal my-2">&ensp;В избранное </h5></div>
+    <svg width="640" height="480" viewbox="0 0 640 480" id="heartSvg" class="heartSvg">
+        <path id="heart"
+    d="m219.28949,21.827393c-66.240005,0 -119.999954,53.76001 -119.999954,
+    120c0,134.755524 135.933151,170.08728 228.562454,303.308044c87.574219,
+        -132.403381 228.5625,-172.854584 228.5625,-303.308044c0,-66.23999
+    -53.759888,-120 -120,-120c-48.047913,0 -89.401611,28.370422 -108.5625,
+        69.1875c-19.160797,-40.817078 -60.514496,-69.1875 -108.5625,-69.1875z"
+    onclick="addToFavourite()"/>
+        </svg>`);
+    if(data.favourite) {
+        $("#heart").toggleClass("filled");
+        $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
+    }
     $("#rateNumber").empty().append(`<h5>${data.rating}<h5>`)
     rateInitialize(data.rating)
+
     // заполнение вкладки с описанием продукта
     let description = document.getElementById('text-description');
     if (data.descriptions == null) {
@@ -83,6 +101,42 @@ async function fillAboutProduct(data) {
                        </tr>`;
             $(specifications).append(content);
         }
+    }
+    $('#addToCartButton').attr('data-toggle-id', data.id)
+}
+
+/**
+ * Функиця добавления/удаления товара из избранного
+ */
+function addToFavourite() {
+    if($("path").is('[class="filled"]')) {
+        fetch("/customer/favouritesGoods", {
+            method: "DELETE",
+            body: productIdFromPath,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(function (response) {
+            if(response.ok) {
+                $("#heart").toggleClass("filled");
+                $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;В избранное</h5>`)
+                toastr.success("Товар успешно удалён из избранного");
+            } else {
+                toastr.error("Авторизуйтесь/зарегестрируйтесь");
+            }
+        })
+    } else {
+        fetch("/customer/favouritesGoods", {
+            method: "PUT",
+            body: productIdFromPath,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(function (response) {
+            if(response.ok) {
+                $("#heart").toggleClass("filled");
+                $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
+                toastr.success("Товар успешно добавлен в избранное");
+            } else {
+                toastr.error("Авторизуйтесь/зарегестрируйтесь");
+            }
+        })
     }
 }
 
@@ -125,3 +179,25 @@ function newRateForProduct(rating) {
         }
     })
 }
+
+/**
+ * function add product to cart
+ * @param event
+ */
+function addToProductToCart(event) {
+    let productId = event.target.dataset.toggleId
+    fetch(basketApiAddUrl + productId, {
+        headers: myHeaders,
+        method: 'PUT'
+    }).then(function (response) {
+        if (response.status === 200) {
+            toastr.success('Продукт добавлен в корзину', '', {timeOut: 1000})
+        } else if (response.status === 405) {
+            toastr.warning('Необходимо авторизоваться что бы добавить в корзину', '', {timeOut: 1000})
+        } else {
+            toastr.warning('Товар не найден', '', {timeOut: 1000})
+        }
+    })
+}
+
+document.getElementById('addToCartButton').addEventListener('click', addToProductToCart)

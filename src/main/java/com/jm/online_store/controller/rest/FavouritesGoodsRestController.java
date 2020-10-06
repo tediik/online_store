@@ -1,14 +1,15 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.interf.ProductService;
-import com.jm.online_store.service.interf.UserService;
+import com.jm.online_store.service.interf.FavouriteGoodsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,73 +23,49 @@ import java.util.Set;
 @AllArgsConstructor
 @RestController
 public class FavouritesGoodsRestController {
-    private final UserService userService;
-    private final ProductService productService;
-
-    /**
-     *метод получения авторизованного пользователя.
-     *
-     * @param authentication модель данных построенная на основе авторизованного пользователя
-     * @return объект авторизованного пользователя
-     */
-    private User getAutorityUser(Authentication authentication) {
-//        return userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
-        return userService.getCurrentLoggedInUser();
-    }
+    FavouriteGoodsService favouriteGoodsService;
 
     /**
      * контроллер для получения товаров "избранное" для авторизованного User.
      * используется поиск по идентификатору User, т.к. используется ленивая
      * загрузка товаров, добавленных в "избранное".
      *
-     * @param authentication модель данных, построенная на основе залогированного User.
+     * @param user модель данных, построенная на основе залогированного User.
      * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
      */
     @GetMapping(value = "/customer/favouritesGoods")
-    public ResponseEntity<Set<Product>> getFavouritesGoods(Authentication authentication) {
-        User autorityUser = userService.getCurrentLoggedInUser();
-//        User autorityUser = getAutorityUser(authentication);
-        Set<Product> favouritesGoods = autorityUser.getFavouritesGoods();
-        return ResponseEntity.ok(favouritesGoods);
+    public ResponseEntity<Set<Product>> getFavouritesGoods(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(favouriteGoodsService.getFavouriteGoods(user));
     }
 
     /**
-     *метод добавления товара в избранное.
+     *контроллер добавления товара в избранное.
      *
      * @param id идентификатор товара
-     * @param authentication модель данных, построенная на основе залогированного User.
+     * @param user модель данных, построенная на основе залогированного User.
      * @return ResponseEntity.ok()
      */
     @PutMapping(value = "/customer/favouritesGoods")
-    public ResponseEntity addFavouritesGoods(@RequestBody Long id, Authentication authentication) {
-//        User autorityUser = getAutorityUser(authentication);
-        User autorityUser = userService.getCurrentLoggedInUser();
-        Product product = productService.findProductById(id).get();
-        Set<Product> favouritesGoods = autorityUser.getFavouritesGoods();
-        favouritesGoods.add(product);
-        autorityUser.setFavouritesGoods(favouritesGoods);
-        userService.updateUserFromController(autorityUser);
+    public ResponseEntity addFavouritesGoods(@RequestBody Long id, @AuthenticationPrincipal User user) {
+        favouriteGoodsService.addToFavouriteGoods(id, user);
         return ResponseEntity.ok().build();
     }
 
     /**
-     *метод удаления товара из избранного списка товаров.
+     *контроллер удаления товара из избранного списка товаров.
      *
      * @param id идентификатор товара
-     * @param authentication модель данных, построенная на основе залогированного User.
+     * @param user модель данных, построенная на основе залогированного User.
      * @return ResponseEntity.ok()
      */
     @DeleteMapping(value = "/customer/favouritesGoods")
-    public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id, Authentication authentication) {
-//        User autorityUser = getAutorityUser(authentication);
-        User autorityUser = userService.getCurrentLoggedInUser();
-        Product product = productService.findProductById(id).get();
-        Set<Product> favouritesGoods = autorityUser.getFavouritesGoods();
-        if (favouritesGoods.contains(product)) {
-            favouritesGoods.remove(product);
-        }
-        autorityUser.setFavouritesGoods(favouritesGoods);
-        userService.updateUserFromController(autorityUser);
+    public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id, @AuthenticationPrincipal User user) {
+        favouriteGoodsService.deleteFromFavouriteGoods(id, user);
         return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler({UserNotFoundException.class, ProductNotFoundException.class})
+    public ResponseEntity handleControllerExceptions() {
+        return ResponseEntity.notFound().build();
     }
 }

@@ -13,6 +13,7 @@ import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.TaskSettings;
+import com.jm.online_store.model.Topic;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BasketService;
@@ -27,6 +28,7 @@ import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.TaskSettingsService;
+import com.jm.online_store.service.interf.TopicService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -71,6 +73,7 @@ public class DataInitializer {
     private final SentStockService sentStockService;
     private final TaskSettingsService taskSettingsService;
     private final CommonSettingsService commonSettingsService;
+    private final TopicService topicService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -90,6 +93,7 @@ public class DataInitializer {
 //        paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
         taskSettingsInit();
         commonSettingsInit();
+        feedbackTopicsInit();
     }
 
     /**
@@ -212,7 +216,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now())
+                .postingDate(LocalDate.now())
                 .archived(true)
                 .build();
 
@@ -231,7 +235,7 @@ public class DataInitializer {
                         "<i style=\"font-size: 1rem;\">Приятных покупок в Online-Shop!</i></p><p style=\"margin-right:" +
                         " 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px; color: rgb(0, 0, 0); font-family:" +
                         " &quot;PT Sans&quot;, Arial, sans-serif;\"><i style=\"font-size: 1rem;\">23<br></i><br></p>")
-                .postingDate(LocalDateTime.now().minusDays(5L))
+                .postingDate(LocalDate.now().minusDays(5L))
                 .archived(false)
                 .build();
 
@@ -246,7 +250,7 @@ public class DataInitializer {
                         "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
-                .postingDate(LocalDateTime.now().minusDays(13L))
+                .postingDate(LocalDate.now().minusDays(13L))
                 .archived(false)
                 .build();
 
@@ -261,7 +265,7 @@ public class DataInitializer {
                         "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
-                .postingDate(LocalDateTime.now().minusDays(10L))
+                .postingDate(LocalDate.now().minusDays(10L))
                 .archived(false)
                 .build();
 
@@ -276,7 +280,7 @@ public class DataInitializer {
                         "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
-                .postingDate(LocalDateTime.now().minusDays(1L))
+                .postingDate(LocalDate.now().minusDays(1L))
                 .archived(false)
                 .build();
 
@@ -291,7 +295,7 @@ public class DataInitializer {
                         "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                         " font-size: 16px;\"><br></p></h1>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
@@ -379,7 +383,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
@@ -424,7 +428,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
@@ -484,7 +488,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
@@ -545,7 +549,7 @@ public class DataInitializer {
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
-                .postingDate(LocalDateTime.now().plusDays(30L))
+                .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
 
@@ -984,7 +988,7 @@ public class DataInitializer {
                             "</p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                             " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;" +
                             " font-size: 16px;\"><br></p></h1>")
-                    .postingDate(LocalDateTime.now().minusDays(Math.round(Math.random() * 20)))
+                    .postingDate(LocalDate.now().minusDays(Math.round(Math.random() * 20)))
                     .archived(false)
                     .build();
             newsService.save(news);
@@ -1005,14 +1009,15 @@ public class DataInitializer {
             stockService.addStock(stock);
         }
     }
+
     /**
      * Метод первичной инициалзации адресов, 2 адреса для магазина и 1 адрес прикрепляется к заказу
      */
     private void addressInit() {
-        Address address1 = new Address("420077","Татарстан","Казань","Революционная","25",true);
-        Address address2 = new Address("420078","Московская область","Москва","Ленина","126",true);
-        Address address3 = new Address("420079","Тамбовская область","Тамбов","Запорожская","11",false);
-        Address address4 = new Address("420080","Тамбовская область","Тамбов","Запорожская","12",false);
+        Address address1 = new Address("420077", "Татарстан", "Казань", "Революционная", "25", true);
+        Address address2 = new Address("420078", "Московская область", "Москва", "Ленина", "126", true);
+        Address address3 = new Address("420079", "Тамбовская область", "Тамбов", "Запорожская", "11", false);
+        Address address4 = new Address("420080", "Тамбовская область", "Тамбов", "Запорожская", "12", false);
         addressService.addAddress(address1);
         addressService.addAddress(address2);
         addressService.addAddress(address3);
@@ -1025,6 +1030,7 @@ public class DataInitializer {
         userToUpdate.setUserAddresses(userAddresses);
         userService.updateUser(userToUpdate);
     }
+
     /**
      * ini method for email stock distribution settings.
      * creates task for stock distribution with status not active
@@ -1050,5 +1056,62 @@ public class DataInitializer {
                         "</p><p>@@stockList@@</p><p>С Уважением</p><p>Online-store.ru</p>")
                 .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
+    }
+
+    /**
+     * Init method for topics
+     */
+    public void feedbackTopicsInit() {
+        Topic topic1 = Topic.builder()
+                .topicCategory("Коммерческое предложение")
+                .topicName("По товарам")
+                .build();
+        Topic topic2 = Topic.builder()
+                .topicCategory("Коммерческое предложение")
+                .topicName("По логистике")
+                .build();
+        Topic topic3 = Topic.builder()
+                .topicCategory("Коммерческое предложение")
+                .topicName("По кредитам")
+                .build();
+        Topic topic4 = Topic.builder()
+                .topicCategory("Оценка работы")
+                .topicName("Магазин")
+                .build();
+        Topic topic5 = Topic.builder()
+                .topicCategory("Оценка работы")
+                .topicName("Доставка")
+                .build();
+        Topic topic6 = Topic.builder()
+                .topicCategory("Оценка работы")
+                .topicName("Сервисный центр")
+                .build();
+        Topic topic7 = Topic.builder()
+                .topicCategory("Ошибки и пожелания")
+                .topicName("Работа сайта")
+                .build();
+        Topic topic8 = Topic.builder()
+                .topicCategory("Ошибки и пожелания")
+                .topicName("Новости, акции")
+                .build();
+        Topic topic9 = Topic.builder()
+                .topicCategory("Ошибки и пожелания")
+                .topicName("Описание товара")
+                .build();
+        Topic topic10 = Topic.builder()
+                .topicCategory("Работа в компании")
+                .topicName("Резюме")
+                .build();
+
+        topicService.addTopic(topic1);
+        topicService.addTopic(topic2);
+        topicService.addTopic(topic3);
+        topicService.addTopic(topic4);
+        topicService.addTopic(topic5);
+        topicService.addTopic(topic6);
+        topicService.addTopic(topic7);
+        topicService.addTopic(topic8);
+        topicService.addTopic(topic9);
+        topicService.addTopic(topic10);
     }
 }

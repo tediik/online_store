@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -62,8 +62,8 @@ public class ManagerRestController {
     @PostMapping("/news/post")
     public ResponseEntity<News> newsPost(@RequestBody News news) {
 
-        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
-            news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
+        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
+            news.setPostingDate(LocalDate.now());
         }
         newsService.save(news);
         return ResponseEntity.ok().body(news);
@@ -78,8 +78,8 @@ public class ManagerRestController {
     @PutMapping("/news/update")
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
 
-        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
-            news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
+        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
+            news.setPostingDate(LocalDate.now());
         }
         newsService.save(news);
         return ResponseEntity.ok().body(news);

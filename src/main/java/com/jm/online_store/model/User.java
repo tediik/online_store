@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
@@ -61,6 +62,8 @@ public class User implements UserDetails {
 
     private String lastName;
 
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private Gender userGender;
 
@@ -97,7 +100,7 @@ public class User implements UserDetails {
      * поле корзина клиента.
      * "Корзина клиента" состоит из подкорзин "SubBasket", сотоящих в свою очередь
      * из сущности "Product" и количества данного "Product" в "SubBasket".
-     * данная схема необходима, чтобы мжно было хранить необходимое количество тавара
+     * данная схема необходима, чтобы можно было хранить необходимое количество товара
      * для заказа пользователя и сам товар как экземпляр класса "Product".
      * для оформления заказа необходимо пройти по всем "SubBasket" и получить из сущности "Product",
      * который находится в "SubBasket" актуальную цену, из объекта "SubBasket" получить количество товара "Product".
@@ -127,6 +130,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonManagedReference(value = "user-sentStock")
     private Set<SentStock> sentStocks;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonIgnore
+    private Set<Feedback> feedbacks;
 
     public User() {
         registerDate = LocalDate.now();
