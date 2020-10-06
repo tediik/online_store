@@ -63,7 +63,8 @@ async function fillBusket() {
     $('#countBasketGoods').append(countGoods + "шт.");
     $('#sumBasketGoods').append(sumBasket);
 
-    $('#countInBasket').append(countGoods);         /*ну ты помнишь*/
+    $('#countInBasket').empty();
+    $('#countInBasket').append(countGoods);
 }
 
 async function deleteBasket(id) {
