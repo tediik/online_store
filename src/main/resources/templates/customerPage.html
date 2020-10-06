@@ -37,7 +37,7 @@
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
                    onclick="fillFavouritesGoods()">Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
-                   role="tab" aria-controls="basketGoods" aria-selected="false" onclick="fillBusket()">Корзина</a>
+                   role="tab" aria-controls="basketGoods" aria-selected="false" >Корзина</a>
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
                 <a class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
@@ -53,19 +53,23 @@
                 </div>
                 <div class="tab-pane fade" id="favouritesGoods" role="tabpanel" aria-labelledby="favouritesGoods-tab">
                     <h3>Избранное</h3>
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">id</th>
-                            <th scope="col">product</th>
-                            <th scope="col">price</th>
-                            <th scope="col">amount</th>
-                        </tr>
-                        </thead>
-                        <tbody id="favouritesGoodsList">
+                    <div class="container">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">product</th>
+                                <th scope="col">price</th>
+                                <th scope="col">amount</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="favouritesGoodsList">
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div form>

@@ -13,7 +13,10 @@ async function fillFavouritesGoods() {
     <td>${content[key].price}</td>
     <td>${content[key].amount}</td>
     <td>
-       <button class="btn btn-primary" onclick="deleteProductFromFavouritGoods(${content[key].id})">Удалить</button>
+       <button class="btn btn-danger" onclick="deleteProductFromFavouritGoods(${content[key].id})">Удалить</button>
+    </td>
+    <td>
+       <button class="btn btn-primary" onclick="addProductToBasket(${content[key].id})">Добавить в корзину</button>
     </td>
     <tr>
 `;
@@ -29,3 +32,16 @@ async function deleteProductFromFavouritGoods(id) {
     });
     await fillFavouritesGoods();
 }
+
+async function addProductToBasket(id) {
+    /*await fetch("/customer/favouritesGoods", {
+        method: "DELETE",
+        body: id,
+        headers: {"Content-Type": "application/json; charset=utf-8"}
+    });
+    await fillFavouritesGoods();*/
+}
+
+$(document).on("click", "#showBasket", function () {
+    $('#v-pills-tab a[href="#basketGoods"]').tab('show')
+});

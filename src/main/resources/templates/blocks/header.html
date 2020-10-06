@@ -7,6 +7,13 @@
         </nav>
         <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/logout">Выйти</a>
         <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/login">Войти</a>
+        <a id="showBasket">
+            <img src="/uploads/images/buscket.jpg" width="25" height="25">
+            <ins style="color: #ff8e05">
+                Корзина
+            </ins>
+            <h6 id="countInBasket"></h6>
+        </a>
         <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/registration">Регистрация</a>
     </div>
 </div>
