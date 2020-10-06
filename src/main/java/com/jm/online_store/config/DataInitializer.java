@@ -77,7 +77,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    //@PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -1055,7 +1055,7 @@ public class DataInitializer {
                         "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
                         "<p>С Уважением</p><p>Online-store.ru</p>")
                 .build();
-//        commonSettingsService.addSetting(emailStockDistributionTemplate);
+        commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
     }
 }

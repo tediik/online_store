@@ -95,16 +95,10 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long saveProduct(Product product) {
-        double oldPrice = findProductById(product.getId()).get().getPrice();
-        double newPrice = product.getPrice();
         Map<LocalDateTime, Double> map = product.getChangePriceHistory();
         map.put(LocalDateTime.now(), product.getPrice());
         product.setChangePriceHistory(map);
-        product.setPriceChangeSubscribers(findProductById(product.getId()).get().getPriceChangeSubscribers());
         Product savedProduct = productRepository.save(product);
-        if (newPrice < oldPrice) {
-            sendNewPrice(product, oldPrice, newPrice);
-        }
         return savedProduct.getId();
     }
 
@@ -369,7 +363,6 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * добавляет новые email в рассылку при измененеии цены на товар
-     *
      * @param id    товара
      * @param email для рассылки
      * @return true если удалось добавить email, false если не удалось
@@ -390,5 +383,21 @@ public class ProductServiceImpl implements ProductService {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Метод для редактирования информации о товаре
+     * @param product изменённый товар
+     * @return id изменённого товара
+     */
+    @Override
+    public Long editProduct(Product product) {
+        double oldPrice = findProductById(product.getId()).get().getPrice();
+        double newPrice = product.getPrice();
+        if (newPrice < oldPrice) {
+            sendNewPrice(product, oldPrice, newPrice);
+        }
+        product.setPriceChangeSubscribers(findProductById(product.getId()).orElseThrow(ProductNotFoundException::new).getPriceChangeSubscribers());
+        return saveProduct(product);
     }
 }
