@@ -5,6 +5,9 @@ import com.jm.online_store.model.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Builder class to convert {@link User} to {@link UserDto}
+ */
 @Service
 @RequiredArgsConstructor
 public class UserDtoBuilder {
