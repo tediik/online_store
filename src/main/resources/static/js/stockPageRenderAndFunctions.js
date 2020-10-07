@@ -250,7 +250,7 @@ function stockModalClearFields() {
  * @param data
  */
 function renderStockList(data) {
-    lastPage.number = data.number + 1;
+    lastPage.number = data.number;
     lastPage.last = data.last;
     let stockDiv = $("#stocksDiv");
     if (data.number === 0) {
