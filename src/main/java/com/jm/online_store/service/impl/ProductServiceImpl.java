@@ -1,14 +1,22 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.exception.ProductNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.EvaluationService;
+import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.ProductService;
-import com.opencsv.CSVReader;
+import com.jm.online_store.service.interf.UserService;
+import com.jm.online_store.util.ValidationUtils;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvValidationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,20 +27,21 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.time.LocalDateTime;
-import java.util.Map;
+import javax.mail.MessagingException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -40,9 +49,14 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final EvaluationService evaluationService;
+    private final UserService userService;
+    private final CommonSettingsService commonSettingsService;
+    private final MailSenderService mailSenderService;
 
     /**
      * метод получения списка товаров
+     *
      * @return List<Product>
      */
     @Transactional
@@ -53,7 +67,6 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Метод для получения списка неудаленных товаров
-     * @return
      */
     @Override
     public List<Product> getNotDeleteProducts() {
@@ -91,11 +104,41 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long saveProduct(Product product) {
-        Map<LocalDateTime, Double> map = product.getChangePriceHistory();
-        map.put(LocalDateTime.now(), product.getPrice());
-        product.setChangePriceHistory(map);
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
+    }
+
+    /**
+     * Метод отправляющий сообщения пользователям, которые подписаны на уведомления
+     * о снижении цены
+     *
+     * @param product  продукт
+     * @param oldPrice старая цена продукта
+     * @param newPrice новая цена продукта
+     */
+    public void sendNewPrice(Product product, double oldPrice, double newPrice) {
+        Product productToSend = findProductById(product.getId()).get();
+        Set<String> emails = productToSend.getPriceChangeSubscribers();
+        String templateBody = commonSettingsService
+                .getSettingByName("price_change_distribution_template")
+                .getTextValue();
+        String messageBody;
+        for (String email : emails) {
+            Optional<User> user = userService.findByEmail(email);
+            if (user.isPresent() && user.get().getFirstName() != null) {
+                messageBody = templateBody.replaceAll("@@user@@", user.get().getFirstName());
+            } else {
+                messageBody = templateBody.replaceAll("@@user@@", "Покупатель");
+            }
+            messageBody = messageBody.replaceAll("@@oldPrice@@", String.valueOf(oldPrice));
+            messageBody = messageBody.replaceAll("@@newPrice@@", String.valueOf(newPrice));
+            messageBody = messageBody.replaceAll("@@product@@", product.getProduct());
+            try {
+                mailSenderService.sendHtmlMessage(email, "Снижена цена на товар!", messageBody, "Price change");
+            } catch (MessagingException e) {
+                log.debug("Can not send mail about price changes to product {} to {}", product.getProduct(), email);
+            }
+        }
     }
 
     /**
@@ -109,13 +152,14 @@ public class ProductServiceImpl implements ProductService {
         product.setDeleted(true);
         productRepository.save(product);
     }
+
     /**
      * метод восстановления удаленного Product.
      *
      * @param idProduct идентификатор Product
      */
     @Override
-    public void restoreProduct(Long idProduct){
+    public void restoreProduct(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
         product.setDeleted(false);
         productRepository.save(product);
@@ -170,6 +214,7 @@ public class ProductServiceImpl implements ProductService {
      * Записывает товары в БД
      * Для правильного считывания используется кастомная MappingStrategy
      * чтобы не перегружать Products лишними аннотациями
+     *
      * @param fileName имя скачанного файла
      */
     public void importFromCSVFile(String fileName) throws FileNotFoundException {
@@ -219,7 +264,154 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Map<LocalDateTime, Double> getProductPriceChange(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
-        return product.getChangePriceHistory();
+        return (Map<LocalDateTime, Double>) product.getChangePriceHistory();
     }
 
+    /**
+     * метод изменения рейтинга товара
+     *
+     * @param productId id товара
+     * @param rating    оценка польователем товара
+     * @param user      пользователь оценивший товар
+     * @return double новый рейтинг
+     * @throws UserNotFoundException,ProductNotFoundException
+     */
+    @Transactional
+    @Override
+    public double changeProductRating(Long productId, double rating, User user) {
+        Optional<Evaluation> evaluation = evaluationService.getEvaluation(
+                user,
+                findProductById(productId).orElseThrow(ProductNotFoundException::new));
+        if (evaluation.isPresent()) {
+            evaluation.get().setRating(rating);
+            evaluationService.addEvaluation(evaluation.get());
+        } else {
+            evaluationService.addEvaluation(new Evaluation(
+                    rating,
+                    userService.findById(user.getId()).orElseThrow(UserNotFoundException::new),
+                    findProductById(productId).orElseThrow(ProductNotFoundException::new)
+            ));
+        }
+        List<Evaluation> evaluations = evaluationService.getAllProductEvaluation(findProductById(productId)
+                .orElseThrow(ProductNotFoundException::new));
+        double newRating = evaluations.stream().mapToDouble(s -> s.getRating()).sum() / evaluations.size();
+        Product product = findProductById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setRating(newRating);
+        return newRating;
+    }
+
+    /**
+     * метод формирующий DTO для передачи на страниу товара
+     *
+     * @param productId
+     * @param currentUser
+     * @return Optional<ProductDto> для передачи на страницу товара
+     * @throws {@link UserNotFoundException}
+     */
+    @Override
+    public Optional<ProductDto> getProductDto(Long productId, User currentUser) {
+        Optional<Product> product = findProductById(productId);
+        if (currentUser != null) {
+            User userFromDB = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
+            if (product.isPresent()) {
+                Set<Product> productSet = userFromDB.getFavouritesGoods();
+                Product presentProduct = product.get();
+                ProductDto productDto = new ProductDto(
+                        presentProduct.getId(),
+                        presentProduct.getProduct(),
+                        presentProduct.getPrice(),
+                        presentProduct.getRating(),
+                        presentProduct.getDescriptions(),
+                        presentProduct.getProductType(),
+                        productSet.contains(presentProduct)
+                );
+                return Optional.of(productDto);
+            }
+        } else {
+            if (product.isPresent()) {
+                Product presentProduct = product.get();
+                ProductDto productDto = new ProductDto(
+                        presentProduct.getId(),
+                        presentProduct.getProduct(),
+                        presentProduct.getPrice(),
+                        presentProduct.getRating(),
+                        presentProduct.getDescriptions(),
+                        presentProduct.getProductType(),
+                        false
+                );
+                return Optional.of(productDto);
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Method that finds search string in Product name.
+     *
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
+    @Override
+    public List<Product> findProductsByNameContains(String searchString) {
+        return productRepository.findProductByProductContains(searchString);
+    }
+
+    /**
+     * Method that finds search string in Product description.
+     *
+     * @param searchString - {@link String} search string
+     * @return - list of {@link Product} with search result
+     */
+    @Override
+    public List<Product> findProductsByDescriptionContains(String searchString) {
+        return productRepository.findProductByDescriptionsContains(searchString);
+    }
+
+    /**
+     * добавляет новые email в рассылку при измененеии цены на товар
+     *
+     * @param id    товара
+     * @param email для рассылки
+     * @return true если удалось добавить email, false если не удалось
+     */
+    @Override
+    public boolean addNewSubscriber(Long id, String email) {
+        if (!ValidationUtils.isValidEmail(email)) {
+            return false;
+        }
+        Product product = findProductById(id).orElseThrow(ProductNotFoundException::new);
+        Set<String> emails = product.getPriceChangeSubscribers();
+        if (emails.contains(email)) {
+            throw new EmailAlreadyExistsException();
+        } else {
+            emails.add(email);
+            product.setPriceChangeSubscribers(emails);
+            saveProduct(product);
+            return true;
+        }
+    }
+
+    /**
+     * Метод для редактирования информации о товаре
+     *
+     * @param product изменённый товар
+     * @return id изменённого товара
+     */
+    @Override
+    public Long editProduct(Product product) {
+        Map<LocalDateTime, Double> map = (Map<LocalDateTime, Double>) findProductById(product.getId())
+                .orElseThrow(ProductNotFoundException::new)
+                .getChangePriceHistory();
+        map.put(LocalDateTime.now(), product.getPrice());
+        product.setChangePriceHistory(map);
+        double oldPrice = findProductById(product.getId()).get().getPrice();
+        double newPrice = product.getPrice();
+        if (newPrice < oldPrice) {
+            sendNewPrice(product, oldPrice, newPrice);
+        }
+        product.setPriceChangeSubscribers(findProductById(product.getId())
+                .orElseThrow(ProductNotFoundException::new)
+                .getPriceChangeSubscribers());
+        return saveProduct(product);
+    }
 }
