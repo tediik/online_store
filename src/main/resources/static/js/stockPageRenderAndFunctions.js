@@ -330,7 +330,7 @@ function handleSummernote() {
 }
 
 /**
- * Function creates allert message when fields in modal are invalid
+ * Function creates alert message when fields in modal are invalid
  * @param text - text of message
  * @param focusField - field to focus
  */
