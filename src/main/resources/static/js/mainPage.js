@@ -154,10 +154,17 @@ function fillSomeProducts(data) {
                 $(prodsView).append(`<div class="row">` + item);
             }
             $(function () {
-                $(`#rate${data[key].id}`).rateYo({
-                    rating: data[key].rating,
-                    readOnly: true
-                });
+                if(data[key].rating !== null) {
+                    $(`#rate${data[key].id}`).rateYo({
+                        rating: data[key].rating,
+                        readOnly: true
+                    });
+                } else {
+                    $(`#rate${data[key].id}`).rateYo({
+                        rating: 0,
+                        readOnly: true
+                    });
+                }
             });
         }
     } else {
