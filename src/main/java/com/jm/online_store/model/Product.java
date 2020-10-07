@@ -23,9 +23,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -39,7 +42,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false, updatable = false, nullable = false)
-    private Long id;
+    private long id;
     @NonNull
     @Column(name = "product", nullable = false)
     private String product;
@@ -62,6 +65,9 @@ public class Product {
         property = "id")
     private List<ProductInOrder> productInOrders;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+
     /**
      *поле для возможности отслеживания изменения цены на Product.
      * при изменении цены добавлять элемент данной коллекции.
@@ -73,6 +79,14 @@ public class Product {
     @Column(name = "price")
     private Map<LocalDateTime, Double> changePriceHistory = new LinkedHashMap<>();
 
+    /**
+     *поле для хранения почтовых адресов для рассылки информации об уменьшения цены на товар
+     */
+    @ElementCollection
+    @CollectionTable(name = "product_subscribers_mails",
+            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")})
+    @Column(name = "email")
+    private Set<String> priceChangeSubscribers = new HashSet<>();
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {
         this.product = product;

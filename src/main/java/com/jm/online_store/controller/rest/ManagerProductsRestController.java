@@ -116,7 +116,7 @@ public class ManagerProductsRestController {
      */
     @PutMapping("/rest/products/editProduct")
     public ResponseEntity<Product> editProductM(@RequestBody Product product) {
-        productService.saveProduct(product);
+        productService.editProduct(product);
         return ResponseEntity.ok(product);
     }
 

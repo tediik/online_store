@@ -185,6 +185,7 @@ public class ProductServiceImpl implements ProductService {
 
             CsvToBean<Product> csvToBean = new CsvToBeanBuilder(reader)
                     .withMappingStrategy(strategy)
+                    .withSkipLines(1)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
 

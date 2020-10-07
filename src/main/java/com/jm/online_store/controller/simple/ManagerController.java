@@ -18,4 +18,18 @@ public class ManagerController {
         return "newsManagement";
     }
 
+    @GetMapping("/reports")
+    public String getReportsPage() {
+        return "reports";
+    }
+
+    @GetMapping("/settings")
+    public String getSettingsPage (){
+        return "manager_settings";
+    }
+
+    @GetMapping("/stocks")
+    public String getStocks() {
+        return "stocksManagerPage";
+    }
 }

@@ -17,11 +17,20 @@
 
                         <input type="password" id="password" name="login_password" placeholder="Password"
                                class="form-control"/>
-
+                        <div class="form-check">
+                            <input class="form-check-input" name="remember-me" type="checkbox" id="rememberMeCheckbox">
+                            <label class="form-check-label" for="rememberMeCheckbox">
+                                Remember me
+                            </label>
+                        </div>
                         <button class="btn btn-primary btn-sm btn-block">Sign In</button>
                     </form>
                     <div>
-                        <a href="/oauth2/authorization/facebook" title="Facebook"
+                        <a href="/registration" class="btn btn-warning btn-sm btn-block"> Log in </a>
+                    </div>
+                    <div>
+                        <!--Кнопка блокирована с помощью скрипта "/static/js/loginNoLinkFacebook.js"-->
+                        <a id="noLinkFacebook" href="/oauth2/authorization/facebook" title="Facebook"
                            class="btn btn-block btn-sm  btn-social btn-lg btn-facebook">
                             <i class="fa fa-facebook"></i> Sign in with Facebook
                         </a>
@@ -48,4 +57,5 @@
         </div>
     </div>
 </section>
+<script src="/static/js/loginNoLinkFacebook.js"></script>
 </body>

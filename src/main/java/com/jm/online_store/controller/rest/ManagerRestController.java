@@ -1,8 +1,18 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.service.interf.NewsService;
+import com.jm.online_store.service.interf.OrderService;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +21,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,9 +37,11 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "api/manager")
+@Slf4j
 public class ManagerRestController {
 
     private final NewsService newsService;
+    private final OrderService orderService;
 
     /**
      * Метод возвращающий всписок всех новостей
@@ -46,8 +62,8 @@ public class ManagerRestController {
     @PostMapping("/news/post")
     public ResponseEntity<News> newsPost(@RequestBody News news) {
 
-        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
-            news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
+        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
+            news.setPostingDate(LocalDate.now());
         }
         newsService.save(news);
         return ResponseEntity.ok().body(news);
@@ -62,8 +78,8 @@ public class ManagerRestController {
     @PutMapping("/news/update")
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
 
-        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDateTime.now())) {
-            news.setPostingDate(LocalDateTime.now().withSecond(0).withNano(0));
+        if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
+            news.setPostingDate(LocalDate.now());
         }
         newsService.save(news);
         return ResponseEntity.ok().body(news);
@@ -81,5 +97,53 @@ public class ManagerRestController {
         return ResponseEntity.ok().body(id);
     }
 
+    /**
+     * Get mapping for get request to response with sales during the custom date range
+     *
+     * @param stringStartDate - start of custom date range
+     * @param stringEndDate   - end of custom date range
+     * @return - {@link ResponseEntity} with list of Orders with status complete
+     */
+    @GetMapping("/sales")
+    public ResponseEntity<List<SalesReportDto>> getSalesForCustomRange(@RequestParam String stringStartDate, @RequestParam String stringEndDate) {
+        LocalDate startDate = LocalDate.parse(stringStartDate);
+        LocalDate endDate = LocalDate.parse(stringEndDate);
+        try {
+            return ResponseEntity.ok(orderService.findAllSalesBetween(startDate, endDate));
+        } catch (OrdersNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
+    /**
+     * Mapping for csv export.
+     *
+     * @param stringStartDate - beginning of the period that receives from frontend in as String
+     * @param stringEndDate   - end of the period that receives from frontend in as String
+     * @param response        - response to write back stream with csv
+     * @return - ResponseEntity
+     */
+    @GetMapping("/sales/exportCSV")
+    public ResponseEntity<FileSystemResource> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate, @RequestParam String stringEndDate, HttpServletResponse response) {
+        LocalDate startDate = LocalDate.parse(stringStartDate);
+        LocalDate endDate = LocalDate.parse(stringEndDate);
+        try {
+            response.setContentType("text/html; charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            StatefulBeanToCsv<SalesReportDto> writer = new StatefulBeanToCsvBuilder<SalesReportDto>(response.getWriter())
+                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                    .withSeparator(';')
+                    .withOrderedResults(true)
+                    .build();
+            writer.write(orderService.findAllSalesBetween(startDate, endDate));
+
+            return ResponseEntity.ok().build();
+        } catch (OrdersNotFoundException e) {
+            log.debug("csv file was successfully sent");
+            return ResponseEntity.notFound().build();
+        } catch (CsvRequiredFieldEmptyException | IOException | CsvDataTypeMismatchException e) {
+            log.debug("Problem with writing csv file");
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

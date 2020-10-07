@@ -3,12 +3,14 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
+import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,10 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +37,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -51,9 +57,9 @@ public class UserServiceImpl implements UserService {
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
-    @Autowired
-    @Setter
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final AddressService addressService;
+
     @Value("${spring.server.url}")
     private String urlActivate;
 
@@ -62,6 +68,39 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+    /**
+     * метод получения пользователей, подписанных на рассылку, по дню недели
+     * @param dayNumber день недели
+     * @return List<User>
+     */
+    @Override
+    public List<User> findByDayOfWeekForStockSend(byte dayNumber) {
+        List<User> users = userRepository.findByDayOfWeekForStockSend(User.DayOfWeekForStockSend.values()[dayNumber - 1]);
+        if (users.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        return users;
+    }
+
+    /**
+     * метод получения списка пользователей, отсортированных в соответствии с выбранной ролью
+     * @param roleString роль, по которой фильтруется список пользователей
+     * @return List<User> отфильтрованный список пользователей
+     */
+    @Override
+    public List<User> findByRole(String roleString) {
+
+        List<User> filteredUsers = new ArrayList<>();
+
+        for (User user : userRepository.findAll()) {
+            for (Role roles : user.getRoles()) {
+                if (roles.getName().equals(roleString)) {
+                    filteredUsers.add(user);
+                }
+            }
+        }
+        return filteredUsers;
+    }
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
@@ -84,10 +123,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод добавления нового пользователя.
-     *
      * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
-     *
-     * @param user полученный объект User/
+     * @param user полученный объект User
      */
     @Override
     @Transactional
@@ -112,7 +149,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод обновления пользователя.
-     *
      * @param user пользователь, полученный из контроллера.
      */
     @Override
@@ -152,7 +188,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод удаления пользователя по идентификатору.
-     *
      * @param id идентификатор.
      */
     @Override
@@ -163,7 +198,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод регистрации нового User.
-     *
      * @param userForm User построенный из данных формы.
      */
     @Override
@@ -207,7 +241,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод проверки активации пользователя.
-     *
      * @param token   модель, построенная на основе пользователя, после подтверждения
      * @param request параметры запроса.
      * @return булево значение "true or false"
@@ -320,7 +353,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to add new user from admin page
-     *
      * @param newUser
      */
     @Override
@@ -335,7 +367,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
-     *
      * @param user
      * @return
      */
@@ -367,7 +398,70 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             return false;
         }
+        if (!ValidationUtils.isValidPassword(newPassword)) {
+            return false;
+        }
         user.setPassword(passwordEncoder.encode(newPassword));
         return true;
+    }
+
+    /**
+     * Service method to cancel subscription
+     * @param id
+     */
+    @Override
+    @Transactional
+    public void cancelSubscription(Long id) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        user.setDayOfWeekForStockSend(null);
+        updateUserProfile(user);
+    }
+    /**
+     * Метод сервиа для добавления нового адреса пользователю
+     * @param user
+     * @param address
+     * @throws UserNotFoundException
+     */
+    @Transactional
+    @Override
+    public boolean addNewAddressForUser(User user, Address address) {
+        User usertoUpdate = findById(user.getId()).orElseThrow(UserNotFoundException::new);
+        Optional<Address> addressFromDB = addressService.findSameAddress(address);
+        if (addressFromDB.isPresent() && !usertoUpdate.getUserAddresses().contains(addressFromDB.get())) {
+            Address addressToAdd = addressFromDB.get();
+            if (usertoUpdate.getUserAddresses() != null) {
+                usertoUpdate.getUserAddresses().add(addressToAdd);
+            } else {
+                usertoUpdate.setUserAddresses(Collections.singleton(address));
+            }
+            updateUser(usertoUpdate);
+            return true;
+        }
+        if (!addressFromDB.isPresent()) {
+            Address addressToAdd = addressService.addAddress(address);
+            if (usertoUpdate.getUserAddresses() != null) {
+                usertoUpdate.getUserAddresses().add(addressToAdd);
+            } else {
+                usertoUpdate.setUserAddresses(Collections.singleton(address));
+            }
+            updateUser(usertoUpdate);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Service method which builds and returns currently logged in User from Authentication
+     *
+     * @return User
+     */
+    public User getCurrentLoggedInUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // AnonymousAuthenticationToken happens when anonymous authentication is enabled
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        String username = ((User) auth.getPrincipal()).getUsername();
+        return findByEmail(username).get();
     }
 }
