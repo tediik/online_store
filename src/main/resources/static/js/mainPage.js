@@ -3,11 +3,44 @@ $(document).ready(function ($) {
         $("#openNewRegistrationModal form")[0].reset();//reset modal fields
         $("#openNewRegistrationModal .error").hide();//reset error spans
     });
-
+    preventDefaultEventForEnterKeyPress()
     getCurrent();
     fillCategories();
-    fillSomeProducts();
+    fetchAndRenderSomeProducts();
 });
+
+/**
+ * function that prevents submit event on Enter keypress in search input
+ */
+function preventDefaultEventForEnterKeyPress() {
+    $(window).keydown(function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            handleSearchButton()
+            return false;
+        }
+    })
+}
+
+function fetchAndRenderSomeProducts() {
+    fetch("/api/products").then(response => response.json()).then(data => fillSomeProducts(data));
+    $('#headerForSomeProductsView').text('Актуальные предложения')
+
+}
+
+/**
+ * event listener for search button
+ */
+document.getElementById('mainPageSearchButton').addEventListener('click', handleSearchButton)
+
+/**
+ * function that handles search button in headder of main page
+ */
+function handleSearchButton() {
+    if ($('#mainPageSearchInput').val() !== '') {
+        window.location.href = "/search/" + $('#mainPageSearchInput').val()
+    }
+}
 
 function getCurrent() {
     $.ajax({
@@ -52,16 +85,16 @@ function register() {
             }
         },
         error: function (data) {
-                if(data.status == 400){
-                    if (data == "passwordError") {
-                        $("#passwordError").show();
-                        $("#passwordValidError").hide();
-                    }
-                    if (data == "passwordValidError") {
-                        $("#passwordValidError").show();
-                        $("#passwordError").hide();
-                    }
+            if (data.status == 400) {
+                if (data == "passwordError") {
+                    $("#passwordError").show();
+                    $("#passwordValidError").hide();
                 }
+                if (data == "passwordValidError") {
+                    $("#passwordValidError").show();
+                    $("#passwordError").hide();
+                }
+            }
         }
     });
 }
@@ -90,12 +123,17 @@ async function fillCategories() {
     }
 }
 
-async function fillSomeProducts() {
-    let data = await fetch("/api/products").then(response => response.json());
+/**
+ * function that fills main page with products
+ * @param data - products list
+ */
+function fillSomeProducts(data) {
     let prodsView = document.getElementById('someProductsView');
-    let item = ``;
-    for (let key = 0; key < data.length; key++) {
-        item += `
+    prodsView.innerHTML = ''
+    if (data !== 'error') {
+        let item = ``;
+        for (let key = 0; key < data.length; key++) {
+            item += `
             <div class="col-2">
                 <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
                     <div class="col-auto d-none d-lg-block productImg">
@@ -108,17 +146,27 @@ async function fillSomeProducts() {
                     </div>
                 </div>
             </div>`;
-        if ((key + 1) % 5 == 0) {
-            $(prodsView).append(`<div class="row">` + item);
-            item = ``;
-        } else if ((key + 1) == data.length) {
-            $(prodsView).append(`<div class="row">` + item);
-        }
-        $(function () {
-            $(`#rate${data[key].id}`).rateYo({
-                rating: data[key].rating,
-                readOnly: true
+            if ((key + 1) % 5 == 0) {
+                $(prodsView).append(`<div class="row">` + item);
+                item = ``;
+            } else if ((key + 1) == data.length) {
+                $(prodsView).append(`<div class="row">` + item);
+            }
+            $(function () {
+                if(data[key].rating !== null) {
+                    $(`#rate${data[key].id}`).rateYo({
+                        rating: data[key].rating,
+                        readOnly: true
+                    });
+                } else {
+                    $(`#rate${data[key].id}`).rateYo({
+                        rating: 0,
+                        readOnly: true
+                    });
+                }
             });
-        });
+        }
+    } else {
+        prodsView.innerHTML = 'Продуктов не найденно'
     }
 }

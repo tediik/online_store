@@ -2,8 +2,8 @@ spring:
   oauth1a:
     twitter:
       resource_url: https://api.twitter.com/1.1/account/verify_credentials.json
-      public_key: BiCDQUyByE72SHyBkqJPe1wAi
-      secret_key: KlJocOjZNnLodCExCNfsQbaz3utxjhOoc7rFuUwncgolAgQnEA
+      public_key: 12345
+      secret_key: 12345
   oauth2:
     odnoklassniki:
       resource_url: https://api.ok.ru/api/users/getCurrentUser?application_key=CINLIMJGDIHBABABA&format=JSON
@@ -15,8 +15,8 @@ spring:
       client:
         registration:
           facebook:
-            client-id: 933203153853320
-            client-secret: c422a6fd091ef86806c2c1ea5b072811
+            client-id: 12345
+            client-secret: 12345
   auth:
     vk:
       client_id: 7575777

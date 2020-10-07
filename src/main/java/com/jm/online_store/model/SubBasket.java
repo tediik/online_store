@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import javax.persistence.ManyToOne;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SubBasket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
