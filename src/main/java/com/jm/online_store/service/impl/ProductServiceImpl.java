@@ -266,7 +266,6 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> product = findProductById(productId);
         if (currentUser != null) {
             User userFromDB = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
-            log.debug("ProductServiceImpl.getProductDTO.userfromDB = " + userFromDB.getEmail());
             if (product.isPresent()) {
                 Set<Product> productSet = userFromDB.getFavouritesGoods();
                 Product presentProduct = product.get();

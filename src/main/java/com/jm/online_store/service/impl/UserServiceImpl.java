@@ -457,7 +457,7 @@ public class UserServiceImpl implements UserService {
      */
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.debug("getCurrentLoggedInUser.auth = " + auth.getPrincipal().toString());
+        log.debug("getCurrentLoggedInUser.auth: {} ", auth.getPrincipal().toString());
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
@@ -473,6 +473,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByToken(String token) {
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
+        log.debug("Token: {}", token);
+        log.debug("ConfirmationToken: {}", confirmationToken);
+
         if (confirmationToken == null) {
             throw new UserNotFoundException();
         }
