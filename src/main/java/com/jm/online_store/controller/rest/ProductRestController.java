@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
@@ -90,5 +91,19 @@ public class ProductRestController {
     @GetMapping("/searchByDescription/{searchString}")
     public ResponseEntity<List<Product>> findProductsByDescription(@PathVariable String searchString) {
         return ResponseEntity.ok(productService.findProductsByDescriptionContains(searchString));
+    }
+
+    /**
+     * Контроллер для добавления нового email в лист рассылок
+     * @param body тело запроса
+     * @return ResponseEntity
+     */
+    @PostMapping("/subscribe")
+    public ResponseEntity<String> addNewSubscriber(@RequestBody ObjectNode body) {
+        if(productService.addNewSubscriber(body.get("id").asLong(), body.get("email").asText())) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body("incorrectEmail");
+        }
     }
 }
