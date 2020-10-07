@@ -3,8 +3,19 @@ let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
-getAllProducts()
-fetchProductsAndRenderTable()
+showAndRefreshNotDeleteHomeTab()
+
+/**
+ * Функция обработки действий чекбокса
+ * @param check
+ */
+function toggle(check) {
+    if(!check.checked) {
+        showAndRefreshHomeTab()
+    } else {
+        showAndRefreshNotDeleteHomeTab()
+    }
+}
 
 /**
  * fetch запрос на allProducts для получения всех продуктов из бд
@@ -85,6 +96,18 @@ function handleRestoreButton(productId) {
  */
 function showAndRefreshHomeTab() {
     fetchProductsAndRenderTable()
+    $('#nav-home').addClass('tab-pane fade active show')
+    $('#nav-profile').removeClass('active show')
+    $('#nav-profile-tab').removeClass('active')
+    $('#nav-home-tab').addClass('active')
+}
+
+/**
+ * функция деалет активным таблицу без
+ * удаленных продуктов
+ */
+function showAndRefreshNotDeleteHomeTab() {
+    fetchProductsAndRenderNotDeleteTable()
     $('#nav-home').addClass('tab-pane fade active show')
     $('#nav-profile').removeClass('active show')
     $('#nav-profile-tab').removeClass('active')
@@ -301,6 +324,20 @@ function renderProductsTable(products) {
  */
 function fetchProductsAndRenderTable() {
     fetch("/rest/products/allProducts", {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    }).then(response => response.json()).then(products => renderProductsTable(products))
+}
+
+/**
+ * функция делает fetch запрос на рест контроллер для получения неудаленных товаров,
+ * преобразует полученный объект в json
+ * и передает функции рендера таблицы renderProductsTable
+ */
+function fetchProductsAndRenderNotDeleteTable() {
+    fetch("/rest/products/getNotDeleteProducts", {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'

@@ -50,6 +50,17 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAll() {
         return productRepository.findAll();
     }
+
+    /**
+     * Метод для получения списка неудаленных товаров
+     * @return
+     */
+    @Override
+    public List<Product> getNotDeleteProducts() {
+        List<Product> products = findAll();
+        products.removeIf(Product::isDeleted);
+        return products;
+    }
     /**
      * метод поиска Product по иденификатору.
      *

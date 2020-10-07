@@ -80,6 +80,15 @@ public class ManagerProductsRestController {
     }
 
     /**
+     * Метод возвращает список неудаленых товаров
+     * @return List<Product> возвращает список товаров
+     */
+    @GetMapping(value = "/rest/products/getNotDeleteProducts")
+    public List<Product> getNotDeleteProducts() {
+        return productService.getNotDeleteProducts();
+    }
+
+    /**
      * Метод, ищет акции по id
      * @param productId идентификатор товара
      * @return Optional<Product> возвращает товар

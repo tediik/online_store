@@ -100,6 +100,13 @@
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Products Table</a>
                         <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
+                        <form class="checkbox">
+                            <!-- for keeping checkbox checked when page loads use checked="checked" --->
+                            <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
+
+                            <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);" checked="checked">
+                            <br>
+                        </form>
                     </div>
                 </nav>
 
