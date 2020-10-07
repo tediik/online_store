@@ -264,7 +264,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Map<LocalDateTime, Double> getProductPriceChange(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
-        return (Map<LocalDateTime, Double>) product.getChangePriceHistory();
+        return product.getChangePriceHistory();
     }
 
     /**
@@ -399,7 +399,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long editProduct(Product product) {
-        Map<LocalDateTime, Double> map = (Map<LocalDateTime, Double>) findProductById(product.getId())
+        Map<LocalDateTime, Double> map = findProductById(product.getId())
                 .orElseThrow(ProductNotFoundException::new)
                 .getChangePriceHistory();
         map.put(LocalDateTime.now(), product.getPrice());
