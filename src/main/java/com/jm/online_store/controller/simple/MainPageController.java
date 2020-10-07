@@ -4,7 +4,6 @@ import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
-import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/")
 public class MainPageController {
-    private UserService userService;
+    private final UserService userService;
     private final ConfirmationTokenRepository confirmTokenRepository;
 
     @GetMapping
