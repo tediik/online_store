@@ -34,12 +34,11 @@ async function deleteProductFromFavouritGoods(id) {
 }
 
 async function addProductToBasket(id) {
-    /*await fetch("/customer/favouritesGoods", {
-        method: "DELETE",
-        body: id,
+    await fetch(`/api/basket/add/${id}`, {
+        method: "PUT",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    await fillFavouritesGoods();*/
+    fillBusket();
 }
 
 $(document).on("click", "#showBasket", function () {
