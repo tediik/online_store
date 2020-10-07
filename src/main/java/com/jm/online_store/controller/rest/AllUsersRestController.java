@@ -37,7 +37,6 @@ public class AllUsersRestController {
         if (authentication == null) {
             return ResponseEntity.badRequest().build();
         }
-//        User currentUser = userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
         User currentUser = userService.getCurrentLoggedInUser();
         if (currentUser == null) {
             return ResponseEntity.badRequest().build();
@@ -49,13 +48,13 @@ public class AllUsersRestController {
 
     @PostMapping("/uploadImage")
     public ResponseEntity<String> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userDetails = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(userService.updateUserImage(userDetails.getId(), imageFile));
     }
 
     @DeleteMapping("/deleteImage")
     public ResponseEntity<String> deleteImage() throws IOException {
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userDetails = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(userService.deleteUserImage(userDetails.getId()));
     }
 }

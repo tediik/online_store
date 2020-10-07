@@ -28,12 +28,11 @@ public class CustomerRestController {
     private UserService userService;
 
     @PostMapping("/changemail")
-    public ResponseEntity<String> changeMailReq(Authentication authentication, @RequestParam String newMail) {
-//        User user = userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+    public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
+        User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
             return ResponseEntity.badRequest().body("Ой! Вы ввели такой же Email.");
         } else {
-            User user = userService.getCurrentLoggedInUser();
             userService.changeUsersMail(user, newMail);
             return ResponseEntity.ok("Email будет изменен после подтверждения.");
         }

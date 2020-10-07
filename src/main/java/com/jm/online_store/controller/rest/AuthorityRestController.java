@@ -24,9 +24,8 @@ public class AuthorityRestController {
     private final UserService userService;
 
     @PostMapping("/changemail")
-    public ResponseEntity<String> changeMailReq(Authentication auth, Model model,
-                                                @RequestParam String newMail) {
-        User user = (User) auth.getPrincipal();
+    public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
+        User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
             throw new EmailAlreadyExistsException();
         }

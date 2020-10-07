@@ -42,10 +42,8 @@ public class CustomerController {
      * @return
      */
     @GetMapping
-    public String getUserProfile(Model model, Authentication authentication) {
-//        User user = userService.findByEmail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+    public String getUserProfile(Model model) {
         User user = userService.getCurrentLoggedInUser();
-        log.debug("Customer controller.getUserProfile.authentication.getPrincipal = " + authentication.getPrincipal().toString());
         model.addAttribute("user", user);
         return "customerPage";
     }
@@ -72,17 +70,16 @@ public class CustomerController {
     /**
      * метод обработки изменения пароля User.
      *
-     * @param auth        модель данных, построенных на основе зарегестрированного User
      * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
      */
     @PostMapping("/change-password")
-    public String changePassword(Authentication auth, Model model,
+    public String changePassword(Model model,
                                  @RequestParam String oldPassword,
                                  @RequestParam String newPassword) {
-        User user = (User) auth.getPrincipal();
+        User user = userService.getCurrentLoggedInUser();
         if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
             model.addAttribute("message", "Pls, check your old password!");
         }

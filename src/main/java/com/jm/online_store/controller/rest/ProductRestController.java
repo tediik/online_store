@@ -4,7 +4,9 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,23 +23,25 @@ import java.util.Map;
 /**
  * Рест контроллер страницы продукта.
  */
+@Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/products")
 public class ProductRestController {
 
-    private ProductService productService;
+    private final ProductService productService;
+    private final UserService userService;
 
     /**
      * Ищет продукт в БД по id из пути
      *
      * @param id продукта
-     * @param user текущий пользователь
      * @return сущность ProductDto, если продукт с таким id существует
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
         ResponseEntity<ProductDto>[] answer = new ResponseEntity[1];
+        User user = userService.getCurrentLoggedInUser();
         productService.getProductDto(id, user).ifPresentOrElse(
                 value -> answer[0] = ResponseEntity.ok(value), () -> answer[0] = ResponseEntity.notFound().build());
         return answer[0];
@@ -59,12 +63,11 @@ public class ProductRestController {
      *
      * @param rating оценка пользователя
      * @param id     id товара
-     * @param user   авторизованный пользователь
      */
     @PostMapping("/rating")
     public ResponseEntity getNewRating(@RequestParam(value = "rating", required = false) float rating,
-                                       @RequestParam(value = "id", required = false) Long id,
-                                       @AuthenticationPrincipal User user) {
+                                       @RequestParam(value = "id", required = false) Long id) {
+        User user = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(productService.changeProductRating(id, rating, user));
     }
 

@@ -29,9 +29,8 @@ public class AuthorityController {
     }
 
     @GetMapping("/profile")
-    public String getPersonalInfo(Model model, Authentication auth) {
-        User principal = (User) auth.getPrincipal();
-        User user = userService.findById(principal.getId()).get();
+    public String getPersonalInfo(Model model) {
+        User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
         return "profileAuthority";
     }
@@ -49,10 +48,10 @@ public class AuthorityController {
     }
 
     @PostMapping("/change-password")
-    public String changePassword(Authentication auth, Model model,
+    public String changePassword(Model model,
                                  @RequestParam String oldPassword,
                                  @RequestParam String newPassword) {
-        User user = (User) auth.getPrincipal();
+        User user = userService.getCurrentLoggedInUser();
         if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
             model.addAttribute("message", "Pls, check your old password!");
         }

@@ -26,8 +26,7 @@ public class FavouriteGoodsServiceImpl implements FavouriteGoodsService {
      */
     @Override
     public void deleteFromFavouriteGoods(Long id, User currentUser) {
-//        User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
-        User user = userService.getCurrentLoggedInUser();
+        User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
         Product productToDelete = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         Set<Product> favouriteGoods = user.getFavouritesGoods();
         if(favouriteGoods.contains(productToDelete)) {
@@ -45,8 +44,7 @@ public class FavouriteGoodsServiceImpl implements FavouriteGoodsService {
      */
     @Override
     public void addToFavouriteGoods(Long id, User currentUser) {
-//        User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
-        User user = userService.getCurrentLoggedInUser();
+        User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         Set<Product> favouritesGoods = user.getFavouritesGoods();
         favouritesGoods.add(product);
@@ -61,8 +59,7 @@ public class FavouriteGoodsServiceImpl implements FavouriteGoodsService {
      */
     @Override
     public Set<Product> getFavouriteGoods(User currentUser) {
-//        User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
-        User user = userService.getCurrentLoggedInUser();
+        User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
         return user.getFavouritesGoods();
     }
 }
