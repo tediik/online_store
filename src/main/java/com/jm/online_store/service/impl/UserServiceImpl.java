@@ -462,8 +462,6 @@ public class UserServiceImpl implements UserService {
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
-//        String username = ((User) auth.getPrincipal()).getUsername();
-//        return findByEmail(username).get();
         return findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
     }
 
