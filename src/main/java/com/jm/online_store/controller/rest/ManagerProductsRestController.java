@@ -80,6 +80,15 @@ public class ManagerProductsRestController {
     }
 
     /**
+     * Метод возвращает список неудаленых товаров
+     * @return List<Product> возвращает список товаров
+     */
+    @GetMapping(value = "/rest/products/getNotDeleteProducts")
+    public List<Product> getNotDeleteProducts() {
+        return productService.getNotDeleteProducts();
+    }
+
+    /**
      * Метод, ищет акции по id
      * @param productId идентификатор товара
      * @return Optional<Product> возвращает товар
@@ -107,7 +116,7 @@ public class ManagerProductsRestController {
      */
     @PutMapping("/rest/products/editProduct")
     public ResponseEntity<Product> editProductM(@RequestBody Product product) {
-        productService.saveProduct(product);
+        productService.editProduct(product);
         return ResponseEntity.ok(product);
     }
 

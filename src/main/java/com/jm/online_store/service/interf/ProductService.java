@@ -23,6 +23,8 @@ public interface ProductService {
 
     List<Product> findAll();
 
+    List<Product> getNotDeleteProducts();
+
     void importFromXMLFile(String fileName);
 
     void importFromCSVFile(String fileName) throws FileNotFoundException;
@@ -38,4 +40,8 @@ public interface ProductService {
     List<Product> findProductsByNameContains(String searchString);
 
     List<Product> findProductsByDescriptionContains(String searchString);
+
+    boolean addNewSubscriber(Long id, String email);
+
+    Long editProduct(Product product);
 }

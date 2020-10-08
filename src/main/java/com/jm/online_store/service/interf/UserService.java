@@ -59,5 +59,7 @@ public interface UserService {
 
     User getCurrentLoggedInUser();
 
+    User getUserByToken(String token);
+
     boolean addNewAddressForUser(User user, Address address);
 }

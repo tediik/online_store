@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Evaluation;
@@ -7,9 +8,12 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
+import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
+import com.jm.online_store.util.ValidationUtils;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -23,6 +27,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.mail.MessagingException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,6 +51,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final EvaluationService evaluationService;
     private final UserService userService;
+    private final CommonSettingsService commonSettingsService;
+    private final MailSenderService mailSenderService;
 
     /**
      * метод получения списка товаров
@@ -58,6 +65,15 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll();
     }
 
+    /**
+     * Метод для получения списка неудаленных товаров
+     */
+    @Override
+    public List<Product> getNotDeleteProducts() {
+        List<Product> products = findAll();
+        products.removeIf(Product::isDeleted);
+        return products;
+    }
     /**
      * метод поиска Product по иденификатору.
      *
@@ -88,11 +104,41 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long saveProduct(Product product) {
-        Map<LocalDateTime, Double> map = product.getChangePriceHistory();
-        map.put(LocalDateTime.now(), product.getPrice());
-        product.setChangePriceHistory(map);
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
+    }
+
+    /**
+     * Метод отправляющий сообщения пользователям, которые подписаны на уведомления
+     * о снижении цены
+     *
+     * @param product  продукт
+     * @param oldPrice старая цена продукта
+     * @param newPrice новая цена продукта
+     */
+    public void sendNewPrice(Product product, double oldPrice, double newPrice) {
+        Product productToSend = findProductById(product.getId()).get();
+        Set<String> emails = productToSend.getPriceChangeSubscribers();
+        String templateBody = commonSettingsService
+                .getSettingByName("price_change_distribution_template")
+                .getTextValue();
+        String messageBody;
+        for (String email : emails) {
+            Optional<User> user = userService.findByEmail(email);
+            if (user.isPresent() && user.get().getFirstName() != null) {
+                messageBody = templateBody.replaceAll("@@user@@", user.get().getFirstName());
+            } else {
+                messageBody = templateBody.replaceAll("@@user@@", "Покупатель");
+            }
+            messageBody = messageBody.replaceAll("@@oldPrice@@", String.valueOf(oldPrice));
+            messageBody = messageBody.replaceAll("@@newPrice@@", String.valueOf(newPrice));
+            messageBody = messageBody.replaceAll("@@product@@", product.getProduct());
+            try {
+                mailSenderService.sendHtmlMessage(email, "Снижена цена на товар!", messageBody, "Price change");
+            } catch (MessagingException e) {
+                log.debug("Can not send mail about price changes to product {} to {}", product.getProduct(), email);
+            }
+        }
     }
 
     /**
@@ -256,6 +302,7 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * метод формирующий DTO для передачи на страниу товара
+     *
      * @param productId
      * @param currentUser
      * @return Optional<ProductDto> для передачи на страницу товара
@@ -297,6 +344,7 @@ public class ProductServiceImpl implements ProductService {
         }
         return Optional.empty();
     }
+
     /**
      * Method that finds search string in Product name.
      *
@@ -317,5 +365,53 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findProductsByDescriptionContains(String searchString) {
         return productRepository.findProductByDescriptionsContains(searchString);
+    }
+
+    /**
+     * добавляет новые email в рассылку при измененеии цены на товар
+     *
+     * @param id    товара
+     * @param email для рассылки
+     * @return true если удалось добавить email, false если не удалось
+     */
+    @Override
+    public boolean addNewSubscriber(Long id, String email) {
+        if (!ValidationUtils.isValidEmail(email)) {
+            return false;
+        }
+        Product product = findProductById(id).orElseThrow(ProductNotFoundException::new);
+        Set<String> emails = product.getPriceChangeSubscribers();
+        if (emails.contains(email)) {
+            throw new EmailAlreadyExistsException();
+        } else {
+            emails.add(email);
+            product.setPriceChangeSubscribers(emails);
+            saveProduct(product);
+            return true;
+        }
+    }
+
+    /**
+     * Метод для редактирования информации о товаре
+     *
+     * @param product изменённый товар
+     * @return id изменённого товара
+     */
+    @Override
+    public Long editProduct(Product product) {
+        Map<LocalDateTime, Double> map = findProductById(product.getId())
+                .orElseThrow(ProductNotFoundException::new)
+                .getChangePriceHistory();
+        map.put(LocalDateTime.now(), product.getPrice());
+        product.setChangePriceHistory(map);
+        double oldPrice = findProductById(product.getId()).get().getPrice();
+        double newPrice = product.getPrice();
+        if (newPrice < oldPrice) {
+            sendNewPrice(product, oldPrice, newPrice);
+        }
+        product.setPriceChangeSubscribers(findProductById(product.getId())
+                .orElseThrow(ProductNotFoundException::new)
+                .getPriceChangeSubscribers());
+        return saveProduct(product);
     }
 }

@@ -76,11 +76,15 @@ async function fillAboutProduct(data) {
         69.1875c-19.160797,-40.817078 -60.514496,-69.1875 -108.5625,-69.1875z"
     onclick="addToFavourite()"/>
         </svg>`);
-    if(data.favourite) {
+    if (data.favourite) {
         $("#heart").toggleClass("filled");
         $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
     }
-    $("#rateNumber").empty().append(`<h5>${data.rating}<h5>`)
+    if(data.rating !== null) {
+        $("#rateNumber").empty().append(`<h5>${data.rating}<h5>`)
+    } else {
+        $("#rateNumber").empty().append(`<h5>Товар ещё никто не оценил<h5>`)
+    }
     rateInitialize(data.rating)
 
     // заполнение вкладки с описанием продукта
@@ -109,13 +113,13 @@ async function fillAboutProduct(data) {
  * Функиця добавления/удаления товара из избранного
  */
 function addToFavourite() {
-    if($("path").is('[class="filled"]')) {
+    if ($("path").is('[class="filled"]')) {
         fetch("/customer/favouritesGoods", {
             method: "DELETE",
             body: productIdFromPath,
             headers: {"Content-Type": "application/json; charset=utf-8"}
         }).then(function (response) {
-            if(response.ok) {
+            if (response.ok) {
                 $("#heart").toggleClass("filled");
                 $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;В избранное</h5>`)
                 toastr.success("Товар успешно удалён из избранного");
@@ -129,7 +133,7 @@ function addToFavourite() {
             body: productIdFromPath,
             headers: {"Content-Type": "application/json; charset=utf-8"}
         }).then(function (response) {
-            if(response.ok) {
+            if (response.ok) {
                 $("#heart").toggleClass("filled");
                 $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
                 toastr.success("Товар успешно добавлен в избранное");
@@ -145,13 +149,23 @@ function addToFavourite() {
  * @param rating текущий рейтинг товара
  */
 function rateInitialize(rating) {
-    $("#rate").rateYo({
-        onSet: function (rating) {
-            newRateForProduct(rating);
-        },
-        rating: rating,
-        halfStar: true
-    });
+    if(rating !== null) {
+        $("#rate").rateYo({
+            onSet: function (rating) {
+                newRateForProduct(rating);
+            },
+            rating: rating,
+            halfStar: true
+        });
+    } else {
+        $("#rate").rateYo({
+            onSet: function (rating) {
+                newRateForProduct(rating);
+            },
+            rating: 0,
+            halfStar: true
+        });
+    }
 }
 
 /**
@@ -181,6 +195,35 @@ function newRateForProduct(rating) {
 }
 
 /**
+ * Функция добавления email в список подписанных на рассылку при изменении цены товара
+ */
+function priceChangeSubscribe() {
+    let email = $("#emailInputModal").val();
+    fetch(`/api/products/subscribe`, {
+        method: 'POST',
+        body: JSON.stringify({
+            email: email,
+            id: productIdFromPath
+        }),
+        headers: {'Content-Type': 'application/json;charset=utf-8'}
+    }).then(function (response) {
+        if (response.ok) {
+            $('#dismissButton').click();
+            toastr.success("Мы уведомим вас об изменении цены на товар")
+            $("#emailInputModal").val("");
+        } else {
+            response.text().then(function (text) {
+                if (text == "incorrectEmail") {
+                    showModalError("Введён некорректный Email")
+                } else {
+                    showModalError("Вы уже подписались на изменение цены этого товара")
+                }
+            })
+        }
+    })
+}
+
+/**
  * function add product to cart
  * @param event
  */
@@ -198,6 +241,25 @@ function addToProductToCart(event) {
             toastr.warning('Товар не найден', '', {timeOut: 1000})
         }
     })
+}
+
+/**
+ * Функция сообщений об ошибке
+ * @param message текст сообщения
+ */
+function showModalError(message) {
+    $('#alert-modal-div').empty().append(`
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>${message}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            `)
+    $('#orderModalWindow').scrollTop(0);
+    window.setTimeout(function () {
+        $('.alert').alert('close');
+    }, 5000)
 }
 
 document.getElementById('addToCartButton').addEventListener('click', addToProductToCart)
