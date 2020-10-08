@@ -4,6 +4,7 @@ import com.jm.online_store.service.interf.MailSenderService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -28,8 +29,12 @@ public class MailSenderServiceImpl implements MailSenderService {
         mailMessage.setTo(emailTo);
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
-        log.info("{} email was sent from {} to {} with subject {} and message {}", emailType, username, emailTo, subject, mailMessage);
-        mailSender.send(mailMessage);
+        log.info("{} email was sent from {} to {} with subject {} and message {}",emailType, username, emailTo, subject, mailMessage);
+        try {
+            mailSender.send(mailMessage);
+        } catch (MailSendException ex) {
+            log.debug("Warning! Message rejected under suspicion of SPAM!");
+        }
     }
 
     /**
@@ -51,7 +56,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         helper.setTo(emailTo);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
-        log.info("{} email was sent from {} to {} with subject {} and message {}", emailType, username, emailTo, subject, mimeMessage);
+        log.info("{} Html-email was sent from {} to {} with subject {} and message {}", emailType, username, emailTo, subject, mimeMessage);
         mailSender.send(mimeMessage);
     }
 }

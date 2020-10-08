@@ -5,6 +5,7 @@ import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FavouriteGoodsService;
+import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,18 +24,19 @@ import java.util.Set;
 @AllArgsConstructor
 @RestController
 public class FavouritesGoodsRestController {
-    FavouriteGoodsService favouriteGoodsService;
-    
+    private final FavouriteGoodsService favouriteGoodsService;
+    private final UserService userService;
+
     /**
      * контроллер для получения товаров "избранное" для авторизованного User.
      * используется поиск по идентификатору User, т.к. используется ленивая
      * загрузка товаров, добавленных в "избранное".
      *
-     * @param user модель данных, построенная на основе залогированного User.
      * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
      */
     @GetMapping(value = "/customer/favouritesGoods")
-    public ResponseEntity<Set<Product>> getFavouritesGoods(@AuthenticationPrincipal User user) {
+    public ResponseEntity<Set<Product>> getFavouritesGoods() {
+        User user = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(favouriteGoodsService.getFavouriteGoods(user));
     }
 
@@ -42,11 +44,11 @@ public class FavouritesGoodsRestController {
      *контроллер добавления товара в избранное.
      *
      * @param id идентификатор товара
-     * @param user модель данных, построенная на основе залогированного User.
      * @return ResponseEntity.ok()
      */
     @PutMapping(value = "/customer/favouritesGoods")
-    public ResponseEntity addFavouritesGoods(@RequestBody Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
+        User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.addToFavouriteGoods(id, user);
         return ResponseEntity.ok().build();
     }
@@ -55,15 +57,15 @@ public class FavouritesGoodsRestController {
      *контроллер удаления товара из избранного списка товаров.
      *
      * @param id идентификатор товара
-     * @param user модель данных, построенная на основе залогированного User.
      * @return ResponseEntity.ok()
      */
     @DeleteMapping(value = "/customer/favouritesGoods")
-    public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id) {
+        User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.deleteFromFavouriteGoods(id, user);
         return ResponseEntity.ok().build();
     }
-    
+
     @ExceptionHandler({UserNotFoundException.class, ProductNotFoundException.class})
     public ResponseEntity handleControllerExceptions() {
         return ResponseEntity.notFound().build();
