@@ -37,14 +37,15 @@ public class AddressRestController {
         return ResponseEntity.ok(addressService.findAllShops());
     }
     @GetMapping(value = "/rest/userAddresses")
-    public ResponseEntity<Set<Address>> userAddresses(@AuthenticationPrincipal User user) {
-        if(userService.findById(user.getId()).get().getUserAddresses() != null) {
-            return ResponseEntity.ok(userService.findById(user.getId()).get().getUserAddresses());
+    public ResponseEntity<Set<Address>> userAddresses() {
+            if(userService.getCurrentLoggedInUser().getUserAddresses() != null) {
+            return ResponseEntity.ok(userService.getCurrentLoggedInUser().getUserAddresses());
         }
         return ResponseEntity.notFound().build();
     }
     @PostMapping(value = "/rest/addAddress")
-    public ResponseEntity addAddressToUser(@AuthenticationPrincipal User user, @RequestBody Address address) {
+    public ResponseEntity addAddressToUser(@RequestBody Address address) {
+        User user = userService.getCurrentLoggedInUser();
         if(userService.addNewAddressForUser(user,address)) {
             return ResponseEntity.ok().build();
         }
