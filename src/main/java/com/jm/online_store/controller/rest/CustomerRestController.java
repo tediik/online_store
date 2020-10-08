@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
@@ -27,9 +28,8 @@ public class CustomerRestController {
     private UserService userService;
 
     @PostMapping("/changemail")
-    public ResponseEntity<String> changeMailReq(Authentication auth, Model model,
-                                                @RequestParam String newMail) {
-        User user = (User) auth.getPrincipal();
+    public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
+        User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
             return ResponseEntity.badRequest().body("Ой! Вы ввели такой же Email.");
         } else {

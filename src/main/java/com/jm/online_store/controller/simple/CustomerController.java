@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.simple;
 
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
@@ -41,9 +42,8 @@ public class CustomerController {
      * @return
      */
     @GetMapping
-    public String getUserProfile(Model model, Authentication auth) {
-        User principal = (User) auth.getPrincipal();
-        User user = userService.findById(principal.getId()).get();
+    public String getUserProfile(Model model) {
+        User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
         return "customerPage";
     }
@@ -70,17 +70,16 @@ public class CustomerController {
     /**
      * метод обработки изменения пароля User.
      *
-     * @param auth        модель данных, построенных на основе зарегестрированного User
      * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
      */
     @PostMapping("/change-password")
-    public String changePassword(Authentication auth, Model model,
+    public String changePassword(Model model,
                                  @RequestParam String oldPassword,
                                  @RequestParam String newPassword) {
-        User user = (User) auth.getPrincipal();
+        User user = userService.getCurrentLoggedInUser();
         if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
             model.addAttribute("message", "Pls, check your old password!");
         }

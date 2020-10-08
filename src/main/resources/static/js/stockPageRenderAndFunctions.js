@@ -250,7 +250,7 @@ function stockModalClearFields() {
  * @param data
  */
 function renderStockList(data) {
-    lastPage.number = data.number + 1;
+    lastPage.number = data.number;
     lastPage.last = data.last;
     let stockDiv = $("#stocksDiv");
     if (data.number === 0) {
@@ -330,7 +330,7 @@ function handleSummernote() {
 }
 
 /**
- * Function creates allert message when fields in modal are invalid
+ * Function creates alert message when fields in modal are invalid
  * @param text - text of message
  * @param focusField - field to focus
  */
