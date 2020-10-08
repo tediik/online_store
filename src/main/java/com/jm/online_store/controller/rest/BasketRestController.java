@@ -42,7 +42,7 @@ public class BasketRestController {
     /**
      * контроллер для получения товаров в корзине для авторизованного User.
      *
-     * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
+     * @return ResponseEntity<> список товаров данного User + статус ответа.
      */
     @GetMapping(value = "/customer/basketGoods")
     public ResponseEntity<List<SubBasket>> getBasket() {
@@ -63,10 +63,10 @@ public class BasketRestController {
     }
 
     /**
-     * Контроллер для удаления сущности SubBasket(корзина) из списка корзин User.
+     * контроллер для удаления сущности SubBasket из списка подкорзин User.
      *
-     * @param id идентификатор миникорзины
-     * @return ResponseEntity(HttpStatus.OK)
+     * @param id идентификатор подкорзины
+     * @return ResponseEntity.ok()
      */
     @DeleteMapping(value = "/customer/basketGoods")
     public ResponseEntity<String> deleteBasket(@RequestBody Long id) {
@@ -75,10 +75,10 @@ public class BasketRestController {
     }
 
     /**
-     * контроллер для обновления количества товара в корзине.
+     * контроллер для обновления количества товара в подкорзине.
      *
      * @param json json из 2-х параметров
-     * @return ResponseEntity(HttpStatus.OK)
+     * @return ResponseEntity.ok()
      */
     @PutMapping(value = "/customer/basketGoods")
     public ResponseEntity<String> updateUpBasket(@RequestBody ObjectNode json) {

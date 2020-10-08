@@ -1,6 +1,8 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
+import com.jm.online_store.exception.SubBasketNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Order;
@@ -33,18 +35,30 @@ public class BasketServiceImpl implements BasketService {
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
 
+    /**
+     * метод поиска сущности SubBasket.
+     *
+     * @param idBasket идентификатор SubBasket
+     * @return SubBasket
+     */
     @Override
     public SubBasket findBasketById(Long idBasket) {
-        return basketRepository.findById(idBasket).get();
+        return basketRepository.findById(idBasket).orElseThrow(SubBasketNotFoundException::new);
     }
 
+    /**
+     * метод для получения товаров в корзине для авторизованного User.
+     *
+     * @return List<SubBasket>
+     */
     @Override
     public List<SubBasket> getBasket() {
         User authorityUser = userService.getCurrentLoggedInUser();
         List<SubBasket> subBaskets = authorityUser.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {
-            productCount = productService.findProductById(subBasket.getProduct().getId()).get().getAmount();
+            productCount = productService.findProductById(subBasket.getProduct().getId())
+                    .orElseThrow(ProductNotFoundException::new).getAmount();
             if (productCount < subBasket.getCount()) {
                 subBasket.setCount(productCount);
                 authorityUser.setUserBasket(subBaskets);
@@ -57,6 +71,13 @@ public class BasketServiceImpl implements BasketService {
         return subBaskets;
     }
 
+    /**
+     * метод для обновления количества товара в подкорзине.
+     *
+     * @param subBasket подкорзина
+     * @param difference счетчик увеличения/уменьшения кол-во товара
+     * @return SubBasket
+     */
     @Override
     public SubBasket updateBasket(SubBasket subBasket, int difference) {
         int count = subBasket.getCount();
@@ -76,11 +97,22 @@ public class BasketServiceImpl implements BasketService {
         return basketRepository.saveAndFlush(subBasket);
     }
 
+    /**
+     * метод добавления SubBasket
+     *
+     * @param subBasket подкорзина
+     * @return SubBasket
+     */
     @Override
     public SubBasket addBasket(SubBasket subBasket) {
         return basketRepository.save(subBasket);
     }
 
+    /**
+     * метод для удаления сущности SubBasket(подкорзина) из списка подкорзин User.
+     *
+     * @param subBasket подкорзина
+     */
     @Override
     public void deleteBasket(SubBasket subBasket) {
         User authorityUser = userService.getCurrentLoggedInUser();
@@ -122,9 +154,13 @@ public class BasketServiceImpl implements BasketService {
         userService.updateUser(userWhoseBasketToModify);
     }
 
+    /**
+     * метод для формирования заказа из корзины.
+     * @param id идентификатор
+     */
     @Override
     public void buildOrderFromBasket(Long id) {
-        Address addressToAdd = addressService.findAddressById(id).get();
+        Address addressToAdd = addressService.findAddressById(id).orElseThrow(AddressNotFoundException::new);
         User authorityUser = userService.getCurrentLoggedInUser();
         List<SubBasket> subBasketList = authorityUser.getUserBasket();
         Product product;
@@ -144,7 +180,8 @@ public class BasketServiceImpl implements BasketService {
         order.setAmount((long) count);
         order.setOrderPrice(sum);
         order.setStatus(Order.Status.INCARTS);
-        order.setAddress(addressService.findAddressById(addressToAdd.getId()).get());
+        order.setAddress(addressService.findAddressById(addressToAdd.getId())
+                 .orElseThrow(AddressNotFoundException::new));
         Set<Order> orderSet = authorityUser.getOrders();
         orderSet.add(order);
         authorityUser.setOrders(orderSet);
