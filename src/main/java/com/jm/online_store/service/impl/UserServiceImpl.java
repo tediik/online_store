@@ -457,11 +457,28 @@ public class UserServiceImpl implements UserService {
      */
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        log.debug("getCurrentLoggedInUser.auth: {} ", auth.getPrincipal().toString());
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
-        String username = ((User) auth.getPrincipal()).getUsername();
-        return findByEmail(username).get();
+        return findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+    }
+
+    /**
+     * Service method which finds and returns the User by token after email confirmation
+     * @return User
+     */
+    @Transactional
+    @Override
+    public User getUserByToken(String token) {
+        ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
+        log.debug("Token: {}", token);
+        log.debug("ConfirmationToken: {}", confirmationToken);
+
+        if (confirmationToken == null) {
+            throw new UserNotFoundException();
+        }
+        return userRepository.findByEmail(confirmationToken.getUserEmail()).orElseThrow(UserNotFoundException::new);
     }
 }
