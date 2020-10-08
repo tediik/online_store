@@ -3,6 +3,7 @@ package com.jm.online_store.controller.rest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
@@ -45,26 +46,15 @@ public class BasketRestController {
     private final AddressService addressService;
 
     /**
-     * метод для получения авторизованного пользователя.
-     *
-     * @param authentication модель данных, построенная на основе залогированного User.
-     * @return авторизванный пользователь.
-     */
-    private User getAutorityUser(Authentication authentication) {
-        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
-    }
-
-    /**
      * контроллер для получения товаров в корзине для авторизованного User.
      * используется поиск по идентификатору User, т.к. используется ленивая
      * загрузка товаров, добавленных в "избранное".
      *
-     * @param authentication модель данных, построенная на основе залогированного User.
      * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
      */
     @GetMapping(value = "/customer/busketGoods")
-    public ResponseEntity<List<SubBasket>> getBasket(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+    public ResponseEntity<List<SubBasket>> getBasket() {
+        User autorityUser = userService.getCurrentLoggedInUser();
         List<SubBasket> subBaskets = autorityUser.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {
@@ -85,14 +75,13 @@ public class BasketRestController {
     /**
      * контроллер для формирования заказа из корзины.
      *
-     * @param authentication авторизованный пользователь.
      * @param id             адрес с формы
      * @return ResponseEntity(HttpStatus.OK)
      */
     @PostMapping(value = "/customer/busketGoods")
-    public ResponseEntity buildOrderFromBasket(Authentication authentication, @RequestBody Long id) {
+    public ResponseEntity buildOrderFromBasket(@RequestBody Long id) {
         Address addressToAdd = addressService.findAddressById(id).get();
-        User autorityUser = getAutorityUser(authentication);
+        User autorityUser = userService.getCurrentLoggedInUser();
         List<SubBasket> subBasketList = autorityUser.getUserBasket();
         Product product;
         int count = 0;
@@ -125,12 +114,11 @@ public class BasketRestController {
      * Контроллер для удаления сущности SubBasket (корзина) из списка корзин User.
      *
      * @param id             идентификатор миникорзины
-     * @param authentication авторизованный пользователь User
      * @return ResponseEntity(HttpStatus.OK)
      */
     @DeleteMapping(value = "/customer/busketGoods")
-    public ResponseEntity deleteBasket(@RequestBody Long id, Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+    public ResponseEntity deleteBasket(@RequestBody Long id) {
+        User autorityUser = userService.getCurrentLoggedInUser();
         List<SubBasket> subBasketList = autorityUser.getUserBasket();
         subBasketList.remove(basketService.findBasketById(id));
         autorityUser.setUserBasket(subBasketList);

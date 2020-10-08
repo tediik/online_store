@@ -44,7 +44,6 @@ public class BasketServiceImpl implements BasketService {
 
     /**
      * Method add product to basket. If product already in subBasket increases by 1
-     *
      * @param id - id of product to add
      */
     @Override
