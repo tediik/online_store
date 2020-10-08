@@ -1,4 +1,7 @@
-
+$(document).ready(function(){
+   console.log("Страница загрузилась полностью!!!");
+   getFavouritesGroup();
+});
 async function fillFavouritesGoods() {
     let response = await fetch("/customer/favouritesGoods");
     let content = await response.json();
@@ -28,4 +31,10 @@ async function deleteProductFromFavouritGoods(id) {
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
     await fillFavouritesGoods();
+}
+
+async function getFavouritesGroup() {
+    let response = await fetch("/customer/favouritesGroup");
+    let content = await response.json();
+    console.log(response);
 }
