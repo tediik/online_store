@@ -61,13 +61,22 @@ async function fillBusket() {
 
     //if basket is empty
     if (countGoods == 0) {
-        let emptyBasket = "<tr align='center'> <td > Корзина сейчас пуста,</br>но вы можете перейти на главную страницу или в каталог товаров</td></tr>";
-        emptyBasket += "<tr > <td ></td></tr>";
-        emptyBasket += "<tr align='center'><td >" +
-            "    <a class='btn btn-outline-primary mr-2' role='button' onclick='' href='/'>На главную страницу</a>" +
-            "    <a class='btn btn-outline-danger ml-2' role='button' onclick='' href='#'>Перейдите в каталог</a>" +
-            "    </td></tr>";
-        let buttonBuy = "<button class=\"btn btn-lg btn-outline-primary btn-block\" data-toggle=\"modal\" data-target=\"#orderModalWindow\" onclick=\"userAdresses()\" disabled>Корзина пуста</button>"
+        let emptyBasket = `
+            <tr align='center'>
+                <td > Корзина сейчас пуста,</br>но вы можете перейти на главную страницу или в каталог товаров</td>
+            </tr>
+            <tr ><td ></td></tr>
+            <tr align='center'>
+                <td>
+                <a class='btn btn-outline-primary mr-2' role='button' onclick='' href='/'>На главную страницу</a>
+                <a class='btn btn-outline-danger ml-2' role='button' onclick='' href='#'>Перейдите в каталог</a>
+                </td>
+            </tr>
+            `;
+        let buttonBuy = `
+            <button class="btn btn-lg btn-outline-primary btn-block" data-toggle="modal"
+            data-target="#orderModalWindow" onclick="userAdresses()" disabled>Корзина пуста</button>
+            `;
         $(basketGoodsJson).append(emptyBasket);
         $('#buttonBuyInBasket').empty().append(buttonBuy);
     }
