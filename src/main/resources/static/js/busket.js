@@ -4,6 +4,10 @@ function prepareNumber(n) {
     return s;
 }
 
+$(document).ready(function (){
+    fillBusket();
+})
+
 async function fillBusket() {
     let response = await fetch("/customer/busketGoods");
     let content = await response.json();
@@ -59,6 +63,8 @@ async function fillBusket() {
     $('#countBasketGoods').append(countGoods + "шт.");
     $('#sumBasketGoods').append(sumBasket);
 
+    $('#countInBasket').empty();
+    $('#countInBasket').append(countGoods);
     //if basket is empty
     if (countGoods == 0) {
         let emptyBasket = `
