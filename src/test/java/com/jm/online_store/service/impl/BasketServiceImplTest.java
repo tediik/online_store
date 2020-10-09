@@ -1,10 +1,10 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.SubBasketNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.BasketRepository;
-import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
@@ -18,10 +18,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,9 +32,6 @@ public class BasketServiceImplTest {
 
     @MockBean
     private BasketRepository basketRepository;
-
-    @MockBean
-    private UserRepository userRepository;
 
     @MockBean
     private UserService userService;
@@ -89,8 +86,7 @@ public class BasketServiceImplTest {
 
     @Test
     void findBasketById() {
-        when(basketRepository.findById(1L))
-                .thenReturn(Optional.ofNullable(subBasket_1));
+        when(basketRepository.findById(1L)).thenReturn(Optional.ofNullable(subBasket_1));
         SubBasket subBasket = basketService.findBasketById(1L);
         assertNotNull(subBasket);
         assertEquals(1L, subBasket.getId());
@@ -98,52 +94,31 @@ public class BasketServiceImplTest {
     }
 
     @Test
+    void findBasketByIdThrowException() {
+        when(basketRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(SubBasketNotFoundException.class, () -> basketService.findBasketById(1L));
+        verify(basketRepository, times(1)).findById(1L);
+    }
+
+    @Test
     void getBasket() {
         when(userService.getCurrentLoggedInUser()).thenReturn(user);
-
-        when(productService.findProductById(any())).thenReturn(Optional.ofNullable(product_1));
-
-        //assertEquals(3, basketList.size());
-
-        List<SubBasket> subBasketListService = basketService.getBasket();
-
-        /*List<SubBasket> basketList2 = basketList.stream()
-                .filter(subBasket -> subBasket.getProduct().getAmount() > 0)
-                .collect(Collectors.toList());
-        assertEquals(2, basketList2.size());*/
-
-  /*      int productCount;
-        for (SubBasket subBasket : basketList) {
-            productCount = subBasket.getProduct().getAmount();
-            if (productCount < subBasket.getCount()) {
-                subBasket.setCount(productCount);
-                assertEquals(subBasket.getCount(), productCount);
-                if (productCount < 1) {
-                    basketList.remove(subBasket);
-                    //assertEquals(2, basketList.size());
-                }
-            }
-        }*/
+        when(productService.findProductById(subBasket_1.getProduct().getId()))
+                .thenReturn(Optional.ofNullable(product_1));
+        List<SubBasket> basketList = basketService.getBasket();
+        assertEquals(3, basketList.size());
+        assertEquals(basketList.get(0), subBasket_1);
+        assertEquals(basketList.get(1), subBasket_2);
+        assertEquals(basketList.get(2), subBasket_3);
+        assertEquals(subBasket_1.getCount(), 4);
     }
 
     @Test
     void updateBasket() {
- /* public SubBasket updateBasket(SubBasket subBasket, int difference) {
-        int count = subBasket.getCount();
-        if (difference > 0) {
-            if (subBasket.getProduct().getAmount() > count) {
-                count += difference;
-                subBasket.setCount(count);
-            } else {
-                subBasket.setCount(subBasket.getProduct().getAmount());
-            }
-        } else {
-            if (count > 1) {
-                count += difference;
-                subBasket.setCount(count);
-            }
-        }
-        return basketRepository.saveAndFlush(subBasket);*/
+        when(basketRepository.saveAndFlush(subBasket_1)).thenReturn(subBasket_1);
+        SubBasket subBasket = basketService.updateBasket(subBasket_1, 1);
+        assertEquals(subBasket.getCount(), 4);
+        verify(basketRepository, times(1)).saveAndFlush(subBasket_1);
     }
 
     @Test
@@ -165,12 +140,11 @@ public class BasketServiceImplTest {
 
     @Test
     void addProductToBasket() {
-
-    }
-
-    @Test
-    void buildOrderFromBasket() {
-
+        when(userService.getCurrentLoggedInUser()).thenReturn(user);
+        when(productService.findProductById(2L)).thenReturn(Optional.ofNullable(product_2));
+        when(basketRepository.save(subBasket_2)).thenReturn(subBasket_2);
+        basketService.addProductToBasket(2L);
+        verify(basketRepository, times(1)).save(any());
     }
 
     @AfterEach
