@@ -65,7 +65,7 @@ async function fillBusket() {
 
     $('#countInBasket').empty();
     $('#countInBasket').append(countGoods);
-
+  
     //if basket is empty
     if (countGoods == 0) {
         let emptyBasket = `
