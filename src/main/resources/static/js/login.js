@@ -33,7 +33,7 @@ function vkBtn() {
  */
 document.getElementById('twitterBtn').addEventListener('click',twitterBtn)
 function twitterBtn() {
-    //В данный момент не отробатывает, раскоментировать при необходимости!
+    //В данный момент не срабатывает, раскоментировать при необходимости!
     // fetch("/login/twitter").then(response => response.text())
     // then(url => document.location.href = url)
 }
