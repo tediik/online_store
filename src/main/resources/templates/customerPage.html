@@ -36,7 +36,7 @@
 <header th:insert="/blocks/header :: header"></header>
 <div class="container-fluid">
     <div class="row min-vh-100">
-        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+        <div class="col-md-2">
             <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary mt-2 active" id="customerMain-tab" data-toggle="pill"
                    href="#customerMain" role="tab" aria-controls="customerMain" aria-selected="true">Главная</a>
@@ -46,7 +46,7 @@
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
                    onclick="fillFavouritesGoods()">Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
-                   role="tab" aria-controls="basketGoods" aria-selected="false" onclick="fillBusket()">Корзина</a>
+                   role="tab" aria-controls="basketGoods" aria-selected="false" >Корзина</a>
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
                 <a class="btn btn-outline-primary mt-2" id="feedback-tab" data-toggle="pill" href="#feedback" role="tab"
@@ -62,7 +62,7 @@
                     <div class="container-fluid" id="chartContainer" style="height: 370px; width: 100%;"></div>
 
                 </div>
-                <div class="tab-pane fade" id="favouritesGoods" role="tabpanel" aria-labelledby="favouritesGoods-tab">
+                <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel" aria-labelledby="favouritesGoods-tab">
                     <h3>Избранное</h3>
                     <table class="table table-striped">
                         <thead>
@@ -71,6 +71,8 @@
                             <th scope="col">product</th>
                             <th scope="col">price</th>
                             <th scope="col">amount</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody id="favouritesGoodsList">
@@ -352,9 +354,9 @@
                 </div>
                 <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
                     <div id="order-div"></div>
-                    <h3>корзина</h3>
+                    <h3>Корзина</h3>
                     <div class="row min-vh-100">
-                        <div class="col-md-9" style="padding-right: 0px; padding-left: 0px">
+                        <div class="col-md-9">
                             <!--                            сама корзина-->
                             <table class="table table-striped">
                                 <tbody id="busketList">
@@ -362,19 +364,20 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-md-3" style="padding-right: 0px; padding-left: 0px">
+                        <div class="col-md-3">
                             <tr>
-                                <span>общее количество товара:</span>
+                                <span>Общее количество товара:</span>
                                 <h3 id="countBasketGoods"></h3>
                             </tr>
                             <tr>
-                                <span>стоимость заказа:</span>
+                                <span>Стоимость заказа:</span>
                                 <h3 id="sumBasketGoods"></h3>
                             </tr>
-
+                            <div id="buttonBuyInBasket">
                             <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
-                                    data-target="#orderModalWindow" onclick="userAdresses()">купить
+                                    data-target="#orderModalWindow" onclick="userAdresses()">Купить
                             </button>
+                            </div>
                         </div>
                     </div>
                     <div class="modal fade" id="orderModalWindow" tabindex="-1" role="dialog"
