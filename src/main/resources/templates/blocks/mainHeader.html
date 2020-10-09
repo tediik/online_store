@@ -11,8 +11,11 @@
             </form>
         </nav>
         <!-- Customer service -->
-        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
+        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/customer">Кабинет покупателя</a>
+        <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           href="/authority/profile">Кабинет администратора</a>
+
         <!-- Registration -->
         <button th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-secondary font-weight-bold secondarybtn"
            data-toggle="modal" data-target="#openNewRegistrationModal">Регистрация</button>
