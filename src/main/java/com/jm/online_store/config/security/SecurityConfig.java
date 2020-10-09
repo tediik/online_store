@@ -71,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/categories/**", "/products/**", "/search/**").permitAll()
                 .antMatchers("/uploads/images/**").permitAll()
                 .antMatchers("/users/**").permitAll()
+                .antMatchers("/login/**").permitAll()
                 .antMatchers("/api/feedback/").access("hasAnyRole('ROLE_CUSTOMER')")
                 .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**", "/404").permitAll()
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")

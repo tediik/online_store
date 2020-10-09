@@ -29,7 +29,7 @@
                         <a href="/registration" class="btn btn-warning btn-sm btn-block"> Log in </a>
                     </div>
                     <div>
-                        <!--Кнопка блокирована с помощью скрипта "/static/js/loginNoLinkFacebook.js"-->
+                        <!--Кнопка блокирована с помощью скрипта "/static/js/login.js"-->
                         <a id="noLinkFacebook" href="/oauth2/authorization/facebook" title="Facebook"
                            class="btn btn-block btn-sm  btn-social btn-lg btn-facebook">
                             <i class="fa fa-facebook"></i> Sign in with Facebook
@@ -37,20 +37,21 @@
                     </div>
                     <br>
                     <div>
-                        <a th:href="${authUrlOK}" class="btn btn-block btn-social btn-odnoklassniki">
+                        <a id="odnoklassnikiBtn" class="btn btn-block btn-social btn-odnoklassniki">
                             <span style="text-decoration-color: #f9f9f9" class="fa fa-odnoklassniki"></span> Sign in
                             with Odnoklassniki
                         </a>
                     </div>
                     <br>
                     <div>
-                        <a th:href="${twitterUrl}" class="btn btn-block btn-social btn-twitter">
+                        <a id="twitterBtn" class="btn btn-block btn-social btn-twitter">
                             <span class="fa fa-twitter"></span> Sign in with Twitter
                         </a>
                     </div>
                     <br>
-                    <div><a th:href="${authUrlVK}" title="VKontakte" class="btn btn-block btn-social btn-vk">
-                        <i class="fa fa-vk"></i> Sign in with VKontakte
+                    <div>
+                        <a id="vkBtn" title="VKontakte" class="btn btn-block btn-social btn-vk">
+                            <i class="fa fa-vk"></i> Sign in with VKontakte
                     </a>
                     </div>
                 </div>
@@ -58,5 +59,5 @@
         </div>
     </div>
 </section>
-<script src="/static/js/loginNoLinkFacebook.js"></script>
+<script src="/static/js/login.js"></script>
 </body>

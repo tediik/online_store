@@ -45,17 +45,7 @@ public class LoginController {
     }
 
     @GetMapping(value = "/login")
-    public String loginPage(Model model) throws InterruptedException, ExecutionException, IOException {
-        String authUrlOK = oAuth2Odnoklassniki.getAuthorizationUrl();
-        model.addAttribute("authUrlOK", authUrlOK);
-
-        /*Заблокировали возможность авторизации через twitter,
-        так как на данном этапе наше приложение не настроено
-        для авторизации через twitter, снять комментарии при необходимости*/
-        //String twitterUrl = twitterAuth.twitterAuth();
-        //model.addAttribute("twitterUrl", twitterUrl);
-
-        model.addAttribute("authUrlVK", vkApiClient.getVkAuthUrl());
+    public String loginPage() {
         return "login";
     }
 
