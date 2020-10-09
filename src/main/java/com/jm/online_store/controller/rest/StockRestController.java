@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.google.gson.Gson;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
@@ -63,9 +64,10 @@ public class StockRestController {
      * @return ResponseEntity<Stock> Возвращает отредактированную акцию с кодом овтета
      */
     @PutMapping("/rest/editStock")
-    public ResponseEntity<Stock> editStockM(@RequestBody Stock stock) {
-        stockService.addStock(stock);
-        return ResponseEntity.ok().body(stock);
+    public ResponseEntity<Stock> editStockM(String stock) {
+        Stock newStock = new Gson().fromJson(stock, Stock.class);
+        stockService.addStock(newStock);
+        return ResponseEntity.ok().body(newStock);
     }
 
     /**
