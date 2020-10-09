@@ -47,7 +47,7 @@
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
                    onclick="fillFavouritesGoods()">Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
-                   role="tab" aria-controls="basketGoods" aria-selected="false" onclick="fillBasket()">Корзина</a>
+                   role="tab" aria-controls="basketGoods" aria-selected="false" >Корзина</a>
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
                 <a class="btn btn-outline-primary mt-2" id="feedback-tab" data-toggle="pill" href="#feedback" role="tab"
@@ -63,7 +63,7 @@
                     <div class="container-fluid" id="chartContainer" style="height: 370px; width: 100%;"></div>
 
                 </div>
-                <div class="tab-pane fade" id="favouritesGoods" role="tabpanel" aria-labelledby="favouritesGoods-tab">
+                <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel" aria-labelledby="favouritesGoods-tab">
                     <h3>Избранное</h3>
                     <table class="table table-striped">
                         <thead>
@@ -72,6 +72,8 @@
                             <th scope="col">product</th>
                             <th scope="col">price</th>
                             <th scope="col">amount</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody id="favouritesGoodsList">
