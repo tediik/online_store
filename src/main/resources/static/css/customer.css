@@ -15,3 +15,10 @@ svg{
 *.filled{
     fill:#f00;
 }
+.messages-after-submit
+{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    color: red;
+}

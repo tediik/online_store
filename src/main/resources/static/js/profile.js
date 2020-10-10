@@ -5,24 +5,46 @@ $(document).ready(function() {
 });
 
 function changeMail() {
+    // this.stopPropagation();
+    // this.preventDefault();
     var formData = $('#formChangeMail').serialize();
     $.ajax({
         url: '/customer/changemail',
         type: 'POST',
         data: formData,
         success: function (res) {
-            toastr.success(res.body, {timeOut: 5000});
-            document.location.href = "/customer";
+          ///  console.log('SUCCESS!!!');
+          //  console.log(res);
+         //   console.log("ötvet"+res.responseText);
+
+            toastr.success(res, {timeOut: 5000});
+            close();
+            $('#email_input').val($('#new_mail').val());
+            $('#new_mail').val('');
+            // document.location.href = "/customer";
+
         },
         error: function (res){
+         //   console.log('ERROR!!! - ' + res.body );
+console.log(res);
             if (res.status == 400) {
-                toastr.error(res.body, {timeOut: 5000});
+                if (res.responseText == 'duplicatedEmailError') {
+                    $(".messages-after-submit").text('Ошибка: Электронный адрес уже зарегистрирован');
+                    toastr.success("Ошибка: Электронный адрес уже зарегистрирован", {timeOut: 5000});
+                }
+                if (res.responseText == 'notValidEmailError') {
+                    $(".messages-after-submit").text('Ошибка: Не верно указана электронная почта');
+                    toastr.success("Ошибка: Не верно указана электронная почта", {timeOut: 5000});
+                }
+
+             //   toastr.error(res.body, {timeOut: 5000});
             } else {
                 console.log(res.status);
             }
-            document.location.href = "/customer";
+            // document.location.href = "/customer";
         }
     });
+    return false;
 }
 
 function close() {
