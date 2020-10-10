@@ -58,8 +58,9 @@
             <a class="navbar-brand"
                th:each="authority : ${#authentication.getAuthorities()}"
                th:text="${authority.getAuthority()} + ' '"></a>
-            <a th:href="@{/authority/profile}" class="btn btn-primary ml-auto">Profile</a>
-            <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
+            <a th:href="@{/}" class="btn btn-info ml-auto">Главная</a>
+            <a th:href="@{/authority/profile}" class="btn btn-primary ml-auto">Профиль</a>
+            <a th:href="@{/logout}" class="btn btn-warning ml-auto">Выйти</a>
         </nav>
         <div class="card">
             <h5 class="card-header">Admin Panel</h5>
