@@ -5,13 +5,13 @@ function prepareNumber(n) {
 }
 
 $(document).ready(function (){
-    fillBusket();
+    fillBasket();
 })
 
-async function fillBusket() {
-    let response = await fetch("/customer/busketGoods");
+async function fillBasket() {
+    let response = await fetch("/customer/basketGoods");
     let content = await response.json();
-    let basketGoodsJson = document.getElementById('busketList');
+    let basketGoodsJson = document.getElementById('basketList');
     let countGoods = 0;
     let sumBasket = 0;
     let key;
@@ -89,16 +89,16 @@ async function fillBusket() {
 }
 
 async function deleteBasket(id) {
-    await fetch("/customer/busketGoods", {
+    await fetch("/customer/basketGoods", {
         method: "DELETE",
         body: id,
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    await fillBusket();
+    await fillBasket();
 }
 
 async function updateCountBasket(id, count) {
-    await fetch("/customer/busketGoods", {
+    await fetch("/customer/basketGoods", {
         method: "PUT",
         body: JSON.stringify({
             id: id,
@@ -106,15 +106,15 @@ async function updateCountBasket(id, count) {
         }),
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    await fillBusket();
+    await fillBasket();
 }
 
 async function buildOrderFromBasket() {
-    await fetch("/customer/busketGoods", {
+    await fetch("/customer/basketGoods", {
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    await fillBusket();
+    await fillBasket();
 }
 
 async function addToFavouritsGoods(id, heartId) {
