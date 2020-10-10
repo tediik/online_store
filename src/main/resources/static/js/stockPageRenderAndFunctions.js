@@ -4,6 +4,7 @@
 let myHeaders = new Headers()
 let sharedStockApiUrl = "/manager/api/sharedStock"
 let stockApiUrl = "/manager/api/stock"
+let stockPublishUrl = "/"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), number: 0, last: false};
 
@@ -77,6 +78,8 @@ function handleStockDivButtons(event) {
         handleEditButtonClick(event)
     } else if (button === "delete-stock") {
         handleDeleteButtonClick(event)
+    } else if (button === "publish-stock") {
+        handlePublishButtonClick(event)
     }
 }
 
@@ -145,8 +148,34 @@ function handleDeleteButtonClick(event) {
             headers: myHeaders
         }).then(function (response) {
             if (response.status === 200) {
+                console.log('Stock deleting. Response.status' + response.status)
                 successActionMainPage("#mainWindowAlert", "Акция успешно удалена", "success")
                 $(`#li-${stockId}`).remove()
+            } else {
+                successActionMainPage("#mainWindowAlert", "Акция не найдена", "error")
+            }
+        })
+    }
+    $('#stockModal').modal('hide')
+}
+
+/**
+ * publish button handler
+ * @param event - эвент откуда берем id элемента
+ */
+function handlePublishButtonClick(event) {
+    let stockId = event.target.dataset.stockId
+    let doPublish = confirm(`Опубликовать акцию id: ${stockId}?`);
+    if (doPublish) {
+        console.log(`${stockId} will be published`)
+        fetch(stockPublishUrl + `/${stockId}`, {
+            method: 'POST',
+            headers: myHeaders
+        }).then(function (response) {
+            if (response.status === 200) {
+                console.log('Stock publishing. Response.status' + response.status)
+                successActionMainPage("#mainWindowAlert", "Акция успешно опубликована", "success")
+                $(`#li-${stockId}`).spellcheck
             } else {
                 successActionMainPage("#mainWindowAlert", "Акция не найдена", "error")
             }
@@ -269,6 +298,8 @@ function renderStockList(data) {
     function render(sharedStocks) {
         let sharedStocksQuantity = sharedStocks.length
         for (let i = 0; i < stocks.length; i++) {
+            let stockId = stocks[i].id
+            let stockImg = stocks[i].imageFile
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
             let endDate = stocks[i].endDate
             if (endDate === null) {
@@ -281,26 +312,38 @@ function renderStockList(data) {
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-4\">
                                  <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">
-                            </div>
-                            <div class=\"col-md-6\">
-                                <div class=\"card-body\">
-                                    <h3 class='card-title'>${stocks[i].stockTitle}</h3>
-                                    <p class=\"card-text\">${stocks[i].stockText}</p>
+<!--                                 <img class=\"card-img\" src=${stockImg} width=\"250\">-->
+                                 <p></p>
+                                 <p id="stockId" class="stockId">ID акции: ${stockId}</p>
                                     <p id="rating" class="rating">Рейтинг: ${rating}</p>
                                     <p>Срок проведения акции: </p>
                                     <div class=\"card-date\">
                                          с ${moment(stocks[i].startDate).format("DD MMM")}
                                          по ${endDate}
                                     </div>
+                            </div>
+                            <div class=\"col-md-6\">
+                                <div class=\"card-body\">
+                                    <h3 class='card-title'>${stocks[i].stockTitle}</h3>
+                                    <p class=\"card-text\">${stocks[i].stockText}</p>
                                 </div>
                             </div>
                             <div class="col-md-2 flex-row align-items-center">
-                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" 
+                                            aria-orientation="vertical">
                                     <button data-toggle-id="edit-stock" class="btn btn-info" data-toggle='modal'
-                                            data-target='#stockModal' id="editButton" data-stock-id="${stocks[i].id}">Edit</button>
+                                            data-target='#stockModal' id="editButton" 
+                                            data-stock-id="${stocks[i].id}">Изменить</button>
                                 </div>
-                                <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button data-toggle-id="delete-stock" class="btn btn-danger" id="deleteButton" data-stock-id="${stocks[i].id}">Delete</button>
+                                <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" 
+                                            aria-orientation="vertical">
+                                    <button data-toggle-id="delete-stock" class="btn btn-danger" id="deleteButton" 
+                                            data-stock-id="${stocks[i].id}">Удалить</button>
+                                </div>
+                                <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" 
+                                            aria-orientation="vertical">
+                                    <button data-toggle-id="publish-stock" class="btn btn-success" id="publishButton" 
+                                            data-stock-id="${stocks[i].id}">Опубликовать</button>
                                 </div>
                             </div>
                         </div>

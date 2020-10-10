@@ -2,9 +2,11 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.Transliteration;
 import com.jm.online_store.util.ValidationUtils;
@@ -42,6 +44,7 @@ public class MainPageRestController {
     private final UserService userService;
     private final CategoriesService categoriesService;
     private final ProductService productService;
+    private final StockService stockService;
 
     @PostMapping("/registration")
     @ResponseBody
@@ -101,5 +104,13 @@ public class MainPageRestController {
     @GetMapping("api/products")
     public ResponseEntity<List<Product>> getSomeProducts() {
         return ResponseEntity.ok(productService.findNumProducts(15));
+    }
+
+    /**
+     * Возвращает список опубликованных акций  - список передаётся в метод сервиса .findPublishedStocks()
+     */
+    @GetMapping("api/publishedstocks")
+    public ResponseEntity<List<Stock>> getPublishedStocks() {
+        return ResponseEntity.ok(stockService.findPublishedStocks());
     }
 }

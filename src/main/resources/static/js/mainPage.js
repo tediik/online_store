@@ -7,6 +7,7 @@ $(document).ready(function ($) {
     getCurrent();
     fillCategories();
     fetchAndRenderSomeProducts();
+    fetchAndRenderPublishedStocks();
 });
 
 /**
@@ -25,7 +26,6 @@ function preventDefaultEventForEnterKeyPress() {
 function fetchAndRenderSomeProducts() {
     fetch("/api/products").then(response => response.json()).then(data => fillSomeProducts(data));
     $('#headerForSomeProductsView').text('Актуальные предложения')
-
 }
 
 /**
@@ -168,6 +168,63 @@ function fillSomeProducts(data) {
             });
         }
     } else {
-        prodsView.innerHTML = 'Продуктов не найденно'
+        prodsView.innerHTML = 'Ожидайте новые продукты'
+    }
+}
+
+/**
+ * function that renders main page with publishedStocks
+ * @param data - stocks list
+ */
+function fetchAndRenderPublishedStocks() {
+    fetch("/api/publishedstocks").then(response => response.json()).then(data => fillPublishedStocks(data));
+    $('#headerForPublishedStocksView').text('Горячие акции!')
+}
+
+/**
+ * function that fills main page with products
+ * @param data - products list
+ */
+function fillPublishedStocks(data) {
+    let stocksView = document.getElementById('publishedStocksView');
+    stocksView.innerHTML = ''
+    if (data !== 'error') {
+        let item = ``;
+        for (let key = 0; key < data.length; key++) {
+            item += `
+            <div class="col-2">
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
+                    <div class="col-auto d-none d-lg-block productImg">
+                        <img class="bd-placeholder-img" src="/uploads/images/products/0.jpg">
+                    </div>
+                    <div id="rate${data[key].id}"></div>
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <p class="card-text mb-auto productName">${data[key].product}</p>
+                        <a class="btn btn-sm btn-outline-light producthref" href="/products/${data[key].id}" role="button">Подробнее &raquo;</a>
+                    </div>
+                </div>
+            </div>`;
+            if ((key + 1) % 5 == 0) {
+                $(stocksView).append(`<div class="row">` + item);
+                item = ``;
+            } else if ((key + 1) == data.length) {
+                $(stocksView).append(`<div class="row">` + item);
+            }
+            $(function () {
+                if(data[key].rating !== null) {
+                    $(`#rate${data[key].id}`).rateYo({
+                        rating: data[key].rating,
+                        readOnly: true
+                    });
+                } else {
+                    $(`#rate${data[key].id}`).rateYo({
+                        rating: 0,
+                        readOnly: true
+                    });
+                }
+            });
+        }
+    } else {
+        stocksView.innerHTML = 'Ожидайте новые акции'
     }
 }
