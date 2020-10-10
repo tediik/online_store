@@ -52,6 +52,16 @@ async function fillBusket() {
             </td>
         <tr>
         `;
+        fetch("api/products/" + `${content[key].product.id}`)
+            .then(function (response) {
+                response.json().then(function (data)
+                {
+                    if (data.favourite) {
+                        $('#heart' + `${content[key].id}`).toggleClass("filled");
+                    }
+                })
+            });
+
         sumBasket += content[key].product.price * content[key].count;
         $(basketGoodsJson).append(product);
     }
@@ -124,14 +134,26 @@ async function addToFavouritsGoods(id, heartId) {
             method: "DELETE",
             body: id,
             headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(function (response) {
+            if (response.ok) {
+                $('#heart' + heartId).toggleClass("filled");
+                toastr.success("Товар успешно удалён из избранного");
+            } else {
+                toastr.error("Авторизуйтесь/зарегистрируйтесь");
+            }
         });
-        $('#heart' + heartId).toggleClass('filled');
     } else {
         await fetch("/customer/favouritesGoods", {
             method: "PUT",
             body: id,
             headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(function (response) {
+            if (response.ok) {
+                $('#heart' + heartId).toggleClass("filled");
+                toastr.success("Товар успешно добавлен в избранное");
+            } else {
+                toastr.error("Авторизуйтесь/зарегистрируйтесь");
+            }
         });
-        $('#heart' + heartId).toggleClass('filled');
     }
 }
