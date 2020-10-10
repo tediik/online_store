@@ -23,9 +23,4 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
     public void addFavouritesGroup(FavouritesGroup favouritesGroup) {
         favouritesGroupRepository.save(favouritesGroup);
     }
-
-    @Override
-    public Optional<FavouritesGroup> findByName(String name) {
-        return favouritesGroupRepository.findByName(name);
-    }
 }

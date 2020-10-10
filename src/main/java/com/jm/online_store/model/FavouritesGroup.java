@@ -25,6 +25,4 @@ public class FavouritesGroup {
 
     @ManyToOne
     User user;
-
-    //private Set<Product> products  = new HashSet<>();
 }

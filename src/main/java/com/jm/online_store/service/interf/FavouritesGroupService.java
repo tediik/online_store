@@ -8,5 +8,4 @@ import java.util.Optional;
 public interface FavouritesGroupService {
     List<FavouritesGroup> findAll();
     void addFavouritesGroup(FavouritesGroup favouritesGroup);
-    Optional<FavouritesGroup> findByName(String name);
 }

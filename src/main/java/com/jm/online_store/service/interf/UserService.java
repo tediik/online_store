@@ -1,6 +1,7 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Address;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import org.springframework.web.multipart.MultipartFile;
 

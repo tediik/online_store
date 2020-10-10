@@ -9,6 +9,7 @@ async function fillFavouritesGoods() {
         let product = `
         <tr class=${content[key].id} id=${content[key].id}>
     <td>${content[key].id}</td>
+    <td><input type="checkbox" name="${content[key].id}"/></td> 
     <td>${content[key].product}</td>
     <td>${content[key].price}</td>
     <td>${content[key].amount}</td>
@@ -44,3 +45,20 @@ async function addProductToBasket(id) {
 $(document).on("click", "#showBasket", function () {
     $('#v-pills-tab a[href="#basketGoods"]').tab('show')
 });
+
+$(document).on("click", "#add-group-buton", function () {
+    // let nameGroup = prompt("Введите название группы \"Избранных товаров\" ");
+    // if (nameGroup) {
+    //     $('#favouritesGroup').append("<option value='All'>" + nameGroup + " </option>");
+    //     addFavouritesGroupInBD(nameGroup);
+    // }
+    addFavouritesGroupInBD();
+    //$('#v-pills-tab a[href="#basketGoods"]').tab('show')
+});
+
+function addFavouritesGroupInBD() {
+    let result = fetch('/customer/favouritesGroup').then( result => {
+        return result.json();
+    };
+    console.log(result);
+};
