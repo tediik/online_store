@@ -35,11 +35,11 @@ public class AllUsersRestController {
     @GetMapping("/getCurrent")
     public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.noContent().build();
         }
         User currentUser = userService.getCurrentLoggedInUser();
         if (currentUser == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(new UserDto()
                 .setEmail(currentUser.getEmail())
