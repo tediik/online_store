@@ -23,7 +23,6 @@ public class LoginRestController {
      * Контроллер для вызова метода по нажатию
      * кнопки "Зарегестрироваться через Одноклассники".
      * Вызов контроллера происходит в login.js
-     * @return
      */
     @GetMapping(value = "/login/odnoklassniki")
     public ResponseEntity<String> odnoklassnikiBtn() {
@@ -34,7 +33,6 @@ public class LoginRestController {
      * Контроллер для вызова метода по нажатию
      * кнопки "Зарегестрироваться через Вконтакте".
      * Вызов контроллера происходит в login.js
-     * @return
      */
     @GetMapping(value = "/login/vkontakte")
     public ResponseEntity<String> vkBtn() {
@@ -45,7 +43,6 @@ public class LoginRestController {
      * Контроллер для вызова метода по нажатию
      * кнопки "Зарегестрироваться через Твиттер".
      * Вызов контроллера происходит в login.js
-     * @return
      */
     @GetMapping(value = "/login/twitter")
     public ResponseEntity<String> twitterBtn() throws InterruptedException, ExecutionException, IOException {
