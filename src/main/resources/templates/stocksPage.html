@@ -17,21 +17,23 @@
         <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/registration">Регистрация</a>
     </div>
 </div>
+
 <div class="container-fluid">
     <div class="row content">
-        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <a class="btn btn-link" href="/"><---обратно</a>
+        <div class="col-2">
+            <a class="btn btn-lg btn-outline-primary" href="/">Вернуться на главную</a>
         </div>
-        <div class="col-sm-8 text-left">
-            <h1 class="text-center">Акции</h1>
+        <div class="col-8 text-left" style="background-color: #f7f9f9">
+            <h2 class="text-center m-3">Актуальные акции Online-store</h2>
             <div th:each="stock : ${stocks}" class="alert alert-info mt-2">
                 <h3 th:text="${stock.stockImg}"></h3>
-                <p th:text="${stock.stockTitle}"></p>
+                <h4 th:text="${stock.stockTitle}"></h4>
                 <p th:text="${stock.stockText}"></p>
-                <a th:href="'/global/stockDetails/' + ${stock.id}" class="btn btn-warning">Детальнее</a>        <!--маппинг продумать!-->
+                <a th:href="'/global/stockDetails/' + ${stock.id}" class="btn btn-warning">Детальнее</a>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>

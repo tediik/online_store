@@ -44,8 +44,8 @@ public class StockMailDistributionTaskSettingsImplTest {
     void send_stocks_to_customers() {
         testUser.setEmail("jm-online-store@yandex.ru");
         testUserList.add(testUser);
-        testStock.setStockTitle("Test title");
-        testStock.setStockText("Test text");
+        testStock.setStockTitle("Test title"); //it shows at the bottom of "Promotion"-page
+        testStock.setStockText("Test text"); //the same
         testStock.setStartDate(LocalDate.now());
         testStock.setEndDate(LocalDate.now());
         testStockList.add(testStock);
