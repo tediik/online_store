@@ -54,14 +54,12 @@ async function fillBusket() {
         `;
         fetch("api/products/" + `${content[key].product.id}`)
             .then(function (response) {
-                response.json().then(function (data)
-                {
+                response.json().then(function (data) {
                     if (data.favourite) {
                         $('#heart' + `${content[key].id}`).toggleClass("filled");
                     }
                 })
             });
-
         sumBasket += content[key].product.price * content[key].count;
         $(basketGoodsJson).append(product);
     }
