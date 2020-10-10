@@ -47,9 +47,9 @@ public class BasketServiceImpl implements BasketService {
     }
 
     /**
-     * метод для получения товаров в корзине для авторизованного User.
+     * метод для получения списка товаров в корзине для авторизованного User.
      *
-     * @return List<SubBasket>
+     * @return List<SubBasket> список подкорзин
      */
     @Override
     public List<SubBasket> getBasket() {
