@@ -4,7 +4,7 @@ function prepareNumber(n) {
     return s;
 }
 
-$(document).ready(function (){
+$(document).ready(function () {
     fillBusket();
 })
 
@@ -119,13 +119,19 @@ async function buildOrderFromBasket() {
 }
 
 async function addToFavouritsGoods(id, heartId) {
-    await fetch("/customer/favouritesGoods", {
-        method: "PUT",
-        body: id,
-        headers: {"Content-Type": "application/json; charset=utf-8"}
-    });
-    let l = 'heart' + heartId;
-    let b = '#' + l;
-    $(b).toggleClass('filled');
-
+    if ($("path").is('[class="filled"]')) {
+        await fetch("/customer/favouritesGoods", {
+            method: "DELETE",
+            body: id,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        });
+        $('#heart' + heartId).toggleClass('filled');
+    } else {
+        await fetch("/customer/favouritesGoods", {
+            method: "PUT",
+            body: id,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        });
+        $('#heart' + heartId).toggleClass('filled');
+    }
 }
