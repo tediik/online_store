@@ -111,6 +111,7 @@ public class MainPageRestController {
      */
     @GetMapping("api/publishedstocks")
     public ResponseEntity<List<Stock>> getPublishedStocks() {
-        return ResponseEntity.ok(stockService.findPublishedStocks());
+        List<Stock> publishedStocks= stockService.findPublishedStocks();
+        return ResponseEntity.ok(publishedStocks);
     }
 }

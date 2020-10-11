@@ -114,6 +114,7 @@ public class StockServiceImpl implements StockService {
         modifiedStock.setStockTitle(stock.getStockTitle());
         modifiedStock.setStockText(stock.getStockText());
         modifiedStock.setStockImg(stock.getStockImg());
+//        modifiedStock.setPublished(stock.get);
         stockRepository.save(modifiedStock);
     }
 }

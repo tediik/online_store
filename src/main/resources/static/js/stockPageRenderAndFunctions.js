@@ -56,6 +56,7 @@ function checkFields(event) {
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
+        let stockPublish = document.getElementById('published')
         if (stockTitle.value === '') {
             invalidModalField("Заполните заголовок акции", stockTitle)
         } else if (stockText.value === "") {
@@ -206,6 +207,7 @@ function handleSaveChangesButton() {
         stockText: $('#stockText').summernote('code'),
         startDate: startDate,
         endDate: endDate,
+        published: $('#published').val(),
         stock: $('#stockTimeZone').val(),
     }
     let method = (stock.id !== '' ? 'PUT' : 'POST')
@@ -246,6 +248,7 @@ function handleEditButtonClick(event) {
         $('#stockText').summernote('code', stockText)
         $("#startDate").val(stock.startDate)
         $("#endDate").val(stock.endDate)
+        $("#published").val(stock.published)
     }
 
     fetch(stockApiUrl + `/${stockId}`, {
@@ -272,6 +275,7 @@ function stockModalClearFields() {
     $('#stockText').summernote('code', "")
     $("#startDate").val("")
     $("#endDate").val("")
+    $("#published").val(false)
 }
 
 /**
@@ -301,6 +305,14 @@ function renderStockList(data) {
             let stockId = stocks[i].id
             let stockImg = stocks[i].imageFile
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
+            let publish = stocks[i].published
+            console.log(`Stock is published: ${publish}`)
+            if (publish === true) {
+                publish = "✔"
+            } else {
+                publish = "✘"
+            }
+
             let endDate = stocks[i].endDate
             if (endDate === null) {
                 endDate = "бессрочно"
@@ -311,16 +323,20 @@ function renderStockList(data) {
             row.append(`<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-4\">
-                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">
-<!--                                 <img class=\"card-img\" src=${stockImg} width=\"250\">-->
+<!--                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">-->
+                                 <img class=\"card-img\" src=${stockImg} width=\"250\">
                                  <p></p>
                                  <p id="stockId" class="stockId">ID акции: ${stockId}</p>
                                     <p id="rating" class="rating">Рейтинг: ${rating}</p>
-                                    <p>Срок проведения акции: </p>
-                                    <div class=\"card-date\">
+                                    <div>Срок проведения акции: <br>
+                                    <p class=\"card-date\">
                                          с ${moment(stocks[i].startDate).format("DD MMM")}
                                          по ${endDate}
+                                    </p> 
                                     </div>
+                                    <p>Опубликовано <br> на гл.странице:    
+                                     ${publish} </p>
+                                    
                             </div>
                             <div class=\"col-md-6\">
                                 <div class=\"card-body\">
@@ -339,11 +355,6 @@ function renderStockList(data) {
                                             aria-orientation="vertical">
                                     <button data-toggle-id="delete-stock" class="btn btn-danger" id="deleteButton" 
                                             data-stock-id="${stocks[i].id}">Удалить</button>
-                                </div>
-                                <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" 
-                                            aria-orientation="vertical">
-                                    <button data-toggle-id="publish-stock" class="btn btn-success" id="publishButton" 
-                                            data-stock-id="${stocks[i].id}">Опубликовать</button>
                                 </div>
                             </div>
                         </div>
