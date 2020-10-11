@@ -153,7 +153,7 @@ function confirmOrder() {
     if (id == null) {
         showModalError("Вы не выбрали адрес доставки")
     } else {
-        fetch("/customer/busketGoods", {
+        fetch("/customer/basketGoods", {
             method: 'POST',
             body: id,
             headers: {
