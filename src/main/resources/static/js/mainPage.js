@@ -59,7 +59,6 @@ function getCurrent() {
                             $('#profile-main-link-manager, #profile-news, #profile-promotion').hide();
                         } else if (role.includes("ROLE_MANAGER")) {
                             $('#profile-main-link-admin').hide();
-
                         }
                     })
             }
