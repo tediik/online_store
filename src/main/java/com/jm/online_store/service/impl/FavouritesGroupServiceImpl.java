@@ -23,4 +23,9 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
     public void addFavouritesGroup(FavouritesGroup favouritesGroup) {
         favouritesGroupRepository.save(favouritesGroup);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        favouritesGroupRepository.deleteById(id);
+    }
 }

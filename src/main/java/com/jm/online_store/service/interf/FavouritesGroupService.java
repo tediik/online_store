@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface FavouritesGroupService {
     List<FavouritesGroup> findAll();
     void addFavouritesGroup(FavouritesGroup favouritesGroup);
+    void deleteById(Long id);
 }

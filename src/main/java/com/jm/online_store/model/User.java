@@ -92,7 +92,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             orphanRemoval = true)
     private Set<FavouritesGroup> favouritesGroups = new HashSet<>();
 

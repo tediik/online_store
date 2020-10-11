@@ -9,12 +9,15 @@ import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,16 +30,19 @@ public class FavouritesGroupRestController {
 
     @GetMapping(value = "/customer/favouritesGroup")
     public ResponseEntity getFavouritesGroups() {
-        System.out.println("Попали в GET");
-        List<FavouritesGroup> favouritesGroupList = favouritesGroupService.findAll();
-        System.out.println(favouritesGroupList);
-        return ResponseEntity.ok(favouritesGroupList.toString());
+        return ResponseEntity.ok(favouritesGroupService.findAll());
     }
     @PostMapping(value = "/customer/favouritesGroup")
     public ResponseEntity addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
-        System.out.println("Попали в POST");
-        //System.out.println(userService.getCurrentLoggedInUser());
-        return ResponseEntity.ok("OK");
+        User user = userService.getCurrentLoggedInUser();
+        favouritesGroup.setUser(user);
+        favouritesGroupService.addFavouritesGroup(favouritesGroup);
+        System.out.println(favouritesGroup);
+        return ResponseEntity.ok("Вроде все ок");
+    }
+    @DeleteMapping(value = "/customer/favouritesGroup/{id}")
+    public void deleteFavouritesGroups(@PathVariable("id") Long id) {
+        favouritesGroupService.deleteById(id);
     }
 
 }
