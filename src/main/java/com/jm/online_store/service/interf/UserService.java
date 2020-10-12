@@ -41,6 +41,8 @@ public interface UserService {
 
     void changeUsersMail(User user, String newMail);
 
+    void changeUsersPass(User user, String newMail);
+
     boolean activateNewUsersMail(String code, HttpServletRequest request);
 
     boolean activateUser(String code, HttpServletRequest request);
@@ -60,4 +62,5 @@ public interface UserService {
     User getCurrentLoggedInUser();
 
     boolean addNewAddressForUser(User user, Address address);
+
 }

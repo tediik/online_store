@@ -14,9 +14,7 @@ import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -58,6 +56,7 @@ public class UserServiceImpl implements UserService {
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+
     private final AddressService addressService;
 
     @Value("${spring.server.url}")
@@ -238,7 +237,21 @@ public class UserServiceImpl implements UserService {
         );
         mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
     }
+    @Transactional
+    public void changeUsersPass(User user, String newMail) {
+        user.setEmail(newMail);
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
+        confirmTokenRepository.save(confirmationToken);
 
+        String message = String.format(
+                "Привет, %s! \n" +
+                        "Ваш пароль изменен "  ,
+                user.getEmail(),
+                confirmationToken.getConfirmationToken()
+
+        );
+        mailSenderService.send(user.getEmail(), "Пароль успешно изменен", message, "pass change");
+    }
     /**
      * метод проверки активации пользователя.
      * @param token   модель, построенная на основе пользователя, после подтверждения

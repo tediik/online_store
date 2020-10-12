@@ -32,23 +32,15 @@ public class CustomerRestController {
     @Autowired
     private UserService userService;
 
-
-
-
-
     @PostMapping("/changemail")
     public ResponseEntity<String> changechangemailReq(Authentication auth, Model model,
-                                                @RequestParam String newMail) {
-      //  log.debug("ResponseEntity1");
+                                                      @RequestParam String newMail) {
         User user = (User) auth.getPrincipal();
         if (userService.isExist(newMail)) {
-         //   log.debug("Вы ввели такой же Email.");
-            // return ResponseEntity.ok("duplicatedEmailError");
+            log.debug("Вы ввели такой же Email.");
             return new ResponseEntity("duplicatedEmailError", HttpStatus.BAD_REQUEST);
         }
         if (ValidationUtils.isNotValidEmail(newMail)) {
-            //log.debug("Wrong email! Не правильно введен email");
-            // return ResponseEntity.ok("notValidEmailError");
             return new ResponseEntity("notValidEmailError", HttpStatus.BAD_REQUEST);
         } else {
             userService.changeUsersMail(user, newMail);

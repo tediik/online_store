@@ -39,34 +39,35 @@
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
 
             <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-<!--                <a class="btn btn-outline-primary mt-2 active" id="customerMain-tab" data-toggle="pill"-->
-<!--                   href="#customerMain" role="tab" aria-controls="customerMain" aria-selected="true">Главная</a>-->
+                                <a class="btn btn-outline-primary mt-2 active" id="customerMain-tab" data-toggle="pill"
+                                   href="#customerMain" role="tab" aria-controls="customerMain" aria-selected="true">Главная</a>
                 <a class="btn btn-outline-primary mt-2 " id="profile-tab" data-toggle="pill" href="#profile" role="tab"
                    aria-controls="profile" aria-selected="false" onclick="location.href='#profile'">Профиль</a>
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
                    onclick="fillFavouritesGoods();location.href='#favourites'">Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
-                   role="tab" aria-controls="basketGoods" aria-selected="false" onclick="fillBusket();location.href='#basket'">Корзина</a>
+                   role="tab" aria-controls="basketGoods" aria-selected="false"
+                   onclick="fillBusket();location.href='#basket'">Корзина</a>
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
-                   aria-controls="orders" aria-selected="false" onclick="fillOrders();location.href='#orders'">Заказы</a>
+                   aria-controls="orders" aria-selected="false"
+                   onclick="fillOrders();location.href='#orders'">Заказы</a>
                 <a class="btn btn-outline-primary mt-2" id="feedback-tab" data-toggle="pill" href="#feedback" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="location.href='#feedback'">Обратная связь</a>
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
             </div>
             <script type="text/javascript">
-              $(document).ready(function ()
-              {
+                $(document).ready(function () {
 
-                  if (location.hash == '#profile') {
-                      $('#profile-tab').click();
-                  }
-                  if (location.hash == '#favourites') {
-                      $('#favouritesGoods-tab').click();
-                  }
+                    if (location.hash == '#profile') {
+                        $('#profile-tab').click();
+                    }
+                    if (location.hash == '#favourites') {
+                        $('#favouritesGoods-tab').click();
+                    }
 
 
-              });
+                });
             </script>
         </div>
         <div class="col-md-10" style="background: #edeef0">
@@ -305,22 +306,24 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:action="@{/customer/change-password}" method="post"
+                                                    <form id="formChangePass" th:action="@{/customer/change-password}"
+                                                          method="post"
                                                           class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
-                                                            <label for="old_password">Старый пароль</label>
+                                                            <label for="old_password">Текущий пароль от личного
+                                                                кабинета</label>
                                                             <input type="password" id="old_password" name="oldPassword"
                                                                    autofocus="autofocus"
                                                                    class="form-control" required>
                                                         </div>
                                                         <div class="form-group text-center font-weight-bold">
-                                                            <label for="new_password">Новый пароль</label>
+                                                            <label for="new_password">Придумайте новый пароль</label>
                                                             <input type="password" id="new_password" name="newPassword"
                                                                    class="form-control" required/>
                                                             <small id="passwordHelpBlock" class="form-text text-muted">
-                                                                Your password must be 8-20 characters long, contain
-                                                                letters and numbers, and must not contain spaces and
-                                                                emoji.
+                                                                Ваш пароль должен состоять из 8-20 символов, содержать
+                                                                буквы и цифры и не должны содержать пробелов и
+                                                                смайлики.
                                                             </small>
                                                         </div>
                                                         <button id="submitNewPassword" type="submit"

@@ -4,13 +4,13 @@ svg{
     height: auto;
 }
 
-*{
+/**{
     fill:transparent;
     stroke:#f00;
     stroke-width:6px;
-    cursor:pointer;
+
     transition:fill .3s;
-}
+}*/
 
 *.filled{
     fill:#f00;

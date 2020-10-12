@@ -1,13 +1,14 @@
 package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.interf.OrderService;
-import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,13 +31,12 @@ public class CustomerController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
-    private final OrderService orderService;
+    private final BCryptPasswordEncoder encoder;
 
     /**
-     * метод получения данных зарегестрированного пользователя.
+     * метод получения данных зарегистрированного пользователя.
      * формирование модели для вывода в "view"
-     * модель данных, построенных на основе зарегестрированного User
+     * модель данных, построенных на основе зарегистрированного User
      *
      * @return
      */
@@ -70,21 +70,41 @@ public class CustomerController {
     /**
      * метод обработки изменения пароля User.
      *
-     * @param auth        модель данных, построенных на основе зарегестрированного User
+     * @param auth        модель данных, построенных на основе зарегистрированного User
      * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
      */
-    @PostMapping("/change-password")
-    public String changePassword(Authentication auth, Model model,
-                                 @RequestParam String oldPassword,
-                                 @RequestParam String newPassword) {
+    @PostMapping("/changepass")
+    public ResponseEntity<String> changePassword(Authentication auth, Model model,
+                                                 @RequestParam String oldPassword,
+                                                 @RequestParam String newPassword) {
         User user = (User) auth.getPrincipal();
-        if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
-            model.addAttribute("message", "Pls, check your old password!");
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            model.addAttribute("message", "Неверный старый пароль!");
+            return new ResponseEntity("error_old_pass", HttpStatus.BAD_REQUEST);
         }
-        return "redirect:/customer";
+        if (encoder.matches(oldPassword, user.getPassword())) {
+            if (newPassword.length() < 8) {
+                return new ResponseEntity("error_pass_len", HttpStatus.BAD_REQUEST);
+            } else {
+                if (!ValidationUtils.isValidPassword(newPassword)) {
+                    return new ResponseEntity("error_valid", HttpStatus.BAD_REQUEST);
+                } else {
+                    if (userService.changePassword(user.getId(), oldPassword, newPassword)) {
+                        log.debug("Пароль изменен");
+                    }
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    userService.updateUser(user);
+                    userService.changeUsersPass(user, user.getEmail());
+                    return new ResponseEntity("ok", HttpStatus.OK);
+                }
+            }
+        } else {
+            return new ResponseEntity("error_old_pass", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/activatenewmail/{token}")
