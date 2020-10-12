@@ -220,7 +220,6 @@ function handleEditButtonClick(event) {
         $('#stockText').summernote('code', stockText)
         $("#startDate").val(stock.startDate)
         $("#endDate").val(stock.endDate)
-        $("#stockImg").val(stock.stockImg)
         $("#published").val(stock.published)
     }
 
@@ -276,8 +275,10 @@ function renderStockList(data) {
         let sharedStocksQuantity = sharedStocks.length
         for (let i = 0; i < stocks.length; i++) {
             let stockId = stocks[i].id
-            let stockImg = stocks[i].imageFile
-            let userImg = "@{/uploads/images/{name}(name = ${user.getProfilePicture()})}"
+            // let stockImg = stocks[i].imageFile
+            let stockImg = "../../uploads/images/dany.jpg"
+            let stockImg1 = "../../uploads/images/{name}(name = ${user.getProfilePicture()})"
+            let stockImg2 = stocks[i].image
             console.log(`Stock img: ${stockImg}`)
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
             let publish = stocks[i].published
@@ -297,9 +298,9 @@ function renderStockList(data) {
             row.append(`<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-4\">
-                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">
+<!--                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">-->
                                  <img class="card-img" src=${stockImg} width=\"250\" alt="Фото акции">
-
+                                
                                  <p></p>
                                  <p id="stockId" class="stockId">ID акции: ${stockId}</p>
                                     <p id="rating" class="rating">Рейтинг: ${rating}</p>

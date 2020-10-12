@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import java.util.List;
 /**
  * Рест контроллер для crud операций с акциями
  */
+@Slf4j
 @RestController
 @AllArgsConstructor
 public class StockRestController {
@@ -85,12 +87,14 @@ public class StockRestController {
     @PostMapping("/rest/uploadStockImage/{id}")
     public ResponseEntity<String> handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("imageStockFile") MultipartFile imageStockFile) throws IOException {
 //        Stock currentStock = stockService.findStockById(stockId);
+        log.debug("rest/uploadStockImage/{id} : {}", stockId);
         return ResponseEntity.ok(stockService.updateStockImage(stockId, imageStockFile));
     }
 
     @DeleteMapping("/rest/deleteStockImage/{id}")
     public ResponseEntity<String> deleteStockImage(@PathVariable("id") Long stockId) throws IOException {
 //        Stock currentStock = stockService.findStockById(stockId);
+        log.debug("rest/deleteStockImage/{id} : {}", stockId);
         return ResponseEntity.ok(stockService.deleteStockImage(stockId));
     }
 }

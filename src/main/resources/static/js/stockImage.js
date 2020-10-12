@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $(function () {
         $('#stockImgBtn').on('click', function () {
+            console.log("stockImgBtn pressed");
             var $uploadId = $('#stockId').val();
             var file_data = $('#fileStockImgInput').prop('files')[0];
             var form_data = new FormData();
@@ -10,7 +11,7 @@ $(document).ready(function () {
             $.ajax(
                 {
                     type: 'POST',
-                    url: '/rest/uploadStockImage/' + $uploadId,
+                    url: '/uploadStockImage/' + $uploadId,
                     dataType: 'script',
                     data: form_data,
                     cache: false,
@@ -28,11 +29,12 @@ $(document).ready(function () {
 
     $(function () {
         $('#deleteStockImgBtn').on('click', function () {
+            console.log("deleteStockImgBtn pressed");
             var $deleteId = $('#stockId').val();
             $.ajax(
                 {
                     type: 'DELETE',
-                    url: 'rest/deleteStockImage/' + $deleteId,
+                    url: '/deleteStockImage/' + $deleteId,
                     contentType: false,
                     processData: false,
                     cache: false,

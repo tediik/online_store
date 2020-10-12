@@ -165,9 +165,9 @@ public class StockServiceImpl implements StockService {
 
     @Override
     @Transactional
-    public String deleteStockImage(Long userId) {
+    public String deleteStockImage(Long stockId) {
         final String defaultStockImg = StringUtils.cleanPath("default.jpg");
-        Stock stock = stockRepository.findById(userId).get();
+        Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
         //Get stockPicture name from Stock and delete this profile picture from Uploads
         Path fileNameAndPath = Paths.get(uploadDirectory, stock.getStockImg());
         //Check if deleting picture is not a default avatar
@@ -182,7 +182,4 @@ public class StockServiceImpl implements StockService {
         stock.setStockImg(defaultStockImg);
         return File.separator + "uploads" + File.separator + "images" + File.separator + defaultStockImg;
     }
-
-
-
 }

@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $(function () {
         $('#pictureBtn').on('click', function () {
-            var file_data = $('#fileInput').prop('files')[0];
+            var file_data = $('#fileInput').prop('files');
             var form_data = new FormData();
             form_data.append("imageFile", file_data);
             console.log(form_data);
