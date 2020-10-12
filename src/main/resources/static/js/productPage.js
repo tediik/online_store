@@ -124,7 +124,7 @@ function addToFavourite() {
                 $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;В избранное</h5>`)
                 toastr.success("Товар успешно удалён из избранного");
             } else {
-                toastr.error("Авторизуйтесь/зарегестрируйтесь");
+                toastr.error("Авторизуйтесь/зарегистрируйтесь");
             }
         })
     } else {
@@ -138,7 +138,7 @@ function addToFavourite() {
                 $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
                 toastr.success("Товар успешно добавлен в избранное");
             } else {
-                toastr.error("Авторизуйтесь/зарегестрируйтесь");
+                toastr.error("Авторизуйтесь/зарегистрируйтесь");
             }
         })
     }
