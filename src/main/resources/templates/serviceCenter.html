@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Center</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header th:insert="/blocks/header :: header"></header>
+
+<main class="wrapper flex-grow-1 container">
+    <a th:href="@{/service/serviceCheckStatus}">Проверить статус и оплатить ремонт</a>
+</main>
+
+<footer th:replace="/blocks/footer :: footer"></footer>
+
+</body>
+</html>

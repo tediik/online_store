@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Check Status</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header th:insert="/blocks/header :: header"></header>
+
+<main class="wrapper flex-grow-1 container">
+    <div class="card">
+        <h5 class="card-header">Проверка статуса ремонта</h5>
+        <div class="card-body">
+            <p class="card-text">Вы можете самостоятельно отслеживать статус ремонта своего оборудования.
+                Для получения информации о текущем состоянии ремонта, Вам необходимо ввести номер телефона,
+                который Вы оставили в сервисном центре для связи и номер заказ-наряда</p>
+            <p class="card-text">После присвоения ремонту статуса «в работе»,
+                вы можете внести предоплату за ремонт.</p>
+            <form th:action="@{/}" method="post">
+                <input type="text" name="text" placeholder="Заказ-наряд">
+                <input type="number" name="number" placeholder="Номер телефона">
+                <div style="margin-top: 20px">
+                    <button type="submit" class="btn btn-warning">Найти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace="/blocks/footer :: footer"></footer>
+
+</body>
+</html>

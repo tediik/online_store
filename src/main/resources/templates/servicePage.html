@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Center</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+</head>
+<body>
+<header th:insert="/blocks/header :: header"></header>
+
+<main>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!--навигация слева-->
+            <div class="col-md-2">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#Profile">
+                            Профиль
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#repairOrders">
+                            Заказы на ремонт
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#addRepairOrder">
+                            Сформировать заказ на ремонт
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--конец навигации слева-->
+
+            <!--наполнение справа-->
+            <div class="col-md-10 bg-light">
+                <div class="tab-content">
+
+                    <!--профиль-->
+                    <div class="tab-pane fade show active" id="Profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div form>
+                            <div class="container-fluid bg-light">
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <div class="imgContainer">
+                                            <div>
+                                                <img id="profilePic" alt="UserPhoto"
+                                                     class="rounded-circle img-responsive mt-2"
+                                                     height="152"
+                                                     th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}"
+                                                     width="152"></div>
+                                            <div class="imgButton">
+                                                <button type="button" class="btn btn-link" data-toggle="modal"
+                                                        data-target="#myModal"> Edit Profile Picture
+                                                </button>
+                                            </div>
+                                            <!--Profile picture change modal-->
+                                            <div class="modal" id="myModal">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+
+                                                        <!-- Modal Header -->
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Upload your profile picture</h4>
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                &times;
+                                                            </button>
+                                                        </div>
+
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body">
+                                                            <input type="file" id="fileInput" name="imageFile"
+                                                                   alt="Picture">
+                                                            <br>
+                                                            <br>
+                                                            <input type="button" id="deletePicBtn"
+                                                                   value="Delete Picture"
+                                                                   data-dismiss="modal"
+                                                                   class="btn btn-sm btn-outline-danger"/>
+                                                            <img id="blah" src="#" alt="your image"
+                                                                 class="rounded-circle img-responsive mt-2 float-right"
+                                                                 height="82" width="82"/>
+                                                        </div>
+                                                        <!-- Modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}"
+                                              method="post" data-role="personal-info-form">
+                                            <div class="form-group text-center font-weight-bold" hidden>
+                                                <label class="input-row_label" for="id_update">ID</label>
+                                                <input th:field="*{id}" type="text" class="form-control" id="id_update"
+                                                       name="id">
+                                            </div>
+                                            <div class="form-group text-center font-weight-bold" hidden>
+                                                <label class="input-row_label" for="password_update">Пароль</label>
+                                                <input th:field="*{password}" type="text" class="form-control"
+                                                       id="password_update" name="password">
+                                            </div>
+                                            <div class="form-group text-center font-weight-bold">
+                                                <label class="input-row_label" for="first_name_update">Имя</label>
+                                                <input th:field="*{firstName}" type="text" class="form-control"
+                                                       id="first_name_update" name="firstName">
+                                            </div>
+                                            <div class="form-group text-center font-weight-bold">
+                                                <label for="last_name_input">Фамилия</label>
+                                                <input th:field="*{lastName}" type="text" class="form-control"
+                                                       id="last_name_input" name="lastName">
+                                            </div>
+                                            <div class="form-group text-center font-weight-bold">
+                                                <label for="email_input">Email</label>
+                                                <input th:field="*{email}" type="text" class="form-control"
+                                                       id="email_input"
+                                                       name="email" readonly>
+                                            </div>
+                                            <div>
+                                                <button type="button" style="background-color: #ff8e05"
+                                                        class="m-2 btn btn-success d-block mx-auto" data-toggle="modal"
+                                                        data-target="#openNewMailModal">Изменить email
+                                                </button>
+
+                                                <button type="button" style="background-color: #ff8e05"
+                                                        class="m-2 btn btn-success d-block mx-auto" data-toggle="modal"
+                                                        data-target="#openChangePassModal">Изменить пароль
+                                                </button>
+                                            </div>
+                                            <div class="form-group text-center font-weight-bold">
+                                                <label for="date_birthday_input" class="col-xs-2 col-form-label">День
+                                                    рождения</label>
+                                                <div class="col-xs-10">
+                                                    <input th:field="*{birthdayDate}" class="form-control"
+                                                           th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                                                           type="date" id="date_birthday_input" name="birthdayDate">
+                                                </div>
+                                            </div>
+                                            <div class="form-group-text-center">
+                                                <label for="gender_radio"
+                                                       class="text-center font-weight-bold">Пол</label>
+                                                <div id="gender_radio">
+                                                    <div class="custom-control custom-radio">
+                                                        <input th:field="*{userGender}" value="" type="radio"
+                                                               id="option1"
+                                                               name="genderRadio" class="custom-control-input">
+                                                        <label class="custom-control-label" for="option1">Не
+                                                            выбрано</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input th:field="*{userGender}" value="MAN" type="radio"
+                                                               id="option2" name="genderRadio"
+                                                               class="custom-control-input">
+                                                        <label class="custom-control-label"
+                                                               for="option2">Мужской</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input th:field="*{userGender}" value="WOMAN" type="radio"
+                                                               id="option3" name="genderRadio"
+                                                               class="custom-control-input">
+                                                        <label class="custom-control-label"
+                                                               for="option3">Женский</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input"
+                                                       id="stockMailingCheckbox"
+                                                       th:checked="*{dayOfWeekForStockSend != null}"
+                                                       onchange="chekboxChanges(this)">
+                                                <label class="form-check-label" for="stockMailingCheckbox">Хотите ли вы
+                                                    получать рассылку?</label>
+                                            </div>
+                                            <br>
+                                            <div
+                                                    th:class="*{dayOfWeekForStockSend != null} ? 'form-group day-of-the-week-drop-list' : 'form-group day-of-the-week-drop-list d-none' ">
+                                                <label for="dayOfWeekDropList">Выберите день недели</label>
+                                                <select class="form-control" id="dayOfWeekDropList"
+                                                        th:field="*{dayOfWeekForStockSend}">
+                                                    <option value=""></option>
+                                                    <option value="MONDAY">Понедельник</option>
+                                                    <option value="TUESDAY">Вторник</option>
+                                                    <option value="WEDNESDAY">Среда</option>
+                                                    <option value="THURSDAY">Четверг</option>
+                                                    <option value="FRIDAY">Пятница</option>
+                                                    <option value="SATURDAY">Суббота</option>
+                                                    <option value="SUNDAY">Воскресенье</option>
+                                                </select>
+                                            </div>
+                                            <hr/>
+                                            <button type="submit" style="background-color: #ff8e05"
+                                                    class="m-2 btn btn-success d-block mx-auto">Сохранить
+                                            </button>
+                                            <div>
+                                                <button type="button" style="color: #a94442"
+                                                        class="m-2 btn btn-link d-block mx-auto"
+                                                        data-toggle="modal"
+                                                        data-target="#deleteProfile"
+                                                        th:data-del-id="${user.id}">Удалить профиль
+                                                </button>
+                                            </div>
+                                            <div class="m-2 text-center personal-info_register-container"
+                                                 style="background-color: #f9f9f9">
+                                                Дата регистрации:
+                                                <a th:field="*{registerDate}" th:text="*{registerDate}"
+                                                   class="personal-info_register-date font-weight-bold"
+                                                   id="register_date"></a>
+                                            </div>
+                                        </form>
+                                        <div id="openNewMailModal" class="modal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3 class="modal-title">Изменяем электронную почту:</h3>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">x</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="formChangeMail" th:action="@{/customer/changemail}"
+                                                              method="post" class="form-group">
+                                                            <div class="form-group text-center font-weight-bold">
+                                                                <label for="new_mail">Введите новый адрес электронной
+                                                                    почты</label>
+                                                                <input type="email"
+                                                                       id="new_mail"
+                                                                       name="newMail"
+                                                                       class="form-control" required/>
+                                                            </div>
+                                                            <button type="submit" id="buttonChangeMail"
+                                                                    class="btn btn-primary btn-sm btn-block">
+                                                                Подтвердить
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="openChangePassModal" class="modal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3 class="modal-title">Название</h3>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">x</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form th:action="@{/customer/change-password}" method="post"
+                                                              class="form-group">
+                                                            <div class="form-group text-center font-weight-bold">
+                                                                <label for="old_password">Старый пароль</label>
+                                                                <input type="password" id="old_password"
+                                                                       name="oldPassword"
+                                                                       autofocus="autofocus"
+                                                                       class="form-control" required>
+                                                            </div>
+                                                            <div class="form-group text-center font-weight-bold">
+                                                                <label for="new_password">Новый пароль</label>
+                                                                <input type="password" id="new_password"
+                                                                       name="newPassword"
+                                                                       class="form-control" required/>
+                                                                <small id="passwordHelpBlock"
+                                                                       class="form-text text-muted">
+                                                                    Your password must be 8-20 characters long, contain
+                                                                    letters and numbers, and must not contain spaces and
+                                                                    emoji.
+                                                                </small>
+                                                            </div>
+                                                            <button id="submitNewPassword" type="submit"
+                                                                    class="btn btn-primary btn-sm btn-block">
+                                                                Сохранить
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!---------------------- Delete Profile Modal window ------------------->
+                                        <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
+                                             aria-labelledby="titleDeleteProfile" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="titleDeleteProfile">Удалить
+                                                            профиль</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Вы уверены что хотите удалить свой профиль?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">
+                                                            Отмена
+                                                        </button>
+                                                        <button id="deleteProfileCustomer" type="button"
+                                                                class="btn btn-danger" th:data-del-id="${user.id}"
+                                                                data-dismiss="modal">
+                                                            Удалить
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!---------------------- End Delete Profile Modal window ------------------->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--конец профиля-->
+
+                    <!--заявки на ремонт-->
+                    <div class="tab-pane" id="repairOrders" role="tabpanel">
+                        <ul class="nav nav-tabs" id="navbarRepairOrders">
+                            <!-- Первая вкладка все заказы (активная) -->
+                            <li class="nav-item">
+                                <a class="nav-link active" id="nav-link_RepairOrders" data-toggle="tab" data-toggle-id="allRepairOrders"
+                                   href="#tab_all_repairOrders">Все</a>
+                            </li>
+                            <!-- Вторая вкладка принятые заказы -->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_acceptedRepairOrders" data-toggle="tab" data-toggle-id="acceptedRepairOrders"
+                                   href="#tab_accepted_repairOrders">Принятые</a>
+                            </li>
+                            <!-- Третья вкладка на диагностике-->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_diagnostics" data-toggle="tab" data-toggle-id="diagnostics"
+                                   href="#tab_diagnostics_repairOrders" >На диагностике</a>
+                            </li>
+                            <!-- Четвертая вкладка в ремонте-->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_underRepair" data-toggle="tab" data-toggle-id="underRepair"
+                                   href="#tab_underRepair" >В ремонте</a>
+                            </li>
+                            <!-- Пятая вкладка на выдаче-->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_onIssue" data-toggle="tab" data-toggle-id="onIssue"
+                                   href="#tab_onIssue" >На выдаче</a>
+                            </li>
+                            <!-- Шестая вкладка закрытые заявки-->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_closedRepairOrders" data-toggle="tab" data-toggle-id="closedRepairOrders"
+                                   href="#tab_closedRepairOrders" >Закрытые заявки</a>
+                            </li>
+                        </ul>
+
+                        <!-- Блоки с контентом -->
+                        <div class="tab-content mb-5" id="newsTabContent">
+                            <!-- Первый блок (он отображается по умолчанию, т.к. имеет классы show и active) -->
+                            <div class="tab-pane fade show active" id="tab_all_repairOrders">
+                                <div id="all_repairOrders">
+                                </div>
+                            </div>
+                            <!-- Второй блок -->
+                            <div class="tab-pane fade" id="tab_accepted_repairOrders">
+                                <div id="accepted_repairOrders">
+                                </div>
+                            </div>
+                            <!-- Третий блок -->
+                            <div class="tab-pane fade" id="tab_diagnostics_repairOrders">
+                                <div id="diagnostics_repairOrders">
+                                </div>
+                            </div>
+                            <!-- Четвертый блок -->
+                            <div class="tab-pane fade" id="tab_underRepair">
+                                <div id="underRepair">
+                                </div>
+                            </div>
+                            <!--Пятый блок-->
+                            <div class="tab-pane fade" id="tab_onIssue">
+                                <div id="onIssue">
+                                </div>
+                            </div>
+                            <!--Шестой блок-->
+                            <div class="tab-pane fade" id="tab_closedRepairOrders">
+                                <div id="closedRepairOrders">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--конец заявкам на ремонт-->
+
+                    <!--оформление заявки на ремонт-->
+                    <div class="tab-pane" id="addRepairOrder" role="tabpanel">
+                        <div class="card">
+                            <div class="card-header">Add new user</div>
+                            <div class="card-body text-center">
+                                <div class="form justify-content-center mx-auto col-md-3">
+
+                                    <form id="addFormNewUser">
+
+                                        <div class="form-group">
+                                            <label for="firstNameNewUser">First name</label>
+                                            <div>
+                                                <input type="text" class="form-control" id="firstNameNewUser">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastNameNewUser">Last name</label>
+                                            <div>
+                                                <input type="text" class="form-control" id="lastNameNewUser">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ageNewUser">Age</label>
+                                            <div>
+                                                <input type="number" class="form-control" id="ageNewUser">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="emailNewUser">Email</label>
+                                            <div>
+                                                <input type="email" class="form-control" id="emailNewUser"
+                                                       aria-describedby="emailHelp">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="passwordNewUser">Password</label>
+                                            <div>
+                                                <input type="password" class="form-control" id="passwordNewUser">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="roleNewUser">Role</label>
+                                            <div>
+                                                <select name="addRole" class="form-control" id="roleNewUser" size="2" multiple>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-success">Add new user</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--конец оформления заявки на ремонт-->
+
+
+                </div>
+            </div>
+            <!--конец наполнения справа-->
+
+
+        </div>
+    </div>
+
+</main>
+
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+
+</body>
+
+
+</html>
