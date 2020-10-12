@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 
@@ -7,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link href="/static/css/products.css" rel="stylesheet">
 
     <!-- ----------------------JS - jQuery ------------->
     <script src="https://code.jquery.com/jquery-3.5.1.js"
@@ -38,228 +41,158 @@
 </head>
 <body>
 
-<header>
-    <nav class="navbar navbar-expand-md navbar-dark">
-
-        <div class="navbar-brand">Перейти на <span><b><a class="headTitle" href="/">главную</a></b></span></div>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-            </ul>
-        </div>
-        <div class="navbar-text"><a th:href="@{/logout}">Logout</a></div>
-    </nav>
-</header>
-
-<div class="main-wrapper">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/manager">Кабинет менеджера</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Товары</li>
-        </ol>
-    </nav>
-
-    <h2 class="text-center"><span class="underline">Товары</span></h2>
-
-    <div id="cont" class="row no-gutters pb-4">
-        <div class="col-md-3 pr-3">
-            <div>
-                <form>
-                    <button type="button" class="btn btn-primary" data-toggle='modal'
-                            data-target='#newProductModal'>
-                        Добавить товар
-                    </button>
-                </form>
+<div class="modal fade" id="productModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditProductModalWindows"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Edit product">Edit product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div>
-                <form>
-                    <button type="button" class="btn btn-primary" data-toggle='modal'
-                            data-target='#newProductImportModal'>
-                        Загрузить товары из файла
-                    </button>
-                </form>
+            <div id="alert-modal-div">
+
             </div>
-            <div>
-                <form>
-                    <!-- for keeping checkbox checked when page loads use checked="checked" --->
-                    <label for="deletedCheckbox">Спрятать удаленные товары</label>
-
-                    <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);" checked="checked">
-                    <br>
-                </form>
-            </div>
-        </div>
-
-        <div class="col-md-7">
-            <!--START of Products-->
-            <br>
-            <div class="productsWrapper container-fluid p-3">
-                <ul class="allProducts" id="productsDiv">
-                </ul>
-            </div>
-            <!--End of Products-->
-
-            <!---------------------- New product add Modal  ------------------->
-            <div class="modal fade" id="newProductModal" data-backdrop="static" tabindex="-1"
-                 role="dialog"
-                 aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="productAddModalLabel">Добавить товар</h5>
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="container-fluid col-sm-12">
-                                <form id="productAddModal" name="productAddModal" enctype="multipart/form-data" method="post">
-                                    <div class="form-group">
-                                        <label for="addProductTitle">Наименование товара:</label>
-                                        <input id="addProductTitle" type="text" name="title" placeholder="product">
-
-                                        <label for="addProductAmount">Кол-во на данный момент:</label>
-                                        <input id="addProductAmount" type="number" size="4" step="1" name="num" min="1" max="1000" value="1">
-
-                                        <label for="addProductPrice">Цена на данный момент:</label>
-                                        <input id="addProductPrice" type="number" size="6" step="10" name="num" min="1" max="1000000" value="1">
-                                        <br>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="modal-footer actions">
-
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">
-                                Close
-                            </button>
-
-                            <button id="save" type="submit"
-                                    class="btn btn-primary">
-                                Save changes
-                            </button>
+            <div class="modal-body" id="modalBody">
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <div class="form-group" id="editFormContainer">
+                            <label for="idInputModal"><strong>Id</strong></label>
+                            <input type="text" class="form-control" id="idInputModal" readonly>
+                            <label for="productInputModal"><strong>Наименование товара</strong></label>
+                            <input type="text" class="form-control" id="productInputModal" required>
+                            <label for="productPriceInputModal"><strong>Цена</strong></label>
+                            <input type="number" class="form-control" id="productPriceInputModal">
+                            <label for="productAmountInputModal"><strong>Количество</strong></label>
+                            <input type="number" class="form-control" id="productAmountInputModal">
                         </div>
                     </div>
                 </div>
             </div>
-            <!---------------------- End of New Stock Modal ------------------->
+            <div class="modal-footer">
+                <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save
+                    changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="container col-11">
+        <!--Display logged in user's name-->
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
+            <a class="navbar-brand"
+               th:each="authority : ${#authentication.getAuthorities()}"
+               th:text="${authority.getAuthority()} + ' '"></a>
+            <a th:href="@{/manager}" class="btn btn-primary ml-auto">Кабинет менеджера</a>
+            <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
+        </nav>
+        <div class="card" >
+            <h5 class="card-header">Товары</h5>
+            <div id="alert-div">
 
-            <!---------------------- Stock Edit Modal  ------------------->
-            <div class="modal fade" id="editProductModal" data-backdrop="static" tabindex="-1"
-                 role="dialog"
-                 aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Редактировать описание товара</h5>
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+            </div>
+            <div class="card-body" >
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Products Table</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
+                        <form class="checkbox">
+                            <!-- for keeping checkbox checked when page loads use checked="checked" --->
+                            <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
 
-                        <form id="productEditModal">
+                            <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);" checked="checked">
+                            <br>
+                        </form>
+                    </div>
+                </nav>
+
+                <!-- Модалка добовления из файла -->
+
+                <div class="modal fade" id="newProductImportModal" data-backdrop="static" tabindex="-1"
+                     role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productImportModalLabel">Добавить товар</h5>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
                             <div class="modal-body">
                                 <div class="container-fluid col-sm-12">
-                                    <form enctype="multipart/form-data" method="post">
-                                        <div class="form-group">
-                                            <label for="Eid"
-                                                   class="col-form-label col-sm-12 text-center">Id</label>
-                                            <div class="text-center">
-                                                <input type="text"
-                                                       class="form-control"
-                                                       id="Eid"
-                                                       readonly>
-                                            </div>
-                                            <div class="field2">
-                                                <label for="editProductTitle">Наименование товара:</label>
-                                                <input id="editProductTitle" type="text" name="title" placeholder="title"
-                                                       class="form-control"
-                                                       required="required">
-                                            </div>
-                                            <div class="field2">
-                                                <label for="editProductAmount">Кол-во на данный момент:</label>
-                                                <input id="editProductAmount" type="number" size="4" step="1" name="num" min="1" max="1000" value="1">
-
-                                            </div>
-                                            <div class="field2">
-                                                <label for="editProductPrice">Цена на данный момент:</label>
-                                                <input id="editProductPrice" type="number" size="6" step="10" name="num" min="1" max="1000000" value="1">
-
-                                            </div>
-                                            <br>
-                                        </div>
+                                    <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
+                                        <label for="file">Выберите файл:</label>
+                                        <input id="file" type="file" name="file">
+                                        <br />
+                                        <br />
                                     </form>
                                 </div>
                             </div>
-                        </form>
-                        <div class="modal-footer actions2">
+                            <div class="modal-footer actions">
+                                <button type="button" id="btnClose" class="btn btn-secondary"
+                                        data-dismiss="modal">
+                                    Close
+                                </button>
 
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">
-                                Close
-                            </button>
-
-                            <button id="editSave" type="submit"
-                                    class="btn btn-primary">
-                                Save changes
-                            </button>
+                                <button id="inputFileSubmit" type="submit" data-dismiss="modal"
+                                        class="btn btn-primary">
+                                    Загрузить данные из файла
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!---------------------- End of Edit Product Modal ------------------->
-            <!---------------------- New products import Modal  ------------------->
-            <div class="modal fade" id="newProductImportModal" data-backdrop="static" tabindex="-1"
-                 role="dialog"
-                 aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
 
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <!--                main tab -->
+                        <table class="table table-active table-striped" id="products-table" style="background-color: white">
 
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="productImportModalLabel">Добавить товар</h5>
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="container-fluid col-sm-12">
-                                <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
-                                    <label for="file">Выберите файл:</label>
-                                    <input id="file" type="file" name="file">
-                                    <br />
-                                    <br />
-                                </form>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <!--                Secondary user addition form-->
+                        <h3>Добавить товар</h3>
+                        <form id="addForm">
+                            <div class="panel panel-default" id="new-user-form">
+                                <div class="panel-body">
+                                    <div id="add-productName-form-group" class="form-group">
+                                        <label for="addProduct">Наименование:</label>
+                                        <input type="email" id="addProduct" name="product" placeholder="Наименование" class="form-control">
+                                    </div>
+                                    <div class="form-group addPriceDiv">
+                                        <label for="addPrice">Цена:</label>
+                                        <input type="number" id="addPrice" name="price" placeholder="Цена" class="form-control">
+                                    </div>
+                                    <div id="add-email-form-group" class="form-group">
+                                        <label for="addAmount">Количество:</label>
+                                        <input type="number" id="addAmount" name="amount" placeholder="Количество" class="form-control">
+                                    </div>
+                                    <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Add</button>
+                                    <button type="button" class="btn btn-primary" data-toggle='modal'
+                                            data-target='#newProductImportModal'>
+                                        Загрузить товары из файла
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer actions">
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">
-                                Close
-                            </button>
-
-                            <button id="inputFileSubmit" type="submit"
-                                    class="btn btn-primary">
-                                Загрузить данные из файла
-                            </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <script type="text/javascript" src="/static/js/products.js"></script>
 <!--MomentJs (work with dates)-->

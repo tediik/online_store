@@ -70,12 +70,6 @@ public class MainPageRestController {
         return new ResponseEntity("success", HttpStatus.OK);
     }
 
-    @GetMapping("/activate/{token}")
-    public String activate(Model model, @PathVariable String token, HttpServletRequest request) {
-        userService.activateUser(token, request);
-        return "redirect:/customer";
-    }
-
     /**
      * Создаёт мапу - ключ - название категории, значение - мапа с названиями подкатегории.
      * Во внутренних мапах - ключ - подкатегория кириллицей и значение - латиницей.

@@ -41,7 +41,7 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
     private AddressService addressService = mock(AddressService.class);
     private AddressRepository addressRepository = mock(AddressRepository.class);
-    private UserService userService = new UserServiceImpl(userRepository, roleRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder,addressService);
+    private UserService userService = new UserServiceImpl(userRepository, roleRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService);
 
     private User userFullParameter;
     private User userWithIdEmailPassword;
@@ -58,6 +58,7 @@ public class UserServiceImplTest {
         userWithIdEmailPassword.setPassword("2");
         userFullParameter = new User("masha@mail.ru", "123",
                 "Masha", "Ivanova", Collections.singleton(new Role(1L, "ROLE_CUSTOMER")));
+        userFullParameter.setId(5L);
         userFullParameterAndIdPicture = new User("ira@mail.ru", "123",
                 "Ira", "Vasina", Collections.singleton(new Role(1L, "ROLE_CUSTOMER")));
         userFullParameterAndIdPicture.setId(3L);
@@ -220,8 +221,8 @@ public class UserServiceImplTest {
 
         assertThrows(UserNotFoundException.class, () ->
             userService.changePassword(7L, "oldPassword", "newPassword"));
-        assertFalse(userService.changePassword(userFullParameterAndIdPicture.getId(), "ollllldPassword", "newPassword"));
-        assertTrue(userService.changePassword(userFullParameter.getId(), "oldPassword", "newPassword"));
+        assertFalse(userService.changePassword(userFullParameterAndIdPicture.getId(), "ollllldPassword", "n1ewPassword9"));
+        assertTrue(userService.changePassword(userFullParameter.getId(), "oldPassword", "n1ewPassword9"));
 
         verify(userRepository, times(3)).findById(any());
         verify(passwordEncoder, times(1)).encode(any());

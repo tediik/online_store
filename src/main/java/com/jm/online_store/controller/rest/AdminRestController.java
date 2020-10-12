@@ -32,14 +32,11 @@ public class AdminRestController {
 
     /**
      * Rest mapping to  receive authenticated user. from admin page
-     *
-     * @param authentication
      * @return ResponseEntity(authUser, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/authUser")
-    public ResponseEntity<User> showAuthUserInfo(Authentication authentication) {
-        User principal = (User) authentication.getPrincipal();
-        User authUser = userService.findById(principal.getId()).get();
+    public ResponseEntity<User> showAuthUserInfo() {
+        User authUser = userService.getCurrentLoggedInUser();
         return new ResponseEntity<>(authUser, HttpStatus.OK);
     }
 

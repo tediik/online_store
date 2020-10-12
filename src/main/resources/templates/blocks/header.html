@@ -4,6 +4,13 @@
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-dark" href="/">Главная</a>
             <a class="p-2 text-dark" href="/news">Новости</a>
+            <a id="showBasket">
+                <img src="/uploads/images/buscket.jpg" width="25" height="25">
+                <ins style="color: #ff8e05">
+                    Корзина
+                    <i id="countInBasket"></i>
+                </ins>
+            </a>
         </nav>
         <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/logout">Выйти</a>
         <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/login">Войти</a>

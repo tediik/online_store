@@ -72,10 +72,11 @@ function register() {
         type: 'POST',
         data: formData,
         success: function (data) {
-            if (data == "success") {
-                toastr.success('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000});
+            if (data === "success") {
+                $("#emailConfirmationSent").show();
+                toastr.info('Ссылка для подтверждения регистрации отправлена на вашу почту', {timeOut: 5000});
                 close();
-                document.location.href = "/";
+                document.location.href = "redirect:/";
             }
             if (data == "duplicatedEmailError") {
                 $("#duplicatedEmailError").show();

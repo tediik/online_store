@@ -2,7 +2,7 @@ let shops = {};
 let adresses = {};
 
 /**
- * Функция отчистки полей формы
+ * Функция очистки полей формы
  */
 function clearFields() {
     $('#addressForm')[0].reset();
@@ -88,7 +88,7 @@ $(function () {
 });
 
 /**
- * Функция смены зачения чекбокса доставка/самовывоз
+ * Функция смены значения чекбокса доставка/самовывоз
  */
 function addressChange() {
     if (document.getElementById("shopAddress").hidden) {
@@ -153,7 +153,7 @@ function confirmOrder() {
     if (id == null) {
         showModalError("Вы не выбрали адрес доставки")
     } else {
-        fetch("/customer/busketGoods", {
+        fetch("/customer/basketGoods", {
             method: 'POST',
             body: id,
             headers: {
