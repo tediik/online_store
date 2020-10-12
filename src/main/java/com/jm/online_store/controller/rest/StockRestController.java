@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -78,5 +80,17 @@ public class StockRestController {
     @DeleteMapping(value = "/rest/{id}")
     public void deleteStockById(@PathVariable("id") Long id) {
         stockService.deleteStockById(id);
+    }
+
+    @PostMapping("/rest/uploadStockImage/{id}")
+    public ResponseEntity<String> handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("imageStockFile") MultipartFile imageStockFile) throws IOException {
+//        Stock currentStock = stockService.findStockById(stockId);
+        return ResponseEntity.ok(stockService.updateStockImage(stockId, imageStockFile));
+    }
+
+    @DeleteMapping("/rest/deleteStockImage/{id}")
+    public ResponseEntity<String> deleteStockImage(@PathVariable("id") Long stockId) throws IOException {
+//        Stock currentStock = stockService.findStockById(stockId);
+        return ResponseEntity.ok(stockService.deleteStockImage(stockId));
     }
 }

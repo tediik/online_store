@@ -7,7 +7,7 @@
 <body>
 <div th:fragment="header">
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+        <h5 class="my-0 mr-md-auto font-weight-normal">Online-store</h5>
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-dark" href="/">Главная</a>
             <a class="p-2 text-dark" href="/news">Новости</a>
@@ -25,7 +25,9 @@
         <div class="col-sm-8 text-left">
             <h1 class="text-center">Акции</h1>
             <div th:each="stock : ${stocks}" class="alert alert-info mt-2">
-                <h3 th:text="${stock.stockImg}"></h3>
+                <img th:src="@{/uploads/images/{name}(name = ${stock.stockImg})}" alt="Здесь могла бы быть ваша картинка"/>
+
+                <h3 th:img="${stock.stockImg}"></h3>
                 <p th:text="${stock.stockTitle}"></p>
                 <p th:text="${stock.stockText}"></p>
                 <a th:href="'/global/stockDetails/' + ${stock.id}" class="btn btn-warning">Детальнее</a>        <!--маппинг продумать!-->

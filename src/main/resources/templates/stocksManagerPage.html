@@ -160,11 +160,25 @@
                                             <input id="endDate" name="date"/>
                                             <br>
                                             <label for="stockImg">Изображение</label>
-                                            <input id="stockImg" type="file" name="g" accept="image/jpeg"
+                                            <input id="stockImg" type="file" name="fileStockImgInput" accept="image/jpeg"
                                                    class="form-control">
+<!--                                            <input id="stockImgBtn" type="file" name="fileStockImgInput" accept="image/jpeg" class="form-control">-->
+<!--                                            <input type="file" id="fileInput" name="fileStockImgInput" alt="Stock picture">-->
+                                            <input type="button" id="stockImgBtn" value="Upload Image" class="btn btn-sm btn-outline-success"/>
+                                            <input type="button" id="deleteStockImgBtn" value="Delete Image"
+                                                   data-dismiss="modal"
+                                                   class="btn btn-sm btn-outline-danger"/>
+<!--                                            <img id="blahs" src="#" alt="stock image"-->
+<!--                                                 class="rounded-circle img-responsive mt-2 float-right"-->
+<!--                                                 height="82" width="82"/>-->
                                             <br>
-                                            <label for="published">Опубликовать на главной странице</label>
-                                            <input id="published" type ="checkbox" name="published"/>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="published"
+                                                       name="published">
+                                                <label class="form-check-label" for="published">
+                                                    Опубликовать
+                                                </label>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>

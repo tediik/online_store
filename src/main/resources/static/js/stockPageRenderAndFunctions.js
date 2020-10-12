@@ -4,7 +4,6 @@
 let myHeaders = new Headers()
 let sharedStockApiUrl = "/manager/api/sharedStock"
 let stockApiUrl = "/manager/api/stock"
-let stockPublishUrl = "/"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), number: 0, last: false};
 
@@ -56,7 +55,6 @@ function checkFields(event) {
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
-        let stockPublish = document.getElementById('published')
         if (stockTitle.value === '') {
             invalidModalField("Заполните заголовок акции", stockTitle)
         } else if (stockText.value === "") {
@@ -79,8 +77,6 @@ function handleStockDivButtons(event) {
         handleEditButtonClick(event)
     } else if (button === "delete-stock") {
         handleDeleteButtonClick(event)
-    } else if (button === "publish-stock") {
-        handlePublishButtonClick(event)
     }
 }
 
@@ -149,34 +145,8 @@ function handleDeleteButtonClick(event) {
             headers: myHeaders
         }).then(function (response) {
             if (response.status === 200) {
-                console.log('Stock deleting. Response.status' + response.status)
                 successActionMainPage("#mainWindowAlert", "Акция успешно удалена", "success")
                 $(`#li-${stockId}`).remove()
-            } else {
-                successActionMainPage("#mainWindowAlert", "Акция не найдена", "error")
-            }
-        })
-    }
-    $('#stockModal').modal('hide')
-}
-
-/**
- * publish button handler
- * @param event - эвент откуда берем id элемента
- */
-function handlePublishButtonClick(event) {
-    let stockId = event.target.dataset.stockId
-    let doPublish = confirm(`Опубликовать акцию id: ${stockId}?`);
-    if (doPublish) {
-        console.log(`${stockId} will be published`)
-        fetch(stockPublishUrl + `/${stockId}`, {
-            method: 'POST',
-            headers: myHeaders
-        }).then(function (response) {
-            if (response.status === 200) {
-                console.log('Stock publishing. Response.status' + response.status)
-                successActionMainPage("#mainWindowAlert", "Акция успешно опубликована", "success")
-                $(`#li-${stockId}`).spellcheck
             } else {
                 successActionMainPage("#mainWindowAlert", "Акция не найдена", "error")
             }
@@ -190,6 +160,8 @@ function handlePublishButtonClick(event) {
  */
 function handleSaveChangesButton() {
     let startDate = $('#startDate').val()
+    let published = $('#published').val()
+    console.log("акция опубликована:" + published)
     startDate = moment(startDate).format("YYYY-MM-DD")
     let endDate = ""
     if ($('#endDate').val() !== null || $('#endDate').val() !== "") {
@@ -202,13 +174,13 @@ function handleSaveChangesButton() {
 
     const stock = {
         id: $('#stockId').val(),
-        stockImg: $('#stockImg').val(),
         stockTitle: $('#stockTitle').val(),
         stockText: $('#stockText').summernote('code'),
         startDate: startDate,
         endDate: endDate,
-        published: $('#published').val(),
-        stock: $('#stockTimeZone').val(),
+        stockImg: $('#stockImg').val(),
+        published: published,
+        stock: $('#stockTimeZone').val()
     }
     let method = (stock.id !== '' ? 'PUT' : 'POST')
 
@@ -248,6 +220,7 @@ function handleEditButtonClick(event) {
         $('#stockText').summernote('code', stockText)
         $("#startDate").val(stock.startDate)
         $("#endDate").val(stock.endDate)
+        $("#stockImg").val(stock.stockImg)
         $("#published").val(stock.published)
     }
 
@@ -304,15 +277,16 @@ function renderStockList(data) {
         for (let i = 0; i < stocks.length; i++) {
             let stockId = stocks[i].id
             let stockImg = stocks[i].imageFile
+            let userImg = "@{/uploads/images/{name}(name = ${user.getProfilePicture()})}"
+            console.log(`Stock img: ${stockImg}`)
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
             let publish = stocks[i].published
-            console.log(`Stock is published: ${publish}`)
+            console.log(`Published: ${publish}`)
             if (publish === true) {
                 publish = "✔"
             } else {
                 publish = "✘"
             }
-
             let endDate = stocks[i].endDate
             if (endDate === null) {
                 endDate = "бессрочно"
@@ -323,8 +297,9 @@ function renderStockList(data) {
             row.append(`<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-4\">
-<!--                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">-->
-                                 <img class=\"card-img\" src=${stockImg} width=\"250\">
+                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">
+                                 <img class="card-img" src=${stockImg} width=\"250\" alt="Фото акции">
+
                                  <p></p>
                                  <p id="stockId" class="stockId">ID акции: ${stockId}</p>
                                     <p id="rating" class="rating">Рейтинг: ${rating}</p>

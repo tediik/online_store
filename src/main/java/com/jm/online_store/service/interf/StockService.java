@@ -4,9 +4,10 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.StockFilterDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 public interface StockService {
 
@@ -29,4 +30,8 @@ public interface StockService {
     List<Stock> findPublishedStocks();
 
     void updateStock(Stock stock);
+
+    String updateStockImage(Long valueOf, MultipartFile imageFile) throws IOException;
+
+    String deleteStockImage(Long stockId) throws IOException;
 }
