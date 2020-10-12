@@ -15,3 +15,12 @@ svg{
 *.filled{
     fill:#f00;
 }
+
+.nav-tabs .nav-link.active {
+    font-weight:bold;
+    background-color: transparent;
+    border-bottom:3px solid #ff8c00;
+    border-right: none;
+    border-left: none;
+    border-top: none;
+}
