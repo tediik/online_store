@@ -8,7 +8,7 @@ svg{
     fill:transparent;
     stroke:#f00;
     stroke-width:6px;
-    cursor:pointer;
+    /*cursor:pointer;*/
     transition:fill .3s;
 }
 
