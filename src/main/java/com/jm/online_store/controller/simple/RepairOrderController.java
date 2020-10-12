@@ -1,25 +1,26 @@
 package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.RepairOrderService;
 import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Контроллер сервисного центра
  */
 @Controller
-@RequestMapping("/service")
-public class ServiceCenterController {
+public class RepairOrderController {
 
     private final UserService userService;
+    private final RepairOrderService repairOrderService;
 
     @Autowired
-    public ServiceCenterController(UserService userService) {
+    public RepairOrderController(UserService userService, RepairOrderService repairOrderService) {
         this.userService = userService;
+        this.repairOrderService = repairOrderService;
     }
 
     @GetMapping("/serviceCenter")
@@ -32,7 +33,7 @@ public class ServiceCenterController {
         return "serviceCheckStatus";
     }
 
-    @GetMapping
+    @GetMapping("/service")
     public String getServiceProfile(Model model) {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);

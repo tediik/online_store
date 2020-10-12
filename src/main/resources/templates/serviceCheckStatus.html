@@ -11,7 +11,7 @@
 <header th:insert="/blocks/header :: header"></header>
 
 <main class="wrapper flex-grow-1 container">
-    <div class="card">
+    <div class="card" style="height: 50rem">
         <h5 class="card-header">Проверка статуса ремонта</h5>
         <div class="card-body">
             <p class="card-text">Вы можете самостоятельно отслеживать статус ремонта своего оборудования.
@@ -21,7 +21,7 @@
                 вы можете внести предоплату за ремонт.</p>
             <form th:action="@{/}" method="post">
                 <input type="text" name="text" placeholder="Заказ-наряд">
-                <input type="number" name="number" placeholder="Номер телефона">
+                <input type="tel" name="tel" placeholder="Номер телефона">
                 <div style="margin-top: 20px">
                     <button type="submit" class="btn btn-warning">Найти</button>
                 </div>

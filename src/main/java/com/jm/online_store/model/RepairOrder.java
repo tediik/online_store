@@ -2,10 +2,12 @@ package com.jm.online_store.model;
 
 import com.jm.online_store.enums.RepairOrderType;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
+import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -18,6 +20,8 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -32,9 +36,12 @@ public class RepairOrder {
     private String fullNameClient;
     @NonNull
     private String telephoneNumber;
+    @NonNull
+    private String nameDevice;
 
     private boolean guarantee;
     @NonNull
+    @Type(type = "text")
     private String fullTextProblem;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

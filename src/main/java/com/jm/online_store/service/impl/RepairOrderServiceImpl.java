@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.enums.RepairOrderType;
 import com.jm.online_store.exception.RepairOrderNotFoundException;
 import com.jm.online_store.model.RepairOrder;
 import com.jm.online_store.repository.RepairOrderRepository;
@@ -7,6 +8,7 @@ import com.jm.online_store.service.interf.RepairOrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -27,31 +29,33 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     @Override
     public List<RepairOrder> getAllAccepted() {
-        return null;
+        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.ACCEPTED);
     }
 
     @Override
     public List<RepairOrder> getAllDiagnostics() {
-        return null;
+        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.DIAGNOSTICS);
     }
 
     @Override
     public List<RepairOrder> getAllIn_Work() {
-        return null;
+        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.IN_WORK);
     }
 
     @Override
     public List<RepairOrder> getAllComplete() {
-        return null;
+        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.COMPLETE);
     }
 
     @Override
     public List<RepairOrder> getAllArchive() {
-        return null;
+        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.ARCHIVED);
     }
 
     @Override
     public void save(RepairOrder repairOrder) {
+        repairOrder.setRepairOrderType(RepairOrderType.ACCEPTED);
+        repairOrder.setAcceptanceDate(LocalDate.now());
         repairOrderRepository.save(repairOrder);
     }
 

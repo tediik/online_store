@@ -1,12 +1,16 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Service Center</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Подключаем библиотеку summernote bs-4 -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 
 </head>
 <body>
@@ -19,7 +23,7 @@
 
             <!--навигация слева-->
             <div class="col-md-2">
-                <ul class="nav nav-pills flex-column">
+                <ul class="nav nav-pills flex-column" id="upperNavTabRepairOrder">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#Profile">
                             Профиль
@@ -43,7 +47,7 @@
 
             <!--наполнение справа-->
             <div class="col-md-10 bg-light">
-                <div class="tab-content">
+                <div class="tab-content" id="repairOrderTabContent">
 
                     <!--профиль-->
                     <div class="tab-pane fade show active" id="Profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -335,33 +339,38 @@
                         <ul class="nav nav-tabs" id="navbarRepairOrders">
                             <!-- Первая вкладка все заказы (активная) -->
                             <li class="nav-item">
-                                <a class="nav-link active" id="nav-link_RepairOrders" data-toggle="tab" data-toggle-id="allRepairOrders"
+                                <a class="nav-link active" id="nav-link_RepairOrders" data-toggle="tab"
+                                   data-toggle-id="allRepairOrders"
                                    href="#tab_all_repairOrders">Все</a>
                             </li>
                             <!-- Вторая вкладка принятые заказы -->
                             <li class="nav-item">
-                                <a class="nav-link" id="nav-link_acceptedRepairOrders" data-toggle="tab" data-toggle-id="acceptedRepairOrders"
+                                <a class="nav-link" id="nav-link_acceptedRepairOrders" data-toggle="tab"
+                                   data-toggle-id="acceptedRepairOrders"
                                    href="#tab_accepted_repairOrders">Принятые</a>
                             </li>
                             <!-- Третья вкладка на диагностике-->
                             <li class="nav-item">
-                                <a class="nav-link" id="nav-link_diagnostics" data-toggle="tab" data-toggle-id="diagnostics"
-                                   href="#tab_diagnostics_repairOrders" >На диагностике</a>
+                                <a class="nav-link" id="nav-link_diagnostics" data-toggle="tab"
+                                   data-toggle-id="diagnostics"
+                                   href="#tab_diagnostics_repairOrders">На диагностике</a>
                             </li>
                             <!-- Четвертая вкладка в ремонте-->
                             <li class="nav-item">
-                                <a class="nav-link" id="nav-link_underRepair" data-toggle="tab" data-toggle-id="underRepair"
-                                   href="#tab_underRepair" >В ремонте</a>
+                                <a class="nav-link" id="nav-link_underRepair" data-toggle="tab"
+                                   data-toggle-id="underRepair"
+                                   href="#tab_underRepair">В ремонте</a>
                             </li>
                             <!-- Пятая вкладка на выдаче-->
                             <li class="nav-item">
                                 <a class="nav-link" id="nav-link_onIssue" data-toggle="tab" data-toggle-id="onIssue"
-                                   href="#tab_onIssue" >На выдаче</a>
+                                   href="#tab_onIssue">На выдаче</a>
                             </li>
                             <!-- Шестая вкладка закрытые заявки-->
                             <li class="nav-item">
-                                <a class="nav-link" id="nav-link_closedRepairOrders" data-toggle="tab" data-toggle-id="closedRepairOrders"
-                                   href="#tab_closedRepairOrders" >Закрытые заявки</a>
+                                <a class="nav-link" id="nav-link_closedRepairOrders" data-toggle="tab"
+                                   data-toggle-id="closedRepairOrders"
+                                   href="#tab_closedRepairOrders">Закрытые заявки</a>
                             </li>
                         </ul>
 
@@ -404,59 +413,63 @@
                     <!--оформление заявки на ремонт-->
                     <div class="tab-pane" id="addRepairOrder" role="tabpanel">
                         <div class="card">
-                            <div class="card-header">Add new user</div>
+                            <div class="card-header">Оформление заявки на ремонт</div>
                             <div class="card-body text-center">
-                                <div class="form justify-content-center mx-auto col-md-3">
+                                <div class="form justify-content-center mx-auto col-md-5">
 
-                                    <form id="addFormNewUser">
+                                    <form id="addFormRepairOrder">
 
                                         <div class="form-group">
-                                            <label for="firstNameNewUser">First name</label>
+                                            <label for="idRepairOrder">Id</label>
                                             <div>
-                                                <input type="text" class="form-control" id="firstNameNewUser">
+                                                <input type="text" class="form-control" id="idRepairOrder" readonly>
                                             </div>
                                         </div>
+
                                         <div class="form-group">
-                                            <label for="lastNameNewUser">Last name</label>
+                                            <label for="fullNameClient">ФИО</label>
                                             <div>
-                                                <input type="text" class="form-control" id="lastNameNewUser">
+                                                <input type="text" class="form-control" id="fullNameClient">
                                             </div>
                                         </div>
+
                                         <div class="form-group">
-                                            <label for="ageNewUser">Age</label>
+                                            <label for="telephoneNumber">Телефон</label>
                                             <div>
-                                                <input type="number" class="form-control" id="ageNewUser">
+                                                <input type="tel" class="form-control" id="telephoneNumber">
                                             </div>
                                         </div>
+
                                         <div class="form-group">
-                                            <label for="emailNewUser">Email</label>
+                                            <label for="nameDevice">Укажите устройство</label>
                                             <div>
-                                                <input type="email" class="form-control" id="emailNewUser"
-                                                       aria-describedby="emailHelp">
+                                                <input type="text" class="form-control" id="nameDevice">
                                             </div>
                                         </div>
+
+                                        <div class="form-check" id="guaranteeCheckboxDiv">
+                                            <input class="form-check-input" type="checkbox" id="guaranteeCheckbox">
+                                            <label class="form-check-label" for="guaranteeCheckbox">
+                                                Устройство на гарантии?
+                                            </label>
+                                        </div>
+
+                                        <br>
                                         <div class="form-group">
-                                            <label for="passwordNewUser">Password</label>
-                                            <div>
-                                                <input type="password" class="form-control" id="passwordNewUser">
-                                            </div>
+                                        <label for="fullTextProblem">Описание проблемы</label>
+                                        <textarea id="fullTextProblem" name="fullText" placeholder="Введите полный текст"
+                                                  class="form-control" required></textarea>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="roleNewUser">Role</label>
-                                            <div>
-                                                <select name="addRole" class="form-control" id="roleNewUser" size="2" multiple>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-success">Add new user</button>
+                                        <br>
+
+                                        <button id="buttonAddRepairOrder" type="submit" class="btn btn-success">Добавить заявку на ремонт</button>
                                     </form>
-
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <!--конец оформления заявки на ремонт-->
-
 
                 </div>
             </div>
@@ -468,10 +481,8 @@
 
 </main>
 
-<!-- JS, Popper.js, and jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
+<!--bootstrap scripts-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
@@ -479,7 +490,15 @@
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
 
+<!--moment-->
+<script src="/static/js/moment.js"></script>
+<!--summernote-->
+<script src="/static/js/summernote.js"></script>
+<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
+<link href="/static/css/summernote.css" rel="stylesheet">
+<script src="/static/js/textRedactor.js"></script>
+
+<script src="/static/js/repair_order.js"></script>
+
 </body>
-
-
 </html>
