@@ -5,13 +5,13 @@ function prepareNumber(n) {
 }
 
 $(document).ready(function (){
-    fillBusket();
+    fillBasket();
 })
 
-async function fillBusket() {
-    let response = await fetch("/customer/busketGoods");
+async function fillBasket() {
+    let response = await fetch("/customer/basketGoods");
     let content = await response.json();
-    let basketGoodsJson = document.getElementById('busketList');
+    let basketGoodsJson = document.getElementById('basketList');
     let countGoods = 0;
     let sumBasket = 0;
     let key;
@@ -52,6 +52,14 @@ async function fillBusket() {
             </td>
         <tr>
         `;
+        fetch("api/products/" + `${content[key].product.id}`)
+            .then(function (response) {
+                response.json().then(function (data) {
+                    if (data.favourite) {
+                        $('#heart' + `${content[key].id}`).toggleClass("filled");
+                    }
+                })
+            });
         sumBasket += content[key].product.price * content[key].count;
         $(basketGoodsJson).append(product);
     }
@@ -90,16 +98,16 @@ async function fillBusket() {
 
 
 async function deleteBasket(id) {
-    await fetch("/customer/busketGoods", {
+    await fetch("/customer/basketGoods", {
         method: "DELETE",
         body: id,
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    await fillBusket();
+    await fillBasket();
 }
 
 async function updateCountBasket(id, count) {
-    await fetch("/customer/busketGoods", {
+    await fetch("/customer/basketGoods", {
         method: "PUT",
         body: JSON.stringify({
             id: id,
@@ -107,25 +115,43 @@ async function updateCountBasket(id, count) {
         }),
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    await fillBusket();
+    await fillBasket();
 }
 
 async function buildOrderFromBasket() {
-    await fetch("/customer/busketGoods", {
+    await fetch("/customer/basketGoods", {
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    await fillBusket();
+    await fillBasket();
 }
 
 async function addToFavouritsGoods(id, heartId) {
-    await fetch("/customer/favouritesGoods", {
-        method: "PUT",
-        body: id,
-        headers: {"Content-Type": "application/json; charset=utf-8"}
-    });
-    let l = 'heart' + heartId;
-    let b = '#' + l;
-    $(b).toggleClass('filled');
-
+    if ($("path").is('[class="filled"]')) {
+        await fetch("/customer/favouritesGoods", {
+            method: "DELETE",
+            body: id,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(function (response) {
+            if (response.ok) {
+                $('#heart' + heartId).toggleClass("filled");
+                toastr.success("Товар успешно удалён из избранного");
+            } else {
+                toastr.error("Авторизуйтесь/зарегистрируйтесь");
+            }
+        });
+    } else {
+        await fetch("/customer/favouritesGoods", {
+            method: "PUT",
+            body: id,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(function (response) {
+            if (response.ok) {
+                $('#heart' + heartId).toggleClass("filled");
+                toastr.success("Товар успешно добавлен в избранное");
+            } else {
+                toastr.error("Авторизуйтесь/зарегистрируйтесь");
+            }
+        });
+    }
 }
