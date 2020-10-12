@@ -9,4 +9,6 @@ public interface FavouritesGroupService {
     List<FavouritesGroup> findAll();
     void addFavouritesGroup(FavouritesGroup favouritesGroup);
     void deleteById(Long id);
+    Optional<FavouritesGroup> findById(Long id);
+    Optional<FavouritesGroup> findByName(String name);
 }

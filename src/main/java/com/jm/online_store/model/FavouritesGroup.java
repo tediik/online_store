@@ -11,6 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -32,4 +35,11 @@ public class FavouritesGroup {
     @JsonProperty(value = "user")
     @ManyToOne
     User user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "favourites_group_product",
+            joinColumns = @JoinColumn(name = "favourites_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> products = new HashSet<>();
 }

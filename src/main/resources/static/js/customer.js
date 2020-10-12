@@ -12,7 +12,7 @@ async function fillFavouritesGoods() {
         let product = `
         <tr class=${content[key].id} id=${content[key].id}>
     <td>${content[key].id}</td>
-    <td><input type="checkbox" name="${content[key].id}"/></td> 
+    <td><input type="checkbox" class="checkProductInGroup" name="${content[key].id}"/></td> 
     <td>${content[key].product}</td>
     <td>${content[key].price}</td>
     <td>${content[key].amount}</td>
@@ -68,6 +68,40 @@ $(document).on("click", "#delete-group-buton", function () {
 
 });
 
+//Привязываем событие к CHECKBOX чтобы отметить избранные товары для отслеживания id
+$(document).on("click", ".checkProductInGroup", function () {
+    if ($(this).is(':checked')) {
+        $(this).attr('class', 'checkProductInGroup selected');
+    } else {
+        $(this).attr('class', 'checkProductInGroup');
+    }
+});
+
+//Привязываем событие к кнопке перемещения товара в избранную группу товаров
+$(document).on("click", "#move-product-buton", function () {
+    let idGroup = $("#favouritesGroup option:selected").attr("id");
+    let idProduct = $(".checkProductInGroup:checked").map(function() {return this.name;}).get();
+    if (idProduct != '') {
+        console.log("Товар id=" + idProduct + " пеермещен в группу с id=" + idGroup);
+        addProductInFavouritesGroupInBD(idProduct, idGroup);
+    }
+});
+//Передаем в БД товары и список Избранного для добавления
+async function addProductInFavouritesGroupInBD(idProduct, idGroup) {
+    const headers = {
+        'Content-type': 'application/json; charset=UTF-8'
+    };
+    let idPidG = idProduct;
+    idPidG.push(idGroup);
+    console.log(idPidG);
+    fetch(`/customer/addProductInFavouritesGroup`, {
+        method: 'POST',
+        body: JSON.stringify(idPidG),
+        headers: headers
+    }).then(response => {
+        console.log(response.text());
+    })
+};
 //Получаем список групп Избранного из БД и формируем "select"
 async function getFavouritesGroupInSelect() {
     fetch(`/customer/favouritesGroup`).then(response => response.json()).then(fgroup => {
@@ -77,7 +111,7 @@ async function getFavouritesGroupInSelect() {
     })
 };
 
-//Передаем в БД новое имя скписка Избранного
+//Передаем в БД новое имя списка Избранного
 async function addFavouritesGroupInBD(nameGroup) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8'
@@ -90,7 +124,9 @@ async function addFavouritesGroupInBD(nameGroup) {
         body: JSON.stringify(favouritesGroup),
         headers: headers
     }).then(response => {
-        console.log(response.text());
+        console.log(response.json());
+        window.location.reload(true);
+        //$("#favouritesGroup :last").attr("id", response.json());
     })
 };
 

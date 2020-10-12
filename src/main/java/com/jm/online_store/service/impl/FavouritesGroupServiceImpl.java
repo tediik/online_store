@@ -28,4 +28,14 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
     public void deleteById(Long id) {
         favouritesGroupRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<FavouritesGroup> findById(Long id) {
+        return favouritesGroupRepository.findById(id);
+    }
+
+    @Override
+    public Optional<FavouritesGroup> findByName(String name) {
+        return favouritesGroupRepository.findByName(name);
+    }
 }
