@@ -1,5 +1,31 @@
 $(document).ready(function () {
     $(function () {
+        $('#pictureBtn').on('click', function () {
+            var file_data = $('#fileInput').prop('files')[0];
+            var form_data = new FormData();
+            form_data.append("imageFile", file_data);
+            console.log(form_data);
+            console.log(form_data.get("imageFile"));
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/users/uploadImage',
+                    dataType: 'script',
+                    data: form_data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        $('#profilePic').attr('src', data);
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+        });
+    });
+
+    $(function () {
         $('#deletePicBtn').on('click', function () {
             $.ajax(
                 {
@@ -30,24 +56,5 @@ $(document).ready(function () {
     }
     $("#fileInput").change(function() {
         readURL(this);
-        var file_data = $('#fileInput').prop('files')[0];
-        var form_data = new FormData();
-        form_data.append("imageFile", file_data);
-        $.ajax(
-            {
-                type: 'POST',
-                url: '/users/uploadImage',
-                dataType: 'script',
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    $('#profilePic').attr('src', data);
-                },
-                error: function (jqXhr, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                }
-            });
     });
 });
