@@ -55,6 +55,7 @@ function checkFields(event) {
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
+        let published = document.getElementById('published')
         if (stockTitle.value === '') {
             invalidModalField("Заполните заголовок акции", stockTitle)
         } else if (stockText.value === "") {
@@ -220,7 +221,7 @@ function handleEditButtonClick(event) {
         $('#stockText').summernote('code', stockText)
         $("#startDate").val(stock.startDate)
         $("#endDate").val(stock.endDate)
-        $("#published").val(stock.published)
+        $("#published").prop('checked', stock.published)
     }
 
     fetch(stockApiUrl + `/${stockId}`, {
@@ -228,6 +229,19 @@ function handleEditButtonClick(event) {
         headers: myHeaders
     }).then(response => response.json()).then(stock => renderModalWindowEdit(stock))
 }
+
+/**
+ * Обработка чекбокса #published
+ * если галка стоит, то установить published = true
+ * и наоборот
+ */
+function chekboxPublished(o) {
+    if (o.checked == true) {
+        $("#published").val('true')
+    } else {
+        $("#published").val('false')
+    }
+};
 
 /**
  * function changes modal window header
