@@ -32,7 +32,7 @@ import java.util.UUID;
 public class StockServiceImpl implements StockService {
 
     private final StockRepository stockRepository;
-    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
+    private static final String uploadDirectory = System.getProperty("stock.dir") + File.separator + "uploads" + File.separator + "images";
 
     @Override
     public List<Stock> findAll() {
@@ -168,8 +168,10 @@ public class StockServiceImpl implements StockService {
     public String deleteStockImage(Long stockId) {
         final String defaultStockImg = StringUtils.cleanPath("default.jpg");
         Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
-        //Get stockPicture name from Stock and delete this profile picture from Uploads
+        //Get stockPicture name from Stock and delete this stock picture from Uploads
+        log.debug("Paths.get(uploadDirectory. Stock: {}" + stock.getStockTitle());
         Path fileNameAndPath = Paths.get(uploadDirectory, stock.getStockImg());
+        log.debug("Paths.get(uploadDirectory: {}" + fileNameAndPath);
         //Check if deleting picture is not a default avatar
         try {
             if (!fileNameAndPath.getFileName().toString().equals(defaultStockImg)) {
@@ -178,7 +180,7 @@ public class StockServiceImpl implements StockService {
         } catch (IOException e) {
             log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
-        //Set a default avatar as a user profilePicture
+        //Set a default picture as a stock default Picture
         stock.setStockImg(defaultStockImg);
         return File.separator + "uploads" + File.separator + "images" + File.separator + defaultStockImg;
     }

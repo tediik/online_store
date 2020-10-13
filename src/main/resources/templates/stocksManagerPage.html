@@ -114,7 +114,7 @@
             <!---------------------- Stock Modal  ------------------->
             <div class="modal fade" id="stockModal" data-backdrop="static" tabindex="-1"
                  role="dialog"
-                 aria-labelledby="stockModalLabel"
+                 aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
@@ -160,12 +160,10 @@
                                             <input id="endDate" name="date"/>
                                             <br>
                                             <label for="stockImg">Изображение</label>
-                                            <input id="stockImg" type="file" name="fileStockImgInput" accept="image/jpeg"
+                                            <input id="stockImg" type="file" name="fileInput" accept="image/jpeg"
                                                    class="form-control">
-<!--                                            <input id="stockImgBtn" type="file" name="fileStockImgInput" accept="image/jpeg" class="form-control">-->
-<!--                                            <input type="file" id="fileInput" name="fileStockImgInput" alt="Stock picture">-->
                                             <input type="button" id="stockImgBtn" value="Upload Image" accept="image/jpeg"
-                                                   name="fileStockImgInput" class="btn btn-sm btn-outline-success"/>
+                                                   name="fileImgInput" class="btn btn-sm btn-outline-success"/>
                                             <input type="button" id="deleteStockImgBtn" value="Delete Image"
                                                    data-dismiss="modal"
                                                    class="btn btn-sm btn-outline-danger"/>
@@ -216,7 +214,7 @@
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <link href="/static/css/summernote.css" rel="stylesheet">
 <script src="/static/js/date_range.js"></script>
-<script src="/static/js/stockImage.js"></script>
+<!--<script src="/static/js/stockImage.js"></script>-->
 <script src="/static/js/stockPageRenderAndFunctions.js"></script>
 </body>
 </html>

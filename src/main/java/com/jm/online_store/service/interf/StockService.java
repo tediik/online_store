@@ -31,7 +31,7 @@ public interface StockService {
 
     void updateStock(Stock stock);
 
-    String updateStockImage(Long valueOf, MultipartFile imageFile) throws IOException;
+    String updateStockImage(Long valueOf, MultipartFile imageStockFile) throws IOException;
 
     String deleteStockImage(Long stockId) throws IOException;
 }

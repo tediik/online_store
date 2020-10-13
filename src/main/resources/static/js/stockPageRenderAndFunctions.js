@@ -300,7 +300,7 @@ function renderStockList(data) {
                             <div class=\"col-md-4\">
 <!--                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">-->
                                  <img class="card-img" src=${stockImg} width=\"250\" alt="Фото акции">
-                                
+                                <img id="blahs" src="#" alt="your image" class="rounded-circle img-responsive mt-2 float-right" height="82" width="82"/>
                                  <p></p>
                                  <p id="stockId" class="stockId">ID акции: ${stockId}</p>
                                     <p id="rating" class="rating">Рейтинг: ${rating}</p>
