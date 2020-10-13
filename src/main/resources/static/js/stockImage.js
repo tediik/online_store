@@ -2,25 +2,25 @@ $(document).ready(function () {
     $(function () {
         $('#stockImgBtn').on('click', function () {
             console.log("stockImgBtn pressed");
-            var $uploadId = $('#stockId').val();
-            console.log('uploadId = ', uploadId);
-            var file_data = $('#fileImgInput').prop('file');
-            console.log(file_data);
+            let uploadId = $('#stockId').val();
+            console.log('uploadId = ' + uploadId);
+            let file_data = $('#fileImgInput').prop('file');
+            console.log('file-data = ' + file_data);
             var form_data = new FormData();
-            form_data.append("imageFile", file_data);
+            form_data.append("fileImgInput", file_data);
             console.log(form_data);
-            console.log(form_data.get("imageStockFile"));
+            console.log('form-data = ' + form_data.get("fileImgInput"));
             $.ajax(
                 {
                     type: 'POST',
-                    url: '/rest/uploadStockImage/' + $uploadId,
+                    url: '/rest/uploadStockImage/' + uploadId,
                     dataType: 'script',
                     data: form_data,
                     cache: false,
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        $('#profilePic').attr('src', data);
+                        $('#stockPicture').attr('src', data);
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -61,7 +61,7 @@ $(document).ready(function () {
             reader.readAsDataURL(input.files[0]); // convert to base64 string
         }
     }
-    $("#fileStockImgInput").change(function() {
+    $("#fileImgInput").change(function() {
         readURL(this);
     });
 });
