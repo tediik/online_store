@@ -25,7 +25,7 @@ $(document).ready(function () {
 function deleteProfile(event) {
     let id = event.target.dataset.delId
     fetch(`/customer/deleteProfile/${id}`, {
-        method: 'DELETE',
+        method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-type': 'application/json'

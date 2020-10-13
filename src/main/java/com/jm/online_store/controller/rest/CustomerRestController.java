@@ -43,9 +43,9 @@ public class CustomerRestController {
      * @param id индентификатор покупателя
      * @return ResponseEntity.ok()
      */
-    @DeleteMapping("/deleteProfile/{id}")
+    @PostMapping("/deleteProfile/{id}")
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
-        userService.deleteByID(id);
+        userService.changeUserStatus(id);
         return ResponseEntity.ok("Delete profile");
     }
 }

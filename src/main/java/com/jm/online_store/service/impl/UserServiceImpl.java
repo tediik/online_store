@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -184,6 +185,24 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
+    }
+
+    /**
+     * Метод, который изменяет статус пользователя при удалии
+     * @param id
+     */
+    @Override
+    @Transactional
+    public void changeUserStatus(Long id){
+        User userStatusChange = getCurrentLoggedInUser();
+        userStatusChange.setStatus(LocalDateTime.now());
+        updateUser(userStatusChange);
+    }
+
+    @Override
+    @Transactional
+    public boolean restoreUser(String email){
+        return true;
     }
 
     /**

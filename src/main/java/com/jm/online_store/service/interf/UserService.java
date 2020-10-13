@@ -21,6 +21,9 @@ public interface UserService {
 
     void addUser(User user);
 
+    void changeUserStatus(Long id);
+
+    boolean restoreUser(String email);
     void deleteByID(Long id);
 
     void updateUser(User user);
