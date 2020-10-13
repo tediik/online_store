@@ -9,10 +9,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Сервис класс, имплементация интерфейса {@link RepairOrderService}
+ * Сервисный класс, имплементация интерфейса {@link RepairOrderService}
  * Содержит бизнес логику, использует методы репозитория {@link RepairOrderRepository}
  */
 @AllArgsConstructor
@@ -20,7 +22,6 @@ import java.util.List;
 public class RepairOrderServiceImpl implements RepairOrderService {
 
     private final RepairOrderRepository repairOrderRepository;
-
 
     @Override
     public List<RepairOrder> findAll() {
@@ -71,11 +72,19 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     @Override
     public RepairOrder update(RepairOrder repairOrder) {
-        return repairOrderRepository.saveAndFlush(repairOrder);
+        repairOrder.setModifiedDate(LocalDate.now());
+        return repairOrderRepository.save(repairOrder);
     }
 
     @Override
     public void deleteById(Long id) {
         repairOrderRepository.deleteById(id);
+    }
+
+    @Override
+    public List<RepairOrderType> findAllRepairOrderType() {
+        List<RepairOrderType> orderTypeList = new ArrayList<>();
+        Collections.addAll(orderTypeList, RepairOrderType.values());
+        return orderTypeList;
     }
 }

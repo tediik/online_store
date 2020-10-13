@@ -1,5 +1,6 @@
 package com.jm.online_store.service.interf;
 
+import com.jm.online_store.enums.RepairOrderType;
 import com.jm.online_store.model.RepairOrder;
 
 import java.util.List;
@@ -17,4 +18,5 @@ public interface RepairOrderService {
     boolean existsById(Long id);
     RepairOrder update(RepairOrder repairOrder);
     void deleteById(Long id);
+    List<RepairOrderType> findAllRepairOrderType();
 }

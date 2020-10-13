@@ -1,7 +1,6 @@
 package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.interf.RepairOrderService;
 import com.jm.online_store.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,12 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class RepairOrderController {
 
     private final UserService userService;
-    private final RepairOrderService repairOrderService;
 
     @Autowired
-    public RepairOrderController(UserService userService, RepairOrderService repairOrderService) {
+    public RepairOrderController(UserService userService) {
         this.userService = userService;
-        this.repairOrderService = repairOrderService;
     }
 
     @GetMapping("/serviceCenter")

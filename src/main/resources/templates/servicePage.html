@@ -18,6 +18,105 @@
 
 <main>
 
+    <!---------------------- Edit RepairOrder Modal window ------------------->
+    <div class="modal fade" id="editRepairOrder" data-backdrop="static" tabindex="-1"
+         role="dialog" aria-labelledby="editRepairOrderFormModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalWindowTitle">Редактировать заказ</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="modal-alert">
+                    <!--alert messages-->
+                </div>
+                <form id="editRepairOrderFormModal">
+                    <div class="modal-body">
+                        <div class="container-fluid col-sm-12">
+                            <form enctype="multipart/form-data" id="editModalRepairOrder" method="post">
+
+                                <div class="form-group">
+
+                                    <div class="text-center" id="idModalDiv">
+                                        <label for="idRepairOrderUpdate"
+                                               class="col-form-label col-sm-12 text-center">Id</label>
+                                        <input type="text" class="form-control" id="idRepairOrderUpdate" readonly>
+                                    </div>
+
+                                    <br>
+                                    <label for="fullNameClientUpdate">ФИО</label>
+                                    <input type="text" id="fullNameClientUpdate" name="fullNameClient"
+                                           placeholder="Введите ФИО клиента"
+                                           class="form-control" required>
+
+                                    <br>
+                                    <label for="telephoneNumberUpdate">Телефон</label>
+                                    <input type="tel" id="telephoneNumberUpdate" name="telephoneNumberUpdate"
+                                           placeholder="Введите телефон клиента" class="form-control" required>
+                                    <br>
+
+                                    <label for="nameDeviceUpdate">Устройство</label>
+                                    <input type="text" id="nameDeviceUpdate" name="nameDeviceUpdate"
+                                           placeholder="Укажите устройства" class="form-control" required>
+
+                                    <br>
+                                    <div class="form-check" id="guaranteeCheckboxUpdateDiv">
+                                        <input class="form-check-input" type="checkbox" id="guaranteeCheckboxUpdate">
+                                        <label class="form-check-label" for="guaranteeCheckboxUpdate">
+                                            Устройство на гарантии?
+                                        </label>
+                                    </div>
+                                    <br>
+
+                                    <div class="form-group" id="statusRepairOrder">
+                                        <label for="statusRepairOrderSelect">
+                                            Статус заказа:
+                                        </label>
+                                        <select class="form-control" id="statusRepairOrderSelect">
+                                            <option value="ALL">ALL</option>
+                                            <option value="ACCEPTED">ACCEPTED</option>
+                                            <option value="DIAGNOSTICS">DIAGNOSTICS</option>
+                                            <option value="IN_WORK">IN_WORK</option>
+                                            <option value="COMPLETE">COMPLETE</option>
+                                            <option value="ARCHIVED">ARCHIVED</option>
+                                        </select>
+                                    </div>
+
+                                    <br>
+                                    <div class="form-group">
+                                        <label for="fullTextProblemUpdate">Описание проблемы</label>
+                                        <textarea id="fullTextProblemUpdate" name="fullTextUpdate"
+                                                  placeholder="Введите описание проблемы"
+                                                  class="form-control" required></textarea>
+                                    </div>
+                                    <br>
+
+                                    <hr>
+                                    <div class="col-xs-10" id="datePublishInputDivUpdate">
+                                        <label for="postingDateUpdate">Дата приема заказа:</label>
+                                        <input class="form-control" type="date" id="postingDateUpdate"
+                                               style="width: 25%" readonly>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </form>
+                <div id="modalFooterEditSave" class="modal-footer actions">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle-id="close">
+                        Закрыть
+                    </button>
+                    <button id="editSave" data-toggle-id="save" class="btn btn-primary">
+                        Обновить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------------------- End Edit RepairOrder Modal window ------------------->
+
     <div class="container-fluid">
         <div class="row">
 
@@ -47,7 +146,7 @@
 
             <!--наполнение справа-->
             <div class="col-md-10 bg-light">
-                <div class="tab-content" id="repairOrderTabContent">
+                <div class="tab-content">
 
                     <!--профиль-->
                     <div class="tab-pane fade show active" id="Profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -352,19 +451,20 @@
                             <!-- Третья вкладка на диагностике-->
                             <li class="nav-item">
                                 <a class="nav-link" id="nav-link_diagnostics" data-toggle="tab"
-                                   data-toggle-id="diagnostics"
+                                   data-toggle-id="diagnosticsRepairOrders"
                                    href="#tab_diagnostics_repairOrders">На диагностике</a>
                             </li>
                             <!-- Четвертая вкладка в ремонте-->
                             <li class="nav-item">
                                 <a class="nav-link" id="nav-link_underRepair" data-toggle="tab"
-                                   data-toggle-id="underRepair"
-                                   href="#tab_underRepair">В ремонте</a>
+                                   data-toggle-id="inWorkRepairOrders"
+                                   href="#tab_inWorkRepairOrders">В ремонте</a>
                             </li>
                             <!-- Пятая вкладка на выдаче-->
                             <li class="nav-item">
-                                <a class="nav-link" id="nav-link_onIssue" data-toggle="tab" data-toggle-id="onIssue"
-                                   href="#tab_onIssue">На выдаче</a>
+                                <a class="nav-link" id="nav-link_onIssue" data-toggle="tab"
+                                   data-toggle-id="completeRepairOrders"
+                                   href="#tab_completeRepairOrders">На выдаче</a>
                             </li>
                             <!-- Шестая вкладка закрытые заявки-->
                             <li class="nav-item">
@@ -375,7 +475,7 @@
                         </ul>
 
                         <!-- Блоки с контентом -->
-                        <div class="tab-content mb-5" id="newsTabContent">
+                        <div class="tab-content mb-5" id="repairOrdersTabContent">
                             <!-- Первый блок (он отображается по умолчанию, т.к. имеет классы show и active) -->
                             <div class="tab-pane fade show active" id="tab_all_repairOrders">
                                 <div id="all_repairOrders">
@@ -392,13 +492,13 @@
                                 </div>
                             </div>
                             <!-- Четвертый блок -->
-                            <div class="tab-pane fade" id="tab_underRepair">
-                                <div id="underRepair">
+                            <div class="tab-pane fade" id="tab_inWorkRepairOrders">
+                                <div id="inWorkRepairOrders">
                                 </div>
                             </div>
                             <!--Пятый блок-->
-                            <div class="tab-pane fade" id="tab_onIssue">
-                                <div id="onIssue">
+                            <div class="tab-pane fade" id="tab_completeRepairOrders">
+                                <div id="completeRepairOrders">
                                 </div>
                             </div>
                             <!--Шестой блок-->
@@ -417,7 +517,7 @@
                             <div class="card-body text-center">
                                 <div class="form justify-content-center mx-auto col-md-5">
 
-                                    <form id="addFormRepairOrder">
+                                    <form enctype="multipart/form-data" id="addFormRepairOrder">
 
                                         <div class="form-group">
                                             <label for="idRepairOrder">Id</label>
@@ -446,23 +546,26 @@
                                                 <input type="text" class="form-control" id="nameDevice">
                                             </div>
                                         </div>
-
+                                        <hr>
                                         <div class="form-check" id="guaranteeCheckboxDiv">
                                             <input class="form-check-input" type="checkbox" id="guaranteeCheckbox">
                                             <label class="form-check-label" for="guaranteeCheckbox">
                                                 Устройство на гарантии?
                                             </label>
                                         </div>
-
+                                        <hr>
                                         <br>
                                         <div class="form-group">
-                                        <label for="fullTextProblem">Описание проблемы</label>
-                                        <textarea id="fullTextProblem" name="fullText" placeholder="Введите полный текст"
-                                                  class="form-control" required></textarea>
+                                            <label for="fullTextProblem">Описание проблемы</label>
+                                            <textarea id="fullTextProblem" name="fullText"
+                                                      placeholder="Введите полный текст"
+                                                      class="form-control" required></textarea>
                                         </div>
                                         <br>
 
-                                        <button id="buttonAddRepairOrder" type="submit" class="btn btn-success">Добавить заявку на ремонт</button>
+                                        <button id="buttonAddRepairOrder" type="submit" class="btn btn-success">Добавить
+                                            заявку на ремонт
+                                        </button>
                                     </form>
                                 </div>
                             </div>
