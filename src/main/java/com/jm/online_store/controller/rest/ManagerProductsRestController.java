@@ -37,6 +37,7 @@ public class ManagerProductsRestController {
     /**
      * Метод обрабатывает загрузку файла с товарами на сервер
      * Вызывает соответствующий сервисный метод в зависимости от типа файла(CSV или XML)
+     *
      * @param file файл с данными
      * @return
      */
@@ -53,9 +54,9 @@ public class ManagerProductsRestController {
             e.printStackTrace();
         }
         log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
-        if(getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")){
+        if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
             productService.importFromXMLFile(file.getOriginalFilename());
-        }else {
+        } else {
             productService.importFromCSVFile(file.getOriginalFilename());
         }
         return ResponseEntity.ok("success");
@@ -63,15 +64,17 @@ public class ManagerProductsRestController {
 
     /**
      * Метод-сепаратор, возвращающий расширение файла
+     *
      * @param myFileName имя файла
      */
     private static String getFileExtension(String myFileName) {
         int index = myFileName.indexOf('.');
-        return index == -1? null : myFileName.substring(index);
+        return index == -1 ? null : myFileName.substring(index);
     }
 
     /**
      * Метод выводит список всех товаров
+     *
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/rest/products/allProducts")
@@ -81,6 +84,7 @@ public class ManagerProductsRestController {
 
     /**
      * Метод возвращает список неудаленых товаров
+     *
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/rest/products/getNotDeleteProducts")
@@ -90,6 +94,7 @@ public class ManagerProductsRestController {
 
     /**
      * Метод, ищет акции по id
+     *
      * @param productId идентификатор товара
      * @return Optional<Product> возвращает товар
      */
@@ -100,6 +105,7 @@ public class ManagerProductsRestController {
 
     /**
      * Метод добавляет товар
+     *
      * @param product акиця для добавления
      * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
      */
@@ -111,6 +117,7 @@ public class ManagerProductsRestController {
 
     /**
      * Редактирует товар
+     *
      * @param product товар для редактирования
      * @return ResponseEntity<Product> Возвращает отредактированный товар с кодом ответа
      */
@@ -122,21 +129,32 @@ public class ManagerProductsRestController {
 
     /**
      * Метод удаления товара по идентификатору
+     *
      * @param id идентификатор товара
      */
     @DeleteMapping(value = "/rest/products/{id}")
-    public ResponseEntity<Long>  deleteProductById(@PathVariable("id") Long id) {
+    public ResponseEntity<Long> deleteProductById(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(id);
     }
 
     /**
      * Метод восстановления удаленного товара по идентификатору
+     *
      * @param id идентификатор товара
      */
     @PostMapping(value = "/rest/products/restoredeleted/{id}")
     public ResponseEntity<Long> restoreProductById(@PathVariable("id") Long id) {
         productService.restoreProduct(id);
         return ResponseEntity.ok(id);
+    }
+
+    /**
+     * Метод создания Excel-файла с отчетом по популярным продуктам
+     */
+    @PostMapping(value = "/rest/products/report")
+    public ResponseEntity<List<Product>> createReport(@RequestBody List<Product> products) {
+
+        return null;
     }
 }

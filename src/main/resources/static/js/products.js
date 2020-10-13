@@ -10,7 +10,7 @@ showAndRefreshNotDeleteHomeTab()
  * @param check
  */
 function toggle(check) {
-    if(!check.checked) {
+    if (!check.checked) {
         showAndRefreshHomeTab()
     } else {
         showAndRefreshNotDeleteHomeTab()
@@ -55,7 +55,7 @@ function deleteModalWindowRender(productToEdit) {
 }
 
 /**
- * Функция обраотки нажатия кнопки Edit в таблице продукта
+ * Функция обработки нажатия кнопки Edit в таблице продукта
  * @param event
  */
 function handleEditButton(event) {
@@ -103,7 +103,7 @@ function showAndRefreshHomeTab() {
 }
 
 /**
- * функция деалет активным таблицу без
+ * функция делает активным таблицу без
  * удаленных продуктов
  */
 function showAndRefreshNotDeleteHomeTab() {
@@ -191,14 +191,16 @@ function handleAddBtn() {
         }
     )
 }
+
 /**
  * Добавление товара из файла
  */
 
 $('#inputFileSubmit').click(importProductsFromFile)
-function importProductsFromFile(){
 
-    let  fileData = new FormData();
+function importProductsFromFile() {
+
+    let fileData = new FormData();
     fileData.append('file', $('#file')[0].files[0]);
 
     $.ajax({
@@ -207,7 +209,7 @@ function importProductsFromFile(){
         processData: false,
         contentType: false,
         type: 'POST',
-        success: function(data){
+        success: function (data) {
             showAndRefreshHomeTab()
             toastr.info('Импорт товаров завершен!', {timeOut: 5000})
         },
@@ -271,16 +273,8 @@ function checkActionButton(event) {
  * @param products
  */
 function renderProductsTable(products) {
-    let table = $('#products-table')
+    let table = $('#productsTable')
     table.empty()
-        .append(`<tr>
-                <th>ID</th>
-                <th>Наименование товара</th>
-                <th>Цена</th>
-                <th>Колличество</th>
-                <th>Edit</th>
-                <th>Delete</th>
-              </tr>`)
     for (let i = 0; i < products.length; i++) {
         const product = products[i];
         let row = `
@@ -289,7 +283,8 @@ function renderProductsTable(products) {
                     <td>${product.product}</td>
                     <td>${product.price}</td>
                     <td>${product.amount}</td>              
-                    
+                    <td>${product.rating}</td>
+                    <td>${product.productType}</td>
                     <td>
             <!-- Buttons of the right column of main table-->
                         <button data-product-id="${product.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#productModalWindow">
@@ -343,4 +338,54 @@ function fetchProductsAndRenderNotDeleteTable() {
             'Content-type': 'application/json; charset=UTF-8'
         }
     }).then(response => response.json()).then(products => renderProductsTable(products))
+}
+
+/**
+ * функция сортировки в таблице
+ */
+document.addEventListener('DOMContentLoaded', () => {
+
+    const getSort = ({target}) => {
+        const order = (target.dataset.order = -(target.dataset.order || -1));
+        const index = [...target.parentNode.cells].indexOf(target);
+        const collator = new Intl.Collator(['en', 'ru'], {numeric: true});
+        const comparator = (index, order) => (a, b) => order * collator.compare(
+            a.children[index].innerHTML,
+            b.children[index].innerHTML
+        );
+
+        for (const tBody of target.closest('table').tBodies)
+            tBody.append(...[...tBody.rows].sort(comparator(index, order)));
+
+        for (const cell of target.parentNode.cells)
+            cell.classList.toggle('sorted', cell === target);
+    };
+
+    document.querySelectorAll('.table-sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
+
+});
+
+/**
+ * функция получения категорий из БД
+ */
+function fetchCategories() {
+    fetch("api/categories/all", {headers: headers}).then(response => response.json())
+        .then(allCategories => renderCategoriesModal(allCategories))
+}
+
+/**
+ * функция рендера модалки категорий
+ */
+function renderCategoriesModal(categories) {
+    let checkList = $('#categoriesContainer')
+    checkList.empty()
+    for (let i = 0; i < categories.length; i++) {
+        let checkbox = `
+            <form class="checkbox">
+            <label class="checkText" for="check${categories[i].id}">${categories[i].category}</label>
+            <input id="check${categories[i].id}" type="checkbox" name="check" onclick="toggle(this.form.check);">
+            </form>
+                        `;
+        checkList.append(checkbox)
+    }
 }

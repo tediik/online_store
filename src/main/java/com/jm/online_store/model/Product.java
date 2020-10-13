@@ -62,14 +62,14 @@ public class Product {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+            property = "id")
     private List<ProductInOrder> productInOrders;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
     /**
-     *поле для возможности отслеживания изменения цены на Product.
+     * поле для возможности отслеживания изменения цены на Product.
      * при изменении цены добавлять элемент данной коллекции.
      */
     @ElementCollection
@@ -80,7 +80,7 @@ public class Product {
     private Map<LocalDateTime, Double> changePriceHistory = new LinkedHashMap<>();
 
     /**
-     *поле для хранения почтовых адресов для рассылки информации об уменьшения цены на товар
+     * поле для хранения почтовых адресов для рассылки информации об уменьшения цены на товар
      */
     @ElementCollection
     @CollectionTable(name = "product_subscribers_mails",
@@ -109,7 +109,7 @@ public class Product {
         this.amount = amount;
     }
 
-    public @NonNull boolean getDeleteStatus(){
+    public @NonNull boolean getDeleteStatus() {
         return this.deleted;
     }
 }
