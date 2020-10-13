@@ -1,15 +1,12 @@
 $(document).ready(function () {
+    let headers = new Headers()
+    headers.append('Content-type', 'application/json; charset=UTF-8')
     $(function () {
         $('#stockImgBtn').on('click', function () {
-            console.log("stockImgBtn pressed");
             let uploadId = $('#stockId').val();
-            console.log('uploadId = ' + uploadId);
-            let file_data = $('#fileImgInput').prop('file');
-            console.log('file-data = ' + file_data);
-            var form_data = new FormData();
+            let file_data = $('#stockImg')[0].files[0];
+            let form_data = new FormData();
             form_data.append("fileImgInput", file_data);
-            console.log(form_data);
-            console.log('form-data = ' + form_data.get("fileImgInput"));
             $.ajax(
                 {
                     type: 'POST',
@@ -17,13 +14,16 @@ $(document).ready(function () {
                     dataType: 'script',
                     data: form_data,
                     cache: false,
-                    contentType: false,
+                    headers: headers,
                     processData: false,
                     success: function (data) {
-                        $('#stockPicture').attr('src', data);
+                        console.log("мы в success");
+                        console.log("data = " + data);
+                        // $('#stockPicture').attr('src', data);
                     },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        console.log(errorThrown);
+                    error: function (data) {
+                        console.log("мы в error");
+                        console.log("data = " + data);
                     }
                 });
         });

@@ -32,7 +32,7 @@ import java.util.UUID;
 public class StockServiceImpl implements StockService {
 
     private final StockRepository stockRepository;
-    private static final String uploadDirectory = System.getProperty("stock.dir") + File.separator + "uploads" + File.separator + "images";
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
 
     @Override
     public List<Stock> findAll() {
@@ -141,6 +141,7 @@ public class StockServiceImpl implements StockService {
     public String updateStockImage(Long userId, MultipartFile file) {
         Stock stock = stockRepository.findById(userId).orElseThrow(StockNotFoundException::new);
         String uniqueFilename = StringUtils.cleanPath(UUID.randomUUID() + "." + file.getOriginalFilename());
+        log.debug("File name: {}", uniqueFilename);
         if (!file.isEmpty()) {
             Path fileNameAndPath = Paths.get(uploadDirectory, uniqueFilename);
             try {

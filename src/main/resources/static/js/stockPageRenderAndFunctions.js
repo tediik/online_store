@@ -165,6 +165,7 @@ function handleSaveChangesButton() {
     console.log("акция опубликована:" + published)
     startDate = moment(startDate).format("YYYY-MM-DD")
     let endDate = ""
+
     if ($('#endDate').val() !== null || $('#endDate').val() !== "") {
         endDate = $('#endDate').val()
         endDate = moment(endDate).format("YYYY-MM-DD")
@@ -291,12 +292,10 @@ function renderStockList(data) {
             let stockId = stocks[i].id
             // let stockImg = stocks[i].imageFile
             let stockImg = "../../uploads/images/dany.jpg"
-            let stockImg1 = "../../uploads/images/{name}(name = ${user.getProfilePicture()})"
+            let stockImg1 = "../../uploads/images/{name}(name = ${stock.getStockPicture()})"
             let stockImg2 = stocks[i].image
-            console.log(`Stock img: ${stockImg}`)
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
             let publish = stocks[i].published
-            console.log(`Published: ${publish}`)
             if (publish === true) {
                 publish = "✔"
             } else {
