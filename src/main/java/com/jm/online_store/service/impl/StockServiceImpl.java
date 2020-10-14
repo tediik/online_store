@@ -153,7 +153,7 @@ public class StockServiceImpl implements StockService {
                 //Set stock image
                 stock.setStockImg(uniqueFilename);
                 stockRepository.save(stock);
-                log.debug("File saved successfully{}", uniqueFilename);
+                log.debug("File saved successfully: {}", uniqueFilename);
             } catch (IOException e) {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }

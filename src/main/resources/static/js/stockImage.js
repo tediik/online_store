@@ -2,7 +2,7 @@ $(document).ready(function () {
     let headers = new Headers()
     headers.append('Content-type', 'application/json; charset=UTF-8')
     $(function () {
-        $('#stockImgBtn').on('click', function () {
+        $('#editSave').on('click', function () {
             let uploadId = $('#stockId').val();
             console.log('uploadId:' + uploadId);
             let file_data = $('#stockImg')[0].files[0];
@@ -34,7 +34,7 @@ $(document).ready(function () {
     $(function () {
         $('#deleteStockImgBtn').on('click', function () {
             console.log("deleteStockImgBtn pressed");
-            var $deleteId = $('#stockId').val();
+            let deleteId = $('#stockId').val();
             console.log('Stock to delete Id = ', deleteId);
             $.ajax(
                 {

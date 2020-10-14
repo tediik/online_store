@@ -93,7 +93,8 @@ public class StockRestController {
         Stock stock = stockService.findStockById(stockId);
         String pathToUploadFile = "../../uploads/images/" + stock.getStockImg();
         log.debug("Stok.Путь: {}", pathToUploadFile);
-        return ResponseEntity.ok("../../uploads/images/dany.jpg");
+//        return ResponseEntity.ok("../../uploads/images/dany.jpg");
+        return ResponseEntity.ok(savedFIleName);
     }
 
     @DeleteMapping("/rest/deleteStockImage/{id}")
