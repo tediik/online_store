@@ -383,7 +383,7 @@ function renderCategoriesModal(categories) {
         let checkbox = `
             <form class="checkbox">
             <label class="checkText" for="check${categories[i].id}">${categories[i].category}</label>
-            <input id="check${categories[i].id}" type="checkbox" name="check" onclick="toggle(this.form.check);">
+            <input id="check${categories[i].id}" type="checkbox" onclick="toggle(this.form.check);">
             </form>
                         `;
         checkList.append(checkbox)
