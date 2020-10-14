@@ -43,9 +43,8 @@ public interface StockRepository extends JpaRepository<Stock, Long>, JpaSpecific
 
     /**
      * Published stocks
-     * @return list of future stocks
+     * @return list of published stocks
      */
     @Query("SELECT s FROM  Stock s WHERE s.published=true ")
     List<Stock> findPublishedStocks();
-
 }

@@ -148,10 +148,10 @@ function fillSomeProducts(data) {
                     </div>
                 </div>
             </div>`;
-            if ((key + 1) % 5 == 0) {
+            if ((key + 1) % 5 === 0) {
                 $(prodsView).append(`<div class="row">` + item);
                 item = ``;
-            } else if ((key + 1) == data.length) {
+            } else if ((key + 1) === data.length) {
                 $(prodsView).append(`<div class="row">` + item);
             }
             $(function () {

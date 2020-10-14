@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -114,6 +115,7 @@ public class StockServiceImpl implements StockService {
         if (publishedStocks.isEmpty()) {
             throw new StockNotFoundException();
         }
+        log.debug("Stock List : {}", Arrays.toString(publishedStocks.toArray()));
         return publishedStocks;
     }
 

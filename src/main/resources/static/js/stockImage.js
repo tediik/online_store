@@ -18,12 +18,12 @@ $(document).ready(function () {
                     processData: false,
                     success: function (data) {
                         console.log("мы в success");
-                        console.log("data = " + data);
+                        //console.log("data = " + data);
                         // $('#stockPicture').attr('src', data);
                     },
                     error: function (data) {
                         console.log("мы в error");
-                        console.log("data = " + data);
+                        //console.log("data = " + data);
                     }
                 });
         });
