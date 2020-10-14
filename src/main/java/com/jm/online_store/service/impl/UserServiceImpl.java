@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-
     private final AddressService addressService;
 
     @Value("${spring.server.url}")

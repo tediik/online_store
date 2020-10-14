@@ -6,7 +6,6 @@ $(document).ready(function () {
 
 function changePass() {
     var formData = $('#formChangePass').serialize();
-    console.log(formData);
     $.ajax({
         url: '/customer/changepass',
         type: 'POST',
@@ -16,7 +15,6 @@ function changePass() {
             close();
         },
         error: function (res) {
-            console.log(res);
             if (res.responseText === "error_old_pass") {
                 toastr.error("Текущий пароль не совпадает. Введите заново пароль.", {timeOut: 5000});
                 $('#old_password').val('').focus();
@@ -34,6 +32,18 @@ function changePass() {
     return false;
 }
 
+type = "text/javascript" >
+    $(document).ready(function () {
+
+        if (location.hash == '#profile') {
+            $('#profile-tab').click();
+        }
+        if (location.hash == '#favourites') {
+            $('#favouritesGoods-tab').click();
+        }
+
+
+    });
 
 function changeMail() {
 
@@ -58,8 +68,6 @@ function changeMail() {
                     $(".messages-after-submit").text('Ошибка: Не верно указана электронная почта');
                     toastr.success("Ошибка: Не верно указана электронная почта", {timeOut: 5000});
                 }
-            } else {
-                console.log(res.status);
             }
         }
     });
@@ -81,6 +89,5 @@ function checkPassword() {
     regularExpression = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}");
     newPassword = document.getElementById("new_password").value;
     if (regularExpression.test(newPassword)) {
-        //   $("#submitNewPassword").attr('disabled', false);
     }
 }

@@ -41,9 +41,8 @@ public class CustomerController {
      * @return
      */
     @GetMapping
-    public String getUserProfile(Model model, Authentication auth) {
-        User principal = (User) auth.getPrincipal();
-        User user = userService.findById(principal.getId()).get();
+    public String getUserProfile(Model model) {
+        User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
         return "customerPage";
     }
@@ -70,17 +69,16 @@ public class CustomerController {
     /**
      * метод обработки изменения пароля User.
      *
-     * @param auth        модель данных, построенных на основе зарегистрированного User
      * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
      */
     @PostMapping("/changepass")
-    public ResponseEntity<String> changePassword(Authentication auth, Model model,
+    public ResponseEntity<String> changePassword(Model model,
                                                  @RequestParam String oldPassword,
                                                  @RequestParam String newPassword) {
-        User user = (User) auth.getPrincipal();
+        User user = userService.getCurrentLoggedInUser();
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("message", "Неверный старый пароль!");

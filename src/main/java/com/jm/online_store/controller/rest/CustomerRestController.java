@@ -33,9 +33,8 @@ public class CustomerRestController {
     private UserService userService;
 
     @PostMapping("/changemail")
-    public ResponseEntity<String> changechangemailReq(Authentication auth, Model model,
-                                                      @RequestParam String newMail) {
-        User user = (User) auth.getPrincipal();
+    public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
+        User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
             log.debug("Вы ввели такой же Email.");
             return new ResponseEntity("duplicatedEmailError", HttpStatus.BAD_REQUEST);
@@ -51,7 +50,7 @@ public class CustomerRestController {
     /**
      * Метод удаления профиля покупателя
      *
-     * @param id индентификатор покупателя
+     * @param id идентификатор покупателя
      * @return ResponseEntity.ok()
      */
     @DeleteMapping("/deleteProfile/{id}")

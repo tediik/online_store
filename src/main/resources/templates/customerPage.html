@@ -39,8 +39,8 @@
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
 
             <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                <a class="btn btn-outline-primary mt-2 active" id="customerMain-tab" data-toggle="pill"
-                                   href="#customerMain" role="tab" aria-controls="customerMain" aria-selected="true">Главная</a>
+                <a class="btn btn-outline-primary mt-2 active" id="customerMain-tab" data-toggle="pill"
+                   href="#customerMain" role="tab" aria-controls="customerMain" aria-selected="true">Главная</a>
                 <a class="btn btn-outline-primary mt-2 " id="profile-tab" data-toggle="pill" href="#profile" role="tab"
                    aria-controls="profile" aria-selected="false" onclick="location.href='#profile'">Профиль</a>
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
@@ -56,19 +56,6 @@
                    aria-controls="orders" aria-selected="false" onclick="location.href='#feedback'">Обратная связь</a>
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
             </div>
-            <script type="text/javascript">
-                $(document).ready(function () {
-
-                    if (location.hash == '#profile') {
-                        $('#profile-tab').click();
-                    }
-                    if (location.hash == '#favourites') {
-                        $('#favouritesGoods-tab').click();
-                    }
-
-
-                });
-            </script>
         </div>
         <div class="col-md-10" style="background: #edeef0">
             <div class="tab-content" id="v-pills-tabContent">
