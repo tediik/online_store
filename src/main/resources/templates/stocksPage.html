@@ -25,8 +25,8 @@
         <div class="col-sm-8 text-left">
             <h1 class="text-center">Акции</h1>
             <div th:each="stock : ${stocks}" class="alert alert-info mt-2">
-                <img th:src="@{/uploads/images/{name}(name = ${stock.stockImg})}" alt="Здесь могла бы быть ваша картинка"/>
-
+                <img th:src="@{../../uploads/images/{name}(name = ${stock.stockImg})}" alt="Здесь могла бы быть картинка акции"/>
+                <img th:src="@{../../uploads/images/dany.jpg}" alt="Здесь могла бы быть картинка акции"/>
                 <h3 th:img="${stock.stockImg}"></h3>
                 <p th:text="${stock.stockTitle}"></p>
                 <p th:text="${stock.stockText}"></p>

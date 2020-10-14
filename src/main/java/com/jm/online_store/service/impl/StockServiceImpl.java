@@ -76,9 +76,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> findCurrentStocks() {
-        List<Stock> currentStocks = stockRepository
-                .findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrEndDateEquals(LocalDate.now(),
-                                                                                        LocalDate.now(), null);
+        List<Stock> currentStocks = stockRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrEndDateEquals(LocalDate.now(), LocalDate.now(), null);
         if (currentStocks.isEmpty()) {
             throw new StockNotFoundException();
         }
@@ -115,7 +113,7 @@ public class StockServiceImpl implements StockService {
         if (publishedStocks.isEmpty()) {
             throw new StockNotFoundException();
         }
-        log.debug("Stock List : {}", Arrays.toString(publishedStocks.toArray()));
+        log.debug("Stock List to main page: {}", Arrays.toString(publishedStocks.toArray()));
         return publishedStocks;
     }
 

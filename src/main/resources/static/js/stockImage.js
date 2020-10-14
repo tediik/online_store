@@ -4,9 +4,11 @@ $(document).ready(function () {
     $(function () {
         $('#stockImgBtn').on('click', function () {
             let uploadId = $('#stockId').val();
+            console.log('uploadId:' + uploadId);
             let file_data = $('#stockImg')[0].files[0];
+            console.log('file_data:' + file_data);
             let form_data = new FormData();
-            form_data.append("fileImgInput", file_data);
+            form_data.append("stockImg", file_data);
             $.ajax(
                 {
                     type: 'POST',
@@ -14,16 +16,16 @@ $(document).ready(function () {
                     dataType: 'script',
                     data: form_data,
                     cache: false,
-                    headers: headers,
+                    contentType: false,
                     processData: false,
                     success: function (data) {
                         console.log("мы в success");
-                        //console.log("data = " + data);
+                        console.log("data = " + data);
                         // $('#stockPicture').attr('src', data);
                     },
                     error: function (data) {
                         console.log("мы в error");
-                        //console.log("data = " + data);
+                        console.log("data = " + data);
                     }
                 });
         });
@@ -61,7 +63,8 @@ $(document).ready(function () {
             reader.readAsDataURL(input.files[0]); // convert to base64 string
         }
     }
-    $("#fileImgInput").change(function() {
+    $("#stockImg" +
+        "").change(function() {
         readURL(this);
     });
 });

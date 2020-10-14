@@ -162,10 +162,8 @@ function handleDeleteButtonClick(event) {
 function handleSaveChangesButton() {
     let startDate = $('#startDate').val()
     let published = $('#published').val()
-    console.log("акция опубликована:" + published)
     startDate = moment(startDate).format("YYYY-MM-DD")
     let endDate = ""
-
     if ($('#endDate').val() !== null || $('#endDate').val() !== "") {
         endDate = $('#endDate').val()
         endDate = moment(endDate).format("YYYY-MM-DD")
@@ -176,13 +174,13 @@ function handleSaveChangesButton() {
 
     const stock = {
         id: $('#stockId').val(),
+        stockImg: $('#stockImg').val(),
         stockTitle: $('#stockTitle').val(),
         stockText: $('#stockText').summernote('code'),
         startDate: startDate,
         endDate: endDate,
-        stockImg: $('#stockImg').val(),
-        published: published,
-        stock: $('#stockTimeZone').val()
+        stock: $('#stockTimeZone').val(),
+        published: published
     }
     let method = (stock.id !== '' ? 'PUT' : 'POST')
 
@@ -292,10 +290,13 @@ function renderStockList(data) {
             let stockId = stocks[i].id
             // let stockImg = stocks[i].imageFile
             let stockImg = "../../uploads/images/dany.jpg"
-            let stockImg1 = "../../uploads/images/{name}(name = ${stock.getStockPicture()})"
-            let stockImg2 = stocks[i].image
+            //let stockImg1 = "../../uploads/images/{name}(name = ${stock.getStockPicture()})"
+            //let stockImg2 = stocks[i].image
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
             let publish = stocks[i].published
+            //console.log(`stockImg1:  ${stockImg1}`)
+            //console.log(`stockImg2:  ${stockImg2}`)
+            // console.log(`stockImg3:  ${stockImg3}`)
             if (publish === true) {
                 publish = "✔"
             } else {
@@ -312,7 +313,8 @@ function renderStockList(data) {
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-4\">
 <!--                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">-->
-                                 <img class="card-img" src=${stockImg} width=\"250\" alt="Фото акции">
+                                 <img class="card-img" src=${stockImg} width=\"250\" alt="Фото stockImg">
+<!--                                <img class="card-img" src=${stocks[i].stockImg} width=\"250\" alt="Фото stocks[i].stockImg">-->
                                 <img id="blahs" src="#" alt="stock image" class="rounded-circle img-responsive mt-2 float-right" height="82" width="82"/>
                                  <img id="stockPicture" src="#" alt="stock picture" class="rounded-circle img-responsive mt-2 float-right" height="82" width="82"/>
                                 

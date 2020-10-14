@@ -148,10 +148,10 @@ function fillSomeProducts(data) {
                     </div>
                 </div>
             </div>`;
-            if ((key + 1) % 5 === 0) {
+            if ((key + 1) % 5 == 0) {
                 $(prodsView).append(`<div class="row">` + item);
                 item = ``;
-            } else if ((key + 1) === data.length) {
+            } else if ((key + 1) == data.length) {
                 $(prodsView).append(`<div class="row">` + item);
             }
             $(function () {
@@ -193,15 +193,16 @@ function fillPublishedStocks(data) {
         let item = ``;
         for (let key = 0; key < data.length; key++) {
             item += `
-            <div class="col-2">
+            <div class="col-4">
                 <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
                     <div class="col-auto d-none d-lg-block productImg">
-                        <img class="bd-placeholder-img" src="/uploads/images/products/0.jpg">
+                        <img class="bd-placeholder-img" src="/manager/api/stock/${data[key].stockImg}">
+<!--                        <img class="bd-placeholder-img" src="/uploads/images/default.jpg">-->
                     </div>
-                    <div id="rate${data[key].id}"></div>
+                    <div id="${data[key].id}"></div>
                     <div class="col p-4 d-flex flex-column position-static">
-                        <p class="card-text mb-auto productName">${data[key].product}</p>
-                        <a class="btn btn-sm btn-outline-light producthref" href="/products/${data[key].id}" role="button">Подробнее &raquo;</a>
+                        <p class="card-text mb-auto productName">${data[key].stockTitle}</p>
+                        <a class="btn btn-sm btn-outline-light stockhref" href="/manager/api/stock/${data[key].id}" role="button">Подробнее &raquo;</a>
                     </div>
                 </div>
             </div>`;
