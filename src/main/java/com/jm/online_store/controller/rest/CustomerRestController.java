@@ -30,6 +30,7 @@ public class CustomerRestController {
     @PostMapping("/changemail")
     public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
         User user = userService.getCurrentLoggedInUser();
+
         if (userService.isExist(newMail)) {
             return ResponseEntity.badRequest().body("Ой! Вы ввели такой же Email.");
         } else {

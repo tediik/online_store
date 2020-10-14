@@ -26,7 +26,9 @@
 </head>
 <body>
 <header th:insert="/blocks/otherPagesHeader :: header"></header>
+<!--Диалог добавление нового отзыва-->
 
+<!-- ----------------------------------------- -->
 <main role="main" class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb" id="categoriesBreadcrumb">
@@ -143,13 +145,35 @@
         <div class="col">
             <nav class="nav nav-masthead justify-content-center" role="tablist">
                 <a class="nav-link active mx-5" data-toggle="tab" href="#description" role="tab"
-                   aria-controls="description" aria-selected="true"><h4>Описание</h4></a>
+                   aria-controls="description" aria-selected="true"><span class="h4">Описание</span></a>
                 <a class="nav-link mx-5" data-toggle="tab" href="#specifications" role="tab"
-                   aria-controls="specifications" aria-selected="false"><h4>Характеристики</h4></a>
+                   aria-controls="specifications" aria-selected="false"><span  class="h4">Характеристики</span></a>
                 <a class="nav-link mx-5" data-toggle="tab" href="#comments" role="tab" aria-controls="comments"
-                   aria-selected="false"><h4>Комментарии</h4></a>
+                   aria-selected="false"><span  class="h4">Комментарии</span></a>
+                <a class="nav-link mx-5" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews"
+                   aria-selected="false"><span  class="h4">Отзывы о товаре</span></a>
             </nav>
             <div class="tab-content">
+                <div class="tab-pane fade show active mx-5" id="reviews" role="tabpanel"
+                     aria-labelledby="reviews-tab">
+
+                    <hr class="mb-4">
+                    <div class="container">
+                        <p class="text-justify font-weight-normal" id="text-reviews" style="font-size: 1.2rem;">
+<!--                            <input type="button" value="Написать отзыв" onclick="show_dialog_reviews()">-->
+<!--                            &lt;!&ndash; from js &ndash;&gt;-->
+<!--                            <script type="text/javascript">-->
+<!--                                function show_dialog_reviews()-->
+<!--                                {-->
+<!--var name_product = $('#productName h2').text();-->
+
+<!--                                   location.href='/products/reviews_product?name_product='+encodeURI(name_product);-->
+<!--                                }-->
+<!--                            </script>-->
+                            <a href="/products/reviews_product">Написать отзыв</a>
+                        </p>
+                    </div>
+                </div>
                 <div class="tab-pane fade show active mx-5" id="description" role="tabpanel"
                      aria-labelledby="description-tab">
                     <hr class="mb-4">
