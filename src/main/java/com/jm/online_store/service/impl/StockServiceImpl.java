@@ -138,23 +138,28 @@ public class StockServiceImpl implements StockService {
 
     @Override
     @Transactional
-    public String updateStockImage(Long userId, MultipartFile file) {
-        Stock stock = stockRepository.findById(userId).orElseThrow(StockNotFoundException::new);
+    public String updateStockImage(Long stockId, MultipartFile file) {
+        Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
         String uniqueFilename = StringUtils.cleanPath(UUID.randomUUID() + "." + file.getOriginalFilename());
         log.debug("File name: {}", uniqueFilename);
+        log.debug("File is empry?: {}", file.isEmpty());
         if (!file.isEmpty()) {
             Path fileNameAndPath = Paths.get(uploadDirectory, uniqueFilename);
+            log.debug("StockServiceImpl. fileNameAndPath: {}", fileNameAndPath);
             try {
                 byte[] bytes = file.getBytes();
+                log.debug("File bytes[].length: {}", bytes.length);
                 Files.write(fileNameAndPath, bytes);
                 //Set stock image
                 stock.setStockImg(uniqueFilename);
                 stockRepository.save(stock);
+                log.debug("File saved successfully{}", uniqueFilename);
             } catch (IOException e) {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }
+        } else {
+            log.debug("Failed to store file - file is not present {}", uniqueFilename);
         }
-        log.debug("Failed to store file - file is not present {}", uniqueFilename);
         return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
     }
 

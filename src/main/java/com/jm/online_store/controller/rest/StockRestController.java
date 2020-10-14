@@ -86,9 +86,10 @@ public class StockRestController {
 
     @PostMapping("/rest/uploadStockImage/{id}")
     public ResponseEntity handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("stockImg") MultipartFile stockImg) throws IOException {
-        stockService.updateStockImage(stockId, stockImg);
+        String savedFIleName = stockService.updateStockImage(stockId, stockImg);
         log.debug("REST.Update Image. Stock ID: {}", stockId);
         log.debug("REST.Update Image. stockImg: {}", stockImg);
+        log.debug("REST.Update Image. stockImg path: {}", savedFIleName);
         Stock stock = stockService.findStockById(stockId);
         String pathToUploadFile = "../../uploads/images/" + stock.getStockImg();
         log.debug("Stok.Путь: {}", pathToUploadFile);
