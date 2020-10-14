@@ -92,7 +92,7 @@ public class CustomerController {
                     return new ResponseEntity("error_valid", HttpStatus.BAD_REQUEST);
                 } else {
                     if (userService.changePassword(user.getId(), oldPassword, newPassword)) {
-                        log.debug("Пароль изменен");
+                        log.debug("Пароль изменен!");
                     }
                     user.setPassword(passwordEncoder.encode(newPassword));
                     userService.updateUser(user);
