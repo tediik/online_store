@@ -180,7 +180,6 @@ function handleSaveChangesButton() {
         stock: $('#stockTimeZone').val(),
     }
     let method = (stock.id !== '' ? 'PUT' : 'POST')
-
     fetchStock(stock, method)
 
     function fetchStock(stock, method) {

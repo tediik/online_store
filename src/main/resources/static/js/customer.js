@@ -1,7 +1,3 @@
-$(document).ready(function () {
-    getFavouritesGroupInSelect();
-});
-
 async function fillFavouritesGoods() {
     let response = await fetch("/customer/favouritesGoods");
     let content = await response.json();
@@ -26,6 +22,7 @@ async function fillFavouritesGoods() {
 `;
         $(favoriteGoodsJson).append(product);
     }
+    getFavouritesGroupInSelect();
 }
 
 async function deleteProductFromFavouritGoods(id) {
@@ -67,8 +64,9 @@ $(document).on("click", "#delete-group-buton", function () {
     // $("#town option:selected").text();  получить текст выбранной категории
 
 });
-
-//Привязываем событие к CHECKBOX чтобы отметить избранные товары для отслеживания id
+/**
+ * Привязываем событие к CHECKBOX чтобы отметить избранные товары для отслеживания id
+ */
 $(document).on("click", ".checkProductInGroup", function () {
     if ($(this).is(':checked')) {
         $(this).attr('class', 'checkProductInGroup selected');
@@ -76,8 +74,9 @@ $(document).on("click", ".checkProductInGroup", function () {
         $(this).attr('class', 'checkProductInGroup');
     }
 });
-
-//Привязываем событие к кнопке перемещения товара в избранную группу товаров
+/**
+ * Привязываем событие к кнопке перемещения товара в избранную группу товаров
+ */
 $(document).on("click", "#move-product-buton", function () {
     let idGroup = $("#favouritesGroup option:selected").attr("id");
     let idProduct = $(".checkProductInGroup:checked").map(function() {return this.name;}).get();
@@ -86,7 +85,12 @@ $(document).on("click", "#move-product-buton", function () {
         addProductInFavouritesGroupInBD(idProduct, idGroup);
     }
 });
-//Передаем в БД товары и список Избранного для добавления
+/**
+ * Передаем в БД товары и список Избранного для добавления
+ * @param idProduct
+ * @param idGroup
+ * @returns {Promise<void>}
+ */
 async function addProductInFavouritesGroupInBD(idProduct, idGroup) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8'
@@ -102,7 +106,10 @@ async function addProductInFavouritesGroupInBD(idProduct, idGroup) {
         console.log(response.text());
     })
 };
-//Получаем список групп Избранного из БД и формируем "select"
+/**
+ * Получаем список групп Избранного из БД и формируем "select"
+ * @returns {Promise<void>}
+ */
 async function getFavouritesGroupInSelect() {
     fetch(`/customer/favouritesGroup`).then(response => response.json()).then(fgroup => {
         for (let i = 0; i < fgroup.length; i++) {
@@ -110,34 +117,45 @@ async function getFavouritesGroupInSelect() {
         }
     })
 };
-
-//Передаем в БД новое имя списка Избранного
+/**
+ * Передаем в БД новое имя списка Избранного
+ * @param nameGroup
+ * @returns {Promise<void>}
+ */
 async function addFavouritesGroupInBD(nameGroup) {
+    let thisId = 0;
     const headers = {
         'Content-type': 'application/json; charset=UTF-8'
     };
     let favouritesGroup = {
         name: nameGroup
     };
-    fetch(`/customer/favouritesGroup`, {
+    await fetch(`/customer/favouritesGroup`, {
         method: 'POST',
         body: JSON.stringify(favouritesGroup),
         headers: headers
     }).then(response => {
-        console.log(response.json());
-        window.location.reload(true);
-        //$("#favouritesGroup :last").attr("id", response.json());
-    })
+        return response.json();
+    }).then(idGroup => {
+        thisId = idGroup;
+    });
+    $("select option[value=" + toTranslit(nameGroup) + "]").attr("id", thisId);
 };
-
-//Удаляем из БД имя скписка Избранного Кнопкой с id = delete-group-buton
+/**
+ * Удаляем из БД имя скписка Избранного Кнопкой с id = delete-group-buton
+ * @param id
+ * @returns {Promise<void>}
+ */
 async function deleteFavouritesGroupInBD(id) {
     fetch(`/customer/favouritesGroup/` + id, {
         method: 'DELETE'
     })
 };
-
-// Транслитерация текста text
+/**
+ * Транслитерация текста text
+ * @param text
+ * @returns {Node|void|string|*}
+ */
 function toTranslit(text) {
     return text.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
         function (all, ch, space, words, i) {
