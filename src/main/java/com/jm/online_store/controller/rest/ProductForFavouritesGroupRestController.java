@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.FavouritesGroup;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FavouritesGroupProductService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
 public class ProductForFavouritesGroupRestController {
     private final UserService userService;
     private final FavouritesGroupProductService favouritesGroupProductService;
+    private final FavouritesGroupService favouritesGroupService;
 
     @PostMapping(value = "/customer/addProductInFavouritesGroup")
     public ResponseEntity addProductInFavouritesGroup(@RequestBody ArrayList<Long> idPidG) {
@@ -33,8 +36,15 @@ public class ProductForFavouritesGroupRestController {
             idProduct = idPidG.get(i);
             favouritesGroupProductService.addProductToFavouritesGroup(idProduct, idFavouritesGroup, user);
         }
-        System.out.println("Мы в контроллере - ProductForFavouritesGroupRestController, в методе addProductInFavouritesGroup");
-        return ResponseEntity.ok("Мы в addProductInFavouritesGroup метод POST");
+        return ResponseEntity.ok("addProductInFavouritesGroupOK");
+    }
+
+    @GetMapping(value = "/customer/getProductFromFavouritesGroup/{id}")
+    public ResponseEntity<Set<Product>> getProductFromFavouritesGroup (@PathVariable Long id) {
+        User user = userService.getCurrentLoggedInUser();
+        Set<FavouritesGroup> favouritesGroupSet = user.getFavouritesGroups();
+        FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
+        return ResponseEntity.ok(favouritesGroup.getProducts());
     }
 }
 

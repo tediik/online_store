@@ -45,6 +45,12 @@ async function addProductToBasket(id) {
 $(document).on("click", "#showBasket", function () {
     $('#v-pills-tab a[href="#basketGoods"]').tab('show')
 });
+$(document).on("click", "#inic-product-buton", function () {
+    inicStartGroup();
+});
+$(document).on("click", "#new-table-product-buton", function () {
+    fillNewTableProductsGroup();
+});
 
 $(document).on("click", "#add-group-buton", function () {
     let nameGroup = prompt("Введите название группы \"Избранных товаров\" ");
@@ -60,10 +66,8 @@ $(document).on("click", "#delete-group-buton", function () {
         deleteFavouritesGroupInBD(idGroup);
         $("#favouritesGroup :selected").remove()
     }
-    // $("#town :selected").remove() удалить выбранный елемент
-    // $("#town option:selected").text();  получить текст выбранной категории
-
 });
+
 /**
  * Привязываем событие к CHECKBOX чтобы отметить избранные товары для отслеживания id
  */
@@ -173,3 +177,41 @@ function toTranslit(text) {
             return t[index];
         });
 };
+
+function inicStartGroup(){
+    let idGroup = $("#favouritesGroup :first").attr("id");
+    let idProductInAll = $(".checkProductInGroup").map(function() {return this.name;}).get();
+    if (idProductInAll != '') {
+        console.log("Товар id=" + idProductInAll + " пеермещен в группу с id=" + idGroup);
+        addProductInFavouritesGroupInBD(idProductInAll, idGroup);
+    }
+};
+function fillNewTableProductsGroup(){
+    let idGroup = $("#favouritesGroup option:selected").attr("id");
+    fillFavouritesGroupProducts(idGroup);
+};
+async function fillFavouritesGroupProducts(idGroup) {
+    let response = await fetch("/customer/getProductFromFavouritesGroup/" + idGroup);
+    let content = await response.json();
+    let favoriteGoodsJson = document.getElementById('favouritesGoodsList');
+    let key
+    $(favoriteGoodsJson).empty();
+    for (key in content) {
+        let product = `
+        <tr class=${content[key].id} id=${content[key].id}>
+    <td>${content[key].id}</td>
+    <td><input type="checkbox" class="checkProductInGroup" name="${content[key].id}"/></td> 
+    <td>${content[key].product}</td>
+    <td>${content[key].price}</td>
+    <td>${content[key].amount}</td>
+    <td>
+       <button class="btn btn-danger" onclick="deleteProductFromFavouritGoods(${content[key].id})">Удалить</button>
+    </td>
+    <td>
+       <button class="btn btn-primary" onclick="addProductToBasket(${content[key].id})">Добавить в корзину</button>
+    </td>
+    <tr>
+`;
+        $(favoriteGoodsJson).append(product);
+    }
+}
