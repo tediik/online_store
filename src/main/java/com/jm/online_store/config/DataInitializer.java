@@ -2,6 +2,7 @@ package com.jm.online_store.config;
 
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Description;
 import com.jm.online_store.model.News;
@@ -18,6 +19,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -74,6 +76,7 @@ public class DataInitializer {
     private final TaskSettingsService taskSettingsService;
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
+    private final CommentService commentService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -94,6 +97,7 @@ public class DataInitializer {
         taskSettingsInit();
         commonSettingsInit();
         feedbackTopicsInit();
+        commentsInit();
     }
 
     /**
@@ -1120,5 +1124,41 @@ public class DataInitializer {
         topicService.addTopic(topic8);
         topicService.addTopic(topic9);
         topicService.addTopic(topic10);
+    }
+
+    /**
+     * Init method for comments
+     */
+    public void commentsInit() {
+
+        Comment comment1 = new Comment();
+        Comment comment2 = new Comment();
+        Comment comment3 = new Comment();
+
+        comment1.setId(1L);
+        comment2.setId(2L);
+        comment3.setId(3L);
+        comment1.setCommentDate(LocalDateTime.now());
+        comment2.setCommentDate(LocalDateTime.now());
+        comment3.setCommentDate(LocalDateTime.now());
+        comment1.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        comment2.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        comment3.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        comment1.setProductId(3L);
+        comment2.setProductId(3L);
+        comment3.setProductId(3L);
+        comment1.setContent("Awesome comment. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium " +
+                "doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto " +
+                "beatae vitae dicta sunt explicabo.");
+        comment2.setContent("Just another one comment. At vero eos et accusamus et iusto odio dignissimos ducimus qui " +
+                "blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint " +
+                "occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est " +
+                "laborum et dolorum fuga.");
+        comment3.setContent("Awful comment. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus " +
+                "saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.");
+
+        commentService.addCommentInit(comment1);
+        commentService.addCommentInit(comment2);
+        commentService.addCommentInit(comment3);
     }
 }
