@@ -9,28 +9,29 @@ $(document).ready(function () {
             console.log("file_data: " + file_data);
             let form_data = new FormData();
             form_data.append("stockImg", file_data);
-            $.ajax(
-                {
-                    type: 'POST',
-                    url: '/rest/uploadStockImage/' + uploadId,
-                    dataType: 'script',
-                    data: form_data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        console.log("мы в success");
-                        console.log("data = " + data);
-                        $('#stockPicture').attr('src', data);
-                        $('#blahs').attr('src', data);
-                    },
-                    error: function (data) {
-                        console.log("мы в error");
-                        console.log("data = " + data);
-                        $('#stockPicture').attr('src', data);
-                        $('#blahs').attr('src', data);
-                    }
-                });
+            changeSrtockImage(uploadId, form_data);
+            // $.ajax(
+            //     {
+            //         type: 'POST',
+            //         url: '/rest/uploadStockImage/' + uploadId,
+            //         dataType: 'script',
+            //         data: form_data,
+            //         cache: false,
+            //         contentType: false,
+            //         processData: false,
+            //         success: function (data) {
+            //             console.log("мы в success");
+            //             console.log("data = " + data);
+            //             $('#stockPicture').attr('src', data);
+            //             $('#blahs').attr('src', data);
+            //         },
+            //         error: function (data) {
+            //             console.log("мы в error");
+            //             console.log("data = " + data);
+            //             $('#stockPicture').attr('src', data);
+            //             $('#blahs').attr('src', data);
+            //         }
+            //     });
         });
     });
 
@@ -72,3 +73,25 @@ $(document).ready(function () {
         readURL(this);
     });
 });
+
+async function changeSrtockImage(upload_Id, form_data) {
+    // const headers = {
+    //     'Content-type': 'application/json; charset=UTF-8'
+    // };
+    let uploadId = upload_Id
+    let formdata = form_data;
+    console.log('upload_Id: ' + upload_Id)
+    console.log('formdata: ' + formdata)
+
+    await fetch(`/rest/uploadStockImage/` + uploadId, {
+        method: 'POST',
+        body: formdata,
+        // headers: headers
+    }).then(response => {
+        console.log(response);
+        return response;
+    }).then(idGroup => {
+        console.log('idGroup')
+    });
+
+};
