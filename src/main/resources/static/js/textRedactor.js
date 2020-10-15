@@ -28,6 +28,7 @@ $(document).ready(function() {
         focus:true,
         placeholder:'Введите описание проблемы',
         toolbar:[
+            //[groupname,[list buttons]]
             ['insert',['picture','link','video','table']],
             ['style',['bold','italic','underline']],
             ['font', ['strikethrough', 'superscript', 'subscript']],

@@ -9,6 +9,7 @@ import lombok.NonNull;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -42,6 +43,7 @@ public class RepairOrder {
     private boolean guarantee;
 
     @NonNull
+    @Column(name = "full_text_problem")
     @Type(type = "text")
     private String fullTextProblem;
 

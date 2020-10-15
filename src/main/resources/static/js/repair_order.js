@@ -3,11 +3,11 @@ $(document).ready(function () {
 
     /*Слушатель для добавления заказа на ремонт*/
     document.getElementById('buttonAddRepairOrder').addEventListener('click', addRepairOrder)
-    /*Слушатель на навбар статусов заказа*/
+    /*Слушатель контролирующий нажатие на вкладки статусов заказа*/
     document.getElementById('navbarRepairOrders').addEventListener('click', checkUpperNavButtonRepairOrder)
-    /*Слушатель для проверки редактирование или удаление были нажаты на заказе*/
+    /*Слушатель проверяющий редактирование или удаление было нажато на заказе*/
     document.getElementById('repairOrdersTabContent').addEventListener('click', checkButtonEditOrDelete)
-    /*Слушатель на вызов модального окна для редактирования*/
+    /*Слушатель на вызов модального окна для редактирования заказа*/
     document.getElementById('editSave').addEventListener('click', updateRepairOrder)
 });
 
@@ -22,30 +22,38 @@ function addRepairOrder() {
         guarantee: document.getElementById('guaranteeCheckbox').checked,
         fullTextProblem: document.getElementById('fullTextProblem').value
     }
-    fetch('http://localhost:9999/service/addRepairOrder', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-type': 'application/json; charset=UTF-8'
-        },
-        body: JSON.stringify(repairOrder)
-    }).then(function (response) {
-        if (response.status === 200) {
-
-        } else {
-
-        }
-    })
+    if (checkFieldsAddRepairOrder()) {
+        fetch('http://localhost:9999/service/addRepairOrder', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json; charset=UTF-8'
+            },
+            body: JSON.stringify(repairOrder)
+        }).then(function (response) {
+            if (response.status === 200) {
+                getAllRepairOrders()
+                toastr.success("Заявка успешно добавлена");
+                $('#fullTextProblem').summernote('code', '')
+                document.getElementById('fullNameClient').value = ''
+                document.getElementById('telephoneNumber').value = ''
+                document.getElementById('nameDevice').value = ''
+                document.getElementById('guaranteeCheckbox').checked = false
+            } else {
+                toastr.error("Заявка не была добавлена.");
+            }
+        })
+    }
 }
 
 /**
- * Функция проверяет какая Таба была нажата
+ * Функция проверяет какая вкладка была нажата
  * @param event событие click
  */
 function checkUpperNavButtonRepairOrder(event) {
     let tab = event.target.dataset.toggleId
     if (tab === 'allRepairOrders') {
-        getAllRepairOrders();
+        getAllRepairOrders()
     }
     if (tab === 'acceptedRepairOrders') {
         getAcceptedRepairOrders()
@@ -70,7 +78,6 @@ function checkUpperNavButtonRepairOrder(event) {
  */
 function checkButtonEditOrDelete(event) {
     let orderId = event.target.dataset.orderId
-    console.log(orderId)
     if (event.target.dataset.toggleId === 'edit') {
         openEditModalWindow(orderId)
     }
@@ -146,14 +153,50 @@ function getArchiveRepairOrders() {
 }
 
 /**
+ * Функция проверяет заполнены ли поля в модальном окне
+ * @returns {boolean}
+ */
+function checkFieldsModalRepairOrder() {
+    if (document.getElementById('fullNameClientUpdate').value === '') {
+        invalidModalField('Введите имя клиента!', document.getElementById('fullNameClientUpdate'))
+        return false
+    } else if (document.getElementById('telephoneNumberUpdate').value === '') {
+        invalidModalField('Введите номер телефона!', document.getElementById('telephoneNumberUpdate'))
+        return false
+    } else if (document.getElementById('nameDeviceUpdate').value === '') {
+        invalidModalField('Введите название устройства!', document.getElementById('nameDeviceUpdate'))
+        return false
+    }
+    return true
+}
+
+/**
+ * Функция проверяет заполнены ли поля в карточке добавления заявки на ремонт
+ * @returns {boolean}
+ */
+function checkFieldsAddRepairOrder() {
+    if (document.getElementById('fullNameClient').value === '') {
+        invalidAddRepairOrderField('Введите имя клиента!', document.getElementById('fullNameClient'))
+        return false
+    } else if (document.getElementById('telephoneNumber').value === '') {
+        invalidAddRepairOrderField('Введите номер телефона!', document.getElementById('telephoneNumber'))
+        return false
+    } else if (document.getElementById('nameDevice').value === '') {
+        invalidAddRepairOrderField('Введите название устройства!', document.getElementById('nameDevice'))
+        return false
+    }
+    return true
+}
+
+/**
  * Функция вызова и заполнения модального окна редактирования заказа на ремонт
+ *
  * @param repairOrderId - идентификатор Long id заказа на ремонт
  */
 function openEditModalWindow(repairOrderId) {
     fetch(`http://localhost:9999/service/${repairOrderId}`)
         .then(function (response) {
             if (response.status === 200) {
-                //renderSelect()
                 response.json().then(repairOrder => {
                     $('#idRepairOrderUpdate').val(repairOrder.id);
                     $('#fullNameClientUpdate').val(repairOrder.fullNameClient);
@@ -162,9 +205,7 @@ function openEditModalWindow(repairOrderId) {
                     $('#fullTextProblemUpdate').summernote('code', repairOrder.fullTextProblem);
                     $("#postingDateUpdate").val(moment(repairOrder.acceptanceDate).format("yyyy-MM-DD"));
                     $('#guaranteeCheckboxUpdate').prop('checked', repairOrder.guarantee);
-                    //$('#statusRepairOrderSelect').prop('selected', repairOrder.repairOrderType);
-                    document.getElementById('statusRepairOrderSelect').value = repairOrder.repairOrderType;
-                    console.log(repairOrder.repairOrderType);
+                    $('#statusRepairOrderSelect').val(repairOrder.repairOrderType);
                 })
             } else {
                 console.log('RepairOrder not found')
@@ -173,7 +214,7 @@ function openEditModalWindow(repairOrderId) {
 }
 
 /**
- * Функция обновления заказа на ремонт
+ * Функция редактирования заказа на ремонт
  */
 function updateRepairOrder() {
     let repairOrder = {
@@ -186,36 +227,31 @@ function updateRepairOrder() {
         fullTextProblem: document.getElementById('fullTextProblemUpdate').value,
         acceptanceDate: document.getElementById('postingDateUpdate').value,
     }
-    fetch('http://localhost:9999/service/updateRepairOrder', {
-        method: 'PUT',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-type': 'application/json; charset=UTF-8'
-        },
-        body: JSON.stringify(repairOrder)
-    }).then(function (response) {
-        if (response.status === 200) {
-            console.log("все ок")
-            $('#editRepairOrder').modal('hide')
-        } else {
-            console.log("не ок")
-        }
-    })
+    if (checkFieldsModalRepairOrder()) {
+        fetch('http://localhost:9999/service/updateRepairOrder', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-type': 'application/json; charset=UTF-8'
+            },
+            body: JSON.stringify(repairOrder)
+        }).then(function (response) {
+            if (response.status === 200) {
+                $('#editRepairOrder').modal('hide')
+                getAllRepairOrders()
+                getAcceptedRepairOrders()
+                getDiagnosticsRepairOrders()
+                getIn_WorkRepairOrders()
+                getCompleteRepairOrders()
+                getArchiveRepairOrders()
+                toastr.success("Обновление заявки прошло успешно.");
+            } else {
+                toastr.error("Обновить заявку не удалось.");
+            }
+        })
+    }
 }
 
-/*function renderSelect() {
-    fetch('http://localhost:9999/service/getAllRepairOrderType')
-        .then((res) => res.json())
-        .then((data) => {
-            let output = '';
-            data.forEach(function (repairOrderType) {
-                output += `
-                   <option id="select-${repairOrderType}">${repairOrderType}</option>
-          `;
-            });
-            document.getElementById('statusRepairOrderSelect').innerHTML = output;
-        })
-}*/
 /**
  * Функция удаления заказа
  *
@@ -229,8 +265,10 @@ function deleteRepairOrder(repairOrderId) {
         }).then(function (response) {
             if (response.status === 200) {
                 $('#div-' + repairOrderId).remove()
+                toastr.success("Заявка была удалена.");
             } else {
                 console.log('Orders not found')
+                toastr.error("Заявка не была удалена.");
             }
         })
     }
@@ -270,4 +308,44 @@ function renderRepairOrder(data, elementId) {
                     </div>`
     });
     document.getElementById(elementId).innerHTML = viewRepairOrder;
+}
+
+/**
+ * Функция выводящая предупреждение в случае если поля модального окна редактирования не заполнены
+ *
+ * @param text текст сообщения
+ * @param focusField поле для фокуса
+ */
+function invalidModalField(text, focusField) {
+    document.getElementById('modal-alert-repairOrder')
+        .innerHTML = `<div id="alert-repairOrder" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>${text}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>`
+    focusField.focus()
+    window.setTimeout(function () {
+        $('#alert-repairOrder').alert('close')
+    }, 3000)
+}
+
+/**
+ * Функция выводящая предупреждение когда поля при добавлении заказа не заполнены
+ *
+ * @param text текст сообщения
+ * @param focusField поле для фокуса
+ */
+function invalidAddRepairOrderField(text, focusField) {
+    document.getElementById('modal-alert-addRepairOrder')
+        .innerHTML = `<div id="alert-addRepairOrder" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>${text}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>`
+    focusField.focus()
+    window.setTimeout(function () {
+        $('#alert-addRepairOrder').alert('close')
+    }, 3000)
 }

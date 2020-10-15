@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -47,6 +48,20 @@ public class RepairOrderRestController {
     public ResponseEntity<String> addRepairOrder(@RequestBody RepairOrder repairOrder) {
         repairOrderService.save(repairOrder);
         return ResponseEntity.ok().build();
+    }
+
+/*    @PostMapping("/api/checkStatus")
+    public ResponseEntity<RepairOrder> addRepairOrder(@RequestParam(name = "idCheck", required = false) Long idCheck,
+                                                      @RequestParam(name = "telCheck", required = false) String telCheck) {
+        RepairOrder repairOrder = repairOrderService.findById(idCheck);
+        return ResponseEntity.ok(repairOrder);
+    }*/
+
+    @PostMapping("/api/checkStatus")
+    public ResponseEntity<RepairOrder> getCurrentRepairOrder(@RequestBody RepairOrder repairOrder) {
+        System.out.println(repairOrder);
+        RepairOrder repairOrderCheck = repairOrderService.findById(repairOrder.getId());
+        return ResponseEntity.ok(repairOrderCheck);
     }
 
     /**

@@ -3,25 +3,24 @@
 <head>
     <title>Service Center</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <!-- Подключаем библиотеку summernote bs-4 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- Подключаем библиотеку summernote bs-4 CSS-->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-
+    <!--summernote CSS-->
+    <link href="/static/css/summernote.css" rel="stylesheet">
+    <!--toastr CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
 </head>
 <body>
 <header th:insert="/blocks/header :: header"></header>
-
 <main>
 
     <!---------------------- Edit RepairOrder Modal window ------------------->
     <div class="modal fade" id="editRepairOrder" data-backdrop="static" tabindex="-1"
          role="dialog" aria-labelledby="editRepairOrderFormModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalWindowTitle">Редактировать заказ</h5>
@@ -29,7 +28,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div id="modal-alert">
+                <div id="modal-alert-repairOrder">
                     <!--alert messages-->
                 </div>
                 <form id="editRepairOrderFormModal">
@@ -278,32 +277,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr/>
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input"
-                                                       id="stockMailingCheckbox"
-                                                       th:checked="*{dayOfWeekForStockSend != null}"
-                                                       onchange="chekboxChanges(this)">
-                                                <label class="form-check-label" for="stockMailingCheckbox">Хотите ли вы
-                                                    получать рассылку?</label>
-                                            </div>
-                                            <br>
-                                            <div
-                                                    th:class="*{dayOfWeekForStockSend != null} ? 'form-group day-of-the-week-drop-list' : 'form-group day-of-the-week-drop-list d-none' ">
-                                                <label for="dayOfWeekDropList">Выберите день недели</label>
-                                                <select class="form-control" id="dayOfWeekDropList"
-                                                        th:field="*{dayOfWeekForStockSend}">
-                                                    <option value=""></option>
-                                                    <option value="MONDAY">Понедельник</option>
-                                                    <option value="TUESDAY">Вторник</option>
-                                                    <option value="WEDNESDAY">Среда</option>
-                                                    <option value="THURSDAY">Четверг</option>
-                                                    <option value="FRIDAY">Пятница</option>
-                                                    <option value="SATURDAY">Суббота</option>
-                                                    <option value="SUNDAY">Воскресенье</option>
-                                                </select>
-                                            </div>
-                                            <hr/>
+                                            <hr>
                                             <button type="submit" style="background-color: #ff8e05"
                                                     class="m-2 btn btn-success d-block mx-auto">Сохранить
                                             </button>
@@ -512,38 +486,36 @@
 
                     <!--оформление заявки на ремонт-->
                     <div class="tab-pane" id="addRepairOrder" role="tabpanel">
+
                         <div class="card">
-                            <div class="card-header">Оформление заявки на ремонт</div>
+                            <div class="card-header">
+                                Оформление заявки на ремонт
+                            </div>
                             <div class="card-body text-center">
                                 <div class="form justify-content-center mx-auto col-md-5">
-
-                                    <form enctype="multipart/form-data" id="addFormRepairOrder">
-
-                                        <div class="form-group">
-                                            <label for="idRepairOrder">Id</label>
-                                            <div>
-                                                <input type="text" class="form-control" id="idRepairOrder" readonly>
-                                            </div>
-                                        </div>
+                                    <div id="modal-alert-addRepairOrder">
+                                        <!--alert messages-->
+                                    </div>
+                                    <form id="addFormRepairOrder">
 
                                         <div class="form-group">
                                             <label for="fullNameClient">ФИО</label>
                                             <div>
-                                                <input type="text" class="form-control" id="fullNameClient">
+                                                <input type="text" class="form-control" id="fullNameClient" required>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="telephoneNumber">Телефон</label>
                                             <div>
-                                                <input type="tel" class="form-control" id="telephoneNumber">
+                                                <input type="tel" class="form-control" id="telephoneNumber" required>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="nameDevice">Укажите устройство</label>
                                             <div>
-                                                <input type="text" class="form-control" id="nameDevice">
+                                                <input type="text" class="form-control" id="nameDevice" required>
                                             </div>
                                         </div>
                                         <hr>
@@ -557,16 +529,18 @@
                                         <br>
                                         <div class="form-group">
                                             <label for="fullTextProblem">Описание проблемы</label>
-                                            <textarea id="fullTextProblem" name="fullText"
+                                            <textarea class="form-control" id="fullTextProblem" name="fullText"
                                                       placeholder="Введите полный текст"
-                                                      class="form-control" required></textarea>
+                                                       required></textarea>
                                         </div>
                                         <br>
 
-                                        <button id="buttonAddRepairOrder" type="submit" class="btn btn-success">Добавить
+                                    </form>
+                                    <div>
+                                        <button id="buttonAddRepairOrder" class="btn btn-success">Добавить
                                             заявку на ремонт
                                         </button>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
 
@@ -595,12 +569,15 @@
 
 <!--moment-->
 <script src="/static/js/moment.js"></script>
+<!-- Подключаем библиотеку summernote bs-4 -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <!--summernote-->
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
-<link href="/static/css/summernote.css" rel="stylesheet">
 <script src="/static/js/textRedactor.js"></script>
-
+<!--toastr-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<!--main script-->
 <script src="/static/js/repair_order.js"></script>
 
 </body>
