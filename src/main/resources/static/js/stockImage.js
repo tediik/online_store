@@ -4,35 +4,10 @@ $(document).ready(function () {
     $(function () {
         $('#editSave').on('click', function () {
             let uploadId = $('#stockId').val();
-            console.log('uploadId:' + uploadId);
             let file_data = $('#stockImg')[0].files[0];
-            console.log("file_data: " + file_data);
             let form_data = new FormData();
             form_data.append("stockImg", file_data);
-            changeSrtockImage(uploadId, form_data);
-            // console.log("pathToStockImage: " + pathToStockImage);
-            // $.ajax(
-            //     {
-            //         type: 'POST',
-            //         url: '/rest/uploadStockImage/' + uploadId,
-            //         dataType: 'script',
-            //         data: form_data,
-            //         cache: false,
-            //         contentType: false,
-            //         processData: false,
-            //         success: function (data) {
-            //             console.log("мы в success");
-            //             console.log("data = " + data);
-            //             $('#stockPicture').attr('src', data);
-            //             $('#blahs').attr('src', data);
-            //         },
-            //         error: function (data) {
-            //             console.log("мы в error");
-            //             console.log("data = " + data);
-            //             $('#stockPicture').attr('src', data);
-            //             $('#blahs').attr('src', data);
-            //         }
-            //     });
+            changeStockImage(uploadId, form_data);
         });
     });
 
@@ -75,7 +50,7 @@ $(document).ready(function () {
     });
 });
 
-async function changeSrtockImage(upload_Id, form_data) {
+async function changeStockImage(upload_Id, form_data) {
     // const headers = {
     //     'Content-type': 'application/json; charset=UTF-8'
     // };

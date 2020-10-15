@@ -3,6 +3,16 @@
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
+.vert {
+margin-top: .2rem;
+margin-bottom: 1rem;
+width: 400px;
+}
+
+.vert {
+    height: 200px;
+    background-color: #8bd0db;
+}
 
 .vert .carousel-item-next,
 .vert .active.carousel-item-right {

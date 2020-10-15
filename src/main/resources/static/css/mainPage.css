@@ -57,11 +57,11 @@ html {
 .carouselWithStock {
     margin-top: .3rem;
     margin-bottom: 1rem;
-    min-width: 450px;
+    width: 400px;
 }
 /* Declare heights because of positioning of img element */
 .carousel-itemWithStock {
-    height: 220px;
+    height: 200px;
     background-color: #8bd0db;
 }
 /* MARKETING CONTENT
