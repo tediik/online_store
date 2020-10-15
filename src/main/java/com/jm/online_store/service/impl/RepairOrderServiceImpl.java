@@ -5,6 +5,7 @@ import com.jm.online_store.exception.RepairOrderNotFoundException;
 import com.jm.online_store.model.RepairOrder;
 import com.jm.online_store.repository.RepairOrderRepository;
 import com.jm.online_store.service.interf.RepairOrderService;
+import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,39 +26,63 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     @Override
     public List<RepairOrder> findAll() {
-        return repairOrderRepository.findAll();
+        List<RepairOrder> repairOrderList = repairOrderRepository.findAll();
+        repairOrderList.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
+        return repairOrderList;
     }
 
     @Override
     public List<RepairOrder> getAllAccepted() {
-        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.ACCEPTED);
+        List<RepairOrder> repairOrderList = repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.ACCEPTED);
+        repairOrderList.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
+        return repairOrderList;
     }
 
     @Override
     public List<RepairOrder> getAllDiagnostics() {
-        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.DIAGNOSTICS);
+        List<RepairOrder> repairOrderList = repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.DIAGNOSTICS);
+        repairOrderList.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
+        return repairOrderList;
     }
 
     @Override
     public List<RepairOrder> getAllIn_Work() {
-        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.IN_WORK);
+        List<RepairOrder> repairOrderList = repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.IN_WORK);
+        repairOrderList.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
+        return repairOrderList;
     }
 
     @Override
     public List<RepairOrder> getAllComplete() {
-        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.COMPLETE);
+        List<RepairOrder> repairOrderList = repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.COMPLETE);
+        repairOrderList.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
+        return repairOrderList;
     }
 
     @Override
     public List<RepairOrder> getAllArchive() {
-        return repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.ARCHIVED);
+        List<RepairOrder> repairOrderList = repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.ARCHIVED);
+        repairOrderList.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
+        return repairOrderList;
     }
 
     @Override
     public void save(RepairOrder repairOrder) {
         repairOrder.setRepairOrderType(RepairOrderType.ACCEPTED);
         repairOrder.setAcceptanceDate(LocalDate.now());
+        if (!ValidationUtils.isValidTelephoneNumber(repairOrder.getTelephoneNumber())) {
+            throw new IllegalArgumentException();
+        }
         repairOrderRepository.save(repairOrder);
+    }
+
+    @Override
+    public RepairOrder update(RepairOrder repairOrder) {
+        repairOrder.setModifiedDate(LocalDate.now());
+        if (!ValidationUtils.isValidTelephoneNumber(repairOrder.getTelephoneNumber())) {
+            throw new IllegalArgumentException();
+        }
+        return repairOrderRepository.save(repairOrder);
     }
 
     @Override
@@ -66,14 +91,13 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     }
 
     @Override
-    public boolean existsById(Long id) {
-        return repairOrderRepository.existsById(id);
+    public RepairOrder findRepairOrderByIdAndTelephoneNumber(Long id, String telephoneNumber) {
+        return repairOrderRepository.findByIdAndTelephoneNumber(id, telephoneNumber).orElseThrow(RepairOrderNotFoundException::new);
     }
 
     @Override
-    public RepairOrder update(RepairOrder repairOrder) {
-        repairOrder.setModifiedDate(LocalDate.now());
-        return repairOrderRepository.save(repairOrder);
+    public boolean existsById(Long id) {
+        return repairOrderRepository.existsById(id);
     }
 
     @Override

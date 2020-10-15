@@ -19,4 +19,5 @@ public interface RepairOrderService {
     RepairOrder update(RepairOrder repairOrder);
     void deleteById(Long id);
     List<RepairOrderType> findAllRepairOrderType();
+    RepairOrder findRepairOrderByIdAndTelephoneNumber(Long id, String telephoneNumber);
 }

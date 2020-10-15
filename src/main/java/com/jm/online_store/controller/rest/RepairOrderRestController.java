@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -50,17 +48,15 @@ public class RepairOrderRestController {
         return ResponseEntity.ok().build();
     }
 
-/*    @PostMapping("/api/checkStatus")
-    public ResponseEntity<RepairOrder> addRepairOrder(@RequestParam(name = "idCheck", required = false) Long idCheck,
-                                                      @RequestParam(name = "telCheck", required = false) String telCheck) {
-        RepairOrder repairOrder = repairOrderService.findById(idCheck);
-        return ResponseEntity.ok(repairOrder);
-    }*/
-
+    /**
+     * Метод возвращает заказ на ремонт по номеру заказа и телефону клиента
+     *
+     * @param repairOrder тело содержит номер заказа и телефон
+     * @return ResponseEntity<RepairOrder> заказ на ремонт
+     */
     @PostMapping("/api/checkStatus")
     public ResponseEntity<RepairOrder> getCurrentRepairOrder(@RequestBody RepairOrder repairOrder) {
-        System.out.println(repairOrder);
-        RepairOrder repairOrderCheck = repairOrderService.findById(repairOrder.getId());
+        RepairOrder repairOrderCheck = repairOrderService.findRepairOrderByIdAndTelephoneNumber(repairOrder.getId(), repairOrder.getTelephoneNumber());
         return ResponseEntity.ok(repairOrderCheck);
     }
 
@@ -159,5 +155,4 @@ public class RepairOrderRestController {
         List<RepairOrderType> orderTypeList = repairOrderService.findAllRepairOrderType();
         return ResponseEntity.ok().body(orderTypeList);
     }
-
 }

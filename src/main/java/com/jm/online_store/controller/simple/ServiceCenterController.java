@@ -6,17 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * Контроллер сервисного центра
  */
 @Controller
-public class RepairOrderController {
+public class ServiceCenterController {
 
     private final UserService userService;
 
     @Autowired
-    public RepairOrderController(UserService userService) {
+    public ServiceCenterController(UserService userService) {
         this.userService = userService;
     }
 
@@ -34,6 +35,13 @@ public class RepairOrderController {
     public String getServiceProfile(Model model) {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
+        return "servicePage";
+    }
+
+    @PostMapping("/service/profile")
+    public String updateServiceProfile(User user, Model model) {
+        User updateUser = userService.updateUserProfile(user);
+        model.addAttribute("user", updateUser);
         return "servicePage";
     }
 }

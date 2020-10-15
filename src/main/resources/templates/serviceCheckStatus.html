@@ -11,17 +11,16 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<!--<div class="modal fade" id="checkStatusRepairOrderModal" tabindex="-1" role="dialog" aria-labelledby="checkStatusRepairOrderLabel" aria-hidden="true">
+<div class="modal fade" id="checkStatusRepairOrderModal" tabindex="-1" role="dialog" aria-labelledby="checkStatusRepairOrderLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="checkStatusRepairOrderLabel">Состояние ваше заявки.</h5>
+                <h5 class="modal-title" id="checkStatusRepairOrderLabel">Состояние вашего заказа.</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                ...
+            <div class="modal-body" id="modal-body_checkStatusRepairOrder">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -29,7 +28,7 @@
             </div>
         </div>
     </div>
-</div>-->
+</div>
 
 <header th:insert="/blocks/header :: header"></header>
 
@@ -45,10 +44,10 @@
 
             <div class="form-group">
                 <input type="number" name="idCheck" id="idCheck" placeholder="Заказ-наряд" required>
-                <input type="tel" name="telCheck" id="telCheck" placeholder="Номер телефона" required>
+                <input value="" type="tel" name="telCheck" id="telCheck" placeholder="Номер телефона" required>
             </div>
             <div style="margin-top: 20px">
-                <button id="checkStatusRepairOrder" class="btn btn-warning">Найти</button>
+                <button id="checkStatusRepairOrder" class="btn btn-warning" data-toggle="modal" data-target="#checkStatusRepairOrderModal">Найти</button>
             </div>
 
         </div>
@@ -70,5 +69,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 
 <script src="/static/js/serviceCheckStatus.js"></script>
+<script src="/static/js/telephoneNumberMask.js"></script>
+
 </body>
 </html>
