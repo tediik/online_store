@@ -160,14 +160,16 @@
                                             <input id="endDate" name="date"/>
                                             <br>
                                             <label for="stockImg">Изображение</label>
+<!--                                            <input id="stockImg" type="file" name="fileImgInput" accept="image/jpeg"-->
+<!--                                                   class="form-control">-->
+<!--                                                   value="@{../../uploads/images/{name}(name = ${stock.stockImg})}">-->
                                             <input id="stockImg" type="file" name="fileImgInput" accept="image/jpeg"
-                                                   class="form-control"
-                                                   value="@{../../uploads/images/{name}(name = ${stock.stockImg})}">
-<!--                                            <input id="stockImgBtn" type="file" value="Загрузить"-->
-<!--                                                   accept="image/jpeg"-->
-<!--                                                   name="fileImgInput" class="btn btn-sm btn-outline-success"/>-->
+                                                   class="form-control">
+                                            <input type="button" id="stockImgBtn" value="Upload Image" accept="image/jpeg"
+                                                   name="fileImg2Input" class="btn btn-sm btn-outline-success"/>
 
-                                            <input type="button" id="deleteStockImgBtn" value="Удалить"
+                                            <input type="button" id="deleteStockImgBtn" value="Delete Image"
+                                                   data-dismiss="modal"
                                                    class="btn btn-sm btn-outline-danger"/>
 <!--                                            <img id="blahs" src="#" alt="stock image"-->
 <!--                                                 class="rounded-circle img-responsive mt-2 float-right"-->

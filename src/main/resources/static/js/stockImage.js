@@ -6,7 +6,7 @@ $(document).ready(function () {
             let uploadId = $('#stockId').val();
             console.log('uploadId:' + uploadId);
             let file_data = $('#stockImg')[0].files[0];
-            console.log('file_data:' + file_data);
+            console.log("file_data: " + file_data);
             let form_data = new FormData();
             form_data.append("stockImg", file_data);
             $.ajax(
@@ -21,11 +21,14 @@ $(document).ready(function () {
                     success: function (data) {
                         console.log("мы в success");
                         console.log("data = " + data);
-                        // $('#stockPicture').attr('src', data);
+                        $('#stockPicture').attr('src', data);
+                        $('#blahs').attr('src', data);
                     },
                     error: function (data) {
                         console.log("мы в error");
                         console.log("data = " + data);
+                        $('#stockPicture').attr('src', data);
+                        $('#blahs').attr('src', data);
                     }
                 });
         });
@@ -39,7 +42,7 @@ $(document).ready(function () {
             $.ajax(
                 {
                     type: 'DELETE',
-                    url: '/rest/deleteStockImage/' + $deleteId,
+                    url: '/rest/deleteStockImage/' + deleteId,
                     contentType: false,
                     processData: false,
                     cache: false,
@@ -56,8 +59,9 @@ $(document).ready(function () {
     })
     function readURL(input) {
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
+            let reader = new FileReader();
             reader.onload = function(e) {
+                $('#stockImg').attr('src', e.target.result);
                 $('#blahs').attr('src', e.target.result);
             }
             reader.readAsDataURL(input.files[0]); // convert to base64 string

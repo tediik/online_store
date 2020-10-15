@@ -140,7 +140,8 @@ public class StockServiceImpl implements StockService {
     @Transactional
     public String updateStockImage(Long stockId, MultipartFile file) {
         Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
-        String uniqueFilename = StringUtils.cleanPath(UUID.randomUUID() + "." + file.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(UUID.randomUUID() + "." + file.getOriginalFilename());
+        String uniqueFilename = fileName.replaceAll("\\s+","");
         log.debug("File name: {}", uniqueFilename);
         log.debug("File is empry?: {}", file.isEmpty());
         if (!file.isEmpty()) {
@@ -175,9 +176,9 @@ public class StockServiceImpl implements StockService {
         final String defaultStockImg = StringUtils.cleanPath("default.jpg");
         Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
         //Get stockPicture name from Stock and delete this stock picture from Uploads
-        log.debug("Paths.get(uploadDirectory. Stock: {}" + stock.getStockTitle());
+        log.debug("Paths.get(uploadDirectory. Stock: {}", stock.getStockTitle());
         Path fileNameAndPath = Paths.get(uploadDirectory, stock.getStockImg());
-        log.debug("Paths.get(uploadDirectory: {}" + fileNameAndPath);
+        log.debug("Paths.get(uploadDirectory: {}", fileNameAndPath);
         //Check if deleting picture is not a default avatar
         try {
             if (!fileNameAndPath.getFileName().toString().equals(defaultStockImg)) {

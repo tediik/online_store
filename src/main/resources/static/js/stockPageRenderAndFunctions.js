@@ -4,6 +4,7 @@
 let myHeaders = new Headers()
 let sharedStockApiUrl = "/manager/api/sharedStock"
 let stockApiUrl = "/manager/api/stock"
+let stockImgUrl = "../../uploads/images/"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), number: 0, last: false};
 
@@ -288,15 +289,9 @@ function renderStockList(data) {
         let sharedStocksQuantity = sharedStocks.length
         for (let i = 0; i < stocks.length; i++) {
             let stockId = stocks[i].id
-            // let stockImg = stocks[i].imageFile
-            let stockImg = "../../uploads/images/dany.jpg"
-            //let stockImg1 = "../../uploads/images/{name}(name = ${stock.getStockPicture()})"
-            //let stockImg2 = stocks[i].image
+            let stockImg = "../../uploads/images/" + stocks[i].stockImg
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
             let publish = stocks[i].published
-            //console.log(`stockImg1:  ${stockImg1}`)
-            //console.log(`stockImg2:  ${stockImg2}`)
-            // console.log(`stockImg3:  ${stockImg3}`)
             if (publish === true) {
                 publish = "✔"
             } else {
@@ -314,7 +309,6 @@ function renderStockList(data) {
                             <div class=\"col-md-4\">
 <!--                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">-->
                                  <img class="card-img" src=${stockImg} width=\"250\" alt="Фото stockImg">
-<!--                                <img class="card-img" src=${stocks[i].stockImg} width=\"250\" alt="Фото stocks[i].stockImg">-->
                                 <img id="blahs" src="#" alt="stock image" class="rounded-circle img-responsive mt-2 float-right" height="82" width="82"/>
                                  <img id="stockPicture" src="#" alt="stock picture" class="rounded-circle img-responsive mt-2 float-right" height="82" width="82"/>
                                 
