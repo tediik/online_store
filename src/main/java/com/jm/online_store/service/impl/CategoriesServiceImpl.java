@@ -27,14 +27,6 @@ public class CategoriesServiceImpl implements CategoriesService {
         return categoriesRepository.findByCategory(category);
     }
 
-    public boolean categoryExistById(long id){
-        return categoriesRepository.existsCategoriesById(id);
-    }
-
-    public boolean categoryExistByCategory(String category){
-        return categoriesRepository.existsCategoriesByCategory(category);
-    }
-
     public void saveCategory(Categories categories) {
         categoriesRepository.save(categories);
     }
