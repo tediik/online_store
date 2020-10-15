@@ -88,18 +88,15 @@ public class StockRestController {
     public ResponseEntity<String> handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("stockImg") MultipartFile stockImg) throws IOException {
         String savedFIleName = stockService.updateStockImage(stockId, stockImg);
         log.debug("REST.Update Image. Stock ID: {}", stockId);
-        log.debug("REST.Update Image. stockImg: {}", stockImg);
         log.debug("REST.Update Image. stockImg path: {}", savedFIleName);
         Stock stock = stockService.findStockById(stockId);
-        String pathToUploadFile = "../../uploads/images/" + stock.getStockImg();
+        String pathToUploadFile = "../../uploads/images/stocks/" + stock.getStockImg();
         log.debug("Stok.Путь: {}", pathToUploadFile);
-//        return ResponseEntity.ok("../../uploads/images/dany.jpg");
         return ResponseEntity.ok(savedFIleName);
     }
 
     @DeleteMapping("/rest/deleteStockImage/{id}")
     public ResponseEntity<String> deleteStockImage(@PathVariable("id") Long stockId) throws IOException {
-//        Stock currentStock = stockService.findStockById(stockId);
         log.debug("rest/deleteStockImage/{id} : {}", stockId);
         return ResponseEntity.ok(stockService.deleteStockImage(stockId));
     }

@@ -33,7 +33,7 @@ import java.util.UUID;
 public class StockServiceImpl implements StockService {
 
     private final StockRepository stockRepository;
-    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images" + File.separator + "stocks";
 
     @Override
     public List<Stock> findAll() {
@@ -143,7 +143,6 @@ public class StockServiceImpl implements StockService {
         String fileName = StringUtils.cleanPath(UUID.randomUUID() + "." + file.getOriginalFilename());
         String uniqueFilename = fileName.replaceAll("\\s+","");
         log.debug("File name: {}", uniqueFilename);
-        log.debug("File is empry?: {}", file.isEmpty());
         if (!file.isEmpty()) {
             Path fileNameAndPath = Paths.get(uploadDirectory, uniqueFilename);
             log.debug("StockServiceImpl. fileNameAndPath: {}", fileNameAndPath);

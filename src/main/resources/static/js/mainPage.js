@@ -197,13 +197,15 @@ function fillPublishedStocks(data) {
             item += `
             <div class="col-4">
                 <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
-                    <div class="col-auto d-none d-lg-block productImg">
-                        <img class="bd-placeholder-img" src="/uploads/images/${data[key].stockImg}" width="180">
-<!--                        <img class="bd-placeholder-img" src="/uploads/images/default.jpg">-->
+                    <div class="col-auto d-none d-lg-block stockImg">
+                        <img class="bd-placeholder-img" 
+                        src="/uploads/images/stocks/${data[key].stockImg}" width="400" height="200"
+                        onerror="if (this.src != '/uploads/images/stocks/default.jpg') 
+                            this.src = '/uploads/images/stocks/default.jpg';">
                     </div>
                     <div id="${data[key].id}"></div>
                     <div class="col p-4 d-flex flex-column position-static">
-                        <p class="card-text mb-auto productName">${data[key].stockTitle}</p>
+                        <p class="card-text mb-auto stockTitle">${data[key].stockTitle}</p>
                         <a class="btn btn-sm btn-outline-light stockhref" href="/manager/api/stock/${data[key].id}" role="button">Подробнее &raquo;</a>
                     </div>
                 </div>
