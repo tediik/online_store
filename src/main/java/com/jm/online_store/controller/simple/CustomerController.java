@@ -2,6 +2,7 @@ package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
@@ -33,6 +34,7 @@ public class CustomerController {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final OrderService orderService;
+    private final CommentService commentService;
 
     /**
      * метод получения данных зарегестрированного пользователя.
@@ -45,11 +47,12 @@ public class CustomerController {
     public String getUserProfile(Model model) {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
+        model.addAttribute("listOfComments", commentService.findAllByCustomer(user));
         return "customerPage";
     }
 
     /**
-     * метод ля формирования данных для обновления User.
+     * метод для формирования данных для обновления User.
      *
      * @param user  пользователь
      * @param model модель для view

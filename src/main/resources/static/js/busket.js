@@ -52,6 +52,14 @@ async function fillBasket() {
             </td>
         <tr>
         `;
+        fetch("api/products/" + `${content[key].product.id}`)
+            .then(function (response) {
+                response.json().then(function (data) {
+                    if (data.favourite) {
+                        $('#heart' + `${content[key].id}`).toggleClass("filled");
+                    }
+                })
+            });
         sumBasket += content[key].product.price * content[key].count;
         $(basketGoodsJson).append(product);
     }
@@ -60,7 +68,7 @@ async function fillBasket() {
     $('#countBasketGoods').empty();
     $('#sumBasketGoods').empty();
 
-    $('#countBasketGoods').append(countGoods + "шт.");
+    $('#countBasketGoods').append(countGoods + " шт.");
     $('#sumBasketGoods').append(sumBasket);
 
     $('#countInBasket').empty();
@@ -119,13 +127,31 @@ async function buildOrderFromBasket() {
 }
 
 async function addToFavouritsGoods(id, heartId) {
-    await fetch("/customer/favouritesGoods", {
-        method: "PUT",
-        body: id,
-        headers: {"Content-Type": "application/json; charset=utf-8"}
-    });
-    let l = 'heart' + heartId;
-    let b = '#' + l;
-    $(b).toggleClass('filled');
-
+    if ($("path").is('[class="filled"]')) {
+        await fetch("/customer/favouritesGoods", {
+            method: "DELETE",
+            body: id,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(function (response) {
+            if (response.ok) {
+                $('#heart' + heartId).toggleClass("filled");
+                toastr.success("Товар успешно удалён из избранного");
+            } else {
+                toastr.error("Авторизуйтесь/зарегистрируйтесь");
+            }
+        });
+    } else {
+        await fetch("/customer/favouritesGoods", {
+            method: "PUT",
+            body: id,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(function (response) {
+            if (response.ok) {
+                $('#heart' + heartId).toggleClass("filled");
+                toastr.success("Товар успешно добавлен в избранное");
+            } else {
+                toastr.error("Авторизуйтесь/зарегистрируйтесь");
+            }
+        });
+    }
 }
