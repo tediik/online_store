@@ -29,6 +29,17 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAllByProductId(productId);
     }
 
+
+/**
+     * Find and return List of comments from database by Customer Id
+     *
+     * @return List<comment>
+     */
+    @Override
+    public List<Comment> findAllByCustomer(User user) {
+        return commentRepository.findCommentsByCustomer(user);
+    }
+
     /**
      * Method checks if Comment is a new post or reply to previous comment
      * then sets a current user as author of a comment and saves to dataBase
@@ -48,12 +59,23 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Find and retrieve ProductComment from database by Id
+     * Find and retrieve ProductComment from database by comment Id
      *
      * @return ProductComment
      */
     @Override
     public Comment findById(Long commentId) {
         return commentRepository.findById(commentId).get();
+    }
+
+    /**
+     * For init comments only
+     *
+     * @param comment
+     */
+    @Override
+    @Transactional
+    public void addCommentInit(Comment comment) {
+        commentRepository.save(comment);
     }
 }
