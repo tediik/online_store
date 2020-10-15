@@ -1,3 +1,10 @@
+$(document).ready(function(){
+    $('select').on('change', function () {   //'#favouritesGroup'
+        var selectedValue = this.selectedOptions[0].value;
+        var selectedText  = this.selectedOptions[0].text;
+        fillNewTableProductsGroup();
+    });
+});
 async function fillFavouritesGoods() {
     let response = await fetch("/customer/favouritesGoods");
     let content = await response.json();
@@ -89,6 +96,7 @@ $(document).on("click", "#move-product-buton", function () {
         addProductInFavouritesGroupInBD(idProduct, idGroup);
     }
 });
+
 /**
  * Передаем в БД товары и список Избранного для добавления
  * @param idProduct
@@ -104,6 +112,30 @@ async function addProductInFavouritesGroupInBD(idProduct, idGroup) {
     console.log(idPidG);
     fetch(`/customer/addProductInFavouritesGroup`, {
         method: 'POST',
+        body: JSON.stringify(idPidG),
+        headers: headers
+    }).then(response => {
+        return response.text();
+    }).then(data => {
+        console.log(data);
+    })
+};
+
+/**
+ * Удаление продукта из одной группы при перемещении в другую
+ * @param idProduct
+ * @param idGroup
+ * @returns {Promise<void>}
+ */
+async function deleteProductFromFavouritesGroupInBD(idProduct, idGroup) {
+    const headers = {
+        'Content-type': 'application/json; charset=UTF-8'
+    };
+    let idPidG = idProduct;
+    idPidG.push(idGroup);
+    console.log(idPidG);
+    fetch(`/customer/deleteProductFromFavouritesGroup`, {
+        method: 'DELETE',
         body: JSON.stringify(idPidG),
         headers: headers
     }).then(response => {
@@ -180,12 +212,17 @@ function toTranslit(text) {
 
 function inicStartGroup(){
     let idGroup = $("#favouritesGroup :first").attr("id");
+    $(".checkProductInGroup").attr("idGroup", idGroup);
     let idProductInAll = $(".checkProductInGroup").map(function() {return this.name;}).get();
     if (idProductInAll != '') {
         console.log("Товар id=" + idProductInAll + " пеермещен в группу с id=" + idGroup);
         addProductInFavouritesGroupInBD(idProductInAll, idGroup);
     }
 };
+
+/**
+ * Перерисовываем таблицу избранного в зависимости от селекта
+ */
 function fillNewTableProductsGroup(){
     let idGroup = $("#favouritesGroup option:selected").attr("id");
     fillFavouritesGroupProducts(idGroup);

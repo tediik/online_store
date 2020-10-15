@@ -27,7 +27,23 @@ public class FavouritesGroupProductServiceImpl implements FavouritesGroupProduct
 
     @Override
     public void deleteProductFromFavouritesGroup(Long idProduct, Long idFavouritesGroup, User currentUser) {
-
+        Iterator<FavouritesGroup> favouritesGroupIterator = currentUser.getFavouritesGroups().iterator();
+        FavouritesGroup favouritesGroup = null;
+        while (favouritesGroupIterator.hasNext()) {
+            favouritesGroup = favouritesGroupIterator.next();
+            if (favouritesGroup.getId() == idFavouritesGroup){
+                break;
+            }
+        }
+        Iterator<Product> productIterator = favouritesGroup.getProducts().iterator();
+        Product product = null;
+        while (productIterator.hasNext()){
+            product = productIterator.next();
+            if (product.getId() == idProduct) {
+                favouritesGroup.getProducts().remove(product);
+                break;
+            }
+        }
     }
 
     @Override
@@ -35,27 +51,15 @@ public class FavouritesGroupProductServiceImpl implements FavouritesGroupProduct
         User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
         Iterator iterator = user.getFavouritesGroups().iterator();
         FavouritesGroup favouritesGroup = null;
-        while (iterator.hasNext()){
-            favouritesGroup = (FavouritesGroup)iterator.next();
-            if(favouritesGroup.getId() == idFavouritesGroup){
+        while (iterator.hasNext()) {
+            favouritesGroup = (FavouritesGroup) iterator.next();
+            if (favouritesGroup.getId() == idFavouritesGroup) {
                 break;
-            };
+            }
         }
         Set<Product> productSet = favouritesGroup.getProducts();
         productSet.add(productService.findProductById(idProduct).orElseThrow(ProductNotFoundException::new));
         favouritesGroup.setProducts(productSet);
-
-        //FavouritesGroup favouritesGroup = (FavouritesGroup) user.getFavouritesGroups().;
-        //Set<FavouritesGroup> favouritesGroupSet = user.getFavouritesGroups();
-
-        //System.out.println(favouritesGroupSet);
-
-//        Set<Product> favouritesGroupProducts = favouritesGroup.getProducts();
-//        favouritesGroupProducts.add(productService.findProductById(idProduct).orElseThrow())
-//        favouritesGroup.setProducts(favouritesGroupProducts);
-//
-//        user.setFavouritesGroups(favouritesGroup);
-//        userService.updateUser(user);
     }
 
     @Override
