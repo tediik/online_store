@@ -85,7 +85,7 @@ public class StockRestController {
     }
 
     @PostMapping("/rest/uploadStockImage/{id}")
-    public ResponseEntity handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("stockImg") MultipartFile stockImg) throws IOException {
+    public ResponseEntity<String> handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("stockImg") MultipartFile stockImg) throws IOException {
         String savedFIleName = stockService.updateStockImage(stockId, stockImg);
         log.debug("REST.Update Image. Stock ID: {}", stockId);
         log.debug("REST.Update Image. stockImg: {}", stockImg);

@@ -10,6 +10,7 @@ $(document).ready(function () {
             let form_data = new FormData();
             form_data.append("stockImg", file_data);
             changeSrtockImage(uploadId, form_data);
+            // console.log("pathToStockImage: " + pathToStockImage);
             // $.ajax(
             //     {
             //         type: 'POST',
@@ -80,18 +81,21 @@ async function changeSrtockImage(upload_Id, form_data) {
     // };
     let uploadId = upload_Id
     let formdata = form_data;
+    let returnPath;
     console.log('upload_Id: ' + upload_Id)
     console.log('formdata: ' + formdata)
 
     await fetch(`/rest/uploadStockImage/` + uploadId, {
         method: 'POST',
         body: formdata,
-        // headers: headers
     }).then(response => {
         console.log(response);
-        return response;
-    }).then(idGroup => {
-        console.log('idGroup')
+        return response.text();
+    }).then(path => {
+        console.log('path: ' + path);
+        returnPath = path;
     });
-
+    console.log('returnPath: ' + returnPath);
+    $('#stockPicture').attr('src', returnPath);
+    $('#blahs').attr('src', returnPath);
 };

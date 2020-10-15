@@ -178,7 +178,9 @@ function fillSomeProducts(data) {
  * @param data - stocks list
  */
 function fetchAndRenderPublishedStocks() {
-    fetch("/api/publishedstocks").then(response => response.json()).then(data => fillPublishedStocks(data));
+    fetch("/api/publishedstocks")
+        .then(response => response.json())
+        .then(data => fillPublishedStocks(data));
     $('#headerForPublishedStocksView').text('Горячие акции!')
 }
 
@@ -196,7 +198,7 @@ function fillPublishedStocks(data) {
             <div class="col-4">
                 <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
                     <div class="col-auto d-none d-lg-block productImg">
-                        <img class="bd-placeholder-img" src="/manager/api/stock/${data[key].stockImg}">
+                        <img class="bd-placeholder-img" src="/uploads/images/${data[key].stockImg}" width="180">
 <!--                        <img class="bd-placeholder-img" src="/uploads/images/default.jpg">-->
                     </div>
                     <div id="${data[key].id}"></div>
@@ -213,7 +215,7 @@ function fillPublishedStocks(data) {
                 $(stocksView).append(`<div class="row">` + item);
             }
             $(function () {
-                if(data[key].rating !== null) {
+                if (data[key].rating !== null) {
                     $(`#rate${data[key].id}`).rateYo({
                         rating: data[key].rating,
                         readOnly: true
