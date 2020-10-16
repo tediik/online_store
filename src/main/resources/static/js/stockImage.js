@@ -73,4 +73,5 @@ async function changeStockImage(upload_Id, form_data) {
     console.log('returnPath: ' + returnPath);
     $('#stockPicture').attr('src', returnPath);
     $('#blahs').attr('src', returnPath);
+    $('#carousel-inner').add('div');
 };

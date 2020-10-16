@@ -115,7 +115,9 @@
                     <li data-target="#myCarousel" data-slide-to="5"></li>
                 </ol>
                 <div class="carousel-inner">
+
                     <div class="carousel-item active carousel-itemWithStock">
+
                         <img class="first-slide"
                              src="/uploads/images/stocks/1.jpg"
                              alt="First slide">
@@ -306,6 +308,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script src="/static/js/stockImage.js"></script>
+<script>
+    $( ".carousel-inner" ).append( "<p>Test</p>" );
+    $( ".carousel-inner" ).append( "<p>Test</p>" );
+    console.log("append = ")
+</script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </body>
 </html>
