@@ -39,7 +39,7 @@
     <div class="row min-vh-100">
         <div class="col-md-2">
             <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary mt-2 active" id="customerMain-tab" data-toggle="pill"
+                <a class="btn btn-outline-primary mt-2 nav-link active" id="customerMain-tab" data-toggle="pill"
                    href="#customerMain" role="tab" aria-controls="customerMain" aria-selected="true">Главная</a>
                 <a class="btn btn-outline-primary mt-2" id="profile-tab" data-toggle="pill" href="#profile" role="tab"
                    aria-controls="profile" aria-selected="false">Профиль</a>
@@ -55,13 +55,100 @@
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
             </div>
         </div>
-        <div class="col-md-10" style="background: #edeef0">
+        <div class="col-md-8" style="background: #edeef0">
             <div class="tab-content" id="v-pills-tabContent">
-                <div class="tab-pane fade" id="customerMain" role="tabpanel" aria-labelledby="customerMain-tab">
-                    <h3>Главная пользователя</h3>
-
-                    <div class="container-fluid" id="chartContainer" style="height: 370px; width: 100%;"></div>
-
+                <div class="tab-pane active" id="customerMain" role="tabpanel" aria-labelledby="customerMain-tab">
+                    <!--<h3>Главная пользователя</h3>-->
+                    <div class="container-fluid my-3 p-3 rounded" id="chartContainer" style="height: 370px; width: 100%; background-color: white">
+                        <div>
+                            <img id="profilePicMainTab" alt="UserPhoto"
+                                 class="rounded-circle img-responsive mt-2"
+                                 height="152"
+                                 th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}"
+                                 width="152">
+                        </div>
+                        <p align="center">Customer's rating and some data will be here</p>
+                    </div>
+                    <div>
+                        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active text-center" id="total-tab" data-toggle="tab" href="#total"
+                                    aria-selected="true"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
+                                    th:utext="${listOfComments.size()} + '&lt;br /&gt;' + 'Всё'"></p></a>
+                                    <!-- ${user.id - user.id} - заглушка, потом будет user.totalCount, который равен
+                                    commentCount + reviewCount + qaCount + rateCount-->
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-center" id="comments-tab" data-toggle="tab" href="#comments"
+                                    aria-selected="false"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
+                                    th:utext="${listOfComments.size()} + '&lt;br /&gt;' + 'Комментарии'"></p></a>
+                                    <!-- user.commentCount -->
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-center" id="reviews-tab" data-toggle="tab" href="#reviews"
+                                    aria-selected="false"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
+                                    th:utext="${user.id - user.id} + '&lt;br /&gt;' + 'Отзывы'"></p></a>
+                                    <!-- user.reviewCount -->
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-center" id="question-answer-tab" data-toggle="tab" href="#question-answer"
+                                   aria-selected="false"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
+                                   th:utext="${user.id - user.id} + '&lt;br /&gt;' + 'Вопрос - Ответ'"></p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-center" id="rates-tab" data-toggle="tab" href="#rates"
+                                   aria-selected="false"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
+                                   th:utext="${user.id - user.id} + '&lt;br /&gt;' + 'Оценки'"></p></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="total">
+                            <div class="container-fluid my-1 rounded" id="someId-0" style="height: 370px; width: 100%;
+                            background-color: white"><p align="center">list of all ACTIONS will be here</p></div>
+                        </div>
+                        <div class="tab-pane fade" id="comments">
+                            <div class="container-fluid my-1 rounded" id="someId-1" style="background-color: white">
+                                <div class="row">
+                                    <table class="table table-borderless m-1" th:each="comment : ${listOfComments}">
+                                        <tbody>
+                                        <tr>
+                                            <td th:style ="${'font-family: arial; font-size: 70%; color: black'}"
+                                                th:utext="${comment.getCommentDate().getDayOfMonth()
+                                                + ' ' + comment.getCommentDate().getMonthValue()
+                                                + ' ' + comment.getCommentDate().getYear()}">
+                                            </td>
+                                            <td style="width: 20%;"rowspan="3"><img src="/uploads/images/products/00.jpg"
+                                                                                    class="img-fluid"></td>
+                                            <!-- временная ссылка, потом заменить на ссылку картинки реального товара -->
+                                        </tr>
+                                        <tr>
+                                            <td ><a th:style ="${'font-family: arial; font-size: 90%; color: Indigo'}"
+                                                    th:href="@{'/products/' + ${comment.getProductId()}}">
+                                                    Комментарий к товару</a></td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid; color: Gainsboro">
+                                            <td th:style ="${'font-family: arial; font-size: 110%; color: DarkSlateGrey'}"
+                                                th:utext="${comment.getContent()}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="reviews">
+                            <div class="container-fluid my-1 rounded" id="someId-2" style="height: 370px; width: 100%;
+                            background-color: white"><p align="center">list of all REVIEWS will be here</p></div>
+                        </div>
+                        <div class="tab-pane fade" id="question-answer">
+                            <div class="container-fluid my-1 rounded" id="someId-3" style="height: 370px; width: 100%;
+                            background-color: white"><p align="center">list of all Q/A will be here</p></div>
+                        </div>
+                        <div class="tab-pane fade" id="rates">
+                            <div class="container-fluid my-1 rounded" id="someId-4" style="height: 370px; width: 100%;
+                            background-color: white"><p align="center">list of all RATES will be here</p></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel" aria-labelledby="favouritesGoods-tab">
                     <h3>Избранное</h3>
