@@ -180,8 +180,7 @@ function fillSomeProducts(data) {
 function fetchAndRenderPublishedStocks() {
     fetch("/api/publishedstocks")
         .then(response => response.json())
-        .then(data => fillPublishedStocks(data));
-    $('#headerForPublishedStocksView').text('Горячие акции!')
+        .then(data => fillPublishedStocks(data))
 }
 
 /**
@@ -189,8 +188,6 @@ function fetchAndRenderPublishedStocks() {
  * @param data - products list
  */
 function fillPublishedStocks(data) {
-    let stocksView = document.getElementById('publishedStocksView');
-    stocksView.innerHTML = ''
     if (data !== 'error') {
         let item = ``;
         let carouselIndicator = ``;
@@ -213,50 +210,64 @@ function fillPublishedStocks(data) {
                             <div class="carousel-caption">
                                 <h4></h4>
                                 <p></p>
-                                <p><a class="btn btn-secondary" href="global/stockDetails/${data[key].id}"
-                                style="margin-bottom: 32px" role="button">Подробнее &raquo;</a></p>
+                                <p><a class="btn btn-secondary" style="margin-bottom: -60px; margin-right: -252px" 
+                                href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a></p>
                             </div>
                         </div>
             </div>`;
             $(".carousel-inner").append(carouselItem);
-
-            // item += `
-            // <div class="col-4">
-            //     <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
-            //         <div class="col-auto d-none d-lg-block stockImg">
-            //             <img class="bd-placeholder-img"
-            //             src="/uploads/images/stocks/${data[key].stockImg}" width="400" height="200"
-            //             onerror="if (this.src != '/uploads/images/stocks/default.jpg')
-            //                 this.src = '/uploads/images/stocks/default.jpg';">
-            //         </div>
-            //         <div id="${data[key].id}"></div>
-            //         <div class="col p-4 d-flex flex-column position-static">
-            //             <p class="card-text mb-auto stockTitle">${data[key].stockTitle}</p>
-            //             <a class="btn btn-secondary stockhref" href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a>
-            //         </div>
-            //     </div>
-            // </div>`;
-            // if ((key + 1) % 5 == 0) {
-            //     $(stocksView).append(`<div class="row">` + item);
-            //     item = ``;
-            // } else if ((key + 1) == data.length) {
-            //     $(stocksView).append(`<div class="row">` + item);
-            // }
-            // $(function () {
-            //     if (data[key].rating !== null) {
-            //         $(`#rate${data[key].id}`).rateYo({
-            //             rating: data[key].rating,
-            //             readOnly: true
-            //         });
-            //     } else {
-            //         $(`#rate${data[key].id}`).rateYo({
-            //             rating: 0,
-            //             readOnly: true
-            //         });
-            //     }
-            // });
         }
     } else {
         stocksView.innerHTML = 'Ожидайте новые акции'
+    }
+}
+
+
+/**
+ * function that renders main page with publishedStocks
+ * @param data - stocks list
+ */
+function fetchAndRenderPublishedNews() {
+    fetch("/api/publishedstocks")
+        .then(response => response.json())
+        .then(data => fillPublishedStocks(data))
+}
+
+/**
+ * function that fills main page with products
+ * @param data - products list
+ */
+function fillPublishedStocks(data) {
+    if (data !== 'error') {
+        let carouselIndicator = ``;
+        let carouselItem = ``;
+
+        for (let key = 0; key < data.length; key++) {
+            let li = key + 1;
+            console.log("key = " + key + ". li = " + li);
+            carouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
+            $(".carousel-indicators").append(carouselIndicator);
+            console.log("carouselIndicator = " + carouselIndicator);
+
+            carouselItem = `
+                 <div class="carousel-item carousel-itemWithStock">
+                        <img class="next-slide"
+                             src="/uploads/images/stocks/${data[key].stockImg}" width="400" height="200"
+                             onerror="if (this.src != '/uploads/images/stocks/default.jpg')
+                                 this.src = '/uploads/images/stocks/default.jpg';">
+                        <div class="container">
+                            <div class="carousel-caption">
+                                <h4></h4>
+                                <p></p>
+                                <p><a class="btn btn-secondary" href="global/stockDetails/${data[key].id}"
+                                style="margin-bottom: -60px; margin-right: -252px"
+                                 role="button">Подробнее &raquo;</a></p>
+                            </div>
+                        </div>
+            </div>`;
+            $(".carousel-inner").append(carouselItem);
+        }
+    } else {
+        console.log("No news to view");
     }
 }
