@@ -73,7 +73,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
      * Util method which convert {@link LocalTime} to cron expression
      *
      * @param time - {@link LocalTime}
-     * @return - String with creon expression
+     * @return - String with cron expression
      */
     private String DateTimeToCron(LocalTime time) {
         return String.format("0 %S %S */1 * *", time.getMinute(), time.getHour());

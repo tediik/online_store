@@ -1,7 +1,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="header">
+
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom shadow-sm siteHeader">
-        <h4 class="my-0 mr-md-auto text-light">Company name</h4>
+        <h4 class="my-0 mr-md-auto text-light">Online store</h4>
 
         <nav class="my-2 my-md-0 mr-md-3">
             <!-- Search -->
@@ -22,4 +23,5 @@
         <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton" href="/login">Войти</a>
         <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton" href="/logout">Выйти</a>
     </div>
+
 </div>
