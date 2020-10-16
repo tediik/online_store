@@ -26,7 +26,6 @@ public class RepairOrderRestController {
 
     /**
      * Метод возвращает заказ по id
-     *
      * @param id идентификатор RepairOrder
      * @return RepairOrder заказ на ремонт
      */
@@ -37,8 +36,7 @@ public class RepairOrderRestController {
     }
 
     /**
-     * Метод сохраняет заявку на ремонт
-     *
+     * Метод сохраняет заказ на ремонт
      * @param repairOrder сущность для сохранения в базу данных
      * @return ResponseEntity<String> возвращает статус запроса
      */
@@ -49,8 +47,7 @@ public class RepairOrderRestController {
     }
 
     /**
-     * Метод возвращает заказ на ремонт по номеру заказа и телефону клиента
-     *
+     * Метод возвращает заказ на ремонт по номеру заказа и номеру телефону клиента
      * @param repairOrder тело содержит номер заказа и телефон
      * @return ResponseEntity<RepairOrder> заказ на ремонт
      */
@@ -62,7 +59,6 @@ public class RepairOrderRestController {
 
     /**
      * Метод удаляет заказ по id
-     *
      * @param id идентификатор RepairOrder
      * @return ResponseEntity<String> статус запроса
      */
@@ -72,7 +68,11 @@ public class RepairOrderRestController {
         return ResponseEntity.ok().build();
     }
 
-
+    /**
+     * Метод обновления заказа на ремонт
+     * @param repairOrder принимает заявку на ремонт
+     * @return ResponseEntity.ok(repairOrder) возвращает статус запроса и заявку на ремонт
+     */
     @PutMapping("/service/updateRepairOrder")
     public ResponseEntity<RepairOrder> updateRepairOrder(@RequestBody RepairOrder repairOrder) {
         repairOrderService.update(repairOrder);
@@ -81,7 +81,6 @@ public class RepairOrderRestController {
 
     /**
      * Метод возвращает все заказы на ремонт
-     *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
     @GetMapping("/service/getAllRepairOrder")
@@ -92,7 +91,6 @@ public class RepairOrderRestController {
 
     /**
      * Метод возвращает все принятые заказы на ремонт
-     *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
     @GetMapping("/service/getAcceptedRepairOrder")
@@ -103,7 +101,6 @@ public class RepairOrderRestController {
 
     /**
      * Метод возвращает все заказы на ремонт, которые находятся на этапе диагностики
-     *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
     @GetMapping("/service/getDiagnosticsRepairOrder")
@@ -114,7 +111,6 @@ public class RepairOrderRestController {
 
     /**
      * Метод возвращает все заказы на ремонт, которые находятся на этапе ремонта
-     *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
     @GetMapping("/service/getIn_WorkRepairOrder")
@@ -125,7 +121,6 @@ public class RepairOrderRestController {
 
     /**
      * Метод возвращает все заказы на ремонт, ремонт по которым выполнен
-     *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
     @GetMapping("/service/getCompleteRepairOrder")
@@ -136,7 +131,6 @@ public class RepairOrderRestController {
 
     /**
      * Метод возвращает все архивные заказы на ремонт
-     *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
     @GetMapping("/service/getArchiveRepairOrder")
@@ -147,7 +141,6 @@ public class RepairOrderRestController {
 
     /**
      * Метод возвращает список статусов заказа на ремонт
-     *
      * @return ResponseEntity<List<RepairOrderType>> список статусов
      */
     @GetMapping("/service/getAllRepairOrderType")

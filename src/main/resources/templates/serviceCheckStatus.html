@@ -11,8 +11,9 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<div class="modal fade" id="checkStatusRepairOrderModal" tabindex="-1" role="dialog" aria-labelledby="checkStatusRepairOrderLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="checkStatusRepairOrderModal" tabindex="-1" role="dialog"
+     aria-labelledby="checkStatusRepairOrderLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="checkStatusRepairOrderLabel">Состояние вашего заказа.</h5>
@@ -33,7 +34,7 @@
 <header th:insert="/blocks/header :: header"></header>
 
 <main class="wrapper flex-grow-1 container">
-    <div class="card" style="height: 50rem">
+    <div class="card" style="height: 60rem">
         <h5 class="card-header">Проверка статуса ремонта</h5>
         <div class="card-body">
             <p class="card-text">Вы можете самостоятельно отслеживать статус ремонта своего оборудования.
@@ -42,17 +43,26 @@
             <p class="card-text">После присвоения ремонту статуса «в работе»,
                 вы можете внести предоплату за ремонт.</p>
 
-            <div class="form-group">
-                <input type="number" name="idCheck" id="idCheck" placeholder="Заказ-наряд" required>
-                <input value="" type="tel" name="telCheck" id="telCheck" placeholder="Номер телефона" required>
-            </div>
-            <div style="margin-top: 20px">
-                <button id="checkStatusRepairOrder" class="btn btn-warning" data-toggle="modal" data-target="#checkStatusRepairOrderModal">Найти</button>
-            </div>
+            <form>
+                <div class="form-row">
+                    <div class="col">
+                        <input class="form-control" type="number" name="idCheck" id="idCheck"
+                               placeholder="Заказ-наряд" required>
+                    </div>
+                    <div class="col">
+                        <input class="form-control" value="" type="tel" name="telCheck" id="telCheck"
+                               placeholder="Введите телефон клиента в формате: (000) 000 00 00" required>
+                    </div>
+                </div>
+            </form>
 
+            <div style="margin-top: 20px">
+                <button id="checkStatusRepairOrder" class="btn btn-warning" data-toggle="modal"
+                        data-target="#checkStatusRepairOrderModal">Найти
+                </button>
+            </div>
         </div>
     </div>
-
 </main>
 
 <footer th:replace="/blocks/footer :: footer"></footer>

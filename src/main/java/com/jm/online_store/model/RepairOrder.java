@@ -19,6 +19,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
+/**
+ * Класс для сущности Заказ на ремонт(RepairOrder).
+ */
 @Builder
 @Data
 @NoArgsConstructor

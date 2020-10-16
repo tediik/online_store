@@ -6,9 +6,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!--toastr CSS-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
 </head>
@@ -16,32 +13,23 @@
 <header th:insert="/blocks/header :: header"></header>
 
 <main class="wrapper flex-grow-1 container">
-
-    <div class="card" style="height: 40rem">
+    <div class="card" style="height: 60rem">
         <div class="card-header">
             Cервисный центр
         </div>
         <div class="card-body">
             <br>
-            <a class="btn btn-primary" role="button" th:href="@{/serviceCheckStatus}">Проверить статус и оплатить ремонт</a>
+            <a class="btn btn-primary" role="button" th:href="@{/serviceCheckStatus}">
+                Проверить статус заказа на ремонт</a>
             <br>
             <br>
             <div class="container">
                 Ремонтируем цифровую и бытовую технику в 226 городах России.
                 Уже 35 мировых брендов доверили нам право ремонтировать их устройства.
                 Компании: Apple, Epson, Brother, Canon, Xiaomi, Indesit и другие.
-
-                <div>
-
-                </div>
-
             </div>
-
         </div>
     </div>
-
-
-
 </main>
 
 <footer th:replace="/blocks/footer :: footer"></footer>

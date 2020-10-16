@@ -1,3 +1,6 @@
+/**
+ * Добавление маски для номера телефона
+ */
 window.addEventListener("DOMContentLoaded", function() {
     function setCursorPosition(pos, elem) {
         elem.focus();

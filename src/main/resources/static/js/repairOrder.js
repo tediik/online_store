@@ -33,14 +33,14 @@ function addRepairOrder() {
         }).then(function (response) {
             if (response.status === 200) {
                 getAllRepairOrders()
-                toastr.success("Заявка успешно добавлена");
+                toastr.success("Заявка успешно добавлена.");
                 $('#fullTextProblem').summernote('code', '')
                 document.getElementById('fullNameClient').value = ''
                 document.getElementById('telephoneNumber').value = ''
                 document.getElementById('nameDevice').value = ''
                 document.getElementById('guaranteeCheckbox').checked = false
             } else {
-                toastr.error("Заявка не была добавлена.");
+                toastr.error("Заявка не была добавлена. Проверьте корректность ввода данных.", {timeOut: 3000});
             }
         })
     }
@@ -190,7 +190,6 @@ function checkFieldsAddRepairOrder() {
 
 /**
  * Функция вызова и заполнения модального окна редактирования заказа на ремонт
- *
  * @param repairOrderId - идентификатор Long id заказа на ремонт
  */
 function openEditModalWindow(repairOrderId) {
@@ -246,7 +245,7 @@ function updateRepairOrder() {
                 getArchiveRepairOrders()
                 toastr.success("Обновление заявки прошло успешно.");
             } else {
-                toastr.error("Обновить заявку не удалось.");
+                toastr.error("Обновить заявку не удалось. Проверьте корректность ввода данных.", {timeOut: 3000});
             }
         })
     }
@@ -254,7 +253,6 @@ function updateRepairOrder() {
 
 /**
  * Функция удаления заказа
- *
  * @param repairOrderId идентифактор заказа
  */
 function deleteRepairOrder(repairOrderId) {
@@ -275,6 +273,27 @@ function deleteRepairOrder(repairOrderId) {
 }
 
 /**
+ * Функция задает фон заказа на ремонт взависимости от статуса
+ * @param status статус заказа
+ * @returns {string} фон заказа
+ */
+function colorDiv(status) {
+    if (status === "ACCEPTED") {
+        return "alert-primary";
+    }
+    if (status === "DIAGNOSTICS") {
+        return "alert-info";
+    }
+    if (status === "IN_WORK") {
+        return "alert-warning";
+    }
+    if (status === "COMPLETE") {
+        return "alert-success";
+    }
+    return "alert-secondary";
+}
+
+/**
  * Функция отрисовки заявок на ремонт
  * @param data - переданные заявки на ремонт
  * @param elementId указатель вкладки где происходит отрисовка
@@ -287,7 +306,7 @@ function renderRepairOrder(data, elementId) {
             modifiedDateRepairOrder = `Дата последнего изменения: ` + moment(repairOrder.modifiedDate).format("yyyy-MM-DD")
         }
 
-        viewRepairOrder += `<div id="div-${repairOrder.id}" class="alert alert-info mt-2">
+        viewRepairOrder += `<div id="div-${repairOrder.id}" class="alert ${colorDiv(repairOrder.repairOrderType)} mt-2">
                         <h5 id="numberOrderRender">№${repairOrder.id}</h5>  
                         <h6 id="fullNameClientRender">${repairOrder.fullNameClient}</h6>
                         <h6 id="telephoneNumberRender">${repairOrder.telephoneNumber}</h6>
@@ -312,7 +331,6 @@ function renderRepairOrder(data, elementId) {
 
 /**
  * Функция выводящая предупреждение в случае если поля модального окна редактирования не заполнены
- *
  * @param text текст сообщения
  * @param focusField поле для фокуса
  */
@@ -332,7 +350,6 @@ function invalidModalField(text, focusField) {
 
 /**
  * Функция выводящая предупреждение когда поля при добавлении заказа не заполнены
- *
  * @param text текст сообщения
  * @param focusField поле для фокуса
  */
