@@ -113,7 +113,7 @@ public class StockServiceImpl implements StockService {
         if (publishedStocks.isEmpty()) {
             throw new StockNotFoundException();
         }
-        log.debug("Stock List to main page: {}", Arrays.toString(publishedStocks.toArray()));
+        log.debug("Stock List to main page: {}", Arrays.deepToString(publishedStocks.toArray()));
         return publishedStocks;
     }
 

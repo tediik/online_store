@@ -192,23 +192,34 @@ function fillPublishedStocks(data) {
     let stocksView = document.getElementById('publishedStocksView');
     stocksView.innerHTML = ''
     if (data !== 'error') {
-        // let item = ``;
+        let item = ``;
+        let carouselIndicator = ``;
         let carouselItem = ``;
+
         for (let key = 0; key < data.length; key++) {
-            $( ".carousel-inner" ).append( data );
-            carouselItem += `
-                                <div class="carousel-item carousel-itemWithStock">
-                        <img class="second-slide"
-                             src="/uploads/images/stocks/2.jpg"
-                             alt="Second slide">
+            let li = key + 1;
+            console.log("key = " + key + ". li = " + li);
+            carouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
+            $(".carousel-indicators").append(carouselIndicator);
+            console.log("carouselIndicator = " + carouselIndicator);
+
+            carouselItem = `
+                 <div class="carousel-item carousel-itemWithStock">
+                        <img class="next-slide"
+                             src="/uploads/images/stocks/${data[key].stockImg}" width="400" height="200"
+                             onerror="if (this.src != '/uploads/images/stocks/default.jpg')
+                                 this.src = '/uploads/images/stocks/default.jpg';">
                         <div class="container">
                             <div class="carousel-caption">
                                 <h4></h4>
                                 <p></p>
-                                <p><a class="btn btn-secondary" href="global/stockDetails/2" role="button">Подробнее &raquo;</a></p>
+                                <p><a class="btn btn-secondary" href="global/stockDetails/${data[key].id}"
+                                style="margin-bottom: 32px" role="button">Подробнее &raquo;</a></p>
                             </div>
                         </div>
-            </div>\`;
+            </div>`;
+            $(".carousel-inner").append(carouselItem);
+
             // item += `
             // <div class="col-4">
             //     <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
