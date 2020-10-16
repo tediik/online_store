@@ -3,10 +3,12 @@
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
+
 .vert {
-margin-top: .2rem;
-margin-bottom: 1rem;
-width: 400px;
+    margin-top: -.2rem;
+    margin-bottom: 1rem;
+    margin-left: -3rem;
+    width: 400px;
 }
 
 .vert {
@@ -22,6 +24,6 @@ width: 400px;
 
 .vert .carousel-item-prev,
 .vert .active.carousel-item-left {
-    -webkit-transform: translate3d(0,-100%, 0);
-    transform: translate3d(0,-100%, 0);
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
 }

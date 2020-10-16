@@ -206,7 +206,7 @@ function fillPublishedStocks(data) {
                     <div id="${data[key].id}"></div>
                     <div class="col p-4 d-flex flex-column position-static">
                         <p class="card-text mb-auto stockTitle">${data[key].stockTitle}</p>
-                        <a class="btn btn-sm btn-outline-light stockhref" href="/manager/api/stock/${data[key].id}" role="button">Подробнее &raquo;</a>
+                        <a class="btn btn-secondary stockhref" href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a>
                     </div>
                 </div>
             </div>`;
