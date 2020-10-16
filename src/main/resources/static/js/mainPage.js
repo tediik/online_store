@@ -192,43 +192,58 @@ function fillPublishedStocks(data) {
     let stocksView = document.getElementById('publishedStocksView');
     stocksView.innerHTML = ''
     if (data !== 'error') {
-        let item = ``;
+        // let item = ``;
+        let carouselItem = ``;
         for (let key = 0; key < data.length; key++) {
-            item += `
-            <div class="col-4">
-                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
-                    <div class="col-auto d-none d-lg-block stockImg">
-                        <img class="bd-placeholder-img" 
-                        src="/uploads/images/stocks/${data[key].stockImg}" width="400" height="200"
-                        onerror="if (this.src != '/uploads/images/stocks/default.jpg') 
-                            this.src = '/uploads/images/stocks/default.jpg';">
-                    </div>
-                    <div id="${data[key].id}"></div>
-                    <div class="col p-4 d-flex flex-column position-static">
-                        <p class="card-text mb-auto stockTitle">${data[key].stockTitle}</p>
-                        <a class="btn btn-secondary stockhref" href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a>
-                    </div>
-                </div>
-            </div>`;
-            if ((key + 1) % 5 == 0) {
-                $(stocksView).append(`<div class="row">` + item);
-                item = ``;
-            } else if ((key + 1) == data.length) {
-                $(stocksView).append(`<div class="row">` + item);
-            }
-            $(function () {
-                if (data[key].rating !== null) {
-                    $(`#rate${data[key].id}`).rateYo({
-                        rating: data[key].rating,
-                        readOnly: true
-                    });
-                } else {
-                    $(`#rate${data[key].id}`).rateYo({
-                        rating: 0,
-                        readOnly: true
-                    });
-                }
-            });
+            $( ".carousel-inner" ).append( data );
+            carouselItem += `
+                                <div class="carousel-item carousel-itemWithStock">
+                        <img class="second-slide"
+                             src="/uploads/images/stocks/2.jpg"
+                             alt="Second slide">
+                        <div class="container">
+                            <div class="carousel-caption">
+                                <h4></h4>
+                                <p></p>
+                                <p><a class="btn btn-secondary" href="global/stockDetails/2" role="button">Подробнее &raquo;</a></p>
+                            </div>
+                        </div>
+            </div>\`;
+            // item += `
+            // <div class="col-4">
+            //     <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
+            //         <div class="col-auto d-none d-lg-block stockImg">
+            //             <img class="bd-placeholder-img"
+            //             src="/uploads/images/stocks/${data[key].stockImg}" width="400" height="200"
+            //             onerror="if (this.src != '/uploads/images/stocks/default.jpg')
+            //                 this.src = '/uploads/images/stocks/default.jpg';">
+            //         </div>
+            //         <div id="${data[key].id}"></div>
+            //         <div class="col p-4 d-flex flex-column position-static">
+            //             <p class="card-text mb-auto stockTitle">${data[key].stockTitle}</p>
+            //             <a class="btn btn-secondary stockhref" href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a>
+            //         </div>
+            //     </div>
+            // </div>`;
+            // if ((key + 1) % 5 == 0) {
+            //     $(stocksView).append(`<div class="row">` + item);
+            //     item = ``;
+            // } else if ((key + 1) == data.length) {
+            //     $(stocksView).append(`<div class="row">` + item);
+            // }
+            // $(function () {
+            //     if (data[key].rating !== null) {
+            //         $(`#rate${data[key].id}`).rateYo({
+            //             rating: data[key].rating,
+            //             readOnly: true
+            //         });
+            //     } else {
+            //         $(`#rate${data[key].id}`).rateYo({
+            //             rating: 0,
+            //             readOnly: true
+            //         });
+            //     }
+            // });
         }
     } else {
         stocksView.innerHTML = 'Ожидайте новые акции'
