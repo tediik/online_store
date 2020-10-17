@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.List;
 
 @Entity
@@ -34,7 +35,8 @@ public class Categories {
     @NonNull
     private String superCategory;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @Transient
+    @OneToMany(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "productType")
     private List<Product> products;

@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Categories findProductCategory(Long id){
-        return productRepository.findProductCategory(id);
+        return productRepository.findProductCategory(id).getProductType();
     }
 
     /**

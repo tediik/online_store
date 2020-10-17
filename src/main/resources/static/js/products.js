@@ -274,8 +274,10 @@ function checkActionButton(event) {
  * @param id продукта
  * @returns {Promise<Response>} категория продукта
  */
-function getProductCategory(id){
-    return fetch("manager/api/categories/${id}",{headers: headers}).then(response=>response.json());
+function getProductCategory(id) {
+    return fetch(`api/categories/${id}`,
+        {method: "GET", headers: headers})
+        .then(response => response.json());
 }
 
 /**
@@ -287,7 +289,6 @@ function renderProductsTable(products) {
     table.empty()
     for (let i = 0; i < products.length; i++) {
         const product = products[i];
-        const category = getProductCategory(product.id);
         let row = `
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>
@@ -295,7 +296,7 @@ function renderProductsTable(products) {
                     <td>${product.price}</td>
                     <td>${product.amount}</td>              
                     <td>${product.rating}</td>
-                    <td>${category.category}</td>
+                    <td>${product.productType.category}</td>
                     <td>
             <!-- Buttons of the right column of main table-->
                         <button data-product-id="${product.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#productModalWindow">
@@ -401,11 +402,11 @@ function renderCategoriesModal(categories) {
     }
 }
 
-function categoryToArray(id){
+function categoryToArray(id) {
     let checkbox = document.getElementById('check' + id);
-    if (checkbox.checked){
-        categoriesArr[id-1] = true;
+    if (checkbox.checked) {
+        categoriesArr[id - 1] = true;
     } else {
-        categoriesArr[id-1] = false;
+        categoriesArr[id - 1] = false;
     }
 }
