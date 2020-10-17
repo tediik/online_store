@@ -61,8 +61,17 @@ html {
 }
 /* Declare heights because of positioning of img element */
 .carousel-itemWithStock {
-    height: 200px;
+    height: 250px;
     background-color: #8bd0db;
+}
+
+.stockTitle {
+    margin-left: -.8rem;
+    margin-right: -1rem;
+    padding-bottom: 1rem;
+    background-color: #8bd0db;
+    width: 400px;
+    height: 100px;
 }
 /* MARKETING CONTENT
 -------------------------------------------------- */

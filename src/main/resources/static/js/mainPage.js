@@ -184,7 +184,7 @@ function fetchAndRenderPublishedStocks() {
 }
 
 /**
- * function that fills main page with products
+ * function that fills main page with publishedStocks
  * @param data - products list
  */
 function fillPublishedStocks(data) {
@@ -207,12 +207,13 @@ function fillPublishedStocks(data) {
                              onerror="if (this.src != '/uploads/images/stocks/default.jpg')
                                  this.src = '/uploads/images/stocks/default.jpg';">
                         <div class="container">
-                            <div class="carousel-caption">
-                                <h4></h4>
-                                <p></p>
-                                <p><a class="btn btn-secondary" style="margin-bottom: -60px; margin-right: -252px" 
+                            <div class="carousel-caption" style="color: red">
+                                <p><a class="btn btn-secondary" style="margin-right: -252px" 
                                 href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a></p>
                             </div>
+                             <div class = "card-text mb-auto stockTitle">
+                                <h5>${data[key].stockTitle}</h5>
+                             </div>
                         </div>
             </div>`;
             $(".carousel-inner").append(carouselItem);
@@ -224,7 +225,7 @@ function fillPublishedStocks(data) {
 
 
 /**
- * function that renders main page with publishedStocks
+ * function that renders main page with publishedNews
  * @param data - stocks list
  */
 function fetchAndRenderPublishedNews() {
@@ -234,10 +235,10 @@ function fetchAndRenderPublishedNews() {
 }
 
 /**
- * function that fills main page with products
+ * function that fills main page with publishedNews
  * @param data - products list
  */
-function fillPublishedStocks(data) {
+function fillPublishedNews(data) {
     if (data !== 'error') {
         let carouselIndicator = ``;
         let carouselItem = ``;
@@ -256,13 +257,13 @@ function fillPublishedStocks(data) {
                              onerror="if (this.src != '/uploads/images/stocks/default.jpg')
                                  this.src = '/uploads/images/stocks/default.jpg';">
                         <div class="container">
-                            <div class="carousel-caption">
-                                <h4></h4>
-                                <p></p>
-                                <p><a class="btn btn-secondary" href="global/stockDetails/${data[key].id}"
-                                style="margin-bottom: -60px; margin-right: -252px"
-                                 role="button">Подробнее &raquo;</a></p>
+                            <div class="carousel-caption" style="color: red">
+                                <p><a class="btn btn-secondary" style="margin-bottom: -60px; margin-right: -252px" 
+                                href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a></p>
                             </div>
+                             <div class = "card-text mb-auto stockTitle">
+                                <h5>${data[key].stockTitle}</h5>
+                             </div>
                         </div>
             </div>`;
             $(".carousel-inner").append(carouselItem);

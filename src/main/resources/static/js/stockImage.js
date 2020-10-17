@@ -24,8 +24,7 @@ $(document).ready(function () {
                     processData: false,
                     cache: false,
                     success: function (data) {
-                        $('#stockPicture').attr('src', data);
-                        $('#blahs').attr('src' , data);
+                        console.log("stockImage "+ deleteId + " deleted.")
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -39,7 +38,6 @@ $(document).ready(function () {
             let reader = new FileReader();
             reader.onload = function(e) {
                 $('#stockImg').attr('src', e.target.result);
-                $('#blahs').attr('src', e.target.result);
             }
             reader.readAsDataURL(input.files[0]); // convert to base64 string
         }
@@ -71,7 +69,5 @@ async function changeStockImage(upload_Id, form_data) {
         returnPath = path;
     });
     console.log('returnPath: ' + returnPath);
-    $('#stockPicture').attr('src', returnPath);
-    $('#blahs').attr('src', returnPath);
     $('#carousel-inner').add('div');
 };

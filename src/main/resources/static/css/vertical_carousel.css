@@ -27,3 +27,26 @@
     -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
 }
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+/* Carousel base class */
+.carouselWithStock {
+    margin-top: .3rem;
+    margin-bottom: 1rem;
+    width: 400px;
+}
+/* Declare heights because of positioning of img element */
+.carousel-itemWithStock {
+    height: 250px;
+    background-color: #8bd0db;
+}
+
+.stockTitle {
+    margin-left: -.8rem;
+    margin-right: -1rem;
+    padding-bottom: 1rem;
+    background-color: #ebc493;
+    width: 400px;
+    height: 100px;
+}
