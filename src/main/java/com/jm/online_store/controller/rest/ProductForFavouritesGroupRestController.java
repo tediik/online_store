@@ -48,7 +48,7 @@ public class ProductForFavouritesGroupRestController {
     }
 
     @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroup")
-    public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody ArrayList<Long> idPidG) { //  1 2   5
+    public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody ArrayList<Long> idPidG) {
         User user = userService.getCurrentLoggedInUser();
         Set<FavouritesGroup> favouritesGroupSet = user.getFavouritesGroups();
         Long idFavouritesGroup = idPidG.get(idPidG.size() - 1);
@@ -59,6 +59,24 @@ public class ProductForFavouritesGroupRestController {
             favouritesGroupProductService.deleteProductFromFavouritesGroup(idProduct, idFavouritesGroup, user);
         }
         return ResponseEntity.ok("deleteProductFromFavouritesGroupOK");
+    }
+    @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroupAll")
+    public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody Long id) {
+        User user = userService.getCurrentLoggedInUser();
+        Long idFavouritesGroup = 1l;
+        //favouriteGoodsService.deleteFromFavouriteGoods(id, user);
+        favouritesGroupProductService.deleteProductFromFavouritesGroup(id, idFavouritesGroup, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "/customer/addProductInFavouritesGroup")
+    public ResponseEntity addFavouritesProduct(@RequestBody Long id) {
+        User user = userService.getCurrentLoggedInUser();
+        //favouriteGoodsService.addToFavouriteGoods(id, user);
+        Long idFavouritesGroup = 1l;
+        favouritesGroupProductService.addProductToFavouritesGroup(id, idFavouritesGroup, user);
+        System.out.println("id=" + id + "        idFavouritesGroup=" + idFavouritesGroup + "   user=" + user);
+        return ResponseEntity.ok().build();
     }
 
 }

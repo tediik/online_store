@@ -1,7 +1,5 @@
 $(document).ready(function(){
-    $('select').on('change', function () {
-        // var selectedValue = this.selectedOptions[0].value;
-        // var selectedText  = this.selectedOptions[0].text;
+    $('#favouritesGroup').on('change', function () {
         fillNewTableProductsGroup();
     });
 });
@@ -52,14 +50,12 @@ async function addProductToBasket(id) {
 $(document).on("click", "#showBasket", function () {
     $('#v-pills-tab a[href="#basketGoods"]').tab('show')
 });
-$(document).on("click", "#inic-product-buton", function () {
-    inicStartGroup();
-});
 
 $(document).on("click", "#add-group-buton", function () {
     let nameGroup = prompt("Введите название группы \"Избранных товаров\" ");
     if (nameGroup) {
         $('#favouritesGroup').append("<option value='" + toTranslit(nameGroup) + "'>" + nameGroup + " </option>");
+        $('#favouritesGroupMove').append("<option value='" + toTranslit(nameGroup) + "'>" + nameGroup + " </option>");
         addFavouritesGroupInBD(nameGroup);
     }
 });
@@ -68,7 +64,10 @@ $(document).on("click", "#delete-group-buton", function () {
     let idGroup = $("#favouritesGroup option:selected").attr("id");
     if (idGroup) {
         deleteFavouritesGroupInBD(idGroup);
-        $("#favouritesGroup :selected").remove()
+        $("#favouritesGroup :selected").remove();
+        $("#favouritesGroupMove option[id='" + idGroup + "']").remove();
+        $("#favouritesGroup :first").attr("selected", "selected");
+
     }
 });
 
@@ -86,7 +85,7 @@ $(document).on("click", ".checkProductInGroup", function () {
  * Привязываем событие к кнопке перемещения товара в избранную группу товаров
  */
 $(document).on("click", "#move-product-buton", function () {
-    let idGroup = $("#favouritesGroup option:selected").attr("id");
+    let idGroup = $("#favouritesGroupMove option:selected").attr("id");
     let idProduct = $(".checkProductInGroup:checked").map(function() {return this.name;}).get();
     if (idProduct != '') {
         console.log("Товар id=" + idProduct + " пеермещен в группу с id=" + idGroup);
@@ -142,13 +141,28 @@ async function deleteProductFromFavouritesGroupInBD(idProduct, idGroup) {
  * @returns {Promise<void>}
  */
 async function getFavouritesGroupInSelect() {
-    fetch(`/customer/favouritesGroup`)
-        .then(response => response.json())
-        .then(fgroup => {
-            for (let i = 0; i < fgroup.length; i++) {
-                $('#favouritesGroup').append("<option id=" + fgroup[i].id + " value='" + toTranslit(fgroup[i].name) + "'>" + fgroup[i].name + " </option>");
-            }
-    })
+        fetch(`/customer/favouritesGroup`)
+            .then(response => response.json())
+            .then(fgroup => {
+                let presentGroup = $('#favouritesGroup :first-child').attr("id");
+                console.log(presentGroup);
+                if (!presentGroup) {
+                    for (let i = 0; i < fgroup.length; i++) {
+                        $('#favouritesGroup').append("<option id=" + fgroup[i].id + " value='" + toTranslit(fgroup[i].name) + "'>" + fgroup[i].name + " </option>");
+                        $('#favouritesGroupMove').append("<option id=" + fgroup[i].id + " value='" + toTranslit(fgroup[i].name) + "'>" + fgroup[i].name + " </option>");
+
+                    }
+                    // Заливаем в БД Товары для Общего списка
+                    let idGroup = $("#favouritesGroup :first").attr("id");
+                    $(".checkProductInGroup").attr("idGroup", idGroup);
+                    let idProductInAll = $(".checkProductInGroup").map(function() {return this.name;}).get();
+                    if (idProductInAll != '') {
+                        console.log("Товар id=" + idProductInAll + " пеермещен в группу с id=" + idGroup);
+                        addProductInFavouritesGroupInBD(idProductInAll, idGroup);
+                    }
+                    //
+                }
+            })
 };
 /**
  * Передаем в БД новое имя списка Избранного
@@ -224,6 +238,7 @@ function inicStartGroup(){
  */
 function fillNewTableProductsGroup(){
     let idGroup = $("#favouritesGroup option:selected").attr("id");
+    console.log("idGroup = " + idGroup);
     fillFavouritesGroupProducts(idGroup);
 };
 async function fillFavouritesGroupProducts(idGroup) {

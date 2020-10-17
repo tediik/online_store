@@ -65,15 +65,6 @@ public class FavouritesGroupProductServiceImpl implements FavouritesGroupProduct
         productSet.add(productService.findProductById(idProduct).orElseThrow(ProductNotFoundException::new));
         favouritesGroup.setProducts(productSet);
         favouritesGroupSet.add(favouritesGroup);
-
-        System.out.println("favouritesGroupSet = " + favouritesGroupSet);
-        System.out.println("ДО currentUser.getFavouritesGroups()=" + currentUser.getFavouritesGroups());
         currentUser.setFavouritesGroups(favouritesGroupSet);
-        System.out.println("ПОСЛЕ currentUser.getFavouritesGroups()=" + currentUser.getFavouritesGroups());
-    }
-
-    @Override
-    public Set<Product> getProductFromFavouritesGroup(Long idFavouritesGroup, User currentUser) {
-        return null;
     }
 }
