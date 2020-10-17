@@ -1,7 +1,7 @@
 $(document).ready(function(){
-    $('select').on('change', function () {   //'#favouritesGroup'
-        var selectedValue = this.selectedOptions[0].value;
-        var selectedText  = this.selectedOptions[0].text;
+    $('select').on('change', function () {
+        // var selectedValue = this.selectedOptions[0].value;
+        // var selectedText  = this.selectedOptions[0].text;
         fillNewTableProductsGroup();
     });
 });
@@ -29,7 +29,7 @@ async function fillFavouritesGoods() {
 `;
         $(favoriteGoodsJson).append(product);
     }
-    getFavouritesGroupInSelect();
+        getFavouritesGroupInSelect();
 }
 
 async function deleteProductFromFavouritGoods(id) {
@@ -54,9 +54,6 @@ $(document).on("click", "#showBasket", function () {
 });
 $(document).on("click", "#inic-product-buton", function () {
     inicStartGroup();
-});
-$(document).on("click", "#new-table-product-buton", function () {
-    fillNewTableProductsGroup();
 });
 
 $(document).on("click", "#add-group-buton", function () {
@@ -138,19 +135,19 @@ async function deleteProductFromFavouritesGroupInBD(idProduct, idGroup) {
         method: 'DELETE',
         body: JSON.stringify(idPidG),
         headers: headers
-    }).then(response => {
-        console.log(response.text());
-    })
+    }).then(response => response.text())
 };
 /**
  * Получаем список групп Избранного из БД и формируем "select"
  * @returns {Promise<void>}
  */
 async function getFavouritesGroupInSelect() {
-    fetch(`/customer/favouritesGroup`).then(response => response.json()).then(fgroup => {
-        for (let i = 0; i < fgroup.length; i++) {
-            $('#favouritesGroup').append("<option id=" + fgroup[i].id + " value='" + toTranslit(fgroup[i].name) + "'>" + fgroup[i].name + " </option>");
-        }
+    fetch(`/customer/favouritesGroup`)
+        .then(response => response.json())
+        .then(fgroup => {
+            for (let i = 0; i < fgroup.length; i++) {
+                $('#favouritesGroup').append("<option id=" + fgroup[i].id + " value='" + toTranslit(fgroup[i].name) + "'>" + fgroup[i].name + " </option>");
+            }
     })
 };
 /**
@@ -183,6 +180,8 @@ async function addFavouritesGroupInBD(nameGroup) {
  * @returns {Promise<void>}
  */
 async function deleteFavouritesGroupInBD(id) {
+// $("#town :selected") выбранный элемент
+// $("#town :first") первый элемент
     fetch(`/customer/favouritesGroup/` + id, {
         method: 'DELETE'
     })
@@ -221,7 +220,7 @@ function inicStartGroup(){
 };
 
 /**
- * Перерисовываем таблицу избранного в зависимости от селекта
+ * Перерисовываем таблицу избранного в зависимости от выбора группы избранного
  */
 function fillNewTableProductsGroup(){
     let idGroup = $("#favouritesGroup option:selected").attr("id");

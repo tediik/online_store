@@ -5,6 +5,7 @@ import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Description;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
@@ -21,6 +22,7 @@ import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
@@ -77,6 +79,7 @@ public class DataInitializer {
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
     private final CommentService commentService;
+    private final FavouritesGroupService favouritesGroupService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -98,6 +101,7 @@ public class DataInitializer {
         commonSettingsInit();
         feedbackTopicsInit();
         commentsInit();
+        favouritesGroupInit();
     }
 
     /**
@@ -1160,5 +1164,12 @@ public class DataInitializer {
         commentService.addCommentInit(comment1);
         commentService.addCommentInit(comment2);
         commentService.addCommentInit(comment3);
+    }
+    public void favouritesGroupInit() {
+        User customer = userService.findByEmail("customer@mail.ru").get();
+        FavouritesGroup favouritesGroup = new FavouritesGroup();
+        favouritesGroup.setName("Общая");
+        favouritesGroup.setUser(customer);
+        favouritesGroupService.addFavouritesGroup(favouritesGroup);
     }
 }

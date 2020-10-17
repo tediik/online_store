@@ -28,7 +28,7 @@ import java.util.Set;
 public class FavouritesGoodsRestController {
     private final FavouriteGoodsService favouriteGoodsService;
     private final UserService userService;
-
+    private final FavouritesGroupProductService favouritesGroupProductService;
     /**
      * контроллер для получения товаров "избранное" для авторизованного User.
      * используется поиск по идентификатору User, т.к. используется ленивая
@@ -52,6 +52,9 @@ public class FavouritesGoodsRestController {
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.addToFavouriteGoods(id, user);
+        Long idFavouritesGroup = 1l;
+        favouritesGroupProductService.addProductToFavouritesGroup(id, idFavouritesGroup, user);
+        System.out.println("id=" + id + "        idFavouritesGroup=" + idFavouritesGroup + "   user=" + user);
         return ResponseEntity.ok().build();
     }
 
