@@ -3,6 +3,7 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
@@ -55,6 +56,17 @@ public class ProductServiceImpl implements ProductService {
     private final MailSenderService mailSenderService;
 
     /**
+     * Смотрим категорию товара по id товара
+     *
+     * @param id товара
+     * @return Categories товара
+     */
+    @Override
+    public Categories findProductCategory(Long id){
+        return productRepository.findProductCategory(id);
+    }
+
+    /**
      * метод получения списка товаров
      *
      * @return List<Product>
@@ -75,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
     /**
-     * метод поиска Product по иденификатору.
+     * метод поиска Product по идентификатору.
      *
      * @param productId идентификатор Product
      * @return Optional<Product>
@@ -301,7 +313,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод формирующий DTO для передачи на страниу товара
+     * метод формирующий DTO для передачи на страницу товара
      *
      * @param productId
      * @param currentUser
@@ -322,7 +334,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getPrice(),
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
-                        presentProduct.getProductType(),
+                        presentProduct.getProductType().getCategory(),
                         productSet.contains(presentProduct)
                 );
                 return Optional.of(productDto);
@@ -336,7 +348,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getPrice(),
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
-                        presentProduct.getProductType(),
+                        presentProduct.getProductType().getCategory(),
                         false
                 );
                 return Optional.of(productDto);

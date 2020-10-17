@@ -1,4 +1,5 @@
 let productRestUrl = "/rest/products/allProducts"
+let categoriesArr = []
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
@@ -269,6 +270,15 @@ function checkActionButton(event) {
 }
 
 /**
+ * функция получения категории продукта
+ * @param id продукта
+ * @returns {Promise<Response>} категория продукта
+ */
+function getProductCategory(id){
+    return fetch("manager/api/categories/${id}",{headers: headers}).then(response=>response.json());
+}
+
+/**
  * функция рендера таблицы продуктов
  * @param products
  */
@@ -277,6 +287,7 @@ function renderProductsTable(products) {
     table.empty()
     for (let i = 0; i < products.length; i++) {
         const product = products[i];
+        const category = getProductCategory(product.id);
         let row = `
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>
@@ -284,7 +295,7 @@ function renderProductsTable(products) {
                     <td>${product.price}</td>
                     <td>${product.amount}</td>              
                     <td>${product.rating}</td>
-                    <td>${product.productType}</td>
+                    <td>${category.category}</td>
                     <td>
             <!-- Buttons of the right column of main table-->
                         <button data-product-id="${product.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#productModalWindow">
@@ -383,9 +394,18 @@ function renderCategoriesModal(categories) {
         let checkbox = `
             <form class="checkbox">
             <label class="checkText" for="check${categories[i].id}">${categories[i].category}</label>
-            <input id="check${categories[i].id}" type="checkbox" onclick="toggle(this.form.check);">
+            <input id="check${categories[i].id}" type="checkbox" name="check[]" onclick="categoryToArray(${categories[i].id})">
             </form>
                         `;
         checkList.append(checkbox)
+    }
+}
+
+function categoryToArray(id){
+    let checkbox = document.getElementById('check' + id);
+    if (checkbox.checked){
+        categoriesArr[id-1] = true;
+    } else {
+        categoriesArr[id-1] = false;
     }
 }

@@ -4,6 +4,7 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -154,7 +155,8 @@ public class ManagerProductsRestController {
      */
     @PostMapping(value = "/rest/products/report")
     public ResponseEntity<List<Product>> createReport(@RequestBody List<Product> products) {
-
+        XSSFWorkbook book = new XSSFWorkbook();
+        //FileOutputStream productReport = new FileOutputStream(new File("/resources/reports/"));
         return null;
     }
 }

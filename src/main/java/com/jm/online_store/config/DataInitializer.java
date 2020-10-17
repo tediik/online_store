@@ -83,7 +83,8 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    //@PostConstruct
+    //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -102,7 +103,7 @@ public class DataInitializer {
 
     /**
      * Метод конфигурирования и первичного заполнения таблиц:
-     * ролей, юзеров и корзины.
+     * ролей, юзеров.
      */
     private void roleInit() {
         Role adminRole = new Role("ROLE_ADMIN");
@@ -138,37 +139,6 @@ public class DataInitializer {
         userService.addUser(customer);
         userService.addUser(admin);
 
-        Product product_1 = new Product("apple", 100000D, 10, 0.1);
-        Product product_2 = new Product("samsung", 80000D, 100, 0.9);
-        Product product_3 = new Product("xiaomi", 30000D, 50, 0.5);
-
-        productService.saveProduct(product_1);
-        productService.saveProduct(product_2);
-        productService.saveProduct(product_3);
-
-        Set<Product> productSet = new HashSet<>();
-        productSet.add(product_1);
-        productSet.add(product_2);
-        productSet.add(product_3);
-
-        customer = userService.findByEmail("customer@mail.ru").get();
-        customer.setFavouritesGoods(productSet);
-        userService.updateUser(customer);
-
-        SubBasket subBasket_1 = new SubBasket();
-        subBasket_1.setProduct(product_1);
-        subBasket_1.setCount(1);
-        basketService.addBasket(subBasket_1);
-        SubBasket subBasket_2 = new SubBasket();
-        subBasket_2.setProduct(product_3);
-        subBasket_2.setCount(1);
-        basketService.addBasket(subBasket_2);
-        List<SubBasket> subBasketList = new ArrayList<>();
-        subBasketList.add(subBasket_1);
-        subBasketList.add(subBasket_2);
-        customer.setUserBasket(subBasketList);
-        userService.updateUser(customer);
-
         Random random = new Random();
         for (int i = 1; i < 20; i++) {
             userService.addUser(new User("customer" + i + "@mail.ru",
@@ -182,7 +152,7 @@ public class DataInitializer {
      */
     private void newsInit() {
         News firstNews = News.builder()
-                .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
+                .title("Акция от XP-Pen: Выиграй обучение в Skillbox!")
                 .anons("Не пропустите розыгрыш потрясающих призов.")
                 .fullText("<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " font-family: &quot;PT Sans&quot;, Arial, sans-serif;\"><b style=\"color: rgb(255, 0, 0);" +
@@ -571,7 +541,7 @@ public class DataInitializer {
     }
 
     /**
-     * Метод первичного тестового заполнения товаров.
+     * Метод первичного тестового заполнения товаров, избранного и корзины.
      */
     private void productInit() {
 
@@ -593,33 +563,33 @@ public class DataInitializer {
         Categories category16 = new Categories("Стиральные и сушильные машины", "Бытовая техника");
         Categories category17 = new Categories("Климатическая техника", "Бытовая техника");
 
-        Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
-        Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
-        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer", false);
+        Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, category1);
+        Product product2 = new Product("ACER-543", 399.9, 10, 4.2, category1);
+        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, category1);
 
-        Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer", false);
-        Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer", false);
-        Product product6 = new Product("NY-2345-PC-453", 1223.9, 7, 4.7, "Computer", false);
+        Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, category2);
+        Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, category2);
+        Product product6 = new Product("NY-2345-PC-453", 1223.9, 7, 4.7, category2);
 
-        Product product7 = new Product("XIAOMI-Mi10", 599.9, 120, 4.9, "Cellphone", false);
-        Product product8 = new Product("LG-2145", 439.5, 78, 3.9, "Cellphone", false);
-        Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, "Cellphone", false);
+        Product product7 = new Product("XIAOMI-Mi10", 599.9, 120, 4.9, category3);
+        Product product8 = new Product("LG-2145", 439.5, 78, 3.9, category3);
+        Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, category3);
 
-        Product product10 = new Product("Notebook 1", 99.9, 2, 0.0, "Computer");
-        Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer");
-        Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, "Computer");
+        Product product10 = new Product("Notebook 1", 99.9, 2, 0.0, category1);
+        Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, category1);
+        Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, category1);
 
-        Product product13 = new Product("Roomba 698", 299.9, 6, 4.3, "Cleaning");
-        Product product14 = new Product("Bosch BWD41720", 329.9, 8, 4.1, "Cleaning");
-        Product product15 = new Product("Samsung SC4131", 69.9, 28, 4.6, "Cleaning");
+        Product product13 = new Product("Roomba 698", 299.9, 6, 4.3, category15);
+        Product product14 = new Product("Bosch BWD41720", 329.9, 8, 4.1, category15);
+        Product product15 = new Product("Samsung SC4131", 69.9, 28, 4.6, category15);
 
-        Product product16 = new Product("Samsung WW60K40G00W", 549.9, 3, 4.8, "Washing");
-        Product product17 = new Product("Hotpoint-Ariston BI WDHG 75148 EU", 999.9, 2, 4.3, "Washing");
-        Product product18 = new Product("Whirlpool TDLR 60111", 499.9, 6, 3.9, "Washing");
+        Product product16 = new Product("Samsung WW60K40G00W", 549.9, 3, 4.8, category16);
+        Product product17 = new Product("Hotpoint-Ariston BI WDHG 75148 EU", 999.9, 2, 4.3, category16);
+        Product product18 = new Product("Whirlpool TDLR 60111", 499.9, 6, 3.9, category16);
 
-        Product product19 = new Product("Hotpoint-Ariston SPOWHA 409-K", 399.9, 2, 3.8, "Air_conditioner");
-        Product product20 = new Product("LG P09EP2", 529.9, 2, 4.1, "Air_conditioner");
-        Product product21 = new Product("LG Mega Plus P12EP1", 584.9, 2, 4.7, "Air_conditioner");
+        Product product19 = new Product("Hotpoint-Ariston SPOWHA 409-K", 399.9, 2, 3.8, category17);
+        Product product20 = new Product("LG P09EP2", 529.9, 2, 4.1, category17);
+        Product product21 = new Product("LG Mega Plus P12EP1", 584.9, 2, 4.7, category17);
 
         Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
         Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
@@ -675,6 +645,29 @@ public class DataInitializer {
         categoriesService.saveAll(Arrays.asList(category1, category2, category3,
                 category4, category5, category6, category7, category8, category9, category10, category11,
                 category12, category13, category14, category15, category16, category17));
+
+        Set<Product> productSet = new HashSet<>();
+        productSet.add(product1);
+        productSet.add(product2);
+        productSet.add(product3);
+
+        User customer = userService.findByEmail("customer@mail.ru").get();
+        customer.setFavouritesGoods(productSet);
+        userService.updateUser(customer);
+
+        SubBasket subBasket_1 = new SubBasket();
+        subBasket_1.setProduct(product1);
+        subBasket_1.setCount(1);
+        basketService.addBasket(subBasket_1);
+        SubBasket subBasket_2 = new SubBasket();
+        subBasket_2.setProduct(product3);
+        subBasket_2.setCount(1);
+        basketService.addBasket(subBasket_2);
+        List<SubBasket> subBasketList = new ArrayList<>();
+        subBasketList.add(subBasket_1);
+        subBasketList.add(subBasket_2);
+        customer.setUserBasket(subBasketList);
+        userService.updateUser(customer);
     }
 
     /**

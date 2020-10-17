@@ -1,5 +1,6 @@
 package com.jm.online_store.repository;
 
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("FROM Product p WHERE p.descriptions.information LIKE %:searchString%")
     List<Product> findProductByDescriptionsContains(@Param("searchString") String searchString);
+
+    @Query("SELECT productType FROM Product WHERE id = :prodId")
+    Categories findProductCategory(@Param("prodId") Long prodId);
 }

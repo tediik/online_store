@@ -1,5 +1,6 @@
 package com.jm.online_store.service.interf;
 
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
@@ -44,4 +45,6 @@ public interface ProductService {
     boolean addNewSubscriber(Long id, String email);
 
     Long editProduct(Product product);
+
+    Categories findProductCategory(Long id);
 }

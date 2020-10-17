@@ -14,16 +14,18 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,20 +45,28 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false, updatable = false, nullable = false)
     private long id;
+
     @NonNull
     @Column(name = "product", nullable = false)
     private String product;
+
     @NonNull
     @Column(name = "price", nullable = false)
     private Double price;
+
     @NonNull
     private Integer amount;
+
     @NonNull
     private Double rating;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Description descriptions;
-    @NonNull
-    private String productType;
+
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinColumn(name = "productType")
+    private Categories productType;
+
     @NonNull
     private boolean deleted;
 
@@ -88,7 +98,7 @@ public class Product {
     @Column(name = "email")
     private Set<String> priceChangeSubscribers = new HashSet<>();
 
-    public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {
+    public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull Categories productType) {
         this.product = product;
         this.price = price;
         this.amount = amount;
@@ -96,14 +106,14 @@ public class Product {
         this.productType = productType;
     }
 
-    public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
+    public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating) {
         this.product = product;
         this.price = price;
         this.amount = amount;
         this.rating = rating;
     }
 
-    public Product(String product, double price, int amount) {
+    public Product(String product, Double price, Integer amount) {
         this.product = product;
         this.price = price;
         this.amount = amount;
