@@ -9,5 +9,6 @@ public enum RepairOrderType {
     DIAGNOSTICS,
     IN_WORK,
     COMPLETE,
-    ARCHIVED
+    ARCHIVED,
+    CANCELED
 }

@@ -19,6 +19,8 @@ public interface RepairOrderService {
 
     List<RepairOrder> getAllArchive();
 
+    List<RepairOrder> getAllCanceled();
+
     void save(RepairOrder repairOrder);
 
     RepairOrder findById(Long id);

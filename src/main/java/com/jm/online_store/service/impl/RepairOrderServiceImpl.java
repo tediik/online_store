@@ -95,6 +95,17 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     }
 
     /**
+     * Метод возвращает все отмененные заказы на ремонт, сортирует по дате, от нового заказа к старому
+     * @return лист заказов на ремонт
+     */
+    @Override
+    public List<RepairOrder> getAllCanceled() {
+        List<RepairOrder> repairOrderList = repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.CANCELED);
+        repairOrderList.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
+        return repairOrderList;
+    }
+
+    /**
      * Метод сохраняет заявку на ремонт, устанавливает дату создания заявки и ставит статус Accepted.
      * Проверяет валидность введенного номера телефона, в случае его невалидности
      * бросает исключение {@throws InvalidTelephoneNumberException}

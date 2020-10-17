@@ -140,6 +140,16 @@ public class RepairOrderRestController {
     }
 
     /**
+     * Метод возвращает все отмененные заказы на ремонт
+     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     */
+    @GetMapping("/service/getCanceledRepairOrder")
+    public ResponseEntity<List<RepairOrder>> getCanceledRepairOrder(){
+        List<RepairOrder> repairOrderList = repairOrderService.getAllCanceled();
+        return ResponseEntity.ok().body(repairOrderList);
+    }
+
+    /**
      * Метод возвращает список статусов заказа на ремонт
      * @return ResponseEntity<List<RepairOrderType>> список статусов
      */

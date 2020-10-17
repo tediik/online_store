@@ -70,6 +70,9 @@ function checkUpperNavButtonRepairOrder(event) {
     if (tab === 'closedRepairOrders') {
         getArchiveRepairOrders()
     }
+    if (tab === 'canceledRepairOrders') {
+        getCanceledRepairOrders()
+    }
 }
 
 /**
@@ -149,6 +152,17 @@ function getArchiveRepairOrders() {
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'closedRepairOrders')
+        })
+}
+
+/**
+ * Функция получает все отмененные заказы на ремонт
+ */
+function getCanceledRepairOrders() {
+    fetch('http://localhost:9999/service/getCanceledRepairOrder')
+        .then((res) => res.json())
+        .then((data) => {
+            renderRepairOrder(data, 'canceledRepairOrders')
         })
 }
 
@@ -243,6 +257,7 @@ function updateRepairOrder() {
                 getIn_WorkRepairOrders()
                 getCompleteRepairOrders()
                 getArchiveRepairOrders()
+                getCanceledRepairOrders()
                 toastr.success("Обновление заявки прошло успешно.");
             } else {
                 toastr.error("Обновить заявку не удалось. Проверьте корректность ввода данных.", {timeOut: 3000});
@@ -289,6 +304,9 @@ function colorDiv(status) {
     }
     if (status === "COMPLETE") {
         return "alert-success";
+    }
+    if (status === "CANCELED") {
+        return "alert-danger";
     }
     return "alert-secondary";
 }

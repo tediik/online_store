@@ -80,6 +80,7 @@
                                             <option value="IN_WORK">IN_WORK</option>
                                             <option value="COMPLETE">COMPLETE</option>
                                             <option value="ARCHIVED">ARCHIVED</option>
+                                            <option value="CANCELED">CANCELED</option>
                                         </select>
                                     </div>
 
@@ -432,6 +433,12 @@
                                        data-toggle-id="closedRepairOrders"
                                        href="#tab_closedRepairOrders">Закрытые заявки</a>
                                 </li>
+                                <!-- Седьмая вкладка закрытые заявки-->
+                                <li class="nav-item">
+                                    <a class="nav-link" id="nav-link_canceledRepairOrders" data-toggle="tab"
+                                       data-toggle-id="canceledRepairOrders"
+                                       href="#tab_canceledRepairOrders">Отмененные заявки</a>
+                                </li>
                             </ul>
 
                             <!-- Блоки с контентом -->
@@ -464,6 +471,11 @@
                                 <!--Шестой блок-->
                                 <div class="tab-pane fade" id="tab_closedRepairOrders">
                                     <div id="closedRepairOrders">
+                                    </div>
+                                </div>
+                                <!--Седьмой блок-->
+                                <div class="tab-pane fade" id="tab_canceledRepairOrders">
+                                    <div id="canceledRepairOrders">
                                     </div>
                                 </div>
                             </div>
