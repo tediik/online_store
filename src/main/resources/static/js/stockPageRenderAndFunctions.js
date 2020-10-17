@@ -53,10 +53,11 @@ function yHandler() {
  */
 function checkFields(event) {
     if (event.target.dataset.toggleId === 'submit') {
+        let stockId = document.getElementById('stockId')
+        console.log("Checking fields. StockId = " + stockId)
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
-        let published = document.getElementById('published')
         if (stockTitle.value === '') {
             invalidModalField("Заполните заголовок акции", stockTitle)
         } else if (stockText.value === "") {
@@ -185,7 +186,8 @@ function handleSaveChangesButton() {
     }
     let method = (stock.id !== '' ? 'PUT' : 'POST')
 
-    fetchStock(stock, method)
+    fetchStock(stock, method);
+    console.log("fetching Stock: " + stock.id + ". Method: " + method + ". Published: " + published);
 
     function fetchStock(stock, method) {
         fetch(stockApiUrl, {
@@ -212,18 +214,20 @@ function handleEditButtonClick(event) {
     $('#stockIdDiv').removeClass('d-none')
     $('.modal-title').text("Редактировать акцию")
     let stockId = event.target.dataset.stockId
+    console.log("Редактирую акцию: " + stockId)
     stockModalClearFields()
 
     function renderModalWindowEdit(stock) {
         let stockText = stock.stockText
         $("#stockId").val(stock.id)
+        console.log("renderModal stockId: " + stockId)
         $("#stockTitle").val(stock.stockTitle)
         $('#stockText').summernote('code', stockText)
         $("#startDate").val(stock.startDate)
         $("#endDate").val(stock.endDate)
         $("#published").prop('checked', stock.published)
     }
-
+    console.log("Подготовка к fetch. stockId: " + stockId)
     fetch(stockApiUrl + `/${stockId}`, {
         method: 'GET',
         headers: myHeaders
