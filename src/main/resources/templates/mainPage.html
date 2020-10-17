@@ -102,27 +102,28 @@
                 <!-- menu from mainPage.js -->
             </ul>
         </div>
-        <!-- Carousel -->
+
+        <!-- Stocks Carousel -->
         <div class="col-4 promo">
             <h4 class="my-0 font-weight-normal"><a class="text-secondary" href="/stocks">Акции</a>
             </h4>
             <div id="myCarousel" class="carousel slide carouselWithStock" data-ride="carousel">
-                <ol class="carousel-indicators" style="margin-bottom: -1px">
+                <ol class="carousel-indicators" id="stockCarousel-indicators" style="margin-bottom: -1px">
                     <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                 </ol>
-                <div class="carousel-inner">
-                    <div class="carousel-item active carousel-itemWithStock">
+                <div class="carousel-inner" id="stockCarousel-inner">
+                    <div class="carousel-item active carousel-itemWithStock" id="carousel-itemWithStock">
                         <img class="first-slide"
                              src="/uploads/images/stocks/default.jpg"
                              alt="First slide">
-                        <div class="container">
+                        <div class="container" style="height: 500px">
                             <div class="carousel-caption text-center">
                                 <p><a class="btn btn-secondary"
                                       style="margin-right: -252px"
                                       href="stocks/" role="button">Подробнее &raquo;</a>
                                 </p>
                             </div>
-                            <div class = "card-text mb-auto stockTitle">
+                            <div class = "card-text stockTitle">
                                 <h5></h5>
                             </div>
                         </div>
@@ -138,6 +139,7 @@
                 </a>
             </div>
         </div>
+
         <!-- News carousel -->
         <div class="col-4 promo">
             <h4 class="my-1 font-weight-normal" style="margin-left: -30px"><a class="text-secondary" href="/news">Обзоры и новости</a></h4>
@@ -145,24 +147,24 @@
                 <div id="carouselExampleControls" class="carousel vert slide" data-ride="carousel"
                      data-interval="2500">
                     <link rel="stylesheet" type="text/css" href="../static/css/vertical_carousel.css">
-                    <ol class="carousel-indicators" style="margin-bottom: -1px">
+                    <ol class="carousel-indicators" id="newsCarousel-indicators" style="margin-bottom: -1px">
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                         <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
                         <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
                         <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
                     </ol>
-                    <div class="carousel-inner">
+                    <div class="carousel-inner" id="newsCarousel-inner">
                         <div class="carousel-item active">
                             <img class="d-block mx-auto img-fluid" src="/uploads/images/news/news1.jpeg"
                                  alt="First slide">
-                            <div class="container">
+                            <div class="container" style="height: 500px">
                                 <div class="carousel-caption text-right">
                                     <h4>Как проверить ноутбук при покупке</h4>
                                     <p>9 шагов</p>
                                     <p><a class="btn btn-secondary" href="/news/1"
                                           role="button">Подробнее &raquo;</a></p>
                                 </div>
-                                <div class = "card-text mb-auto stockTitle">
+                                <div class = "card-text stockTitle">
                                     <h5></h5>
                                 </div>
                             </div>
@@ -223,7 +225,7 @@
         <div class="col-2">
         </div>
         <div class="col-10">
-            <h4 class="my-0 font-weight-normal products" id="headerForSomeProductsView">Актуальные предложения</h4>
+            <h4 class="my 50px font-weight-normal products" id="headerForSomeProductsView">Актуальные предложения</h4>
             <div id="someProductsView">
                 <!-- products view from mainPage.js-->
             </div>

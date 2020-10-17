@@ -6,8 +6,9 @@ $(document).ready(function ($) {
     preventDefaultEventForEnterKeyPress()
     getCurrent();
     fillCategories();
-    fetchAndRenderSomeProducts();
     fetchAndRenderPublishedStocks();
+    fetchAndRenderPublishedNews();
+    fetchAndRenderSomeProducts();
 });
 
 /**
@@ -190,17 +191,17 @@ function fetchAndRenderPublishedStocks() {
 function fillPublishedStocks(data) {
     if (data !== 'error') {
         let item = ``;
-        let carouselIndicator = ``;
-        let carouselItem = ``;
+        let stockCarouselIndicator = ``;
+        let stockCarouselItem = ``;
 
         for (let key = 0; key < data.length; key++) {
             let li = key + 1;
             console.log("key = " + key + ". li = " + li);
-            carouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
-            $(".carousel-indicators").append(carouselIndicator);
-            console.log("carouselIndicator = " + carouselIndicator);
+            stockCarouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
+            $(".stockCarousel-indicators").append(stockCarouselIndicator);
+            console.log("stockCarouselIndicator = " + stockCarouselIndicator);
 
-            carouselItem = `
+            stockCarouselItem = `
                  <div class="carousel-item carousel-itemWithStock">
                         <img class="next-slide"
                              src="/uploads/images/stocks/${data[key].stockImg}" width="400" height="200"
@@ -211,15 +212,15 @@ function fillPublishedStocks(data) {
                                 <p><a class="btn btn-secondary" style="margin-right: -252px" 
                                 href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a></p>
                             </div>
-                             <div class = "card-text mb-auto stockTitle">
+                             <div class = "card-text stockTitle">
                                 <h5>${data[key].stockTitle}</h5>
                              </div>
                         </div>
             </div>`;
-            $(".carousel-inner").append(carouselItem);
+            $(".stockCarousel-inner").append(stockCarouselItem);
         }
     } else {
-        stocksView.innerHTML = 'Ожидайте новые акции'
+        console.log('Нет опубликованных акций');
     }
 }
 
@@ -229,9 +230,9 @@ function fillPublishedStocks(data) {
  * @param data - stocks list
  */
 function fetchAndRenderPublishedNews() {
-    fetch("/api/publishedstocks")
+    fetch("/api/publishednews")
         .then(response => response.json())
-        .then(data => fillPublishedStocks(data))
+        .then(data => fillPublishedNews(data))
 }
 
 /**
@@ -246,27 +247,27 @@ function fillPublishedNews(data) {
         for (let key = 0; key < data.length; key++) {
             let li = key + 1;
             console.log("key = " + key + ". li = " + li);
-            carouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
+            carouselIndicator = `<li data-target="#carouselExampleIndicators" data-slide-to="${li}"></li>`;
             $(".carousel-indicators").append(carouselIndicator);
             console.log("carouselIndicator = " + carouselIndicator);
 
             carouselItem = `
-                 <div class="carousel-item carousel-itemWithStock">
+                 <div class="carousel-item carousel-itemWithNews">
                         <img class="next-slide"
-                             src="/uploads/images/stocks/${data[key].stockImg}" width="400" height="200"
-                             onerror="if (this.src != '/uploads/images/stocks/default.jpg')
-                                 this.src = '/uploads/images/stocks/default.jpg';">
+                             src="/uploads/images/news/${data[key].newsImg}" width="400" height="200"
+                             onerror="if (this.src != '/uploads/images/news/defnews.jpg')
+                                 this.src = '/uploads/images/stocks/defnews.jpg';">
                         <div class="container">
                             <div class="carousel-caption" style="color: red">
                                 <p><a class="btn btn-secondary" style="margin-bottom: -60px; margin-right: -252px" 
-                                href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a></p>
+                                href="news/${data[key].id}" role="button">Подробнее &raquo;</a></p>
                             </div>
-                             <div class = "card-text mb-auto stockTitle">
-                                <h5>${data[key].stockTitle}</h5>
+                             <div class = "card-text newsTitle">
+                                <h5>${data[key].newsTitle}</h5>
                              </div>
                         </div>
             </div>`;
-            $(".carousel-inner").append(carouselItem);
+            $(".newsCarousel-inner").append(carouselItem);
         }
     } else {
         console.log("No news to view");

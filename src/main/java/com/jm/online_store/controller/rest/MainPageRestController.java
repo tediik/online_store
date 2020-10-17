@@ -1,10 +1,12 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.News;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
@@ -19,13 +21,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +45,7 @@ public class MainPageRestController {
     private final CategoriesService categoriesService;
     private final ProductService productService;
     private final StockService stockService;
+    private final NewsService newsService;
 
     @PostMapping("/registration")
     @ResponseBody
@@ -113,5 +114,14 @@ public class MainPageRestController {
     public ResponseEntity<List<Stock>> getPublishedStocks() {
         List<Stock> publishedStocks= stockService.findPublishedStocks();
         return ResponseEntity.ok(publishedStocks);
+    }
+
+    /**
+     * Возвращает список опубликованных акций  - список передаётся в метод сервиса .findPublishedStocks()
+     */
+    @GetMapping("api/publishednews")
+    public ResponseEntity<List<News>> getPublishedNews() {
+        List<News> publishedNews= newsService.getAllPublished();
+        return ResponseEntity.ok(publishedNews);
     }
 }
