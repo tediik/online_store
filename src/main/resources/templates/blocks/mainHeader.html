@@ -15,6 +15,8 @@
            href="/customer">Кабинет покупателя</a>
         <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/authority/profile">Кабинет администратора</a>
+        <a sec:authorize="hasAnyAuthority('ROLE_MANAGER')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           href="/authority/profile">Кабинет менеджера</a>
         <a sec:authorize="hasAnyAuthority('ROLE_SERVICE')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/service">Кабинет сервисного работника</a>
         <!-- Registration -->
