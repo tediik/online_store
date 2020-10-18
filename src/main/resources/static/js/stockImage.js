@@ -34,7 +34,7 @@ $(document).ready(function () {
                     processData: false,
                     cache: false,
                     success: function (data) {
-                        console.log("stockImage "+ deleteId + " deleted.")
+                        console.log("stockImage " + deleteId + " deleted.")
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -43,15 +43,16 @@ $(document).ready(function () {
         })
 
     })
+
     function readURL(input) {
         if (input.files && input.files[0]) {
             let reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 $('#stockImg').attr('src', e.target.result);
             }
             let fakefilename = $('#stockImg')[0].files[0].name;
             console.log("fakefilename = " + fakefilename);
-            if(fakefilename.indexOf('fakepath') == -1) {
+            if (fakefilename.indexOf('fakepath') == -1) {
                 console.log("2. False. fakefilename = " + fakefilename);
                 var filename = fakefilename;
             } else {
@@ -63,8 +64,9 @@ $(document).ready(function () {
             reader.readAsDataURL(input.files[0]); // convert to base64 string
         }
     }
+
     $("#stockImg" +
-        "").change(function() {
+        "").change(function () {
         readURL(this);
     });
 });
@@ -75,6 +77,7 @@ async function changeStockImage(upload_Id, form_data) {
     let returnPath;
     console.log('upload_Id: ' + upload_Id)
     console.log('formdata: ' + formdata)
+
 
     await fetch(`/rest/uploadStockImage/` + uploadId, {
         method: 'POST',

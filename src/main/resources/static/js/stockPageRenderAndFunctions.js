@@ -24,8 +24,8 @@ $(document).ready(function () {
     document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
     /*Modal window buttons*/
     document.getElementById('modalFooter').addEventListener('click', checkFields)
-    /*modal window publish checkbox listener*/
-    document.getElementById('publishCheckboxDiv').addEventListener('change', publishCheckboxHandler)
+    // /*modal window publish checkbox listener*/
+    // document.getElementById('publishCheckboxDiv').addEventListener('change', publishCheckboxHandler)
 
     document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
 
@@ -60,17 +60,22 @@ function checkFields(event) {
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
+        let filename = "default.jpg";
 
-        let fakefilename = $('#stockImg')[0].files[0].name;
-        console.log("fakefilename = " + fakefilename);
-        if(fakefilename.indexOf('fakepath') === -1) {
-            console.log("2. All right. fakefilename = " + fakefilename);
-            var filename = fakefilename;
-        } else {
-            console.log("1.Not OK. fakefilename = " + fakefilename);
-            var filename = $(fakefilename).val().replace(/C:\\fakepath\\/i, '')
-            console.log("filename = " + filename);
-            invalidModalField("Ошибка загрузки. Повторите выбор файла", stockImgUrl)
+        try {
+            let fakefilename = $('#stockImg')[0].files[0].name;
+            console.log("fakefilename = " + fakefilename);
+            if (fakefilename.indexOf('fakepath') === -1) {
+                console.log("2. All right. fakefilename = " + fakefilename);
+                filename = fakefilename;
+            } else {
+                console.log("1.Not OK. fakefilename = " + fakefilename);
+                filename = $(fakefilename).val().replace(/C:\\fakepath\\/i, '')
+                console.log("filename = " + filename);
+                invalidModalField("Ошибка загрузки. Повторите выбор файла", stockImgUrl)
+            }
+        } catch (err) {
+            console.log("name of file not found");
         }
 
         if (stockTitle.value === '') {
@@ -248,30 +253,30 @@ function handleEditButtonClick(event) {
     }).then(response => response.json()).then(stock => renderModalWindowEdit(stock))
 }
 
-// /**
-//  * Обработка чекбокса #published
-//  * если галка стоит, то установить published = true
-//  * и наоборот
-//  */
-// function chekboxPublished(o) {
-//     if (o.checked == true) {
-//         $("#published").val('true')
-//     } else {
-//         $("#published").val('false')
-//     }
-// };
 /**
- * function that handles publish checkbox
+ * Обработка чекбокса #published
+ * если галка стоит, то установить published = true
+ * и наоборот
  */
-function publishCheckboxHandler() {
-    if (document.getElementById('published').checked) {
+function chekboxPublished(o) {
+    if (o.checked == true) {
         $("#published").val('true')
-        document.getElementById('publishedCheckboxLabel').innerHTML = 'Опубликовать на гл.странице'
     } else {
         $("#published").val('false')
-        document.getElementById('publishedCheckboxLabel').innerHTML = 'Опубликовать на гл.странице'
     }
-}
+};
+// /**
+//  * function that handles publish checkbox
+//  */
+// function publishCheckboxHandler() {
+//     if (document.getElementById('published').checked) {
+//         $("#published").val('true')
+//         document.getElementById('publishedCheckboxLabel').innerHTML = 'Опубликовать на гл.странице'
+//     } else {
+//         $("#published").val('false')
+//         document.getElementById('publishedCheckboxLabel').innerHTML = 'Опубликовать на гл.странице'
+//     }
+// }
 
 /**
  * function changes modal window header
@@ -337,7 +342,7 @@ function renderStockList(data) {
             row.append(`<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-4\">
-                                 <img class="card-img" src=${stockImg} width=\"250\" alt="Здесь могло бы быть фото акции">
+                                 <img class="card-img" src=${stockImg} width=\"250\" alt="Ошибка. Перезагрузите фото акции">
                                  <p></p>
                                  <p id="stockId" class="stockId">ID акции: ${stockId}</p>
                                     <p id="rating" class="rating">Рейтинг: ${rating}</p>
@@ -366,7 +371,8 @@ function renderStockList(data) {
                                 </div>
                                 <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" 
                                             aria-orientation="vertical">
-                                    <button data-toggle-id="delete-stock" class="btn btn-danger" id="deleteButton" 
+                                    <button data-toggle-id="delete-stock" class="btn btn-danger" 
+                                            id="deleteButton" style="margin-right: -10px"
                                             data-stock-id="${stocks[i].id}">Удалить</button>
                                 </div>
                             </div>
