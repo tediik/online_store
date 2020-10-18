@@ -86,7 +86,7 @@ public class RepairOrderRestController {
     @GetMapping("/service/getAllRepairOrder")
     public ResponseEntity<List<RepairOrder>> getAllRepairOrder(){
         List<RepairOrder> repairOrderList = repairOrderService.findAll();
-        return ResponseEntity.ok().body(repairOrderList);
+        return ResponseEntity.ok(repairOrderList);
     }
 
     /**
@@ -96,7 +96,7 @@ public class RepairOrderRestController {
     @GetMapping("/service/getAcceptedRepairOrder")
     public ResponseEntity<List<RepairOrder>> getAcceptedRepairOrder(){
         List<RepairOrder> repairOrderList = repairOrderService.getAllAccepted();
-        return ResponseEntity.ok().body(repairOrderList);
+        return ResponseEntity.ok(repairOrderList);
     }
 
     /**
@@ -106,7 +106,7 @@ public class RepairOrderRestController {
     @GetMapping("/service/getDiagnosticsRepairOrder")
     public ResponseEntity<List<RepairOrder>> getDiagnosticsRepairOrder(){
         List<RepairOrder> repairOrderList = repairOrderService.getAllDiagnostics();
-        return ResponseEntity.ok().body(repairOrderList);
+        return ResponseEntity.ok(repairOrderList);
     }
 
     /**
@@ -116,7 +116,7 @@ public class RepairOrderRestController {
     @GetMapping("/service/getIn_WorkRepairOrder")
     public ResponseEntity<List<RepairOrder>> getIn_WorkRepairOrder(){
         List<RepairOrder> repairOrderList = repairOrderService.getAllIn_Work();
-        return ResponseEntity.ok().body(repairOrderList);
+        return ResponseEntity.ok(repairOrderList);
     }
 
     /**
@@ -126,7 +126,7 @@ public class RepairOrderRestController {
     @GetMapping("/service/getCompleteRepairOrder")
     public ResponseEntity<List<RepairOrder>> getCompleteRepairOrder(){
         List<RepairOrder> repairOrderList = repairOrderService.getAllComplete();
-        return ResponseEntity.ok().body(repairOrderList);
+        return ResponseEntity.ok(repairOrderList);
     }
 
     /**
@@ -136,7 +136,7 @@ public class RepairOrderRestController {
     @GetMapping("/service/getArchiveRepairOrder")
     public ResponseEntity<List<RepairOrder>> getArchiveRepairOrder(){
         List<RepairOrder> repairOrderList = repairOrderService.getAllArchive();
-        return ResponseEntity.ok().body(repairOrderList);
+        return ResponseEntity.ok(repairOrderList);
     }
 
     /**
@@ -146,7 +146,7 @@ public class RepairOrderRestController {
     @GetMapping("/service/getCanceledRepairOrder")
     public ResponseEntity<List<RepairOrder>> getCanceledRepairOrder(){
         List<RepairOrder> repairOrderList = repairOrderService.getAllCanceled();
-        return ResponseEntity.ok().body(repairOrderList);
+        return ResponseEntity.ok(repairOrderList);
     }
 
     /**

@@ -7,7 +7,7 @@ document.getElementById('checkStatusRepairOrder').addEventListener("click", getR
 function getRepairOrder() {
     let id = document.getElementById('idCheck').value;
     let telephoneNumber = document.getElementById('telCheck').value;
-    fetch('http://localhost:9999/api/checkStatus', {
+    fetch('/api/checkStatus', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',

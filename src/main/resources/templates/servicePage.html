@@ -6,7 +6,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <!-- Подключаем библиотеку summernote bs-4 CSS-->
+    <!-- Подключаем CSS summernote bs-4 -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <!--summernote CSS-->
     <link href="/static/css/summernote.css" rel="stylesheet">
@@ -53,7 +53,8 @@
                                     <br>
                                     <label for="telephoneNumberUpdate">Телефон</label>
                                     <input value="" type="tel" id="telephoneNumberUpdate" name="telephoneNumberUpdate"
-                                           placeholder="Введите телефон клиента в формате: (000) 000 00 00" class="form-control" required>
+                                           placeholder="Введите телефон клиента в формате: (000) 000 00 00"
+                                           class="form-control" required>
                                     <br>
 
                                     <label for="nameDeviceUpdate">Устройство</label>
@@ -130,7 +131,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#repairOrders">
+                        <a id="getRepairOrdersNav" class="nav-link" data-toggle="tab" href="#repairOrders">
                             Заказы на ремонт
                         </a>
                     </li>
@@ -150,246 +151,7 @@
 
                     <!--профиль-->
                     <div class="tab-pane fade show active" id="Profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <div form>
-                            <div class="container-fluid bg-light">
-                                <div class="row p-3">
-                                    <div class="col-4">
-                                        <div class="imgContainer">
-                                            <div>
-                                                <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2" height="152"
-                                                     th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}" width="152"></div>
-                                            <div class="imgButton">
-                                                <button type="button" class="btn btn-link" data-toggle="modal"
-                                                        data-target="#myModal"> Edit Profile Picture
-                                                </button>
-                                            </div>
-                                            <!--Profile picture change modal-->
-                                            <div class="modal" id="myModal">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-
-                                                        <!-- Modal Header -->
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Upload your profile picture</h4>
-                                                            <button type="button" class="close" data-dismiss="modal">
-                                                                &times;
-                                                            </button>
-                                                        </div>
-
-                                                        <!-- Modal body -->
-                                                        <div class="modal-body">
-                                                            <input type="file" id="fileInput" name="imageFile" alt="Picture">
-                                                            <br>
-                                                            <br>
-                                                            <input type="button" id="deletePicBtn" value="Delete Picture" data-dismiss="modal" class="btn btn-sm btn-outline-danger"/>
-                                                            <img id="blah" src="#" alt="your image"
-                                                                 class="rounded-circle img-responsive mt-2 float-right"
-                                                                 height="82" width="82"/>
-                                                        </div>
-                                                        <!-- Modal footer -->
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <form th:action="@{/service/profile}" th:object="${user}" th:value="${user.id}" method="post" data-role="personal-info-form">
-                                            <div class="form-group text-center font-weight-bold" hidden>
-                                                <label class="input-row_label" for="id_update">ID</label>
-                                                <input th:field="*{id}" type="text" class="form-control" id="id_update" name="id">
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold" hidden>
-                                                <label class="input-row_label" for="password_update">Пароль</label>
-                                                <input th:field="*{password}" type="text" class="form-control"
-                                                       id="password_update" name="password">
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold">
-                                                <label class="input-row_label" for="first_name_update">Имя</label>
-                                                <input th:field="*{firstName}" type="text" class="form-control"
-                                                       id="first_name_update" name="firstName">
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold">
-                                                <label for="last_name_input">Фамилия</label>
-                                                <input th:field="*{lastName}" type="text" class="form-control"
-                                                       id="last_name_input" name="lastName">
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold">
-                                                <label for="email_input">Email</label>
-                                                <input th:field="*{email}" type="text" class="form-control"
-                                                       id="email_input"
-                                                       name="email" readonly>
-                                            </div>
-                                            <div>
-                                                <button type="button" style="background-color: #ff8e05" class="m-2 btn btn-success d-block mx-auto"
-                                                        data-toggle="modal" data-target="#openNewMailModalServiceWorker">Изменить email
-                                                </button>
-
-                                                <button type="button" style="background-color: #ff8e05" class="m-2 btn btn-success d-block mx-auto"
-                                                        data-toggle="modal" data-target="#openChangePassModalServiceWorker">Изменить пароль
-                                                </button>
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold">
-                                                <label for="date_birthday_input" class="col-xs-2 col-form-label">День рождения</label>
-                                                <div class="col-xs-10">
-                                                    <input th:field="*{birthdayDate}" class="form-control"
-                                                           th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
-                                                           type="date" id="date_birthday_input" name="birthdayDate">
-                                                </div>
-                                            </div>
-                                            <div class="form-group-text-center">
-                                                <label for="gender_radio"
-                                                       class="text-center font-weight-bold">Пол</label>
-                                                <div id="gender_radio">
-                                                    <div class="custom-control custom-radio">
-                                                        <input th:field="*{userGender}" value="" type="radio"
-                                                               id="option1"
-                                                               name="genderRadio" class="custom-control-input">
-                                                        <label class="custom-control-label" for="option1">Не
-                                                            выбрано</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio">
-                                                        <input th:field="*{userGender}" value="MAN" type="radio"
-                                                               id="option2" name="genderRadio"
-                                                               class="custom-control-input">
-                                                        <label class="custom-control-label"
-                                                               for="option2">Мужской</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio">
-                                                        <input th:field="*{userGender}" value="WOMAN" type="radio"
-                                                               id="option3" name="genderRadio"
-                                                               class="custom-control-input">
-                                                        <label class="custom-control-label"
-                                                               for="option3">Женский</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <button type="submit" style="background-color: #ff8e05"
-                                                    class="m-2 btn btn-success d-block mx-auto">Сохранить
-                                            </button>
-                                            <div>
-                                                <button type="button" style="color: #a94442" class="m-2 btn btn-link d-block mx-auto"
-                                                        data-toggle="modal" data-target="#deleteProfile"
-                                                        th:data-del-id="${user.id}">Удалить профиль
-                                                </button>
-                                            </div>
-                                            <div class="m-2 text-center personal-info_register-container" style="background-color: #f9f9f9">
-                                                Дата регистрации:
-                                                <a th:field="*{registerDate}" th:text="*{registerDate}"
-                                                   class="personal-info_register-date font-weight-bold" id="register_date"></a>
-                                            </div>
-                                        </form>
-
-                                        <!---------------------- Change email Profile Modal window ------------------->
-                                        <div id="openNewMailModalServiceWorker" class="modal">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h3 class="modal-title">Изменяем электронную почту:</h3>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">x</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form id="formChangeMail" class="form-group">
-                                                            <div class="form-group text-center font-weight-bold">
-                                                                <label for="new_mail">Введите новый адрес электронной почты</label>
-                                                                <input type="email" id="new_mail" name="newMail" class="form-control" required/>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                            Отмена
-                                                        </button>
-                                                        <button type="submit" id="buttonChangeMailServiceWorker" class="btn btn-primary">
-                                                            Подтвердить
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!---------------------- End Change email Profile Modal window ------------------->
-
-                                        <!---------------------- Change password Profile Modal window ------------------->
-                                        <div id="openChangePassModalServiceWorker" class="modal">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h3 class="modal-title">Название</h3>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">x</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form class="form-group">
-                                                            <div class="form-group text-center font-weight-bold">
-                                                                <label for="old_password">Старый пароль</label>
-                                                                <input type="password" id="old_password" name="oldPassword"
-                                                                       autofocus="autofocus" class="form-control" required>
-                                                            </div>
-                                                            <div class="form-group text-center font-weight-bold">
-                                                                <label for="new_password">Новый пароль</label>
-                                                                <input type="password" id="new_password"
-                                                                       name="newPassword" class="form-control" required/>
-                                                                <small id="passwordHelpBlock" class="form-text text-muted">
-                                                                    Your password must be 8-20 characters long, contain
-                                                                    letters and numbers, and must not contain spaces
-                                                                    and emoji.
-                                                                </small>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                            Отмена
-                                                        </button>
-                                                        <button id="changePasswordServiceWorker" type="submit" class="btn btn-primary">
-                                                        Сохранить
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!---------------------- End Change password Profile Modal window ------------------->
-
-                                        <!---------------------- Delete Profile Modal window ------------------->
-                                        <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
-                                             aria-labelledby="titleDeleteProfile" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="titleDeleteProfile">Удалить
-                                                            профиль</h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Вы уверены что хотите удалить свой профиль?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                            Отмена
-                                                        </button>
-                                                        <button id="deleteProfileServiceWorker" type="button"
-                                                                class="btn btn-danger" th:data-del-id="${user.id}"
-                                                                data-dismiss="modal">
-                                                            Удалить
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!---------------------- End Delete Profile Modal window ------------------->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div th:insert="/blocks/profile :: profile"></div>
                     </div>
                     <!--конец профиля-->
 
@@ -508,7 +270,8 @@
                                             <label for="telephoneNumber">Телефон</label>
                                             <div>
                                                 <input value="" type="tel" class="form-control" id="telephoneNumber"
-                                                       placeholder="Введите телефон клиента в формате: (000) 000 00 00" required>
+                                                       placeholder="Введите телефон клиента в формате: (000) 000 00 00"
+                                                       required>
                                             </div>
                                         </div>
 
@@ -579,21 +342,10 @@
 <!--main script-->
 <script src="/static/js/repairOrder.js"></script>
 <script src="/static/js/profilePicture.js"></script>
-<script src="/static/js/serviceCenter.js"></script>
+<script src="/static/js/profileAdminManagerService.js"></script>
 
 <!-- jQuery Mask Plugin -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-<script>
-    $(function() {
-        $('#telephoneNumber').mask('+7 (000) 000 00 00');
-    });
-</script>
-<script>
-    $(function() {
-        $('#telephoneNumberUpdate').mask('+7 (000) 000 00 00');
-    });
-</script>
-<!-- jQuery Mask Plugin -->
-
+<script src="/static/js/telephoneNumberMask.js"></script>
 </body>
 </html>
