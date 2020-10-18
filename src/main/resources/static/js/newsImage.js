@@ -69,5 +69,4 @@ async function changeStockImage(upload_Id, form_data) {
         returnPath = path;
     });
     console.log('returnPath: ' + returnPath);
-    $('#carousel-inner').add('div');
 };
