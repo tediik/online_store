@@ -68,7 +68,7 @@ async function fillBasket() {
     $('#countBasketGoods').empty();
     $('#sumBasketGoods').empty();
 
-    $('#countBasketGoods').append(countGoods + "шт.");
+    $('#countBasketGoods').append(countGoods + " шт.");
     $('#sumBasketGoods').append(sumBasket);
 
     $('#countInBasket').empty();
