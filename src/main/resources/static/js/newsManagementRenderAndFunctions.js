@@ -3,6 +3,7 @@
  */
 let myHeaders = new Headers()
 let newsApiUrl = "/api/manager/news"
+let newsImgUrl = "../../uploads/images/news/"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), divId: '#allNews', number: 0, last: false};
 let clickUpperNavButton = 'allNews'

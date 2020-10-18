@@ -2,16 +2,6 @@ $(document).ready(function () {
     let headers = new Headers()
     headers.append('Content-type', 'application/json; charset=UTF-8')
     $(function () {
-        $('#fileImgInput').on('click', function () {
-            let uploadId = $('#stockId').val();
-            let file_data = $('#stockImg')[0].files[0];
-            let form_data = new FormData();
-            form_data.append("stockImg", file_data);
-            changeStockImage(uploadId, form_data);
-        });
-    });
-
-    $(function () {
         $('#editSave').on('click', function () {
             let uploadId = $('#stockId').val();
             let file_data = $('#stockImg')[0].files[0];
@@ -49,17 +39,6 @@ $(document).ready(function () {
             reader.onload = function(e) {
                 $('#stockImg').attr('src', e.target.result);
             }
-            let fakefilename = $('#stockImg')[0].files[0].name;
-            console.log("fakefilename = " + fakefilename);
-            if(fakefilename.indexOf('fakepath') == -1) {
-                console.log("2. False. fakefilename = " + fakefilename);
-                var filename = fakefilename;
-            } else {
-                console.log("1.True. fakefilename = " + fakefilename);
-                var filename = $(fakefilename).val().replace(/C:\\fakepath\\/i, '')
-                console.log("filename = " + filename);
-            }
-
             reader.readAsDataURL(input.files[0]); // convert to base64 string
         }
     }
@@ -70,6 +49,9 @@ $(document).ready(function () {
 });
 
 async function changeStockImage(upload_Id, form_data) {
+    // const headers = {
+    //     'Content-type': 'application/json; charset=UTF-8'
+    // };
     let uploadId = upload_Id
     let formdata = form_data;
     let returnPath;

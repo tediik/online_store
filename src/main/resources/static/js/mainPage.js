@@ -200,7 +200,7 @@ function fillPublishedStocks(data) {
             stockCarouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
             $(".stockCarousel-indicators").append(stockCarouselIndicator);
             console.log("stockCarouselIndicator = " + stockCarouselIndicator);
-
+            console.log("stockCarouselImage = " + data[key].stockImg);
             stockCarouselItem = `
                  <div class="carousel-item carousel-itemWithStock">
                         <img class="next-slide"
@@ -217,7 +217,7 @@ function fillPublishedStocks(data) {
                              </div>
                         </div>
             </div>`;
-            $(".stockCarousel-inner").append(stockCarouselItem);
+            $(".carousel-inner").append(stockCarouselItem);
         }
     } else {
         console.log('Нет опубликованных акций');
@@ -256,7 +256,7 @@ function fillPublishedNews(data) {
                         <img class="next-slide"
                              src="/uploads/images/news/${data[key].newsImg}" width="400" height="200"
                              onerror="if (this.src != '/uploads/images/news/defnews.jpg')
-                                 this.src = '/uploads/images/stocks/defnews.jpg';">
+                                 this.src = '/uploads/images/news/defnews.jpg';">
                         <div class="container">
                             <div class="carousel-caption" style="color: red">
                                 <p><a class="btn btn-secondary" style="margin-bottom: -60px; margin-right: -252px" 

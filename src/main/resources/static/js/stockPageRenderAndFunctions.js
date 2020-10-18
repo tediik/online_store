@@ -24,6 +24,8 @@ $(document).ready(function () {
     document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
     /*Modal window buttons*/
     document.getElementById('modalFooter').addEventListener('click', checkFields)
+    /*modal window publish checkbox listener*/
+    document.getElementById('publishCheckboxDiv').addEventListener('change', publishCheckboxHandler)
 
     document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
 
@@ -58,6 +60,19 @@ function checkFields(event) {
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
+
+        let fakefilename = $('#stockImg')[0].files[0].name;
+        console.log("fakefilename = " + fakefilename);
+        if(fakefilename.indexOf('fakepath') === -1) {
+            console.log("2. All right. fakefilename = " + fakefilename);
+            var filename = fakefilename;
+        } else {
+            console.log("1.Not OK. fakefilename = " + fakefilename);
+            var filename = $(fakefilename).val().replace(/C:\\fakepath\\/i, '')
+            console.log("filename = " + filename);
+            invalidModalField("Ошибка загрузки. Повторите выбор файла", stockImgUrl)
+        }
+
         if (stockTitle.value === '') {
             invalidModalField("Заполните заголовок акции", stockTitle)
         } else if (stockText.value === "") {
@@ -220,32 +235,43 @@ function handleEditButtonClick(event) {
     function renderModalWindowEdit(stock) {
         let stockText = stock.stockText
         $("#stockId").val(stock.id)
-        console.log("renderModal stockId: " + stockId)
         $("#stockTitle").val(stock.stockTitle)
         $('#stockText').summernote('code', stockText)
         $("#startDate").val(stock.startDate)
         $("#endDate").val(stock.endDate)
         $("#published").prop('checked', stock.published)
     }
-    console.log("Подготовка к fetch. stockId: " + stockId)
+
     fetch(stockApiUrl + `/${stockId}`, {
         method: 'GET',
         headers: myHeaders
     }).then(response => response.json()).then(stock => renderModalWindowEdit(stock))
 }
 
+// /**
+//  * Обработка чекбокса #published
+//  * если галка стоит, то установить published = true
+//  * и наоборот
+//  */
+// function chekboxPublished(o) {
+//     if (o.checked == true) {
+//         $("#published").val('true')
+//     } else {
+//         $("#published").val('false')
+//     }
+// };
 /**
- * Обработка чекбокса #published
- * если галка стоит, то установить published = true
- * и наоборот
+ * function that handles publish checkbox
  */
-function chekboxPublished(o) {
-    if (o.checked == true) {
+function publishCheckboxHandler() {
+    if (document.getElementById('published').checked) {
         $("#published").val('true')
+        document.getElementById('publishedCheckboxLabel').innerHTML = 'Опубликовать на гл.странице'
     } else {
         $("#published").val('false')
+        document.getElementById('publishedCheckboxLabel').innerHTML = 'Опубликовать на гл.странице'
     }
-};
+}
 
 /**
  * function changes modal window header
