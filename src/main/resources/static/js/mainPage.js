@@ -254,7 +254,7 @@ function fillPublishedNews(data) {
             carouselItem = `
                  <div class="carousel-item carousel-itemWithNews">
                         <img class="next-slide"
-                             src="/uploads/images/news/${data[key].newsImg}" width="400" height="200"
+                             src="/uploads/images/news/${key}.jpg" width="400" height="200"
                              onerror="if (this.src != '/uploads/images/news/defnews.jpg')
                                  this.src = '/uploads/images/news/defnews.jpg';">
                         <div class="container">
@@ -263,7 +263,7 @@ function fillPublishedNews(data) {
                                 href="news/${data[key].id}" role="button">Подробнее &raquo;</a></p>
                             </div>
                              <div class = "card-text newsTitle">
-                                <h5>${data[key].newsTitle}</h5>
+                                <h5>${data[key].title}</h5>
                              </div>
                         </div>
             </div>`;
