@@ -84,20 +84,27 @@ public class StockRestController {
         stockService.deleteStockById(id);
     }
 
+    /**
+     * Метод обновления картинки для акции по идентификатору акции
+     *
+     * @param id идентификатор акции
+     * @param stockImg картинка  акции
+     */
     @PostMapping("/rest/uploadStockImage/{id}")
     public ResponseEntity<String> handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("stockImg") MultipartFile stockImg) throws IOException {
         String savedFIleName = stockService.updateStockImage(stockId, stockImg);
-        log.debug("REST.Update Image. Stock ID: {}", stockId);
-        log.debug("REST.Update Image. stockImg path: {}", savedFIleName);
         Stock stock = stockService.findStockById(stockId);
         String pathToUploadFile = "../../uploads/images/stocks/" + stock.getStockImg();
-        log.debug("Stok.Путь: {}", pathToUploadFile);
         return ResponseEntity.ok(savedFIleName);
     }
 
+    /**
+     * Метод удаления картинки акции по идентификатору акции
+     *
+     * @param id идентификатор акции
+     */
     @DeleteMapping("/rest/deleteStockImage/{id}")
     public ResponseEntity<String> deleteStockImage(@PathVariable("id") Long stockId) throws IOException {
-        log.debug("rest/deleteStockImage/{id} : {}", stockId);
         return ResponseEntity.ok(stockService.deleteStockImage(stockId));
     }
 }

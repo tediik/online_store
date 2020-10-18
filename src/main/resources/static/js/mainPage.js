@@ -196,11 +196,8 @@ function fillPublishedStocks(data) {
 
         for (let key = 0; key < data.length; key++) {
             let li = key + 1;
-            // console.log("key = " + key + ". li = " + li);
             stockCarouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
             $("#stockCarousel-indicators").append(stockCarouselIndicator);
-            // console.log("stockCarouselIndicator = " + stockCarouselIndicator);
-            // console.log("stockCarouselImage = " + data[key].stockImg);
             stockCarouselItem = `
                  <div class="carousel-item carousel-itemWithStock">
                         <img class="next-slide"
@@ -246,10 +243,8 @@ function fillPublishedNews(data) {
 
         for (let key = 0; key < data.length; key++) {
             let li = key + 1;
-            console.log("key = " + key + ". li = " + li);
             carouselIndicator = `<li data-target="#carouselExampleIndicators" data-slide-to="${li}"></li>`;
             $("#newsCarousel-indicators").append(carouselIndicator);
-            console.log("carouselIndicator = " + carouselIndicator);
 
             carouselItem = `
                  <div class="carousel-item carousel-itemWithNews">

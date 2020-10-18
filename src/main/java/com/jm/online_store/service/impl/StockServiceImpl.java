@@ -22,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -113,7 +112,6 @@ public class StockServiceImpl implements StockService {
         if (publishedStocks.isEmpty()) {
             throw new StockNotFoundException();
         }
-        log.debug("Stock List to main page: {}", Arrays.deepToString(publishedStocks.toArray()));
         return publishedStocks;
     }
 
@@ -142,13 +140,10 @@ public class StockServiceImpl implements StockService {
         Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
         String fileName = StringUtils.cleanPath(UUID.randomUUID() + "." + file.getOriginalFilename());
         String uniqueFilename = fileName.replaceAll("\\s+","");
-        log.debug("File name: {}", uniqueFilename);
         if (!file.isEmpty()) {
             Path fileNameAndPath = Paths.get(uploadDirectory, uniqueFilename);
-            log.debug("StockServiceImpl. fileNameAndPath: {}", fileNameAndPath);
             try {
                 byte[] bytes = file.getBytes();
-                log.debug("File bytes[].length: {}", bytes.length);
                 Files.write(fileNameAndPath, bytes);
                 //Set stock image
                 stock.setStockImg(uniqueFilename);
@@ -175,9 +170,7 @@ public class StockServiceImpl implements StockService {
         final String defaultStockImg = StringUtils.cleanPath("default.jpg");
         Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
         //Get stockPicture name from Stock and delete this stock picture from Uploads
-        log.debug("Paths.get(uploadDirectory. Stock: {}", stock.getStockTitle());
         Path fileNameAndPath = Paths.get(uploadDirectory, stock.getStockImg());
-        log.debug("Paths.get(uploadDirectory: {}", fileNameAndPath);
         //Check if deleting picture is not a default avatar
         try {
             if (!fileNameAndPath.getFileName().toString().equals(defaultStockImg)) {

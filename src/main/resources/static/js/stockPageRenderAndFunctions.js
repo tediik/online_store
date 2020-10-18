@@ -24,8 +24,6 @@ $(document).ready(function () {
     document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
     /*Modal window buttons*/
     document.getElementById('modalFooter').addEventListener('click', checkFields)
-    // /*modal window publish checkbox listener*/
-    // document.getElementById('publishCheckboxDiv').addEventListener('change', publishCheckboxHandler)
 
     document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
 
@@ -56,7 +54,6 @@ function yHandler() {
 function checkFields(event) {
     if (event.target.dataset.toggleId === 'submit') {
         let stockId = document.getElementById('stockId')
-        console.log("Checking fields. StockId = " + stockId)
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
@@ -64,14 +61,10 @@ function checkFields(event) {
 
         try {
             let fakefilename = $('#stockImg')[0].files[0].name;
-            console.log("fakefilename = " + fakefilename);
             if (fakefilename.indexOf('fakepath') === -1) {
-                console.log("2. All right. fakefilename = " + fakefilename);
                 filename = fakefilename;
             } else {
-                console.log("1.Not OK. fakefilename = " + fakefilename);
                 filename = $(fakefilename).val().replace(/C:\\fakepath\\/i, '')
-                console.log("filename = " + filename);
                 invalidModalField("Ошибка загрузки. Повторите выбор файла", stockImgUrl)
             }
         } catch (err) {
@@ -207,7 +200,6 @@ function handleSaveChangesButton() {
     let method = (stock.id !== '' ? 'PUT' : 'POST')
 
     fetchStock(stock, method);
-    console.log("fetching Stock: " + stock.id + ". Method: " + method + ". Published: " + published);
 
     function fetchStock(stock, method) {
         fetch(stockApiUrl, {
@@ -234,7 +226,6 @@ function handleEditButtonClick(event) {
     $('#stockIdDiv').removeClass('d-none')
     $('.modal-title').text("Редактировать акцию")
     let stockId = event.target.dataset.stockId
-    console.log("Редактирую акцию: " + stockId)
     stockModalClearFields()
 
     function renderModalWindowEdit(stock) {
@@ -265,18 +256,6 @@ function chekboxPublished(o) {
         $("#published").val('false')
     }
 };
-// /**
-//  * function that handles publish checkbox
-//  */
-// function publishCheckboxHandler() {
-//     if (document.getElementById('published').checked) {
-//         $("#published").val('true')
-//         document.getElementById('publishedCheckboxLabel').innerHTML = 'Опубликовать на гл.странице'
-//     } else {
-//         $("#published").val('false')
-//         document.getElementById('publishedCheckboxLabel').innerHTML = 'Опубликовать на гл.странице'
-//     }
-// }
 
 /**
  * function changes modal window header

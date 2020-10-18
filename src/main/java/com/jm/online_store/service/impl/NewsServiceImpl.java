@@ -7,21 +7,18 @@ import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.spec.NewsSpec;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Сервис класс, имплементация интерфейса {@link NewsService}
  * Содержит бизнес логику, использует методы репозитория {@link NewsRepository}
  */
-@Slf4j
 @Service
 @AllArgsConstructor
 public class NewsServiceImpl implements NewsService {
@@ -118,7 +115,6 @@ public class NewsServiceImpl implements NewsService {
         if (publishedNews.isEmpty()) {
             throw new NewsNotFoundException("There are no published news");
         }
-        log.debug("News List to main page: {}", Arrays.deepToString(publishedNews.toArray()));
         return publishedNews;
     }
 

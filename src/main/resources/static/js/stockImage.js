@@ -23,9 +23,7 @@ $(document).ready(function () {
 
     $(function () {
         $('#deleteStockImgBtn').on('click', function () {
-            console.log("deleteStockImgBtn pressed");
             let deleteId = $('#stockId').val();
-            console.log('Stock to delete Id = ', deleteId);
             $.ajax(
                 {
                     type: 'DELETE',
@@ -51,16 +49,11 @@ $(document).ready(function () {
                 $('#stockImg').attr('src', e.target.result);
             }
             let fakefilename = $('#stockImg')[0].files[0].name;
-            console.log("fakefilename = " + fakefilename);
             if (fakefilename.indexOf('fakepath') == -1) {
-                console.log("2. False. fakefilename = " + fakefilename);
                 var filename = fakefilename;
             } else {
-                console.log("1.True. fakefilename = " + fakefilename);
                 var filename = $(fakefilename).val().replace(/C:\\fakepath\\/i, '')
-                console.log("filename = " + filename);
             }
-
             reader.readAsDataURL(input.files[0]); // convert to base64 string
         }
     }
@@ -75,20 +68,13 @@ async function changeStockImage(upload_Id, form_data) {
     let uploadId = upload_Id
     let formdata = form_data;
     let returnPath;
-    console.log('upload_Id: ' + upload_Id)
-    console.log('formdata: ' + formdata)
-
 
     await fetch(`/rest/uploadStockImage/` + uploadId, {
         method: 'POST',
         body: formdata,
     }).then(response => {
-        console.log(response);
         return response.text();
     }).then(path => {
-        console.log('path: ' + path);
         returnPath = path;
     });
-    console.log('returnPath: ' + returnPath);
-    $('#carousel-inner').add('div');
 };

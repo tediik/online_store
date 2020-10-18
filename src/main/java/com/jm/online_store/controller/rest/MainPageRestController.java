@@ -117,7 +117,7 @@ public class MainPageRestController {
     }
 
     /**
-     * Возвращает список опубликованных акций  - список передаётся в метод сервиса .findPublishedStocks()
+     * Возвращает список опубликованных новостей  - список передаётся в метод сервиса .findPublishedNews()
      */
     @GetMapping("api/publishednews")
     public ResponseEntity<List<News>> getPublishedNews() {
