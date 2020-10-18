@@ -198,7 +198,7 @@ function fillPublishedStocks(data) {
             let li = key + 1;
             // console.log("key = " + key + ". li = " + li);
             stockCarouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
-            $(".stockCarousel-indicators").append(stockCarouselIndicator);
+            $("#stockCarousel-indicators").append(stockCarouselIndicator);
             // console.log("stockCarouselIndicator = " + stockCarouselIndicator);
             // console.log("stockCarouselImage = " + data[key].stockImg);
             stockCarouselItem = `
@@ -217,7 +217,7 @@ function fillPublishedStocks(data) {
                              </div>
                         </div>
             </div>`;
-            $(".carousel-inner").append(stockCarouselItem);
+            $("#stockCarousel-inner").append(stockCarouselItem);
         }
     } else {
         console.log('Нет опубликованных акций');
@@ -248,7 +248,7 @@ function fillPublishedNews(data) {
             let li = key + 1;
             console.log("key = " + key + ". li = " + li);
             carouselIndicator = `<li data-target="#carouselExampleIndicators" data-slide-to="${li}"></li>`;
-            $(".carousel-indicators").append(carouselIndicator);
+            $("#newsCarousel-indicators").append(carouselIndicator);
             console.log("carouselIndicator = " + carouselIndicator);
 
             carouselItem = `
@@ -267,7 +267,7 @@ function fillPublishedNews(data) {
                              </div>
                         </div>
             </div>`;
-            $(".newsCarousel-inner").append(carouselItem);
+            $("#newsCarousel-inner").append(carouselItem);
         }
     } else {
         console.log("No news to view");
