@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.FavouritesGroup;
+import com.jm.online_store.model.User;
 import com.jm.online_store.repository.FavouritesGroupRepository;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,11 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
     @Override
     public List<FavouritesGroup> findAll() {
         return favouritesGroupRepository.findAll();
+    }
+
+    @Override
+    public List<FavouritesGroup> findAllByUser(User user) {
+        return favouritesGroupRepository.findAllByUser(user);
     }
 
     @Override

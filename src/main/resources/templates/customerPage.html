@@ -47,7 +47,7 @@
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
                    onclick="fillFavouritesGoods()">Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
-                   role="tab" aria-controls="basketGoods" aria-selected="false" >Корзина</a>
+                   role="tab" aria-controls="basketGoods" aria-selected="false">Корзина</a>
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
                 <a class="btn btn-outline-primary mt-2" id="feedback-tab" data-toggle="pill" href="#feedback" role="tab"
@@ -59,7 +59,8 @@
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane active" id="customerMain" role="tabpanel" aria-labelledby="customerMain-tab">
                     <!--<h3>Главная пользователя</h3>-->
-                    <div class="container-fluid my-3 p-3 rounded" id="chartContainer" style="height: 370px; width: 100%; background-color: white">
+                    <div class="container-fluid my-3 p-3 rounded" id="chartContainer"
+                         style="height: 370px; width: 100%; background-color: white">
                         <div>
                             <img id="profilePicMainTab" alt="UserPhoto"
                                  class="rounded-circle img-responsive mt-2"
@@ -73,32 +74,38 @@
                         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active text-center" id="total-tab" data-toggle="tab" href="#total"
-                                    aria-selected="true"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
-                                    th:utext="${listOfComments.size()} + '&lt;br /&gt;' + 'Всё'"></p></a>
-                                    <!-- ${user.id - user.id} - заглушка, потом будет user.totalCount, который равен
-                                    commentCount + reviewCount + qaCount + rateCount-->
+                                   aria-selected="true"><p
+                                        th:style="${'font-family: arial; font-size: 100%; color: black'}"
+                                        th:utext="${listOfComments.size()} + '&lt;br /&gt;' + 'Всё'"></p></a>
+                                <!-- ${user.id - user.id} - заглушка, потом будет user.totalCount, который равен
+                                commentCount + reviewCount + qaCount + rateCount-->
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-center" id="comments-tab" data-toggle="tab" href="#comments"
-                                    aria-selected="false"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
-                                    th:utext="${listOfComments.size()} + '&lt;br /&gt;' + 'Комментарии'"></p></a>
-                                    <!-- user.commentCount -->
+                                   aria-selected="false"><p
+                                        th:style="${'font-family: arial; font-size: 100%; color: black'}"
+                                        th:utext="${listOfComments.size()} + '&lt;br /&gt;' + 'Комментарии'"></p></a>
+                                <!-- user.commentCount -->
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-center" id="reviews-tab" data-toggle="tab" href="#reviews"
-                                    aria-selected="false"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
-                                    th:utext="${user.id - user.id} + '&lt;br /&gt;' + 'Отзывы'"></p></a>
-                                    <!-- user.reviewCount -->
+                                   aria-selected="false"><p
+                                        th:style="${'font-family: arial; font-size: 100%; color: black'}"
+                                        th:utext="${user.id - user.id} + '&lt;br /&gt;' + 'Отзывы'"></p></a>
+                                <!-- user.reviewCount -->
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-center" id="question-answer-tab" data-toggle="tab" href="#question-answer"
-                                   aria-selected="false"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
-                                   th:utext="${user.id - user.id} + '&lt;br /&gt;' + 'Вопрос - Ответ'"></p></a>
+                                <a class="nav-link text-center" id="question-answer-tab" data-toggle="tab"
+                                   href="#question-answer"
+                                   aria-selected="false"><p
+                                        th:style="${'font-family: arial; font-size: 100%; color: black'}"
+                                        th:utext="${user.id - user.id} + '&lt;br /&gt;' + 'Вопрос - Ответ'"></p></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-center" id="rates-tab" data-toggle="tab" href="#rates"
-                                   aria-selected="false"><p th:style ="${'font-family: arial; font-size: 100%; color: black'}"
-                                   th:utext="${user.id - user.id} + '&lt;br /&gt;' + 'Оценки'"></p></a>
+                                   aria-selected="false"><p
+                                        th:style="${'font-family: arial; font-size: 100%; color: black'}"
+                                        th:utext="${user.id - user.id} + '&lt;br /&gt;' + 'Оценки'"></p></a>
                             </li>
                         </ul>
                     </div>
@@ -113,22 +120,23 @@
                                     <table class="table table-borderless m-1" th:each="comment : ${listOfComments}">
                                         <tbody>
                                         <tr>
-                                            <td th:style ="${'font-family: arial; font-size: 70%; color: black'}"
+                                            <td th:style="${'font-family: arial; font-size: 70%; color: black'}"
                                                 th:utext="${comment.getCommentDate().getDayOfMonth()
                                                 + ' ' + comment.getCommentDate().getMonthValue()
                                                 + ' ' + comment.getCommentDate().getYear()}">
                                             </td>
-                                            <td style="width: 20%;"rowspan="3"><img src="/uploads/images/products/00.jpg"
-                                                                                    class="img-fluid"></td>
+                                            <td style="width: 20%;" rowspan="3"><img
+                                                    src="/uploads/images/products/00.jpg"
+                                                    class="img-fluid"></td>
                                             <!-- временная ссылка, потом заменить на ссылку картинки реального товара -->
                                         </tr>
                                         <tr>
-                                            <td ><a th:style ="${'font-family: arial; font-size: 90%; color: Indigo'}"
-                                                    th:href="@{'/products/' + ${comment.getProductId()}}">
-                                                    Комментарий к товару</a></td>
+                                            <td><a th:style="${'font-family: arial; font-size: 90%; color: Indigo'}"
+                                                   th:href="@{'/products/' + ${comment.getProductId()}}">
+                                                Комментарий к товару</a></td>
                                         </tr>
                                         <tr style="border-bottom: 1px solid; color: Gainsboro">
-                                            <td th:style ="${'font-family: arial; font-size: 110%; color: DarkSlateGrey'}"
+                                            <td th:style="${'font-family: arial; font-size: 110%; color: DarkSlateGrey'}"
                                                 th:utext="${comment.getContent()}"></td>
                                         </tr>
                                         </tbody>
@@ -150,17 +158,93 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel" aria-labelledby="favouritesGoods-tab">
+                <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel"
+                     aria-labelledby="favouritesGoods-tab">
                     <h3>Избранное</h3>
-                    <select id="favouritesGroup">
-                        <!-- Вставка из customer.js-->
-                    </select>
-                    <button type="button" id="add-group-buton"> Add Group </button>
-                    <button type="button" id="delete-group-buton"> Delete Group </button>
-                    <select id="favouritesGroupMove">
-                        <!-- Вставка из customer.js-->
-                    </select>
-                    <button type="button" id="move-product-buton"> Move product in Group </button>
+                    <!-- Новый интерфейс -->
+                    <div class="favouritesgroups">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                Все товары
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" th:each="favouritesGroup : ${favouritesGroupList}"
+                                   th:id="${favouritesGroup.id}" th:text="${favouritesGroup.name}">Все товары</a>
+                            </div>
+                        </div>
+                        <a id="addInOverGroup" class="btn btn-outline-secondary " href="#">Добавить товары в другой
+                            список </a>
+                        <span class="ch_select_all hidden">
+                            <input class="ch_select_all" type="checkbox" value="" id="ch_sel_all">
+                            <label class="ch_select_all" for="ch_sel_all">
+                                Выбрать все
+                            </label>
+                        </span>
+                        <a id="escape" class="btn btn-outline-secondary hidden" href="#">Отмена</a>
+                        <a id="clear_group" class="btn btn-outline-secondary" href="#">Очистить список</a>
+                        <a id="rename_group" class="btn btn-outline-secondary" href="#">Переименовать</a>
+                        <a id="archive_group" class="btn btn-outline-secondary" href="#">В архив</a>
+                        <a id="sel_new_group" class="btn btn-outline-secondary hidden" data-toggle="modal"
+                           data-target="#exampleModal" href="#">Выбрать группу</a>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Выбирите список:</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="select_group table table-condensed" >
+                                        <tr th:each="favouritesGroup : ${favouritesGroupList}" class="select-group-tr mt-3">
+                                            <td>
+                                                <input th:id="${favouritesGroup.id}"
+                                                       th:class="${favouritesGroup.id}" type="checkbox"
+                                                       class="form-check-input checkbox_move_group">
+                                                <label class="form-check-label"
+                                                       th:for="${favouritesGroup.id}">
+                                                    <input th:id="${favouritesGroup.id}" type="text" th:value="${favouritesGroup.getName()}" class="select-group-tr-input">
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <div class="ok-cancel-edit-fav-group hidden" th:id="${favouritesGroup.id}">
+                                                    <span class="edit-fav-group-ok" th:id="${favouritesGroup.id}">V</span>
+                                                    <span class="edit-fav-group-cancel" th:id="${favouritesGroup.id}">X</span>
+                                                </div>
+                                                <button type="button" class="button-edit-fav-group btn btn-secondary"
+                                                        th:id="${favouritesGroup.id}">EDIT
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="add-group">
+                                        <div class="polya-input hidden">
+                                            <input type="checkbox" class="new-group-checkbox">
+                                            <input type="text" class="new-group-input"
+                                                   th:value="@{'Мой список '+${execInfo.now.time}}" size="40">
+                                            <span class="add-group-input-ok">V</span>
+                                            <span class="add-group-input-cancel">X</span>
+                                        </div>
+                                        <div class="add-group-new">
+                                            Создать новый список
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                                    </button>
+                                    <button type="button" class="btn btn-primary">Копировать</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Модалка END-->
+                    <!--  Новый интерфейс -->
+
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -469,9 +553,9 @@
                                 <h3 id="sumBasketGoods"></h3>
                             </tr>
                             <div id="buttonBuyInBasket">
-                            <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
-                                    data-target="#orderModalWindow" onclick="userAdresses()">Купить
-                            </button>
+                                <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
+                                        data-target="#orderModalWindow" onclick="userAdresses()">Купить
+                                </button>
                             </div>
                         </div>
                     </div>

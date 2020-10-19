@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -51,10 +52,9 @@ public class FavouritesGoodsRestController {
     @PutMapping(value = "/customer/favouritesGoods")
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
-        favouriteGoodsService.addToFavouriteGoods(id, user);
+        //favouriteGoodsService.addToFavouriteGoods(id, user); //работает
         Long idFavouritesGroup = 1l;
         favouritesGroupProductService.addProductToFavouritesGroup(id, idFavouritesGroup, user);
-        System.out.println("id=" + id + "        idFavouritesGroup=" + idFavouritesGroup + "   user=" + user);
         return ResponseEntity.ok().build();
     }
 

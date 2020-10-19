@@ -48,15 +48,14 @@ public class FavouritesGroupProductServiceImpl implements FavouritesGroupProduct
 
     @Override
     public void addProductToFavouritesGroup(Long idProduct, Long idFavouritesGroup, User currentUser) {
-        System.out.println("idProduct=" + idProduct + "   idFavouritesGroup=" + idFavouritesGroup + "   currentUser=" + currentUser);
+        System.out.println("idProduct=" + idProduct + "      idFavouritesGroup="
+                        + idFavouritesGroup + "   currentUser=" + currentUser);
         Set<FavouritesGroup> favouritesGroupSet= currentUser.getFavouritesGroups();
-        System.out.println("favouritesGroupSet = " + favouritesGroupSet);
         FavouritesGroup favouritesGroup = null;
         Iterator<FavouritesGroup> favouritesGroupIterator = favouritesGroupSet.iterator();
         while (favouritesGroupIterator.hasNext()){
             favouritesGroup = favouritesGroupIterator.next();
             if (favouritesGroup.getId() == idFavouritesGroup) {
-                //System.out.println("favouritesGroup=" + favouritesGroup);
                 break;
             }
         }

@@ -68,16 +68,5 @@ public class ProductForFavouritesGroupRestController {
         favouritesGroupProductService.deleteProductFromFavouritesGroup(id, idFavouritesGroup, user);
         return ResponseEntity.ok().build();
     }
-
-    @PutMapping(value = "/customer/addProductInFavouritesGroup")
-    public ResponseEntity addFavouritesProduct(@RequestBody Long id) {
-        User user = userService.getCurrentLoggedInUser();
-        //favouriteGoodsService.addToFavouriteGoods(id, user);
-        Long idFavouritesGroup = 1l;
-        favouritesGroupProductService.addProductToFavouritesGroup(id, idFavouritesGroup, user);
-        System.out.println("id=" + id + "        idFavouritesGroup=" + idFavouritesGroup + "   user=" + user);
-        return ResponseEntity.ok().build();
-    }
-
 }
 

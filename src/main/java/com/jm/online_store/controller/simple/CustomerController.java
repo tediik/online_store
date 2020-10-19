@@ -1,8 +1,10 @@
 package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CommentService;
+import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * CustomerController контроллер для пользователя с ролью "Customer"
@@ -35,6 +38,7 @@ public class CustomerController {
     private final RoleService roleService;
     private final OrderService orderService;
     private final CommentService commentService;
+    private final FavouritesGroupService favouritesGroupService;
 
     /**
      * метод получения данных зарегестрированного пользователя.
@@ -48,6 +52,7 @@ public class CustomerController {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
         model.addAttribute("listOfComments", commentService.findAllByCustomer(user));
+        model.addAttribute("favouritesGroupList", favouritesGroupService.findAllByUser(user));
         return "customerPage";
     }
 

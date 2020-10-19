@@ -120,6 +120,7 @@ public class DataInitializer {
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
         User customer = new User("customer@mail.ru", "1");
+        User customer1 = new User("cus@mail.ru", "1");
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
@@ -137,9 +138,11 @@ public class DataInitializer {
         manager.setRoles(managerRoles);
         admin.setRoles(adminRoles);
         customer.setRoles(customerRoles);
+        customer1.setRoles(customerRoles);
 
         userService.addUser(manager);
         userService.addUser(customer);
+        userService.addUser(customer1);
         userService.addUser(admin);
 
         Product product_1 = new Product("apple", 100000D, 10, 0.1);
@@ -1167,9 +1170,17 @@ public class DataInitializer {
     }
     public void favouritesGroupInit() {
         User customer = userService.findByEmail("customer@mail.ru").get();
+        User customer1 = userService.findByEmail("cus@mail.ru").get();
+
         FavouritesGroup favouritesGroup = new FavouritesGroup();
-        favouritesGroup.setName("Общая");
+        favouritesGroup.setName("Все товары");
         favouritesGroup.setUser(customer);
+
+        FavouritesGroup favouritesGroup1 = new FavouritesGroup();
+        favouritesGroup1.setName("Все товары");
+        favouritesGroup1.setUser(customer1);
+
         favouritesGroupService.addFavouritesGroup(favouritesGroup);
+        favouritesGroupService.addFavouritesGroup(favouritesGroup1);
     }
 }
