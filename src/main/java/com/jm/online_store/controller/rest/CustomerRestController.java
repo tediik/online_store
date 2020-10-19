@@ -4,6 +4,7 @@ import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
+import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +29,26 @@ public class CustomerRestController {
     private UserService userService;
 
     @PostMapping("/changemail")
+
     public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
         User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
-            return ResponseEntity.badRequest().body("Ой! Вы ввели такой же Email.");
+            log.debug("Вы ввели такой же Email.");
+            return ResponseEntity.badRequest().body("duplicatedEmailError");
+        }
+        if (ValidationUtils.isNotValidEmail(newMail)) {
+            return ResponseEntity.badRequest().body("notValidEmailError");
         } else {
+            log.debug("вызывает");
             userService.changeUsersMail(user, newMail);
+
             return ResponseEntity.ok("Email будет изменен после подтверждения.");
         }
     }
 
     /**
      * Метод удаления профиля покупателя
+     *
      * @param id индентификатор покупателя
      * @return ResponseEntity.ok()
      */

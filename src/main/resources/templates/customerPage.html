@@ -39,17 +39,19 @@
     <div class="row min-vh-100">
         <div class="col-md-2">
             <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary mt-2 nav-link active" id="customerMain-tab" data-toggle="pill"
+                <a class="btn btn-outline-primary mt-2 active" id="customerMain-tab" data-toggle="pill"
                    href="#customerMain" role="tab" aria-controls="customerMain" aria-selected="true">Главная</a>
-                <a class="btn btn-outline-primary mt-2" id="profile-tab" data-toggle="pill" href="#profile" role="tab"
-                   aria-controls="profile" aria-selected="false">Профиль</a>
+                <a class="btn btn-outline-primary mt-2 " id="profile-tab" data-toggle="pill" href="#profile" role="tab"
+                   aria-controls="profile" aria-selected="false" onclick="location.href='#profile'">Профиль</a>
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
-                   onclick="fillFavouritesGoods()">Избранное</a>
+                   onclick="fillFavouritesGoods();location.href='#favourites'">Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
-                   role="tab" aria-controls="basketGoods" aria-selected="false" >Корзина</a>
+                   role="tab" aria-controls="basketGoods" aria-selected="false"
+                   onclick="fillBusket();location.href='#basket'">Корзина</a>
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
-                   aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
+                   aria-controls="orders" aria-selected="false"
+                   onclick="fillOrders();location.href='#orders'">Заказы</a>
                 <a class="btn btn-outline-primary mt-2" id="feedback-tab" data-toggle="pill" href="#feedback" role="tab"
                    aria-controls="orders" aria-selected="false">Обратная связь</a>
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
