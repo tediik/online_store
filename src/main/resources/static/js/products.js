@@ -1,5 +1,5 @@
 let productRestUrl = "/rest/products/allProducts"
-let categoriesArr = []
+let categoryNow = null;
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
@@ -278,7 +278,8 @@ function renderProductsTable(products) {
     table.empty()
     for (let i = 0; i < products.length; i++) {
         const product = products[i];
-        let row = `
+        if (product.productType.category === categoryNow || categoryNow == null) {
+            let row = `
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>
                     <td>${product.product}</td>
@@ -299,15 +300,16 @@ function renderProductsTable(products) {
                     </td>
                 </tr>
                 `;
-        table.append(row)
-        if (product.deleted === false) {
-            $(`#action-button-${product.id}`).attr('data-toggle-id', 'delete')
-            $(`#action-button-${product.id}`).attr('data-toggle', 'modal')
-            $(`#action-button-${product.id}`).text("Delete").removeClass().toggleClass('btn btn-danger delete-product action')
-        } else {
-            $(`#action-button-${product.id}`).attr('data-toggle-id', 'restore')
-            $(`#action-button-${product.id}`).text("Restore").removeClass().toggleClass('btn btn-info restore-product action')
-            $('#tr-' + product.id).toggleClass('table-dark')
+            table.append(row)
+            if (product.deleted === false) {
+                $(`#action-button-${product.id}`).attr('data-toggle-id', 'delete')
+                $(`#action-button-${product.id}`).attr('data-toggle', 'modal')
+                $(`#action-button-${product.id}`).text("Delete").removeClass().toggleClass('btn btn-danger delete-product action')
+            } else {
+                $(`#action-button-${product.id}`).attr('data-toggle-id', 'restore')
+                $(`#action-button-${product.id}`).text("Restore").removeClass().toggleClass('btn btn-info restore-product action')
+                $('#tr-' + product.id).toggleClass('table-dark')
+            }
         }
     }
     $('.edit-button').click(handleEditButton)
@@ -378,24 +380,28 @@ function fetchCategories() {
  * функция рендера модалки категорий
  */
 function renderCategoriesModal(categories) {
-    let checkList = $('#categoriesContainer')
-    checkList.empty()
+    let radioList = $('#categoriesContainer')
+    radioList.empty()
+    radioList.append(`<form class= form-group-text-center>`)
     for (let i = 0; i < categories.length; i++) {
-        let checkbox = `
-            <form class="checkbox">
-            <label class="checkText" for="check${categories[i].id}">${categories[i].category}</label>
-            <input id="check${categories[i].id}" type="checkbox" name="check[]" onclick="categoryToArray(${categories[i].id})">
-            </form>
+        let radiobox = `
+                     <div class="custom-control custom-radio">
+                     <input value="${categories[i].category}" type="radio" id="radio${categories[i].id}"
+                            name="radioCategory" class="custom-control-input">
+                     <label class="custom-control-label" for="radio${categories[i].id}">${categories[i].category}</label>
+                     </div>
                         `;
-        checkList.append(checkbox)
+        radioList.append(radiobox)
     }
+    radioList.append(`</form>`)
 }
 
-function categoryToArray(id) {
-    let checkbox = document.getElementById('check' + id);
-    if (checkbox.checked) {
-        categoriesArr[id - 1] = true;
-    } else {
-        categoriesArr[id - 1] = false;
+function changeCategory() {
+    let radio = document.getElementsByName('radioCategory');
+    for (let i = 0; i < radio.length; i++) {
+        if (radio[i].checked) {
+            categoryNow = radio[i].value;
+        }
     }
+    fetchProductsAndRenderTable();
 }
