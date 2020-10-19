@@ -27,44 +27,10 @@ public class FavouritesGroupProductServiceImpl implements FavouritesGroupProduct
     @Override
     public void deleteProductFromFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
 
-
-        Iterator<FavouritesGroup> favouritesGroupIterator = currentUser.getFavouritesGroups().iterator();
-        FavouritesGroup favouritesGroup = null;
-        while (favouritesGroupIterator.hasNext()) {
-            favouritesGroup = favouritesGroupIterator.next();
-            if (favouritesGroup.getId() == idFavouritesGroup){
-                break;
-            }
-        }
-        Iterator<Product> productIterator = favouritesGroup.getProducts().iterator();
-        Product product = null;
-        while (productIterator.hasNext()){
-            product = productIterator.next();
-            if (product.getId() == idProduct) {
-                favouritesGroup.getProducts().remove(product);
-                break;
-            }
-        }
     }
 
     @Override
     public void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
-        System.out.println("idProduct=" + idProduct + "      idFavouritesGroup="
-                        + idFavouritesGroup + "   currentUser=" + currentUser);
-        Set<FavouritesGroup> favouritesGroupSet= currentUser.getFavouritesGroups();
-        FavouritesGroup favouritesGroup = null;
-        Iterator<FavouritesGroup> favouritesGroupIterator = favouritesGroupSet.iterator();
-        while (favouritesGroupIterator.hasNext()){
-            favouritesGroup = favouritesGroupIterator.next();
-            if (favouritesGroup.getId() == idFavouritesGroup) {
-                break;
-            }
-        }
-        favouritesGroupSet.remove(favouritesGroup);
-        Set<Product> productSet = favouritesGroup.getProducts();
-        productSet.add(productService.findProductById(idProduct).orElseThrow(ProductNotFoundException::new));
-        favouritesGroup.setProducts(productSet);
-        favouritesGroupSet.add(favouritesGroup);
-        currentUser.setFavouritesGroups(favouritesGroupSet);
+
     }
 }

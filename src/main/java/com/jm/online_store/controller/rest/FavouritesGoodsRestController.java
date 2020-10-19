@@ -54,7 +54,7 @@ public class FavouritesGoodsRestController {
         User user = userService.getCurrentLoggedInUser();
         //favouriteGoodsService.addToFavouriteGoods(id, user); //работает
         Long idFavouritesGroup = 1l;
-        favouritesGroupProductService.addProductToFavouritesGroup(id, idFavouritesGroup, user);
+        //favouritesGroupProductService.addProductToFavouritesGroup(id, idFavouritesGroup, user);
         return ResponseEntity.ok().build();
     }
 
