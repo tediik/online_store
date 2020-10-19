@@ -322,7 +322,7 @@ function addNewTopic() {
  */
 function renderTopic(topic) {
     let topicRow;
-    if (topic.topicsCategory.topics.length <= 1) {
+    if (topic.topicsCategory.topics.length === 0) {
         topicRow = document.querySelector(`#nullRow${topic.topicsCategory.id}`);
         topicRow.insertAdjacentHTML("beforebegin", makeTopicRow(topic));
         topicRow.remove();
