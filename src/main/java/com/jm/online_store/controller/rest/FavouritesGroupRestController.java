@@ -39,7 +39,6 @@ public class FavouritesGroupRestController {
         User user = userService.getCurrentLoggedInUser();
         favouritesGroup.setUser(user);
         favouritesGroupService.addFavouritesGroup(favouritesGroup);
-        System.out.println(favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName()));
         return ResponseEntity.ok(favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName()));
     }
 

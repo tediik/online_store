@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Set;
 
 public interface FavouritesGroupProductService {
-    void deleteProductFromFavouritesGroup(Long idProduct, Long idFavouritesGroup, User currentUser);
-    void addProductToFavouritesGroup(Long idProduct, Long idFavouritesGroup, User currentUser);
+    void deleteProductFromFavouritesGroup(Product product, FavouritesGroup favouritesGroup);
+    void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup);
 }

@@ -21,12 +21,13 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class FavouritesGroupProductServiceImpl implements FavouritesGroupProductService {
-    private final UserService userService;
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
 
     @Override
-    public void deleteProductFromFavouritesGroup(Long idProduct, Long idFavouritesGroup, User currentUser) {
+    public void deleteProductFromFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
+
+
         Iterator<FavouritesGroup> favouritesGroupIterator = currentUser.getFavouritesGroups().iterator();
         FavouritesGroup favouritesGroup = null;
         while (favouritesGroupIterator.hasNext()) {
@@ -47,7 +48,7 @@ public class FavouritesGroupProductServiceImpl implements FavouritesGroupProduct
     }
 
     @Override
-    public void addProductToFavouritesGroup(Long idProduct, Long idFavouritesGroup, User currentUser) {
+    public void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
         System.out.println("idProduct=" + idProduct + "      idFavouritesGroup="
                         + idFavouritesGroup + "   currentUser=" + currentUser);
         Set<FavouritesGroup> favouritesGroupSet= currentUser.getFavouritesGroups();
