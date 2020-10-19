@@ -1,6 +1,10 @@
 package com.jm.online_store.controller.simple;
 
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CommentService;
+import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
@@ -31,6 +35,9 @@ public class CustomerController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
+    private final OrderService orderService;
+    private final CommentService commentService;
     private final BCryptPasswordEncoder encoder;
 
     /**
@@ -41,15 +48,15 @@ public class CustomerController {
      * @return
      */
     @GetMapping
-    public String getUserProfile(Model model, Authentication auth) {
-        User principal = (User) auth.getPrincipal();
-        User user = userService.findById(principal.getId()).get();
+    public String getUserProfile(Model model) {
+        User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
+    //    model.addAttribute("listOfComments", commentService.findAllByCustomer(user));
         return "customerPage";
     }
 
     /**
-     * метод ля формирования данных для обновления User.
+     * метод для формирования данных для обновления User.
      *
      * @param user  пользователь
      * @param model модель для view
@@ -70,42 +77,35 @@ public class CustomerController {
     /**
      * метод обработки изменения пароля User.
      *
-     * @param auth        модель данных, построенных на основе зарегистрированного User
      * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
      */
-    @PostMapping("/changepass")
-    public ResponseEntity<String> changePassword(Authentication auth, Model model,
-                                                 @RequestParam String oldPassword,
-                                                 @RequestParam String newPassword) {
-        User user = (User) auth.getPrincipal();
+    @PostMapping("/change-password")
+    public ResponseEntity changePassword(Model model,
+                                         @RequestParam String oldPassword,
+                                         @RequestParam String newPassword) {
+        User user = userService.getCurrentLoggedInUser();
+        if (userService.findById(user.getId()).isEmpty()) {
+            log.debug("There are no user with id: {}", user.getId());
+            return ResponseEntity.noContent().build();
+        }
+        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+            log.debug("Wrong email! Не правильно введен email");
+            return ResponseEntity.badRequest().body("notValidEmailError");
+        }
+        if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
+                && userService.isExist(user.getEmail())) {
+            log.debug("User with same email already exists");
+            return ResponseEntity.badRequest().body("duplicatedEmailError");
+        }
+        if (userService.changePassword(user.getId(), oldPassword, newPassword))
+            log.debug("Changes to user with id: {} was successfully added", user.getId());
+        return ResponseEntity.ok().build();
 
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            model.addAttribute("message", "Неверный старый пароль!");
-            return new ResponseEntity("error_old_pass", HttpStatus.BAD_REQUEST);
-        }
-        if (encoder.matches(oldPassword, user.getPassword())) {
-            if (newPassword.length() < 8) {
-                return new ResponseEntity("error_pass_len", HttpStatus.BAD_REQUEST);
-            } else {
-                if (!ValidationUtils.isValidPassword(newPassword)) {
-                    return new ResponseEntity("error_valid", HttpStatus.BAD_REQUEST);
-                } else {
-                    if (userService.changePassword(user.getId(), oldPassword, newPassword)) {
-                        log.debug("Пароль изменен");
-                    }
-                    user.setPassword(passwordEncoder.encode(newPassword));
-                    userService.updateUser(user);
-                    userService.changeUsersPass(user, user.getEmail());
-                    return new ResponseEntity("ok", HttpStatus.OK);
-                }
-            }
-        } else {
-            return new ResponseEntity("error_old_pass", HttpStatus.BAD_REQUEST);
-        }
     }
+
 
     @GetMapping("/activatenewmail/{token}")
     public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {

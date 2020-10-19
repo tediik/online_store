@@ -135,6 +135,14 @@ function showAndRefreshHomeTab() {
 }
 
 /**
+ * Функция для очистки всех полей с формы
+ * @param fieldIdForm - принимает id формы
+ */
+function clearFieldsForm(fieldIdForm){
+    document.getElementById(fieldIdForm).reset();
+}
+
+/**
  * функция обработки кнопки add на форме нового пользователя
  */
 function handleAddBtn() {
@@ -144,13 +152,9 @@ function handleAddBtn() {
         roles: getSelectValues(document.getElementById('addRoles'))
     }
 
-    /**
-     * функция очистки полей формы нового пользователя
-     */
-    function clearFormFields() {
-        $('#addForm')[0].reset();
-        addRolesOnNewUserForm()
-    }
+    clearFieldsForm('addForm');
+    addRolesOnNewUserForm();
+
     /**
      * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
      * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
@@ -205,7 +209,8 @@ function handleAddBtn() {
             } else {
                 response.text().then(function () {
                     showAndRefreshHomeTab();
-                    clearFormFields();
+                    clearFieldsForm('addForm');
+                    addRolesOnNewUserForm();
                 })
             }
         }

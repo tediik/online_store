@@ -2,6 +2,7 @@ package com.jm.online_store.config;
 
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Description;
 import com.jm.online_store.model.News;
@@ -18,6 +19,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -74,6 +76,7 @@ public class DataInitializer {
     private final TaskSettingsService taskSettingsService;
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
+    private final CommentService commentService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -94,6 +97,7 @@ public class DataInitializer {
         taskSettingsInit();
         commonSettingsInit();
         feedbackTopicsInit();
+        commentsInit();
     }
 
     /**
@@ -104,35 +108,44 @@ public class DataInitializer {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
         Role managerRole = new Role("ROLE_MANAGER");
+        Role serviceRole = new Role("ROLE_SERVICE");
 
         roleService.addRole(adminRole);
         roleService.addRole(customerRole);
         roleService.addRole(managerRole);
+        roleService.addRole(serviceRole);
 
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
         User customer = new User("customer@mail.ru", "1");
+        User service = new User("service@mail.ru", "1");
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
         Optional<Role> managRole = roleService.findByName("ROLE_MANAGER");
+        Optional<Role> servRole = roleService.findByName("ROLE_SERVICE");
 
         Set<Role> customerRoles = new HashSet<>();
         Set<Role> adminRoles = new HashSet<>();
         Set<Role> managerRoles = new HashSet<>();
+        Set<Role> serviceRoles = new HashSet<>();
 
         customerRoles.add(custRole.get());
         adminRoles.add(admnRole.get());
         adminRoles.add(custRole.get());
+        adminRoles.add(servRole.get());
         managerRoles.add(managRole.get());
+        serviceRoles.add(servRole.get());
 
         manager.setRoles(managerRoles);
         admin.setRoles(adminRoles);
         customer.setRoles(customerRoles);
+        service.setRoles(serviceRoles);
 
         userService.addUser(manager);
         userService.addUser(customer);
         userService.addUser(admin);
+        userService.addUser(service);
 
         Product product_1 = new Product("apple", 100000D, 10, 0.1);
         Product product_2 = new Product("samsung", 80000D, 100, 0.9);
@@ -1120,5 +1133,41 @@ public class DataInitializer {
         topicService.addTopic(topic8);
         topicService.addTopic(topic9);
         topicService.addTopic(topic10);
+    }
+
+    /**
+     * Init method for comments
+     */
+    public void commentsInit() {
+
+        Comment comment1 = new Comment();
+        Comment comment2 = new Comment();
+        Comment comment3 = new Comment();
+
+        comment1.setId(1L);
+        comment2.setId(2L);
+        comment3.setId(3L);
+        comment1.setCommentDate(LocalDateTime.now());
+        comment2.setCommentDate(LocalDateTime.now());
+        comment3.setCommentDate(LocalDateTime.now());
+        comment1.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        comment2.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        comment3.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        comment1.setProductId(3L);
+        comment2.setProductId(3L);
+        comment3.setProductId(3L);
+        comment1.setContent("Awesome comment. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium " +
+                "doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto " +
+                "beatae vitae dicta sunt explicabo.");
+        comment2.setContent("Just another one comment. At vero eos et accusamus et iusto odio dignissimos ducimus qui " +
+                "blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint " +
+                "occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est " +
+                "laborum et dolorum fuga.");
+        comment3.setContent("Awful comment. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus " +
+                "saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.");
+
+        commentService.addCommentInit(comment1);
+        commentService.addCommentInit(comment2);
+        commentService.addCommentInit(comment3);
     }
 }

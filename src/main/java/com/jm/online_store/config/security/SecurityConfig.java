@@ -35,49 +35,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.oauth2Login().loginPage("/login").userInfoEndpoint().userService(OAuth2UserService).and().and().authorizeRequests().antMatchers("/customer").hasRole("CUSTOMER");
+        http.oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint()
+                .userService(OAuth2UserService)
+                .and().and()
+                .authorizeRequests()
+                .antMatchers("/customer").hasRole("CUSTOMER");
 
         http.formLogin()
-                // указываем страницу с формой логина
-                .loginPage("/login")
-                //указываем логику обработки при логине
-                .successHandler(successHandler)
-                // указываем action с формы логина
-                .loginProcessingUrl("/login")
-                // Указываем параметры логина и пароля с формы логина
-                .usernameParameter("login_username")
+                .loginPage("/login") // указываем страницу с формой логина
+                .successHandler(successHandler) //указываем логику обработки при логине
+                .loginProcessingUrl("/login")// указываем action с формы логина
+                .usernameParameter("login_username") // Указываем параметры логина и пароля с формы логина
                 .passwordParameter("login_password")
-                // даем доступ к форме логина всем
-                .permitAll();
+                .permitAll(); // даем доступ к форме логина всем
 
-        http.logout()
-                // разрешаем делать логаут всем
-                .permitAll()
-                // указываем URL логаута
+        http.logout().permitAll() // разрешаем делать логаут всем
+                .logoutSuccessUrl("/") // указываем URL при удачном логауте
+                .and().csrf().disable();
 
-                // указываем URL при удачном логауте
-                .logoutSuccessUrl("/")
-                .and()
-                .csrf().disable();
-        http
-                // делаем страницу регистрации недоступной для авторизированных пользователей
-                .authorizeRequests()
-                .antMatchers("/auth-vk").permitAll()
-                .antMatchers("/api/comments/**").permitAll()
-                .antMatchers("/oauth/**", "/oauthTwitter/**", "/TwitterRegistrationPage/**").permitAll()
-                .antMatchers("/", "/login", "/news/**", "/registration", "/css/**","/global/**","/stocks/**").permitAll()
-                .antMatchers("/api/products/productChangeMonitor").access("hasAnyRole('ROLE_MANAGER')")
-                .antMatchers("/api/categories/**", "/api/products/**").permitAll()
-                .antMatchers("/categories/**", "/products/**", "/search/**").permitAll()
-                .antMatchers("/uploads/images/**").permitAll()
-                .antMatchers("/users/**").permitAll()
-                .antMatchers("/api/feedback/").access("hasAnyRole('ROLE_CUSTOMER')")
-                .antMatchers("/js/**", "/images/**", "/static/**", "/activate/**", "/404").permitAll()
+        http.authorizeRequests()
+                .antMatchers("/api/feedback/").access("hasRole('ROLE_CUSTOMER')")
+                .antMatchers("/api/products/productChangeMonitor", "/manager/**").access("hasRole('ROLE_MANAGER')")
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
-                .antMatchers("/authority/**", "/api/commonSettings/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-                .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
-                .antMatchers("/manager/**").access("hasAnyRole('ROLE_MANAGER')")
-                .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated()
+                .antMatchers("/service/**").access("hasAnyRole('ROLE_SERVICE','ROLE_ADMIN')")
+                .antMatchers("/authority/**", "/api/commonSettings/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SERVICE')")
+                .antMatchers("/admin/**", "/api/users/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied")
                 .and()

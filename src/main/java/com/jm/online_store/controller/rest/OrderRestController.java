@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.OrderDTO;
@@ -28,63 +29,45 @@ public class OrderRestController {
     private final OrderService orderService;
 
     /**
-     * метод для получения авторизованного пользователя.
-     *
-     * @param authentication модель данных, построенная на основе залогированного User.
-     * @return авторизванный пользователь.
-     */
-    private User getAutorityUser(Authentication authentication) {
-        return userService.findById(((User) authentication.getPrincipal()).getId()).get();
-    }
-
-    /**
      * метод получения списка всех заказов авторизованного пользователя.
-     *
-     * @param authentication модель данных, построенная на основе залогированного User.
      * @return список заказов.
      */
     @GetMapping("/getAllOrders")
-    public ResponseEntity<Set<Order>> getAllOrders(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+    public ResponseEntity<Set<Order>> getAllOrders() {
+        User autorityUser = userService.getCurrentLoggedInUser();
         Set<Order> orders = autorityUser.getOrders();
         return ResponseEntity.ok(orders);
     }
 
     /**
      * метод получения списка всех действительных заказов авторизованного пользователя.
-     *
-     * @param authentication модель данных, построенная на основе залогированного User.
      * @return список заказов.
      */
     @GetMapping("/getIncartsOrders")
-    public ResponseEntity<List<Order>> getIncartsOrders(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+    public ResponseEntity<List<Order>> getIncartsOrders() {
+        User autorityUser = userService.getCurrentLoggedInUser();
         List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.INCARTS);
         return ResponseEntity.ok(orders);
     }
 
     /**
      * метод получения списка всех завершенных заказов авторизованного пользователя.
-     *
-     * @param authentication модель данных, построенная на основе залогированного User.
      * @return список заказов.
      */
     @GetMapping("/getCompletedOrders")
-    public ResponseEntity<List<Order>> getCompletedOrders(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+    public ResponseEntity<List<Order>> getCompletedOrders() {
+        User autorityUser = userService.getCurrentLoggedInUser();
         List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.COMPLETED);
         return ResponseEntity.ok(orders);
     }
 
     /**
      * метод получения списка всех отмененных заказов авторизованного пользователя.
-     *
-     * @param authentication модель данных, построенная на основе залогированного User.
      * @return список заказов.
      */
     @GetMapping("/getCanceledOrders")
-    public ResponseEntity<List<Order>> getCanceledOrders(Authentication authentication) {
-        User autorityUser = getAutorityUser(authentication);
+    public ResponseEntity<List<Order>> getCanceledOrders() {
+        User autorityUser = userService.getCurrentLoggedInUser();
         List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.CANCELED);
         return ResponseEntity.ok(orders);
     }

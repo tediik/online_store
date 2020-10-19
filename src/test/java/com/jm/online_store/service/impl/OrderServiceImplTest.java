@@ -130,7 +130,6 @@ class OrderServiceImplTest {
 
     @Test
     void findAllSalesBetween() {
-        LocalDate nowLocalDate = LocalDate.now();
         /*Создаем продукт*/
         Product product = new Product();
         product.setId(1L);
@@ -170,8 +169,7 @@ class OrderServiceImplTest {
         completedOrders.forEach(order -> expectedSalesList.add(SalesReportDto.orderToSalesReportDto(order)));
         /*эмулируем возвращение репозиторием листа с выполнеными ордерами*/
         when(orderRepository
-                .findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, nowLocalDate.atStartOfDay().minusDays(2),
-                        nowLocalDate.atStartOfDay().plusDays(2)))
+                .findAllByStatusEqualsAndDateTimeBetween(any(), any(), any()))
                 .thenReturn(completedOrders);
         assertEquals(expectedSalesList, orderService.findAllSalesBetween(now.minusDays(2).toLocalDate(), now.plusDays(2).toLocalDate()),
                 "Expected Sales List doesn't match actual");
