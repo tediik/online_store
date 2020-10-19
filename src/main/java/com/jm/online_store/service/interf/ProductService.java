@@ -45,6 +45,4 @@ public interface ProductService {
     boolean addNewSubscriber(Long id, String email);
 
     Long editProduct(Product product);
-
-    Categories findProductCategory(Long id);
 }

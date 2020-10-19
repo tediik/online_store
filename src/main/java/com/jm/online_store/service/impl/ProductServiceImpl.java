@@ -56,17 +56,6 @@ public class ProductServiceImpl implements ProductService {
     private final MailSenderService mailSenderService;
 
     /**
-     * Смотрим категорию товара по id товара
-     *
-     * @param id товара
-     * @return Categories товара
-     */
-    @Override
-    public Categories findProductCategory(Long id){
-        return productRepository.findProductCategory(id).getProductType();
-    }
-
-    /**
      * метод получения списка товаров
      *
      * @return List<Product>

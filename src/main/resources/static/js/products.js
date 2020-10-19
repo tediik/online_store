@@ -270,17 +270,6 @@ function checkActionButton(event) {
 }
 
 /**
- * функция получения категории продукта
- * @param id продукта
- * @returns {Promise<Response>} категория продукта
- */
-function getProductCategory(id) {
-    return fetch(`api/categories/${id}`,
-        {method: "GET", headers: headers})
-        .then(response => response.json());
-}
-
-/**
  * функция рендера таблицы продуктов
  * @param products
  */
