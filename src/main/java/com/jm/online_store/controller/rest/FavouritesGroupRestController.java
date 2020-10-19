@@ -30,7 +30,8 @@ public class FavouritesGroupRestController {
 
     @GetMapping(value = "/customer/favouritesGroup")
     public ResponseEntity getFavouritesGroups() {
-        return ResponseEntity.ok(favouritesGroupService.findAll());
+        User user = userService.getCurrentLoggedInUser();
+        return ResponseEntity.ok(favouritesGroupService.findAllByUser(user));
     }
 
     @PostMapping(value = "/customer/favouritesGroup")
@@ -38,13 +39,12 @@ public class FavouritesGroupRestController {
         User user = userService.getCurrentLoggedInUser();
         favouritesGroup.setUser(user);
         favouritesGroupService.addFavouritesGroup(favouritesGroup);
-        Long idNewGroup = favouritesGroupService.findByName(favouritesGroup.getName()).get().getId();
-        return ResponseEntity.ok(idNewGroup);
+        System.out.println(favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName()));
+        return ResponseEntity.ok(favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName()));
     }
 
     @DeleteMapping(value = "/customer/favouritesGroup/{id}")
     public void deleteFavouritesGroups(@PathVariable("id") Long id) {
         favouritesGroupService.deleteById(id);
     }
-
 }

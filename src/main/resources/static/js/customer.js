@@ -80,6 +80,9 @@ $(document).on("click", "#ch_sel_all", function () {
         $('.select_product').prop('checked', false);
     }
 });
+/**
+ * Нажимаем на выбранной группе для отображения списка товаров
+ */
 $(document).on("click", ".btn-group .dropdown-item", function () {
     alert(this.id);
 });
@@ -90,7 +93,39 @@ $(document).on("click", ".add-group-new", function () {
     $(".new-group-checkbox").prop('checked', true);
     $(".new-group-checkbox").prop("disabled", true);
 });
-
+/**
+ * Обработчик нажатия на кнопку EDIT в выборе списка избранного
+ */
+$(document).on("click", ".button-edit-fav-group", function () {
+    let thisId = $(this).attr("id");
+    $(".ok-cancel-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
+    $(this).addClass("hidden");
+    $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", false);
+});
+/**
+ * Обработчик нажатия на кнопку Х(Отмена редактирования) в выборе списка избранного
+ */
+$(document).on("click", ".edit-fav-group-cancel", function () {
+    let thisId = $(this).attr("id");
+    $(".ok-cancel-edit-fav-group[id='" + thisId + "']").addClass("hidden");
+    $(".button-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
+    $(".select-group-tr-input[id='" + thisId + "']").val($(".dropdown-item[id='" + thisId + "']").text());
+    $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", true);
+});
+/**
+ * Кнопочка подтверждения создания нового списка  "V"
+ */
+$(document).on("click", ".add-group-input-ok", function (){
+    let newGroupName = $(".new-group-input").val();
+    addFavouritesGroupInBD(newGroupName);
+    $(".polya-input").addClass("hidden");
+    $(".add-group-new").removeClass("hidden");
+    $(".new-group-checkbox").prop('checked', false);
+    $(".new-group-checkbox").prop("disabled", false);
+})
+/**
+ * Кнопочка отмены от создания нового списка  "Х"
+ */
 $(document).on("click", ".add-group-input-cancel", function () {
     $(".polya-input").addClass("hidden");
     $(".add-group-new").removeClass("hidden");
@@ -98,25 +133,68 @@ $(document).on("click", ".add-group-input-cancel", function () {
     $(".new-group-checkbox").prop("disabled", false);
 });
 /**
- * Обработчик нажатия на кнопку EDIT в выборе списка избранного
+ * Добавляем название нового списка в БД
+ * @param nameGroup   Название новой группы
+ * @returns {Promise<void>}
  */
-$(document).on("click", ".button-edit-fav-group", function () {
-    let thisId = $(this).attr("id");
-    // console.log($(".ok-cancel-edit-fav-group[id='" + thisId + "']").attr("class"))
-    // console.log($(this).attr("class"));
-    $(".ok-cancel-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
-    $(this).addClass("hidden");
-});
-/**
- * Обработчик нажатия на кнопку Х(Отмена редактирования) в выборе списка избранного
- */
-$(document).on("click", ".edit-fav-group-cancel", function () {
-    let thisId = $(this).attr("id");
-    console.log(thisId);
-    $(".ok-cancel-edit-fav-group[id='" + thisId + "']").addClass("hidden");
-    $(".button-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
-});
-
+async function addFavouritesGroupInBD(nameGroup) {
+    const headers = {
+        'Content-type': 'application/json; charset=UTF-8'
+    };
+    let favouritesGroup = {
+        name: nameGroup
+    };
+    await fetch(`/customer/favouritesGroup`, {
+        method: 'POST',
+        body: JSON.stringify(favouritesGroup),
+        headers: headers
+    }).then(respons => respons.json())
+        .then(data => {
+            $('.dropdown-menu').append("<a class='dropdown-item' href='#' id=" + data.id + ">" + data.name + "</a>");
+            let kusok = `<tr class="select-group-tr mt-3">
+                <td>
+                    <input id="${data.id}" type="checkbox" class="${data.id}">
+                        <label class="form-check-label" for="${data.id}">
+                            <input id="${data.id}" type="text" value="${data.name}" class="select-group-tr-input" disabled="">
+                        </label>
+                </td>
+                <td>
+                    <div class="ok-cancel-edit-fav-group hidden" id="${data.id}">
+                        <span class="edit-fav-group-ok" id="${data.id}">V</span>
+                        <span class="edit-fav-group-cancel" id="${data.id}">X</span>
+                    </div>
+                    <button type="button" class="button-edit-fav-group btn btn-secondary" id="${data.id}">EDIT
+                    </button>
+                </td>
+            </tr>
+            `;
+            $('.select_group').append(kusok);
+        });
+};
+// /**
+//  * Нажимаем и подгружаем список групп пользователя
+//  */
+// $(document).on("click", ".get-favourites-group-btn", function () {
+//     getFavouritesGroupInSelect();
+// console.log("Нажади на  get-favourites-group-btn");
+// });
+// /**
+//  * Вытаскиваем из БД список "Избранных списков"
+//  * @returns {Promise<void>}
+//  */
+// async function getFavouritesGroupInSelect() {
+//         fetch(`/customer/favouritesGroup`)
+//             .then(response => response.json())
+//             .then(fgroup => {
+//                 let presentGroup = $('#favouritesGroup :first-child').attr("id");
+//                 if (!presentGroup) {
+//                     for (let i = 0; i < fgroup.length; i++) {
+//                         $('.dropdown-menu').append("<a class='dropdown-item' href='#' id=" + fgroup[i].id + ">" + fgroup[i].name + "</a>");
+// //                        $('#favouritesGroupMove').append("<option id=" + fgroup[i].id + " value='" + toTranslit(fgroup[i].name) + "'>" + fgroup[i].name + " </option>");
+//                     }
+//                 }
+//             })
+// };
 //  Новый функционал   $(`.building[data-id="${id}"]`)
 //jQuery(inform_panel).find('button.svg-control[status="' + object.status + '"]').addClass('active');
 

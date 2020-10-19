@@ -164,7 +164,7 @@
                     <!-- Новый интерфейс -->
                     <div class="favouritesgroups">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                            <button type="button" class="get-favourites-group-btn btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                 Все товары
                             </button>
@@ -208,7 +208,7 @@
                                                        class="form-check-input checkbox_move_group">
                                                 <label class="form-check-label"
                                                        th:for="${favouritesGroup.id}">
-                                                    <input th:id="${favouritesGroup.id}" type="text" th:value="${favouritesGroup.getName()}" class="select-group-tr-input">
+                                                    <input th:id="${favouritesGroup.id}" type="text" th:value="${favouritesGroup.getName()}" class="select-group-tr-input" disabled>
                                                 </label>
                                             </td>
                                             <td>

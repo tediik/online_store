@@ -38,3 +38,6 @@ svg{
     font-weight: 400;
     color: #212529;
 }
+.select-group-tr-input {
+    border: none;
+}
