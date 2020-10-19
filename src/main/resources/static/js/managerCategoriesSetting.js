@@ -3,14 +3,22 @@
  */
 $(document).ready(function () {
     $('#nav-categories-and-topics-tab').click(function () {
-        getCategoriesTable();
+        getCategories();
     })
     $('#addCategoryButton').click(function (event) {
         addNewCategory();
         event.preventDefault();
     })
+    $('#addTopicButton').click(function (event) {
+        addNewTopic();
+        event.preventDefault();
+    })
     $('#editCategoryButton').click(function (event) {
-        editCategory($('#editId').val());
+        editCategory($('#editCategoryId').val());
+        event.preventDefault();
+    })
+    $('#editTopicButton').click(function (event) {
+        editTopic($('#editTopicId').val());
         event.preventDefault();
     })
 })
@@ -18,43 +26,80 @@ $(document).ready(function () {
 /**
  * Делает запрос всех категорий
  */
-function getCategoriesTable() {
-    fetch("/api/manager/categories")
+function getCategories() {
+    fetch("/api/manager/topicsCategory")
         .then(response => {
             if (response.status === 200) {
                 response.json()
-                    .then(categories => renderCategoriesTable(categories))
+                    .then(topicsCategories => renderCategories(topicsCategories))
             }
         })
 }
 
 /**
- * Отрисовывает все категории в таблицу на фронт
- * @param categories категории, которые отрисовываются в таблицу
+ * Вставляет все категории на фронт
+ * @param topicsCategories категории, которые будут вставлены
  */
-function renderCategoriesTable(categories) {
-    let rows = "";
-    for (let category of categories) {
-        rows += row(category);
+function renderCategories(topicsCategories) {//
+    let categoriesBody = document.querySelector('#accordionCategories');
+    let insertBody = "";
+    for (let topicsCategory of topicsCategories) {
+        insertBody += makeCategoryBody(topicsCategory)
     }
-
-    let categoriesBody = document.querySelector('#categoriesBody');
-    categoriesBody.insertAdjacentHTML("afterbegin", rows);
+    categoriesBody.insertAdjacentHTML("afterbegin", insertBody);
 }
 
 /**
- * Помогает методу renderCategoriesTable()
- * @param category категория, которая будет отрендерена в строку
- * @returns {string} возвращает строку таблицы
+ * Отрисовывает тело категории
+ * @param topicsCategory категория, которая будет отрисована
+ * @returns {string} тело категории в html
  */
-function row(category) {
-    return `<tr data-rowId="${category.id}"> 
-                <td>${category.id}</td>
-                <td>${category.category}</td>
-                <td>${category.superCategory}</td>
-                <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#editCategoryModal" onclick="getCategory(${category.id})">Edit</button></td>
-                <td><button type="button" class="btn btn-danger" id="deleteCategoryButton" onclick="deleteCategory(${category.id})">Delete</button></td>
-            </tr>`
+function makeCategoryBody(topicsCategory) {
+    let topicsTable = "";
+    if (topicsCategory.topics !== null && topicsCategory.topics.length !== 0) {
+        topicsTable += `<ul class="list-group list-group-flush" id="topic${topicsCategory.id}">`
+        for (let tops of topicsCategory.topics) {
+            topicsTable += `<li class="list-group-item" id="row${tops.id}">
+                                <span class="text-left">${tops.topicName}</span>
+                                <span class="float-right">
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editTopicModal" onclick="getTopic(${tops.id})">Переименовать</button>
+                                </span>                        
+                            </li>`
+        }
+    } else {
+        topicsTable = `<ul class="list-group list-group-flush id="topic${topicsCategory.id}">
+                           <li class="list-group-item" id="nullRow${topicsCategory.id}">
+                               <span class="text-left">Тем пока что нет</span>                                                      
+                           </li>`;
+    }
+
+    topicsTable += `<li class="list-group-item">
+                            <button type="button" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#addNewTopicModal" onclick="getCategoryForNewTopic(${topicsCategory.id})">
+                                Добавить
+                            </button>
+                        </li>
+                    </ul>`
+
+    return `<div class="card" id="categoryCard${topicsCategory.id}">
+                <div class="card-header" id="heading${topicsCategory.id}">
+                    <h5 class="mb-0">                    
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse${topicsCategory.id}" aria-expanded="false" aria-controls="collapse${topicsCategory.id}">
+                      ${topicsCategory.categoryName}
+                    </button>
+                    <span class="float-right">
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#editCategoryModal" onclick="getCategory(${topicsCategory.id})">Переименовать</button>
+                            <button type="button" class="btn btn-outline-danger" onclick="deleteCategory${topicsCategory.id})">Архивировать</button>
+                        </div>
+                    </span>
+                    </h5>
+                </div>
+                <div id="collapse${topicsCategory.id}" class="collapse" aria-labelledby="heading${topicsCategory.id}" data-parent="#accordionCategories">
+                    <div class="card-body">
+                        ${topicsTable}
+                    </div>
+                </div>
+          </div>`
 }
 
 /**
@@ -62,60 +107,57 @@ function row(category) {
  * @param id идентификатор категории
  */
 function getCategory(id) {
-    fetch("/api/manager/categories/" + id)
+    fetch("/api/manager/topicsCategory/" + id)
         .then(response => {
             if (response.status === 200) {
                 response.json()
-                    .then(category => completeModal(category));
+                    .then(topicsCategory => completeEditCategory(topicsCategory));
             }
         })
+}
+
+/**
+ * Заполняет модальное окно для редактирования категории
+ * @param topicsCategory категория, которая будет заполнена в модальном окне для последующего редактирования
+ */
+let topic;
+function completeEditCategory(topicsCategory) {
+    topic = topicsCategory.topics;
+    let editCategoryForm = document.forms['editCategoryForm'];
+    editCategoryForm.elements['editCategoryId'].value = topicsCategory.id;
+    editCategoryForm.elements['editCategoryName'].value = topicsCategory.categoryName;
 }
 
 /**
  * Делает запрос на добавление новой категории
  */
 function addNewCategory() {
-    fetch("/api/manager/categories", {
+    fetch("/api/manager/topicsCategory", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            category: $('#addNewCategory').val(),
-            superCategory: $('#addNewSuperCategory').val()
+            categoryName: $('#addNewCategory').val()
         })
     })
         .then(response => {
             if (response.status === 200) {
                 response.json()
-                    .then(categories => renderCategoriesInCategoriesTable(categories))
-            } else {
-                console.log("Problem: " + response.status);
+                    .then(topicsCategory => renderCategory(topicsCategory))
             }
         })
 }
 
 /**
- * Отрисовывет новую категорию в таблицу на фронт
- * @param categories - новая категория, которая будет отрендерена в общую таблицу
+ * Вставляет категорию на фронт
+ * @param topicsCategories категория, которая будет вставлена
  */
-function renderCategoriesInCategoriesTable(categories) {
-    let tbody = document.querySelector("#categoriesBody");
-    tbody.insertAdjacentHTML("beforeend", row(categories));
-
+function renderCategory(topicsCategory) {
+    let cardsBody = document.querySelector("#accordionCategories");
+    cardsBody.insertAdjacentHTML("afterbegin", makeCategoryBody(topicsCategory));
     $('#addNewCategoryModal').modal('hide');
     document.forms["addCategoryForm"].reset();
-}
-
-/**
- * Заполняет модальное окно для редактирования категории
- * @param category - категория, которая будет заполнена в модальном окне для последующего редактирования
- */
-function completeModal(category) {
-    let editForm = document.forms['editCategoryForm'];
-    editForm.elements['editId'].value = category.id;
-    editForm.elements['editCategory'].value = category.category;
-    editForm.elements['editSuperCategory'].value = category.superCategory
 }
 
 /**
@@ -123,59 +165,174 @@ function completeModal(category) {
  * @param id идентификатор категории
  */
 function editCategory(id) {
-    fetch("/api/manager/categories/" + id, {
+    fetch("/api/manager/topicsCategory/" + id, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            id: $('#editId').val(),
-            category: $('#editCategory').val(),
-            superCategory: $('#editSuperCategory').val()
+            id: $('#editCategoryId').val(),
+            categoryName: $('#editCategoryName').val(),
+            topics: topic
         })
     }).then(response => {
         if (response.status === 200) {
             response.json()
-                .then(changedCategory => renderChangedCategoryInCategoriesTable(changedCategory));
+                .then(changedCategory => changeCategoryBody(changedCategory));
         }
     })
 }
 
 /**
- * Отрисовывает измененную категорию в таблицу на фронт
- * @param changedCategory измененная категория, которая будет перерендерена в общую таблицу
+ * Перевсатвляет измененную категорию на фронт
+ * @param changedCategory измененная категория, которая будет вставлена
  */
-function renderChangedCategoryInCategoriesTable(changedCategory) {
-    let tr = document.querySelector(`tr[data-rowId="${changedCategory.id}"]`);
-    tr.insertAdjacentHTML("beforebegin", row(changedCategory));
-    tr.remove();
-
+function changeCategoryBody(changedCategory) {
+    let cardsBody = document.querySelector(`#categoryCard${changedCategory.id}`);
+    cardsBody.insertAdjacentHTML("beforebegin", makeCategoryBody(changedCategory));
+    cardsBody.remove();
     $('#editCategoryModal').modal('hide');
     document.forms["editCategoryForm"].reset();
 }
 
+// Сделать архивирование категории
+
 /**
- * Делает запрос на удаление категории
- * @param id идентификатор категории
+ * Делает запрос конкретной темы
+ * @param id идентификатор темы
  */
-function deleteCategory(id) {
-    fetch("/api/manager/categories/" + id, {
-        method: "DELETE"
-    })
+function getTopic(id) {
+    fetch("/api/manager/topic/" + id)
         .then(response => {
-            if (response.status === 204) {
-                deleteCategoryFromCategoriesTable(id);
+            if (response.status === 200) {
+                response.json()
+                    .then(topic => completeEditTopic(topic));
             }
         })
 }
 
 /**
- * Стирает удаленную категорию из таблицы на фронте
+ * Заполняет модальное окно для редактирования темы
+ * @param topic тема, которая будет заполнена в модальном окне для последующего редактирования
+ */
+let category;
+function completeEditTopic(topic) {
+    category = topic.topicsCategory;
+    let editTopicForm = document.forms['editTopicForm'];
+    editTopicForm.elements['editTopicId'].value = topic.id;
+    editTopicForm.elements['editTopicName'].value = topic.topicName;
+}
+
+/**
+ * Делает запрос на измененние темы
+ * @param id идентификатор темы
+ */
+function editTopic(id) {
+    fetch("/api/manager/topic/" + id, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id: $('#editTopicId').val(),
+            topicName: $('#editTopicName').val(),
+            topicsCategory: category
+        })
+    }).then(response => {
+        if (response.status === 200) {
+            response.json()
+                .then(changedTopic => changeTopicRow(changedTopic));
+        }
+    })
+}
+
+/**
+ * Перевсатвляет измененную тему на фронт
+ * @param changedTopic измененная темв, которая будет вставлена
+ */
+function changeTopicRow(changedTopic) {
+    let topicRow = document.querySelector(`#row${changedTopic.id}`);
+    topicRow.insertAdjacentHTML("beforebegin", makeTopicRow(changedTopic));
+    topicRow.remove();
+    $('#editTopicModal').modal('hide');
+    document.forms["editTopicForm"].reset();
+}
+
+/**
+ * Отрисовывает тело темы
+ * @param topic тема, которая будет отрисована
+ * @returns {string} тело темы в html
+ */
+function makeTopicRow(topic) {
+    return `<li class="list-group-item" id="row${topic.id}">
+                <span class="text-left">${topic.topicName}</span>
+                <span class="float-right">
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editTopicModal" onclick="getTopic(${topic.id})">Переименовать</button>
+                </span>                        
+            </li>`
+}
+
+/**
+ * Делает запрос конкретной категории для ее вставки в новую тему
  * @param id идентификатор категории
  */
-function deleteCategoryFromCategoriesTable(id) {
-    let tr = document.querySelector(`tr[data-rowId="${id}"]`);
-    tr.remove();
+function getCategoryForNewTopic(id) {
+    fetch("/api/manager/topicsCategory/" + id)
+        .then(response => {
+            if (response.status === 200) {
+                response.json()
+                    .then(topicsCategory => completeAddTopic(topicsCategory));
+            }
+        })
 }
+
+/**
+ * Присваивает переменной категорию для новой темы
+ */
+let categoryForAdd;
+function completeAddTopic(topicsCategory) {
+    categoryForAdd = topicsCategory;
+}
+
+/**
+ * Делает запрос на добавление новой темы
+ */
+function addNewTopic() {
+    fetch("/api/manager/topic", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            topicName: $('#addNewTopic').val(),
+            topicsCategory: categoryForAdd
+        })
+    })
+        .then(response => {
+            if (response.status === 200) {
+                response.json()
+                    .then(topic => renderTopic(topic))
+            }
+        })
+}
+
+/**
+ * Вставляет новую категорию
+ * @param topic
+ */
+function renderTopic(topic) {
+    let topicRow;
+    if (topic.topicsCategory.topics.length <= 1) {
+        topicRow = document.querySelector(`#nullRow${topic.topicsCategory.id}`);
+        topicRow.insertAdjacentHTML("beforebegin", makeTopicRow(topic));
+        topicRow.remove();
+    } else {
+        topicRow = document.querySelector(`#topic${topic.topicsCategory.id}`);
+        topicRow.insertAdjacentHTML("afterbegin", makeTopicRow(topic));
+    }
+    $('#addNewTopicModal').modal('hide');
+    document.forms["addTopicForm"].reset();
+}
+
 
 
