@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Center</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!--toastr CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header th:insert="/blocks/header :: header"></header>
+
+<main class="wrapper flex-grow-1 container">
+    <div class="card" style="height: 60rem">
+        <div class="card-header">
+            Cервисный центр
+        </div>
+        <div class="card-body">
+            <br>
+            <a class="btn btn-primary" role="button" th:href="@{/serviceCheckStatus}">
+                Проверить статус заказа на ремонт</a>
+            <br>
+            <br>
+            <div class="container">
+                Ремонтируем цифровую и бытовую технику в 226 городах России.
+                Уже 35 мировых брендов доверили нам право ремонтировать их устройства.
+                Компании: Apple, Epson, Brother, Canon, Xiaomi, Indesit и другие.
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="/blocks/footer :: footer"></footer>
+
+<!--bootstrap scripts-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<!--toastr-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
+</body>
+</html>

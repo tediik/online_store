@@ -27,6 +27,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             httpServletResponse.sendRedirect("/");
         } else if (roles.contains("ROLE_MANAGER")) {
             httpServletResponse.sendRedirect("/manager");
+        } else if (roles.contains("ROLE_SERVICE")) {
+            httpServletResponse.sendRedirect("/service");
         }
     }
 }

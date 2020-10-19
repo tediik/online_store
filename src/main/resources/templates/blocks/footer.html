@@ -1,9 +1,43 @@
-<div th:fragment="footer">
-    <footer class="text-muted">
-        <div class="container">
-            <p class="float-right">
-                <a href="#">Back to top</a>
-            </p>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<footer th:fragment="footer" class="footer card-footer border-dark" role="contentinfo">
+    <div class="container">
+        <div class="row">
+
+                <div class="col-6 col-md">
+                    <small class="title">Компания</small>
+                    <ul>
+                        <!-- Что-то -->
+                        <li><a th:href="@{/news}">Новости</a></li>
+                        <!-- Что-то -->
+                        <li><a th:href="@{/news}">Вакансии</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md">
+                    <small class="title">Покупателям</small>
+                    <ul>
+                        <!-- Cервисный центр -->
+                        <li><a th:href="@{/serviceCenter}">Сервисный центр</a></li>
+                        <!-- Статус оборудования СЦ -->
+                        <li><a th:href="@{/serviceCheckStatus}">Статус оборудования СЦ</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md">
+                    <small class="title">Помощь</small>
+                    <ul>
+                        <!-- Что-то -->
+                        <li><a th:href="@{/news}">Как оформить заказ</a></li>
+                        <!-- Что-то -->
+                        <li><a th:href="@{/news}">Способы оплаты</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md">
+                    <p class="float-right">
+                        <a href="#">Back to top</a>
+                    </p>
+                </div>
         </div>
-    </footer>
-</div>
+    </div>
+</footer>
