@@ -29,10 +29,10 @@ public class ManagerTopicRestController {
 
     @PostMapping // ok
     public ResponseEntity<Topic> createTopic(@RequestBody Topic topic){
-        if (topicService.existsTopicByTopicName(topic.getTopicName())) {
+        if (topicService.existsByTopicName(topic.getTopicName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        topicService.addTopic(topic);
+        topicService.creat(topic);
         return ResponseEntity.ok(topicService.findByTopicName(topic.getTopicName()));
     }
 
