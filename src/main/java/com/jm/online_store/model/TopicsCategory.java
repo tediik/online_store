@@ -41,4 +41,7 @@ public class TopicsCategory {
 
     @OneToMany(mappedBy = "topicsCategory")
     private List<Topic> topics;
+
+    @Column(nullable = false)
+    private Boolean actual = Boolean.TRUE;
 }
