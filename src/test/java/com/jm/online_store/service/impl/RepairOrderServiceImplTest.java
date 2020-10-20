@@ -120,7 +120,6 @@ public class RepairOrderServiceImplTest {
     void findAllTest() {
         when(repairOrderRepository.findAll()).thenReturn(repairOrderList);
         List<RepairOrder> list = repairOrderService.findAll();
-        list.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
         assertEquals(6, list.size());
         verify(repairOrderRepository, times(1)).findAll();
     }
@@ -130,7 +129,6 @@ public class RepairOrderServiceImplTest {
         when(repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.ACCEPTED))
                 .thenReturn(listAccepted);
         List<RepairOrder> listAccepted = repairOrderService.getAllAccepted();
-        listAccepted.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
         assertEquals(1, listAccepted.size());
         verify(repairOrderRepository, times(1))
                 .findAllByRepairOrderTypeEquals(RepairOrderType.ACCEPTED);
@@ -141,7 +139,6 @@ public class RepairOrderServiceImplTest {
         when(repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.DIAGNOSTICS))
                 .thenReturn(listDiagnostics);
         List<RepairOrder> listDiagnostics = repairOrderService.getAllDiagnostics();
-        listDiagnostics.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
         assertEquals(1, listDiagnostics.size());
         verify(repairOrderRepository, times(1))
                 .findAllByRepairOrderTypeEquals(RepairOrderType.DIAGNOSTICS);
@@ -152,7 +149,6 @@ public class RepairOrderServiceImplTest {
         when(repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.IN_WORK))
                 .thenReturn(listInWork);
         List<RepairOrder> listInWork = repairOrderService.getAllIn_Work();
-        listInWork.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
         assertEquals(1, listInWork.size());
         verify(repairOrderRepository, times(1))
                 .findAllByRepairOrderTypeEquals(RepairOrderType.IN_WORK);
@@ -163,7 +159,6 @@ public class RepairOrderServiceImplTest {
         when(repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.COMPLETE))
                 .thenReturn(listComplete);
         List<RepairOrder> listComplete = repairOrderService.getAllComplete();
-        listInWork.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
         assertEquals(1, listComplete.size());
         verify(repairOrderRepository, times(1))
                 .findAllByRepairOrderTypeEquals(RepairOrderType.COMPLETE);
@@ -174,7 +169,6 @@ public class RepairOrderServiceImplTest {
         when(repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.ARCHIVED))
                 .thenReturn(listArchived);
         List<RepairOrder> listArchived = repairOrderService.getAllArchive();
-        listArchived.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
         assertEquals(1, listArchived.size());
         verify(repairOrderRepository, times(1))
                 .findAllByRepairOrderTypeEquals(RepairOrderType.ARCHIVED);
@@ -185,7 +179,6 @@ public class RepairOrderServiceImplTest {
         when(repairOrderRepository.findAllByRepairOrderTypeEquals(RepairOrderType.CANCELED))
                 .thenReturn(listCanceled);
         List<RepairOrder> listCanceled = repairOrderService.getAllCanceled();
-        listCanceled.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
         assertEquals(1, listCanceled.size());
         verify(repairOrderRepository, times(1))
                 .findAllByRepairOrderTypeEquals(RepairOrderType.CANCELED);
