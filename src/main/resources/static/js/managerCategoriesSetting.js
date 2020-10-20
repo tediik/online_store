@@ -27,7 +27,7 @@ $(document).ready(function () {
  * Делает запрос всех категорий
  */
 function getCategories() {
-    fetch("/api/manager/topicsCategory")
+    fetch("/api/manager/topicsCategory/actual")
         .then(response => {
             if (response.status === 200) {
                 response.json()
@@ -89,7 +89,7 @@ function makeCategoryBody(topicsCategory) {
                     <span class="float-right">
                         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#editCategoryModal" onclick="getCategory(${topicsCategory.id})">Переименовать</button>
-                            <button type="button" class="btn btn-outline-danger" onclick="deleteCategory${topicsCategory.id})">Архивировать</button>
+                            <button type="button" class="btn btn-outline-danger" onclick="archiveCategory(${topicsCategory.id})">Архивировать</button>
                         </div>
                     </span>
                     </h5>
@@ -195,7 +195,30 @@ function changeCategoryBody(changedCategory) {
     document.forms["editCategoryForm"].reset();
 }
 
-// Сделать архивирование категории
+/**
+ * Делает запрос на архивацию категории и удаляет ее из актуальных категорий на фронте
+ * @param id идентификатор темы
+ */
+function archiveCategory(id) {
+    fetch("/api/manager/topicsCategory/archive/" + id, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id: id
+        })
+    }).then(response => {
+        if (response.status === 200) {
+            deleteCategoryBodyFromActual(id)
+        }
+    })
+
+    function deleteCategoryBodyFromActual(id){
+        let cardsBody = document.querySelector(`#categoryCard${id}`);
+        cardsBody.remove();
+    }
+}
 
 /**
  * Делает запрос конкретной темы
