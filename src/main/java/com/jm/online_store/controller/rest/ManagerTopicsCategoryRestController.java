@@ -30,9 +30,18 @@ public class ManagerTopicsCategoryRestController {
      * @return ResponseEntity<List < TopicsCategory>> возвращает все категории тем со статусом ответа,
      * если категорий тем нет - только статус
      */
-    @GetMapping // ok
-    public ResponseEntity<List<TopicsCategory>> readAllTopicsCategories() {
-        List<TopicsCategory> topicsCategories = topicsCategoryService.getAllTopicsCategories();
+    @GetMapping("/actual")
+    public ResponseEntity<List<TopicsCategory>> readAllActualTopicsCategories() {
+        List<TopicsCategory> topicsCategories = topicsCategoryService.findAllByActualIsTrue();
+        if (topicsCategories.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(topicsCategories);
+    }
+
+    @GetMapping("/archive")
+    public ResponseEntity<List<TopicsCategory>> readAllArchiveTopicsCategories() {
+        List<TopicsCategory> topicsCategories = topicsCategoryService.findAllByActualIsFalse();
         if (topicsCategories.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -48,7 +57,7 @@ public class ManagerTopicsCategoryRestController {
      */
     @GetMapping("/{id}") // ок
     public ResponseEntity<TopicsCategory> readTopicsCategory(@PathVariable(name = "id") long id) {
-        if (!topicsCategoryService.existsTopicsCategoryById(id)) {
+        if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(topicsCategoryService.findById(id));
@@ -63,11 +72,11 @@ public class ManagerTopicsCategoryRestController {
      */
     @PostMapping // ok
     public ResponseEntity<TopicsCategory> createTopicsCategory(@RequestBody TopicsCategory topicsCategory) {
-        if (topicsCategoryService.existsTopicsCategoryByName(topicsCategory.getCategoryName())) {
+        if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         topicsCategoryService.creat(topicsCategory);
-        return ResponseEntity.ok(topicsCategoryService.findByName(topicsCategory.getCategoryName()));
+        return ResponseEntity.ok(topicsCategoryService.findByCategoryName(topicsCategory.getCategoryName()));
     }
 
     /**
@@ -80,10 +89,40 @@ public class ManagerTopicsCategoryRestController {
      */
     @PutMapping("/{id}") // ок
     public ResponseEntity<TopicsCategory> updateTopicsCategory(@PathVariable(name = "id") long id, @RequestBody TopicsCategory topicsCategory) {
-        if (!topicsCategoryService.existsTopicsCategoryById(id)) {
+        if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         topicsCategoryService.update(topicsCategory);
         return ResponseEntity.ok(topicsCategoryService.findById(id));
+    }
+
+    /**
+     * Метод для пометки категории тем, как архивной
+     *
+     * @param id идентификатор категории
+     * @return ResponseEntity<String> возврвщвет статус
+     */
+    @PutMapping("/archive/{id}")
+    public ResponseEntity<String> archiveTopicsCategory(@PathVariable(name = "id") long id) {
+        if (!topicsCategoryService.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        topicsCategoryService.archive(topicsCategoryService.findById(id));
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Метод для пометки категории тем, как актуальной
+     *
+     * @param id идентификатор категории
+     * @return ResponseEntity<String> возврвщвет статус
+     */
+    @PutMapping("/unarchive/{id}")
+    public ResponseEntity<String> unarchiveTopicsCategory(@PathVariable(name = "id") long id) {
+        if (!topicsCategoryService.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        topicsCategoryService.unarchive(topicsCategoryService.findById(id));
+        return ResponseEntity.ok().build();
     }
 }
