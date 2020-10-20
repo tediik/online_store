@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -28,13 +29,14 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Column(unique = true)
     private String topicName;
 
     @OneToMany(mappedBy = "topic")
     private Set<Feedback> feedbacks;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
+    @ManyToOne
     @JoinColumn(name = "topicCategory_id")
     private TopicsCategory topicsCategory;
 }
