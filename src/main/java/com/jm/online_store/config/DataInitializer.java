@@ -1077,15 +1077,19 @@ public class DataInitializer {
      */
     public void feedbackTopicsInit() {
         TopicsCategory topicsCategory1 = TopicsCategory.builder()
+                .actual(true)
                 .categoryName("Коммерческое предложение")
                 .build();
         TopicsCategory topicsCategory2 = TopicsCategory.builder()
+                .actual(true)
                 .categoryName("Оценка работы")
                 .build();
         TopicsCategory topicsCategory3 = TopicsCategory.builder()
+                .actual(true)
                 .categoryName("Ошибки и пожелания")
                 .build();
         TopicsCategory topicsCategory4 = TopicsCategory.builder()
+                .actual(false)
                 .categoryName("Работа в компании")
                 .build();
 
@@ -1136,16 +1140,16 @@ public class DataInitializer {
                 .topicsCategory(topicsCategory4)
                 .build();
 
-        topicService.addTopic(topic1);
-        topicService.addTopic(topic2);
-        topicService.addTopic(topic3);
-        topicService.addTopic(topic4);
-        topicService.addTopic(topic5);
-        topicService.addTopic(topic6);
-        topicService.addTopic(topic7);
-        topicService.addTopic(topic8);
-        topicService.addTopic(topic9);
-        topicService.addTopic(topic10);
+        topicService.creat(topic1);
+        topicService.creat(topic2);
+        topicService.creat(topic3);
+        topicService.creat(topic4);
+        topicService.creat(topic5);
+        topicService.creat(topic6);
+        topicService.creat(topic7);
+        topicService.creat(topic8);
+        topicService.creat(topic9);
+        topicService.creat(topic10);
     }
 
     /**
