@@ -44,6 +44,9 @@ public class Feedback {
     private Status status;
 
     private String message;
+
+    private String answer;
+
     private LocalDateTime feedbackPostDate;
 
     public enum Status {
