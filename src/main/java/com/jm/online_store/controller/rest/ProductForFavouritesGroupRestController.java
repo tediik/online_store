@@ -29,43 +29,24 @@ public class ProductForFavouritesGroupRestController {
 
     @PostMapping(value = "/customer/addProductInFavouritesGroup")
     public ResponseEntity addProductInFavouritesGroup(@RequestBody ArrayList<Long> idPidG) {
-        User user = userService.getCurrentLoggedInUser();
-        Long idFavouritesGroup = idPidG.get(idPidG.size() - 1);
-        Long idProduct;
-        for (int i = 0; i < idPidG.size() - 1; i++) {
-            idProduct = idPidG.get(i);
-            favouritesGroupProductService.addProductToFavouritesGroup(idProduct, idFavouritesGroup, user);
-        }
+
         return ResponseEntity.ok("addProductInFavouritesGroupOK");
     }
 
     @GetMapping(value = "/customer/getProductFromFavouritesGroup/{id}")
     public ResponseEntity<Set<Product>> getProductFromFavouritesGroup (@PathVariable Long id) {
-        User user = userService.getCurrentLoggedInUser();
-        Set<FavouritesGroup> favouritesGroupSet = user.getFavouritesGroups();
-        FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
-        return ResponseEntity.ok(favouritesGroup.getProducts());
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroup")
     public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody ArrayList<Long> idPidG) {
-        User user = userService.getCurrentLoggedInUser();
-        Set<FavouritesGroup> favouritesGroupSet = user.getFavouritesGroups();
-        Long idFavouritesGroup = idPidG.get(idPidG.size() - 1);
-        FavouritesGroup favouritesGroup = favouritesGroupService.findById(idFavouritesGroup).orElseThrow();
-        Long idProduct;
-        for (int i = 0; i < idPidG.size() - 1; i++) {
-            idProduct = idPidG.get(i);
-            favouritesGroupProductService.deleteProductFromFavouritesGroup(idProduct, idFavouritesGroup, user);
-        }
+
         return ResponseEntity.ok("deleteProductFromFavouritesGroupOK");
     }
     @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroupAll")
     public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody Long id) {
-        User user = userService.getCurrentLoggedInUser();
-        Long idFavouritesGroup = 1l;
-        //favouriteGoodsService.deleteFromFavouriteGoods(id, user);
-        favouritesGroupProductService.deleteProductFromFavouritesGroup(id, idFavouritesGroup, user);
+
         return ResponseEntity.ok().build();
     }
 }

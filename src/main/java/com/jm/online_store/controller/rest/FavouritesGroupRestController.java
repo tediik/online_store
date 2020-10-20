@@ -46,4 +46,13 @@ public class FavouritesGroupRestController {
     public void deleteFavouritesGroups(@PathVariable("id") Long id) {
         favouritesGroupService.deleteById(id);
     }
+    @PutMapping(value = "/customer/favouritesGroup/{id}")
+    public ResponseEntity updateFavouritesGroups(@RequestBody String name, @PathVariable("id") Long id) {
+        User user = userService.getCurrentLoggedInUser();
+        FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
+        favouritesGroup.setName(name);
+        favouritesGroupService.save(favouritesGroup);
+        System.out.println("Мы тут!");
+        return ResponseEntity.ok().build();
+    }
 }

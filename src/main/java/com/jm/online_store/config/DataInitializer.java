@@ -149,7 +149,6 @@ public class DataInitializer {
         userService.addUser(customer);
         userService.addUser(customer1);
         userService.addUser(admin);
-        userService.addUser(service);
 
         Product product_1 = new Product("apple", 100000D, 10, 0.1);
         Product product_2 = new Product("samsung", 80000D, 100, 0.9);

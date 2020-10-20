@@ -201,7 +201,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <table class="select_group table table-condensed" >
-                                        <tr th:each="favouritesGroup : ${favouritesGroupList}" class="select-group-tr mt-3">
+                                        <tr th:each="favouritesGroup : ${favouritesGroupList}" class="select-group-tr mt-3" th:id="${favouritesGroup.id}">
                                             <td>
                                                 <input th:id="${favouritesGroup.id}"
                                                        th:class="${favouritesGroup.id}" type="checkbox"
@@ -219,6 +219,10 @@
                                                 <button type="button" class="button-edit-fav-group btn btn-secondary"
                                                         th:id="${favouritesGroup.id}">EDIT
                                                 </button>
+                                                <button type="button" class="button-delete-fav-group btn btn-danger"
+                                                        th:id="${favouritesGroup.id}">DELETE
+                                                </button>
+
                                             </td>
                                         </tr>
                                     </table>

@@ -52,9 +52,7 @@ public class FavouritesGoodsRestController {
     @PutMapping(value = "/customer/favouritesGoods")
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
-        //favouriteGoodsService.addToFavouriteGoods(id, user); //работает
-        Long idFavouritesGroup = 1l;
-        //favouritesGroupProductService.addProductToFavouritesGroup(id, idFavouritesGroup, user);
+        favouriteGoodsService.addToFavouriteGoods(id, user);
         return ResponseEntity.ok().build();
     }
 

@@ -45,6 +45,9 @@ $(document).on("click", "#showBasket", function () {
     $('#v-pills-tab a[href="#basketGoods"]').tab('show')
 });
 // Новый функционал
+/**
+ * Обработчик кнопки "Добавить товары в другой список"
+ */
 $(document).on("click", "#addInOverGroup", function (event) {
     let activeAddInOverGroup = $(".favouritesgroups");
     if (!activeAddInOverGroup.hasClass("selected")) {
@@ -59,6 +62,9 @@ $(document).on("click", "#addInOverGroup", function (event) {
         $("#sel_new_group").removeClass("hidden");
     }
 });
+/**
+ * Обработчик кнопки Отмена (Появляется после нажатия на "Добавить товары в другой список")
+ */
 $(document).on("click", "#escape", function () {
     let activeAddInOverGroup = $(".favouritesgroups");
     if (activeAddInOverGroup.hasClass("selected")) {
@@ -73,6 +79,9 @@ $(document).on("click", "#escape", function () {
         $("#sel_new_group").addClass("hidden");
     }
 });
+/**
+ * Чекбокс "Выбрать все"
+ */
 $(document).on("click", "#ch_sel_all", function () {
     if ($(this).is(':checked')) {
         $('.select_product').prop('checked', true);
@@ -86,7 +95,9 @@ $(document).on("click", "#ch_sel_all", function () {
 $(document).on("click", ".btn-group .dropdown-item", function () {
     alert(this.id);
 });
-
+/**
+ * Кнопка "создать новый список"  в модалке работы со списками избранных
+ */
 $(document).on("click", ".add-group-new", function () {
     $(".polya-input").removeClass("hidden");
     $(".add-group-new").addClass("hidden");
@@ -103,6 +114,34 @@ $(document).on("click", ".button-edit-fav-group", function () {
     $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", false);
 });
 /**
+ * Обработчик нажатия на кнопку DELETE в выборе списка избранного
+ */
+$(document).on("click", ".button-delete-fav-group", function () {
+    let thisId = $(this).attr("id");
+    let noDeleteGroup = $(".select-group-tr-input:first").val();
+    if ($(".select-group-tr-input[id='" + thisId + "']").val() != noDeleteGroup){
+        deleteFavouritesGroupInBD(thisId);
+        toastr.success("Cписок удален!");
+        $(".select-group-tr[id='" + thisId + "']").detach();
+        $(".dropdown-menu [id='" + thisId + "']").detach();
+
+    } else {
+        toastr.error("Удаление невозможно, основной список!");
+    }
+}); ///edit-fav-group-ok
+/**
+ * Обработчик нажатия на кнопку V(Подтвердить редактирование) в выборе списка избранного
+ */
+$(document).on("click", ".edit-fav-group-ok", function () {
+    let thisId = $(this).attr("id");
+    let newNameFavouritesGroup = $(".select-group-tr-input[id='" + thisId + "']").val();
+    $(".ok-cancel-edit-fav-group[id='" + thisId + "']").addClass("hidden");
+    $(".button-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
+    updateFavouritesGroupInBD(newNameFavouritesGroup, thisId);
+    //$(".select-group-tr-input[id='" + thisId + "']").val($(".dropdown-item[id='" + thisId + "']").text());
+    $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", true);
+});
+/**
  * Обработчик нажатия на кнопку Х(Отмена редактирования) в выборе списка избранного
  */
 $(document).on("click", ".edit-fav-group-cancel", function () {
@@ -117,11 +156,17 @@ $(document).on("click", ".edit-fav-group-cancel", function () {
  */
 $(document).on("click", ".add-group-input-ok", function (){
     let newGroupName = $(".new-group-input").val();
-    addFavouritesGroupInBD(newGroupName);
+    let isPresent = $(".select-group-tr-input[value='" + newGroupName + "']").length;
+    if (!isPresent) {
+        addFavouritesGroupInBD(newGroupName);
+        toastr.success("Cписок успешно создан!");
+    } else {
+        toastr.error("Такой список уже существует!");
     $(".polya-input").addClass("hidden");
     $(".add-group-new").removeClass("hidden");
     $(".new-group-checkbox").prop('checked', false);
     $(".new-group-checkbox").prop("disabled", false);
+    }
 })
 /**
  * Кнопочка отмены от создания нового списка  "Х"
@@ -132,6 +177,27 @@ $(document).on("click", ".add-group-input-cancel", function () {
     $(".new-group-checkbox").prop('checked', false);
     $(".new-group-checkbox").prop("disabled", false);
 });
+/**
+ * Обновление название списка в БД
+ * @param nameGroup   Новое название списка
+ * @returns {Promise<void>}
+ */
+async function updateFavouritesGroupInBD(nameGroup, idGroup) {
+    let id = idGroup;
+    const headers = {
+        'Content-type': 'application/json; charset=UTF-8'
+    };
+    // let favouritesGroup = {
+    //     name: nameGroup
+    // };
+    await fetch(`/customer/favouritesGroup/` + id, {
+        method: 'PUT',
+        body: nameGroup,
+        headers: headers
+    }).then(respons => {
+        console.log(respons);
+    });
+};
 /**
  * Добавляем название нового списка в БД
  * @param nameGroup   Название новой группы
@@ -151,7 +217,7 @@ async function addFavouritesGroupInBD(nameGroup) {
     }).then(respons => respons.json())
         .then(data => {
             $('.dropdown-menu').append("<a class='dropdown-item' href='#' id=" + data.id + ">" + data.name + "</a>");
-            let kusok = `<tr class="select-group-tr mt-3">
+            let kusok = `<tr class="select-group-tr mt-3" id="${data.id}">
                 <td>
                     <input id="${data.id}" type="checkbox" class="${data.id}">
                         <label class="form-check-label" for="${data.id}">
@@ -165,11 +231,23 @@ async function addFavouritesGroupInBD(nameGroup) {
                     </div>
                     <button type="button" class="button-edit-fav-group btn btn-secondary" id="${data.id}">EDIT
                     </button>
+                    <button type="button" class="button-delete-fav-group btn btn-danger" id="${data.id}">DELETE
+                    </button>
                 </td>
             </tr>
             `;
             $('.select_group').append(kusok);
         });
+};
+/**
+ * Удаляем из БД имя скписка Избранного Кнопкой DELETE
+ * @param id
+ * @returns {Promise<void>}
+ */
+async function deleteFavouritesGroupInBD(id) {
+    fetch(`/customer/favouritesGroup/` + id, {
+        method: 'DELETE'
+    })
 };
 // /**
 //  * Нажимаем и подгружаем список групп пользователя

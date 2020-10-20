@@ -49,4 +49,9 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
     public FavouritesGroup getOneFavouritesGroupByUserAndByName(User user, String name) {
         return favouritesGroupRepository.getOneFavouritesGroupByUserAndByName(user, name);
     }
+
+    @Override
+    public void save(FavouritesGroup favouritesGroup) {
+        favouritesGroupRepository.save(favouritesGroup);
+    }
 }

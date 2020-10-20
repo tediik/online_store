@@ -15,4 +15,5 @@ public interface FavouritesGroupService {
     Optional<FavouritesGroup> findById(Long id);
     Optional<FavouritesGroup> findByName(String name);
     FavouritesGroup getOneFavouritesGroupByUserAndByName(User user, String name);
+    void save (FavouritesGroup favouritesGroup);
 }
