@@ -3,8 +3,7 @@
  */
 $(document).ready(function () {
     $('#nav-categories-and-topics-tab').click(function () {
-        getActualCategories();
-        getArchiveCategories();
+        getAllCategories();
     })
     $('#addCategoryButton').click(function (event) {
         addNewCategory();
@@ -27,35 +26,50 @@ $(document).ready(function () {
 /**
  * Делает запрос всех категорий
  */
-function getActualCategories() {
-    fetch("/api/manager/topicsCategory/actual")
+function getAllCategories() {
+    fetch("/api/manager/topicsCategory")
         .then(response => {
             if (response.status === 200) {
                 response.json()
-                    .then(topicsCategories => renderCategories(topicsCategories))
+                    .then(topicsCategories => {
+                        for (let topicsCategory of topicsCategories) {
+                            if (topicsCategory.actual === true) {
+                                renderActualCategories(topicsCategory);
+                            } else {
+                                renderArchiveCategories(topicsCategory);
+                            }
+                        }
+                    })
             }
         })
 }
 
 /**
- * Вставляет все категории на фронт
+ * Вставляет все актуальные категории на фронт
  * @param topicsCategories категории, которые будут вставлены
  */
-function renderCategories(topicsCategories) {//
+function renderActualCategories(topicsCategory) {
     let categoriesBody = document.querySelector('#accordionCategories');
-    let insertBody = "";
-    for (let topicsCategory of topicsCategories) {
-        insertBody += makeCategoryBody(topicsCategory)
-    }
+    let insertBody = makeActualCategoryBody(topicsCategory);
     categoriesBody.insertAdjacentHTML("afterbegin", insertBody);
 }
 
 /**
- * Отрисовывает тело категории
+ * Вставляет все архивные категории на фронт
+ * @param topicsCategories категории, которые будут вставлены
+ */
+function renderArchiveCategories(topicsCategory) {
+    let categoriesBody = document.querySelector('#accordionCategoriesArchive');
+    let insertBody = makeArchiveCategoryBody(topicsCategory);
+    categoriesBody.insertAdjacentHTML("afterbegin", insertBody);
+}
+
+/**
+ * Отрисовывает тело актуальной категории
  * @param topicsCategory категория, которая будет отрисована
  * @returns {string} тело категории в html
  */
-function makeCategoryBody(topicsCategory) {
+function makeActualCategoryBody(topicsCategory) {
     let topicsTable = `<ul class="list-group list-group-flush" id="topic${topicsCategory.id}">`;
     if (topicsCategory.topics !== null && topicsCategory.topics.length !== 0) {
         for (let tops of topicsCategory.topics) {
@@ -77,7 +91,7 @@ function makeCategoryBody(topicsCategory) {
                             </button>
                         </li>
                     </ul>`
-
+    console.log("Акуальная категория, id: " + topicsCategory.id)
     return `<div class="card" id="categoryCard${topicsCategory.id}">
                 <div class="card-header" id="heading${topicsCategory.id}">
                     <h5 class="mb-0">                    
@@ -100,32 +114,42 @@ function makeCategoryBody(topicsCategory) {
           </div>`
 }
 
-
-// надо делать
-function getArchiveCategories(){
-    let categoriesBody = document.querySelector('#accordionCategoriesArchive');
-    let insertBody = `<div class="card" id="categoryCardArchiveCategoryID">
-                          <div class="card-header" id="headingArchiveCategoryID">
-                              <h5 class="mb-0">                    
-                              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseCategoryArchiveID" aria-expanded="false" aria-controls="collapseArchiveCategoryID">
-                                  Название категории
-                              </button>
-                              <span class="float-right">
-                                  <button type="button" class="btn btn-outline-info btn-sm" onclick="unarchiveCategory(CategoryID")>Разархивировать</button>
-                              </span>
-                              </h5>
-                          </div>
-                          <div id="collapseCategoryArchiveID" class="collapse" aria-labelledby="headingArchiveCategoryID" data-parent="#accordionCategoriesArchive">
-                              <div class="card-body">
-                                  <ul class="list-group list-group-flush" id="topicArchiveCategoryID">
-                                      <li class="list-group-item" id="rowArchiveTopicID">
-                                          <span class="text-left">Название темы</span>                                                      
-                                      </li>
-                                  </ul>
-                              </div>
-                          </div>
-                    </div>`;
-    categoriesBody.insertAdjacentHTML("afterbegin", insertBody);
+/**
+ * Отрисовывает тело архивной категории
+ * @param topicsCategory категория, которая будет отрисована
+ * @returns {string} тело категории в html
+ */
+function makeArchiveCategoryBody(topicsCategory) {
+    let topicsTable = `<ul class="list-group list-group-flush" id="archiveTopic${topicsCategory.id}">`;
+    if (topicsCategory.topics !== null && topicsCategory.topics.length !== 0) {
+        for (let tops of topicsCategory.topics) {
+            topicsTable += `<li class="list-group-item" id="archiveRow${tops.id}">
+                                <span class="text-left">${tops.topicName}</span>
+                            </li>`
+        }
+    } else {
+        topicsTable += `<li class="list-group-item" id="nullArchiveRow${topicsCategory.id}">
+                           <span class="text-left">Тем нет</span>                                                      
+                        </li>`;
+    }
+    console.log("Архивная категория, id: " + topicsCategory.id)
+    return `<div class="card" id="categoryCardArchive${topicsCategory.id}">
+                <div class="card-header" id="headingArchive${topicsCategory.id}">
+                    <h5 class="mb-0">                    
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseArchiveCategory${topicsCategory.id}" aria-expanded="false" aria-controls="collapseArchiveCategory${topicsCategory.id}">
+                        ${topicsCategory.categoryName}
+                    </button>
+                    <span class="float-right">
+                        <button type="button" class="btn btn-outline-info btn-sm" onclick="unarchiveCategory(${topicsCategory.id})">Разархивировать</button>
+                    </span>
+                    </h5>
+                </div>
+                <div id="collapseArchiveCategory${topicsCategory.id}" class="collapse" aria-labelledby="headingArchiveCategory${topicsCategory.id}" data-parent="#accordionCategoriesArchive">
+                    <div class="card-body">
+                        ${topicsTable}
+                    </div>
+                </div>
+            </div>`;
 }
 
 /**
@@ -186,7 +210,7 @@ function addNewCategory() {
  */
 function renderCategory(topicsCategory) {
     let cardsBody = document.querySelector("#accordionCategories");
-    cardsBody.insertAdjacentHTML("afterbegin", makeCategoryBody(topicsCategory));
+    cardsBody.insertAdjacentHTML("afterbegin", makeActualCategoryBody(topicsCategory));
     $('#addNewCategoryModal').modal('hide');
     document.forms["addCategoryForm"].reset();
 }
@@ -224,7 +248,7 @@ function editCategory(id) {
  */
 function changeCategoryBody(changedCategory) {
     let cardsBody = document.querySelector(`#categoryCard${changedCategory.id}`);
-    cardsBody.insertAdjacentHTML("beforebegin", makeCategoryBody(changedCategory));
+    cardsBody.insertAdjacentHTML("beforebegin", makeActualCategoryBody(changedCategory));
     cardsBody.remove();
     $('#editCategoryModal').modal('hide');
     document.forms["editCategoryForm"].reset();
@@ -232,7 +256,7 @@ function changeCategoryBody(changedCategory) {
 
 /**
  * Делает запрос на архивацию категории и удаляет ее из актуальных категорий на фронте
- * @param id идентификатор темы
+ * @param id идентификатор категории
  */
 function archiveCategory(id) {
     fetch("/api/manager/topicsCategory/archive/" + id, {
@@ -245,13 +269,48 @@ function archiveCategory(id) {
         })
     }).then(response => {
         if (response.status === 200) {
-            deleteCategoryBodyFromActual(id)
+            response.json()
+                .then(archiveCategory => {
+                    deleteCategoryBodyFromActual(archiveCategory);
+                })
         }
     })
 
-    function deleteCategoryBodyFromActual(id){
-        let cardsBody = document.querySelector(`#categoryCard${id}`);
+    function deleteCategoryBodyFromActual(archiveCategory) {
+        console.log("Уже не актуальная категория, id: " + archiveCategory.id);
+        let cardsBody = document.querySelector(`#categoryCard${archiveCategory.id}`);
         cardsBody.remove();
+        renderArchiveCategories(archiveCategory);
+    }
+}
+
+/**
+ * Делает запрос на разархивацию категории и удаляет ее из архивных категорий на фронте
+ * @param id идентификатор категории
+ */
+function unarchiveCategory(id) {
+    fetch("/api/manager/topicsCategory/unarchive/" + id, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id: id
+        })
+    }).then(response => {
+        if (response.status === 200) {
+            response.json()
+                .then(actualCategory => {
+                    deleteCategoryBodyFromArchive(actualCategory);
+                })
+        }
+    })
+
+    function deleteCategoryBodyFromArchive(actualCategory) {
+        console.log("Уже не архивная категория, id: " + actualCategory.id);
+        let cardsBody = document.querySelector(`#categoryCardArchive${actualCategory.id}`);
+        cardsBody.remove();
+        renderActualCategories(actualCategory);
     }
 }
 
@@ -286,7 +345,7 @@ function completeEditTopic(topic) {
  * @param id идентификатор темы
  */
 function editTopic(id) {
-    if ($('#editTopicName').val() !== ''){
+    if ($('#editTopicName').val() !== '') {
         fetch("/api/manager/topic/" + id, {
             method: "PUT",
             headers: {
