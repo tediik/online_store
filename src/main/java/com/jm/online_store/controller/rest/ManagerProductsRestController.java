@@ -160,15 +160,10 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Метод создания Excel-файла с отчетом по популярным продуктам
+     * @param category нужная категория товаров
+     * @param response запрос для возврата информации
+     * @return запрос с файлом xlsx
      */
-    @PostMapping(value = "/rest/products/report")
-    public ResponseEntity<List<Product>> createReport(@RequestBody List<Product> products) {
-        XSSFWorkbook book = new XSSFWorkbook();
-        //FileOutputStream productReport = new FileOutputStream(new File("/resources/reports/"));
-        return null;
-    }
-
     @GetMapping("/manager/products/report")
     public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@RequestParam String category, HttpServletResponse response) {
         List<Product> productsList = new ArrayList<>(productService.findAll());
@@ -202,6 +197,7 @@ public class ManagerProductsRestController {
                 cell = row.createCell(5);
                 cell.setCellValue(aProduct.getProductType().getCategory());
             }
+            response.setHeader("Size", String.valueOf(rowCount));
             workbook.write(response.getOutputStream());
             return ResponseEntity.ok().build();
         } catch (NullPointerException | IOException e) {

@@ -403,6 +403,9 @@ function renderCategoriesModal(categories) {
     radioList.append(`</form>`)
 }
 
+/**
+ * функция изменения категории
+ */
 function changeCategory() {
     let radio = document.getElementsByName('radioCategory');
     for (let i = 0; i < radio.length; i++) {
@@ -412,24 +415,31 @@ function changeCategory() {
     }
 }
 
+/**
+ * функция смены категории отображаемых продуктов
+ */
 function changeProducts() {
     changeCategory();
     fetchProductsAndRenderTable();
 }
 
+/**
+ * функция создания отчёта
+ */
 function createReport() {
     changeCategory();
     fetch(`/manager/products/report?category=${categoryNow}`)
         .then(function (response) {
             if (response.status === 200) {
-                response.blob().then(blob => {
-                    let url = window.URL.createObjectURL(blob);
-                    let file = document.createElement('a');
-                    file.href = url;
-                    file.download = `products_report_${categoryNow}.xlsx`;
-                    file.click();
-                    alert("Данные успешно выгружены")
-                })
+                if (confirm("Товаров в отчёте будет " + response.headers.get("Size"))) {
+                    response.blob().then(blob => {
+                        let url = window.URL.createObjectURL(blob);
+                        let file = document.createElement('a');
+                        file.href = url;
+                        file.download = `products_report_${categoryNow}.xlsx`;
+                        file.click();
+                    })
+                }
             } else {
                 alert("Товаров не найдено")
             }

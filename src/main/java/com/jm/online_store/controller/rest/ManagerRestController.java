@@ -142,7 +142,6 @@ public class ManagerRestController {
                     .withOrderedResults(true)
                     .build();
             writer.write(orderService.findAllSalesBetween(startDate, endDate));
-
             return ResponseEntity.ok().build();
         } catch (OrdersNotFoundException e) {
             log.debug("csv file was successfully sent");
