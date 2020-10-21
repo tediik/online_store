@@ -2,9 +2,11 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.ProductService;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
@@ -12,6 +14,10 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,10 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -42,6 +47,7 @@ public class ManagerRestController {
 
     private final NewsService newsService;
     private final OrderService orderService;
+    private final ProductService productService;
 
     /**
      * Метод возвращающий всписок всех новостей

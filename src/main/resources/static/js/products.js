@@ -1,5 +1,5 @@
 let productRestUrl = "/rest/products/allProducts"
-let categoryNow = null;
+let categoryNow = "all";
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
@@ -278,7 +278,7 @@ function renderProductsTable(products) {
     table.empty()
     for (let i = 0; i < products.length; i++) {
         const product = products[i];
-        if (product.productType.category === categoryNow || categoryNow == null) {
+        if (product.productType.category === categoryNow || categoryNow === "all") {
             let row = `
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>
@@ -383,6 +383,13 @@ function renderCategoriesModal(categories) {
     let radioList = $('#categoriesContainer')
     radioList.empty()
     radioList.append(`<form class= form-group-text-center>`)
+    radioList.append(`
+                     <div class="custom-control custom-radio">
+                     <input value="all" type="radio" id="radio0"
+                            name="radioCategory" class="custom-control-input">
+                     <label class="custom-control-label" for="radio0">Все</label>
+                     </div>
+                        `)
     for (let i = 0; i < categories.length; i++) {
         let radiobox = `
                      <div class="custom-control custom-radio">
@@ -403,5 +410,28 @@ function changeCategory() {
             categoryNow = radio[i].value;
         }
     }
+}
+
+function changeProducts() {
+    changeCategory();
     fetchProductsAndRenderTable();
+}
+
+function createReport() {
+    changeCategory();
+    fetch(`/manager/products/report?category=${categoryNow}`)
+        .then(function (response) {
+            if (response.status === 200) {
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let file = document.createElement('a');
+                    file.href = url;
+                    file.download = `products_report_${categoryNow}.xlsx`;
+                    file.click();
+                    alert("Данные успешно выгружены")
+                })
+            } else {
+                alert("Товаров не найдено")
+            }
+        })
 }
