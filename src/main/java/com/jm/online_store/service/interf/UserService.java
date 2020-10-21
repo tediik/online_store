@@ -38,8 +38,10 @@ public interface UserService {
     boolean isExist(String email);
 
     void regNewAccount(User user);
-
+ 
     void changeUsersMail(User user, String newMail);
+
+    void changeUsersPass(User user, String newMail);
 
     boolean activateNewUsersMail(String code, HttpServletRequest request);
 
@@ -62,4 +64,5 @@ public interface UserService {
     User getUserByToken(String token);
 
     boolean addNewAddressForUser(User user, Address address);
+
 }
