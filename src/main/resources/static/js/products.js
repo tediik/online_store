@@ -1,5 +1,5 @@
 let productRestUrl = "/rest/products/allProducts"
-let categoryNow = "all";
+let categoryNow
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
