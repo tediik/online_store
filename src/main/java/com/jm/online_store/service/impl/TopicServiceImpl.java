@@ -17,8 +17,8 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     @Transactional
-    public void creat(Topic topic) {
-        topicRepository.saveAndFlush(topic);
+    public Topic creat(Topic topic) {
+        return topicRepository.saveAndFlush(topic);
     }
 
     @Override

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TopicService {
 
-    void creat(Topic topic);
+    Topic creat(Topic topic);
 
     List<Topic> getTopicsByCategoryId(long id);
 
@@ -19,6 +19,4 @@ public interface TopicService {
     Topic findById(long id);
 
     Topic update(Topic topic);
-
-
 }

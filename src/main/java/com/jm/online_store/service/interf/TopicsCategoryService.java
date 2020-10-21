@@ -20,11 +20,11 @@ public interface TopicsCategoryService {
 
     boolean existsByCategoryName(String categoryName);
 
-    void creat(TopicsCategory topicsCategory);
+    TopicsCategory creat(TopicsCategory topicsCategory);
 
-    void update(TopicsCategory topicsCategory);
+    TopicsCategory update(TopicsCategory topicsCategory);
 
-    void archive(TopicsCategory topicsCategory);
+    TopicsCategory archive(TopicsCategory topicsCategory);
 
-    void unarchive(TopicsCategory topicsCategory);
+    TopicsCategory unarchive(TopicsCategory topicsCategory);
 }

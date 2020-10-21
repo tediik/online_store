@@ -18,8 +18,8 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
 
     @Override
     @Transactional
-    public void creat(TopicsCategory topicsCategory) {
-        topicsCategoryRepository.saveAndFlush(topicsCategory);
+    public TopicsCategory creat(TopicsCategory topicsCategory) {
+        return topicsCategoryRepository.saveAndFlush(topicsCategory);
     }
 
     @Override
@@ -59,21 +59,21 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
 
     @Override
     @Transactional
-    public void update(TopicsCategory topicsCategory) {
-        topicsCategoryRepository.saveAndFlush(topicsCategory);
+    public TopicsCategory update(TopicsCategory topicsCategory) {
+        return topicsCategoryRepository.saveAndFlush(topicsCategory);
     }
 
     @Override
     @Transactional
-    public void archive(TopicsCategory topicsCategory) {
+    public TopicsCategory archive(TopicsCategory topicsCategory) {
         topicsCategory.setActual(false);
-        topicsCategoryRepository.saveAndFlush(topicsCategory);
+        return topicsCategoryRepository.saveAndFlush(topicsCategory);
     }
 
     @Override
     @Transactional
-    public void unarchive(TopicsCategory topicsCategory) {
+    public TopicsCategory unarchive(TopicsCategory topicsCategory) {
         topicsCategory.setActual(true);
-        topicsCategoryRepository.saveAndFlush(topicsCategory);
+        return topicsCategoryRepository.saveAndFlush(topicsCategory);
     }
 }
