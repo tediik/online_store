@@ -2,9 +2,8 @@
  * Слушатели событий
  */
 $(document).ready(function () {
-    $('#nav-categories-and-topics-tab').click(function () {
-        getAllCategories();
-    })
+    getAllCategories();
+
     $('#addCategoryButton').click(function (event) {
         addNewCategory();
         event.preventDefault();
@@ -91,7 +90,6 @@ function makeActualCategoryBody(topicsCategory) {
                             </button>
                         </li>
                     </ul>`
-    console.log("Акуальная категория, id: " + topicsCategory.id)
     return `<div class="card" id="categoryCard${topicsCategory.id}">
                 <div class="card-header" id="heading${topicsCategory.id}">
                     <h5 class="mb-0">                    
@@ -132,7 +130,6 @@ function makeArchiveCategoryBody(topicsCategory) {
                            <span class="text-left">Тем нет</span>                                                      
                         </li>`;
     }
-    console.log("Архивная категория, id: " + topicsCategory.id)
     return `<div class="card" id="categoryCardArchive${topicsCategory.id}">
                 <div class="card-header" id="headingArchive${topicsCategory.id}">
                     <h5 class="mb-0">                    
@@ -277,7 +274,6 @@ function archiveCategory(id) {
     })
 
     function deleteCategoryBodyFromActual(archiveCategory) {
-        console.log("Уже не актуальная категория, id: " + archiveCategory.id);
         let cardsBody = document.querySelector(`#categoryCard${archiveCategory.id}`);
         cardsBody.remove();
         renderArchiveCategories(archiveCategory);
@@ -307,7 +303,6 @@ function unarchiveCategory(id) {
     })
 
     function deleteCategoryBodyFromArchive(actualCategory) {
-        console.log("Уже не архивная категория, id: " + actualCategory.id);
         let cardsBody = document.querySelector(`#categoryCardArchive${actualCategory.id}`);
         cardsBody.remove();
         renderActualCategories(actualCategory);
@@ -388,7 +383,7 @@ function makeTopicRow(topic) {
     return `<li class="list-group-item" id="row${topic.id}">
                 <span class="text-left">${topic.topicName}</span>
                 <span class="float-right">
-                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editTopicModal" onclick="getTopic(${topic.id})">Переименовать</button>
+                    <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#editTopicModal" onclick="getTopic(${topic.id})">Переименовать</button>
                 </span>                        
             </li>`
 }
