@@ -1,7 +1,9 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.controller.rest.SchedulingTaskRestController;
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.repository.TaskSettingsRepository;
+import com.jm.online_store.service.interf.PriceListService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
 import lombok.AllArgsConstructor;
@@ -9,9 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +30,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     private final TaskScheduler scheduler;
     private final TaskSettingsRepository taskSettingsRepository;
     private final StockMailDistributionTask stockMailDistributionTask;
+    private final PriceListService priceListService;
     private final Map<Long, ScheduledFuture<?>> jobsMap;
 
     /**
@@ -36,7 +41,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
      */
     @Override
     public void addTaskToScheduler(TaskSettings taskSettings, Runnable task) {
-        String cronExpression = DateTimeToCron(taskSettings.getStartTime());
+        String cronExpression = DateTimeToCron(taskSettings.getStartTime().minusHours(2));
         ScheduledFuture<?> scheduledTask = scheduler.schedule(task,
                 new CronTrigger(cronExpression, TimeZone.getTimeZone(TimeZone.getDefault().getID())));
         jobsMap.put(taskSettings.getId(), scheduledTask);
@@ -62,11 +67,8 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     @EventListener({ContextRefreshedEvent.class})
     public void contextRefreshedEvent() {
         List<TaskSettings> allTasks = taskSettingsRepository.findAll();
-        for (TaskSettings taskSettings : allTasks) {
-            if (taskSettings.isActive()) {
-                addTaskToScheduler(taskSettings, stockMailDistributionTask);
-            }
-        }
+        addTaskToScheduler(allTasks.get(0), stockMailDistributionTask);
+        addTaskToScheduler(allTasks.get(1), priceListService);
     }
 
     /**

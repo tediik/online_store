@@ -19,12 +19,10 @@
                         <li><a href="#">Партнерам</a></li>
                     </ul>
                     <h5 class="pt-3">Прайс-листы</h5>
-                    <a style="color: #b4f7a3" href="uploads/files/prices/pricedaily.xls">Microsoft Excel</a>
-                    <p th:style ="${'font-family: arial; font-size: 60%; color: white'}"
-                       th:text="'Создан: ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy')} + ' 03:57'"></p>
-                    <a style="color: #afeeee" href="uploads/files/prices/pricedaily.zip">ZIP-архив</a>
-                    <p th:style ="${'font-family: arial; font-size: 60%; color: white'}"
-                       th:text="'Создан: ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy')} + ' 03:57'"></p>
+                    <a href="uploads/files/prices/pricedaily.xls">Microsoft Excel</a>
+                    <p class="timeOfCreate" th:text="'Создан: ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy')}"></p>
+                    <a href="uploads/files/prices/pricedaily.zip">ZIP-архив</a>
+                    <p class="timeOfCreate" th:text="'Создан: ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy')}"></p>
                 </div>
                 <div class="col-3">
                     <h5 class="pb-3">Покупателям<hr/></h5>
@@ -34,8 +32,8 @@
                         <li><a href="#">Проверка оплаты счета</a></li>
                         <li><a href="#">Кредиты</a></li>
                         <li><a href="#">Доставка</a></li>
-                        <li><a href="#">Сервисные центры</a></li>
-                        <li><a href="#">Статус оборудования СЦ</a></li>
+                        <li><a href="/serviceCenter">Сервисный центр</a></li>
+                        <li><a href="/serviceCheckStatus">Статус оборудования СЦ</a></li>
                     </ul>
                 </div>
                 <div class="col-3">
@@ -76,8 +74,7 @@
                 </div>
             </div>
             <div class="row lastRow pt-3">
-                <p>© 2020 Компания Online store. Администрация Сайта не несет ответственности за размещаемые Пользователями информацию и изображения, их содержание и качество.
-                </p>
+                <p th:text="'©' + ${#dates.format(#dates.createNow(), 'yyyy')} + ' Компания Online store. Администрация Сайта не несет ответственности за размещаемые Пользователями информацию и изображения, их содержание и качество.'"></p>
             </div>
         </div>
         <div class="col-2"></div>

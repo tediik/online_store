@@ -1047,6 +1047,13 @@ public class DataInitializer {
                 .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings);
+
+        TaskSettings taskSettings2 = TaskSettings.builder()
+                .taskName("dailyPriceCreate")
+                .active(true)
+                .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .build();
+        taskSettingsService.addNewTaskSetting(taskSettings2);
     }
 
     /**

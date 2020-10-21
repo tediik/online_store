@@ -4,12 +4,14 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.PriceListService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,31 +27,52 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @AllArgsConstructor
+@Slf4j
 @Service
 public class PriceListServiceImpl implements PriceListService {
 
-    private static final String TIME_TO_START = "0 00 02 * * *";
     private static final String PATH_TO_XLS_FILE = "uploads/files/prices/pricedaily.xls";
     private static final String PATH_TO_ZIP_FILE = "uploads/files/prices/pricedaily.zip";
 
     private final ProductService productService;
 
+    @Override
+    public void run() {
+        createPrice();
+    }
+
     /**
      * Method creates XLS-file with the daily price list and archives it
      */
-    @Scheduled(cron = TIME_TO_START)
-    @Override
     public void createPrice() {
-
         //удаляем неактуальные файлы
         try {
             Files.deleteIfExists(Paths.get(PATH_TO_XLS_FILE));
             Files.deleteIfExists(Paths.get(PATH_TO_ZIP_FILE));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.debug("Unable to delete daily pricelist .xls or .zip files for some reason");
         }
 
         //инициализация виртуального xls-файла
+        HSSFWorkbook workbook = xlsFileInit();
+
+        //записываем виртуальный файл в реальный
+        try (FileOutputStream fos = new FileOutputStream(PATH_TO_XLS_FILE)){
+            workbook.write(fos);
+        } catch (FileNotFoundException e) {
+            log.debug("File not found -> failed to save .xls price list");
+        } catch (IOException e) {
+            log.debug("Failed to save .xls price list");
+        }
+
+        //архивация
+        archiveFile(PATH_TO_XLS_FILE, PATH_TO_ZIP_FILE);
+    }
+
+    /**
+     * Method creates virtual XLS-file with the daily price list
+     */
+    private HSSFWorkbook xlsFileInit() {
         int rowCount = 0;
         List<Product> productsList = productService.findAll();
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -63,7 +86,7 @@ public class PriceListServiceImpl implements PriceListService {
         row.createCell(3).setCellValue("Наличие");
 
         //заполняем страницу
-        for (Product product : productsList) { //list.stream
+        for (Product product : productsList) {
             row = sheet.createRow(++rowCount);
             row.createCell(0).setCellValue(product.getId());
             row.createCell(1).setCellValue(product.getProduct());
@@ -80,24 +103,19 @@ public class PriceListServiceImpl implements PriceListService {
         //придаем читабельность файлу
         IntStream.range(0,3).forEach(i -> sheet.autoSizeColumn(i));
 
-        //записываем виртуальный файл в реальный
-        try (FileOutputStream fos = new FileOutputStream(PATH_TO_XLS_FILE)){
-            workbook.write(fos);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //архивация
-        archiveFileWithPrice();
+        return workbook;
     }
 
-    public void archiveFileWithPrice() {
-
-        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(PATH_TO_ZIP_FILE));
-             FileInputStream fis = new FileInputStream(new File(PATH_TO_XLS_FILE))){
-            File zipFile = new File(PATH_TO_XLS_FILE);
+    /**
+     * Method archives any input file
+     *
+     * @param incomingFile - path to original file
+     * @param outgoingFile - path to archived file
+     */
+    public void archiveFile(String incomingFile, String outgoingFile) {
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(outgoingFile));
+             FileInputStream fis = new FileInputStream(new File(incomingFile))) {
+            File zipFile = new File(incomingFile);
             ZipEntry ze = new ZipEntry(zipFile.getName());
             zos.putNextEntry(ze);
             byte[] temp = new byte[1024];
@@ -106,10 +124,9 @@ public class PriceListServiceImpl implements PriceListService {
                 zos.write(temp, 0, bytesRead);
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.debug("File not found -> failed to save .zip price list");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.debug("Failed to save .zip price list");
         }
-
     }
 }
