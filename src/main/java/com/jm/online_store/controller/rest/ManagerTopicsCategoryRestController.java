@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * RestController для добавления/изменения/удаления категорий тем для обратной связи
+ * RestController для чтения/добавления/изменения/архивирования категорий тем для обратной связи
  */
 @RestController
 @RequestMapping("/api/manager/topicsCategory")
@@ -25,10 +25,10 @@ public class ManagerTopicsCategoryRestController {
     private final TopicsCategoryService topicsCategoryService;
 
     /**
-     * Метод для получения всех категорий тем
+     * Метод для получения всех актуальных категорий тем
      *
-     * @return ResponseEntity<List < TopicsCategory>> возвращает все категории тем со статусом ответа,
-     * если категорий тем нет - только статус
+     * @return ResponseEntity<List <TopicsCategory>> возвращает все актуальные
+     * категории тем со статусом ответа, если категорий тем нет - только статус
      */
     @GetMapping("/actual")
     public ResponseEntity<List<TopicsCategory>> readAllActualTopicsCategories() {
@@ -39,6 +39,12 @@ public class ManagerTopicsCategoryRestController {
         return ResponseEntity.ok(topicsCategories);
     }
 
+    /**
+     * Метод для получения всех архивных категорий тем
+     *
+     * @return ResponseEntity<List < TopicsCategory>> возвращает все архивные
+     * категории тем со статусом ответа, если категорий тем нет - только статус
+     */
     @GetMapping("/archive")
     public ResponseEntity<List<TopicsCategory>> readAllArchiveTopicsCategories() {
         List<TopicsCategory> topicsCategories = topicsCategoryService.findAllByActualIsFalse();
@@ -55,7 +61,7 @@ public class ManagerTopicsCategoryRestController {
      * @return ResponseEntity<TopicsCategory> возвращает единственную категорию тем со статусом ответа,
      * если категория тем с таким id не существует - только статус
      */
-    @GetMapping("/{id}") // ок
+    @GetMapping("/{id}")
     public ResponseEntity<TopicsCategory> readTopicsCategory(@PathVariable(name = "id") long id) {
         if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -68,15 +74,14 @@ public class ManagerTopicsCategoryRestController {
      *
      * @param topicsCategory категория тем, которая будет создана
      * @return ResponseEntity<TopicsCategory> возвращает созданную категорию тем со статусом ответа,
-     * если категории тем с таким именем уже существует - только статус
+     * если категория тем с таким именем уже существует - только статус
      */
-    @PostMapping // ok
+    @PostMapping
     public ResponseEntity<TopicsCategory> createTopicsCategory(@RequestBody TopicsCategory topicsCategory) {
         if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        topicsCategoryService.creat(topicsCategory);
-        return ResponseEntity.ok(topicsCategoryService.findByCategoryName(topicsCategory.getCategoryName()));
+        return ResponseEntity.ok(topicsCategoryService.creat(topicsCategory));
     }
 
     /**
@@ -87,42 +92,41 @@ public class ManagerTopicsCategoryRestController {
      * @return ResponseEntity<TopicsCategory> возвращает измененную категорию тем со статусом ответа,
      * если категория тем с таким id не существует - только статус
      */
-    @PutMapping("/{id}") // ок
+    @PutMapping("/{id}")
     public ResponseEntity<TopicsCategory> updateTopicsCategory(@PathVariable(name = "id") long id, @RequestBody TopicsCategory topicsCategory) {
         if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        topicsCategoryService.update(topicsCategory);
-        return ResponseEntity.ok(topicsCategoryService.findById(id));
+        return ResponseEntity.ok(topicsCategoryService.update(topicsCategory));
     }
 
     /**
      * Метод для пометки категории тем, как архивной
      *
      * @param id идентификатор категории
-     * @return ResponseEntity<String> возврвщвет статус
+     * @return ResponseEntity<TopicsCategory> возвращает заархивированную категорию тем со статусом ответа,
+     * если категория тем с таким id не существует - только статус
      */
     @PutMapping("/archive/{id}")
-    public ResponseEntity<String> archiveTopicsCategory(@PathVariable(name = "id") long id) {
+    public ResponseEntity<TopicsCategory> archiveTopicsCategory(@PathVariable(name = "id") long id) {
         if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        topicsCategoryService.archive(topicsCategoryService.findById(id));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(topicsCategoryService.archive(topicsCategoryService.findById(id)));
     }
 
     /**
      * Метод для пометки категории тем, как актуальной
      *
      * @param id идентификатор категории
-     * @return ResponseEntity<String> возврвщвет статус
+     * @return ResponseEntity<TopicsCategory> возвращает акутальную категорию тем со статусом ответа,
+     * если категория тем с таким id не существует - только статус
      */
     @PutMapping("/unarchive/{id}")
-    public ResponseEntity<String> unarchiveTopicsCategory(@PathVariable(name = "id") long id) {
+    public ResponseEntity<TopicsCategory> unarchiveTopicsCategory(@PathVariable(name = "id") long id) {
         if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        topicsCategoryService.unarchive(topicsCategoryService.findById(id));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(topicsCategoryService.unarchive(topicsCategoryService.findById(id)));
     }
 }
