@@ -33,11 +33,6 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
     }
 
     @Override
-    public List<TopicsCategory> findAllByActualIsFalse() {
-        return topicsCategoryRepository.findAllByActualIsFalse();
-    }
-
-    @Override
     public TopicsCategory findById(Long id) {
         return topicsCategoryRepository.findById(id).get();
     }

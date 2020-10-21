@@ -13,6 +13,4 @@ public interface TopicsCategoryRepository extends JpaRepository<TopicsCategory, 
     boolean existsByCategoryName(String name);
 
     List<TopicsCategory> findAllByActualIsTrue();
-
-    List<TopicsCategory> findAllByActualIsFalse();
 }

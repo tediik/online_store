@@ -10,8 +10,6 @@ public interface TopicsCategoryService {
 
     List<TopicsCategory> findAllByActualIsTrue();
 
-    List<TopicsCategory> findAllByActualIsFalse();
-
     TopicsCategory findById(Long id);
 
     TopicsCategory findByCategoryName(String categoryName);
