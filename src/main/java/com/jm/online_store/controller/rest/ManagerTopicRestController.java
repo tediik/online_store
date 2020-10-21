@@ -13,13 +13,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * RestController для чтения/добавления/изменения тем для обратной связи
+ */
 @RestController
 @RequestMapping("/api/manager/topic")
 @RequiredArgsConstructor
 public class ManagerTopicRestController {
     private final TopicService topicService;
 
-    @GetMapping("/{id}") // ok
+    /**
+     * Метод для получения единственной темы
+     *
+     * @param id идентификатор темы
+     * @return ResponseEntity<Topic> возвращает единственную тему со статусом ответа,
+     * если темы с таким id не существует - только статус
+     */
+    @GetMapping("/{id}")
     public ResponseEntity<Topic> readTopic(@PathVariable(name = "id") long id) {
         if (!topicService.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -27,21 +37,34 @@ public class ManagerTopicRestController {
         return ResponseEntity.ok(topicService.findById(id));
     }
 
-    @PostMapping // ok
+    /**
+     * Метод для добавления новой темы
+     *
+     * @param topic тема, которая будет создана
+     * @return ResponseEntity<Topic> возвращает созданную тему со статусом ответа,
+     * если тема с таким именем уже существует - только статус
+     */
+    @PostMapping
     public ResponseEntity<Topic> createTopic(@RequestBody Topic topic){
         if (topicService.existsByTopicName(topic.getTopicName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        topicService.creat(topic);
-        return ResponseEntity.ok(topicService.findByTopicName(topic.getTopicName()));
+        return ResponseEntity.ok(topicService.creat(topic));
     }
 
-    @PutMapping("/{id}") // ok
+    /**
+     * Методя для изменения темы
+     *
+     * @param id идентификатор темы
+     * @param topic тема с внесенными изменениями
+     * @return ResponseEntity<Topic> возвращает измененную тему со статусом ответа,
+     * если тема с таким id не существует - только статус
+     */
+    @PutMapping("/{id}")
     public ResponseEntity<Topic> editTopic(@PathVariable(name = "id") long id, @RequestBody Topic topic) {
         if(!topicService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        topicService.update(topic);
-        return ResponseEntity.ok(topicService.findByTopicName(topic.getTopicName()));
+        return ResponseEntity.ok(topicService.update(topic));
     }
 }
