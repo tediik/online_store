@@ -43,6 +43,37 @@ public class CustomerRestController {
     }
 
     /**
+     * метод обработки изменения пароля User.
+     *
+     * @param model       модель для view
+     * @param oldPassword старый пароль
+     * @param newPassword новый пароль
+     * @return страница User
+     */
+    @PostMapping("/change-password")
+    public ResponseEntity changePassword(Model model,
+                                         @RequestParam String oldPassword,
+                                         @RequestParam String newPassword) {
+        User user = userService.getCurrentLoggedInUser();
+        if (userService.findById(user.getId()).isEmpty()) {
+            log.debug("Нет пользователя с идентификатором: {}", user.getId());
+            return ResponseEntity.noContent().build();
+        }
+        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+            log.debug("Wrong email! Не правильно введен email");
+            return ResponseEntity.badRequest().body("notValidEmailError");
+        }
+        if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
+                && userService.isExist(user.getEmail())) {
+            log.debug("Пользователь с таким адресом электронной почты уже существует");
+            return ResponseEntity.badRequest().body("duplicatedEmailError");
+        }
+        if (userService.changePassword(user.getId(), oldPassword, newPassword))
+            log.debug("Изменения для пользователя с идентификатором: {} был успешно добавлен", user.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * Метод удаления профиля покупателя
      *
      * @param id идентификатор покупателя
