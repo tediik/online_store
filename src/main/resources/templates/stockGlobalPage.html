@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
     <meta property="og:type" content="Online Store"/>
     <meta property="og:title" content="JM Online Store"/>
@@ -12,7 +13,7 @@
     <meta property="og:image" content="https://www.your-domain.com/path/image.jpg"/>
     <script type="text/javascript" src="https://vk.com/js/api/share.js?93" charset="windows-1251"></script>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <script>
     window.fbAsyncInit = function () {
         FB.init({
@@ -24,7 +25,7 @@
     };
 </script>
 <header th:insert="/blocks/header :: header"></header>
-<div class="container-fluid">
+<div class="wrapper flex-grow-1 container-fluid">
     <div class="row content justify-content-center">
         <div class="col-sm-8 text-left">
             <div class="alert alert-info mt-2">
@@ -58,6 +59,7 @@
         </div>
     </div>
 </div>
+<footer th:replace="/blocks/footer :: footer"></footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>

@@ -8,18 +8,16 @@
     <title>Категория товаров</title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Custom styles for this template -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
     <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <header th:insert="/blocks/otherPagesHeader :: header"></header>
 
-<main role="main" class="container">
+<main role="main" class="wrapper flex-grow-1 container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb" id="categoriesBreadcrumb">
             <!-- from subcategoryPage.js -->
@@ -104,7 +102,7 @@
         </div>
     </div>
 </main>
-
+<footer th:replace="/blocks/footer :: footer"></footer>
 <!-- Optional JavaScript -->
 <script src="../static/js/subcategoryPage.js"></script>
 <!-- Bootstrap core JavaScript

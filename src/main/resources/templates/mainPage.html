@@ -23,7 +23,7 @@
     <!-- Rate YO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <header th:insert="/blocks/mainHeader :: header"></header>
 
 <div id="openNewRegistrationModal" class="modal">
@@ -94,7 +94,7 @@
     </div>
 </div>
 
-<main role="main" class="container">
+<main role="main" class="wrapper flex-grow-1 container">
     <div class="row">
         <div class="col-2">
             <ul class="navbar-nav mr-auto shadow" aria-orientation="vertical" id="siteMenu">
@@ -284,7 +284,7 @@
         </div>
     </div>
 </main><!-- /.container -->
-
+<footer th:replace="/blocks/footer :: footer"></footer>
 <!-- Optional JavaScript -->
 <script src="../static/js/mainPage.js"></script>
 <script src="/static/js/jquery.hoverIntent.minified.js"></script>

@@ -1,6 +1,5 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.controller.rest.SchedulingTaskRestController;
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.repository.TaskSettingsRepository;
 import com.jm.online_store.service.interf.PriceListService;
@@ -11,11 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
