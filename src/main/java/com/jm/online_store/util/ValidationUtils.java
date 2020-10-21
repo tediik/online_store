@@ -14,6 +14,9 @@ public class ValidationUtils {
     public final Pattern VALID_PASSWORD_REGEX =
             Pattern.compile("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}", Pattern.CASE_INSENSITIVE);
 
+    public final Pattern VALID_TELEPHONE_NUMBER_REGEX =
+            Pattern.compile("(?:\\+7)[\\d\\(\\) ]{15,}\\d", Pattern.CASE_INSENSITIVE);
+
     public boolean isValidPassword(String password) {
         Matcher matcher = VALID_PASSWORD_REGEX.matcher(password);
         return matcher.matches();
@@ -28,5 +31,8 @@ public class ValidationUtils {
         return !isValidEmail(email);
     }
 
-
+    public boolean isValidTelephoneNumber(String telephoneNumber) {
+        Matcher matcher = VALID_TELEPHONE_NUMBER_REGEX.matcher(telephoneNumber);
+        return matcher.matches();
+    }
 }

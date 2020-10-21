@@ -86,7 +86,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+   // @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -111,35 +111,44 @@ public class DataInitializer {
         Role adminRole = new Role("ROLE_ADMIN");
         Role customerRole = new Role("ROLE_CUSTOMER");
         Role managerRole = new Role("ROLE_MANAGER");
+        Role serviceRole = new Role("ROLE_SERVICE");
 
         roleService.addRole(adminRole);
         roleService.addRole(customerRole);
         roleService.addRole(managerRole);
+        roleService.addRole(serviceRole);
 
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
         User customer = new User("customer@mail.ru", "1");
+        User service = new User("service@mail.ru", "1");
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
         Optional<Role> managRole = roleService.findByName("ROLE_MANAGER");
+        Optional<Role> servRole = roleService.findByName("ROLE_SERVICE");
 
         Set<Role> customerRoles = new HashSet<>();
         Set<Role> adminRoles = new HashSet<>();
         Set<Role> managerRoles = new HashSet<>();
+        Set<Role> serviceRoles = new HashSet<>();
 
         customerRoles.add(custRole.get());
         adminRoles.add(admnRole.get());
         adminRoles.add(custRole.get());
+        adminRoles.add(servRole.get());
         managerRoles.add(managRole.get());
+        serviceRoles.add(servRole.get());
 
         manager.setRoles(managerRoles);
         admin.setRoles(adminRoles);
         customer.setRoles(customerRoles);
+        service.setRoles(serviceRoles);
 
         userService.addUser(manager);
         userService.addUser(customer);
         userService.addUser(admin);
+        userService.addUser(service);
 
         Product product_1 = new Product("apple", 100000D, 10, 0.1);
         Product product_2 = new Product("samsung", 80000D, 100, 0.9);
