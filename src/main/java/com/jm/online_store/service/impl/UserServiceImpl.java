@@ -223,19 +223,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void changeUsersMail(User user, String newMail) {
         String address = user.getAuthorities().toString().contains("ROLE_CUSTOMER") ? "/customer" : "/authority";
-        user.setEmail(newMail);
+
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
-                "Hello, %s! \n" +
-                        "You have requested the email change. Please, confirm via link: " +
+                "Здравствуйте, %s! \n" +
+                        "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке: " +
                         urlActivate + address + "/activatenewmail/%s",
                 user.getEmail(),
                 confirmationToken.getConfirmationToken()
 
         );
         mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
+//        user.setEmail(newMail);
     }
     @Transactional
     public void changeUsersPass(User user, String newMail) {

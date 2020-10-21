@@ -46,7 +46,7 @@ public class CustomerRestController {
     /**
      * Метод удаления профиля покупателя
      *
-     * @param id индентификатор покупателя
+     * @param id идентификатор покупателя
      * @return ResponseEntity.ok()
      */
     @DeleteMapping("/deleteProfile/{id}")

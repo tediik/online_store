@@ -8,7 +8,7 @@ function changePass() {
     var formData = $('#formChangePass').serialize();
     console.log(formData);
     $.ajax({
-        url: '/customer/changepass',
+        url: '/customer/change-password',
         type: 'POST',
         data: formData,
         success: function (res) {
@@ -47,6 +47,35 @@ function changeMail() {
             close();
             $('#email_input').val($('#new_mail').val());
             $('#new_mail').val('');
+           // location.href='/logout';
+       //     _        _
+  // ( `-.__.-' )
+  //  `-.    .-'
+  //      \  /
+  //       ||
+  //       ||
+  //      //\\
+  //     //  \\
+  //    ||    ||
+  //    ||____||
+  //    ||====||
+  //     \\  //
+  //      \\//
+  //       ||
+  //       ||
+  //       ||
+  //       ||
+  //       ||
+  //       ||
+  //       ||
+  //       ||
+  //       []
+
+
+
+
+
+
         },
         error: function (res) {
             if (res.status === 400) {
@@ -81,6 +110,6 @@ function checkPassword() {
     regularExpression = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}");
     newPassword = document.getElementById("new_password").value;
     if (regularExpression.test(newPassword)) {
-        //   $("#submitNewPassword").attr('disabled', false);
+        $("#submitNewPassword").attr('disabled', false);
     }
 }
