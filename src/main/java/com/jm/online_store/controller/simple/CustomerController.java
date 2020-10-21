@@ -55,24 +55,6 @@ public class CustomerController {
     public String updateUserProfile(User user, Model model) {
         User updateUser = userService.updateUserProfile(user);
         model.addAttribute("user", updateUser);
-//
-//   .-""-.
-//  / .--. \
-//  | |  | |
-//  \_|  | |
-//       | |
-//       | |
-//       | |
-//       | |
-//       | |
-//       | |
-//       | |
-//       | |
-//       | |
-//       | |
-//       |_|
-//       [_]
-
 
         return "redirect:/customer";
     }

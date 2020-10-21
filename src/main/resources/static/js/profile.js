@@ -47,35 +47,8 @@ function changeMail() {
             close();
             $('#email_input').val($('#new_mail').val());
             $('#new_mail').val('');
-  // location.href='/logout';//     _        _
-  // ( `-.__.-' )
-  //  `-.    .-'
-  //      \  /
-  //       ||
-  //       ||
-  //      //\\
-  //     //  \\
-  //    ||    ||
-  //    ||____||
-  //    ||====||
-  //     \\  //
-  //      \\//
-  //       ||
-  //       ||
-  //       ||
-  //       ||
-  //       ||
-  //       ||
-  //       ||
-  //       ||
-  //       []
-
-
-
-
-
-
-        },
+  // location.href='/logout';//
+            },
         error: function (res) {
             if (res.status === 400) {
                 if (res.responseText === 'duplicatedEmailError') {
@@ -86,7 +59,6 @@ function changeMail() {
                     $(".messages-after-submit").text('Ошибка: Не верно указана электронная почта');
                     toastr.success("Ошибка: Не верно указана электронная почта", {timeOut: 5000});
                 }
-
             }
         }
     });

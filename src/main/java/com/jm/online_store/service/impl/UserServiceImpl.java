@@ -235,7 +235,7 @@ public class UserServiceImpl implements UserService {
 
         );
         mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
-//        user.setEmail(newMail);
+        user.setEmail(newMail);
     }
     @Transactional
     public void changeUsersPass(User user, String newMail) {
