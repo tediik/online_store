@@ -129,21 +129,26 @@ function completeEditCategory(topicsCategory) {
  * Делает запрос на добавление новой категории
  */
 function addNewCategory() {
-    fetch("/api/manager/topicsCategory", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            categoryName: $('#addNewCategory').val()
+    if ($('#addNewCategory').val() !== '') {
+        fetch("/api/manager/topicsCategory", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                categoryName: $('#addNewCategory').val()
+            })
         })
-    })
-        .then(response => {
-            if (response.status === 200) {
-                response.json()
-                    .then(topicsCategory => renderCategory(topicsCategory))
-            }
-        })
+            .then(response => {
+                if (response.status === 200) {
+                    response.json()
+                        .then(topicsCategory => renderCategory(topicsCategory))
+                }
+            })
+    } else {
+        toastr.error('Введите название категории');
+    }
+
 }
 
 /**
@@ -162,22 +167,26 @@ function renderCategory(topicsCategory) {
  * @param id идентификатор категории
  */
 function editCategory(id) {
-    fetch("/api/manager/topicsCategory/" + id, {
-        method: "PUT",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: $('#editCategoryId').val(),
-            categoryName: $('#editCategoryName').val(),
-            topics: topic
+    if ($('#editCategoryName').val() !== '') {
+        fetch("/api/manager/topicsCategory/" + id, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: $('#editCategoryId').val(),
+                categoryName: $('#editCategoryName').val(),
+                topics: topic
+            })
+        }).then(response => {
+            if (response.status === 200) {
+                response.json()
+                    .then(changedCategory => changeCategoryBody(changedCategory));
+            }
         })
-    }).then(response => {
-        if (response.status === 200) {
-            response.json()
-                .then(changedCategory => changeCategoryBody(changedCategory));
-        }
-    })
+    } else {
+        toastr.error('Введите новое название категории');
+    }
 }
 
 /**
@@ -248,27 +257,31 @@ function completeEditTopic(topic) {
  * @param id идентификатор темы
  */
 function editTopic(id) {
-    fetch("/api/manager/topic/" + id, {
-        method: "PUT",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: $('#editTopicId').val(),
-            topicName: $('#editTopicName').val(),
-            topicsCategory: category
+    if ($('#editTopicName').val() !== ''){
+        fetch("/api/manager/topic/" + id, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: $('#editTopicId').val(),
+                topicName: $('#editTopicName').val(),
+                topicsCategory: category
+            })
+        }).then(response => {
+            if (response.status === 200) {
+                response.json()
+                    .then(changedTopic => changeTopicRow(changedTopic));
+            }
         })
-    }).then(response => {
-        if (response.status === 200) {
-            response.json()
-                .then(changedTopic => changeTopicRow(changedTopic));
-        }
-    })
+    } else {
+        toastr.error('Введите новое название темы');
+    }
 }
 
 /**
  * Перевсатвляет измененную тему на фронт
- * @param changedTopic измененная темв, которая будет вставлена
+ * @param changedTopic измененная тема, которая будет вставлена
  */
 function changeTopicRow(changedTopic) {
     let topicRow = document.querySelector(`#row${changedTopic.id}`);
@@ -318,22 +331,26 @@ function completeAddTopic(topicsCategory) {
  * Делает запрос на добавление новой темы
  */
 function addNewTopic() {
-    fetch("/api/manager/topic", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            topicName: $('#addNewTopic').val(),
-            topicsCategory: categoryForAdd
+    if ($('#addNewTopic').val() !== '') {
+        fetch("/api/manager/topic", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                topicName: $('#addNewTopic').val(),
+                topicsCategory: categoryForAdd
+            })
         })
-    })
-        .then(response => {
-            if (response.status === 200) {
-                response.json()
-                    .then(topic => renderTopic(topic))
-            }
-        })
+            .then(response => {
+                if (response.status === 200) {
+                    response.json()
+                        .then(topic => renderTopic(topic))
+                }
+            })
+    } else {
+        toastr.error('Введите название темы');
+    }
 }
 
 /**
