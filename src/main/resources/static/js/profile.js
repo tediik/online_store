@@ -47,8 +47,7 @@ function changeMail() {
             close();
             $('#email_input').val($('#new_mail').val());
             $('#new_mail').val('');
-           // location.href='/logout';
-       //     _        _
+  // location.href='/logout';//     _        _
   // ( `-.__.-' )
   //  `-.    .-'
   //      \  /
@@ -87,8 +86,7 @@ function changeMail() {
                     $(".messages-after-submit").text('Ошибка: Не верно указана электронная почта');
                     toastr.success("Ошибка: Не верно указана электронная почта", {timeOut: 5000});
                 }
-            } else {
-                console.log(res.status);
+
             }
         }
     });
