@@ -165,7 +165,7 @@
                     <div class="favouritesgroups">
                         <div class="btn-group">
                             <button type="button" class="get-favourites-group-btn btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Все товары</button>
+                                    aria-haspopup="true" aria-expanded="false" th:id="${favouritesGroupList[0].id}">Все товары</button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" th:each="favouritesGroup : ${favouritesGroupList}"
                                    th:id="${favouritesGroup.id}" th:text="${favouritesGroup.name}">Все товары</a>

@@ -5,6 +5,7 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FavouritesGroupProductService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
+import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.Response;
@@ -27,6 +28,7 @@ public class ProductForFavouritesGroupRestController {
     private final UserService userService;
     private final FavouritesGroupProductService favouritesGroupProductService;
     private final FavouritesGroupService favouritesGroupService;
+    private final ProductService productService;
 
     @PostMapping(value = "/customer/addProductInFavouritesGroup/{id}")
     public ResponseEntity addProductInFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
@@ -37,7 +39,7 @@ public class ProductForFavouritesGroupRestController {
     }
 
     @GetMapping(value = "/customer/getProductFromFavouritesGroup/{id}")
-    public ResponseEntity<Set<Product>> getProductFromFavouritesGroup (@PathVariable Long id) {
+    public ResponseEntity<Set<Product>> getProductFromFavouritesGroup(@PathVariable Long id) {
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         //favouritesGroupProductService.getProductSet(favouritesGroup, user);
@@ -60,6 +62,14 @@ public class ProductForFavouritesGroupRestController {
     @PutMapping(value = "/customer/deleteProductFromFavouritesGroup/{idNewGroup}/{idOldGroup}")
     public ResponseEntity moveProducts(@RequestBody ArrayList<Long> idProducts, @PathVariable("idNewGroup") Long idNewGroup, @PathVariable("idOldGroup") Long idOldGroup) {
         System.out.println("idNewGroup=" + idNewGroup + "      idOldGroup=" + idOldGroup + "       idProducts=" + idProducts);
+        User user = userService.getCurrentLoggedInUser();
+        FavouritesGroup newFavouritesGroup = favouritesGroupService.findById(idNewGroup).orElseThrow();
+        FavouritesGroup oldFavouritesGroup = favouritesGroupService.findById(idOldGroup).orElseThrow();
+        for (int i = 0; i < idProducts.size(); i++) {
+            Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
+            favouritesGroupProductService.deleteProductFromFavouritesGroup(product, oldFavouritesGroup, user);
+            favouritesGroupProductService.addProductToFavouritesGroup(product, newFavouritesGroup, user);
+        }
         return ResponseEntity.ok().build();
     }
 }
