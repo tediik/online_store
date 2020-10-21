@@ -1,0 +1,243 @@
+<!--Профиль для админа, менеджера, сервисного работника.-->
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="profile" form>
+    <div class="container-fluid bg-light">
+        <div class="row p-3">
+            <div class="col-4">
+                <div class="imgContainer">
+                    <div>
+                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2" height="152"
+                             th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}" width="152">
+                    </div>
+                    <div class="imgButton">
+                        <button type="button" class="btn btn-link" data-toggle="modal"
+                                data-target="#myModal"> Edit Profile Picture
+                        </button>
+                    </div>
+                    <!--Profile picture change modal-->
+                    <div class="modal" id="myModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Upload your profile picture</h4>
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        &times;
+                                    </button>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    <input type="file" id="fileInput" name="imageFile" alt="Picture">
+                                    <br>
+                                    <br>
+                                    <input type="button" id="deletePicBtn" value="Delete Picture"
+                                           data-dismiss="modal" class="btn btn-sm btn-outline-danger"/>
+                                    <img id="blah" src="#" alt="your image"
+                                         class="rounded-circle img-responsive mt-2 float-right"
+                                         height="82" width="82"/>
+                                </div>
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form data-role="personal-info-form">
+                    <div class="form-group text-center font-weight-bold" hidden>
+                        <label class="input-row_label" for="id_update">ID</label>
+                        <input type="text" class="form-control" id="id_update" name="id">
+                    </div>
+                    <div class="form-group text-center font-weight-bold" hidden>
+                        <label class="input-row_label" for="password_update">Пароль</label>
+                        <input type="text" class="form-control"
+                               id="password_update" name="password">
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label class="input-row_label" for="first_name_update">Имя</label>
+                        <input type="text" class="form-control"
+                               id="first_name_update" name="firstName">
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="last_name_input">Фамилия</label>
+                        <input type="text" class="form-control"
+                               id="last_name_input" name="lastName">
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="email_input">Email</label>
+                        <input type="text" class="form-control"
+                               id="email_input" name="email" readonly>
+                    </div>
+                    <div>
+                        <button type="button" style="background-color: #ff8e05"
+                                class="m-2 btn btn-success d-block mx-auto"
+                                data-toggle="modal" data-target="#changeMailModal">Изменить email
+                        </button>
+
+                        <button type="button" style="background-color: #ff8e05"
+                                class="m-2 btn btn-success d-block mx-auto"
+                                data-toggle="modal" data-target="#changePasswordModal">Изменить пароль
+                        </button>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="date_birthday_input" class="col-xs-2 col-form-label">День рождения</label>
+                        <div class="col-xs-10">
+                            <input class="form-control"
+                                   th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-DD')}"
+                                   type="date" id="date_birthday_input" name="birthdayDate">
+                        </div>
+                    </div>
+                    <div class="form-group-text-center">
+                        <label for="gender_radio"
+                               class="text-center font-weight-bold">Пол</label>
+                        <div id="gender_radio">
+                            <div class="custom-control custom-radio">
+                                <input value="" type="radio"
+                                       id="userGenderNone" name="genderRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="userGenderNone">Не выбрано</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input value="MAN" type="radio"
+                                       id="userGenderMan" name="genderRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="userGenderMan">Мужской</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input value="WOMAN" type="radio"
+                                       id="userGenderWoman" name="genderRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="userGenderWoman">Женский</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+                <div>
+                    <button id="updateProfile" style="background-color: #ff8e05"
+                            th:data-post-date="${user.registerDate}"
+                            class="m-2 btn btn-success d-block mx-auto">Сохранить
+                    </button>
+                </div>
+                <form data-role="personal-info-form">
+                    <div>
+                        <button type="button" style="color: #a94442" class="m-2 btn btn-link d-block mx-auto"
+                                data-toggle="modal" data-target="#deleteProfileModal"
+                                th:data-del-id="${user.id}">Удалить профиль
+                        </button>
+                    </div>
+                    <div class="m-2 text-center personal-info_register-container" style="background-color: #f9f9f9">
+                        Дата регистрации:
+                        <span class="personal-info_register-date font-weight-bold" id="register_date" th:text="${user.registerDate}"></span>
+                    </div>
+                </form>
+                <!---------------------- Change email Profile Modal window ------------------->
+                <div id="changeMailModal" class="modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Изменяем электронную почту:</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">x</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="formChangeMail" class="form-group">
+                                    <div class="form-group text-center font-weight-bold">
+                                        <label for="new_mail">Введите новый адрес электронной почты</label>
+                                        <input type="email" id="new_mail" name="newMail" class="form-control"
+                                               required/>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Отмена
+                                </button>
+                                <button type="submit" id="buttonChangeMail" class="btn btn-primary">
+                                    Подтвердить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!---------------------- End Change email Profile Modal window ------------------->
+
+                <!---------------------- Change password Profile Modal window ------------------->
+                <div id="changePasswordModal" class="modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Название</h3>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">x</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-group">
+                                    <div class="form-group text-center font-weight-bold">
+                                        <label for="old_password">Старый пароль</label>
+                                        <input type="password" id="old_password" name="oldPassword"
+                                               autofocus="autofocus" class="form-control" required>
+                                    </div>
+                                    <div class="form-group text-center font-weight-bold">
+                                        <label for="new_password">Новый пароль</label>
+                                        <input type="password" id="new_password"
+                                               name="newPassword" class="form-control" required/>
+                                        <small id="passwordHelpBlock" class="form-text text-muted">
+                                            Your password must be 8-20 characters long, contain
+                                            letters and numbers, and must not contain spaces
+                                            and emoji.
+                                        </small>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Отмена
+                                </button>
+                                <button id="changePassword" type="submit" class="btn btn-primary">
+                                    Сохранить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!---------------------- End Change password Profile Modal window ------------------->
+
+                <!---------------------- Delete Profile Modal window ------------------->
+                <div id="deleteProfileModal" class="modal" tabindex="-1" role="dialog"
+                     aria-labelledby="titleDeleteProfile" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="titleDeleteProfile">Удалить
+                                    профиль</h5>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Вы уверены что хотите удалить свой профиль?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Отмена
+                                </button>
+                                <button id="deleteProfile" type="button"
+                                        class="btn btn-danger" th:data-del-id="${user.id}"
+                                        data-dismiss="modal">
+                                    Удалить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!---------------------- End Delete Profile Modal window ------------------->
+            </div>
+        </div>
+    </div>
+</div>
