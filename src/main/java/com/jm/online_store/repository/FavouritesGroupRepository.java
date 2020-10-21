@@ -19,4 +19,7 @@ public interface FavouritesGroupRepository extends JpaRepository<FavouritesGroup
 
     @Query("from FavouritesGroup f where f.user = :user and f.name = :name")
     FavouritesGroup getOneFavouritesGroupByUserAndByName(@Param("user") User user, @Param("name") String name);
+
+    @Query("from FavouritesGroup f where f.user = :user and f.id = :id")
+    FavouritesGroup getOneFavouritesGroupByUserAndById(@Param("user") User user, @Param("id") Long id);
 }

@@ -45,7 +45,7 @@
                    aria-controls="profile" aria-selected="false">Профиль</a>
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
-                   onclick="fillFavouritesGoods()">Избранное</a>
+                   >Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false">Корзина</a>
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
@@ -165,9 +165,7 @@
                     <div class="favouritesgroups">
                         <div class="btn-group">
                             <button type="button" class="get-favourites-group-btn btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                Все товары
-                            </button>
+                                    aria-haspopup="true" aria-expanded="false">Все товары</button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" th:each="favouritesGroup : ${favouritesGroupList}"
                                    th:id="${favouritesGroup.id}" th:text="${favouritesGroup.name}">Все товары</a>
@@ -204,7 +202,7 @@
                                         <tr th:each="favouritesGroup : ${favouritesGroupList}" class="select-group-tr mt-3" th:id="${favouritesGroup.id}">
                                             <td>
                                                 <input th:id="${favouritesGroup.id}"
-                                                       th:class="${favouritesGroup.id}" type="checkbox"
+                                                       th:class="check-favourites-group" type="checkbox"
                                                        class="form-check-input checkbox_move_group">
                                                 <label class="form-check-label"
                                                        th:for="${favouritesGroup.id}">
@@ -242,7 +240,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
                                     </button>
-                                    <button type="button" class="btn btn-primary">Копировать</button>
+                                    <button type="button" class="btn-copy-product btn btn-primary">Копировать</button>
                                 </div>
                             </div>
                         </div>

@@ -2,11 +2,13 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FavouriteGoodsService;
 import com.jm.online_store.service.interf.FavouritesGroupProductService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
+import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ public class FavouritesGoodsRestController {
     private final FavouriteGoodsService favouriteGoodsService;
     private final UserService userService;
     private final FavouritesGroupProductService favouritesGroupProductService;
+    private final FavouritesGroupService favouritesGroupService;
+    private final ProductService productService;
     /**
      * контроллер для получения товаров "избранное" для авторизованного User.
      * используется поиск по идентификатору User, т.к. используется ленивая
@@ -53,6 +57,11 @@ public class FavouritesGoodsRestController {
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.addToFavouriteGoods(id, user);
+        //Добавляем продукт в список избранного "Все товары"
+        Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
+        FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
+        favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup, user);
+        //
         return ResponseEntity.ok().build();
     }
 
@@ -66,6 +75,11 @@ public class FavouritesGoodsRestController {
     public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.deleteFromFavouriteGoods(id, user);
+        // Удаляем продукт из списка "Все товары"
+        Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
+        FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
+        favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup, user);
+        //
         return ResponseEntity.ok().build();
     }
 

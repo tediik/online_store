@@ -1,3 +1,4 @@
+//Этот метод не используется
 async function fillFavouritesGoods() {
     let response = await fetch("/customer/favouritesGoods");
     let content = await response.json();
@@ -30,7 +31,9 @@ async function deleteProductFromFavouritGoods(id) {
         body: id,
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    await fillFavouritesGoods();
+    let idGroup = $('.dropdown-item:first').attr("id");
+    fillFavouritesProducts(idGroup);
+    //await fillFavouritesGoods();
 }
 
 async function addProductToBasket(id) {
@@ -45,6 +48,56 @@ $(document).on("click", "#showBasket", function () {
     $('#v-pills-tab a[href="#basketGoods"]').tab('show')
 });
 // Новый функционал
+/**
+ * Обработка события нажатия на кнопку "Копировать"
+ * Собираем данные и перемещаем продукты в нужный список
+ */
+$(document).on("click", ".btn-copy-product", function (){
+    let listIdProducts = $(".select_product:checked").map(function() {return this.id;}).get();
+    console.log(listIdProducts);
+    let idGroup = $(".check-favourites-group:checked").attr("id");
+    console.log(idGroup);
+    let idOldGroup = $(".get-favourites-group-btn").attr("id");
+    console.log(idOldGroup);
+    moveProductsFavouritesGroup(idGroup, idOldGroup, listIdProducts);
+});
+/**
+ * Достаем продукты заданного списка
+ * @param id списка
+ * @returns {Promise<void>}
+ */
+async function fillFavouritesProducts(id) {
+    let response = await fetch("/customer/getProductFromFavouritesGroup/" + id);
+    let content = await response.json();
+    let favoriteGoodsJson = document.getElementById('favouritesGoodsList');
+    let key
+    $(favoriteGoodsJson).empty();
+    for (key in content) {
+        let product = `
+        <tr class=${content[key].id} id=${content[key].id}>
+    <td>${content[key].id}</td>
+    <td><input class="select_product hidden" type="checkbox" value="" id="${content[key].id}" ></td>
+    <td>${content[key].product}</td>
+    <td>${content[key].price}</td>
+    <td>${content[key].amount}</td>
+    <td>
+       <button class="btn btn-danger" onclick="deleteProductFromFavouritGoods(${content[key].id})">Удалить</button>
+    </td>
+    <td>
+       <button class="btn btn-primary" onclick="addProductToBasket(${content[key].id})">Добавить в корзину</button>
+    </td>
+    <tr>
+`;
+        $(favoriteGoodsJson).append(product);
+    }
+}
+/**
+ * Переход во вкладку "Избранное" - рисуем таблицу Списка "Все товары"
+ */
+$(document).on("click", "#favouritesGoods-tab", function (){
+    let id = $('.dropdown-item:first').attr("id");
+    fillFavouritesProducts(id);
+});
 /**
  * Обработчик кнопки "Добавить товары в другой список"
  */
@@ -93,7 +146,10 @@ $(document).on("click", "#ch_sel_all", function () {
  * Нажимаем на выбранной группе для отображения списка товаров
  */
 $(document).on("click", ".btn-group .dropdown-item", function () {
-    alert(this.id);
+    $(".get-favourites-group-btn").text($(this).text());
+    $(".get-favourites-group-btn").attr("id", this.id);
+    fillFavouritesProducts(this.id);
+
 });
 /**
  * Кнопка "создать новый список"  в модалке работы со списками избранных
@@ -187,12 +243,29 @@ async function updateFavouritesGroupInBD(nameGroup, idGroup) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8'
     };
-    // let favouritesGroup = {
-    //     name: nameGroup
-    // };
     await fetch(`/customer/favouritesGroup/` + id, {
         method: 'PUT',
         body: nameGroup,
+        headers: headers
+    }).then(respons => {
+        console.log(respons);
+    });
+};
+/**
+ * Функция перемещения товаров из одного списка ИЗБРАННОГО в другой
+ * @param idNewGroup     id списка В который перемещаем
+ * @param idOldGroup     id списка ИЗ которого перемещаем
+ * @param idProducts     Массив товаров для перемещения
+ * @returns {Promise<void>}
+ */
+async function moveProductsFavouritesGroup(idNewGroup, idOldGroup, idProducts) {
+    const headers = {
+        'Content-type': 'application/json; charset=UTF-8'
+    };
+
+    await fetch(`/customer/deleteProductFromFavouritesGroup/` + idNewGroup + `/` + idOldGroup, {
+        method: 'PUT',
+        body: JSON.stringify(idProducts),
         headers: headers
     }).then(respons => {
         console.log(respons);
@@ -219,7 +292,7 @@ async function addFavouritesGroupInBD(nameGroup) {
             $('.dropdown-menu').append("<a class='dropdown-item' href='#' id=" + data.id + ">" + data.name + "</a>");
             let kusok = `<tr class="select-group-tr mt-3" id="${data.id}">
                 <td>
-                    <input id="${data.id}" type="checkbox" class="${data.id}">
+                    <input id="${data.id}" type="checkbox" class="check-favourites-group">
                         <label class="form-check-label" for="${data.id}">
                             <input id="${data.id}" type="text" value="${data.name}" class="select-group-tr-input" disabled="">
                         </label>

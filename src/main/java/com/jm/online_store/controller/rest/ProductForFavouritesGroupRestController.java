@@ -7,6 +7,7 @@ import com.jm.online_store.service.interf.FavouritesGroupProductService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,26 +28,38 @@ public class ProductForFavouritesGroupRestController {
     private final FavouritesGroupProductService favouritesGroupProductService;
     private final FavouritesGroupService favouritesGroupService;
 
-    @PostMapping(value = "/customer/addProductInFavouritesGroup")
-    public ResponseEntity addProductInFavouritesGroup(@RequestBody ArrayList<Long> idPidG) {
-
+    @PostMapping(value = "/customer/addProductInFavouritesGroup/{id}")
+    public ResponseEntity addProductInFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
+        User user = userService.getCurrentLoggedInUser();
+        FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
+        favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup, user);
         return ResponseEntity.ok("addProductInFavouritesGroupOK");
     }
 
     @GetMapping(value = "/customer/getProductFromFavouritesGroup/{id}")
     public ResponseEntity<Set<Product>> getProductFromFavouritesGroup (@PathVariable Long id) {
+        User user = userService.getCurrentLoggedInUser();
+        FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
+        //favouritesGroupProductService.getProductSet(favouritesGroup, user);
+        return ResponseEntity.ok(favouritesGroupProductService.getProductSet(favouritesGroup, user));
+    }
 
+    @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroup/{id}")
+    public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
+        User user = userService.getCurrentLoggedInUser();
+        FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
+        favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup, user);
+        return ResponseEntity.ok("deleteProductFromFavouritesGroupOK");
+    }
+
+    @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroupAll")
+    public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody Long id) {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroup")
-    public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody ArrayList<Long> idPidG) {
-
-        return ResponseEntity.ok("deleteProductFromFavouritesGroupOK");
-    }
-    @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroupAll")
-    public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody Long id) {
-
+    @PutMapping(value = "/customer/deleteProductFromFavouritesGroup/{idNewGroup}/{idOldGroup}")
+    public ResponseEntity moveProducts(@RequestBody ArrayList<Long> idProducts, @PathVariable("idNewGroup") Long idNewGroup, @PathVariable("idOldGroup") Long idOldGroup) {
+        System.out.println("idNewGroup=" + idNewGroup + "      idOldGroup=" + idOldGroup + "       idProducts=" + idProducts);
         return ResponseEntity.ok().build();
     }
 }
