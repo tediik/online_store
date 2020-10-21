@@ -41,7 +41,7 @@ async function addProductToBasket(id) {
         method: "PUT",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    fillBusket();
+    fillBasket()
 }
 
 $(document).on("click", "#showBasket", function () {
@@ -52,15 +52,20 @@ $(document).on("click", "#showBasket", function () {
  * Обработка события нажатия на кнопку "Копировать"
  * Собираем данные и перемещаем продукты в нужный список
  */
-$(document).on("click", ".btn-copy-product", function (){
-    let listIdProducts = $(".select_product:checked").map(function() {return this.id;}).get();
-    console.log(listIdProducts);
+$(document).on("click", ".btn-copy-product", function () {
+    let listIdProducts = $(".select_product:checked").map(function () {
+        return this.id;
+    }).get();
     let idGroup = $(".check-favourites-group:checked").attr("id");
-    console.log(idGroup);
-    let idOldGroup = $(".get-favourites-group-btn").attr("id");
-    console.log(idOldGroup);
-    moveProductsFavouritesGroup(idGroup, idOldGroup, listIdProducts);
+    if (idGroup) {
+        let idOldGroup = $(".get-favourites-group-btn").attr("id");
+        moveProductsFavouritesGroup(idGroup, idOldGroup, listIdProducts);
+        toastr.success("Успешное перемещение!");
+    } else {
+        toastr.error("Выбирите список!");
+    }
 });
+
 /**
  * Достаем продукты заданного списка
  * @param id списка
@@ -91,12 +96,19 @@ async function fillFavouritesProducts(id) {
         $(favoriteGoodsJson).append(product);
     }
 }
+
 /**
  * Переход во вкладку "Избранное" - рисуем таблицу Списка "Все товары"
  */
-$(document).on("click", "#favouritesGoods-tab", function (){
+$(document).on("click", "#favouritesGoods-tab", function () {
     let id = $('.dropdown-item:first').attr("id");
     fillFavouritesProducts(id);
+});
+/**
+ * Нажымием на кнопку "Выбрать группу"
+ */
+$(document).on("click", "#sel_new_group", function () {
+    $(".get-favourites-group-btn").attr("disabled", false);
 });
 /**
  * Обработчик кнопки "Добавить товары в другой список"
@@ -110,15 +122,16 @@ $(document).on("click", "#addInOverGroup", function (event) {
         $(".ch_select_all").removeClass("hidden");
         $(".select_product").removeClass("hidden");
         $("#clear_group").addClass("hidden");
-        $("#rename_group").addClass("hidden");
+        //$("#rename_group").addClass("hidden");
         $("#archive_group").addClass("hidden");
         $("#sel_new_group").removeClass("hidden");
+        $(".get-favourites-group-btn").attr("disabled", true);
     }
 });
 /**
  * Обработчик кнопки Отмена (Появляется после нажатия на "Добавить товары в другой список")
  */
-$(document).on("click", "#escape", function () {
+$(document).on("click", "#escape", function () {   // get-favourites-group-btn
     let activeAddInOverGroup = $(".favouritesgroups");
     if (activeAddInOverGroup.hasClass("selected")) {
         activeAddInOverGroup.removeClass("selected");
@@ -127,9 +140,10 @@ $(document).on("click", "#escape", function () {
         $(".ch_select_all").addClass("hidden");
         $(".select_product ").addClass("hidden");
         $("#clear_group").removeClass("hidden");
-        $("#rename_group").removeClass("hidden");
+        // $("#rename_group").removeClass("hidden");
         $("#archive_group").removeClass("hidden");
         $("#sel_new_group").addClass("hidden");
+        $(".get-favourites-group-btn").attr("disabled", false);
     }
 });
 /**
@@ -175,7 +189,7 @@ $(document).on("click", ".button-edit-fav-group", function () {
 $(document).on("click", ".button-delete-fav-group", function () {
     let thisId = $(this).attr("id");
     let noDeleteGroup = $(".select-group-tr-input:first").val();
-    if ($(".select-group-tr-input[id='" + thisId + "']").val() != noDeleteGroup){
+    if ($(".select-group-tr-input[id='" + thisId + "']").val() != noDeleteGroup) {
         deleteFavouritesGroupInBD(thisId);
         toastr.success("Cписок удален!");
         $(".select-group-tr[id='" + thisId + "']").detach();
@@ -210,7 +224,7 @@ $(document).on("click", ".edit-fav-group-cancel", function () {
 /**
  * Кнопочка подтверждения создания нового списка  "V"
  */
-$(document).on("click", ".add-group-input-ok", function (){
+$(document).on("click", ".add-group-input-ok", function () {
     let newGroupName = $(".new-group-input").val();
     let isPresent = $(".select-group-tr-input[value='" + newGroupName + "']").length;
     if (!isPresent) {
@@ -218,10 +232,10 @@ $(document).on("click", ".add-group-input-ok", function (){
         toastr.success("Cписок успешно создан!");
     } else {
         toastr.error("Такой список уже существует!");
-    $(".polya-input").addClass("hidden");
-    $(".add-group-new").removeClass("hidden");
-    $(".new-group-checkbox").prop('checked', false);
-    $(".new-group-checkbox").prop("disabled", false);
+        $(".polya-input").addClass("hidden");
+        $(".add-group-new").removeClass("hidden");
+        $(".new-group-checkbox").prop('checked', false);
+        $(".new-group-checkbox").prop("disabled", false);
     }
 })
 /**
@@ -233,6 +247,7 @@ $(document).on("click", ".add-group-input-cancel", function () {
     $(".new-group-checkbox").prop('checked', false);
     $(".new-group-checkbox").prop("disabled", false);
 });
+
 /**
  * Обновление название списка в БД
  * @param nameGroup   Новое название списка
@@ -251,6 +266,7 @@ async function updateFavouritesGroupInBD(nameGroup, idGroup) {
         console.log(respons);
     });
 };
+
 /**
  * Функция перемещения товаров из одного списка ИЗБРАННОГО в другой
  * @param idNewGroup     id списка В который перемещаем
@@ -271,6 +287,7 @@ async function moveProductsFavouritesGroup(idNewGroup, idOldGroup, idProducts) {
         console.log(respons);
     });
 };
+
 /**
  * Добавляем название нового списка в БД
  * @param nameGroup   Название новой группы
@@ -312,6 +329,7 @@ async function addFavouritesGroupInBD(nameGroup) {
             $('.select_group').append(kusok);
         });
 };
+
 /**
  * Удаляем из БД имя скписка Избранного Кнопкой DELETE
  * @param id
