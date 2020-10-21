@@ -3,7 +3,8 @@
  */
 $(document).ready(function () {
     $('#nav-categories-and-topics-tab').click(function () {
-        getCategories();
+        getActualCategories();
+        getArchiveCategories();
     })
     $('#addCategoryButton').click(function (event) {
         addNewCategory();
@@ -26,7 +27,7 @@ $(document).ready(function () {
 /**
  * Делает запрос всех категорий
  */
-function getCategories() {
+function getActualCategories() {
     fetch("/api/manager/topicsCategory/actual")
         .then(response => {
             if (response.status === 200) {
@@ -61,14 +62,14 @@ function makeCategoryBody(topicsCategory) {
             topicsTable += `<li class="list-group-item" id="row${tops.id}">
                                 <span class="text-left">${tops.topicName}</span>
                                 <span class="float-right">
-                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editTopicModal" onclick="getTopic(${tops.id})">Переименовать</button>
+                                    <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#editTopicModal" onclick="getTopic(${tops.id})">Переименовать</button>
                                 </span>                        
                             </li>`
         }
     } else {
         topicsTable += `<li class="list-group-item" id="nullRow${topicsCategory.id}">
                            <span class="text-left">Тем пока что нет</span>                                                      
-                       </li>`;
+                        </li>`;
     }
     topicsTable += `<li class="list-group-item">
                             <button type="button" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#addNewTopicModal" onclick="getCategoryForNewTopic(${topicsCategory.id})">
@@ -97,6 +98,34 @@ function makeCategoryBody(topicsCategory) {
                     </div>
                 </div>
           </div>`
+}
+
+
+// надо делать
+function getArchiveCategories(){
+    let categoriesBody = document.querySelector('#accordionCategoriesArchive');
+    let insertBody = `<div class="card" id="categoryCardArchiveCategoryID">
+                          <div class="card-header" id="headingArchiveCategoryID">
+                              <h5 class="mb-0">                    
+                              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseCategoryArchiveID" aria-expanded="false" aria-controls="collapseArchiveCategoryID">
+                                  Название категории
+                              </button>
+                              <span class="float-right">
+                                  <button type="button" class="btn btn-outline-info btn-sm" onclick="unarchiveCategory(CategoryID")>Разархивировать</button>
+                              </span>
+                              </h5>
+                          </div>
+                          <div id="collapseCategoryArchiveID" class="collapse" aria-labelledby="headingArchiveCategoryID" data-parent="#accordionCategoriesArchive">
+                              <div class="card-body">
+                                  <ul class="list-group list-group-flush" id="topicArchiveCategoryID">
+                                      <li class="list-group-item" id="rowArchiveTopicID">
+                                          <span class="text-left">Название темы</span>                                                      
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                    </div>`;
+    categoriesBody.insertAdjacentHTML("afterbegin", insertBody);
 }
 
 /**
