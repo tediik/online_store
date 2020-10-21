@@ -25,29 +25,14 @@ public class ManagerTopicsCategoryRestController {
     private final TopicsCategoryService topicsCategoryService;
 
     /**
-     * Метод для получения всех актуальных категорий тем
+     * Метод для получения всех категорий тем
      *
-     * @return ResponseEntity<List <TopicsCategory>> возвращает все актуальные
+     * @return ResponseEntity<List <TopicsCategory>> возвращает все
      * категории тем со статусом ответа, если категорий тем нет - только статус
      */
-    @GetMapping("/actual")
-    public ResponseEntity<List<TopicsCategory>> readAllActualTopicsCategories() {
-        List<TopicsCategory> topicsCategories = topicsCategoryService.findAllByActualIsTrue();
-        if (topicsCategories.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(topicsCategories);
-    }
-
-    /**
-     * Метод для получения всех архивных категорий тем
-     *
-     * @return ResponseEntity<List < TopicsCategory>> возвращает все архивные
-     * категории тем со статусом ответа, если категорий тем нет - только статус
-     */
-    @GetMapping("/archive")
-    public ResponseEntity<List<TopicsCategory>> readAllArchiveTopicsCategories() {
-        List<TopicsCategory> topicsCategories = topicsCategoryService.findAllByActualIsFalse();
+    @GetMapping
+    public ResponseEntity<List<TopicsCategory>> readAllTopicsCategories() {
+        List<TopicsCategory> topicsCategories = topicsCategoryService.findAll();
         if (topicsCategories.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
