@@ -129,46 +129,61 @@
                 <div class="tab-pane fade" id="nav-categories-and-topics" role="tabpanel"
                      aria-labelledby="nav-categories-and-topics-tab">
                     <h1 class="font-weight mt-3 pb-1">Здесь вы можете редактировать категории и темы</h1>
-                    <!-- Акордеон -->
-                    <div class="accordion" id="accordionCategories">
-                        <div class="card">
-                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#addNewCategoryModal">
-                                Добавить новую категорию
-                            </button>
+                    <!-- Навигация для категорий и тем-->
+                    <nav>
+                        <div class="nav nav-tabs" id="actual-and-archives-categories-tab" role="tablist">
+                            <a class="nav-link active" id="nav-actual-categories-tab" data-toggle="tab" href="#nav-actual-categories" role="tab" aria-controls="nav-actual-categories" aria-selected="true">Категории</a>
+                            <a class="nav-link" id="nav-archive-categories-tab" data-toggle="tab" href="#nav-archive-categories" role="tab" aria-controls="nav-archive-categories" aria-selected="false">Архив</a>
+
+
                         </div>
+                    </nav>
+                    <!-- Конец навигация для категорий и тем -->
+                    <!-- Области контроля навигация для категорий и тем -->
+                    <div class="tab-content" id="actual-and-archives-categories-tabContent">
+                        <!-- Вкладка акуальные категории -->
+                        <div class="tab-pane fade show active" id="nav-actual-categories" role="tabpanel" aria-labelledby="nav-actual-categories-tab">
+                            <!-- Акордеон актуальных категорий -->
+                            <div class="accordion" id="accordionCategories">
+                                <div class="card">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#addNewCategoryModal">
+                                        Добавить новую категорию
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Конец акордеона актуальных категорий -->
+                        </div>
+                        <!-- Конец вкладки акуальные категории -->
+                        <!-- Вкладка архивные категории -->
+                        <div class="tab-pane fade" id="nav-archive-categories" role="tabpanel" aria-labelledby="nav-archive-categories-tab">
+                            <div class="accordion" id="accordionCategoriesArchive"></div>
+                        </div>
+                        <!-- Конец вкладки архивные категории -->
                     </div>
-                    <!-- Акордеон конец -->
+                    <!-- Конец области контроля навигация для категорий и тем-->
+
                     <!-- Модальное окно для добавления категории -->
                     <div class="modal fade" id="addNewCategoryModal" tabindex="-1" role="dialog"
                          aria-labelledby="addNewCategoryModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="addNewCategoryModalLabel">Добавление новой категории</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <h5 class="modal-title" id="addNewCategoryModalLabel">Введите название категории</h5>
                                 </div>
-                                <div class="modal-body text-center">
-                                    <div class="row">
-                                        <div class="col-5 offset-3">
-                                            <form id="addCategoryForm">
-                                                <div class="form-group">
-                                                    <label for="addNewCategory"
-                                                           class="font-weight-bold">Категория</label>
-                                                    <input required type="text" class="form-control" name="category"
-                                                           id="addNewCategory">
-                                                </div>
-                                            </form>
+                                <div class="modal-body">
+                                    <form id="addCategoryForm">
+                                        <div class="form-group">
+                                            <label for="addNewCategory"></label>
+                                            <input type="text" class="form-control" name="category" id="addNewCategory">
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
                                         Закрыть
                                     </button>
-                                    <button type="button" class="btn btn-primary" id="addCategoryButton">
+                                    <button type="button" class="btn btn-primary btn-sm" id="addCategoryButton">
                                         Добавить
                                     </button>
                                 </div>
@@ -179,30 +194,29 @@
                     <!-- Модальное окно для изменения категории -->
                     <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog"
                          aria-labelledby="editCategoryModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
                             <div class="modal-content">
-                                <div class="modal-body text-center">
-                                    <div class="row">
-                                        <div class="col-6 offset-3">
-                                            <form id="editCategoryForm">
-                                                <div class="form-group">
-                                                    <label for="editCategoryId" class="font-weight-bold"></label>
-                                                    <input type="number" class="form-control" name="id"
-                                                           id="editCategoryId" readonly hidden>
-                                                    <label for="editCategoryName" class="font-weight-bold">Введите новое
-                                                        назавание категории</label>
-                                                    <input required type="text" class="form-control" name="categoryName"
-                                                           id="editCategoryName">
-                                                </div>
-                                            </form>
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editCategoryModalLabel">Введите новое
+                                        назавание категории</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editCategoryForm">
+                                        <div class="form-group">
+                                            <label for="editCategoryId"></label>
+                                            <input type="number" class="form-control" name="id"
+                                                   id="editCategoryId" readonly hidden>
+                                            <label for="editCategoryName"></label>
+                                            <input type="text" class="form-control" name="categoryName"
+                                                   id="editCategoryName">
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
                                         Закрыть
                                     </button>
-                                    <button type="button" class="btn btn-primary" id="editCategoryButton">
+                                    <button type="button" class="btn btn-primary btn-sm" id="editCategoryButton">
                                         Изменить
                                     </button>
                                 </div>
@@ -213,33 +227,26 @@
                     <!-- Модальное окно для добавления темы -->
                     <div class="modal fade" id="addNewTopicModal" tabindex="-1" role="dialog"
                          aria-labelledby="addNewTopicModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="addNewTopicModalLabel">Добавление новой темы</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <h5 class="modal-title" id="addNewTopicModalLabel">Введите название темы</h5>
                                 </div>
-                                <div class="modal-body text-center">
-                                    <div class="row">
-                                        <div class="col-5 offset-3">
-                                            <form id="addTopicForm">
-                                                <div class="form-group">
-                                                    <label for="addNewTopic"
-                                                           class="font-weight-bold">Тема</label>
-                                                    <input required type="text" class="form-control" name="topic"
-                                                           id="addNewTopic">
-                                                </div>
-                                            </form>
+                                <div class="modal-body">
+                                    <form id="addTopicForm">
+                                        <div class="form-group">
+                                            <label for="addNewTopic"
+                                                   class="font-weight-normal"></label>
+                                            <input type="text" class="form-control" name="topic"
+                                                   id="addNewTopic">
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
                                         Закрыть
                                     </button>
-                                    <button type="button" class="btn btn-primary" id="addTopicButton">
+                                    <button type="button" class="btn btn-primary btn-sm" id="addTopicButton">
                                         Добавить
                                     </button>
                                 </div>
@@ -249,31 +256,30 @@
                     <!-- Конец модального окна для добавления темы -->
                     <!-- Модальное окно для редактирования темы -->
                     <div class="modal fade" id="editTopicModal" tabindex="-1" role="dialog"
-                         aria-labelledby="editCategoryModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                         aria-labelledby="editTopicModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
                             <div class="modal-content">
-                                <div class="modal-body text-center">
-                                    <div class="row">
-                                        <div class="col-6 offset-3">
-                                            <form id="editTopicForm">
-                                                <div class="form-group">
-                                                    <label for="editTopicId" class="font-weight-bold"></label>
-                                                    <input type="number" class="form-control" name="id"
-                                                           id="editTopicId" readonly hidden>
-                                                    <label for="editTopicName" class="font-weight-bold">Введите новое
-                                                        назавание темы</label>
-                                                    <input required type="text" class="form-control" name="topicName"
-                                                           id="editTopicName">
-                                                </div>
-                                            </form>
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editTopicModalLabel">Введите новое
+                                        назавание темы</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editTopicForm">
+                                        <div class="form-group">
+                                            <label for="editTopicId"></label>
+                                            <input type="number" class="form-control" name="id"
+                                                   id="editTopicId" readonly hidden>
+                                            <label for="editTopicName"></label>
+                                            <input type="text" class="form-control" name="topicName"
+                                                   id="editTopicName">
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
                                         Закрыть
                                     </button>
-                                    <button type="button" class="btn btn-primary" id="editTopicButton">
+                                    <button type="button" class="btn btn-primary btn-sm" id="editTopicButton">
                                         Изменить
                                     </button>
                                 </div>
@@ -282,6 +288,7 @@
                     </div>
                     <!-- Конец модального окна для редактирования темы -->
                 </div>
+                <!--  Конец раздела для редактирования категорий и тем -->
             </div>
         </div>
     </div>
