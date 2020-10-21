@@ -55,9 +55,8 @@ function renderCategories(topicsCategories) {//
  * @returns {string} тело категории в html
  */
 function makeCategoryBody(topicsCategory) {
-    let topicsTable = "";
+    let topicsTable = `<ul class="list-group list-group-flush" id="topic${topicsCategory.id}">`;
     if (topicsCategory.topics !== null && topicsCategory.topics.length !== 0) {
-        topicsTable += `<ul class="list-group list-group-flush" id="topic${topicsCategory.id}">`
         for (let tops of topicsCategory.topics) {
             topicsTable += `<li class="list-group-item" id="row${tops.id}">
                                 <span class="text-left">${tops.topicName}</span>
@@ -67,12 +66,10 @@ function makeCategoryBody(topicsCategory) {
                             </li>`
         }
     } else {
-        topicsTable = `<ul class="list-group list-group-flush id="topic${topicsCategory.id}">
-                           <li class="list-group-item" id="nullRow${topicsCategory.id}">
-                               <span class="text-left">Тем пока что нет</span>                                                      
-                           </li>`;
+        topicsTable += `<li class="list-group-item" id="nullRow${topicsCategory.id}">
+                           <span class="text-left">Тем пока что нет</span>                                                      
+                       </li>`;
     }
-
     topicsTable += `<li class="list-group-item">
                             <button type="button" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#addNewTopicModal" onclick="getCategoryForNewTopic(${topicsCategory.id})">
                                 Добавить
