@@ -4,8 +4,10 @@ import com.jm.online_store.model.Feedback;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.service.interf.FeedbackService;
 import com.jm.online_store.service.interf.TopicService;
+import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/feedback")
@@ -21,6 +24,7 @@ import java.util.List;
 public class FeedbackRestController {
     private final TopicService topicService;
     private final FeedbackService feedbackService;
+    private final UserService userService;
 
     /**
      * Mapping to get categories from {@link Topic}
@@ -49,6 +53,42 @@ public class FeedbackRestController {
     @PostMapping
     public ResponseEntity<String> addNewFeedback(@RequestBody Feedback newFeedback) {
         feedbackService.addFeedbackFromDto(newFeedback);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/messages")
+    public ResponseEntity<Set<Feedback>> getAllFeedbackCurrentCustomer() {
+        Set<Feedback> feedbackSet = userService.getCurrentLoggedInUser().getFeedbacks();
+        return ResponseEntity.ok(feedbackSet);
+    }
+
+    @GetMapping("/allMessages")
+    public ResponseEntity<List<Feedback>> getAllFeedback() {
+        List<Feedback> feedbackList = feedbackService.getAllFeedback();
+        return ResponseEntity.ok(feedbackList);
+    }
+
+    @GetMapping("/inProgress")
+    public ResponseEntity<List<Feedback>> getInProgressFeedback() {
+        List<Feedback> feedbackList = feedbackService.getInProgressFeedback();
+        return ResponseEntity.ok(feedbackList);
+    }
+
+    @GetMapping("/later")
+    public ResponseEntity<List<Feedback>> getLaterFeedback() {
+        List<Feedback> feedbackList = feedbackService.getLaterFeedback();
+        return ResponseEntity.ok(feedbackList);
+    }
+
+    @GetMapping("/resolved")
+    public ResponseEntity<List<Feedback>> getResolvedFeedback() {
+        List<Feedback> feedbackList = feedbackService.getResolvedFeedback();
+        return ResponseEntity.ok(feedbackList);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFeedback(@PathVariable Long id) {
+        feedbackService.deleteFeedbackById(id);
         return ResponseEntity.ok().build();
     }
 }

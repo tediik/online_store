@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +27,32 @@ public class FeedbackServiceImpl implements FeedbackService {
     public void addFeedbackFromDto(Feedback feedback) {
         feedback.setUser(userService.getCurrentLoggedInUser());
         feedback.setFeedbackPostDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-        feedback.setStatus(Feedback.Status.TO_DO);
+        feedback.setStatus(Feedback.Status.IN_PROGRESS);
         feedbackRepository.save(feedback);
+    }
+
+    @Override
+    public void deleteFeedbackById(Long id) {
+        feedbackRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Feedback> getAllFeedback() {
+        return feedbackRepository.findAll();
+    }
+
+    @Override
+    public List<Feedback> getInProgressFeedback() {
+        return feedbackRepository.findByStatus(Feedback.Status.IN_PROGRESS);
+    }
+
+    @Override
+    public List<Feedback> getLaterFeedback() {
+        return feedbackRepository.findByStatus(Feedback.Status.LATER);
+    }
+
+    @Override
+    public List<Feedback> getResolvedFeedback() {
+        return feedbackRepository.findByStatus(Feedback.Status.RESOLVED);
     }
 }

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>News Management</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!--toastr CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+        </div>
+        <div class="navbar-text"><a th:href="@{/logout}">Выйти</a></div>
+    </nav>
+</header>
+
+<div class="container-fluid">
+    <div class="row content">
+
+        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager">Главная</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/stocks"> Акции</a>
+            </div>
+            <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/authority/profile">Профиль</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/products"> Товары</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/reports">Отчёты</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a id="getAllFeedback" class="btn btn-outline-primary">Обратная связь</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/settings"> Настройки</a>
+            </div>
+        </div>
+
+        <div class="col-sm-8">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
+                    <div class="col-md-9">
+                        <ul class="nav nav-tabs" id="navbarFeedbackManager">
+                            <!-- Первая вкладка все обращения (активная) -->
+                            <li class="nav-item">
+                                <a class="nav-link active" id="nav-link_all_feedback" data-toggle="tab"
+                                   data-toggle-id="allFeedback" href="#tab_all_feedback">Все</a>
+                            </li>
+                            <!-- Вторая вкладка обращения в работе -->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_in_progress_feedback" data-toggle="tab"
+                                   data-toggle-id="inProgressFeedback" href="#tab_in_progress_feedback">В работе</a>
+                            </li>
+                            <!-- Третья вкладка отложенные обращения-->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_later_feedback" data-toggle="tab"
+                                   data-toggle-id="laterFeedback" href="#tab_later_feedback">Отложенные</a>
+                            </li>
+                            <!-- Четвертая вкладка завершенные обращения-->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_resolved_feedback" data-toggle="tab"
+                                   data-toggle-id="resolvedFeedback"
+                                   href="#tab_resolved_feedback">Завершенные</a>
+                            </li>
+                        </ul>
+
+                        <!-- Блоки с контентом -->
+                        <div class="tab-content mb-5" id="feedbackTabContent">
+                            <!-- Первый блок (он отображается по умолчанию, т.к. имеет классы show и active) -->
+                            <div class="tab-pane fade show active" id="tab_all_feedback">
+                                <div id="all_feedback">
+                                </div>
+                            </div>
+                            <!-- Второй блок -->
+                            <div class="tab-pane fade" id="tab_in_progress_feedback">
+                                <div id="in_progress_feedback">
+                                </div>
+                            </div>
+                            <!-- Третий блок -->
+                            <div class="tab-pane fade" id="tab_later_feedback">
+                                <div id="later_feedback">
+                                </div>
+                            </div>
+                            <!-- Четвертый блок -->
+                            <div class="tab-pane fade" id="tab_resolved_feedback">
+                                <div id="resolved_feedback">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--bootstrap scripts-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<!--toastr-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
+<script src="/static/js/managerFeedback.js"></script>
+</body>
+</html>

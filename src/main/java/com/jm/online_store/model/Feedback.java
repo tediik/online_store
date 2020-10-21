@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -33,7 +35,7 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Topic topic;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,15 +45,19 @@ public class Feedback {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "message")
+    @Type(type = "text")
     private String message;
 
+    @Column(name = "answer")
+    @Type(type = "text")
     private String answer;
 
     private LocalDateTime feedbackPostDate;
 
     public enum Status {
-        TO_DO,
         IN_PROGRESS,
+        LATER,
         RESOLVED
     }
 }
