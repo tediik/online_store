@@ -78,7 +78,7 @@ public class CustomerController {
                                          @RequestParam String newPassword) {
         User user = userService.getCurrentLoggedInUser();
         if (userService.findById(user.getId()).isEmpty()) {
-            log.debug("There are no user with id: {}", user.getId());
+            log.debug("Нет пользователя с идентификатором: {}", user.getId());
             return ResponseEntity.noContent().build();
         }
         if (ValidationUtils.isNotValidEmail(user.getEmail())) {
@@ -87,13 +87,12 @@ public class CustomerController {
         }
         if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
                 && userService.isExist(user.getEmail())) {
-            log.debug("User with same email already exists");
+            log.debug("Пользователь с таким адресом электронной почты уже существует");
             return ResponseEntity.badRequest().body("duplicatedEmailError");
         }
         if (userService.changePassword(user.getId(), oldPassword, newPassword))
-            log.debug("Changes to user with id: {} was successfully added", user.getId());
+            log.debug("Изменения для пользователя с идентификатором: {} был успешно добавлен", user.getId());
         return ResponseEntity.ok().build();
-
     }
 
 

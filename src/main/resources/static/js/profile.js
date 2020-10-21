@@ -46,18 +46,16 @@ function changeMail() {
             toastr.success(res, {timeOut: 5000});
             close();
             $('#email_input').val($('#new_mail').val());
-            $('#new_mail').val('');
-  // location.href='/logout';//
-            },
+        },
         error: function (res) {
             if (res.status === 400) {
                 if (res.responseText === 'duplicatedEmailError') {
                     $(".messages-after-submit").text('Ошибка: Электронный адрес уже зарегистрирован');
-                    toastr.success("Ошибка: Электронный адрес уже зарегистрирован", {timeOut: 5000});
+                    toastr.error("Ошибка: Электронный адрес уже зарегистрирован", {timeOut: 5000});
                 }
                 if (res.responseText === 'notValidEmailError') {
                     $(".messages-after-submit").text('Ошибка: Не верно указана электронная почта');
-                    toastr.success("Ошибка: Не верно указана электронная почта", {timeOut: 5000});
+                    toastr.error("Ошибка: Не верно указана электронная почта", {timeOut: 5000});
                 }
             }
         }
