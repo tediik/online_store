@@ -28,6 +28,12 @@
     list-style-type: none;
 }
 
+.timeOfCreate {
+    font-family: arial;
+    font-size: 60%;
+    color: white;
+}
+
 .lastRow {
     font-size: 70%;
     color: whitesmoke;
