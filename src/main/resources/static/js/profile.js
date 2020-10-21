@@ -6,8 +6,7 @@ $(document).ready(function () {
 
 function changePass() {
     var formData = $('#formChangePass').serialize();
-    console.log(formData);
-    $.ajax({
+       $.ajax({
         url: '/customer/change-password',
         type: 'POST',
         data: formData,
@@ -16,7 +15,6 @@ function changePass() {
             close();
         },
         error: function (res) {
-            console.log(res);
             if (res.responseText === "error_old_pass") {
                 toastr.error("Текущий пароль не совпадает. Введите заново пароль.", {timeOut: 5000});
                 $('#old_password').val('').focus();

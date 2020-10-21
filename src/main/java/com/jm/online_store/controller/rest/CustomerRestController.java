@@ -31,7 +31,7 @@ public class CustomerRestController {
     public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
         User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
-            log.debug("Вы ввели такой же Email.");
+            log.debug("Попытка ввести дублирующийся email: " + newMail);
             return new ResponseEntity("duplicatedEmailError", HttpStatus.BAD_REQUEST);
         }
         if (ValidationUtils.isNotValidEmail(newMail)) {
