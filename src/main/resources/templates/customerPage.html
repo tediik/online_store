@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/static/css/customer.css">
+    <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="/static/css/jquery.fias.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
     <!-- CSS fot toaster -->
@@ -622,14 +623,15 @@
             </div>
         </div>
     </div>
-
-    <!--summernote-->
-    <script src="/static/js/summernote.js"></script>
-    <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"
-            integrity="sha512-sR3EKGp4SG8zs7B0MEUxDeq8rw9wsuGVYNfbbO/GLCJ59LBE4baEfQBVsP2Y/h2n8M19YV1mujFANO1yA3ko7Q=="
-            crossorigin="anonymous"></script>
-    <script src="../static/js/customerProfilePageFunctions.js"></script>
-    <script src="/static/js/customer-feedback-form.js"></script>
+</div>
+<!--summernote-->
+<script src="/static/js/summernote.js"></script>
+<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"
+        integrity="sha512-sR3EKGp4SG8zs7B0MEUxDeq8rw9wsuGVYNfbbO/GLCJ59LBE4baEfQBVsP2Y/h2n8M19YV1mujFANO1yA3ko7Q=="
+        crossorigin="anonymous"></script>
+<script src="../static/js/customerProfilePageFunctions.js"></script>
+<script src="/static/js/customer-feedback-form.js"></script>
+<footer th:insert="/blocks/footer :: footer"></footer>
 </body>
 </html>
