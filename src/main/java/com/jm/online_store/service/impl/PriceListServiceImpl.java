@@ -3,15 +3,13 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.PriceListService;
 import com.jm.online_store.service.interf.ProductService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,15 +24,21 @@ import java.util.stream.IntStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@AllArgsConstructor
+
 @Slf4j
 @Service
 public class PriceListServiceImpl implements PriceListService {
 
-    private static final String PATH_TO_XLS_FILE = "uploads/files/prices/pricedaily.xls";
-    private static final String PATH_TO_ZIP_FILE = "uploads/files/prices/pricedaily.zip";
+    @Value("${price-list-service.path-to-xls-file}")
+    private String PATH_TO_XLS_FILE;
+    @Value("${price-list-service.path-to-zip-file}")
+    private String PATH_TO_ZIP_FILE;
 
     private final ProductService productService;
+
+    public PriceListServiceImpl(ProductService productService) {
+        this.productService = productService;
+    }
 
     @Override
     public void run() {
