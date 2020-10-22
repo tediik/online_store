@@ -1109,10 +1109,10 @@ public class DataInitializer {
                 .categoryName("Работа в компании")
                 .build();
 
-        topicsCategoryService.creat(topicsCategory1);
-        topicsCategoryService.creat(topicsCategory2);
-        topicsCategoryService.creat(topicsCategory3);
-        topicsCategoryService.creat(topicsCategory4);
+        topicsCategoryService.create(topicsCategory1);
+        topicsCategoryService.create(topicsCategory2);
+        topicsCategoryService.create(topicsCategory3);
+        topicsCategoryService.create(topicsCategory4);
 
 
         Topic topic1 = Topic.builder()
@@ -1156,16 +1156,16 @@ public class DataInitializer {
                 .topicsCategory(topicsCategory4)
                 .build();
 
-        topicService.creat(topic1);
-        topicService.creat(topic2);
-        topicService.creat(topic3);
-        topicService.creat(topic4);
-        topicService.creat(topic5);
-        topicService.creat(topic6);
-        topicService.creat(topic7);
-        topicService.creat(topic8);
-        topicService.creat(topic9);
-        topicService.creat(topic10);
+        topicService.create(topic1);
+        topicService.create(topic2);
+        topicService.create(topic3);
+        topicService.create(topic4);
+        topicService.create(topic5);
+        topicService.create(topic6);
+        topicService.create(topic7);
+        topicService.create(topic8);
+        topicService.create(topic9);
+        topicService.create(topic10);
     }
 
     /**
