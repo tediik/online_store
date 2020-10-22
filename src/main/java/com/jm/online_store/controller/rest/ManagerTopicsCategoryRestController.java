@@ -66,11 +66,11 @@ public class ManagerTopicsCategoryRestController {
         if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        return ResponseEntity.ok(topicsCategoryService.creat(topicsCategory));
+        return ResponseEntity.ok(topicsCategoryService.create(topicsCategory));
     }
 
     /**
-     * Методя для изменения категории тем
+     * Метод для изменения категории тем
      *
      * @param id             идентификатор категории
      * @param topicsCategory категория с внесенными изменениями

@@ -49,11 +49,11 @@ public class ManagerTopicRestController {
         if (topicService.existsByTopicName(topic.getTopicName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        return ResponseEntity.ok(topicService.creat(topic));
+        return ResponseEntity.ok(topicService.create(topic));
     }
 
     /**
-     * Методя для изменения темы
+     * Метод для изменения темы
      *
      * @param id идентификатор темы
      * @param topic тема с внесенными изменениями

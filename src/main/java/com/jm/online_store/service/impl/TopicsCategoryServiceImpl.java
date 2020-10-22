@@ -18,7 +18,7 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
 
     @Override
     @Transactional
-    public TopicsCategory creat(TopicsCategory topicsCategory) {
+    public TopicsCategory create(TopicsCategory topicsCategory) {
         return topicsCategoryRepository.saveAndFlush(topicsCategory);
     }
 

@@ -18,7 +18,7 @@ public interface TopicsCategoryService {
 
     boolean existsByCategoryName(String categoryName);
 
-    TopicsCategory creat(TopicsCategory topicsCategory);
+    TopicsCategory create(TopicsCategory topicsCategory);
 
     TopicsCategory update(TopicsCategory topicsCategory);
 
