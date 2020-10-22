@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TopicService {
 
-    Topic creat(Topic topic);
+    Topic create(Topic topic);
 
     List<Topic> getTopicsByCategoryId(long id);
 
