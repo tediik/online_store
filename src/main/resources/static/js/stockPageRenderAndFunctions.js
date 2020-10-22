@@ -193,11 +193,26 @@ function handleSaveChangesButton() {
     let startDate = $('#startDate').val();
     let published = 'false';
     console.log("$('#published').val() = " + $('#published').val());
-    if ($('#published').val() === 'on' || $('#published').val() === 'true'){
+    if ($('#published').val() === 'on' || $('#published').val() === 'true') {
         published = true;
     }
-    // let published = $('#published').val();
     console.log("handleSaveChangesButton. published: " + published);
+
+
+    let uploadId = $('#stockId').val();
+    console.log('stockId = ' + uploadId);
+    let file_data = $('#fileImgInput')[0].files[0]
+    let form_data = new FormData();
+    form_data.append("stockImg", file_data);
+    changeStockImage(uploadId, form_data).then(function (response) {
+        if (response.status === 200) {
+            console.log("Картинка акции успешно сохранена");
+        } else {
+            console.log("Картинка акции не сохранена");
+        }
+    });
+
+
     startDate = moment(startDate).format("YYYY-MM-DD")
     let endDate = ""
     if ($('#endDate').val() !== null || $('#endDate').val() !== "") {
@@ -208,9 +223,26 @@ function handleSaveChangesButton() {
         endDate = ""
     }
 
+    // сохраняем картинку акции в БД
+    async function changeStockImage(upload_Id, form_data) {
+        let uploadId = upload_Id
+        let formdata = form_data;
+        let returnPath;
+
+        await fetch(`/rest/uploadStockImage/` + uploadId, {
+            method: 'POST',
+            body: formdata,
+        }).then(response => {
+            return response.text();
+        }).then(path => {
+            returnPath = path;
+        });
+    };
+
     const stock = {
         id: $('#stockId').val(),
         // stockImg: $('#stockImg').val(),
+        stockImg: file_data,
         stockTitle: $('#stockTitle').val(),
         stockText: $('#stockText').summernote('code'),
         startDate: startDate,
@@ -238,6 +270,29 @@ function handleSaveChangesButton() {
 
     $('#stockModal').modal('hide')
 }
+
+$(function () {
+    $('#deleteStockImgBtn').on('click', function () {
+        let deleteId = $('#stockId').val();
+        $.ajax(
+            {
+                type: 'DELETE',
+                url: '/rest/deleteStockImage/' + deleteId,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    console.log("stockImage " + deleteId + " deleted.")
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+    })
+
+})
+
+
 
 /**
  * Edit button handler
@@ -296,7 +351,7 @@ function handleAddNewStockButton() {
  * function clears modal window fields
  */
 function stockModalClearFields() {
-     $("#stockId").val("")
+    $("#stockId").val("")
     $("#stockTitle").val("")
     $('#stockText').summernote('code', "")
     $("#startDate").val("")
