@@ -292,7 +292,28 @@ $(function () {
 
 })
 
-
+/**
+ * При изменении содержимого формы для ввода картинки, удаляет старую картинку с диска и БД
+ *
+ */
+$("#fileImgInput" +
+    "").change(function () {
+    let deleteId = $('#stockId').val();
+    $.ajax(
+        {
+            type: 'DELETE',
+            url: '/rest/deleteStockImage/' + deleteId,
+            contentType: false,
+            processData: false,
+            cache: false,
+            success: function () {
+                console.log("stockImage " + deleteId + " deleted.")
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+});
 
 /**
  * Edit button handler

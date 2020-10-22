@@ -84,3 +84,24 @@
 //         returnPath = path;
 //     });
 // };
+//
+//
+// $("#fileImgInput" +
+//     "").change(function () {
+//     let deleteId = $('#stockId').val();
+//     $.ajax(
+//         {
+//             type: 'DELETE',
+//             url: '/rest/deleteStockImage/' + deleteId,
+//             contentType: false,
+//             processData: false,
+//             cache: false,
+//             success: function (data) {
+//                 console.log("stockImage " + deleteId + " deleted.")
+//             },
+//             error: function (jqXhr, textStatus, errorThrown) {
+//                 console.log(errorThrown);
+//             }
+//         });
+// });
+
