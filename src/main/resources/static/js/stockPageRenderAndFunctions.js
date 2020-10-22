@@ -24,6 +24,8 @@ $(document).ready(function () {
     document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
     /*Modal window buttons*/
     document.getElementById('modalFooter').addEventListener('click', checkFields)
+    /*Handle checkbox listener*/
+    document.getElementById('published').addEventListener('change', publishCheckboxHandler)
 
     document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
 
@@ -60,11 +62,13 @@ function checkFields(event) {
         let filename = "default.jpg";
 
         try {
-            let fakefilename = $('#stockImg')[0].files[0].name;
+            let fakefilename = $('#fileImgInput')[0].files[0].name;
             if (fakefilename.indexOf('fakepath') === -1) {
                 filename = fakefilename;
+                console.log("Checking fields. Case1. filename = " + filename);
             } else {
                 filename = $(fakefilename).val().replace(/C:\\fakepath\\/i, '')
+                console.log("Checking fields. Case2. filename = " + filename);
                 invalidModalField("Ошибка загрузки. Повторите выбор файла", stockImgUrl)
             }
         } catch (err) {
@@ -106,6 +110,17 @@ function defineFilterAndFetchList(event) {
     lastPage.number = 0;
     lastPage.last = false;
     fetchStockList();
+}
+
+/**
+ * function that handles publish checkbox
+ */
+function publishCheckboxHandler() {
+    if (document.getElementById('published').checked) {
+        console.log("checked");
+    } else {
+        console.log("unchecked");
+    }
 }
 
 /**
@@ -175,8 +190,14 @@ function handleDeleteButtonClick(event) {
  * modal window "save changes" button handler
  */
 function handleSaveChangesButton() {
-    let startDate = $('#startDate').val()
-    let published = $('#published').val()
+    let startDate = $('#startDate').val();
+    let published = 'false';
+    console.log("$('#published').val() = " + $('#published').val());
+    if ($('#published').val() === 'on' || $('#published').val() === 'true'){
+        published = true;
+    }
+    // let published = $('#published').val();
+    console.log("handleSaveChangesButton. published: " + published);
     startDate = moment(startDate).format("YYYY-MM-DD")
     let endDate = ""
     if ($('#endDate').val() !== null || $('#endDate').val() !== "") {
@@ -189,7 +210,7 @@ function handleSaveChangesButton() {
 
     const stock = {
         id: $('#stockId').val(),
-        stockImg: $('#stockImg').val(),
+        // stockImg: $('#stockImg').val(),
         stockTitle: $('#stockTitle').val(),
         stockText: $('#stockText').summernote('code'),
         startDate: startDate,
@@ -208,7 +229,7 @@ function handleSaveChangesButton() {
             body: JSON.stringify(stock)
         }).then(function (response) {
             if (response.status === 200) {
-                successActionMainPage("#mainWindowAlert", "Акция успешно сохранена", "success")
+                successActionMainPage("#mainWindowAlert", "Акция успешно сохранена", "success");
             } else {
                 successActionMainPage("#mainWindowAlert", "Акция не сохранена", "error")
             }
@@ -230,12 +251,13 @@ function handleEditButtonClick(event) {
 
     function renderModalWindowEdit(stock) {
         let stockText = stock.stockText
-        $("#stockId").val(stock.id)
-        $("#stockTitle").val(stock.stockTitle)
-        $('#stockText').summernote('code', stockText)
-        $("#startDate").val(stock.startDate)
-        $("#endDate").val(stock.endDate)
-        $("#published").prop('checked', stock.published)
+        $("#stockId").val(stock.id);
+        $("#stockTitle").val(stock.stockTitle);
+        $('#stockText').summernote('code', stockText);
+        $("#startDate").val(stock.startDate);
+        $("#endDate").val(stock.endDate);
+        //$("#fileImgInput").val(stock.stockImg);
+        $("#published").prop('checked', stock.published);
     }
 
     fetch(stockApiUrl + `/${stockId}`, {
@@ -251,9 +273,13 @@ function handleEditButtonClick(event) {
  */
 function chekboxPublished(o) {
     if (o.checked == true) {
-        $("#published").val('true')
+        console.log("Published checkbox = " + o.checked);
+        $("#published").val('true');
+        console.log("Published checkbox = " + o.checked);
     } else {
+        console.log("Published checkbox = " + o.checked);
         $("#published").val('false')
+        console.log("Published checkbox = " + o.checked);
     }
 };
 
@@ -270,12 +296,12 @@ function handleAddNewStockButton() {
  * function clears modal window fields
  */
 function stockModalClearFields() {
-    $("#stockId").val("")
+     $("#stockId").val("")
     $("#stockTitle").val("")
     $('#stockText').summernote('code', "")
     $("#startDate").val("")
     $("#endDate").val("")
-    $("#published").val(false)
+    // $("#published").val(false)
 }
 
 /**
@@ -303,9 +329,14 @@ function renderStockList(data) {
         let sharedStocksQuantity = sharedStocks.length
         for (let i = 0; i < stocks.length; i++) {
             let stockId = stocks[i].id
-            let stockImg = "../../uploads/images/stocks/" + stocks[i].stockImg
+            let stockImgToRender = "../../uploads/images/stocks/" + stocks[i].stockImg
+            // console.log("StockId = " + stockId + ". StockImg to render: " + stockImgToRender)
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
-            let publish = stocks[i].published
+            let publish = stocks[i].published;
+            if (stockId === 1) {
+                console.log("StockId = " + stockId + ". ");
+                console.log("Publish: " + publish);
+            }
             if (publish === true) {
                 publish = "✔"
             } else {
@@ -321,7 +352,7 @@ function renderStockList(data) {
             row.append(`<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-4\">
-                                 <img class="card-img" src=${stockImg} width=\"250\" alt="Ошибка. Перезагрузите фото акции">
+                                 <img class="card-img" src=${stockImgToRender} width=\"250\" alt="Ошибка. Перезагрузите фото акции">
                                  <p></p>
                                  <p id="stockId" class="stockId">ID акции: ${stockId}</p>
                                     <p id="rating" class="rating">Рейтинг: ${rating}</p>

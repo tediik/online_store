@@ -140,22 +140,30 @@ public class StockServiceImpl implements StockService {
         Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
         String fileName = StringUtils.cleanPath(UUID.randomUUID() + "." + file.getOriginalFilename());
         String uniqueFilename = fileName.replaceAll("\\s+","");
+        log.debug("UpdatingStockImage. fileName: {}" + uniqueFilename);
         if (!file.isEmpty()) {
             Path fileNameAndPath = Paths.get(uploadDirectory, uniqueFilename);
+            log.debug("UpdatingStockImage. fileNameandPath: {}", fileNameAndPath);
             try {
                 byte[] bytes = file.getBytes();
                 Files.write(fileNameAndPath, bytes);
                 //Set stock image
                 stock.setStockImg(uniqueFilename);
+                log.debug("UpdatingStockImage. new StockImg: {}", uniqueFilename);
                 stockRepository.save(stock);
                 log.debug("File saved successfully: {}", uniqueFilename);
+                log.debug("UpdatingStockImage. Stock ID: {}", stock.getId());
+                log.debug("UpdatingStockImage. New StockImg: {}", stock.getStockImg());
             } catch (IOException e) {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }
         } else {
             log.debug("Failed to store file - file is not present {}", uniqueFilename);
         }
-        return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
+        String newFilePath = File.separator + "uploads" + File.separator + "images" + File.separator + "stocks" + File.separator + uniqueFilename;
+        log.debug("New file full path: {}", newFilePath);
+        return newFilePath;
+//        return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
     }
 
     /**
@@ -181,6 +189,6 @@ public class StockServiceImpl implements StockService {
         }
         //Set a default picture as a stock default Picture
         stock.setStockImg(defaultStockImg);
-        return File.separator + "uploads" + File.separator + "images" + File.separator + defaultStockImg;
+        return File.separator + "uploads" + File.separator + "images" + File.separator + "stocks" + File.separator + defaultStockImg;
     }
 }
