@@ -5,12 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <!--    summernote-->
+<!--    summernote-->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <!--    Toastr css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
-          integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
-          crossorigin="anonymous"/>
+          integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" />
 </head>
 <body>
 <header>
@@ -56,12 +55,11 @@
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-distribution"
                        role="tab"
-                       aria-controls="nav-home" aria-selected="true">Рассылка</a>
-                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-priceChange"
-                       role="tab"
-                       aria-controls="nav-profile" aria-selected="false">Изменение цены</a>
-                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-3" role="tab"
-                       aria-controls="nav-contact" aria-selected="false">Tab #3</a>
+                       aria-controls="nav-home" aria-selected="true">E-mail рассылка</a>
+                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-priceChange" role="tab"
+                       aria-controls="nav-profile" aria-selected="false">Снижение цен</a>
+                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#priceListCreate" role="tab"
+                       aria-controls="nav-contact" aria-selected="false">Ежедневный прайс</a>
                     <a class="nav-item nav-link" id="nav-categories-and-topics-tab" data-toggle="tab"
                        href="#nav-categories-and-topics" role="tab"
                        aria-controls="nav-categories-and-topics" aria-selected="false">Обратная связь</a>
@@ -124,7 +122,15 @@
                     </ul>
                     <button class="btn btn-primary" id="savePriceChangeTemplateChanges">Сохранить шаблон</button>
                 </div>
-                <div class="tab-pane fade" id="nav-3" role="tabpanel" aria-labelledby="nav-3-tab">3</div>
+                <div class="tab-pane fade" id="priceListCreate" role="tabpanel" aria-labelledby="nav-3-tab">
+                    <form id="priceListCreateTimeChange">
+                        <div class="form-group" id="priceListCreateTimeChangeHere">
+                            <label for="priceTimeInput">Выберите время создания прайс-листа</label>
+                            <input class="form-control" type="time" id="priceTimeInput" style="width: 10%">
+                        </div>
+                        <button class="btn btn-primary" id="savePriceTimeChanges">Сохранить</button>
+                    </form>
+                </div>
                 <!--  Раздел для редактирования категорий и тем -->
                 <div class="tab-pane fade" id="nav-categories-and-topics" role="tabpanel"
                      aria-labelledby="nav-categories-and-topics-tab">
@@ -308,13 +314,13 @@
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
-        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
-        crossorigin="anonymous"></script>
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous"></script>
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <link href="/static/css/summernote.css" rel="stylesheet">
 <script src="/static/js/managerSettingsPage.js"></script>
 <script src="/static/js/managerPriceChangeSetting.js"></script>
+<script src="/static/js/managerPriceListCreate.js"></script>
 <script src="/static/js/managerCategoriesSetting.js"></script>
 </body>
 </html>
