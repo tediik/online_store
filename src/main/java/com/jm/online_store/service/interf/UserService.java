@@ -23,7 +23,10 @@ public interface UserService {
 
     void changeUserStatus(Long id);
 
-    boolean restoreUser(String email);
+    boolean checkUserStatus(String email, String password);
+
+    void restoreUser(String email);
+
     void deleteByID(Long id);
 
     void updateUser(User user);

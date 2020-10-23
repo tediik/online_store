@@ -14,9 +14,7 @@ import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,12 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -71,6 +64,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод получения пользователей, подписанных на рассылку, по дню недели
+     *
      * @param dayNumber день недели
      * @return List<User>
      */
@@ -85,6 +79,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод получения списка пользователей, отсортированных в соответствии с выбранной ролью
+     *
      * @param roleString роль, по которой фильтруется список пользователей
      * @return List<User> отфильтрованный список пользователей
      */
@@ -102,6 +97,7 @@ public class UserServiceImpl implements UserService {
         }
         return filteredUsers;
     }
+
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
@@ -118,13 +114,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean isExist(String email) {
-        return userRepository.findByEmail(email).isPresent();
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            return false;
+        }
+        if (user.get().getStatus() == null) {
+            return true;
+        }
+        if (!user.get().getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
+            deleteByID(user.get().getId());
+            return false;
+        }
+        return true;
     }
 
     /**
      * метод добавления нового пользователя.
      * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
+     *
      * @param user полученный объект User
      */
     @Override
@@ -150,6 +159,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод обновления пользователя.
+     *
      * @param user пользователь, полученный из контроллера.
      */
     @Override
@@ -188,25 +198,58 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод, который изменяет статус пользователя при удалии
+     * Метод, который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
+     *
      * @param id
      */
     @Override
     @Transactional
-    public void changeUserStatus(Long id){
+    public void changeUserStatus(Long id) {
         User userStatusChange = getCurrentLoggedInUser();
         userStatusChange.setStatus(LocalDateTime.now());
         updateUser(userStatusChange);
     }
 
+    /**
+     * Метод, который проверяет статус клиента, если срок восстановления истек - удаляется
+     *
+     * @param email    - нужен для проверки на существование
+     * @param password - нужен для подтверждения подлинности
+     * @return
+     */
     @Override
     @Transactional
-    public boolean restoreUser(String email){
-        return true;
+    public boolean checkUserStatus(String email, String password) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            if (user.getStatus() != null) {
+                if (!user.getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
+                    deleteByID(user.getId());
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Метод для восстановления клиента
+     *
+     * @param email - емейл для восстановления
+     * @return
+     */
+    @Override
+    @Transactional
+    public void restoreUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        user.setStatus(null);
+        updateUser(user);
     }
 
     /**
      * метод удаления пользователя по идентификатору.
+     *
      * @param id идентификатор.
      */
     @Override
@@ -217,6 +260,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод регистрации нового User.
+     *
      * @param userForm User построенный из данных формы.
      */
     @Override
@@ -260,6 +304,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод проверки активации пользователя.
+     *
      * @param token   модель, построенная на основе пользователя, после подтверждения
      * @param request параметры запроса.
      * @return булево значение "true or false"
@@ -372,6 +417,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to add new user from admin page
+     *
      * @param newUser
      */
     @Override
@@ -386,6 +432,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
+     *
      * @param user
      * @return
      */
@@ -426,6 +473,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to cancel subscription
+     *
      * @param id
      */
     @Override
@@ -435,8 +483,10 @@ public class UserServiceImpl implements UserService {
         user.setDayOfWeekForStockSend(null);
         updateUserProfile(user);
     }
+
     /**
      * Метод сервиа для добавления нового адреса пользователю
+     *
      * @param user
      * @param address
      * @throws UserNotFoundException
@@ -486,6 +536,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which finds and returns the User by token after email confirmation
+     *
      * @return User
      */
     @Transactional
