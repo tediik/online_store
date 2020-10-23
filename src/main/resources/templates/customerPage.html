@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/static/css/customer.css">
+    <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="/static/css/jquery.fias.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
     <!-- CSS fot toaster -->
@@ -630,15 +631,16 @@
                         <div class="col">
                             <div id="orderModalBody">
 
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal">Close
-                </button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">Close
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -652,5 +654,6 @@
 <script src="/static/js/moment.js"></script>
 <script src="../static/js/customerProfilePageFunctions.js"></script>
 <script src="/static/js/customer-feedback-form.js"></script>
+<footer th:insert="/blocks/footer :: footer"></footer>
 </body>
 </html>

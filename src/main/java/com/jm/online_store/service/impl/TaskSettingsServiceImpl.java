@@ -31,7 +31,7 @@ public class TaskSettingsServiceImpl implements TaskSettingsService {
     }
 
     /**
-     * method updates raw in task_settings
+     * method updates row in task_settings
      * if repository returns int 1, that means that 1 row was updated.
      * if it will be 0 that means that there is no row with such name
      * and method throws {@link TaskNotFoundException}
