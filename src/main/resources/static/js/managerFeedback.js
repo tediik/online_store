@@ -332,9 +332,6 @@ function renderMessages(data, elementId) {
     };
     data.forEach(function (messages) {
         let postDateFeedback = new Date(messages.feedbackPostDate).toLocaleString('ru', options)
-        let minDateFeedback = new Date()
-        console.log(minDateFeedback)
-
         viewMessages += `<div id="div-${messages.id}" class="alert ${colorDivFeedback(messages.status)} mt-2">
                         <h5 class="font-weight-bold">№${messages.id} Категория: ${messages.topic.topicCategory}</h5>
                         <hr>  
@@ -373,7 +370,7 @@ function renderMessages(data, elementId) {
                                 </div>
                                 <div id="collapseTwo-${messages.id}" class="collapse" data-parent="#div-${messages.id}">
                                     <div class="card-body" id="card-body2-${messages.id}">
-                                        <input id="laterTime-${messages.id}" class="form-control" type="datetime-local" min="${minDateFeedback}">
+                                        <input id="laterTime-${messages.id}" class="form-control" type="datetime-local">
                                         <br>
                                         <button data-later-id="${messages.id}" data-laterstatus-id="${messages.status}" data-toggle-id="later" class="btn btn-success">Отложить обращение</button>
                                         <button data-inwork-id="${messages.id}" data-inworkstatus-id="${messages.status}" data-toggle-id="inwork" class="btn btn-primary">Вернуть в работу</button>
