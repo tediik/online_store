@@ -1,4 +1,4 @@
-//Этот метод не используется
+
 async function fillFavouritesGoods() {
     let response = await fetch("/customer/favouritesGoods");
     let content = await response.json();
@@ -41,7 +41,7 @@ async function addProductToBasket(id) {
         method: "PUT",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    fillBasket()
+    fillBasket();
 }
 
 $(document).on("click", "#showBasket", function () {

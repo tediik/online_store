@@ -15,9 +15,7 @@ import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -71,6 +69,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод получения пользователей, подписанных на рассылку, по дню недели
+     *
      * @param dayNumber день недели
      * @return List<User>
      */
@@ -85,6 +84,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод получения списка пользователей, отсортированных в соответствии с выбранной ролью
+     *
      * @param roleString роль, по которой фильтруется список пользователей
      * @return List<User> отфильтрованный список пользователей
      */
@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService {
         }
         return filteredUsers;
     }
+
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
@@ -125,6 +126,7 @@ public class UserServiceImpl implements UserService {
     /**
      * метод добавления нового пользователя.
      * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
+     *
      * @param user полученный объект User
      */
     @Override
@@ -150,6 +152,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод обновления пользователя.
+     *
      * @param user пользователь, полученный из контроллера.
      */
     @Override
@@ -189,6 +192,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод удаления пользователя по идентификатору.
+     *
      * @param id идентификатор.
      */
     @Override
@@ -199,6 +203,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * метод регистрации нового User.
+     *
      * @param userForm User построенный из данных формы.
      */
     @Override
@@ -225,23 +230,38 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void changeUsersMail(User user, String newMail) {
         String address = user.getAuthorities().toString().contains("ROLE_CUSTOMER") ? "/customer" : "/authority";
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
+        confirmTokenRepository.save(confirmationToken);
+
+        String message = String.format(
+                "Здравствуйте, %s! \n" +
+                        "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке: " +
+                        urlActivate + address + "/activatenewmail/%s",
+                user.getEmail(),
+                confirmationToken.getConfirmationToken()
+        );
+        mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
+        user.setEmail(newMail);
+    }
+
+    @Transactional
+    public void changeUsersPass(User user, String newMail) {
         user.setEmail(newMail);
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
-                "Hello, %s! \n" +
-                        "You have requested the email change. Please, confirm via link: " +
-                        urlActivate + address + "/activatenewmail/%s",
+                "Привет, %s! \n Ваш пароль изменен ",
                 user.getEmail(),
                 confirmationToken.getConfirmationToken()
-
         );
-        mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
+        mailSenderService.send(user.getEmail(), "Пароль успешно изменен", message, "pass change");
     }
 
     /**
      * метод проверки активации пользователя.
+     *
      * @param token   модель, построенная на основе пользователя, после подтверждения
      * @param request параметры запроса.
      * @return булево значение "true or false"
@@ -354,6 +374,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to add new user from admin page
+     *
      * @param newUser
      */
     @Override
@@ -368,6 +389,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
+     *
      * @param user
      * @return
      */
@@ -408,6 +430,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to cancel subscription
+     *
      * @param id
      */
     @Override
@@ -417,8 +440,10 @@ public class UserServiceImpl implements UserService {
         user.setDayOfWeekForStockSend(null);
         updateUserProfile(user);
     }
+
     /**
-     * Метод сервиа для добавления нового адреса пользователю
+     * Метод сервиса для добавления нового адреса пользователю
+     *
      * @param user
      * @param address
      * @throws UserNotFoundException
@@ -468,6 +493,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which finds and returns the User by token after email confirmation
+     *
      * @return User
      */
     @Transactional

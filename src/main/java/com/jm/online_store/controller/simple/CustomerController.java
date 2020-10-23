@@ -1,10 +1,8 @@
 package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CommentService;
-import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
@@ -14,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,16 +33,13 @@ import java.util.List;
 public class CustomerController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
-    private final OrderService orderService;
     private final CommentService commentService;
     private final FavouritesGroupService favouritesGroupService;
 
     /**
-     * метод получения данных зарегестрированного пользователя.
+     * метод получения данных зарегистрированного пользователя.
      * формирование модели для вывода в "view"
-     * модель данных, построенных на основе зарегестрированного User
+     * модель данных, построенных на основе зарегистрированного User
      *
      * @return
      */
@@ -67,31 +63,13 @@ public class CustomerController {
     public String updateUserProfile(User user, Model model) {
         User updateUser = userService.updateUserProfile(user);
         model.addAttribute("user", updateUser);
-        return "customerPage";
+
+        return "redirect:/customer";
     }
 
     @GetMapping("/change-password")
     public String changePassword() {
         return "changePassword";
-    }
-
-    /**
-     * метод обработки изменения пароля User.
-     *
-     * @param model       модель для view
-     * @param oldPassword старый пароль
-     * @param newPassword новый пароль
-     * @return страница User
-     */
-    @PostMapping("/change-password")
-    public String changePassword(Model model,
-                                 @RequestParam String oldPassword,
-                                 @RequestParam String newPassword) {
-        User user = userService.getCurrentLoggedInUser();
-        if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
-            model.addAttribute("message", "Pls, check your old password!");
-        }
-        return "redirect:/customer";
     }
 
     @GetMapping("/activatenewmail/{token}")
