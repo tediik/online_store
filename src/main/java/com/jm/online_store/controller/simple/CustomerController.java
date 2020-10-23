@@ -3,6 +3,7 @@ package com.jm.online_store.controller.simple;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CommentService;
+import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.UserService;
