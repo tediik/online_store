@@ -14,7 +14,6 @@
 <body>
 <header>
     <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
             </ul>
@@ -55,11 +54,11 @@
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-distribution"
                        role="tab"
-                       aria-controls="nav-home" aria-selected="true">Рассылка</a>
+                       aria-controls="nav-home" aria-selected="true">E-mail рассылка</a>
                     <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-priceChange" role="tab"
-                       aria-controls="nav-profile" aria-selected="false">Изменение цены</a>
-                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-3" role="tab"
-                       aria-controls="nav-contact" aria-selected="false">Tab #3</a>
+                       aria-controls="nav-profile" aria-selected="false">Снижение цен</a>
+                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#priceListCreate" role="tab"
+                       aria-controls="nav-contact" aria-selected="false">Ежедневный прайс</a>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -73,7 +72,7 @@
                                 почту</label>
                         </div>
                         <div class="form-group" id="distributionTimeDiv">
-                            <label for="distributionTimeInput">Выбирите время для рассылки</label>
+                            <label for="distributionTimeInput">Выберите время для рассылки</label>
                             <input class="form-control" type="time" id="distributionTimeInput" style="width: 10%">
                         </div>
                         <button class="btn btn-primary" id="saveSettingsChanges">Сохранить</button>
@@ -119,7 +118,15 @@
                     </ul>
                     <button class="btn btn-primary" id="savePriceChangeTemplateChanges">Сохранить шаблон</button>
                 </div>
-                <div class="tab-pane fade" id="nav-3" role="tabpanel" aria-labelledby="nav-3-tab">3</div>
+                <div class="tab-pane fade" id="priceListCreate" role="tabpanel" aria-labelledby="nav-3-tab">
+                    <form id="priceListCreateTimeChange">
+                        <div class="form-group" id="priceListCreateTimeChangeHere">
+                            <label for="priceTimeInput">Выберите время создания прайс-листа</label>
+                            <input class="form-control" type="time" id="priceTimeInput" style="width: 10%">
+                        </div>
+                        <button class="btn btn-primary" id="savePriceTimeChanges">Сохранить</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -138,5 +145,6 @@
 <link href="/static/css/summernote.css" rel="stylesheet">
 <script src="/static/js/managerSettingsPage.js"></script>
 <script src="/static/js/managerPriceChangeSetting.js"></script>
+<script src="/static/js/managerPriceListCreate.js"></script>
 </body>
 </html>
