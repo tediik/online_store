@@ -43,25 +43,26 @@ function handleSearchButton() {
 }
 
 function getCurrent() {
-    $.ajax({
-        url: '/users/getCurrent',
-        type: 'GET',
-        dataType: 'json',
-        success: function (user) {
-            let role = user.roles.map(role => role.name);
-            $('#user-email').append(user.email);
-            if (role.includes("ROLE_ADMIN") || role.includes("ROLE_MANAGER")) {
-                $('#role-redirect').text("Профиль").click(function () {
-                    $('#role-redirect').attr("href", "/authority/profile");
-                });
+    fetch('/users/getCurrent')
+        .then(response => {
+            if (response.status == 200) {
+                response.json()
+                    .then(user => {
+                        let role = user.roles.map(role => role.name);
+                        $('#user-email').append(user.email);
+                        if (role.includes("ROLE_ADMIN") || role.includes("ROLE_MANAGER")) {
+                            $('#role-redirect').text("Профиль").click(function () {
+                                $('#role-redirect').attr("href", "/authority/profile");
+                            });
+                        }
+                        if (role.includes("ROLE_ADMIN")) {
+                            $('#profile-main-link-manager, #profile-news, #profile-promotion').hide();
+                        } else if (role.includes("ROLE_MANAGER")) {
+                            $('#profile-main-link-admin').hide();
+                        }
+                    })
             }
-            if (role.includes("ROLE_ADMIN")) {
-                $('#profile-main-link-manager, #profile-news, #profile-promotion').hide();
-            } else if (role.includes("ROLE_MANAGER")) {
-                $('#profile-main-link-admin').hide();
-            }
-        }
-    })
+        })
 }
 
 function register() {
@@ -154,7 +155,7 @@ function fillSomeProducts(data) {
                 $(prodsView).append(`<div class="row">` + item);
             }
             $(function () {
-                if(data[key].rating !== null) {
+                if (data[key].rating !== null) {
                     $(`#rate${data[key].id}`).rateYo({
                         rating: data[key].rating,
                         readOnly: true

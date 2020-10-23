@@ -5,9 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <header th:insert="/blocks/header :: header"></header>
-<div class="container-fluid">
+<div class="wrapper flex-grow-1 container-fluid">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
             <a class="btn btn-link" href="/news"><---обратно</a>
@@ -20,5 +20,6 @@
         </div>
     </div>
 </div>
+<footer th:replace="/blocks/footer :: footer"></footer>
 </body>
 </html>

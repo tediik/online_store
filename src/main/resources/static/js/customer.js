@@ -38,7 +38,7 @@ async function addProductToBasket(id) {
         method: "PUT",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
-    fillBusket();
+    fillBasket();
 }
 
 $(document).on("click", "#showBasket", function () {

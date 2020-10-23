@@ -287,19 +287,33 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void changeUsersMail(User user, String newMail) {
         String address = user.getAuthorities().toString().contains("ROLE_CUSTOMER") ? "/customer" : "/authority";
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
+        confirmTokenRepository.save(confirmationToken);
+
+        String message = String.format(
+                "Здравствуйте, %s! \n" +
+                        "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке: " +
+                        urlActivate + address + "/activatenewmail/%s",
+                user.getEmail(),
+                confirmationToken.getConfirmationToken()
+        );
+        mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
+        user.setEmail(newMail);
+    }
+
+    @Transactional
+    public void changeUsersPass(User user, String newMail) {
         user.setEmail(newMail);
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
-                "Hello, %s! \n" +
-                        "You have requested the email change. Please, confirm via link: " +
-                        urlActivate + address + "/activatenewmail/%s",
+                "Привет, %s! \n Ваш пароль изменен ",
                 user.getEmail(),
                 confirmationToken.getConfirmationToken()
-
         );
-        mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
+        mailSenderService.send(user.getEmail(), "Пароль успешно изменен", message, "pass change");
     }
 
     /**
@@ -485,7 +499,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод сервиа для добавления нового адреса пользователю
+     * Метод сервиса для добавления нового адреса пользователю
      *
      * @param user
      * @param address
