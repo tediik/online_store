@@ -15,7 +15,7 @@ $(document).ready(function() {
     /*по нажатию на табу "Перечень обращений и ответов" достаем все обращения*/
     document.getElementById('answersFeedback-tab').addEventListener('click', getAllFeedbackCurrentCustomer)
     /*проверяем какая кнопка была нажата на обращении*/
-    document.getElementById('messagesAndAnswersFeedback').addEventListener('click', checkButtonOnFeedback)
+    document.getElementById('messagesAndAnswersFeedback').addEventListener('click', checkButtonOnFeedbackCustomer)
 })
 
 /**
@@ -119,7 +119,7 @@ function getAllFeedbackCurrentCustomer() {
         })
 }
 
-function colorButtonAnswerFeedback(answer) {
+function colorButtonAnswerFeedbackCustomer(answer) {
     if (answer === null) {
         return 'btn-light'
     } else {
@@ -127,7 +127,7 @@ function colorButtonAnswerFeedback(answer) {
     }
 }
 
-function checkExistAnswerFeedback(answer) {
+function checkExistAnswerFeedbackCustomer(answer) {
     if (answer === null) {
         return `disabled`
     } else {
@@ -135,7 +135,7 @@ function checkExistAnswerFeedback(answer) {
     }
 }
 
-function colorStatusFeedback(status) {
+function colorStatusFeedbackCustomer(status) {
     if (status === 'IN_PROGRESS') {
         return 'badge-primary'
     } else if (status === 'LATER') {
@@ -147,7 +147,7 @@ function colorStatusFeedback(status) {
     }
 }
 
-function colorDivFeedback(status) {
+function colorDivFeedbackCustomer(status) {
     if (status === 'IN_PROGRESS') {
         return 'alert-primary'
     } else if (status === 'LATER') {
@@ -173,33 +173,34 @@ function renderMessagesCurrentCustomer(data) {
     };
     data.forEach(function (messages) {
         let postDateFeedback = new Date(messages.feedbackPostDate).toLocaleString('ru', options)
-        viewMessagesCurrentCustomer += `<div id="div-${messages.id}" class="alert ${colorDivFeedback(messages.status)} mt-2">
+        viewMessagesCurrentCustomer += `<div id="divCustomer-${messages.id}" class="alert ${colorDivFeedbackCustomer(messages.status)} mt-2">
                         <h5 class="font-weight-bold">№${messages.id} Категория: ${messages.topic.topicCategory}</h5>
                         <hr>  
                         <h6><u>Тема: ${messages.topic.topicName}</u></h6>
-                        <span class="badge badge-pill ${colorStatusFeedback(messages.status)} text-right">${messages.status}</span>
+                        <span class="badge badge-pill ${colorStatusFeedbackCustomer(messages.status)} text-right">${messages.status}</span>
                         <br>  
                         <p>${messages.message}</p>
-                        <div class="container-fluid row" id="divContainer">
-                            <div class="text-left align-text-bottom col" id="divSpan">
-                                <span id="postingDateRender">Дата обращения: ${postDateFeedback}</span>
+                        <div class="container-fluid row" id="divContainerCustomer">
+                            <div class="text-left align-text-bottom col" id="divSpanCustomer">
+                                <span id="postingDateRenderCustomer">Дата обращения: ${postDateFeedback}</span>
                             </div>
-                            <div class="text-right col" id="divButtons">
-                                <button type="button" data-toggle="modal" data-target="#deleteFeedbackModal" class="btn btn-danger" id="btn_delete_Feedback" 
-                                data-toggle-id="delete" data-feedback-id="${messages.id}" >Удалить</button>
+                            <div class="text-right col" id="divButtonsC">
+                                <button type="button" data-toggle="modal" data-target="#deleteFeedbackModal" class="btn btn-danger" id="btn_delete_Feedback_Customer" 
+                                data-toggle-id="cdelete" data-deletefeedback-id="${messages.id}" >Удалить</button>
                             </div>
                         </div>
                         <hr>
                         <div class="card">
-                                    <div class="card-header" id="headingOne">
+                                    <div class="card-header" id="headingOneCustomer">
                                         <h5 class="mb-0">
-                                            <button ${checkExistAnswerFeedback(messages.answer)} type="button" 
-                                            class="btn ${colorButtonAnswerFeedback(messages.answer)}" id="btn_show_Answer" 
-                                            data-toggle-id="show" data-feedback-id="${messages.id}"
-                                            data-toggle="collapse" data-target="#collapseOne-${messages.id}" aria-expanded="true" aria-controls="collapseOne">Посмотреть ответ</button>
+                                            <button ${checkExistAnswerFeedbackCustomer(messages.answer)} type="button" 
+                                            class="btn ${colorButtonAnswerFeedbackCustomer(messages.answer)}" id="btn_show_Answer_Customer" 
+                                            data-toggle-id="cshow" data-cfeedback-id="${messages.id}"
+                                            data-toggle="collapse" data-target="#collapseOneCustomer-${messages.id}" aria-expanded="true" 
+                                            aria-controls="collapseOneCustomer-${messages.id}">Посмотреть ответ</button>
                                         </h5>
                                     </div>
-                                <div id="collapseOne-${messages.id}" class="collapse" aria-labelledby="headingOne" data-parent="#div-${messages.id}">
+                                <div id="collapseOneCustomer-${messages.id}" class="collapse" aria-labelledby="headingOneCustomer" data-parent="#divCustomer-${messages.id}">
                                     <div class="card-body" readonly>
                                         <p>${messages.answer}</p>
                                     </div>
@@ -210,23 +211,23 @@ function renderMessagesCurrentCustomer(data) {
     document.getElementById('messagesAndAnswersFeedback').innerHTML = viewMessagesCurrentCustomer;
 }
 
-function checkButtonOnFeedback(event) {
-    let id = event.target.dataset.feedbackId
-    if (event.target.dataset.toggleId === "show") {
+function checkButtonOnFeedbackCustomer(event) {
+    let delId = event.target.dataset.deletefeedbackId
+    if (event.target.dataset.toggleId === "cshow") {
 
     }
-    if (event.target.dataset.toggleId === "delete") {
-        deleteFeedback(id)
+    if (event.target.dataset.toggleId === "cdelete") {
+        deleteFeedbackCustomer(delId)
     }
 }
 
-function deleteFeedback(id) {
+function deleteFeedbackCustomer(id) {
     if (confirm("Вы уверены что хотите удалить ообращение?")) {
         fetch(`/api/feedback/${id}`, {
             method: 'DELETE'
         }).then(function (response) {
             if (response.ok) {
-                $('#div-' + id).remove()
+                $('#divCustomer-' + id).remove()
                 toastr.success("Обращение было удалено.");
             } else {
                 toastr.error("Обращение не было удалено.");

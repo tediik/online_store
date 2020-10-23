@@ -1,76 +1,92 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>News Management</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Manager Feedback</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!--toastr CSS-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+
 </head>
 <body>
+<header th:insert="/blocks/header :: header"></header>
+<main>
 
-<header>
-    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
+    <div class="container-fluid">
+        <div class="row">
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-            </ul>
-        </div>
-        <div class="navbar-text"><a th:href="@{/logout}">Выйти</a></div>
-    </nav>
-</header>
+            <!--навигация слева-->
+            <div class="col-md-2">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" th:href="@{/manager}">
+                            Главная
+                        </a>
+                    </li>
 
-<div class="container-fluid">
-    <div class="row content">
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/news">
+                            Новости
+                        </a>
+                    </li>
 
-        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager">Главная</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/stocks"> Акции</a>
-            </div>
-            <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/authority/profile">Профиль</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/products"> Товары</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/reports">Отчёты</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a id="getAllFeedback" class="btn btn-outline-primary">Обратная связь</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/settings"> Настройки</a>
-            </div>
-        </div>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/stocks">
+                            Акции
+                        </a>
+                    </li>
 
-        <div class="col-sm-8">
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
-                    <div class="col-md-9">
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/authority/profile">
+                            Профиль
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/products">
+                            Товары
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/reports">
+                            Отчёты
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a id="nav-link-feedbackManager" class="nav-link" data-toggle="tab" href="#feedbackManager">
+                            Обратная связь
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/settings">
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--конец навигации слева-->
+
+            <div class="col-sm-8">
+                <div class="tab-content">
+
+                    <div class="tab-pane fade" id="feedbackManager" role="tabpanel">
                         <ul class="nav nav-tabs" id="navbarFeedbackManager">
-                            <!-- Первая вкладка все обращения (активная) -->
+                            <!-- Первая вкладка обращения в работе -->
                             <li class="nav-item">
-                                <a class="nav-link active" id="nav-link_all_feedback" data-toggle="tab"
-                                   data-toggle-id="allFeedback" href="#tab_all_feedback">Все</a>
-                            </li>
-                            <!-- Вторая вкладка обращения в работе -->
-                            <li class="nav-item">
-                                <a class="nav-link" id="nav-link_in_progress_feedback" data-toggle="tab"
+                                <a class="nav-link active" id="nav-link_in_progress_feedback" data-toggle="tab"
                                    data-toggle-id="inProgressFeedback" href="#tab_in_progress_feedback">В работе</a>
                             </li>
-                            <!-- Третья вкладка отложенные обращения-->
+                            <!-- Вторая вкладка отложенные обращения-->
                             <li class="nav-item">
                                 <a class="nav-link" id="nav-link_later_feedback" data-toggle="tab"
                                    data-toggle-id="laterFeedback" href="#tab_later_feedback">Отложенные</a>
                             </li>
-                            <!-- Четвертая вкладка завершенные обращения-->
+                            <!-- Третья вкладка завершенные обращения-->
                             <li class="nav-item">
                                 <a class="nav-link" id="nav-link_resolved_feedback" data-toggle="tab"
                                    data-toggle-id="resolvedFeedback"
@@ -80,22 +96,17 @@
 
                         <!-- Блоки с контентом -->
                         <div class="tab-content mb-5" id="feedbackTabContent">
-                            <!-- Первый блок (он отображается по умолчанию, т.к. имеет классы show и active) -->
-                            <div class="tab-pane fade show active" id="tab_all_feedback">
-                                <div id="all_feedback">
-                                </div>
-                            </div>
-                            <!-- Второй блок -->
-                            <div class="tab-pane fade" id="tab_in_progress_feedback">
+                            <!-- Первый блок -->
+                            <div class="tab-pane fade show active" id="tab_in_progress_feedback">
                                 <div id="in_progress_feedback">
                                 </div>
                             </div>
-                            <!-- Третий блок -->
+                            <!-- Второй блок -->
                             <div class="tab-pane fade" id="tab_later_feedback">
                                 <div id="later_feedback">
                                 </div>
                             </div>
-                            <!-- Четвертый блок -->
+                            <!-- Третий блок -->
                             <div class="tab-pane fade" id="tab_resolved_feedback">
                                 <div id="resolved_feedback">
                                 </div>
@@ -106,8 +117,7 @@
             </div>
         </div>
     </div>
-</div>
-
+</main>
 <!--bootstrap scripts-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
