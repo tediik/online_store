@@ -75,7 +75,7 @@ public class CustomerRestController {
      * @param id идентификатор покупателя
      * @return ResponseEntity.ok()
      */
-    @PostMapping("/deleteProfile/{id}")
+    @DeleteMapping("/deleteProfile/{id}")
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
         userService.changeUserStatus(id);
         return ResponseEntity.ok("Delete profile");

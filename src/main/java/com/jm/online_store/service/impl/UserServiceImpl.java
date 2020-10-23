@@ -215,7 +215,9 @@ public class UserServiceImpl implements UserService {
      *
      * @param email    - нужен для проверки на существование
      * @param password - нужен для подтверждения подлинности
-     * @return
+     * @return - false - если такой пользователь существует и статус не равен null,
+     * и статус больше равен больше 30 дней
+     * true - то есть предлагаем пользователю восстановится, если статус меньше 30 дней
      */
     @Override
     @Transactional
@@ -237,7 +239,6 @@ public class UserServiceImpl implements UserService {
      * Метод для восстановления клиента
      *
      * @param email - емейл для восстановления
-     * @return
      */
     @Override
     @Transactional

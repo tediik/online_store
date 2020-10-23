@@ -54,10 +54,10 @@ function functionRestore() {
         body: email
     }).then(function (res) {
         if (res.status === 200) {
-            toastr.success(res, {timeOut: 50000});
+            toastr.success(res, {timeOut: 5000});
             document.getElementById("formLogin").submit();
         } else {
-            toastr.error(res, {timeOut: 50000});
+            toastr.error(res, {timeOut: 5000});
             document.location.href = "/login";
         }
     })
