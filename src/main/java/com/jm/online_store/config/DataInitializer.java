@@ -8,6 +8,7 @@ import com.jm.online_store.model.Description;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.Review;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.model.SharedStock;
@@ -25,6 +26,7 @@ import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.SharedStockService;
@@ -77,13 +79,14 @@ public class DataInitializer {
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
     private final CommentService commentService;
+    private final ReviewService reviewService;
 
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   // @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+//  @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -98,6 +101,7 @@ public class DataInitializer {
         commonSettingsInit();
         feedbackTopicsInit();
         commentsInit();
+        reviewsInit();
     }
 
     /**
@@ -1169,5 +1173,49 @@ public class DataInitializer {
         commentService.addCommentInit(comment1);
         commentService.addCommentInit(comment2);
         commentService.addCommentInit(comment3);
+    }
+    /**
+     * Init method for review
+     */
+    public void reviewsInit() {
+
+        Review review1 = new Review();
+        Review review2 = new Review();
+        Review review3 = new Review();
+
+        review1.setId(1L);
+        review2.setId(2L);
+        review3.setId(3L);
+        review1.setReviewDate(LocalDateTime.now());
+        review2.setReviewDate(LocalDateTime.now());
+        review3.setReviewDate(LocalDateTime.now());
+        review1.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        review2.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        review3.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        review1.setProductId(1L);
+        review2.setProductId(1L);
+        review3.setProductId(1L);
+        review1.setContent("Пожалуй это лучший компьютер который я когда либо видел и держал в руках, надеюсь он сослужит" +
+                " мне хорошую службу.\n" +
+                "Перед покупкой смотрел на конфигурацию с i9 и 5500m, в итоге по опыту прошлых поколений сделал выбор в " +
+                "пользу i7 и 5300m и не прогадал. В моих задачах производительность идентичная MacBook с i9 но более " +
+                "старшая модель при высоких нагрузках нагревается и сбрасывает частоты что у данной модели не обнаружено," +
+                " и в итоге по сравнению с ноутбуком товарища c i9 5500m Xcode работает у меня стабильней, и " +
+                "производительность на одно ядро выше, и работает он куда тише.");
+        review2.setContent("По производительности большой разницы для меня нет.Проект собирается плюс минус так же. " +
+                "Только теперь температура во время сборки доходит максимум до 65 градусов вместо 80-85.Ноутбук стал " +
+                "немного больше по габаритам, но в сумку от пятнашки вошел.Звук вроде хороший, качество экрана особо " +
+                "без изменений. Не понятно достают ли клавиши до экрана когда ноутбук лежит в сумке, вроде отметин " +
+                "пока на нем нет. На старом доставали и царапали покрытие экрана. Можно выкинуть внешнюю клавиатуру. " +
+                "Мышь теперь то же не нужна.");
+        review3.setContent("Для меня важно было найти баланс между решением рабочих задач (разработка на Java), " +
+                "любовью к потреблению контента (YouTube, PornoHub, Горячие мамочки) и периодическими поездками. " +
+                "Производительная начинка вкупе с большой диагональю экрана и автономностью работы у этой прошки " +
+                "полностью меня устроили. Надеюсь, Apple докажет и в этот раз свою состоятельность, и менять мак в связи" +
+                "с не актульностью придется не раньше 2025)");
+
+        reviewService.addReviewInit(review1);
+        reviewService.addReviewInit(review2);
+        reviewService.addReviewInit(review3);
     }
 }
