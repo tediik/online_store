@@ -17,24 +17,25 @@ $(document).ready(function () {
  * Функция добавления заявки на ремонт
  */
 function addRepairOrder() {
-    let repairOrder = {
-        fullNameClient: document.getElementById('fullNameClient').value,
-        telephoneNumber: document.getElementById('telephoneNumber').value,
-        nameDevice: document.getElementById('nameDevice').value,
-        guarantee: document.getElementById('guaranteeCheckbox').checked,
-        fullTextProblem: document.getElementById('fullTextProblem').value
-    }
     if (checkFieldsAddRepairOrder()) {
+        let order = {
+            fullNameClient: document.getElementById('fullNameClient').value,
+            telephoneNumber: document.getElementById('telephoneNumber').value,
+            nameDevice: document.getElementById('nameDevice').value,
+            guarantee: document.getElementById('guaranteeCheckbox').checked,
+            fullTextProblem: document.getElementById('fullTextProblem').value
+        };
         fetch('/service/addRepairOrder', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-type': 'application/json; charset=UTF-8'
             },
-            body: JSON.stringify(repairOrder)
+            body: JSON.stringify(order)
         }).then(function (response) {
             if (response.status === 200) {
                 toastr.success("Заявка успешно добавлена.");
+                getWorkOrder(order);
                 $('#fullTextProblem').summernote('code', '')
                 document.getElementById('fullNameClient').value = ''
                 document.getElementById('telephoneNumber').value = ''
@@ -45,6 +46,29 @@ function addRepairOrder() {
             }
         })
     }
+}
+
+/**
+ * Функция возвращает файл заказ-наряда
+ * @param order заказ на ремонт
+ */
+function getWorkOrder(order) {
+    fetch('/service/getWorkOrder', {
+        method: 'POST',
+        body: JSON.stringify(order)
+    }).then(function (response) {
+        if (response.status === 200) {
+            response.blob().then(blob => {
+                let url = window.URL.createObjectURL(blob);
+                let file = document.createElement('a');
+                file.href = url;
+                file.download = `work_order.docx`;
+                file.click();
+            })
+        } else {
+            alert("Заказа не найдено")
+        }
+    })
 }
 
 /**
