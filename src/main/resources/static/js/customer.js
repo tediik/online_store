@@ -299,9 +299,14 @@ async function clearFavouritGroup(idGroup, listIdProducts) {
  */
 $(document).on("click", ".button-edit-fav-group", function () {
     let thisId = $(this).attr("id");
-    $(".ok-cancel-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
-    $(this).addClass("hidden");
-    $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", false);
+    let noEditGroup = $(".select-group-tr-input:first").val();
+    if ($(".select-group-tr-input[id='" + thisId + "']").val() != noEditGroup) {
+        $(".ok-cancel-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
+        $(this).addClass("hidden");
+        $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", false);
+    } else {
+        toastr.error("Редактирование невозможно, основной список!");
+    }
 });
 /**
  * Обработчик нажатия на кнопку DELETE в выборе списка избранного
