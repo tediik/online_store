@@ -30,7 +30,7 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Topic topic;
 
     @ManyToOne(fetch = FetchType.LAZY)

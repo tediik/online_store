@@ -114,7 +114,7 @@ function getAllFeedbackCurrentCustomer() {
                     renderMessagesCurrentCustomer(messages)
                 })
             } else {
-                console.log('Что-то не ладное творится в наших чертогах.')
+                console.log('Ошибка запроса.')
             }
         })
 }
