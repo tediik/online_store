@@ -46,22 +46,29 @@ public class ProductForFavouritesGroupRestController {
         return ResponseEntity.ok(favouritesGroupProductService.getProductSet(favouritesGroup, user));
     }
 
-    @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroup/{id}")
-    public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
+    @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroup/{idGroup}")
+    public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody Long idProduct, @PathVariable("idGroup") Long id) {
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
+        Product product = productService.findProductById(idProduct).orElseThrow();
         favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup, user);
-        return ResponseEntity.ok("deleteProductFromFavouritesGroupOK");
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroupAll")
-    public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody Long id) {
+    @DeleteMapping(value = "/customer/clearFavouritesGroup/{idGroup}")
+    public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody ArrayList<Long> idProducts, @PathVariable("idGroup") Long idGroup) {
+        User user = userService.getCurrentLoggedInUser();
+        FavouritesGroup favouritesGroup = favouritesGroupService.findById(idGroup).orElseThrow();
+        System.out.println(" idGroup=" + idGroup + "   idProducts = " + idProducts);
+        for (int i = 0; i < idProducts.size(); i++){
+            Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
+            favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup, user);
+        }
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/customer/deleteProductFromFavouritesGroup/{idNewGroup}/{idOldGroup}")
     public ResponseEntity moveProducts(@RequestBody ArrayList<Long> idProducts, @PathVariable("idNewGroup") Long idNewGroup, @PathVariable("idOldGroup") Long idOldGroup) {
-        System.out.println("idNewGroup=" + idNewGroup + "      idOldGroup=" + idOldGroup + "       idProducts=" + idProducts);
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup newFavouritesGroup = favouritesGroupService.findById(idNewGroup).orElseThrow();
         FavouritesGroup oldFavouritesGroup = favouritesGroupService.findById(idOldGroup).orElseThrow();

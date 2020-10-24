@@ -1,4 +1,3 @@
-
 async function fillFavouritesGoods() {
     let response = await fetch("/customer/favouritesGoods");
     let content = await response.json();
@@ -26,16 +25,28 @@ async function fillFavouritesGoods() {
 }
 
 async function deleteProductFromFavouritGoods(id) {
-    await fetch("/customer/favouritesGoods", {
-        method: "DELETE",
-        body: id,
-        headers: {"Content-Type": "application/json; charset=utf-8"}
-    });
-    let idGroup = $('.dropdown-item:first').attr("id");
+    let idGroup = $('.get-favourites-group-btn').attr("id");
+    if (idGroup == 1) {
+        await fetch("/customer/favouritesGoods", {
+            method: "DELETE",
+            body: id,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        });
+    } else {
+        await fetch("/customer/deleteProductFromFavouritesGroup/" + idGroup, {
+            method: "DELETE",
+            body: id,
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        });
+    }
     fillFavouritesProducts(idGroup);
-    //await fillFavouritesGoods();
 }
 
+/**
+ * Добавление Товара в корзину
+ * @param id
+ * @returns {Promise<void>}
+ */
 async function addProductToBasket(id) {
     await fetch(`/api/basket/add/${id}`, {
         method: "PUT",
@@ -64,7 +75,69 @@ $(document).on("click", ".btn-copy-product", function () {
     } else {
         toastr.error("Выбирите список!");
     }
+    defaultInterface();
+    $('.close').trigger('click');
 });
+/**
+ * Закрываем модулку
+ */
+$(document).on("click", ".modal-footer button", function (){
+    defaultInterface();
+    cancelNevGroup();
+})
+$(document).on("click", 'button[class="close"]', function (){
+    defaultInterface();
+    cancelNevGroup();
+})
+
+/**
+ * Закрыть модалку выбора/создания списка избранных товаров
+ */
+function closeModalFavouritesList() {
+    $("#exampleModal").removeClass("show");
+    $("body").removeClass("modal-open");
+    defaultBtnGroup ();
+    defaultInterface();
+    cancelNevGroup();
+}
+/**
+ * Нажатие на чекбоксы для выбора списка в который будем перемещать продукты
+ */
+$(document).on("click", ".check-favourites-group", function () {
+        let checkNewGroup = $(".check-favourites-group:checked").map(function () {
+            return this.id;
+        }).get();
+        let checkOldGroup = $(".select_product:checked").map(function () {
+            return this.id;
+        }).get();
+        if ((checkNewGroup.length > 0) && (checkOldGroup.length > 0)) {
+            $(".btn-copy-product").attr("disabled", false);
+        } else {
+            $(".btn-copy-product").attr("disabled", true);
+        }
+    }
+);
+
+/**
+ * Делаем стили по умолчанию(как будто только зашли в ИЗБРАННОЕ)
+ */
+function defaultInterface(){
+    $(".favouritesgroups").removeClass("selected");
+    $("#addInOverGroup").removeClass("hidden");
+    $("#escape").addClass("hidden");
+ //   if ($('.ch_select_all').is(':checked')){
+        $('.ch_select_all').prop('checked', false); // убираем галочку с "Выделить все"
+        $(".select_product:checked").prop('checked', false); // убираем галочки с выбранных продуктов
+  //  }
+    $(".check-favourites-group").prop('checked', false); // убираем галочки с выбираемых списков
+    $(".ch_select_all").addClass("hidden");
+    $(".select_product ").addClass("hidden");
+    $("#clear_group").removeClass("hidden");
+    // $("#rename_group").removeClass("hidden");
+    $("#archive_group").removeClass("hidden");
+    $("#sel_new_group").addClass("hidden");
+    $(".get-favourites-group-btn").attr("disabled", false);
+}
 
 /**
  * Достаем продукты заданного списка
@@ -79,7 +152,7 @@ async function fillFavouritesProducts(id) {
     $(favoriteGoodsJson).empty();
     for (key in content) {
         let product = `
-        <tr class=${content[key].id} id=${content[key].id}>
+        <tr class="product-in-group" id=${content[key].id}>
     <td>${content[key].id}</td>
     <td><input class="select_product hidden" type="checkbox" value="" id="${content[key].id}" ></td>
     <td>${content[key].product}</td>
@@ -91,7 +164,7 @@ async function fillFavouritesProducts(id) {
     <td>
        <button class="btn btn-primary" onclick="addProductToBasket(${content[key].id})">Добавить в корзину</button>
     </td>
-    <tr>
+    </tr>
 `;
         $(favoriteGoodsJson).append(product);
     }
@@ -109,6 +182,8 @@ $(document).on("click", "#favouritesGoods-tab", function () {
  */
 $(document).on("click", "#sel_new_group", function () {
     $(".get-favourites-group-btn").attr("disabled", false);
+    $(".btn-copy-product").attr("disabled", true);
+
 });
 /**
  * Обработчик кнопки "Добавить товары в другой список"
@@ -132,19 +207,20 @@ $(document).on("click", "#addInOverGroup", function (event) {
  * Обработчик кнопки Отмена (Появляется после нажатия на "Добавить товары в другой список")
  */
 $(document).on("click", "#escape", function () {   // get-favourites-group-btn
-    let activeAddInOverGroup = $(".favouritesgroups");
-    if (activeAddInOverGroup.hasClass("selected")) {
-        activeAddInOverGroup.removeClass("selected");
-        $("#addInOverGroup").removeClass("hidden");
-        $("#escape").addClass("hidden");
-        $(".ch_select_all").addClass("hidden");
-        $(".select_product ").addClass("hidden");
-        $("#clear_group").removeClass("hidden");
-        // $("#rename_group").removeClass("hidden");
-        $("#archive_group").removeClass("hidden");
-        $("#sel_new_group").addClass("hidden");
-        $(".get-favourites-group-btn").attr("disabled", false);
-    }
+    //let activeAddInOverGroup = $(".favouritesgroups");
+    //if (activeAddInOverGroup.hasClass("selected")) {
+        defaultInterface();
+        // activeAddInOverGroup.removeClass("selected");
+        // $("#addInOverGroup").removeClass("hidden");
+        // $("#escape").addClass("hidden");
+        // $(".ch_select_all").addClass("hidden");
+        // $(".select_product ").addClass("hidden");
+        // $("#clear_group").removeClass("hidden");
+        // // $("#rename_group").removeClass("hidden");
+        // $("#archive_group").removeClass("hidden");
+        // $("#sel_new_group").addClass("hidden");
+        // $(".get-favourites-group-btn").attr("disabled", false);
+   // }
 });
 /**
  * Чекбокс "Выбрать все"
@@ -165,6 +241,17 @@ $(document).on("click", ".btn-group .dropdown-item", function () {
     fillFavouritesProducts(this.id);
 
 });
+
+/**
+ * Перерисовываем обновленный список избранных товаров после переноса
+ * продукта в другой список
+ */
+function defaultBtnGroup() {
+    let id = $(".get-favourites-group-btn").attr("id");
+    let text = $(".btn-group .dropdown-item[id='" + id + "']").text();
+    $(".get-favourites-group-btn").text(text);
+    fillFavouritesProducts(id);
+}
 /**
  * Кнопка "создать новый список"  в модалке работы со списками избранных
  */
@@ -174,6 +261,39 @@ $(document).on("click", ".add-group-new", function () {
     $(".new-group-checkbox").prop('checked', true);
     $(".new-group-checkbox").prop("disabled", true);
 });
+/**
+ * Кнопка "Очистить список"
+ */
+$(document).on("click", "#clear_group", function () {
+    let idGroup = $(".get-favourites-group-btn").attr("id");
+    let listIdProducts = $(".product-in-group").map(function () {
+        return this.id;
+    }).get();
+    if ((idGroup != undefined) && (listIdProducts.length != "")) {
+        clearFavouritGroup(idGroup, listIdProducts);
+    }
+
+});
+
+/**
+ * Метод Очистки списка   "Очистить список"
+ * @param idGroup
+ * @param listIdProducts
+ * @returns {Promise<void>}
+ */
+async function clearFavouritGroup(idGroup, listIdProducts) {
+    const headers = {
+        'Content-type': 'application/json; charset=UTF-8'
+    };
+    await fetch(`/customer/clearFavouritesGroup/` + idGroup, {
+        method: 'DELETE',
+        body: JSON.stringify(listIdProducts),
+        headers: headers
+    }).then(respons => {
+        return respons;
+    });
+    defaultBtnGroup();
+}
 /**
  * Обработчик нажатия на кнопку EDIT в выборе списка избранного
  */
@@ -221,6 +341,7 @@ $(document).on("click", ".edit-fav-group-cancel", function () {
     $(".select-group-tr-input[id='" + thisId + "']").val($(".dropdown-item[id='" + thisId + "']").text());
     $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", true);
 });
+
 /**
  * Кнопочка подтверждения создания нового списка  "V"
  */
@@ -242,11 +363,17 @@ $(document).on("click", ".add-group-input-ok", function () {
  * Кнопочка отмены от создания нового списка  "Х"
  */
 $(document).on("click", ".add-group-input-cancel", function () {
+    cancelNevGroup();
+});
+/**
+ * Функция к кнопке отмены от создания нового списка
+ */
+function cancelNevGroup(){
     $(".polya-input").addClass("hidden");
     $(".add-group-new").removeClass("hidden");
     $(".new-group-checkbox").prop('checked', false);
     $(".new-group-checkbox").prop("disabled", false);
-});
+}
 
 /**
  * Обновление название списка в БД
@@ -263,7 +390,7 @@ async function updateFavouritesGroupInBD(nameGroup, idGroup) {
         body: nameGroup,
         headers: headers
     }).then(respons => {
-        console.log(respons);
+        return respons;
     });
 };
 
@@ -284,8 +411,9 @@ async function moveProductsFavouritesGroup(idNewGroup, idOldGroup, idProducts) {
         body: JSON.stringify(idProducts),
         headers: headers
     }).then(respons => {
-        console.log(respons);
+        return respons;
     });
+    defaultBtnGroup();
 };
 
 /**
@@ -340,237 +468,3 @@ async function deleteFavouritesGroupInBD(id) {
         method: 'DELETE'
     })
 };
-// /**
-//  * Нажимаем и подгружаем список групп пользователя
-//  */
-// $(document).on("click", ".get-favourites-group-btn", function () {
-//     getFavouritesGroupInSelect();
-// console.log("Нажади на  get-favourites-group-btn");
-// });
-// /**
-//  * Вытаскиваем из БД список "Избранных списков"
-//  * @returns {Promise<void>}
-//  */
-// async function getFavouritesGroupInSelect() {
-//         fetch(`/customer/favouritesGroup`)
-//             .then(response => response.json())
-//             .then(fgroup => {
-//                 let presentGroup = $('#favouritesGroup :first-child').attr("id");
-//                 if (!presentGroup) {
-//                     for (let i = 0; i < fgroup.length; i++) {
-//                         $('.dropdown-menu').append("<a class='dropdown-item' href='#' id=" + fgroup[i].id + ">" + fgroup[i].name + "</a>");
-// //                        $('#favouritesGroupMove').append("<option id=" + fgroup[i].id + " value='" + toTranslit(fgroup[i].name) + "'>" + fgroup[i].name + " </option>");
-//                     }
-//                 }
-//             })
-// };
-//  Новый функционал   $(`.building[data-id="${id}"]`)
-//jQuery(inform_panel).find('button.svg-control[status="' + object.status + '"]').addClass('active');
-
-
-// $(document).on("click", "#add-group-buton", function () {
-//     let nameGroup = prompt("Введите название группы \"Избранных товаров\" ");
-//     if (nameGroup) {
-//         $('#favouritesGroup').append("<option value='" + toTranslit(nameGroup) + "'>" + nameGroup + " </option>");
-//         $('#favouritesGroupMove').append("<option value='" + toTranslit(nameGroup) + "'>" + nameGroup + " </option>");
-//         addFavouritesGroupInBD(nameGroup);
-//     }
-// });
-//
-// $(document).on("click", "#delete-group-buton", function () {
-//     let idGroup = $("#favouritesGroup option:selected").attr("id");
-//     if (idGroup) {
-//         deleteFavouritesGroupInBD(idGroup);
-//         $("#favouritesGroup :selected").remove();
-//         $("#favouritesGroupMove option[id='" + idGroup + "']").remove();
-//         $("#favouritesGroup :first").attr("selected", "selected");
-//
-//     }
-// });
-//
-// /**
-//  * Привязываем событие к CHECKBOX чтобы отметить избранные товары для отслеживания id
-//  */
-// $(document).on("click", ".checkProductInGroup", function () {
-//     if ($(this).is(':checked')) {
-//         $(this).attr('class', 'checkProductInGroup selected');
-//     } else {
-//         $(this).attr('class', 'checkProductInGroup');
-//     }
-// });
-// /**
-//  * Привязываем событие к кнопке перемещения товара в избранную группу товаров
-//  */
-// $(document).on("click", "#move-product-buton", function () {
-//     let idGroup = $("#favouritesGroupMove option:selected").attr("id");
-//     let idProduct = $(".checkProductInGroup:checked").map(function() {return this.name;}).get();
-//     if (idProduct != '') {
-//         addProductInFavouritesGroupInBD(idProduct, idGroup);
-//     }
-// });
-//
-// /**
-//  * Передаем в БД товары и список Избранного для добавления
-//  * @param idProduct
-//  * @param idGroup
-//  * @returns {Promise<void>}
-//  */
-// async function addProductInFavouritesGroupInBD(idProduct, idGroup) {
-//     const headers = {
-//         'Content-type': 'application/json; charset=UTF-8'
-//     };
-//     let idPidG = idProduct;
-//     idPidG.push(idGroup);
-//     fetch(`/customer/addProductInFavouritesGroup`, {
-//         method: 'POST',
-//         body: JSON.stringify(idPidG),
-//         headers: headers
-//     }).then(response => {
-//         return response.text();
-//     })
-// };
-//
-// /**
-//  * Удаление продукта из одной группы при перемещении в другую
-//  * @param idProduct
-//  * @param idGroup
-//  * @returns {Promise<void>}
-//  */
-// async function deleteProductFromFavouritesGroupInBD(idProduct, idGroup) {
-//     const headers = {
-//         'Content-type': 'application/json; charset=UTF-8'
-//     };
-//     let idPidG = idProduct;
-//     idPidG.push(idGroup);
-//     fetch(`/customer/deleteProductFromFavouritesGroup`, {
-//         method: 'DELETE',
-//         body: JSON.stringify(idPidG),
-//         headers: headers
-//     }).then(response => response.text())
-// };
-// /**
-//  * Получаем список групп Избранного из БД и формируем "select"
-//  * @returns {Promise<void>}
-//  */
-// async function getFavouritesGroupInSelect() {
-//         fetch(`/customer/favouritesGroup`)
-//             .then(response => response.json())
-//             .then(fgroup => {
-//                 let presentGroup = $('#favouritesGroup :first-child').attr("id");
-//                 if (!presentGroup) {
-//                     for (let i = 0; i < fgroup.length; i++) {
-//                         $('#favouritesGroup').append("<option id=" + fgroup[i].id + " value='" + toTranslit(fgroup[i].name) + "'>" + fgroup[i].name + " </option>");
-//                         $('#favouritesGroupMove').append("<option id=" + fgroup[i].id + " value='" + toTranslit(fgroup[i].name) + "'>" + fgroup[i].name + " </option>");
-//
-//                     }
-//                     // Заливаем в БД Товары для Общего списка
-//                     let idGroup = $("#favouritesGroup :first").attr("id");
-//                     $(".checkProductInGroup").attr("idGroup", idGroup);
-//                     let idProductInAll = $(".checkProductInGroup").map(function() {return this.name;}).get();
-//                     if (idProductInAll != '') {
-//                         addProductInFavouritesGroupInBD(idProductInAll, idGroup);
-//                     }
-//                     //
-//                 }
-//             })
-// };
-// /**
-//  * Передаем в БД новое имя списка Избранного
-//  * @param nameGroup
-//  * @returns {Promise<void>}
-//  */
-// async function addFavouritesGroupInBD(nameGroup) {
-//     let thisId = 0;
-//     const headers = {
-//         'Content-type': 'application/json; charset=UTF-8'
-//     };
-//     let favouritesGroup = {
-//         name: nameGroup
-//     };
-//     await fetch(`/customer/favouritesGroup`, {
-//         method: 'POST',
-//         body: JSON.stringify(favouritesGroup),
-//         headers: headers
-//     }).then(response => {
-//         return response.json();
-//     }).then(idGroup => {
-//         thisId = idGroup;
-//     });
-//     $("select option[value=" + toTranslit(nameGroup) + "]").attr("id", thisId);
-// };
-// /**
-//  * Удаляем из БД имя скписка Избранного Кнопкой с id = delete-group-buton
-//  * @param id
-//  * @returns {Promise<void>}
-//  */
-// async function deleteFavouritesGroupInBD(id) {
-// // $("#town :selected") выбранный элемент
-// // $("#town :first") первый элемент
-//     fetch(`/customer/favouritesGroup/` + id, {
-//         method: 'DELETE'
-//     })
-// };
-// /**
-//  * Транслитерация текста text
-//  * @param text
-//  * @returns {Node|void|string|*}
-//  */
-// function toTranslit(text) {
-//     return text.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
-//         function (all, ch, space, words, i) {
-//             if (space || words) {
-//                 return space ? '-' : '';
-//             }
-//             var code = ch.charCodeAt(0),
-//                 index = code == 1025 || code == 1105 ? 0 :
-//                     code > 1071 ? code - 1071 : code - 1039,
-//                 t = ['yo', 'a', 'b', 'v', 'g', 'd', 'e', 'zh',
-//                     'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
-//                     'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh',
-//                     'shch', '', 'y', '', 'e', 'yu', 'ya'
-//                 ];
-//             return t[index];
-//         });
-// };
-//
-// function inicStartGroup(){
-//     let idGroup = $("#favouritesGroup :first").attr("id");
-//     $(".checkProductInGroup").attr("idGroup", idGroup);
-//     let idProductInAll = $(".checkProductInGroup").map(function() {return this.name;}).get();
-//     if (idProductInAll != '') {
-//         addProductInFavouritesGroupInBD(idProductInAll, idGroup);
-//     }
-// };
-//
-// /**
-//  * Перерисовываем таблицу избранного в зависимости от выбора группы избранного
-//  */
-// function fillNewTableProductsGroup(){
-//     let idGroup = $("#favouritesGroup option:selected").attr("id");
-//     fillFavouritesGroupProducts(idGroup);
-// };
-// async function fillFavouritesGroupProducts(idGroup) {
-//     let response = await fetch("/customer/getProductFromFavouritesGroup/" + idGroup);
-//     let content = await response.json();
-//     let favoriteGoodsJson = document.getElementById('favouritesGoodsList');
-//     let key
-//     $(favoriteGoodsJson).empty();
-//     for (key in content) {
-//         let product = `
-//         <tr class=${content[key].id} id=${content[key].id}>
-//     <td>${content[key].id}</td>
-//     <td><input type="checkbox" class="checkProductInGroup" name="${content[key].id}"/></td>
-//     <td>${content[key].product}</td>
-//     <td>${content[key].price}</td>
-//     <td>${content[key].amount}</td>
-//     <td>
-//        <button class="btn btn-danger" onclick="deleteProductFromFavouritGoods(${content[key].id})">Удалить</button>
-//     </td>
-//     <td>
-//        <button class="btn btn-primary" onclick="addProductToBasket(${content[key].id})">Добавить в корзину</button>
-//     </td>
-//     <tr>
-// `;
-//         $(favoriteGoodsJson).append(product);
-//     }
-// }

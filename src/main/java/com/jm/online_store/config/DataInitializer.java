@@ -22,6 +22,8 @@ import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.FavouriteGoodsService;
+import com.jm.online_store.service.interf.FavouritesGroupProductService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -80,13 +82,14 @@ public class DataInitializer {
     private final TopicService topicService;
     private final CommentService commentService;
     private final FavouritesGroupService favouritesGroupService;
+    private final FavouriteGoodsService favouriteGoodsService;
 
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    //@PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -101,7 +104,6 @@ public class DataInitializer {
         commonSettingsInit();
         feedbackTopicsInit();
         commentsInit();
-        favouritesGroupInit();
     }
 
     /**
@@ -166,6 +168,13 @@ public class DataInitializer {
         customer = userService.findByEmail("customer@mail.ru").get();
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
+
+        //Создание основного списка(Все товары) избранных товаров
+        FavouritesGroup favouritesGroup = new FavouritesGroup();
+        favouritesGroup.setName("Все товары");
+        favouritesGroup.setProducts(productSet);
+        favouritesGroup.setUser(customer);
+        favouritesGroupService.save(favouritesGroup);
 
         SubBasket subBasket_1 = new SubBasket();
         subBasket_1.setProduct(product_1);
@@ -1179,20 +1188,5 @@ public class DataInitializer {
         commentService.addCommentInit(comment1);
         commentService.addCommentInit(comment2);
         commentService.addCommentInit(comment3);
-    }
-    public void favouritesGroupInit() {
-        User customer = userService.findByEmail("customer@mail.ru").get();
-        User customer1 = userService.findByEmail("cus@mail.ru").get();
-
-        FavouritesGroup favouritesGroup = new FavouritesGroup();
-        favouritesGroup.setName("Все товары");
-        favouritesGroup.setUser(customer);
-
-        FavouritesGroup favouritesGroup1 = new FavouritesGroup();
-        favouritesGroup1.setName("Все товары");
-        favouritesGroup1.setUser(customer1);
-
-        favouritesGroupService.addFavouritesGroup(favouritesGroup);
-        favouritesGroupService.addFavouritesGroup(favouritesGroup1);
     }
 }

@@ -37,17 +37,11 @@ public class FavouritesGroupProductServiceImpl implements FavouritesGroupProduct
         Set<Product> productSet = selectedFavouritesGroup.getProducts();
         productSet.remove(product);
         selectedFavouritesGroup.setProducts(productSet);
+        favouritesGroupSet.add(selectedFavouritesGroup);
         user.setFavouritesGroups(favouritesGroupSet);
         userService.updateUser(user);
     }
     public void deleteListProductFromFavouritesGroup(ArrayList<Long> idProducts, FavouritesGroup favouritesGroup, User user) {
-//        Set<FavouritesGroup> favouritesGroupSet = user.getFavouritesGroups();
-//        FavouritesGroup selectedFavouritesGroup = favouritesGroupSet.stream().filter(data -> Objects.equals(data, favouritesGroup)).findFirst().get();
-//        Set<Product> productSet = selectedFavouritesGroup.getProducts();
-//        productSet.remove(product);
-//        selectedFavouritesGroup.setProducts(productSet);
-//        user.setFavouritesGroups(favouritesGroupSet);
-//        userService.updateUser(user);
     }
 
     @Override
