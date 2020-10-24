@@ -52,7 +52,6 @@ public class FavouritesGroupRestController {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         favouritesGroup.setName(name);
         favouritesGroupService.save(favouritesGroup);
-        System.out.println("Мы тут!");
         return ResponseEntity.ok().build();
     }
 }

@@ -59,7 +59,6 @@ public class ProductForFavouritesGroupRestController {
     public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody ArrayList<Long> idProducts, @PathVariable("idGroup") Long idGroup) {
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(idGroup).orElseThrow();
-        System.out.println(" idGroup=" + idGroup + "   idProducts = " + idProducts);
         for (int i = 0; i < idProducts.size(); i++){
             Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
             favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup, user);

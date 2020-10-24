@@ -83,13 +83,15 @@ public class DataInitializer {
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
     private final CommentService commentService;
+    private final FavouritesGroupService favouritesGroupService;
+    private final TopicsCategoryService topicsCategoryService;
 
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   // @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    //@PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
