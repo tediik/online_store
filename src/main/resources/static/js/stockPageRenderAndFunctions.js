@@ -24,8 +24,6 @@ $(document).ready(function () {
     document.getElementById('newStockButton').addEventListener('click', handleAddNewStockButton)
     /*Modal window buttons*/
     document.getElementById('modalFooter').addEventListener('click', checkFields)
-    /*Handle checkbox listener*/
-    document.getElementById('published').addEventListener('change', publishCheckboxHandler)
 
     document.getElementById('stocksDiv').addEventListener('click', handleStockDivButtons)
 
@@ -55,10 +53,16 @@ function yHandler() {
  */
 function checkFields(event) {
     if (event.target.dataset.toggleId === 'submit') {
-        let stockId = document.getElementById('stockId')
-        let stockTitle = document.getElementById('stockTitle')
-        let stockText = document.getElementById('stockText')
-        let startDate = document.getElementById('startDate')
+        let stockTitle = document.getElementById('stockTitle');
+        let stockText = document.getElementById('stockText');
+        let startDate = document.getElementById('startDate');
+        let stockPublished;
+        if (document.getElementById('published').checked) {
+            stockPublished = "true";
+        } else {
+            stockPublished = "false";
+        }
+        console.log("stock: " + stockId + ". stockPublished: " + stockPublished);
         let filename = "default.jpg";
 
         try {
@@ -110,17 +114,6 @@ function defineFilterAndFetchList(event) {
     lastPage.number = 0;
     lastPage.last = false;
     fetchStockList();
-}
-
-/**
- * function that handles publish checkbox
- */
-function publishCheckboxHandler() {
-    if (document.getElementById('published').checked) {
-        console.log("checked");
-    } else {
-        console.log("unchecked");
-    }
 }
 
 /**
@@ -186,33 +179,55 @@ function handleDeleteButtonClick(event) {
     $('#stockModal').modal('hide')
 }
 
+// function fetchStock(stock, method) {
+//     console.log("fetch stock: " + JSON.stringify(stock));
+//     fetch(stockApiUrl, {
+//         method: method,
+//         headers: myHeaders,
+//         body: JSON.stringify(stock)
+//     }).then(function (response) {
+//         if (response.status === 200) {
+//             successActionMainPage("#mainWindowAlert", "Акция успешно сохранена", "success");
+//         } else {
+//             successActionMainPage("#mainWindowAlert", "Акция не сохранена", "error")
+//         }
+//     })
+// }
+
 /**
  * modal window "save changes" button handler
  */
 function handleSaveChangesButton() {
     let startDate = $('#startDate').val();
-    let published = 'false';
     console.log("$('#published').val() = " + $('#published').val());
-    if ($('#published').val() === 'on' || $('#published').val() === 'true') {
-        published = true;
+    if (document.getElementById('published').checked) {
+        stockPublished = "true";
+    } else {
+        stockPublished = "false";
     }
-    console.log("handleSaveChangesButton. published: " + published);
+    console.log("handleSaveChangesButton. published: " + stockPublished);
+    // if ($('#published').val() === 'on' || $('#published').val() === 'true') {
+    //     published = true;
+    // }
+    // console.log("handleSaveChangesButton. published: " + published);
 
 
     let uploadId = $('#stockId').val();
     console.log('stockId = ' + uploadId);
     let file_data = $('#fileImgInput')[0].files[0]
+    console.log("первый file_data = " + file_data);
+    console.log("второй file_data = " + JSON.stringify(file_data));
     let form_data = new FormData();
     form_data.append("stockImg", file_data);
-    changeStockImage(uploadId, form_data).then(function (response) {
-        if (response.status === 200) {
+    if (file_data != null) {
+        changeStockImage(uploadId, form_data).then(function (response) {
+            // if (response.status === 200) {
             console.log("Картинка акции успешно сохранена");
-        } else {
-            console.log("Картинка акции не сохранена");
-        }
-    });
-
-
+            // } else {
+            //     console.log("Картинка акции не сохранена");
+            // }
+        });
+    }
     startDate = moment(startDate).format("YYYY-MM-DD")
     let endDate = ""
     if ($('#endDate').val() !== null || $('#endDate').val() !== "") {
@@ -226,50 +241,65 @@ function handleSaveChangesButton() {
     // сохраняем картинку акции в БД
     async function changeStockImage(upload_Id, form_data) {
         let uploadId = upload_Id
-        let formdata = form_data;
-        let returnPath;
+        console.log("Сохраняем картинку. form_data:  " + form_data);
+        if (form_data === null) {
+            console.log("No file to upload stock picture");
+        } else {
+            let formdata = form_data;
+            console.log("сохранение form_data = " + JSON.stringify(form_data));
+            let returnPath;
 
-        await fetch(`/rest/uploadStockImage/` + uploadId, {
-            method: 'POST',
-            body: formdata,
-        }).then(response => {
-            return response.text();
-        }).then(path => {
-            returnPath = path;
-        });
-    };
-
-    const stock = {
-        id: $('#stockId').val(),
-        // stockImg: $('#stockImg').val(),
-        stockImg: file_data,
-        stockTitle: $('#stockTitle').val(),
-        stockText: $('#stockText').summernote('code'),
-        startDate: startDate,
-        endDate: endDate,
-        stock: $('#stockTimeZone').val(),
-        published: published
+            await fetch(`/rest/uploadStockImage/` + uploadId, {
+                method: 'POST',
+                body: formdata,
+            }).then(response => {
+                console.log("fetching rest/uploadStockImage. response = " + response);
+                return response.ok;
+                // }).then(path => {
+                //     console.log("fetching rest/uploadStockImage. path = " + path);
+                //     returnPath = path;
+            });
+        }
     }
-    let method = (stock.id !== '' ? 'PUT' : 'POST')
 
-    fetchStock(stock, method);
+    console.log("второй file_data = " + file_data);
+    console.log("второй file_data = " + JSON.stringify(file_data));
+    if (file_data === null) {
+        console.log("Stock updating. form_data = undefined.");
+        file_data = 'default.jpg';
+        const stock = {
+            id: $('#stockId').val(),
+            // stockImg: file_data,
+            stockTitle: $('#stockTitle').val(),
+            stockText: $('#stockText').summernote('code'),
+            startDate: startDate,
+            endDate: endDate,
+            // stock: $('#stockTimeZone').val(),
+            published: stockPublished
+        }
+        let method = (stock.id !== '' ? 'PUT' : 'POST')
 
-    function fetchStock(stock, method) {
-        fetch(stockApiUrl, {
-            method: method,
-            headers: myHeaders,
-            body: JSON.stringify(stock)
-        }).then(function (response) {
-            if (response.status === 200) {
-                successActionMainPage("#mainWindowAlert", "Акция успешно сохранена", "success");
-            } else {
-                successActionMainPage("#mainWindowAlert", "Акция не сохранена", "error")
-            }
-        })
+        fetchStock(stock, method);
+
+
+        function fetchStock(stock, method) {
+            fetch(stockApiUrl, {
+                method: method,
+                headers: myHeaders,
+                body: JSON.stringify(stock)
+            }).then(function (response) {
+                if (response.status === 200) {
+                    successActionMainPage("#mainWindowAlert", "Акция успешно сохранена", "success")
+                } else {
+                    successActionMainPage("#mainWindowAlert", "Акция не сохранена", "error")
+                }
+            })
+        }
     }
 
     $('#stockModal').modal('hide')
 }
+
 
 $(function () {
     $('#deleteStockImgBtn').on('click', function () {
@@ -342,22 +372,54 @@ function handleEditButtonClick(event) {
     }).then(response => response.json()).then(stock => renderModalWindowEdit(stock))
 }
 
+
+// /**
+//  * При изменении чекбокса "Опубликовать на гл.странице" запускает цепочку проверки чекбоксов
+//  *
+//  */
+// $("#published" +
+//     "").change(function () {
+//     let stockPublished = $('#published').val();
+//     console.log("stockPublished:  " + stockPublished);
+// });
+
 /**
  * Обработка чекбокса #published
  * если галка стоит, то установить published = true
  * и наоборот
  */
 function chekboxPublished(o) {
-    if (o.checked == true) {
-        console.log("Published checkbox = " + o.checked);
+    if (o.checked === true) {
         $("#published").val('true');
-        console.log("Published checkbox = " + o.checked);
+        let uploadId = $('#stockId').val();
+        console.log('stockId = ' + uploadId);
+        changeStockPublished(uploadId, true).then(function (response) {
+            console.log("Акция успешно опубликована");
+        });
     } else {
         console.log("Published checkbox = " + o.checked);
         $("#published").val('false')
-        console.log("Published checkbox = " + o.checked);
+        let uploadId = $('#stockId').val();
+        changeStockPublished(uploadId, false).then(function (response) {
+            console.log("Акция снята с публикации");
+        });
     }
-};
+
+    // сохраняем значение чекбокса в БД
+    async function changeStockPublished(upload_Id, upload_data) {
+        let uploadId = upload_Id
+        console.log("Сохраняем чекбокс. upload_data:  " + upload_data);
+
+        await fetch(`/rest/uploadStockPublished/` + uploadId, {
+            method: 'POST',
+            body: upload_data,
+        }).then(response => {
+            console.log("fetching rest/uploadStockPublished. response = " + response);
+            return response.ok;
+        });
+    }
+}
+;
 
 /**
  * function changes modal window header
@@ -407,7 +469,7 @@ function renderStockList(data) {
             let stockId = stocks[i].id
             let stockImgToRender = "../../uploads/images/stocks/" + stocks[i].stockImg
             // console.log("StockId = " + stockId + ". StockImg to render: " + stockImgToRender)
-            let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
+            let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000);
             let publish = stocks[i].published;
             if (stockId === 1) {
                 console.log("StockId = " + stockId + ". ");
@@ -430,7 +492,7 @@ function renderStockList(data) {
                             <div class=\"col-md-4\">
                                  <img class="card-img" src=${stockImgToRender} width=\"250\" alt="Ошибка. Перезагрузите фото акции">
                                  <p></p>
-                                 <p id="stockId" class="stockId">ID акции: ${stockId}</p>
+                                 <p id="renderedStockId" class="stockId">ID акции: ${stockId}</p>
                                     <p id="rating" class="rating">Рейтинг: ${rating}</p>
                                     <div>Срок проведения акции: <br>
                                     <p class=\"card-date\">

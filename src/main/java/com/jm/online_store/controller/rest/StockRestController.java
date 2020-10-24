@@ -107,4 +107,17 @@ public class StockRestController {
     public ResponseEntity<String> deleteStockImage(@PathVariable("id") Long stockId) throws IOException {
         return ResponseEntity.ok(stockService.deleteStockImage(stockId));
     }
+
+    /**
+     * Метод обновления информации о публикации акции на главной странице
+     *
+     * @param id идентификатор акции
+     * @param StockPublishedCheckBox статус должны ли быть опубликована акция
+     */
+    @PostMapping("/rest/uploadStockPublished/{id}")
+    public ResponseEntity<String> handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("StockPublishedCheckBox") boolean stockPublishedCheckbox) throws IOException {
+        String savedStockStatus = stockService.updateStockPublished(stockId, stockPublishedCheckbox);
+        Stock stock = stockService.findStockById(stockId);
+        return ResponseEntity.ok(savedStockStatus);
+    }
 }

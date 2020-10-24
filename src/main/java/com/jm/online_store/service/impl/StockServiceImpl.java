@@ -163,7 +163,6 @@ public class StockServiceImpl implements StockService {
         String newFilePath = File.separator + "uploads" + File.separator + "images" + File.separator + "stocks" + File.separator + uniqueFilename;
         log.debug("New file full path: {}", newFilePath);
         return newFilePath;
-//        return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
     }
 
     /**
@@ -190,5 +189,20 @@ public class StockServiceImpl implements StockService {
         //Set a default picture as a stock default Picture
         stock.setStockImg(defaultStockImg);
         return File.separator + "uploads" + File.separator + "images" + File.separator + "stocks" + File.separator + defaultStockImg;
+    }
+
+    /**
+     * updateStockPublished method receives Stock Id and value of published checkbox
+     * and sets published true/false to Stock
+     *
+     */
+    @Override
+    @Transactional
+    public String updateStockPublished(Long stockId, boolean stockPublishedCheckbox) {
+        Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
+        log.debug("UpdatingStockPublished. StockId = " + stockId + " published: " + stockPublishedCheckbox);
+        stock.setPublished(stockPublishedCheckbox);
+        String publishedStatus = String.valueOf(stockPublishedCheckbox);
+        return publishedStatus;
     }
 }
