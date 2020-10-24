@@ -206,7 +206,7 @@ function fillPublishedStocks(data) {
                                  this.src = '/uploads/images/stocks/default.jpg';">
                         <div class="container">
                             <div class="carousel-caption" style="color: red">
-                                <p><a class="btn btn-secondary" style="margin-right: -252px" 
+                                <p><a class="btn btn-secondary" style="margin-top: 50px; margin-left: -252px" 
                                 href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a></p>
                             </div>
                              <div class = "card-text stockTitle">
@@ -254,7 +254,7 @@ function fillPublishedNews(data) {
                                  this.src = '/uploads/images/news/defnews.jpg';">
                         <div class="container">
                             <div class="carousel-caption" style="color: red">
-                                <p><a class="btn btn-secondary" style="margin-bottom: -60px; margin-right: -252px" 
+                                <p><a class="btn btn-secondary" style="margin-top: 50px; margin-left: -252px" 
                                 href="news/${data[key].id}" role="button">Подробнее &raquo;</a></p>
                             </div>
                              <div class = "card-text newsTitle">

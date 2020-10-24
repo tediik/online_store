@@ -40,7 +40,7 @@
 /* Declare heights because of positioning of img element */
 .carousel-itemWithStock {
     height: 250px;
-    background-color: #8bd0db;
+    background-color: #ebc493;
 }
 
 .stockTitle {
@@ -65,7 +65,7 @@
 /* Declare heights because of positioning of img element */
 .carousel-itemWithNews {
     height: 250px;
-    background-color: #8bd0db;
+    background-color: #ebc493;
 }
 
 .newsTitle {
