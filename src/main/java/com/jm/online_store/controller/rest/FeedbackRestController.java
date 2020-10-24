@@ -2,8 +2,9 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Feedback;
 import com.jm.online_store.model.Topic;
+import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.service.interf.FeedbackService;
-import com.jm.online_store.service.interf.TopicService;
+import com.jm.online_store.service.interf.TopicsCategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,30 +24,33 @@ import java.util.Set;
 @RequestMapping("/api/feedback")
 @AllArgsConstructor
 public class FeedbackRestController {
-    private final TopicService topicService;
     private final FeedbackService feedbackService;
+    private final TopicsCategoryService topicsCategoryService;
 
     /**
-     * Mapping to get categories from {@link Topic}
-     * @return - ResponseEntity with list of categories for feedback
+     * Mapping to get categories from {@link TopicsCategory}
+     *
+     * @return - ResponseEntity with list of actual categories for feedback
      */
     @GetMapping("/categories")
-    public ResponseEntity<List<String>> getFeedbackCategories() {
-        return ResponseEntity.ok(topicService.getAllCategories());
+    public ResponseEntity<List<TopicsCategory>> getFeedbackTopicsCategories() {
+        return ResponseEntity.ok(topicsCategoryService.findAllByActualIsTrue());
     }
 
     /**
      * Mapping to get topics list for special category
+     *
      * @param category - {@link String} String with name of category
      * @return - ResponseEntity with list of topics for feedback
      */
     @GetMapping("/{category}")
     public ResponseEntity<List<Topic>> getTopicsByCategory(@PathVariable String category) {
-        return ResponseEntity.ok(topicService.getTopicsByCategory(category));
+        return ResponseEntity.ok(topicsCategoryService.findByCategoryName(category).getTopics());
     }
 
     /**
      * Mapping to post new feedback
+     *
      * @param newFeedback - {@link Feedback}
      * @return ResponseEntity
      */

@@ -35,7 +35,7 @@ function fetchAndFillCategorySelect() {
             .append(`<option selected="selected" disabled>Выберите категорию</option>`)
         categories
             .forEach(category => feedBackTopicCategorySelect
-                .append(`<option>${category}</option>`))
+                .append(`<option>${category.categoryName}</option>`))
     }
     document.getElementById('feedbackTopicCategorySelect').addEventListener('change', fetchAndFillTopicSelect)
 }
