@@ -24,7 +24,7 @@
             <a class="btn btn-link" href="/"><---на главную</a>
         </div>
         <div class="col-sm-8 text-left">
-            <h1 class="text-center">Новости</h1>
+            <h1 class="text-center">Акции</h1>
             <div th:each="stock : ${stocks}" class="alert alert-info mt-2">
                 <img th:src="@{../../uploads/images/stocks/{name}(name = ${stock.stockImg})}" width="400"
                      alt="Ищите новые акции на нашем сайте"/>

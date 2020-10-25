@@ -114,7 +114,6 @@ public class ManagerStockRestController {
 
     @PutMapping
     public ResponseEntity<String> modifyStock(@RequestBody Stock stock) {
-        log.debug("manager/api/stock... Stock image = " + stock.getStockImg());
         try {
             stockService.updateStock(stock);
         } catch (StockNotFoundException e) {

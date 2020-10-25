@@ -140,7 +140,7 @@ svg.heartSvg {
 
 .heartSvg {
     fill:transparent;
-    stroke:#f00;
+    stroke: #ff0000;
     stroke-width:6px;
     cursor:pointer;
     transition:fill .3s;

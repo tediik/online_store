@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.StockService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
  * Рест контроллер для crud операций с акциями
  */
-@Slf4j
 @RestController
 @AllArgsConstructor
 public class StockRestController {
@@ -82,47 +77,5 @@ public class StockRestController {
     @DeleteMapping(value = "/rest/{id}")
     public void deleteStockById(@PathVariable("id") Long id) {
         stockService.deleteStockById(id);
-    }
-
-    /**
-     * Метод обновления картинки для акции по идентификатору акции
-     *
-     * @param id идентификатор акции
-     * @param stockImg картинка  акции
-     */
-    @PostMapping("/rest/uploadStockImage/{id}")
-    public ResponseEntity<String> handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("stockImg") MultipartFile stockImg) throws IOException {
-        String savedFIleName = stockService.updateStockImage(stockId, stockImg);
-        Stock stock = stockService.findStockById(stockId);
-        String pathToUploadFile = "../../uploads/images/stocks/" + stock.getStockImg();
-        return ResponseEntity.ok(savedFIleName);
-    }
-
-    /**
-     * Метод удаления картинки акции по идентификатору акции
-     *
-     * @param id идентификатор акции
-     */
-    @DeleteMapping("/rest/deleteStockImage/{id}")
-    public ResponseEntity<String> deleteStockImage(@PathVariable("id") Long stockId) throws IOException {
-        return ResponseEntity.ok(stockService.deleteStockImage(stockId));
-    }
-
-    /**
-     * Метод обновления информации о публикации акции на главной странице
-     *
-     * @param id идентификатор акции
-     * @param StockPublishedCheckBox статус должны ли быть опубликована акция
-     */
-    @PostMapping("/rest/uploadStockPublished/{id}")
-    public ResponseEntity<String> handleStockPublishedPost(@PathVariable("id") Long stockId, @RequestParam("StockPublishedCheckBox") String stockPublishedCheckbox) throws IOException {
-        log.debug("/rest/uploadStockPublished/" + stockId + " stock published: " + stockPublishedCheckbox);
-        boolean stockPublishedCheck = false;
-        if (stockPublishedCheckbox.equals("true")) {
-            stockPublishedCheck = true;
-        }
-        String savedStockStatus = stockService.updateStockPublished(stockId, stockPublishedCheck);
-        Stock stock = stockService.findStockById(stockId);
-        return ResponseEntity.ok(savedStockStatus);
     }
 }

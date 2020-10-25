@@ -31,14 +31,13 @@ import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.TaskSettingsService;
-import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.TopicService;
+import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -86,7 +85,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   // @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    // @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();

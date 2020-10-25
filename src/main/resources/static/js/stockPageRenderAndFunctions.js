@@ -56,23 +56,13 @@ function checkFields(event) {
         let stockTitle = document.getElementById('stockTitle');
         let stockText = document.getElementById('stockText');
         let startDate = document.getElementById('startDate');
-        let stockPublished;
-        if (document.getElementById('published').checked) {
-            stockPublished = "true";
-        } else {
-            stockPublished = "false";
-        }
-        console.log("stock: " + stockId + ". stockPublished: " + stockPublished);
         let filename = "default.jpg";
-
         try {
-            let fakefilename = $('#fileImgInput')[0].files[0].name;
-            if (fakefilename.indexOf('fakepath') === -1) {
-                filename = fakefilename;
-                console.log("Checking fields. Case1. filename = " + filename);
+            let tempfilename = $('#fileImgInput')[0].files[0].name;
+            if (tempfilename.indexOf('fakepath') === -1) {
+                filename = tempfilename;
             } else {
-                filename = $(fakefilename).val().replace(/C:\\fakepath\\/i, '')
-                console.log("Checking fields. Case2. filename = " + filename);
+                filename = $(tempfilename).val().replace(/C:\\fakepath\\/i, '')
                 invalidModalField("Ошибка загрузки. Повторите выбор файла", stockImgUrl)
             }
         } catch (err) {
@@ -179,76 +169,17 @@ function handleDeleteButtonClick(event) {
     $('#stockModal').modal('hide')
 }
 
-// function fetchStock(stock, method) {
-//     console.log("fetch stock: " + JSON.stringify(stock));
-//     fetch(stockApiUrl, {
-//         method: method,
-//         headers: myHeaders,
-//         body: JSON.stringify(stock)
-//     }).then(function (response) {
-//         if (response.status === 200) {
-//             successActionMainPage("#mainWindowAlert", "Акция успешно сохранена", "success");
-//         } else {
-//             successActionMainPage("#mainWindowAlert", "Акция не сохранена", "error")
-//         }
-//     })
-// }
-
-
-// сохраняем картинку акции в БД
-async function changeStockImage(upload_Id, form_data) {
-    let uploadId = upload_Id
-    if (form_data === null) {
-        console.log("No file to upload stock picture");
-    } else {
-        let formdata = form_data;
-
-        await fetch(`/rest/uploadStockImage/` + uploadId, {
-            method: 'POST',
-            body: formdata,
-        }).then(response => {
-            console.log("fetching rest/uploadStockImage. response = " + response);
-            return response.ok;
-        });
-    }
-}
-
-
-
 /**
  * modal window "save changes" button handler
  */
 function handleSaveChangesButton(event, file_name_stockImg) {
     let startDate = $('#startDate').val();
-    console.log("$('#published').val() = " + $('#published').val());
     let stockPublished;
     if (document.getElementById('published').checked) {
         stockPublished = "true";
     } else {
         stockPublished = "false";
     }
-    console.log("handleSaveChangesButton. published: " + stockPublished);
-    // if ($('#published').val() === 'on' || $('#published').val() === 'true') {
-    //     published = true;
-    // }
-    // console.log("handleSaveChangesButton. published: " + published);
-
-
-    let uploadId = $('#stockId').val();
-
-    // let file_data = $('#fileImgInput')[0].files[0]
-    // let form_data = new FormData();
-    // form_data.append("stockImg", file_data);
-    // if (file_data != null) {
-    //     changeStockImage(uploadId, form_data).then(function (response) {
-    //         // if (response.status === 200) {
-    //         console.log("Картинка акции успешно сохранена");
-    //         // } else {
-    //         //     console.log("Картинка акции не сохранена");
-    //         // }
-    //     });
-    // }
-
     startDate = moment(startDate).format("YYYY-MM-DD")
     let endDate = ""
     if ($('#endDate').val() !== null || $('#endDate').val() !== "") {
@@ -259,93 +190,35 @@ function handleSaveChangesButton(event, file_name_stockImg) {
         endDate = ""
     }
 
+    const stock = {
+        id: $('#stockId').val(),
+        stockImg: file_name_stockImg,
+        stockTitle: $('#stockTitle').val(),
+        stockText: $('#stockText').summernote('code'),
+        startDate: startDate,
+        endDate: endDate,
+        published: stockPublished
+    }
+    let method = (stock.id !== '' ? 'PUT' : 'POST')
 
-    //
-    // if (file_data === null) {
-    //     let form_data = new FormData();
-    //     form_data.append("stockImg", 'default.jpg');
-    // }
+    fetchStock(stock, method);
 
-        const stock = {
-            id: $('#stockId').val(),
-            stockImg: file_name_stockImg,
-            stockTitle: $('#stockTitle').val(),
-            stockText: $('#stockText').summernote('code'),
-            startDate: startDate,
-            endDate: endDate,
-            // stock: $('#stockTimeZone').val(),
-            published: stockPublished
-        }
-        let method = (stock.id !== '' ? 'PUT' : 'POST')
-
-
-        fetchStock(stock, method);
-
-
-        function fetchStock(stock, method) {
-            console.log("fetching..." + stock);
-            fetch(stockApiUrl, {
-                method: method,
-                headers: myHeaders,
-                body: JSON.stringify(stock)
-            }).then(function (response) {
-                if (response.status === 200) {
-                    successActionMainPage("#mainWindowAlert", "Акция успешно сохранена", "success")
-                } else {
-                    successActionMainPage("#mainWindowAlert", "Акция не сохранена", "error")
-                }
-            })
-        }
-
+    function fetchStock(stock, method) {
+        fetch(stockApiUrl, {
+            method: method,
+            headers: myHeaders,
+            body: JSON.stringify(stock)
+        }).then(function (response) {
+            if (response.status === 200) {
+                successActionMainPage("#mainWindowAlert", "Акция успешно сохранена", "success")
+            } else {
+                successActionMainPage("#mainWindowAlert", "Акция не сохранена", "error")
+            }
+        })
+    }
 
     $('#stockModal').modal('hide')
 }
-
-
-$(function () {
-    $('#deleteStockImgBtn').on('click', function () {
-        let deleteId = $('#stockId').val();
-        $.ajax(
-            {
-                type: 'DELETE',
-                url: '/rest/deleteStockImage/' + deleteId,
-                contentType: false,
-                processData: false,
-                cache: false,
-                success: function (data) {
-                    console.log("stockImage " + deleteId + " deleted.")
-                },
-                error: function (jqXhr, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                }
-            });
-    })
-
-})
-
-/**
- * При изменении содержимого формы для ввода картинки, удаляет старую картинку с диска и БД
- *
- */
-$("#fileImgInput" +
-    "").change(function () {
-    let deleteId = $('#stockId').val();
-
-    $.ajax(
-        {
-            type: 'DELETE',
-            url: '/rest/deleteStockImage/' + deleteId,
-            contentType: false,
-            processData: false,
-            cache: false,
-            success: function () {
-                console.log("stockImage " + deleteId + " deleted.");
-            },
-            error: function (jqXhr, textStatus, errorThrown) {
-                console.log(errorThrown);
-            }
-        });
-});
 
 /**
  * Edit button handler
@@ -364,7 +237,6 @@ function handleEditButtonClick(event) {
         $('#stockText').summernote('code', stockText);
         $("#startDate").val(stock.startDate);
         $("#endDate").val(stock.endDate);
-        //$("#fileImgInput").val(stock.stockImg);
         $("#published").prop('checked', stock.published);
     }
 
@@ -374,17 +246,6 @@ function handleEditButtonClick(event) {
     }).then(response => response.json()).then(stock => renderModalWindowEdit(stock))
 }
 
-
-// /**
-//  * При изменении чекбокса "Опубликовать на гл.странице" запускает цепочку проверки чекбоксов
-//  *
-//  */
-// $("#published" +
-//     "").change(function () {
-//     let stockPublished = $('#published').val();
-//     console.log("stockPublished:  " + stockPublished);
-// });
-
 /**
  * Обработка чекбокса #published
  * если галка стоит, то установить published = true
@@ -393,76 +254,10 @@ function handleEditButtonClick(event) {
 function chekboxPublished(o) {
     if (o.checked === true) {
         $("#published").val(true);
-        let uploadId = $('#stockId').val();
-        // console.log('stockId = ' + uploadId);
-        // changeStockPublished(uploadId, "true").then(function (response) {
-             console.log("Акция отмечена на публикацию.");
-        // });
     } else {
-        console.log("Published checkbox = " + o.checked);
         $("#published").val(false);
-        // let uploadId = $('#stockId').val();
-        // changeStockPublished(uploadId, "false").then(function (response) {
-        //     console.log("Акция снята с публикации");
-        // });
     }
-
-    // // сохраняем значение чекбокса в БД
-    // async function changeStockPublished(upload_Id, upload_data) {
-    //     let uploadId = upload_Id
-    //     console.log("Сохраняем чекбокс. upload_data:  " + upload_data);
-    //
-    //     let form_data_check = new FormData();
-    //     form_data_check.append("StockPublishedCheckBox", upload_data);
-    //
-    //
-    //         if (upload_data === null) {
-    //             console.log("No checkbox information to upload");
-    //         } else {
-    //             console.log("checkbox to upload = " + JSON.stringify(form_data_check) + ". upload_data: " + upload_data);
-    //         }
-    //         let stockCheckApiUrl = `/rest/uploadStockPublished/` + uploadId
-    //             await fetch(stockCheckApiUrl, {
-    //                 method: 'POST',
-    //                 headers: myHeaders,
-    //                 body: JSON.stringify(form_data_check)
-    //             }).then(function (response) {
-    //                 if (response.status === 200) {
-    //                     console.log("fetch /rest/uploadStockPublished/ = OK");
-    //                 } else {
-    //                     console.log("fetch /rest/uploadStockPublished/ = ERROR");
-    //                 }
-    //             //     .then(response => {
-    //             //     return response.status;
-    //             // }).then((data)=>{
-    //             //     console.log("fetching rest/uploadStockImage. response = " + data);
-    //             });
-    //     }
-
-        // $.ajax(
-        //     {
-        //         type: 'POST',
-        //         url: `/rest/uploadStockPublished/` + uploadId,
-        //         contentType: false,
-        //         processData: false,
-        //         cache: false,
-        //         success: function () {
-        //             console.log("Stock " + uploadId + " checkbox changed to " + upload_data);
-        //         },
-        //         error: function () {
-        //             console.log("Stock checkbox change error");
-        //         }
-        //     });
-
-        // await fetch(`/rest/uploadStockPublished/` + uploadId, {
-        //     method: 'POST',
-        //     body: upload_data,
-        // }).then(response => {
-        //     console.log("fetching rest/uploadStockPublished. response = " + response);
-        //     return response.ok;
-        // });
 }
-;
 
 /**
  * function changes modal window header
@@ -482,7 +277,6 @@ function stockModalClearFields() {
     $('#stockText').summernote('code', "")
     $("#startDate").val("")
     $("#endDate").val("")
-    // $("#published").val(false)
 }
 
 /**
@@ -511,13 +305,8 @@ function renderStockList(data) {
         for (let i = 0; i < stocks.length; i++) {
             let stockId = stocks[i].id
             let stockImgToRender = "../../uploads/images/stocks/" + stocks[i].stockImg
-            // console.log("StockId = " + stockId + ". StockImg to render: " + stockImgToRender)
             let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000);
             let publish = stocks[i].published;
-            if (stockId === 1) {
-                console.log("StockId = " + stockId + ". ");
-                console.log("Publish: " + publish);
-            }
             if (publish === true) {
                 publish = "✔"
             } else {
@@ -553,7 +342,7 @@ function renderStockList(data) {
                                     <p class=\"card-text\">${stocks[i].stockText}</p>
                                 </div>
                             </div>
-                            <div class="col-md-2 flex-row align-items-center">
+                            <div class="col-md-2 flex-row align-items-right">
                                 <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" 
                                             aria-orientation="vertical">
                                     <button data-toggle-id="edit-stock" class="btn btn-info" data-toggle='modal'

@@ -57,26 +57,21 @@
                 <div id="stockFilters">
                     <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
                          aria-orientation="vertical">
-                        <button data-toggle-id="ALL" type="button" class="btn btn-outline-primary"
-                                id="filterAllStocks">Все акции
+                        <button data-toggle-id="ALL" type="button" class="btn btn-outline-primary" id="filterAllStocks">Все акции</button>
+                    </div>
+                    <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                         aria-orientation="vertical">
+                        <button data-toggle-id="CURRENT" type="button" class="btn btn-outline-primary" id="filterCurrentStocks">Текущие акции
                         </button>
                     </div>
                     <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
                          aria-orientation="vertical">
-                        <button data-toggle-id="CURRENT" type="button" class="btn btn-outline-primary"
-                                id="filterCurrentStocks">Текущие акции
+                        <button data-toggle-id="FUTURE" type="button" class="btn btn-outline-primary" id="filterFutureStocks">Планируемые акции
                         </button>
                     </div>
                     <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
                          aria-orientation="vertical">
-                        <button data-toggle-id="FUTURE" type="button" class="btn btn-outline-primary"
-                                id="filterFutureStocks">Планируемые акции
-                        </button>
-                    </div>
-                    <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
-                         aria-orientation="vertical">
-                        <button data-toggle-id="PAST" type="button" class="btn btn-outline-primary"
-                                id="filterPastStocks">Завершенные акции
+                        <button data-toggle-id="PAST" type="button" class="btn btn-outline-primary" id="filterPastStocks">Завершенные акции
                         </button>
                     </div>
                 </div>
@@ -167,10 +162,6 @@
                                                            class="form-control">
                                                 </div>
                                             </form>
-<!--                                            <br>-->
-<!--                                                <input type="button" id="deleteStockImgBtn" value="Delete Image"-->
-<!--                                                   data-dismiss="modal"-->
-<!--                                                   class="btn btn-sm btn-outline-danger"/>-->
                                             <br>
                                             <div class="form-check" id="publishCheckboxDiv">
                                                 <input class="form-check-label" type="checkbox" id="published"
@@ -216,6 +207,5 @@
 <link href="/static/css/summernote.css" rel="stylesheet">
 <script src="/static/js/date_range.js"></script>
 <script src="/static/js/stockPageRenderAndFunctions.js"></script>
-<script src="/static/js/stockImage.js"></script>
 </body>
 </html>
