@@ -1,12 +1,12 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,9 +34,10 @@ public class Topic {
     private String topicName;
 
     @OneToMany(mappedBy = "topic")
+    @JsonIgnore
     private Set<Feedback> feedbacks;
 
     @ManyToOne
-    @JoinColumn(name = "topicCategory_id")
+    @JoinColumn(name = "topic_сategory_id")
     private TopicsCategory topicsCategory;
 }
