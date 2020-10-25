@@ -1,18 +1,17 @@
 package com.jm.online_store.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,30 +24,36 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Topic topic;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JsonIgnore
     private User user;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "message")
+    @Type(type = "text")
     private String message;
+
+    @Column(name = "answer")
+    @Type(type = "text")
+    private String answer;
+
+    private LocalDateTime responseExpected;
+
     private LocalDateTime feedbackPostDate;
 
     public enum Status {
-        TO_DO,
         IN_PROGRESS,
+        LATER,
         RESOLVED
     }
 }
