@@ -38,6 +38,6 @@ public class Topic {
     private Set<Feedback> feedbacks;
 
     @ManyToOne
-    @JoinColumn(name = "topicCategory_id")
+    @JoinColumn(name = "topic_сategory_id")
     private TopicsCategory topicsCategory;
 }
