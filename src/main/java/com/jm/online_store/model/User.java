@@ -82,7 +82,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    //Попробовать это убрать!
     @ManyToMany
     @JoinTable(
             name = "user_product",
@@ -92,7 +91,6 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
             orphanRemoval = true)
     private Set<FavouritesGroup> favouritesGroups = new HashSet<>();
 

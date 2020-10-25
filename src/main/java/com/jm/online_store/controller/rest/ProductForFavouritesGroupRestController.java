@@ -42,7 +42,6 @@ public class ProductForFavouritesGroupRestController {
     public ResponseEntity<Set<Product>> getProductFromFavouritesGroup(@PathVariable Long id) {
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
-        //favouritesGroupProductService.getProductSet(favouritesGroup, user);
         return ResponseEntity.ok(favouritesGroupProductService.getProductSet(favouritesGroup, user));
     }
 
