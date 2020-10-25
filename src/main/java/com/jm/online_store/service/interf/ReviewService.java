@@ -17,5 +17,4 @@ public interface ReviewService {
     void addReviewInit(Review review);
 
     Review findById(Long parentId);
-
-   }
+}

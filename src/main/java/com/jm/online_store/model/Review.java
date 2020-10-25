@@ -27,13 +27,6 @@ public class Review {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "parent_id")
-    private Long parentId;
-
-    @ManyToOne
-    @JoinColumn(name = "parent_review")
-    private Review parentReview;
-
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private User customer;

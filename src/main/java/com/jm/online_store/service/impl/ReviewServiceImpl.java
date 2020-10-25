@@ -51,9 +51,6 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public Review addReview(Review review) {
         User loggedInUser = userService.getCurrentLoggedInUser();
-        if (review.getParentId() != null) {
-            review.setParentReview(reviewRepository.findById(review.getParentId()).get());
-        }
         review.setCustomer(userService.findById(loggedInUser.getId()).get());
         return reviewRepository.save(review);
     }
@@ -78,6 +75,4 @@ public class ReviewServiceImpl implements ReviewService {
     public void addReviewInit(Review review) {
         reviewRepository.save(review);
     }
-
-
 }

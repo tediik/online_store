@@ -9,7 +9,6 @@ import java.time.temporal.ChronoUnit;
 public class ReviewDto {
 
     private Long id;
-    private Long parentId;
     private String content;
     private String userPhoto;
     private String userEmail;
@@ -19,7 +18,6 @@ public class ReviewDto {
     public static ReviewDto reviewEntityToDto(Review reviewEntity) {
         ReviewDto reviewDto = new ReviewDto();
         reviewDto.setId(reviewEntity.getId());
-        reviewDto.setParentId(reviewEntity.getParentId());
         reviewDto.setContent(reviewEntity.getContent());
         reviewDto.setUserPhoto(reviewEntity.getCustomer().getProfilePicture());
         reviewDto.setUserEmail(reviewEntity.getCustomer().getEmail());

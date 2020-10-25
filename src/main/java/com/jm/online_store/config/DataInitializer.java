@@ -86,7 +86,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//  @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    // @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -95,8 +95,8 @@ public class DataInitializer {
         stockInit();
         sharedStockInit();
         addressInit();
-//        sentStockInit();  // метод нужен только для тестирования рассылки акций
-//        paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
+//      sentStockInit();  // метод нужен только для тестирования рассылки акций
+//      paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
         taskSettingsInit();
         commonSettingsInit();
         feedbackTopicsInit();
@@ -1174,6 +1174,7 @@ public class DataInitializer {
         commentService.addCommentInit(comment2);
         commentService.addCommentInit(comment3);
     }
+
     /**
      * Init method for review
      */
