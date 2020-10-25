@@ -36,7 +36,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -113,6 +118,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByFirstName(FirstName);
     }
 
+    /**
+     * Метод который проверяет существование пользователя в бд.
+     * @param email - поле по которому проверяем пользователя
+     * @return false -  Если такой пользователь не был найден.
+     *                  Если же все-таки он был найден, и статус удаления у него есть, и 30 дней истекли.
+     *         true -   Если такой пользователь существует и у него отсутствует статус удаления.
+     *                  Если такой пользователь существует и у него есть статус на удаление, но его 30 дней не истекли.
+     */
     @Override
     @Transactional
     public boolean isExist(String email) {
@@ -198,13 +211,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод, который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
+     * У нас пользователь изначально не удаляется. При нажатии на кнопку "удалить профиль"
+     * происходит запись времени, когда кнопка была нажата и подтвеждена.
+     * Мы ему даем 30 дней на восстановление.
+     * Время удаление записывается в поле "status" у User
      *
+     * Метод, который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
      * @param id
      */
     @Override
     @Transactional
-    public void changeUserStatus(Long id) {
+    public void changeUserStatusToLocked(Long id) {
         User userStatusChange = getCurrentLoggedInUser();
         userStatusChange.setStatus(LocalDateTime.now());
         updateUser(userStatusChange);

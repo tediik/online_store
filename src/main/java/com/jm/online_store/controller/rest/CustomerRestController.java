@@ -68,16 +68,14 @@ public class CustomerRestController {
     }
 
     /**
-     * Метод удаления профиля покупателя
-     *
-     * @param id индентификатор покупателя
+     * Метод который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
      *
      * @param id идентификатор покупателя
      * @return ResponseEntity.ok()
      */
     @DeleteMapping("/deleteProfile/{id}")
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
-        userService.changeUserStatus(id);
+        userService.changeUserStatusToLocked(id);
         return ResponseEntity.ok("Delete profile");
     }
 }
