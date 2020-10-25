@@ -542,48 +542,69 @@
                                     <div class="tab-pane fade show" id="tab_canceled">
                                         <div id="canceledOrders">
 
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
-                        <div class="container-fluid bg-light">
-                            <div class="row">
-                                <div class="col">
-                                    <h4>Обратная связь</h4>
-                                    <p>Уважаемые клиенты!</p>
-                                    <p>В целях оперативного рассмотрения ваших обращений просим максимально точно
-                                        изложить
-                                        суть вопроса и имеющиеся факты.</p>
-                                    <hr>
+                </div>
+                <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
+                    <ul class="nav nav-tabs" id="navFeedback" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="messageFeedback-tab" data-toggle="tab" href="#messageFeedback" role="tab"
+                               aria-controls="home" aria-selected="true">Сформировать обращение</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="answersFeedback-tab" data-toggle="tab" href="#answersFeedback" role="tab"
+                               aria-controls="contact" aria-selected="false">Перечень обращений и ответов</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="containerFeedback">
+                        <div class="tab-pane fade show active" id="messageFeedback" role="tabpanel" aria-labelledby="messageFeedback-tab">
+                            <div class="container-fluid bg-light">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4>Обратная связь</h4>
+                                        <p>Уважаемые клиенты!</p>
+                                        <p>В целях оперативного рассмотрения ваших обращений просим максимально точно
+                                            изложить
+                                            суть вопроса и имеющиеся факты.</p>
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <form id="feedbackFrom">
+                                            <div class="form-group">
+                                                <p>Чтобы заполнить форму обращения, пожалуйста, выберите категорию
+                                                    вопроса.</p>
+                                                <label for="feedbackTopicCategorySelect"
+                                                       class="feedback-form">Категория:</label>
+                                                <select class="form-control" id="feedbackTopicCategorySelect">
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="feedbackTopicNameSelect" class="feedback-form">Тема:</label>
+                                                <select class="form-control" id="feedbackTopicNameSelect" disabled>
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="messageFeedbackForm" class="feedback-form">Текст
+                                                    сообщения</label>
+                                                <textarea class="form-control" id="messageFeedbackForm"
+                                                          disabled></textarea>
+                                            </div>
+                                        </form>
+                                        <button class="btn btn-primary" id="feedbackSubmitButton" disabled>Отправить
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <form id="feedbackFrom">
-                                        <div class="form-group">
-                                            <p>Чтобы заполнить форму обращения, пожалуйста, выберите категорию
-                                                вопроса.</p>
-                                            <label for="feedbackTopicCategorySelect"
-                                                   class="feedback-form">Категория:</label>
-                                            <select class="form-control" id="feedbackTopicCategorySelect">
-
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="feedbackTopicNameSelect" class="feedback-form">Тема:</label>
-                                            <select class="form-control" id="feedbackTopicNameSelect" disabled>
-
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="messageFeedbackForm" class="feedback-form">Текст сообщения</label>
-                                        <textarea class="form-control" id="messageFeedbackForm" disabled></textarea>
-                                    </div>
-                                </form>
-                                <button class="btn btn-primary" id="feedbackSubmitButton" disabled>Отправить</button>
+                        </div>
+                        <div class="tab-pane fade" id="answersFeedback" role="tabpanel" aria-labelledby="answersFeedback-tab">
+                            <div id="messagesAndAnswersFeedback">
                             </div>
                         </div>
                     </div>
@@ -630,6 +651,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"
         integrity="sha512-sR3EKGp4SG8zs7B0MEUxDeq8rw9wsuGVYNfbbO/GLCJ59LBE4baEfQBVsP2Y/h2n8M19YV1mujFANO1yA3ko7Q=="
         crossorigin="anonymous"></script>
+<script src="/static/js/moment.js"></script>
 <script src="../static/js/customerProfilePageFunctions.js"></script>
 <script src="/static/js/customer-feedback-form.js"></script>
 <footer th:insert="/blocks/footer :: footer"></footer>
