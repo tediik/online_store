@@ -16,6 +16,7 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.model.Topic;
+import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BasketService;
@@ -32,6 +33,7 @@ import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.TaskSettingsService;
+import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.TopicService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
@@ -80,6 +82,7 @@ public class DataInitializer {
     private final TopicService topicService;
     private final CommentService commentService;
     private final ReviewService reviewService;
+    private final TopicsCategoryService topicsCategoryService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -1060,6 +1063,13 @@ public class DataInitializer {
                 .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings);
+
+        TaskSettings taskSettings2 = TaskSettings.builder()
+                .taskName("dailyPriceCreate")
+                .active(true)
+                .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .build();
+        taskSettingsService.addNewTaskSetting(taskSettings2);
     }
 
     /**
@@ -1086,57 +1096,80 @@ public class DataInitializer {
      * Init method for topics
      */
     public void feedbackTopicsInit() {
-        Topic topic1 = Topic.builder()
-                .topicCategory("Коммерческое предложение")
-                .topicName("По товарам")
+        TopicsCategory topicsCategory1 = TopicsCategory.builder()
+                .actual(true)
+                .categoryName("Коммерческое предложение")
                 .build();
-        Topic topic2 = Topic.builder()
-                .topicCategory("Коммерческое предложение")
-                .topicName("По логистике")
+        TopicsCategory topicsCategory2 = TopicsCategory.builder()
+                .actual(true)
+                .categoryName("Оценка работы")
                 .build();
-        Topic topic3 = Topic.builder()
-                .topicCategory("Коммерческое предложение")
-                .topicName("По кредитам")
+        TopicsCategory topicsCategory3 = TopicsCategory.builder()
+                .actual(true)
+                .categoryName("Ошибки и пожелания")
                 .build();
-        Topic topic4 = Topic.builder()
-                .topicCategory("Оценка работы")
-                .topicName("Магазин")
-                .build();
-        Topic topic5 = Topic.builder()
-                .topicCategory("Оценка работы")
-                .topicName("Доставка")
-                .build();
-        Topic topic6 = Topic.builder()
-                .topicCategory("Оценка работы")
-                .topicName("Сервисный центр")
-                .build();
-        Topic topic7 = Topic.builder()
-                .topicCategory("Ошибки и пожелания")
-                .topicName("Работа сайта")
-                .build();
-        Topic topic8 = Topic.builder()
-                .topicCategory("Ошибки и пожелания")
-                .topicName("Новости, акции")
-                .build();
-        Topic topic9 = Topic.builder()
-                .topicCategory("Ошибки и пожелания")
-                .topicName("Описание товара")
-                .build();
-        Topic topic10 = Topic.builder()
-                .topicCategory("Работа в компании")
-                .topicName("Резюме")
+        TopicsCategory topicsCategory4 = TopicsCategory.builder()
+                .actual(false)
+                .categoryName("Работа в компании")
                 .build();
 
-        topicService.addTopic(topic1);
-        topicService.addTopic(topic2);
-        topicService.addTopic(topic3);
-        topicService.addTopic(topic4);
-        topicService.addTopic(topic5);
-        topicService.addTopic(topic6);
-        topicService.addTopic(topic7);
-        topicService.addTopic(topic8);
-        topicService.addTopic(topic9);
-        topicService.addTopic(topic10);
+        topicsCategoryService.create(topicsCategory1);
+        topicsCategoryService.create(topicsCategory2);
+        topicsCategoryService.create(topicsCategory3);
+        topicsCategoryService.create(topicsCategory4);
+
+
+        Topic topic1 = Topic.builder()
+                .topicName("По товарам")
+                .topicsCategory(topicsCategory1)
+                .build();
+        Topic topic2 = Topic.builder()
+                .topicName("По логистике")
+                .topicsCategory(topicsCategory1)
+                .build();
+        Topic topic3 = Topic.builder()
+                .topicName("По кредитам")
+                .topicsCategory(topicsCategory1)
+                .build();
+        Topic topic4 = Topic.builder()
+                .topicName("Магазин")
+                .topicsCategory(topicsCategory2)
+                .build();
+        Topic topic5 = Topic.builder()
+                .topicName("Доставка")
+                .topicsCategory(topicsCategory2)
+                .build();
+        Topic topic6 = Topic.builder()
+                .topicName("Сервисный центр")
+                .topicsCategory(topicsCategory2)
+                .build();
+        Topic topic7 = Topic.builder()
+                .topicName("Работа сайта")
+                .topicsCategory(topicsCategory3)
+                .build();
+        Topic topic8 = Topic.builder()
+                .topicName("Новости, акции")
+                .topicsCategory(topicsCategory3)
+                .build();
+        Topic topic9 = Topic.builder()
+                .topicName("Описание товара")
+                .topicsCategory(topicsCategory3)
+                .build();
+        Topic topic10 = Topic.builder()
+                .topicName("Резюме")
+                .topicsCategory(topicsCategory4)
+                .build();
+
+        topicService.create(topic1);
+        topicService.create(topic2);
+        topicService.create(topic3);
+        topicService.create(topic4);
+        topicService.create(topic5);
+        topicService.create(topic6);
+        topicService.create(topic7);
+        topicService.create(topic8);
+        topicService.create(topic9);
+        topicService.create(topic10);
     }
 
     /**

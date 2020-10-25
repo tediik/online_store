@@ -2,6 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.repository.TaskSettingsRepository;
+import com.jm.online_store.service.interf.PriceListService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     private final TaskScheduler scheduler;
     private final TaskSettingsRepository taskSettingsRepository;
     private final StockMailDistributionTask stockMailDistributionTask;
+    private final PriceListService priceListService;
     private final Map<Long, ScheduledFuture<?>> jobsMap;
 
     /**
@@ -36,7 +38,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
      */
     @Override
     public void addTaskToScheduler(TaskSettings taskSettings, Runnable task) {
-        String cronExpression = DateTimeToCron(taskSettings.getStartTime());
+        String cronExpression = DateTimeToCron(taskSettings.getStartTime().minusHours(2));
         ScheduledFuture<?> scheduledTask = scheduler.schedule(task,
                 new CronTrigger(cronExpression, TimeZone.getTimeZone(TimeZone.getDefault().getID())));
         jobsMap.put(taskSettings.getId(), scheduledTask);
@@ -62,18 +64,15 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     @EventListener({ContextRefreshedEvent.class})
     public void contextRefreshedEvent() {
         List<TaskSettings> allTasks = taskSettingsRepository.findAll();
-        for (TaskSettings taskSettings : allTasks) {
-            if (taskSettings.isActive()) {
-                addTaskToScheduler(taskSettings, stockMailDistributionTask);
-            }
-        }
+        addTaskToScheduler(allTasks.get(0), stockMailDistributionTask);
+        addTaskToScheduler(allTasks.get(1), priceListService);
     }
 
     /**
      * Util method which convert {@link LocalTime} to cron expression
      *
      * @param time - {@link LocalTime}
-     * @return - String with creon expression
+     * @return - String with cron expression
      */
     private String DateTimeToCron(LocalTime time) {
         return String.format("0 %S %S */1 * *", time.getMinute(), time.getHour());
