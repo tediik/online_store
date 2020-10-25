@@ -337,50 +337,53 @@
                                             </div>
                                         </div>
 
-                                        <!---------------------- Delete Profile Modal window ------------------->
-                                        <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
-                                             aria-labelledby="titleDeleteProfile" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="titleDeleteProfile">Удалить
-                                                            профиль</h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Вы уверены что хотите удалить свой профиль?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">
-                                                            Отмена
-                                                        </button>
-                                                        <button id="deleteProfileCustomer" type="button"
-                                                                class="btn btn-danger" th:data-del-id="${user.id}"
-                                                                data-dismiss="modal">
-                                                            Удалить
-                                                        </button>
-                                                    </div>
+                                    <!---------------------- Delete Profile Modal window ------------------->
+                                    <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
+                                         aria-labelledby="titleDeleteProfile" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="titleDeleteProfile">Удалить профиль</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Вы уверены что хотите удалить свой профиль?
+                                                    <br>
+                                                    <small style="color: rgba(243,18,8,0.75)">
+                                                        Возможность восстановить до 30 дней
+                                                    </small>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">
+                                                        Отмена
+                                                    </button>
+                                                    <button id="deleteProfileCustomer" type="button"
+                                                            class="btn btn-danger" th:data-del-id="${user.id}"
+                                                            data-dismiss="modal">
+                                                        Удалить
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!---------------------- End Delete Profile Modal window ------------------->
                                     </div>
+                                    <!---------------------- End Delete Profile Modal window ------------------->
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
-                        <div id="order-div"></div>
-                        <h3>Корзина</h3>
-                        <div class="row min-vh-100">
-                            <div class="col-md-9">
-                                <!-------------сама корзина------------->
-                                <table class="table table-striped">
-                                    <tbody id="basketList">
+                </div>
+                <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
+                    <div id="order-div"></div>
+                    <h3>Корзина</h3>
+                    <div class="row min-vh-100">
+                        <div class="col-md-9">
+                            <!--                            сама корзина-->
+                            <table class="table table-striped">
+                                <tbody id="busketList">
 
                                     </tbody>
                                 </table>
