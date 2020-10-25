@@ -81,8 +81,9 @@ public class DataInitializer {
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
     private final CommentService commentService;
-    private final ReviewService reviewService;
     private final TopicsCategoryService topicsCategoryService;
+    private final ReviewService reviewService;
+
 
     /**
      * Основной метод для заполнения базы данных.

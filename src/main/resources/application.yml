@@ -52,8 +52,4 @@ logging:
 emailStockSending:
   delay: '0 0 10 */1 * *'
 
-price-list-service:
-  path-to-xls-file: uploads/files/prices/pricedaily.xls
-  path-to-zip-file: uploads/files/prices/pricedaily.zip
-
 spring.profiles.include: 'security'
