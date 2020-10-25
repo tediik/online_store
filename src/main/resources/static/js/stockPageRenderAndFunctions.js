@@ -86,7 +86,7 @@ function checkFields(event) {
         } else if (startDate.value === '') {
             invalidModalField("Заполните начальную дату", startDate)
         } else {
-            handleSaveChangesButton(event)
+            handleSaveChangesButton(event, filename)
         }
     }
 }
@@ -194,12 +194,34 @@ function handleDeleteButtonClick(event) {
 //     })
 // }
 
+
+// сохраняем картинку акции в БД
+async function changeStockImage(upload_Id, form_data) {
+    let uploadId = upload_Id
+    if (form_data === null) {
+        console.log("No file to upload stock picture");
+    } else {
+        let formdata = form_data;
+
+        await fetch(`/rest/uploadStockImage/` + uploadId, {
+            method: 'POST',
+            body: formdata,
+        }).then(response => {
+            console.log("fetching rest/uploadStockImage. response = " + response);
+            return response.ok;
+        });
+    }
+}
+
+
+
 /**
  * modal window "save changes" button handler
  */
-function handleSaveChangesButton() {
+function handleSaveChangesButton(event, file_name_stockImg) {
     let startDate = $('#startDate').val();
     console.log("$('#published').val() = " + $('#published').val());
+    let stockPublished;
     if (document.getElementById('published').checked) {
         stockPublished = "true";
     } else {
@@ -213,21 +235,20 @@ function handleSaveChangesButton() {
 
 
     let uploadId = $('#stockId').val();
-    console.log('stockId = ' + uploadId);
-    let file_data = $('#fileImgInput')[0].files[0]
-    console.log("первый file_data = " + file_data);
-    console.log("второй file_data = " + JSON.stringify(file_data));
-    let form_data = new FormData();
-    form_data.append("stockImg", file_data);
-    if (file_data != null) {
-        changeStockImage(uploadId, form_data).then(function (response) {
-            // if (response.status === 200) {
-            console.log("Картинка акции успешно сохранена");
-            // } else {
-            //     console.log("Картинка акции не сохранена");
-            // }
-        });
-    }
+
+    // let file_data = $('#fileImgInput')[0].files[0]
+    // let form_data = new FormData();
+    // form_data.append("stockImg", file_data);
+    // if (file_data != null) {
+    //     changeStockImage(uploadId, form_data).then(function (response) {
+    //         // if (response.status === 200) {
+    //         console.log("Картинка акции успешно сохранена");
+    //         // } else {
+    //         //     console.log("Картинка акции не сохранена");
+    //         // }
+    //     });
+    // }
+
     startDate = moment(startDate).format("YYYY-MM-DD")
     let endDate = ""
     if ($('#endDate').val() !== null || $('#endDate').val() !== "") {
@@ -238,38 +259,16 @@ function handleSaveChangesButton() {
         endDate = ""
     }
 
-    // сохраняем картинку акции в БД
-    async function changeStockImage(upload_Id, form_data) {
-        let uploadId = upload_Id
-        console.log("Сохраняем картинку. form_data:  " + form_data);
-        if (form_data === null) {
-            console.log("No file to upload stock picture");
-        } else {
-            let formdata = form_data;
-            console.log("сохранение form_data = " + JSON.stringify(form_data));
-            let returnPath;
 
-            await fetch(`/rest/uploadStockImage/` + uploadId, {
-                method: 'POST',
-                body: formdata,
-            }).then(response => {
-                console.log("fetching rest/uploadStockImage. response = " + response);
-                return response.ok;
-                // }).then(path => {
-                //     console.log("fetching rest/uploadStockImage. path = " + path);
-                //     returnPath = path;
-            });
-        }
-    }
+    //
+    // if (file_data === null) {
+    //     let form_data = new FormData();
+    //     form_data.append("stockImg", 'default.jpg');
+    // }
 
-    console.log("второй file_data = " + file_data);
-    console.log("второй file_data = " + JSON.stringify(file_data));
-    if (file_data === null) {
-        console.log("Stock updating. form_data = undefined.");
-        file_data = 'default.jpg';
         const stock = {
             id: $('#stockId').val(),
-            // stockImg: file_data,
+            stockImg: file_name_stockImg,
             stockTitle: $('#stockTitle').val(),
             stockText: $('#stockText').summernote('code'),
             startDate: startDate,
@@ -279,10 +278,12 @@ function handleSaveChangesButton() {
         }
         let method = (stock.id !== '' ? 'PUT' : 'POST')
 
+
         fetchStock(stock, method);
 
 
         function fetchStock(stock, method) {
+            console.log("fetching..." + stock);
             fetch(stockApiUrl, {
                 method: method,
                 headers: myHeaders,
@@ -295,7 +296,7 @@ function handleSaveChangesButton() {
                 }
             })
         }
-    }
+
 
     $('#stockModal').modal('hide')
 }
@@ -329,6 +330,7 @@ $(function () {
 $("#fileImgInput" +
     "").change(function () {
     let deleteId = $('#stockId').val();
+
     $.ajax(
         {
             type: 'DELETE',
@@ -337,7 +339,7 @@ $("#fileImgInput" +
             processData: false,
             cache: false,
             success: function () {
-                console.log("stockImage " + deleteId + " deleted.")
+                console.log("stockImage " + deleteId + " deleted.");
             },
             error: function (jqXhr, textStatus, errorThrown) {
                 console.log(errorThrown);
@@ -390,34 +392,75 @@ function handleEditButtonClick(event) {
  */
 function chekboxPublished(o) {
     if (o.checked === true) {
-        $("#published").val('true');
+        $("#published").val(true);
         let uploadId = $('#stockId').val();
-        console.log('stockId = ' + uploadId);
-        changeStockPublished(uploadId, true).then(function (response) {
-            console.log("Акция успешно опубликована");
-        });
+        // console.log('stockId = ' + uploadId);
+        // changeStockPublished(uploadId, "true").then(function (response) {
+             console.log("Акция отмечена на публикацию.");
+        // });
     } else {
         console.log("Published checkbox = " + o.checked);
-        $("#published").val('false')
-        let uploadId = $('#stockId').val();
-        changeStockPublished(uploadId, false).then(function (response) {
-            console.log("Акция снята с публикации");
-        });
+        $("#published").val(false);
+        // let uploadId = $('#stockId').val();
+        // changeStockPublished(uploadId, "false").then(function (response) {
+        //     console.log("Акция снята с публикации");
+        // });
     }
 
-    // сохраняем значение чекбокса в БД
-    async function changeStockPublished(upload_Id, upload_data) {
-        let uploadId = upload_Id
-        console.log("Сохраняем чекбокс. upload_data:  " + upload_data);
+    // // сохраняем значение чекбокса в БД
+    // async function changeStockPublished(upload_Id, upload_data) {
+    //     let uploadId = upload_Id
+    //     console.log("Сохраняем чекбокс. upload_data:  " + upload_data);
+    //
+    //     let form_data_check = new FormData();
+    //     form_data_check.append("StockPublishedCheckBox", upload_data);
+    //
+    //
+    //         if (upload_data === null) {
+    //             console.log("No checkbox information to upload");
+    //         } else {
+    //             console.log("checkbox to upload = " + JSON.stringify(form_data_check) + ". upload_data: " + upload_data);
+    //         }
+    //         let stockCheckApiUrl = `/rest/uploadStockPublished/` + uploadId
+    //             await fetch(stockCheckApiUrl, {
+    //                 method: 'POST',
+    //                 headers: myHeaders,
+    //                 body: JSON.stringify(form_data_check)
+    //             }).then(function (response) {
+    //                 if (response.status === 200) {
+    //                     console.log("fetch /rest/uploadStockPublished/ = OK");
+    //                 } else {
+    //                     console.log("fetch /rest/uploadStockPublished/ = ERROR");
+    //                 }
+    //             //     .then(response => {
+    //             //     return response.status;
+    //             // }).then((data)=>{
+    //             //     console.log("fetching rest/uploadStockImage. response = " + data);
+    //             });
+    //     }
 
-        await fetch(`/rest/uploadStockPublished/` + uploadId, {
-            method: 'POST',
-            body: upload_data,
-        }).then(response => {
-            console.log("fetching rest/uploadStockPublished. response = " + response);
-            return response.ok;
-        });
-    }
+        // $.ajax(
+        //     {
+        //         type: 'POST',
+        //         url: `/rest/uploadStockPublished/` + uploadId,
+        //         contentType: false,
+        //         processData: false,
+        //         cache: false,
+        //         success: function () {
+        //             console.log("Stock " + uploadId + " checkbox changed to " + upload_data);
+        //         },
+        //         error: function () {
+        //             console.log("Stock checkbox change error");
+        //         }
+        //     });
+
+        // await fetch(`/rest/uploadStockPublished/` + uploadId, {
+        //     method: 'POST',
+        //     body: upload_data,
+        // }).then(response => {
+        //     console.log("fetching rest/uploadStockPublished. response = " + response);
+        //     return response.ok;
+        // });
 }
 ;
 
@@ -520,7 +563,7 @@ function renderStockList(data) {
                                 <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" 
                                             aria-orientation="vertical">
                                     <button data-toggle-id="delete-stock" class="btn btn-danger" 
-                                            id="deleteButton" style="margin-right: -10px"
+                                            id="deleteButton" 
                                             data-stock-id="${stocks[i].id}">Удалить</button>
                                 </div>
                             </div>

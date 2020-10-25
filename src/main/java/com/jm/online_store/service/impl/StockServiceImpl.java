@@ -177,14 +177,16 @@ public class StockServiceImpl implements StockService {
         final String defaultStockImg = StringUtils.cleanPath("default.jpg");
         Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
         //Get stockPicture name from Stock and delete this stock picture from Uploads
-        Path fileNameAndPath = Paths.get(uploadDirectory, stock.getStockImg());
-        //Check if deleting picture is not a default avatar
-        try {
-            if (!fileNameAndPath.getFileName().toString().equals(defaultStockImg)) {
-                Files.delete(fileNameAndPath);
+        if(stock.getStockImg() != null) {
+            Path fileNameAndPath = Paths.get(uploadDirectory, stock.getStockImg());
+            //Check if deleting picture is not a default avatar
+            try {
+                if (!fileNameAndPath.getFileName().toString().equals(defaultStockImg)) {
+                    Files.delete(fileNameAndPath);
+                }
+            } catch (IOException e) {
+                log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
             }
-        } catch (IOException e) {
-            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
         //Set a default picture as a stock default Picture
         stock.setStockImg(defaultStockImg);
@@ -201,8 +203,9 @@ public class StockServiceImpl implements StockService {
     public String updateStockPublished(Long stockId, boolean stockPublishedCheckbox) {
         Stock stock = stockRepository.findById(stockId).orElseThrow(StockNotFoundException::new);
         log.debug("UpdatingStockPublished. StockId = " + stockId + " published: " + stockPublishedCheckbox);
-        stock.setPublished(stockPublishedCheckbox);
-        String publishedStatus = String.valueOf(stockPublishedCheckbox);
-        return publishedStatus;
+//        stock.setPublished(stockPublishedCheckbox);
+//        String publishedStatus = String.valueOf(stockPublishedCheckbox);
+//        return publishedStatus;
+        return "OK";
     }
 }

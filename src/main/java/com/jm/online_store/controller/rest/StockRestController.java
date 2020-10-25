@@ -115,8 +115,13 @@ public class StockRestController {
      * @param StockPublishedCheckBox статус должны ли быть опубликована акция
      */
     @PostMapping("/rest/uploadStockPublished/{id}")
-    public ResponseEntity<String> handleStockImagePost(@PathVariable("id") Long stockId, @RequestParam("StockPublishedCheckBox") boolean stockPublishedCheckbox) throws IOException {
-        String savedStockStatus = stockService.updateStockPublished(stockId, stockPublishedCheckbox);
+    public ResponseEntity<String> handleStockPublishedPost(@PathVariable("id") Long stockId, @RequestParam("StockPublishedCheckBox") String stockPublishedCheckbox) throws IOException {
+        log.debug("/rest/uploadStockPublished/" + stockId + " stock published: " + stockPublishedCheckbox);
+        boolean stockPublishedCheck = false;
+        if (stockPublishedCheckbox.equals("true")) {
+            stockPublishedCheck = true;
+        }
+        String savedStockStatus = stockService.updateStockPublished(stockId, stockPublishedCheck);
         Stock stock = stockService.findStockById(stockId);
         return ResponseEntity.ok(savedStockStatus);
     }
