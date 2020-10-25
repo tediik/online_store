@@ -32,4 +32,9 @@ public class ManagerController {
     public String getStocks() {
         return "stocksManagerPage";
     }
+
+    @GetMapping("/feedback")
+    public String getFeedbacks() {
+        return "managerFeedback";
+    }
 }
