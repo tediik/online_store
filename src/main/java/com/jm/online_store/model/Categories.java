@@ -23,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Categories {
+public class Categories {//очень хочется убрать множественное число
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,9 @@ public class Categories {
     private String category;
     //For example, Category = Laptop (or PC), SuperCategory = Computer
     @NonNull
-    private String superCategory;
+    private Long parentCategoryId;
+    @NonNull
+    private int depth;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private List<Product> products;

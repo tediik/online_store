@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -81,7 +82,10 @@ public class MainPageRestController {
      * "Смартфоны":"Smartfony"}}
      */
     @GetMapping("api/categories")
-    public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
+    public ResponseEntity<List<Categories>> getCategories() {
+        return ResponseEntity.ok(categoriesService.getCategoriesByParentCategoryId(0L));
+    }
+/*    public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.getAllCategories();
         Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
 
@@ -93,7 +97,7 @@ public class MainPageRestController {
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
         return ResponseEntity.ok(categoriesBySuperCategories);
-    }
+    }*/
 
     /**
      * Возвращает список первых N продуктов - N передаётся в метод сервиса .findNumProducts(N)

@@ -107,9 +107,29 @@ function close() {
 }
 
 async function fillCategories() {
+
+
+
+
+
+
+
+
+
+
+
     let data = await fetch("/api/categories").then(response => response.json());
     let siteMenu = document.getElementById('siteMenu');
-    for (let key in data) {
+    for (let count in data) {
+        console.log(data[count].category);
+        let button = `
+            <li class="nav-item">
+            <a class="btn btn-outline-light text-black-50 font-weight-bold" id="button + '${data[count].id}'">${data[count].category}</a>
+            </li>
+        `;
+        $(siteMenu).append(button);
+    }
+/*    for (let key in data) {
         let item = `
             <li class="nav-item dropright">
                 <a class="btn btn-outline-light dropdown-toggle text-secondary font-weight-normal dropdownbtn" 
@@ -122,7 +142,7 @@ async function fillCategories() {
         }
         item += subItem;
         $(siteMenu).append(item);
-    }
+    }*/
 }
 
 /**

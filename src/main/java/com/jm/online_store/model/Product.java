@@ -56,7 +56,7 @@ public class Product {
     @OneToOne(cascade = CascadeType.ALL)
     private Description descriptions;
     @NonNull
-    private String productType;
+    private String productType; //Что это за поле?
     @NonNull
     private boolean deleted;
 

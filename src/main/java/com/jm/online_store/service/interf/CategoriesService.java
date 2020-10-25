@@ -9,6 +9,8 @@ public interface CategoriesService {
 
     List<Categories> getAllCategories();
 
+    List<Categories> getCategoriesByParentCategoryId (Long parentCategoryId);
+
     Optional<Categories> getCategoryById(Long categoryId);
 
     Optional<Categories> getCategoryByCategoryName(String category);

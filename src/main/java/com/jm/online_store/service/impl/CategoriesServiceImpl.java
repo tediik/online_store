@@ -15,26 +15,37 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     private final CategoriesRepository categoriesRepository;
 
+    @Override
     public List<Categories> getAllCategories() {
         return categoriesRepository.findAll();
     }
 
+    @Override
+    public List<Categories> getCategoriesByParentCategoryId(Long parentCategoryId) {
+        return categoriesRepository.getCategoriesByParentCategoryId(parentCategoryId);
+    }
+
+    @Override
     public Optional<Categories> getCategoryById(Long categoryId) {
         return categoriesRepository.findById(categoryId);
     }
 
+    @Override
     public Optional<Categories> getCategoryByCategoryName(String category) {
         return categoriesRepository.findByCategory(category);
     }
 
+    @Override
     public void saveCategory(Categories categories) {
         categoriesRepository.save(categories);
     }
 
+    @Override
     public void deleteCategory(Long idCategory) {
         categoriesRepository.deleteById(idCategory);
     }
 
+    @Override
     public void saveAll(List<Categories> catList) {
         categoriesRepository.saveAll(catList);
     }

@@ -86,7 +86,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   // @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    //@PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -587,8 +587,38 @@ public class DataInitializer {
      */
     private void productInit() {
 
-        Categories category1 = new Categories("Ноутбуки", "Компьютеры");
-        Categories category2 = new Categories("Компьютеры", "Компьютеры");
+        Categories category1 = new Categories("Компьютеры", 0L, 1);
+        Categories category2 = new Categories("Бытовая техника", 0L, 1);
+        Categories category3 = new Categories("Смартфоны и гаджеты", 0L, 1);
+        Categories category4 = new Categories("ТВ и развлечения", 0L, 1);
+        Categories category5 = new Categories("Офис и сеть", 0L, 1);
+        Categories category6 = new Categories("Аксессуары", 0L, 1);
+        Categories category7 = new Categories("Автотовары", 0L, 1);
+        Categories category8 = new Categories("Инструменты", 0L, 1);
+        Categories category9 = new Categories("Ноутбуки", 1L, 2);
+        Categories category10 = new Categories("Моноблоки", 1L, 2);
+        Categories category11 = new Categories("Смартфоны", 3L, 2);
+        Categories category12 = new Categories("Комплектующие", 1L, 2);
+        Categories category13 = new Categories("Периферия", 1L, 2);
+        Categories category14 = new Categories("Планшеты", 3L, 2);
+        Categories category15 = new Categories("Электронные книги", 3L, 2);
+        Categories category16 =  new Categories("Аксессуары", 3L, 2);
+        Categories category17 =  new Categories("Телевизоры", 4L, 2);
+        Categories category18 =  new Categories("Игры", 4L, 2);
+        Categories category19 =  new Categories("Аудиотехника", 4L, 2);
+        Categories category20 =  new Categories("Оргтехника", 5L, 2);
+        Categories category21 =  new Categories("Роутеры и сетевое оборудование", 5L, 2);
+        Categories category22 =  new Categories("Техника для кухни", 2L, 2);
+        Categories category23 =  new Categories("Техника для уборки", 2L, 2);
+        Categories category24 =  new Categories("Стиральные и сушильные машины", 2L, 2);
+        Categories category25 =  new Categories("Климатическая техника", 2L, 2);
+        Categories category26 =  new Categories("С сенсорным экраном", 9L, 3);
+        Categories category27 =  new Categories("Игровые", 9L, 3);
+        Categories category28 =  new Categories("Недорогие", 9L, 3);
+        Categories category29 =  new Categories("Ультрабуки", 9L, 3);
+
+/*        Categories category1 = new Categories("Ноутбуки", "Компьютеры");
+        Categories category2 = new Categories("Моноблоки", "Компьютеры");
         Categories category3 = new Categories("Смартфоны", "Смартфоны и гаджеты");
         Categories category4 = new Categories("Комплектующие", "Компьютеры");
         Categories category5 = new Categories("Периферия", "Компьютеры");
@@ -603,7 +633,7 @@ public class DataInitializer {
         Categories category14 = new Categories("Техника для кухни", "Бытовая техника");
         Categories category15 = new Categories("Техника для уборки", "Бытовая техника");
         Categories category16 = new Categories("Стиральные и сушильные машины", "Бытовая техника");
-        Categories category17 = new Categories("Климатическая техника", "Бытовая техника");
+        Categories category17 = new Categories("Климатическая техника", "Бытовая техника");*/
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
@@ -677,16 +707,18 @@ public class DataInitializer {
         product18.setDescriptions(description20);
         product18.setDescriptions(description21);
 
-        category1.setProducts(Arrays.asList(product1, product2, product3, product10, product11, product12));
-        category2.setProducts(Arrays.asList(product4, product5, product6));
-        category3.setProducts(Arrays.asList(product7, product8, product9));
-        category15.setProducts(Arrays.asList(product13, product14, product15));
-        category16.setProducts(Arrays.asList(product16, product17, product18));
-        category17.setProducts(Arrays.asList(product19, product20, product21));
+        category26.setProducts(Arrays.asList(product1, product2, product3));
+        category28.setProducts(Arrays.asList(product4, product5, product6));
+        category11.setProducts(Arrays.asList(product7, product8, product9));
+        category27.setProducts(Arrays.asList(product10, product11, product12));
+        category23.setProducts(Arrays.asList(product13, product14, product15));
+        category24.setProducts(Arrays.asList(product16, product17, product18));
+        category25.setProducts(Arrays.asList(product19, product20, product21));
 
-        categoriesService.saveAll(Arrays.asList(category1, category2, category3,
-                category4, category5, category6, category7, category8, category9, category10, category11,
-                category12, category13, category14, category15, category16, category17));
+        categoriesService.saveAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7,
+                category8, category9, category10, category11, category12, category13, category14, category15, category16,
+                category17, category18, category19, category20, category21, category22, category23, category24, category25,
+                category26, category27, category28, category29));
     }
 
     /**
