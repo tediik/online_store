@@ -17,13 +17,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
-
+    <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <!-- Rate YO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <header th:insert="/blocks/mainHeader :: header"></header>
 
 <div id="openNewRegistrationModal" class="modal">
@@ -97,7 +97,7 @@
     </div>
 </div>
 
-<main role="main" class="container">
+<main role="main" class="wrapper flex-grow-1 container">
     <div class="row">
         <div class="col-2">
             <ul class="navbar-nav mr-auto shadow" aria-orientation="vertical" id="siteMenu">
@@ -197,7 +197,7 @@
         </div>
     </div>
 </main><!-- /.container -->
-
+<footer th:replace="/blocks/footer :: footer"></footer>
 <!-- Optional JavaScript -->
 <script src="../static/js/mainPage.js"></script>
 <script src="/static/js/jquery.hoverIntent.minified.js"></script>
@@ -209,5 +209,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<footer th:insert="/blocks/footer :: footer"></footer>
 </body>
 </html>

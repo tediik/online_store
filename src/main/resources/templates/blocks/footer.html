@@ -1,9 +1,82 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="footer">
-    <footer class="text-muted">
-        <div class="container">
-            <p class="float-right">
-                <a href="#">Back to top</a>
-            </p>
+    <div class="row siteFooter">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="row py-3">
+                <h2>Online store<hr/></h2>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <h5 class="pb-3">Компания<hr/></h5>
+                    <ul>
+                        <li><a href="#">Корпоративные продажи</a></li>
+                        <li><a href="#">Обратная связь</a></li>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="/news">Новости</a></li>
+                        <li><a href="#">Правила продаж</a></li>
+                        <li><a href="#">Персональные данные</a></li>
+                        <li><a href="#">Партнерам</a></li>
+                    </ul>
+                    <h5 class="pt-3">Прайс-листы</h5>
+                    <a href="uploads/files/prices/pricedaily.xls">Microsoft Excel</a>
+                    <p class="timeOfCreate" th:text="'Создан: ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy')}"></p>
+                    <a href="uploads/files/prices/pricedaily.zip">ZIP-архив</a>
+                    <p class="timeOfCreate" th:text="'Создан: ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy')}"></p>
+                </div>
+                <div class="col-3">
+                    <h5 class="pb-3">Покупателям<hr/></h5>
+                    <ul>
+                        <li><a href="#">Бонусная программа</a></li>
+                        <li><a href="#">Подарочные карты</a></li>
+                        <li><a href="#">Проверка оплаты счета</a></li>
+                        <li><a href="#">Кредиты</a></li>
+                        <li><a href="#">Доставка</a></li>
+                        <li><a href="/serviceCenter">Сервисный центр</a></li>
+                        <li><a href="/serviceCheckStatus">Статус оборудования СЦ</a></li>
+                    </ul>
+                </div>
+                <div class="col-3">
+                    <h5 class="pb-3">Помощь<hr/></h5>
+                    <ul>
+                        <li><a href="#">Как оформить заказ</a></li>
+                        <li><a href="#">Способы оплаты</a></li>
+                        <li><a href="#">Обмен, возврат, гарантия</a></li>
+                        <li><a href="#">Информация для юр.лиц</a></li>
+                        <li><a href="#">Статусы заказов</a></li>
+                        <li><a href="#">База знаний</a></li>
+                    </ul>
+                </div>
+                <div class="col-3">
+                    <div class="row"><h5 class="pb-3 m-0">Найдите нас<hr/></h5></div>
+                    <div class="row"><p>Social media</p></div>
+                    <div class="row">
+                        <div class="social github">
+                            <a href="#" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+                        </div>
+                        <div class="social twitter">
+                            <a href="#" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>
+                        </div>
+                        <div class="social facebook">
+                            <a href="#" target="_blank"><i class="fa fa-facebook fa-2x"></i></a>
+                        </div>
+                        <div class="social vk">
+                            <a href="#" target="_blank"><i class="fa fa-vk fa-2x"></i></a>
+                        </div>
+                        <div class="social instagram">
+                            <a href="#" target="_blank"><i class="fa fa-instagram fa-2x"></i></a>
+                        </div>
+                        <div class="social telegram">
+                            <a href="#" target="_blank"><i class="fa fa-paper-plane fa-2x"></i></a>
+                        </div>
+                    </div>
+                    <div class="row"><p>8-800-800-800-8</p></div>
+                </div>
+            </div>
+            <div class="row lastRow pt-3">
+                <p th:text="'©' + ${#dates.format(#dates.createNow(), 'yyyy')} + ' Компания Online store. Администрация Сайта не несет ответственности за размещаемые Пользователями информацию и изображения, их содержание и качество.'"></p>
+            </div>
         </div>
-    </footer>
+        <div class="col-2"></div>
+    </div>
 </div>

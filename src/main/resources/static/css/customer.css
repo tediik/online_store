@@ -23,3 +23,10 @@ svg{
     border-left: none;
     border-top: none;
 }
+.messages-after-submit
+{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    color: red;
+}
