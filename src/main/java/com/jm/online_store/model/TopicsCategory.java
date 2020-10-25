@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+        property = "categoryName")
 public class TopicsCategory {
 
     @Id

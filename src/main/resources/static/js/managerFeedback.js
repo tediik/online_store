@@ -313,6 +313,14 @@ function colorDivFeedback(status) {
     }
 }
 
+function getCategoryName(category) {
+    if (typeof category === "object") {
+        return category.categoryName
+    } else {
+        return category
+    }
+}
+
 /**
  * Функция отрисовки обращений
  * @param data - массив обращений
@@ -333,7 +341,7 @@ function renderMessages(data, elementId) {
     data.forEach(function (messages) {
         let postDateFeedback = new Date(messages.feedbackPostDate).toLocaleString('ru', options)
         viewMessages += `<div id="div-${messages.id}" class="alert ${colorDivFeedback(messages.status)} mt-2">
-                        <h5 class="font-weight-bold">№${messages.id} Категория: ${messages.topic.topicCategory}</h5>
+                        <h5 class="font-weight-bold">№${messages.id} Категория: ${getCategoryName(messages.topic.topicsCategory)}</h5>
                         <hr>  
                         <h6><u>Тема: ${messages.topic.topicName}</u></h6>  
                         <span class="badge badge-pill ${colorStatusFeedback(messages.status)} text-right">${messages.status}</span>
