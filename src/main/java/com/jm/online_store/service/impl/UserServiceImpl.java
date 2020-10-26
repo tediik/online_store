@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -117,9 +118,29 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByFirstName(FirstName);
     }
 
+    /**
+     * Метод проверяет существование пользователя в БД.
+     * @param email - поле по которому проверяем пользователя
+     * @return false -  Если такой пользователь не был найден.
+     *                  Если же все-таки он был найден, и статус удаления у него есть, и 30 дней истекли.
+     *         true -   Если такой пользователь существует и у него отсутствует статус удаления.
+     *                  Если такой пользователь существует и у него есть статус на удаление, но его 30 дней не истекли.
+     */
     @Override
+    @Transactional
     public boolean isExist(String email) {
-        return userRepository.findByEmail(email).isPresent();
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            return false;
+        }
+        if (user.get().getStatus() == null) {
+            return true;
+        }
+        if (!user.get().getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
+            deleteByID(user.get().getId());
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -187,6 +208,61 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
+    }
+
+    /**
+     * У нас пользователь изначально не удаляется. При нажатии на кнопку "удалить профиль"
+     * происходит запись времени, когда кнопка была нажата и подтвеждена.
+     * Мы ему даем 30 дней на восстановление.
+     * Время удаления записывается в поле "status" у User
+     *
+     * Метод, который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
+     * @param id
+     */
+    @Override
+    @Transactional
+    public void changeUserStatusToLocked(Long id) {
+        User userStatusChange = getCurrentLoggedInUser();
+        userStatusChange.setStatus(LocalDateTime.now());
+        updateUser(userStatusChange);
+    }
+
+    /**
+     * Метод проверяет статус клиента, если срок восстановления истек - удаляется
+     *
+     * @param email    - нужен для проверки на существование
+     * @param password - нужен для подтверждения подлинности
+     * @return - false - если такой пользователь существует и статус не равен null,
+     * и статус больше равен больше 30 дней
+     * true - то есть предлагаем пользователю восстановится, если статус меньше 30 дней
+     */
+    @Override
+    @Transactional
+    public boolean checkUserStatus(String email, String password) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            if (user.getStatus() != null) {
+                if (!user.getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
+                    deleteByID(user.getId());
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Метод для восстановления клиента
+     *
+     * @param email - емейл для восстановления
+     */
+    @Override
+    @Transactional
+    public void restoreUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        user.setStatus(null);
+        updateUser(user);
     }
 
     /**

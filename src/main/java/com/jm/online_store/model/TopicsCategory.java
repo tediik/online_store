@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,32 +13,35 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.List;
 
+/**
+ * Сущность Категория тем, связанная с {@link Topic}
+ */
 @Entity
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Topic {
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "categoryName")
+public class TopicsCategory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     @Column(unique = true)
-    private String topicName;
+    private String categoryName;
 
-    @OneToMany(mappedBy = "topic")
-    @JsonIgnore
-    private Set<Feedback> feedbacks;
+    @OneToMany(mappedBy = "topicsCategory")
+    private List<Topic> topics;
 
-    @ManyToOne
-    @JoinColumn(name = "topic_сategory_id")
-    private TopicsCategory topicsCategory;
+    @Column(nullable = false)
+    private Boolean actual = Boolean.TRUE;
 }
