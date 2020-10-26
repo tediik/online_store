@@ -4,7 +4,6 @@ import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +29,6 @@ public class CategoryRestController {
      */
     @GetMapping("/all")
     public ResponseEntity<List<Categories>> getAllCategories() {
-        return new ResponseEntity<>(categoriesService.getAllCategories(), HttpStatus.OK);
+        return ResponseEntity.ok(categoriesService.getAllCategories());
     }
 }

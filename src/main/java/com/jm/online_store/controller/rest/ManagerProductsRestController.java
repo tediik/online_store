@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,9 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -160,6 +157,8 @@ public class ManagerProductsRestController {
     }
 
     /**
+     * Метод, который формирует файл с товарами нужной категории и передаёт обратно на страницу
+     *
      * @param category нужная категория товаров
      * @param response запрос для возврата информации
      * @return запрос с файлом xlsx
@@ -212,7 +211,7 @@ public class ManagerProductsRestController {
                 cell = row.createCell(5);
                 cell.setCellValue(aProduct.getProductType().getCategory());
             }
-            response.setHeader("Size", String.valueOf(rowCount));
+            response.setHeader("Size", String.valueOf(rowCount-1));
             workbook.write(response.getOutputStream());
             return ResponseEntity.ok().build();
         } catch (NullPointerException | IOException e) {
