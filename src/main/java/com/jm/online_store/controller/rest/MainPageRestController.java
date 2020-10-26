@@ -82,7 +82,7 @@ public class MainPageRestController {
      * "Смартфоны":"Smartfony"}}
      */
     @GetMapping("api/categories")
-    public ResponseEntity<List<Categories>> getCategories() {
+    public ResponseEntity<List<Categories>> getMainCategories() {
         return ResponseEntity.ok(categoriesService.getCategoriesByParentCategoryId(0L));
     }
 /*    public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
@@ -98,6 +98,13 @@ public class MainPageRestController {
         }
         return ResponseEntity.ok(categoriesBySuperCategories);
     }*/
+
+    @GetMapping("api/categories/sub/{id}")
+    public ResponseEntity<List<Categories>> getSubCategoriesById(@PathVariable Long id) {
+        List<Categories> lc = categoriesService.getCategoriesByParentCategoryId(id);
+        System.out.println(lc.isEmpty());
+        return ResponseEntity.ok(lc);
+    }
 
     /**
      * Возвращает список первых N продуктов - N передаётся в метод сервиса .findNumProducts(N)

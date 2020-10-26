@@ -26,36 +26,34 @@
 </div>
 <div class="container-fluid">
     <div class="row content">
-        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+        <div class="col-2">
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/manager">Главная</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
+                <a class="btn btn-outline-primary" href="/manager/news">Новости</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/stocks"> Акции</a>
+                <a class="btn btn-outline-primary" href="/manager/stocks">Акции</a>
             </div>
             <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
-                 aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/authority/profile">Профиль</a>
+                 aria-orientation="vertical"><a class="btn btn-outline-primary" href="/authority/profile">Профиль</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/products"> Товары</a>
+                <a class="btn btn-outline-primary" href="/manager/products">Товары</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/manager/reports">Отчёты</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/settings"> Настройки</a>
+                <a class="btn btn-outline-primary" href="/manager/settings">Настройки</a>
             </div>
         </div>
-        <div class="col-sm-8 text-left">
+        <div class="col-10">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-distribution"
-                       role="tab"
-                       aria-controls="nav-home" aria-selected="true">E-mail рассылка</a>
+                       role="tab" aria-controls="nav-home" aria-selected="true">E-mail рассылка</a>
                     <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-priceChange" role="tab"
                        aria-controls="nav-profile" aria-selected="false">Снижение цен</a>
                     <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#priceListCreate" role="tab"
@@ -63,6 +61,9 @@
                     <a class="nav-item nav-link" id="nav-categories-and-topics-tab" data-toggle="tab"
                        href="#nav-categories-and-topics" role="tab"
                        aria-controls="nav-categories-and-topics" aria-selected="false">Обратная связь</a>
+                    <a class="nav-item nav-link" id="nav-products-categories-tab" data-toggle="tab"
+                       href="#nav-products-categories" role="tab"
+                       aria-controls="nav-products-categories" aria-selected="false">Категории товаров</a>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -302,6 +303,19 @@
                     <!-- Конец модального окна для редактирования темы -->
                 </div>
                 <!--  Конец раздела для редактирования категорий и тем -->
+
+                <div class="tab-pane fade" id="nav-products-categories" role="tabpanel"
+                     aria-labelledby="nav-products-categories-tab">
+                    <h2>Редактирование категорий товаров</h2>
+
+                        <button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
+                                data-target="#addProductCategoryModal">Добавить корневую категорию товара</button>
+
+
+                    <div class="accordion" id="accordionProductsCategories">
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -322,5 +336,6 @@
 <script src="/static/js/managerPriceChangeSetting.js"></script>
 <script src="/static/js/managerPriceListCreate.js"></script>
 <script src="/static/js/managerCategoriesSetting.js"></script>
+<script src="/static/js/managerProductCategorieCRUD.js"></script>
 </body>
 </html>

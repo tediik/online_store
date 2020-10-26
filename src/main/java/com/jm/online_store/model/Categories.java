@@ -30,7 +30,6 @@ public class Categories {//очень хочется убрать множест
     private Long id;
     @NonNull
     private String category;
-    //For example, Category = Laptop (or PC), SuperCategory = Computer
     @NonNull
     private Long parentCategoryId;
     @NonNull

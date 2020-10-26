@@ -108,23 +108,17 @@ function close() {
 
 async function fillCategories() {
 
-
-
-
-
-
-
-
-
-
-
     let data = await fetch("/api/categories").then(response => response.json());
+    let subdata = await fetch("/api/categories/sub/7").then(response => response.json());
     let siteMenu = document.getElementById('siteMenu');
-    for (let count in data) {
+    console.log('data - ' + data[0]);
+    console.log('subdata - ' + is.empty(subdata));
+        for (let count in data) {
         console.log(data[count].category);
         let button = `
             <li class="nav-item">
-            <a class="btn btn-outline-light text-black-50 font-weight-bold" id="button + '${data[count].id}'">${data[count].category}</a>
+            <a class="btn btn-outline-light text-black-50 font-weight-bold text-left" href="#" id="button
+            + '${data[count].id}'">${data[count].category}</a>
             </li>
         `;
         $(siteMenu).append(button);
