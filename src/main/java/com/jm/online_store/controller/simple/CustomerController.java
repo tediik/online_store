@@ -2,6 +2,7 @@ package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CommentService;
+import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,8 @@ public class CustomerController {
 
     private final UserService userService;
     private final CommentService commentService;
+    private final ReviewService reviewService;
+
 
     /**
      * метод получения данных зарегистрированного пользователя.
@@ -41,6 +44,7 @@ public class CustomerController {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
         model.addAttribute("listOfComments", commentService.findAllByCustomer(user));
+        model.addAttribute("listOfReviews", reviewService.findAllByCustomer(user));
         return "customerPage";
     }
 
