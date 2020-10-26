@@ -4,10 +4,6 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +23,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -165,54 +160,17 @@ public class ManagerProductsRestController {
      */
     @GetMapping("/manager/products/report")
     public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@RequestParam String category, HttpServletResponse response) {
-        List<Product> productsList = new ArrayList<>(productService.findAll());
-        if (!category.equals("all")) {
-            productsList.removeIf(nextProduct -> !nextProduct.getProductType().getCategory().equals(category));
-        }
         try {
             response.setContentType("text/html; charset=UTF-8");
             response.setCharacterEncoding("UTF-8");
-            XSSFWorkbook workbook = new XSSFWorkbook();
-            XSSFSheet sheet = workbook.createSheet("Products report");
-            int rowCount = 0;
-
-            XSSFRow row = sheet.createRow(rowCount++);
-            XSSFCell cell = row.createCell(0);
-            cell.setCellValue("ID");
-            cell = row.createCell(1);
-            cell.setCellValue("Название");
-            cell = row.createCell(2);
-            cell.setCellValue("Цена");
-            cell = row.createCell(3);
-            cell.setCellValue("Количество");
-            cell = row.createCell(4);
-            cell.setCellValue("Рейтинг");
-            cell = row.createCell(5);
-            cell.setCellValue("Категория");
-
-            for (Product aProduct : productsList) {
-                row = sheet.createRow(rowCount++);
-
-                cell = row.createCell(0);
-                cell.setCellValue(aProduct.getId());
-
-                cell = row.createCell(1);
-                cell.setCellValue(aProduct.getProduct());
-
-                cell = row.createCell(2);
-                cell.setCellValue(aProduct.getPrice());
-
-                cell = row.createCell(3);
-                cell.setCellValue(aProduct.getAmount());
-
-                cell = row.createCell(4);
-                cell.setCellValue(aProduct.getRating());
-
-                cell = row.createCell(5);
-                cell.setCellValue(aProduct.getProductType().getCategory());
+            List<Product> products;
+            if (category.equals("all")) {
+                products = productService.findAll();
+            } else {
+                products = productService.findProductsByCategory(category);
             }
-            response.setHeader("Size", String.valueOf(rowCount-1));
-            workbook.write(response.getOutputStream());
+            response.setHeader("Size", String.valueOf(products.size()));
+            productService.createXlsxDoc(products, category).write(response.getOutputStream());
             return ResponseEntity.ok().build();
         } catch (NullPointerException | IOException e) {
             return ResponseEntity.notFound().build();

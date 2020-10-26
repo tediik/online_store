@@ -3,7 +3,6 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
@@ -20,6 +19,10 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -74,6 +77,68 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = findAll();
         products.removeIf(Product::isDeleted);
         return products;
+    }
+
+    /**
+     * Метод для получения товаров по категории
+     *
+     * @param categoryName категория
+     * @return список товаров данной категории
+     */
+    @Override
+    public List<Product> findProductsByCategory(String categoryName) {
+        return productRepository.findProductsByCategory(categoryName);
+    }
+
+    /**
+     * Метод для создания XLSX файла из списка товаров по категории
+     *
+     * @param products товары
+     * @param category нужная категория
+     * @return Excel-документ
+     */
+    @Override
+    public XSSFWorkbook createXlsxDoc(List<Product> products, String category){
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Products report");
+        int rowCount = 0;
+
+        XSSFRow row = sheet.createRow(rowCount++);
+        XSSFCell cell = row.createCell(0);
+        cell.setCellValue("ID");
+        cell = row.createCell(1);
+        cell.setCellValue("Название");
+        cell = row.createCell(2);
+        cell.setCellValue("Цена");
+        cell = row.createCell(3);
+        cell.setCellValue("Количество");
+        cell = row.createCell(4);
+        cell.setCellValue("Рейтинг");
+        cell = row.createCell(5);
+        cell.setCellValue("Категория");
+
+        for (Product aProduct : products) {
+            row = sheet.createRow(rowCount++);
+
+            cell = row.createCell(0);
+            cell.setCellValue(aProduct.getId());
+
+            cell = row.createCell(1);
+            cell.setCellValue(aProduct.getProduct());
+
+            cell = row.createCell(2);
+            cell.setCellValue(aProduct.getPrice());
+
+            cell = row.createCell(3);
+            cell.setCellValue(aProduct.getAmount());
+
+            cell = row.createCell(4);
+            cell.setCellValue(aProduct.getRating());
+
+            cell = row.createCell(5);
+            cell.setCellValue(aProduct.getProductType().getCategory());
+        }
+        return workbook;
     }
 
     /**

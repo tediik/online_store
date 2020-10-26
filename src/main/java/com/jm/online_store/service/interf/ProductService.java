@@ -3,6 +3,7 @@ package com.jm.online_store.service.interf;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -45,5 +46,9 @@ public interface ProductService {
 
     Long editProduct(Product product);
 
+    List<Product> findProductsByCategory(String categoryName);
+
     void saveAllProducts(List<Product> products);
+
+    XSSFWorkbook createXlsxDoc(List<Product> products, String category);
 }
