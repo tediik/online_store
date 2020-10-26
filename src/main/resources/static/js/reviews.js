@@ -7,9 +7,7 @@ $(document).ready(function () {
             url: '/api/reviews/' + productId,
             dataType: "json",
             success: function (response) {
-                console.log(response);
                 $.each(response, function (i, review) {
-                    //console.log(review);
                     if (review.parentId === null) {
                         $('#showReviews').append($(`
                         <div class="media mb-4"><div>
@@ -36,7 +34,6 @@ $(document).ready(function () {
             } else {
 
                 var formData = $(this).serializeArray();
-                console.log(formData);
                 var formDataObject = {};
                 $.each(formData,
                     function (i, v) {

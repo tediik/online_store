@@ -32,10 +32,10 @@ public class ReviewRestController {
     private final ReviewService reviewService;
 
     /**
-     * Получает arrayList всех отзывов к продукту по productId и возвращает ответ JSON response
+     * Fetches an arrayList of all product Review by productId and returns JSON representation response
      *
      * @param productId
-     * @return ResponseEntity<List < ReviewDto>>
+     * @return ResponseEntity<List <ReviewDto>>
      */
     @GetMapping("/{productId}")
     public ResponseEntity<List<ReviewDto>> findAll(@PathVariable Long productId) {
@@ -46,11 +46,11 @@ public class ReviewRestController {
     }
 
     /**
-     * Получает productReview requestBody и передает его в слой Service для обработки
-     * Возвращает представление JSON
+     * Receives productReview requestBody and passes it to Service layer for processing
+     * Returns JSON representation
      *
      * @param review
-     * @return ResponseEntity<ProductReview>
+     * @return ResponseEntity<productReview>
      */
     @PostMapping
     public ResponseEntity<ProductForReviewDto> addReview(@RequestBody @Valid Review review, BindingResult bindingResult) {

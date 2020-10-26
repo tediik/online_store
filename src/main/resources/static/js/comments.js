@@ -88,7 +88,6 @@ $(document).ready(function () {
             var commentId = $(this).attr("id");
 
             commentId = commentId.replace(/\D/g, '');
-            console.log(commentId);
             var commentBox = $(`
                                 <div class="well">
                                     <h4>Leave a Comment:</h4>
