@@ -159,18 +159,6 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     }
 
     /**
-     * Метод находит заказ по {@param orderNumber}, в случае если его нет,
-     * бросается исключение {@throws RepairOrderNotFoundException}
-     *
-     * @param orderNumber номер заказа на ремонт
-     * @return RepairOrder заказ на ремонт
-     */
-    @Override
-    public RepairOrder findByOrderNumber(String orderNumber) {
-        return repairOrderRepository.findByOrderNumber(orderNumber).orElseThrow(RepairOrderNotFoundException::new);
-    }
-
-    /**
      * Метод находит заказ по {@param id} и {@param telephoneNumber}, в случае если его нет,
      * бросается исключение {@throws RepairOrderNotFoundException}
      *

@@ -79,7 +79,7 @@ function getWorkOrder(order) {
                 let url = window.URL.createObjectURL(blob);
                 let file = document.createElement('a');
                 file.href = url;
-                file.download = `work_order.pdf`;
+                file.download = `work_order_${order.orderNumber}.pdf`;
                 file.click();
             })
         } else {

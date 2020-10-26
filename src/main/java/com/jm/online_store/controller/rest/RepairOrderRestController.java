@@ -1,15 +1,17 @@
 package com.jm.online_store.controller.rest;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.jm.online_store.enums.RepairOrderType;
 import com.jm.online_store.model.RepairOrder;
 import com.jm.online_store.service.interf.RepairOrderService;
 import lombok.AllArgsConstructor;
-import org.apache.poi.xwpf.converter.pdf.PdfConverter;
-import org.apache.poi.xwpf.converter.pdf.PdfOptions;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -193,9 +197,37 @@ public class RepairOrderRestController {
         try {
             response.setContentType("text/html; charset=UTF-8");
             response.setCharacterEncoding("UTF-8");
-            XWPFDocument document = new XWPFDocument();
-
-            XWPFParagraph companyName = document.createParagraph();
+            Document document = new Document();
+            PdfWriter.getInstance(document, response.getOutputStream());
+            Font companyNameFont = FontFactory.getFont("fonts/HelveticaRegular.ttf", BaseFont.IDENTITY_H, true, 18, Font.BOLD);
+            Font infoFont = FontFactory.getFont("fonts/HelveticaRegular.ttf", BaseFont.IDENTITY_H, true, 12);
+            Font titleFont = FontFactory.getFont("fonts/HelveticaRegular.ttf", BaseFont.IDENTITY_H, true, 16, Font.BOLD);
+            document.open();
+            document.addTitle("Заказ-наряд " + repairOrder.getOrderNumber());
+            Paragraph paragraph = new Paragraph("ООО «ONLINE STORE»", companyNameFont);
+            paragraph.add(new Paragraph("125130, г. Москва, ул. Нарвская, д. 1А", infoFont));
+            paragraph.add(new Paragraph("ИНН 7724457832, КПП 841689725, ОГРН 1176713648274", infoFont));
+            document.add(paragraph);
+            paragraph = new Paragraph("ЗАКАЗ-НАРЯД № " + repairOrder.getOrderNumber(), titleFont);
+            paragraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(paragraph);
+            paragraph = new Paragraph("От " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(LocalDate.now()),
+                    infoFont);
+            paragraph.add(new Paragraph("Заказчик " + repairOrder.getFullNameClient(), infoFont));
+            paragraph.add(new Paragraph("Номер телефона " + repairOrder.getTelephoneNumber(), infoFont));
+            paragraph.add(new Paragraph("Название устройства " + repairOrder.getNameDevice(), infoFont));
+            paragraph.add(new Paragraph("Гарантия " + (repairOrder.isGuarantee() ? "да" : "нет"), infoFont));
+            paragraph.add(new Paragraph("Описание проблемы " + repairOrder.getFullTextProblem(), infoFont));
+            paragraph.add(new Paragraph("Исполнитель ____________________  Заказчик ____________________", infoFont));
+            paragraph.setAlignment(Element.ALIGN_LEFT);
+            document.add(paragraph);
+            document.close();
+            return ResponseEntity.ok().build();
+        } catch (DocumentException | IOException e) {
+            return ResponseEntity.notFound().build();
+        }
+        /*
+        XWPFParagraph companyName = document.createParagraph();
             companyName.setAlignment(ParagraphAlignment.LEFT);
             XWPFRun companyNameRun = companyName.createRun();
             companyNameRun.setText("ООО «ONLINE STORE»");
@@ -223,7 +255,7 @@ public class RepairOrderRestController {
             XWPFParagraph userInfo = document.createParagraph();
             userInfo.setAlignment(ParagraphAlignment.LEFT);
             XWPFRun userInfoRun = userInfo.createRun();
-            userInfoRun.setText("От " + repairOrder.getAcceptanceDate().toString());
+            userInfoRun.setText("От " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(LocalDate.now()));
             userInfoRun.addBreak();
             userInfoRun.setText("Заказчик " + repairOrder.getFullNameClient());
             userInfoRun.addBreak();
@@ -239,12 +271,11 @@ public class RepairOrderRestController {
             userInfoRun.setFontFamily("Arial");
             userInfoRun.setFontSize(12);
 
-            PdfOptions options = PdfOptions.create().fontEncoding("utf-8");
-            PdfConverter.getInstance().convert(document, response.getOutputStream(), options);
+            document.write(response.getOutputStream());
 
             return ResponseEntity.ok().build();
         } catch (NullPointerException | IOException e) {
             return ResponseEntity.notFound().build();
-        }
+        }*/
     }
 }
