@@ -181,20 +181,20 @@ public class ManagerProductsRestController {
             XSSFCell cell = row.createCell(0);
             cell.setCellValue("ID");
             cell = row.createCell(1);
-            cell.setCellValue("");
+            cell.setCellValue("Название");
             cell = row.createCell(2);
-            cell.setCellValue(aProduct.getPrice());
+            cell.setCellValue("Цена");
             cell = row.createCell(3);
-            cell.setCellValue(aProduct.getAmount());
+            cell.setCellValue("Количество");
             cell = row.createCell(4);
-            cell.setCellValue(aProduct.getRating());
+            cell.setCellValue("Рейтинг");
             cell = row.createCell(5);
-            cell.setCellValue(aProduct.getProductType().getCategory());
+            cell.setCellValue("Категория");
 
             for (Product aProduct : productsList) {
-                XSSFRow row = sheet.createRow(rowCount++);
+                row = sheet.createRow(rowCount++);
 
-                XSSFCell cell = row.createCell(0);
+                cell = row.createCell(0);
                 cell.setCellValue(aProduct.getId());
 
                 cell = row.createCell(1);
