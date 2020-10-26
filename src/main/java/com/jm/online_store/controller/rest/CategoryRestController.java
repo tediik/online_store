@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Рест контроллер страницы продукта.
+ * Рест контроллер категорий.
  */
 @Slf4j
 @RestController
@@ -24,7 +24,7 @@ public class CategoryRestController {
     private final CategoriesService categoriesService;
 
     /**
-     * Ищет категории в БД
+     * Метод, который ищет категории в БД
      *
      * @return список сущностей Categories
      */

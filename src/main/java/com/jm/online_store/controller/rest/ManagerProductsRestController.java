@@ -176,6 +176,21 @@ public class ManagerProductsRestController {
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("Products report");
             int rowCount = 0;
+
+            XSSFRow row = sheet.createRow(rowCount++);
+            XSSFCell cell = row.createCell(0);
+            cell.setCellValue("ID");
+            cell = row.createCell(1);
+            cell.setCellValue("");
+            cell = row.createCell(2);
+            cell.setCellValue(aProduct.getPrice());
+            cell = row.createCell(3);
+            cell.setCellValue(aProduct.getAmount());
+            cell = row.createCell(4);
+            cell.setCellValue(aProduct.getRating());
+            cell = row.createCell(5);
+            cell.setCellValue(aProduct.getProductType().getCategory());
+
             for (Product aProduct : productsList) {
                 XSSFRow row = sheet.createRow(rowCount++);
 
