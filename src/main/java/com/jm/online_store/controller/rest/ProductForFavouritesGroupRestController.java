@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Рест контроллер по работе с продуктами в списках избранного
+ */
 @RestController
 @AllArgsConstructor
 public class ProductForFavouritesGroupRestController {
@@ -30,32 +33,52 @@ public class ProductForFavouritesGroupRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
 
+    /**
+     * Добавление продукта в Список избранных товаров
+     * @param product продукт
+     * @param id идентификатор списка избранных товаров
+     * @return
+     */
     @PostMapping(value = "/customer/addProductInFavouritesGroup/{id}")
     public ResponseEntity addProductInFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
-        User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok("addProductInFavouritesGroupOK");
     }
 
+    /**
+     * Получение продуктов из списка избранных товаров
+     * @param id идентификатор списка избранных товаров
+     * @return
+     */
     @GetMapping(value = "/customer/getProductFromFavouritesGroup/{id}")
     public ResponseEntity<Set<Product>> getProductFromFavouritesGroup(@PathVariable Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         return ResponseEntity.ok(favouritesGroupProductService.getProductSet(favouritesGroup));
     }
 
+    /**
+     * Удаление продукта из выбранного списка избранного
+     * @param idProduct идентификатор продукта
+     * @param id идентификатор списка
+     * @return
+     */
     @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroup/{idGroup}")
     public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody Long idProduct, @PathVariable("idGroup") Long id) {
-        User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         Product product = productService.findProductById(idProduct).orElseThrow();
         favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Удаление продукта из выбранного списка избранного
+     * @param idProducts Масссив id продуктов
+     * @param idGroup идентификатор списка
+     * @return
+     */
     @DeleteMapping(value = "/customer/clearFavouritesGroup/{idGroup}")
     public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody ArrayList<Long> idProducts, @PathVariable("idGroup") Long idGroup) {
-        User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(idGroup).orElseThrow();
         for (int i = 0; i < idProducts.size(); i++){
             Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
@@ -64,9 +87,15 @@ public class ProductForFavouritesGroupRestController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Перемещение продуктов из одного списка в другой
+     * @param idProducts  Масссив id продуктов
+     * @param idNewGroup идентификатор нового списка
+     * @param idOldGroup идентификатор старого списка
+     * @return
+     */
     @PutMapping(value = "/customer/deleteProductFromFavouritesGroup/{idNewGroup}/{idOldGroup}")
     public ResponseEntity moveProducts(@RequestBody ArrayList<Long> idProducts, @PathVariable("idNewGroup") Long idNewGroup, @PathVariable("idOldGroup") Long idOldGroup) {
-        User user = userService.getCurrentLoggedInUser();
         FavouritesGroup newFavouritesGroup = favouritesGroupService.findById(idNewGroup).orElseThrow();
         FavouritesGroup oldFavouritesGroup = favouritesGroupService.findById(idOldGroup).orElseThrow();
         for (int i = 0; i < idProducts.size(); i++) {
