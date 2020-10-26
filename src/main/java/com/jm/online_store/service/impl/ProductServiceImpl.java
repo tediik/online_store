@@ -75,6 +75,7 @@ public class ProductServiceImpl implements ProductService {
         products.removeIf(Product::isDeleted);
         return products;
     }
+
     /**
      * метод поиска Product по идентификатору.
      *
@@ -107,6 +108,13 @@ public class ProductServiceImpl implements ProductService {
     public Long saveProduct(Product product) {
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
+    }
+
+    @Override
+    public void saveAllProducts(List<Product> products) {
+        for (Product product : products) {
+            saveProduct(product);
+        }
     }
 
     /**

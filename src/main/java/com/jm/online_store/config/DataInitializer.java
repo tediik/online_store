@@ -83,7 +83,8 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   // @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    //@PostConstruct
+    //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -643,6 +644,10 @@ public class DataInitializer {
         categoriesService.saveAll(Arrays.asList(category1, category2, category3,
                 category4, category5, category6, category7, category8, category9, category10, category11,
                 category12, category13, category14, category15, category16, category17));
+
+        productService.saveAllProducts(Arrays.asList(product1, product2, product3, product4, product5,
+                product6, product7, product8, product9, product10, product11, product12, product13, product14,
+                product15, product16, product17, product18));
 
         Set<Product> productSet = new HashSet<>();
         productSet.add(product1);

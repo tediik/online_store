@@ -45,4 +45,6 @@ public interface ProductService {
     boolean addNewSubscriber(Long id, String email);
 
     Long editProduct(Product product);
+
+    void saveAllProducts(List<Product> products);
 }

@@ -61,7 +61,7 @@ public class Product {
     @OneToOne(cascade = CascadeType.ALL)
     private Description descriptions;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "productType")
     private Categories productType;
 
