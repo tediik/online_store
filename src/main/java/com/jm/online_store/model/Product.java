@@ -68,6 +68,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<Review> reviews;
+
     /**
      *поле для возможности отслеживания изменения цены на Product.
      * при изменении цены добавлять элемент данной коллекции.

@@ -63,6 +63,7 @@ $(document).ready(function () {
                     cache: false,
                     contentType: "application/json; charset=utf-8",
                     success: function (response) {
+
                         var comment = response.comments[0];
                         $('#showComments').append($(`<div class="media mb-4">
                             <div>
@@ -85,6 +86,7 @@ $(document).ready(function () {
         $(document).on('click', '.reply', function (e) {
             //Reply to this id
             var commentId = $(this).attr("id");
+
             commentId = commentId.replace(/\D/g, '');
             var commentBox = $(`
                                 <div class="well">
