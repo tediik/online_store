@@ -25,6 +25,8 @@ public interface RepairOrderService {
 
     RepairOrder findById(Long id);
 
+    RepairOrder findByOrderNumber(String orderNumber);
+
     boolean existsById(Long id);
 
     RepairOrder update(RepairOrder repairOrder);

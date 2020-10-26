@@ -35,6 +35,9 @@ public class RepairOrder {
     private Long id;
 
     @NonNull
+    private String orderNumber;
+
+    @NonNull
     private String fullNameClient;
 
     @NonNull

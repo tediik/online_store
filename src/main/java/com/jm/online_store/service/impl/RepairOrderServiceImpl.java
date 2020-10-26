@@ -27,6 +27,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     /**
      * Метод возвращает все заказы на ремонт, сортирует по дате, от нового заказа к старому
+     *
      * @return лист заказов на ремонт
      */
     @Override
@@ -38,6 +39,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     /**
      * Метод возвращает все принятые заказы на ремонт, сортирует по дате, от нового заказа к старому
+     *
      * @return лист заказов на ремонт
      */
     @Override
@@ -50,6 +52,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     /**
      * Метод возвращает все заказы на ремонт, которые находятся на этапе диагностики,
      * сортирует по дате, от нового заказа к старому
+     *
      * @return лист заказов на ремонт
      */
     @Override
@@ -62,6 +65,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     /**
      * Метод возвращает все заказы на ремонт, которые находятся на этапе ремонта,
      * сортирует по дате, от нового заказа к старому
+     *
      * @return лист заказов на ремонт
      */
     @Override
@@ -74,6 +78,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     /**
      * Метод возвращает все заказы на ремонт, ремонт по которым выполнен,
      * сортирует по дате, от нового заказа к старому
+     *
      * @return лист заказов на ремонт
      */
     @Override
@@ -85,6 +90,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     /**
      * Метод возвращает все архивные заказы на ремонт, сортирует по дате, от нового заказа к старому
+     *
      * @return лист заказов на ремонт
      */
     @Override
@@ -96,6 +102,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     /**
      * Метод возвращает все отмененные заказы на ремонт, сортирует по дате, от нового заказа к старому
+     *
      * @return лист заказов на ремонт
      */
     @Override
@@ -109,6 +116,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
      * Метод сохраняет заявку на ремонт, устанавливает дату создания заявки и ставит статус Accepted.
      * Проверяет валидность введенного номера телефона, в случае его невалидности
      * бросает исключение {@throws InvalidTelephoneNumberException}
+     *
      * @param repairOrder принимает в качестве параметра заказ на ремонт
      */
     @Override
@@ -125,6 +133,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
      * Метод обновляет заявку на ремонт, устанавливает дату редактирования заявки.
      * Проверяет валидность введенного номера телефона, в случае его невалидности
      * бросает исключение {@throws InvalidTelephoneNumberException}
+     *
      * @param repairOrder принимает в качестве параметра заказ на ремонт
      * @return отредактированную заявку на ремонт
      */
@@ -140,6 +149,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     /**
      * Метод находит заказ по {@param id}, в случае если его нет,
      * бросается исключение {@throws RepairOrderNotFoundException}
+     *
      * @param id идентификатор заказа на ремонт
      * @return RepairOrder заказ на ремонт
      */
@@ -149,9 +159,22 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     }
 
     /**
+     * Метод находит заказ по {@param orderNumber}, в случае если его нет,
+     * бросается исключение {@throws RepairOrderNotFoundException}
+     *
+     * @param orderNumber номер заказа на ремонт
+     * @return RepairOrder заказ на ремонт
+     */
+    @Override
+    public RepairOrder findByOrderNumber(String orderNumber) {
+        return repairOrderRepository.findByOrderNumber(orderNumber).orElseThrow(RepairOrderNotFoundException::new);
+    }
+
+    /**
      * Метод находит заказ по {@param id} и {@param telephoneNumber}, в случае если его нет,
      * бросается исключение {@throws RepairOrderNotFoundException}
-     * @param id идентификатор заказа на ремонт
+     *
+     * @param id              идентификатор заказа на ремонт
      * @param telephoneNumber номер телефона клиента
      * @return RepairOrder заказ на ремонт
      */
@@ -162,6 +185,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     /**
      * Метод проверяет существует ли заказ на ремонт по {@param id}
+     *
      * @param id идентификатор заказа на ремонт
      * @return возвращает true если существует заказ, иначе false
      */
@@ -172,6 +196,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     /**
      * Удаляет заказ на ремонт по {@param id}
+     *
      * @param id идентификатор заказа на ремонт
      */
     @Override
@@ -181,6 +206,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     /**
      * Метод возвращает список всех возможных статусов заказа на ремонт
+     *
      * @return возвращает список статусов заказа на ремонт
      */
     @Override

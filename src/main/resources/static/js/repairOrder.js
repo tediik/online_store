@@ -13,18 +13,25 @@ $(document).ready(function () {
     })
 });
 
+function formOrder() {
+    let order = {
+        fullNameClient: document.getElementById('fullNameClient').value,
+        telephoneNumber: document.getElementById('telephoneNumber').value,
+        nameDevice: document.getElementById('nameDevice').value,
+        guarantee: document.getElementById('guaranteeCheckbox').checked,
+        fullTextProblem: document.getElementById('fullTextProblem').value,
+        orderNumber: ""
+    }
+    order.orderNumber += order.guarantee? "Y":"N"
+    order.orderNumber += order.telephoneNumber.slice()
+}
+
 /**
  * Функция добавления заявки на ремонт
  */
 function addRepairOrder() {
     if (checkFieldsAddRepairOrder()) {
-        let order = {
-            fullNameClient: document.getElementById('fullNameClient').value,
-            telephoneNumber: document.getElementById('telephoneNumber').value,
-            nameDevice: document.getElementById('nameDevice').value,
-            guarantee: document.getElementById('guaranteeCheckbox').checked,
-            fullTextProblem: document.getElementById('fullTextProblem').value
-        };
+        let order = formOrder();
         fetch('/service/addRepairOrder', {
             method: 'POST',
             headers: {
@@ -55,6 +62,10 @@ function addRepairOrder() {
 function getWorkOrder(order) {
     fetch('/service/getWorkOrder', {
         method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json; charset=UTF-8'
+        },
         body: JSON.stringify(order)
     }).then(function (response) {
         if (response.status === 200) {
@@ -62,7 +73,7 @@ function getWorkOrder(order) {
                 let url = window.URL.createObjectURL(blob);
                 let file = document.createElement('a');
                 file.href = url;
-                file.download = `work_order.docx`;
+                file.download = `work_order.pdf`;
                 file.click();
             })
         } else {
