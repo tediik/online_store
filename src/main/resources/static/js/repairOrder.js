@@ -28,10 +28,11 @@ function formOrder() {
     }
     order.orderNumber += order.guarantee ? "Y" : "N";
     order.orderNumber += order.telephoneNumber.slice(order.telephoneNumber.length - 4, order.telephoneNumber.length).split(' ').join('');
-    order.orderNumber += fetch('/service/getTime').then((res) => res.json())
-        .then((data) => {
-            return data
-        });
+    fetch("/service/getTime").then(function (response) {
+        return response.text().then(function (text) {
+            order.orderNumber += text;
+        })
+    })
     return order;
 }
 
