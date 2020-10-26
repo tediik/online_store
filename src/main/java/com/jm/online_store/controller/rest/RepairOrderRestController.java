@@ -217,7 +217,8 @@ public class RepairOrderRestController {
             paragraph.add(new Paragraph("Номер телефона " + repairOrder.getTelephoneNumber(), infoFont));
             paragraph.add(new Paragraph("Название устройства " + repairOrder.getNameDevice(), infoFont));
             paragraph.add(new Paragraph("Гарантия " + (repairOrder.isGuarantee() ? "да" : "нет"), infoFont));
-            paragraph.add(new Paragraph("Описание проблемы " + repairOrder.getFullTextProblem(), infoFont));
+            paragraph.add(new Paragraph("Описание проблемы " + repairOrder.getFullTextProblem()
+                    .substring(3, repairOrder.getFullTextProblem().length() - 4), infoFont));
             paragraph.add(new Paragraph("Исполнитель ____________________  Заказчик ____________________", infoFont));
             paragraph.setAlignment(Element.ALIGN_LEFT);
             document.add(paragraph);
@@ -226,56 +227,5 @@ public class RepairOrderRestController {
         } catch (DocumentException | IOException e) {
             return ResponseEntity.notFound().build();
         }
-        /*
-        XWPFParagraph companyName = document.createParagraph();
-            companyName.setAlignment(ParagraphAlignment.LEFT);
-            XWPFRun companyNameRun = companyName.createRun();
-            companyNameRun.setText("ООО «ONLINE STORE»");
-            companyNameRun.setBold(true);
-            companyNameRun.setFontFamily("Arial");
-            companyNameRun.setFontSize(18);
-
-            XWPFParagraph companyInfo = document.createParagraph();
-            companyInfo.setAlignment(ParagraphAlignment.LEFT);
-            XWPFRun companyInfoRun = companyInfo.createRun();
-            companyInfoRun.setText("125130, г. Москва, ул. Нарвская, д. 1А");
-            companyInfoRun.addBreak();
-            companyInfoRun.setText("ИНН 7724457832, КПП 841689725, ОГРН 1176713648274");
-            companyInfoRun.setFontFamily("Arial");
-            companyInfoRun.setFontSize(12);
-
-            XWPFParagraph title = document.createParagraph();
-            title.setAlignment(ParagraphAlignment.CENTER);
-            XWPFRun titleRun = title.createRun();
-            titleRun.setText("ЗАКАЗ-НАРЯД № " + repairOrder.getOrderNumber());
-            titleRun.setBold(true);
-            titleRun.setFontFamily("Arial");
-            titleRun.setFontSize(16);
-
-            XWPFParagraph userInfo = document.createParagraph();
-            userInfo.setAlignment(ParagraphAlignment.LEFT);
-            XWPFRun userInfoRun = userInfo.createRun();
-            userInfoRun.setText("От " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(LocalDate.now()));
-            userInfoRun.addBreak();
-            userInfoRun.setText("Заказчик " + repairOrder.getFullNameClient());
-            userInfoRun.addBreak();
-            userInfoRun.setText("Номер телефона " + repairOrder.getTelephoneNumber());
-            userInfoRun.addBreak();
-            userInfoRun.setText("Название устройства " + repairOrder.getNameDevice());
-            userInfoRun.addBreak();
-            userInfoRun.setText("Гарантия " + (repairOrder.isGuarantee() ? "да" : "нет"));
-            userInfoRun.addBreak();
-            userInfoRun.setText("Описание проблемы " + repairOrder.getFullTextProblem());
-            userInfoRun.addBreak();
-            userInfoRun.setText("Исполнитель ____________________  Заказчик ____________________");
-            userInfoRun.setFontFamily("Arial");
-            userInfoRun.setFontSize(12);
-
-            document.write(response.getOutputStream());
-
-            return ResponseEntity.ok().build();
-        } catch (NullPointerException | IOException e) {
-            return ResponseEntity.notFound().build();
-        }*/
     }
 }
