@@ -32,5 +32,4 @@ public class CategoryRestController {
     public ResponseEntity<List<Categories>> getAllCategories() {
         return new ResponseEntity<>(categoriesService.getAllCategories(), HttpStatus.OK);
     }
-
 }

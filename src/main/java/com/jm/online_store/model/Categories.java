@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,8 +35,7 @@ public class Categories {
     private String superCategory;
 
     @Transient
-    @OneToMany(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
+    @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "productType")
     private List<Product> products;
 }
