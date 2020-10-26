@@ -1,10 +1,11 @@
 let productRestUrl = "/rest/products/allProducts"
-let categoryNow
+let categoryNow = "all"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
 showAndRefreshNotDeleteHomeTab()
+
 
 /**
  * Функция обработки действий чекбокса
