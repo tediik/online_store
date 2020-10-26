@@ -26,6 +26,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -73,6 +74,8 @@ public class User implements UserDetails {
     private LocalDate registerDate;
 
     private String profilePicture = "";
+
+    private LocalDateTime status;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
