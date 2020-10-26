@@ -21,8 +21,8 @@ public class GlobalStocksController {
         if (stockService.findStockById(id) == null) {
             return "redirect:/stocks";
         }
-        Stock stocks = stockService.findStockById(id);
-        model.addAttribute("stock", stocks);
+        Stock stock = stockService.findStockById(id);
+        model.addAttribute("stock", stock);
         return "stockGlobalPage";
     }
 }
