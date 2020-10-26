@@ -69,8 +69,13 @@ public class RepairOrderRestController {
      */
     @PostMapping("/api/checkStatus")
     public ResponseEntity<RepairOrder> getCurrentRepairOrder(@RequestBody RepairOrder repairOrder) {
-        RepairOrder repairOrderCheck = repairOrderService.findRepairOrderByIdAndTelephoneNumber(repairOrder.getId(), repairOrder.getTelephoneNumber());
-        return ResponseEntity.ok(repairOrderCheck);
+        try {
+            RepairOrder repairOrderCheck = repairOrderService.findRepairOrderByIdAndTelephoneNumber(repairOrder.getId(),
+                    repairOrder.getTelephoneNumber());
+            return ResponseEntity.ok(repairOrderCheck);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /**
