@@ -48,8 +48,8 @@ public class FavouritesGoodsRestController {
     }
 
     /**
-     *контроллер добавления товара в избранное.
-     *
+     * Контроллер добавления товара в избранное.
+     * Добавляем продукт в список избранного "Все товары"
      * @param id идентификатор товара
      * @return ResponseEntity.ok()
      */
@@ -57,17 +57,15 @@ public class FavouritesGoodsRestController {
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.addToFavouriteGoods(id, user);
-        //Добавляем продукт в список избранного "Все товары"
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
         favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup, user);
-        //
         return ResponseEntity.ok().build();
     }
 
     /**
-     *контроллер удаления товара из избранного списка товаров.
-     *
+     * Контроллер удаления товара из избранного списка товаров.
+     * Удаляем продукт из списка "Все товары"
      * @param id идентификатор товара
      * @return ResponseEntity.ok()
      */
@@ -75,11 +73,9 @@ public class FavouritesGoodsRestController {
     public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.deleteFromFavouriteGoods(id, user);
-        // Удаляем продукт из списка "Все товары"
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
         favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup, user);
-        //
         return ResponseEntity.ok().build();
     }
 

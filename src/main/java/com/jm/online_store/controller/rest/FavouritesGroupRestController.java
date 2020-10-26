@@ -15,26 +15,39 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Рест контроллер для "Списков" Избранных товаров
+ */
 @RestController
 @AllArgsConstructor
+@RequestMapping("/customer/favouritesGroup")
 public class FavouritesGroupRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final UserService userService;
 
-    @GetMapping(value = "/customer/favouritesGroup")
+    /**
+     * Получение списков избранных товаров залогиневшегося пользователя
+     * @return
+     */
+    @GetMapping
     public ResponseEntity getFavouritesGroups() {
         User user = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(favouritesGroupService.findAllByUser(user));
     }
 
-    @PostMapping(value = "/customer/favouritesGroup")
+    /**
+     * Сохраняем в БД новый список избранных товаров
+     * @param favouritesGroup
+     * @return возвращаем в точку вызова данные нового списка
+     */
+    @PostMapping
     public ResponseEntity addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
         User user = userService.getCurrentLoggedInUser();
         favouritesGroup.setUser(user);
@@ -42,10 +55,21 @@ public class FavouritesGroupRestController {
         return ResponseEntity.ok(favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName()));
     }
 
-    @DeleteMapping(value = "/customer/favouritesGroup/{id}")
+    /**
+     * Удаляем из БД список избранных товаров
+     * @param id идентификатор списка
+     */
+    @DeleteMapping("/{id}")
     public void deleteFavouritesGroups(@PathVariable("id") Long id) {
         favouritesGroupService.deleteById(id);
     }
+
+    /**
+     * Обновляем в БД имя списка избранных товаров
+     * @param name новое имя
+     * @param id идентификатор списка
+     * @return  статус ответа 200
+     */
     @PutMapping(value = "/customer/favouritesGroup/{id}")
     public ResponseEntity updateFavouritesGroups(@RequestBody String name, @PathVariable("id") Long id) {
         User user = userService.getCurrentLoggedInUser();
