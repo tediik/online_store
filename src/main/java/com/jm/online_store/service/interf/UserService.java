@@ -21,6 +21,12 @@ public interface UserService {
 
     void addUser(User user);
 
+    void changeUserStatusToLocked(Long id);
+
+    boolean checkUserStatus(String email, String password);
+
+    void restoreUser(String email);
+
     void deleteByID(Long id);
 
     void updateUser(User user);
