@@ -13,6 +13,10 @@ $(document).ready(function () {
     })
 });
 
+/**
+ * Формирует заказ и присваивает уникальный номер
+ * @returns Заказ на ремонт
+ */
 function formOrder() {
     let order = {
         fullNameClient: document.getElementById('fullNameClient').value,
@@ -22,8 +26,10 @@ function formOrder() {
         fullTextProblem: document.getElementById('fullTextProblem').value,
         orderNumber: ""
     }
-    order.orderNumber += order.guarantee? "Y":"N"
-    order.orderNumber += order.telephoneNumber.slice()
+    order.orderNumber += order.guarantee ? "Y" : "N";
+    order.orderNumber += new Date().getUTCMilliseconds();
+    order.orderNumber += order.telephoneNumber.slice(order.telephoneNumber.length - 2, order.telephoneNumber.length);
+    return order;
 }
 
 /**

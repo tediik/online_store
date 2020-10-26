@@ -5,6 +5,8 @@ import com.jm.online_store.model.Order;
 import com.jm.online_store.model.RepairOrder;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +17,4 @@ public interface RepairOrderRepository extends JpaRepository<RepairOrder, Long> 
     List<RepairOrder> findAllByRepairOrderTypeEquals(RepairOrderType repairOrderType);
 
     Optional<RepairOrder> findByIdAndTelephoneNumber(Long id, @NonNull String telephoneNumber);
-
-    Optional<RepairOrder> findByOrderNumber(String orderNumber);
 }

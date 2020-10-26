@@ -215,7 +215,7 @@ public class RepairOrderRestController {
             XWPFParagraph title = document.createParagraph();
             title.setAlignment(ParagraphAlignment.CENTER);
             XWPFRun titleRun = title.createRun();
-            titleRun.setText("ЗАКАЗ-НАРЯД № " + repairOrder.getId().toString());
+            titleRun.setText("ЗАКАЗ-НАРЯД № " + repairOrder.getOrderNumber());
             titleRun.setBold(true);
             titleRun.setFontFamily("Arial");
             titleRun.setFontSize(16);
