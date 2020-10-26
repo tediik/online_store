@@ -62,10 +62,10 @@ public class AllUsersRestController {
     public ResponseEntity<String> checkEmailForRestore(@RequestBody UserDto userDto) {
         try {
             if (userService.checkUserStatus(userDto.getEmail(), userDto.getPassword())) {
-                return ResponseEntity.ok("Все хорошо, идет дальше!");
+                return ResponseEntity.badRequest().body("Профиль будет восстановлен после подтверждения!");
 
             } else {
-                return ResponseEntity.badRequest().body("Профиль будет восстановлен после подтверждения!");
+                return ResponseEntity.ok("Все хорошо, идет дальше!");
             }
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.badRequest().body("Пользователь не найден!");
