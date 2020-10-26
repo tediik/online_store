@@ -95,6 +95,10 @@ public class StockServiceImpl implements StockService {
         return currentStocks;
     }
 
+    /**
+     * Метод извлекает список акций, отмеченных для публикации на главной странице
+     * @return publishedStocks возвращает список опубликованных акций со значением true в поле published из БД
+     */
     @Override
     public List<Stock> findPublishedStocks() {
         List<Stock> publishedStocks = stockRepository.findPublishedStocks();

@@ -201,13 +201,13 @@ function fillPublishedStocks(data) {
             stockCarouselItem = `
                  <div class="carousel-item carousel-itemWithStock">
                         <img class="next-slide"
-                             src="/uploads/images/stocks/${data[key].stockImg}" width="400" height="200"
+                             src="/uploads/images/stocks/${data[key].stockImg}" 
                              onerror="if (this.src != '/uploads/images/stocks/default.jpg')
                                  this.src = '/uploads/images/stocks/default.jpg';">
                         <div class="container">
-                            <div class="carousel-caption" style="color: red">
-                                <p><a class="btn btn-secondary" style="margin-top: 50px; margin-left: -252px" 
-                                href="global/stockDetails/${data[key].id}" role="button">Подробнее &raquo;</a></p>
+                            <div class="carousel-caption">
+                                <p><a class="btn btn-secondary btn-carousel" href="global/stockDetails/${data[key].id}" 
+                                role="button">Подробнее &raquo;</a></p>
                             </div>
                              <div class = "card-text stockTitle">
                                 <h5>${data[key].stockTitle}</h5>
@@ -249,13 +249,13 @@ function fillPublishedNews(data) {
             carouselItem = `
                  <div class="carousel-item carousel-itemWithNews">
                         <img class="next-slide"
-                             src="/uploads/images/news/${key}.jpg" width="400" height="200"
+                             src="/uploads/images/news/${key}.jpg" 
                              onerror="if (this.src != '/uploads/images/news/defnews.jpg')
                                  this.src = '/uploads/images/news/defnews.jpg';">
                         <div class="container">
-                            <div class="carousel-caption" style="color: red">
-                                <p><a class="btn btn-secondary" style="margin-top: 50px; margin-left: -252px" 
-                                href="news/${data[key].id}" role="button">Подробнее &raquo;</a></p>
+                            <div class="carousel-caption">
+                                <p><a class="btn btn-secondary btn-carousel" href="news/${data[key].id}" 
+                                role="button">Подробнее &raquo;</a></p>
                             </div>
                              <div class = "card-text newsTitle">
                                 <h5>${data[key].title}</h5>

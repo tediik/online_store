@@ -30,7 +30,7 @@
         <div class="col-sm-8 text-left">
             <div class="alert alert-info mt-2">
                 <div th:each="stock : ${stock}" class="alert alert-info mt-2">
-                    <img th:src="@{../../uploads/images/stocks/{name}(name = ${stock.stockImg})}" width="400"
+                    <img th:src="@{../../uploads/images/stocks/{name}(name = ${stock.stockImg})}" class="next-slide"
                          alt="Ищите новые акции на нашем сайте"/>
                     <h4 th:text="${stock.stockTitle}"></h4>
                     <p th:text="${stock.stockText}"></p>

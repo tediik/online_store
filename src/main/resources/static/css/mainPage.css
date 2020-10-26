@@ -65,6 +65,17 @@ html {
     background-color: #ebc493;
 }
 
+/* Declare margin-bottom because of positioning of element on carousel slide */
+.carousel-indicators {
+    margin-bottom: -1px;
+}
+
+/* Declare margins for carousel button because of positioning of element on carousel slide */
+.btn-carousel {
+    margin-bottom: 5px;
+    margin-left: -252px;
+}
+
 .stockTitle {
     margin-left: -.8rem;
     margin-right: -1rem;
@@ -72,6 +83,15 @@ html {
     background-color: #ebc493;
     width: 400px;
     height: 100px;
+}
+
+.container-carousel {
+    height: 500px;
+}
+
+.next-slide {
+    width: 400px;
+    height: 200px;
 }
 /* MARKETING CONTENT
 -------------------------------------------------- */
