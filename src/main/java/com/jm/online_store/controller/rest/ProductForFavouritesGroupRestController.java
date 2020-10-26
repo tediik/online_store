@@ -34,15 +34,14 @@ public class ProductForFavouritesGroupRestController {
     public ResponseEntity addProductInFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
-        favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup, user);
+        favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok("addProductInFavouritesGroupOK");
     }
 
     @GetMapping(value = "/customer/getProductFromFavouritesGroup/{id}")
     public ResponseEntity<Set<Product>> getProductFromFavouritesGroup(@PathVariable Long id) {
-        User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
-        return ResponseEntity.ok(favouritesGroupProductService.getProductSet(favouritesGroup, user));
+        return ResponseEntity.ok(favouritesGroupProductService.getProductSet(favouritesGroup));
     }
 
     @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroup/{idGroup}")
@@ -50,7 +49,7 @@ public class ProductForFavouritesGroupRestController {
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         Product product = productService.findProductById(idProduct).orElseThrow();
-        favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup, user);
+        favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok().build();
     }
 
@@ -60,7 +59,7 @@ public class ProductForFavouritesGroupRestController {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(idGroup).orElseThrow();
         for (int i = 0; i < idProducts.size(); i++){
             Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
-            favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup, user);
+            favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup);
         }
         return ResponseEntity.ok().build();
     }
@@ -72,8 +71,8 @@ public class ProductForFavouritesGroupRestController {
         FavouritesGroup oldFavouritesGroup = favouritesGroupService.findById(idOldGroup).orElseThrow();
         for (int i = 0; i < idProducts.size(); i++) {
             Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
-            favouritesGroupProductService.deleteProductFromFavouritesGroup(product, oldFavouritesGroup, user);
-            favouritesGroupProductService.addProductToFavouritesGroup(product, newFavouritesGroup, user);
+            favouritesGroupProductService.deleteProductFromFavouritesGroup(product, oldFavouritesGroup);
+            favouritesGroupProductService.addProductToFavouritesGroup(product, newFavouritesGroup);
         }
         return ResponseEntity.ok().build();
     }

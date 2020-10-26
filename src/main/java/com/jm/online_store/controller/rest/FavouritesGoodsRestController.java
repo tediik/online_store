@@ -59,7 +59,7 @@ public class FavouritesGoodsRestController {
         favouriteGoodsService.addToFavouriteGoods(id, user);
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
-        favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup, user);
+        favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok().build();
     }
 
@@ -75,7 +75,7 @@ public class FavouritesGoodsRestController {
         favouriteGoodsService.deleteFromFavouriteGoods(id, user);
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
-        favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup, user);
+        favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok().build();
     }
 

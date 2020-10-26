@@ -25,41 +25,40 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class FavouritesGroupProductServiceImpl implements FavouritesGroupProductService {
-    private final FavouritesGroupService favouritesGroupService;
-    private final ProductService productService;
     private final FavouritesGroupRepository favouritesGroupRepository;
-    private final UserService userService;
 
+    /**
+     * Удалеине продукта из списка избранных товаров
+     * @param product  продукт
+     * @param favouritesGroup список
+     */
     @Override
-    public void deleteProductFromFavouritesGroup(Product product, FavouritesGroup favouritesGroup, User user) {
-        Set<FavouritesGroup> favouritesGroupSet = user.getFavouritesGroups();
-        FavouritesGroup selectedFavouritesGroup = favouritesGroupSet.stream().filter(data -> Objects.equals(data, favouritesGroup)).findFirst().get();
-        Set<Product> productSet = selectedFavouritesGroup.getProducts();
+    public void deleteProductFromFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
+        Set<Product> productSet = favouritesGroup.getProducts();
         productSet.remove(product);
-        selectedFavouritesGroup.setProducts(productSet);
-        favouritesGroupSet.add(selectedFavouritesGroup);
-        user.setFavouritesGroups(favouritesGroupSet);
-        userService.updateUser(user);
-    }
-    public void deleteListProductFromFavouritesGroup(ArrayList<Long> idProducts, FavouritesGroup favouritesGroup, User user) {
+        favouritesGroupRepository.save(favouritesGroup);
     }
 
+    /**
+     * Добавление продукта в список избранных товаров
+     * @param product продукт
+     * @param favouritesGroup список
+     */
     @Override
-    public void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup, User user) {
-        Set<FavouritesGroup> favouritesGroupSet = user.getFavouritesGroups();
-        FavouritesGroup selectedFavouritesGroup = favouritesGroupSet.stream().filter(data -> Objects.equals(data, favouritesGroup)).findFirst().get();
-        Set<Product> productSet = selectedFavouritesGroup.getProducts();
+    public void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
+        Set<Product> productSet = favouritesGroup.getProducts();
         productSet.add(product);
-        selectedFavouritesGroup.setProducts(productSet);
-        user.setFavouritesGroups(favouritesGroupSet);
-        userService.updateUser(user);
+        favouritesGroupRepository.save(favouritesGroup);
     }
 
+    /**
+     * Получаем список продуктов из списка избранного
+     * @param favouritesGroup список как сущность избранных товаров
+     * @return список товаров
+     */
     @Override
-    public Set<Product> getProductSet(FavouritesGroup favouritesGroup, User user) {
-        Set<FavouritesGroup> favouritesGroupSet = user.getFavouritesGroups();
-        FavouritesGroup selectedFavouritesGroup = favouritesGroupSet.stream().filter(data -> Objects.equals(data, favouritesGroup)).findFirst().get();
-        Set<Product> productSet = selectedFavouritesGroup.getProducts();
+    public Set<Product> getProductSet(FavouritesGroup favouritesGroup) {
+        Set<Product> productSet = favouritesGroup.getProducts();
         return productSet;
     }
 }
