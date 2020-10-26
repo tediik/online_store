@@ -233,4 +233,10 @@ public class RepairOrderRestController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/service/getTime")
+    public ResponseEntity<String> getUnixTime() {
+        String result = String.valueOf(System.currentTimeMillis());
+        return ResponseEntity.ok(result.substring(result.length() - 4));
+    }
 }

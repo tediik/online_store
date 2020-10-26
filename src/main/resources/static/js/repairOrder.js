@@ -27,8 +27,11 @@ function formOrder() {
         orderNumber: ""
     }
     order.orderNumber += order.guarantee ? "Y" : "N";
-    order.orderNumber += order.telephoneNumber.slice(order.telephoneNumber.length - 2, order.telephoneNumber.length);
-    order.orderNumber += new Date().getUTCMilliseconds();
+    order.orderNumber += order.telephoneNumber.slice(order.telephoneNumber.length - 4, order.telephoneNumber.length).split(' ').join('');
+    order.orderNumber += fetch('/service/getTime').then((res) => res.json())
+        .then((data) => {
+            return data
+        });
     return order;
 }
 
