@@ -5,9 +5,11 @@ import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Description;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.Review;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.model.SharedStock;
@@ -22,10 +24,12 @@ import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.SharedStockService;
@@ -79,14 +83,17 @@ public class DataInitializer {
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
     private final CommentService commentService;
+    private final FavouritesGroupService favouritesGroupService;
     private final TopicsCategoryService topicsCategoryService;
+    private final ReviewService reviewService;
+
 
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   //@PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    // @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -95,12 +102,13 @@ public class DataInitializer {
         stockInit();
         sharedStockInit();
         addressInit();
-//        sentStockInit();  // метод нужен только для тестирования рассылки акций
-//        paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
+//      sentStockInit();  // метод нужен только для тестирования рассылки акций
+//      paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
         taskSettingsInit();
         commonSettingsInit();
         feedbackTopicsInit();
         commentsInit();
+        reviewsInit();
     }
 
     /**
@@ -166,6 +174,13 @@ public class DataInitializer {
         customer = userService.findByEmail("customer@mail.ru").get();
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
+
+        //Создание основного списка(Все товары) избранных товаров
+        FavouritesGroup favouritesGroup = new FavouritesGroup();
+        favouritesGroup.setName("Все товары");
+        favouritesGroup.setProducts(productSet);
+        favouritesGroup.setUser(customer);
+        favouritesGroupService.save(favouritesGroup);
 
         SubBasket subBasket_1 = new SubBasket();
         subBasket_1.setProduct(product_1);
@@ -787,7 +802,7 @@ public class DataInitializer {
                         "2</span><span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
                         " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">&nbsp;–" +
                         " выбор за вами!</span><br>")
-
+                .published(true)
                 .build();
 
         Stock secondStock = Stock.builder()
@@ -856,6 +871,7 @@ public class DataInitializer {
                         "не вправе принимать участие в акции.</span><br style=\"color: rgb(51, 51, 51); " +
                         "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px;" +
                         " letter-spacing: 0.23px; text-align: start;\">")
+                .published(true)
                 .build();
 
         Stock thirdStock = Stock.builder()
@@ -909,6 +925,7 @@ public class DataInitializer {
                         "<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
                         " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
                         "&nbsp;– выбор за вами!</span>")
+                .published(true)
                 .build();
 
         Stock forthStock = Stock.builder()
@@ -919,6 +936,7 @@ public class DataInitializer {
                         " Эта техника предлагает множество программ для деликатной и эффективной стирки и сушки." +
                         " Оформите беспроцентный кредит на бытовую технику Whirlpool или получите 10% от стоимости" +
                         " покупки на бонусную карту – выбор за вами!")
+                .published(true)
                 .build();
 
         Stock fifthStock = Stock.builder()
@@ -930,6 +948,7 @@ public class DataInitializer {
                         " Закажи компьютер с Windows 10. Забери товар и получи промокод на Kaspersky Internet Security" +
                         " за 990 рублей на свой Email и в личный кабинет в течение трёх дней после получения заказа." +
                         " Обязательно используй Бонусную карту – её можно оформить прямо на сайте.")
+                .published(false)
                 .build();
 
         Stock sixthStock = Stock.builder()
@@ -941,6 +960,7 @@ public class DataInitializer {
                         " Активируй свою скидку на странице товара." +
                         " Товары из акционного списка отмечены специальным знаком \"Требуй скидку!\" на сайте." +
                         " На товары из акционного перечня распространяются правила программы лояльности.")
+                .published(false)
                 .build();
 
         stockService.addStock(firstStock);
@@ -1202,5 +1222,50 @@ public class DataInitializer {
         commentService.addCommentInit(comment1);
         commentService.addCommentInit(comment2);
         commentService.addCommentInit(comment3);
+    }
+
+    /**
+     * Init method for review
+     */
+    public void reviewsInit() {
+
+        Review review1 = new Review();
+        Review review2 = new Review();
+        Review review3 = new Review();
+
+        review1.setId(1L);
+        review2.setId(2L);
+        review3.setId(3L);
+        review1.setReviewDate(LocalDateTime.now());
+        review2.setReviewDate(LocalDateTime.now());
+        review3.setReviewDate(LocalDateTime.now());
+        review1.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        review2.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        review3.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        review1.setProductId(1L);
+        review2.setProductId(1L);
+        review3.setProductId(1L);
+        review1.setContent("Пожалуй это лучший компьютер который я когда либо видел и держал в руках, надеюсь он сослужит" +
+                " мне хорошую службу.\n" +
+                "Перед покупкой смотрел на конфигурацию с i9 и 5500m, в итоге по опыту прошлых поколений сделал выбор в " +
+                "пользу i7 и 5300m и не прогадал. В моих задачах производительность идентичная MacBook с i9 но более " +
+                "старшая модель при высоких нагрузках нагревается и сбрасывает частоты что у данной модели не обнаружено," +
+                " и в итоге по сравнению с ноутбуком товарища c i9 5500m Xcode работает у меня стабильней, и " +
+                "производительность на одно ядро выше, и работает он куда тише.");
+        review2.setContent("По производительности большой разницы для меня нет.Проект собирается плюс минус так же. " +
+                "Только теперь температура во время сборки доходит максимум до 65 градусов вместо 80-85.Ноутбук стал " +
+                "немного больше по габаритам, но в сумку от пятнашки вошел.Звук вроде хороший, качество экрана особо " +
+                "без изменений. Не понятно достают ли клавиши до экрана когда ноутбук лежит в сумке, вроде отметин " +
+                "пока на нем нет. На старом доставали и царапали покрытие экрана. Можно выкинуть внешнюю клавиатуру. " +
+                "Мышь теперь то же не нужна.");
+        review3.setContent("Для меня важно было найти баланс между решением рабочих задач (разработка на Java), " +
+                "любовью к потреблению контента (YouTube, PornoHub, Горячие мамочки) и периодическими поездками. " +
+                "Производительная начинка вкупе с большой диагональю экрана и автономностью работы у этой прошки " +
+                "полностью меня устроили. Надеюсь, Apple докажет и в этот раз свою состоятельность, и менять мак в связи" +
+                "с не актульностью придется не раньше 2025)");
+
+        reviewService.addReviewInit(review1);
+        reviewService.addReviewInit(review2);
+        reviewService.addReviewInit(review3);
     }
 }

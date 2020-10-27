@@ -4,6 +4,18 @@
     transform: translate3d(0, 0, 0);
 }
 
+.vert {
+    margin-top: -.2rem;
+    margin-bottom: 1rem;
+    margin-left: -3rem;
+    width: 400px;
+}
+
+.vert {
+    height: 200px;
+    background-color: #ebc493;
+}
+
 .vert .carousel-item-next,
 .vert .active.carousel-item-right {
     -webkit-transform: translate3d(0, 100%, 0);
@@ -15,3 +27,53 @@
     -webkit-transform: translate3d(0,-100%, 0);
     transform: translate3d(0,-100%, 0);
 }
+
+/* CUSTOMIZE THE STOCK CAROUSEL
+-------------------------------------------------- */
+/* Carousel base class */
+.carouselWithStock {
+    margin-top: .3rem;
+    margin-bottom: 1rem;
+    width: 400px;
+    height: 200px;
+}
+/* Declare heights because of positioning of img element */
+.carousel-itemWithStock {
+    height: 250px;
+    background-color: #ebc493;
+}
+
+.stockTitle {
+    margin-left: -.8rem;
+    margin-right: -1rem;
+    padding-bottom: 1rem;
+    background-color: #ebc493;
+    width: 400px;
+    height: 100px;
+}
+
+
+/* CUSTOMIZE THE NEWS CAROUSEL
+-------------------------------------------------- */
+/* Carousel base class */
+.carouselWithNews {
+    margin-top: .3rem;
+    margin-bottom: 1rem;
+    width: 400px;
+    height: 200px;
+}
+/* Declare heights because of positioning of img element */
+.carousel-itemWithNews {
+    height: 250px;
+    background-color: #ebc493;
+}
+
+.newsTitle {
+    margin-left: -.8rem;
+    margin-right: -1rem;
+    padding-bottom: 1rem;
+    background-color: #ebc493;
+    width: 400px;
+    height: 100px;
+}
+

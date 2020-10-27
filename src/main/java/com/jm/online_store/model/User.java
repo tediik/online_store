@@ -92,6 +92,11 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favouritesGoods = new HashSet<>();
 
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private Set<FavouritesGroup> favouritesGroups = new HashSet<>();
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_adresses",
