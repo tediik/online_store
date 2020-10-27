@@ -5,6 +5,7 @@ import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Description;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
@@ -23,6 +24,7 @@ import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
@@ -81,6 +83,7 @@ public class DataInitializer {
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
     private final CommentService commentService;
+    private final FavouritesGroupService favouritesGroupService;
     private final TopicsCategoryService topicsCategoryService;
     private final ReviewService reviewService;
 
@@ -171,6 +174,13 @@ public class DataInitializer {
         customer = userService.findByEmail("customer@mail.ru").get();
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
+
+        //Создание основного списка(Все товары) избранных товаров
+        FavouritesGroup favouritesGroup = new FavouritesGroup();
+        favouritesGroup.setName("Все товары");
+        favouritesGroup.setProducts(productSet);
+        favouritesGroup.setUser(customer);
+        favouritesGroupService.save(favouritesGroup);
 
         SubBasket subBasket_1 = new SubBasket();
         subBasket_1.setProduct(product_1);
