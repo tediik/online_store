@@ -57,6 +57,9 @@ public class Stock {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
 
+    @Column (name = "published")
+    private boolean published;
+
     @OneToMany(mappedBy = "stock", orphanRemoval = true)
     @JsonManagedReference(value = "stock-sharedStock")
     private Set<SharedStock> sharedStocks;

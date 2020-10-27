@@ -802,7 +802,7 @@ public class DataInitializer {
                         "2</span><span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
                         " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">&nbsp;–" +
                         " выбор за вами!</span><br>")
-
+                .published(true)
                 .build();
 
         Stock secondStock = Stock.builder()
@@ -871,6 +871,7 @@ public class DataInitializer {
                         "не вправе принимать участие в акции.</span><br style=\"color: rgb(51, 51, 51); " +
                         "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px;" +
                         " letter-spacing: 0.23px; text-align: start;\">")
+                .published(true)
                 .build();
 
         Stock thirdStock = Stock.builder()
@@ -924,6 +925,7 @@ public class DataInitializer {
                         "<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
                         " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
                         "&nbsp;– выбор за вами!</span>")
+                .published(true)
                 .build();
 
         Stock forthStock = Stock.builder()
@@ -934,6 +936,7 @@ public class DataInitializer {
                         " Эта техника предлагает множество программ для деликатной и эффективной стирки и сушки." +
                         " Оформите беспроцентный кредит на бытовую технику Whirlpool или получите 10% от стоимости" +
                         " покупки на бонусную карту – выбор за вами!")
+                .published(true)
                 .build();
 
         Stock fifthStock = Stock.builder()
@@ -945,6 +948,7 @@ public class DataInitializer {
                         " Закажи компьютер с Windows 10. Забери товар и получи промокод на Kaspersky Internet Security" +
                         " за 990 рублей на свой Email и в личный кабинет в течение трёх дней после получения заказа." +
                         " Обязательно используй Бонусную карту – её можно оформить прямо на сайте.")
+                .published(false)
                 .build();
 
         Stock sixthStock = Stock.builder()
@@ -956,6 +960,7 @@ public class DataInitializer {
                         " Активируй свою скидку на странице товара." +
                         " Товары из акционного списка отмечены специальным знаком \"Требуй скидку!\" на сайте." +
                         " На товары из акционного перечня распространяются правила программы лояльности.")
+                .published(false)
                 .build();
 
         stockService.addStock(firstStock);
