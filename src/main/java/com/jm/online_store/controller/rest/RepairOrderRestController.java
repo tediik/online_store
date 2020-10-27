@@ -1,13 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.jm.online_store.enums.RepairOrderType;
 import com.jm.online_store.model.RepairOrder;
 import com.jm.online_store.service.interf.RepairOrderService;
@@ -24,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -199,41 +190,20 @@ public class RepairOrderRestController {
      */
     @PostMapping("/service/getWorkOrder")
     public ResponseEntity<FileSystemResource> getWorkOrder(@RequestBody RepairOrder repairOrder, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         try {
-            response.setContentType("text/html; charset=UTF-8");
-            response.setCharacterEncoding("UTF-8");
-            Document document = new Document();
-            PdfWriter.getInstance(document, response.getOutputStream());
-            Font companyNameFont = FontFactory.getFont("fonts/HelveticaRegular.ttf", BaseFont.IDENTITY_H, true, 18, Font.BOLD);
-            Font infoFont = FontFactory.getFont("fonts/HelveticaRegular.ttf", BaseFont.IDENTITY_H, true, 12);
-            Font titleFont = FontFactory.getFont("fonts/HelveticaRegular.ttf", BaseFont.IDENTITY_H, true, 16, Font.BOLD);
-            document.open();
-            document.addTitle("Заказ-наряд " + repairOrder.getOrderNumber());
-            Paragraph paragraph = new Paragraph("ООО «ONLINE STORE»", companyNameFont);
-            paragraph.add(new Paragraph("125130, г. Москва, ул. Нарвская, д. 1А", infoFont));
-            paragraph.add(new Paragraph("ИНН 7724457832, КПП 841689725, ОГРН 1176713648274", infoFont));
-            document.add(paragraph);
-            paragraph = new Paragraph("ЗАКАЗ-НАРЯД № " + repairOrder.getOrderNumber(), titleFont);
-            paragraph.setAlignment(Element.ALIGN_CENTER);
-            document.add(paragraph);
-            paragraph = new Paragraph("От " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(LocalDate.now()),
-                    infoFont);
-            paragraph.add(new Paragraph("Заказчик " + repairOrder.getFullNameClient(), infoFont));
-            paragraph.add(new Paragraph("Номер телефона " + repairOrder.getTelephoneNumber(), infoFont));
-            paragraph.add(new Paragraph("Название устройства " + repairOrder.getNameDevice(), infoFont));
-            paragraph.add(new Paragraph("Гарантия " + (repairOrder.isGuarantee() ? "да" : "нет"), infoFont));
-            paragraph.add(new Paragraph("Описание проблемы " + repairOrder.getFullTextProblem()
-                    .substring(3, repairOrder.getFullTextProblem().length() - 4), infoFont));
-            paragraph.add(new Paragraph("Исполнитель ____________________  Заказчик ____________________", infoFont));
-            paragraph.setAlignment(Element.ALIGN_LEFT);
-            document.add(paragraph);
-            document.close();
+            repairOrderService.createPdfWorkOrder(repairOrder, response);
             return ResponseEntity.ok().build();
         } catch (DocumentException | IOException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
+    /**
+     * Простое получение времени Unix
+     * @return String с последними 5 цифрами времени
+     */
     @GetMapping("/service/getTime")
     public ResponseEntity<String> getUnixTime() {
         String result = String.valueOf(System.currentTimeMillis());
