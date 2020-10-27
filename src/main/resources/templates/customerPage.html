@@ -46,7 +46,7 @@
                    aria-controls="profile" aria-selected="false">Профиль</a>
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
-                   onclick="fillFavouritesGoods()">Избранное</a>
+                   >Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false"
                    onclick="fillBasket();location.href='#basket'">Корзина</a>
@@ -65,12 +65,98 @@
                     <div class="container-fluid" id="chartContainer" style="height: 370px; width: 100%;"></div>
 
                 </div>
-                <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel" aria-labelledby="favouritesGoods-tab">
+                <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel"
+                     aria-labelledby="favouritesGoods-tab">
                     <h3>Избранное</h3>
+                    <!-- Новый интерфейс -->
+                    <div class="favouritesgroups">
+                        <div class="btn-group">
+                            <button type="button" class="get-favourites-group-btn btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false" th:id="${favouritesGroupList[0].id}">Все товары</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" th:each="favouritesGroup : ${favouritesGroupList}"
+                                   th:id="${favouritesGroup.id}" th:text="${favouritesGroup.name}">Все товары</a>
+                            </div>
+                        </div>
+                        <a id="addInOverGroup" class="btn btn-outline-secondary " href="#">Добавить товары в другой
+                            список </a>
+                        <span class="ch_select_all hidden">
+                            <input class="ch_select_all" type="checkbox" value="" id="ch_sel_all">
+                            <label class="ch_select_all" for="ch_sel_all">
+                                Выбрать все
+                            </label>
+                        </span>
+                        <a id="escape" class="btn btn-outline-secondary hidden" href="#">Отмена</a>
+                        <a id="clear_group" class="btn btn-outline-secondary" href="#">Очистить список</a>
+                        <a id="sel_new_group" class="btn btn-outline-secondary hidden" data-toggle="modal"
+                           data-target="#exampleModal" href="#">Выбрать группу</a>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Выбирите список:</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="select_group table table-condensed" >
+                                        <tr th:each="favouritesGroup : ${favouritesGroupList}" class="select-group-tr mt-3" th:id="${favouritesGroup.id}">
+                                            <td>
+                                                <input th:id="${favouritesGroup.id}"
+                                                       th:class="check-favourites-group" type="checkbox"
+                                                       class="form-check-input checkbox_move_group">
+                                                <label class="form-check-label"
+                                                       th:for="${favouritesGroup.id}">
+                                                    <input th:id="${favouritesGroup.id}" type="text" th:value="${favouritesGroup.getName()}" class="select-group-tr-input" disabled>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <div class="ok-cancel-edit-fav-group hidden" th:id="${favouritesGroup.id}">
+                                                    <span class="edit-fav-group-ok done" th:id="${favouritesGroup.id}">V</span>
+                                                    <span class="edit-fav-group-cancel" th:id="${favouritesGroup.id}">X</span>
+                                                </div>
+                                                <button type="button" class="button-edit-fav-group btn btn-secondary"
+                                                        th:id="${favouritesGroup.id}">EDIT
+                                                </button>
+                                                <button type="button" class="button-delete-fav-group btn btn-danger"
+                                                        th:id="${favouritesGroup.id}">DELETE
+                                                </button>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="add-group">
+                                        <div class="polya-input hidden">
+                                            <input type="checkbox" class="new-group-checkbox">
+                                            <input type="text" class="new-group-input"
+                                                   th:value="@{'Мой список '+${execInfo.now.time}}" size="40">
+                                            <span class="add-group-input-ok">V</span>
+                                            <span class="add-group-input-cancel">X</span>
+                                        </div>
+                                        <div class="add-group-new">
+                                            Создать новый список
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                                    </button>
+                                    <button type="button" class="btn-copy-product btn btn-primary">Перенести</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Модалка END-->
+                    <!--  Новый интерфейс -->
+
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th scope="col">id</th>
+                            <th scope="col">check</th>
                             <th scope="col">product</th>
                             <th scope="col">price</th>
                             <th scope="col">amount</th>

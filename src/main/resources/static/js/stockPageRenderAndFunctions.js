@@ -200,8 +200,7 @@ function handleSaveChangesButton(event, file_name_stockImg) {
         published: stockPublished
     }
     let method = (stock.id !== '' ? 'PUT' : 'POST')
-
-    fetchStock(stock, method);
+    fetchStock(stock, method)
 
     function fetchStock(stock, method) {
         fetch(stockApiUrl, {
