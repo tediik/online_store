@@ -4,6 +4,7 @@ import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
+import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;

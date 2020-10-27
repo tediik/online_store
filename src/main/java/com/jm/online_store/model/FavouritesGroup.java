@@ -31,8 +31,6 @@ public class FavouritesGroup {
 
     private String name;
 
-    @JsonIgnore
-    @JsonProperty(value = "user")
     @ManyToOne
     User user;
 

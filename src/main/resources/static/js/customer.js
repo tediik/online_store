@@ -79,7 +79,7 @@ $(document).on("click", ".btn-copy-product", function () {
     $('.close').trigger('click');
 });
 /**
- * Закрываем модулку
+ * Закрываем модальное окно
  */
 $(document).on("click", ".modal-footer button", function (){
     defaultInterface();
