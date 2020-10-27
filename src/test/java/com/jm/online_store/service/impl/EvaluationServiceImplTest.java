@@ -41,7 +41,7 @@ public class EvaluationServiceImplTest {
         MockitoAnnotations.initMocks(this);
         user = new User("email","1");
         evaluations = new ArrayList<>();
-        product = new Product("product",234,2);
+        product = new Product("product",234D,2);
         evaluation1 = new Evaluation(5,user,product);
         evaluation2 = new Evaluation(4,user,null);
         evaluations.add(evaluation1);

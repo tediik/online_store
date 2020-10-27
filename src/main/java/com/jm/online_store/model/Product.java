@@ -18,12 +18,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,26 +43,34 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false, updatable = false, nullable = false)
     private long id;
+
     @NonNull
     @Column(name = "product", nullable = false)
     private String product;
+
     @NonNull
     @Column(name = "price", nullable = false)
     private Double price;
+
     @NonNull
     private Integer amount;
+
     @NonNull
     private Double rating;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Description descriptions;
-    @NonNull
-    private String productType;
+
+    @ManyToOne
+    @JoinColumn(name = "productType")
+    private Categories productType;
+
     @NonNull
     private boolean deleted;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+            property = "id")
     private List<ProductInOrder> productInOrders;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
@@ -72,7 +80,7 @@ public class Product {
     private List<Review> reviews;
 
     /**
-     *поле для возможности отслеживания изменения цены на Product.
+     * поле для возможности отслеживания изменения цены на Product.
      * при изменении цены добавлять элемент данной коллекции.
      */
     @ElementCollection
@@ -83,7 +91,7 @@ public class Product {
     private Map<LocalDateTime, Double> changePriceHistory = new LinkedHashMap<>();
 
     /**
-     *поле для хранения почтовых адресов для рассылки информации об уменьшения цены на товар
+     * поле для хранения почтовых адресов для рассылки информации об уменьшения цены на товар
      */
     @ElementCollection
     @CollectionTable(name = "product_subscribers_mails",
@@ -91,7 +99,7 @@ public class Product {
     @Column(name = "email")
     private Set<String> priceChangeSubscribers = new HashSet<>();
 
-    public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {
+    public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull Categories productType) {
         this.product = product;
         this.price = price;
         this.amount = amount;
@@ -99,20 +107,20 @@ public class Product {
         this.productType = productType;
     }
 
-    public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating) {
+    public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating) {
         this.product = product;
         this.price = price;
         this.amount = amount;
         this.rating = rating;
     }
 
-    public Product(String product, double price, int amount) {
+    public Product(String product, Double price, Integer amount) {
         this.product = product;
         this.price = price;
         this.amount = amount;
     }
 
-    public @NonNull boolean getDeleteStatus(){
+    public @NonNull boolean getDeleteStatus() {
         return this.deleted;
     }
 }
