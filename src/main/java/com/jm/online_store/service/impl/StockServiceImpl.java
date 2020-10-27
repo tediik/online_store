@@ -95,6 +95,19 @@ public class StockServiceImpl implements StockService {
         return currentStocks;
     }
 
+    /**
+     * Метод извлекает список акций, отмеченных для публикации на главной странице
+     * @return publishedStocks возвращает список опубликованных акций со значением true в поле published из БД
+     */
+    @Override
+    public List<Stock> findPublishedStocks() {
+        List<Stock> publishedStocks = stockRepository.findPublishedStocks();
+        if (publishedStocks.isEmpty()) {
+            throw new StockNotFoundException();
+        }
+        return publishedStocks;
+    }
+
     @Override
     public void updateStock(Stock stock) {
         Stock modifiedStock = stockRepository.findById(stock.getId()).orElseThrow(StockNotFoundException::new);
@@ -103,6 +116,7 @@ public class StockServiceImpl implements StockService {
         modifiedStock.setStockTitle(stock.getStockTitle());
         modifiedStock.setStockText(stock.getStockText());
         modifiedStock.setStockImg(stock.getStockImg());
+        modifiedStock.setPublished(stock.isPublished());
         stockRepository.save(modifiedStock);
     }
 }

@@ -5,6 +5,7 @@ import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Description;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
@@ -23,6 +24,7 @@ import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
@@ -81,6 +83,7 @@ public class DataInitializer {
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
     private final CommentService commentService;
+    private final FavouritesGroupService favouritesGroupService;
     private final TopicsCategoryService topicsCategoryService;
     private final ReviewService reviewService;
 
@@ -110,7 +113,7 @@ public class DataInitializer {
 
     /**
      * Метод конфигурирования и первичного заполнения таблиц:
-     * ролей, юзеров.
+     * ролей, юзеров и корзины.
      */
     private void roleInit() {
         Role adminRole = new Role("ROLE_ADMIN");
@@ -665,6 +668,13 @@ public class DataInitializer {
         customer.setFavouritesGoods(productSet);
         userService.updateUser(customer);
 
+        //Создание основного списка(Все товары) избранных товаров
+        FavouritesGroup favouritesGroup = new FavouritesGroup();
+        favouritesGroup.setName("Все товары");
+        favouritesGroup.setProducts(productSet);
+        favouritesGroup.setUser(customer);
+        favouritesGroupService.save(favouritesGroup);
+
         SubBasket subBasket_1 = new SubBasket();
         subBasket_1.setProduct(product1);
         subBasket_1.setCount(1);
@@ -778,7 +788,7 @@ public class DataInitializer {
                         "2</span><span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
                         " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">&nbsp;–" +
                         " выбор за вами!</span><br>")
-
+                .published(true)
                 .build();
 
         Stock secondStock = Stock.builder()
@@ -847,6 +857,7 @@ public class DataInitializer {
                         "не вправе принимать участие в акции.</span><br style=\"color: rgb(51, 51, 51); " +
                         "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px;" +
                         " letter-spacing: 0.23px; text-align: start;\">")
+                .published(true)
                 .build();
 
         Stock thirdStock = Stock.builder()
@@ -900,6 +911,7 @@ public class DataInitializer {
                         "<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
                         " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
                         "&nbsp;– выбор за вами!</span>")
+                .published(true)
                 .build();
 
         Stock forthStock = Stock.builder()
@@ -910,6 +922,7 @@ public class DataInitializer {
                         " Эта техника предлагает множество программ для деликатной и эффективной стирки и сушки." +
                         " Оформите беспроцентный кредит на бытовую технику Whirlpool или получите 10% от стоимости" +
                         " покупки на бонусную карту – выбор за вами!")
+                .published(true)
                 .build();
 
         Stock fifthStock = Stock.builder()
@@ -921,6 +934,7 @@ public class DataInitializer {
                         " Закажи компьютер с Windows 10. Забери товар и получи промокод на Kaspersky Internet Security" +
                         " за 990 рублей на свой Email и в личный кабинет в течение трёх дней после получения заказа." +
                         " Обязательно используй Бонусную карту – её можно оформить прямо на сайте.")
+                .published(false)
                 .build();
 
         Stock sixthStock = Stock.builder()
@@ -932,6 +946,7 @@ public class DataInitializer {
                         " Активируй свою скидку на странице товара." +
                         " Товары из акционного списка отмечены специальным знаком \"Требуй скидку!\" на сайте." +
                         " На товары из акционного перечня распространяются правила программы лояльности.")
+                .published(false)
                 .build();
 
         stockService.addStock(firstStock);

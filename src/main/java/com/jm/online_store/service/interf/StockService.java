@@ -26,5 +26,7 @@ public interface StockService {
 
     List<Stock> findPastStocks();
 
+    List<Stock> findPublishedStocks();
+
     void updateStock(Stock stock);
 }

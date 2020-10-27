@@ -21,15 +21,16 @@
 <div class="wrapper flex-grow-1 container-fluid">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <a class="btn btn-link" href="/"><---обратно</a>
+            <a class="btn btn-link" href="/"><---на главную</a>
         </div>
         <div class="col-sm-8 text-left">
             <h1 class="text-center">Акции</h1>
             <div th:each="stock : ${stocks}" class="alert alert-info mt-2">
-                <h3 th:text="${stock.stockImg}"></h3>
-                <p th:text="${stock.stockTitle}"></p>
+                <img th:src="@{../../uploads/images/stocks/{name}(name = ${stock.stockImg})}" class="next-slide"
+                     alt="Ищите новые акции на нашем сайте"/>
+                <h4 th:text="${stock.stockTitle}"></h4>
                 <p th:text="${stock.stockText}"></p>
-                <a th:href="'/global/stockDetails/' + ${stock.id}" class="btn btn-warning">Детальнее</a>        <!--маппинг продумать!-->
+                <a th:href="'/global/stockDetails/' + ${stock.id}" class="btn btn-warning">Детальнее</a>
             </div>
         </div>
     </div>
