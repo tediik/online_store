@@ -99,11 +99,14 @@ public class MainPageRestController {
         return ResponseEntity.ok(categoriesBySuperCategories);
     }*/
 
+    @GetMapping("api/categories/all")
+    public ResponseEntity<List<Categories>> getAllCategories() {
+        return ResponseEntity.ok(categoriesService.getAllCategories());
+    }
+
     @GetMapping("api/categories/sub/{id}")
     public ResponseEntity<List<Categories>> getSubCategoriesById(@PathVariable Long id) {
-        List<Categories> lc = categoriesService.getCategoriesByParentCategoryId(id);
-        System.out.println(lc.isEmpty());
-        return ResponseEntity.ok(lc);
+        return ResponseEntity.ok(categoriesService.getCategoriesByParentCategoryId(id));
     }
 
     /**

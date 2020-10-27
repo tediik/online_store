@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 @Entity
 @Table(name = "categories")
 @Data
+@Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor

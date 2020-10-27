@@ -1,0 +1,19 @@
+.accordion-item {
+    border: 1px solid #ddd;
+    margin: 0 0 10px 0;
+}
+.ui-accordion-header {
+    padding: 10px;
+    background: #fff2d6;
+    cursor: pointer;
+    outline: none;
+}
+.ui-accordion-content {
+    padding: 10px;
+    background: #fff;
+}
+.portlet-placeholder {
+    border: 1px dotted black;
+    margin: 0 1em 1em 0;
+    height: 50px;
+}
