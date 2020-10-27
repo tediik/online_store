@@ -14,7 +14,7 @@ public class FavouritesGroupProductServiceImpl implements FavouritesGroupProduct
     private final FavouritesGroupRepository favouritesGroupRepository;
 
     /**
-     * Удалеине продукта из списка избранных товаров
+     * Удаление продукта из списка избранных товаров
      * @param product  продукт
      * @param favouritesGroup список
      */
