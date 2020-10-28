@@ -2,11 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>News</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script type="text/javascript" src="https://vk.com/js/api/share.js?95" charset="windows-1251"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v8.0"
+        nonce="BZFaCW36"></script>
 <header th:insert="/blocks/header :: header"></header>
+
 <div class="wrapper flex-grow-1 container-fluid">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
@@ -14,12 +20,85 @@
         </div>
         <div class="col-sm-8 text-left">
             <div th:each="news : ${news}" class="alert alert-info mt-2">
-                <h3 th:text="${news.title}"></h3>
-                <p th:utext="${news.fullText}"></p>
+                <h3 th:text="${news.title}" id="newsTitle" th:value="${news.title}"></h3>
+                <p th:utext="${news.fullText}" id="newsDescription" th:value="${news.fullText}"></p>
+                <div class="container">
+                    <div class="row">
+                        <!-- Скопировать ссылку -->
+                        <div class="col-sm">
+                            <button type="button" id="shareLink" class=" copy_link btn btn-secondary btn-sm"
+                                    onclick="shareLink()">
+                                Ссылка
+                            </button>
+                        </div>
+                        <!-- Поедлиться в Fb -->
+                        <div class="col-sm">
+                            <div class="fb-share-button" data-href="http://localhost:9999" data-layout="button_count"
+                                 data-size="small">
+                                <a target="_blank"
+                                   href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A9999%2F&amp;src=sdkpreparse"
+                                   class="fb-xfbml-parse-ignore">Поделиться</a></div>
+                        </div>
+                        <!-- Поедлиться в Vk -->
+                        <div class="col-sm">
+                            <div class="vk_share_button" id="shareVkLink"
+                                 data-socialNetworkName="vk" th:attr="data-id=${news.id}">
+                                <script type="text/javascript">
+                                    document.write(VK.Share.button(false, {type: "round", text: "Поделиться"}));
+                                </script>
+                            </div>
+                        </div>
+                        <!-- Поедлиться в Ок -->
+                        <div class="col-sm">
+                            <div id="ok_shareWidget"></div>
+                            <script>
+                                !function (d, id, did, st, title, description, image) {
+                                    function init() {
+                                        OK.CONNECT.insertShareWidget(id, did, st, title, description, image);
+                                    }
+
+                                    if (!window.OK || !OK.CONNECT || !OK.CONNECT.insertShareWidget) {
+                                        var js = d.createElement("script");
+                                        js.src = "https://connect.ok.ru/connect.js";
+                                        js.onload = js.onreadystatechange = function () {
+                                            if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
+                                                if (!this.executed) {
+                                                    this.executed = true;
+                                                    setTimeout(init, 0);
+                                                }
+                                            }
+                                        };
+                                        d.documentElement.appendChild(js);
+                                    } else {
+                                        init();
+                                    }
+                                }(document, "ok_shareWidget", document.URL, '{"sz":20,"st":"rounded","ck":2,"lang":"ru","bgclr":"ED8207","txclr":"FFFFFF"}', "", "", "");
+                            </script>
+
+                        </div>
+                        <!-- Поедлиться в Twitter -->
+                        <div class="col-sm">
+                            <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button"
+                               data-show-count="false">Поделиться</a>
+                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <footer th:replace="/blocks/footer :: footer"></footer>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+<script src="/static/js/newsDetailsPageRender.js"></script>
 </body>
 </html>
