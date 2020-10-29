@@ -34,7 +34,7 @@ public class SharedStock {
     private String socialNetworkName;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     @JsonBackReference(value = "user-sharedStock")
     private User user;
 
