@@ -46,7 +46,7 @@
                    aria-controls="profile" aria-selected="false">Профиль</a>
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
-                   onclick="fillFavouritesGoods()">Избранное</a>
+                   >Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false"
                    onclick="fillBasket();location.href='#basket'">Корзина</a>
@@ -65,12 +65,98 @@
                     <div class="container-fluid" id="chartContainer" style="height: 370px; width: 100%;"></div>
 
                 </div>
-                <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel" aria-labelledby="favouritesGoods-tab">
+                <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel"
+                     aria-labelledby="favouritesGoods-tab">
                     <h3>Избранное</h3>
+                    <!-- Новый интерфейс -->
+                    <div class="favouritesgroups">
+                        <div class="btn-group">
+                            <button type="button" class="get-favourites-group-btn btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false" th:id="${favouritesGroupList[0].id}">Все товары</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" th:each="favouritesGroup : ${favouritesGroupList}"
+                                   th:id="${favouritesGroup.id}" th:text="${favouritesGroup.name}">Все товары</a>
+                            </div>
+                        </div>
+                        <a id="addInOverGroup" class="btn btn-outline-secondary " href="#">Добавить товары в другой
+                            список </a>
+                        <span class="ch_select_all hidden">
+                            <input class="ch_select_all" type="checkbox" value="" id="ch_sel_all">
+                            <label class="ch_select_all" for="ch_sel_all">
+                                Выбрать все
+                            </label>
+                        </span>
+                        <a id="escape" class="btn btn-outline-secondary hidden" href="#">Отмена</a>
+                        <a id="clear_group" class="btn btn-outline-secondary" href="#">Очистить список</a>
+                        <a id="sel_new_group" class="btn btn-outline-secondary hidden" data-toggle="modal"
+                           data-target="#exampleModal" href="#">Выбрать группу</a>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Выбирите список:</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="select_group table table-condensed" >
+                                        <tr th:each="favouritesGroup : ${favouritesGroupList}" class="select-group-tr mt-3" th:id="${favouritesGroup.id}">
+                                            <td>
+                                                <input th:id="${favouritesGroup.id}"
+                                                       th:class="check-favourites-group" type="checkbox"
+                                                       class="form-check-input checkbox_move_group">
+                                                <label class="form-check-label"
+                                                       th:for="${favouritesGroup.id}">
+                                                    <input th:id="${favouritesGroup.id}" type="text" th:value="${favouritesGroup.getName()}" class="select-group-tr-input" disabled>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <div class="ok-cancel-edit-fav-group hidden" th:id="${favouritesGroup.id}">
+                                                    <span class="edit-fav-group-ok done" th:id="${favouritesGroup.id}">V</span>
+                                                    <span class="edit-fav-group-cancel" th:id="${favouritesGroup.id}">X</span>
+                                                </div>
+                                                <button type="button" class="button-edit-fav-group btn btn-secondary"
+                                                        th:id="${favouritesGroup.id}">EDIT
+                                                </button>
+                                                <button type="button" class="button-delete-fav-group btn btn-danger"
+                                                        th:id="${favouritesGroup.id}">DELETE
+                                                </button>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="add-group">
+                                        <div class="polya-input hidden">
+                                            <input type="checkbox" class="new-group-checkbox">
+                                            <input type="text" class="new-group-input"
+                                                   th:value="@{'Мой список '+${execInfo.now.time}}" size="40">
+                                            <span class="add-group-input-ok">V</span>
+                                            <span class="add-group-input-cancel">X</span>
+                                        </div>
+                                        <div class="add-group-new">
+                                            Создать новый список
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                                    </button>
+                                    <button type="button" class="btn-copy-product btn btn-primary">Перенести</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Модалка END-->
+                    <!--  Новый интерфейс -->
+
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th scope="col">id</th>
+                            <th scope="col">check</th>
                             <th scope="col">product</th>
                             <th scope="col">price</th>
                             <th scope="col">amount</th>
@@ -337,50 +423,53 @@
                                             </div>
                                         </div>
 
-                                        <!---------------------- Delete Profile Modal window ------------------->
-                                        <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
-                                             aria-labelledby="titleDeleteProfile" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="titleDeleteProfile">Удалить
-                                                            профиль</h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Вы уверены что хотите удалить свой профиль?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">
-                                                            Отмена
-                                                        </button>
-                                                        <button id="deleteProfileCustomer" type="button"
-                                                                class="btn btn-danger" th:data-del-id="${user.id}"
-                                                                data-dismiss="modal">
-                                                            Удалить
-                                                        </button>
-                                                    </div>
+                                    <!---------------------- Delete Profile Modal window ------------------->
+                                    <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
+                                         aria-labelledby="titleDeleteProfile" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="titleDeleteProfile">Удалить профиль</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Вы уверены что хотите удалить свой профиль?
+                                                    <br>
+                                                    <small style="color: rgba(243,18,8,0.75)">
+                                                        Возможность восстановить до 30 дней
+                                                    </small>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">
+                                                        Отмена
+                                                    </button>
+                                                    <button id="deleteProfileCustomer" type="button"
+                                                            class="btn btn-danger" th:data-del-id="${user.id}"
+                                                            data-dismiss="modal">
+                                                        Удалить
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!---------------------- End Delete Profile Modal window ------------------->
                                     </div>
+                                    <!---------------------- End Delete Profile Modal window ------------------->
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
-                        <div id="order-div"></div>
-                        <h3>Корзина</h3>
-                        <div class="row min-vh-100">
-                            <div class="col-md-9">
-                                <!-------------сама корзина------------->
-                                <table class="table table-striped">
-                                    <tbody id="basketList">
+                </div>
+                <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
+                    <div id="order-div"></div>
+                    <h3>Корзина</h3>
+                    <div class="row min-vh-100">
+                        <div class="col-md-9">
+                            <!--                            сама корзина-->
+                            <table class="table table-striped">
+                                <tbody id="busketList">
 
                                     </tbody>
                                 </table>
@@ -542,48 +631,69 @@
                                     <div class="tab-pane fade show" id="tab_canceled">
                                         <div id="canceledOrders">
 
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
-                        <div class="container-fluid bg-light">
-                            <div class="row">
-                                <div class="col">
-                                    <h4>Обратная связь</h4>
-                                    <p>Уважаемые клиенты!</p>
-                                    <p>В целях оперативного рассмотрения ваших обращений просим максимально точно
-                                        изложить
-                                        суть вопроса и имеющиеся факты.</p>
-                                    <hr>
+                </div>
+                <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
+                    <ul class="nav nav-tabs" id="navFeedback" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="messageFeedback-tab" data-toggle="tab" href="#messageFeedback" role="tab"
+                               aria-controls="home" aria-selected="true">Сформировать обращение</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="answersFeedback-tab" data-toggle="tab" href="#answersFeedback" role="tab"
+                               aria-controls="contact" aria-selected="false">Перечень обращений и ответов</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="containerFeedback">
+                        <div class="tab-pane fade show active" id="messageFeedback" role="tabpanel" aria-labelledby="messageFeedback-tab">
+                            <div class="container-fluid bg-light">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4>Обратная связь</h4>
+                                        <p>Уважаемые клиенты!</p>
+                                        <p>В целях оперативного рассмотрения ваших обращений просим максимально точно
+                                            изложить
+                                            суть вопроса и имеющиеся факты.</p>
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <form id="feedbackFrom">
+                                            <div class="form-group">
+                                                <p>Чтобы заполнить форму обращения, пожалуйста, выберите категорию
+                                                    вопроса.</p>
+                                                <label for="feedbackTopicCategorySelect"
+                                                       class="feedback-form">Категория:</label>
+                                                <select class="form-control" id="feedbackTopicCategorySelect">
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="feedbackTopicNameSelect" class="feedback-form">Тема:</label>
+                                                <select class="form-control" id="feedbackTopicNameSelect" disabled>
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="messageFeedbackForm" class="feedback-form">Текст
+                                                    сообщения</label>
+                                                <textarea class="form-control" id="messageFeedbackForm"
+                                                          disabled></textarea>
+                                            </div>
+                                        </form>
+                                        <button class="btn btn-primary" id="feedbackSubmitButton" disabled>Отправить
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <form id="feedbackFrom">
-                                        <div class="form-group">
-                                            <p>Чтобы заполнить форму обращения, пожалуйста, выберите категорию
-                                                вопроса.</p>
-                                            <label for="feedbackTopicCategorySelect"
-                                                   class="feedback-form">Категория:</label>
-                                            <select class="form-control" id="feedbackTopicCategorySelect">
-
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="feedbackTopicNameSelect" class="feedback-form">Тема:</label>
-                                            <select class="form-control" id="feedbackTopicNameSelect" disabled>
-
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="messageFeedbackForm" class="feedback-form">Текст сообщения</label>
-                                        <textarea class="form-control" id="messageFeedbackForm" disabled></textarea>
-                                    </div>
-                                </form>
-                                <button class="btn btn-primary" id="feedbackSubmitButton" disabled>Отправить</button>
+                        </div>
+                        <div class="tab-pane fade" id="answersFeedback" role="tabpanel" aria-labelledby="answersFeedback-tab">
+                            <div id="messagesAndAnswersFeedback">
                             </div>
                         </div>
                     </div>
@@ -630,6 +740,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"
         integrity="sha512-sR3EKGp4SG8zs7B0MEUxDeq8rw9wsuGVYNfbbO/GLCJ59LBE4baEfQBVsP2Y/h2n8M19YV1mujFANO1yA3ko7Q=="
         crossorigin="anonymous"></script>
+<script src="/static/js/moment.js"></script>
 <script src="../static/js/customerProfilePageFunctions.js"></script>
 <script src="/static/js/customer-feedback-form.js"></script>
 <footer th:insert="/blocks/footer :: footer"></footer>

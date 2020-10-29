@@ -1,16 +1,18 @@
 let productRestUrl = "/rest/products/allProducts"
+let categoryNow = "all"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
 showAndRefreshNotDeleteHomeTab()
 
+
 /**
  * Функция обработки действий чекбокса
  * @param check
  */
 function toggle(check) {
-    if(!check.checked) {
+    if (!check.checked) {
         showAndRefreshHomeTab()
     } else {
         showAndRefreshNotDeleteHomeTab()
@@ -55,7 +57,7 @@ function deleteModalWindowRender(productToEdit) {
 }
 
 /**
- * Функция обраотки нажатия кнопки Edit в таблице продукта
+ * Функция обработки нажатия кнопки Edit в таблице продукта
  * @param event
  */
 function handleEditButton(event) {
@@ -103,7 +105,7 @@ function showAndRefreshHomeTab() {
 }
 
 /**
- * функция деалет активным таблицу без
+ * функция делает активным таблицу без
  * удаленных продуктов
  */
 function showAndRefreshNotDeleteHomeTab() {
@@ -191,14 +193,16 @@ function handleAddBtn() {
         }
     )
 }
+
 /**
  * Добавление товара из файла
  */
 
 $('#inputFileSubmit').click(importProductsFromFile)
-function importProductsFromFile(){
 
-    let  fileData = new FormData();
+function importProductsFromFile() {
+
+    let fileData = new FormData();
     fileData.append('file', $('#file')[0].files[0]);
 
     $.ajax({
@@ -207,7 +211,7 @@ function importProductsFromFile(){
         processData: false,
         contentType: false,
         type: 'POST',
-        success: function(data){
+        success: function (data) {
             showAndRefreshHomeTab()
             toastr.info('Импорт товаров завершен!', {timeOut: 5000})
         },
@@ -271,25 +275,19 @@ function checkActionButton(event) {
  * @param products
  */
 function renderProductsTable(products) {
-    let table = $('#products-table')
+    let table = $('#productsTable')
     table.empty()
-        .append(`<tr>
-                <th>ID</th>
-                <th>Наименование товара</th>
-                <th>Цена</th>
-                <th>Колличество</th>
-                <th>Edit</th>
-                <th>Delete</th>
-              </tr>`)
     for (let i = 0; i < products.length; i++) {
         const product = products[i];
-        let row = `
+        if (product.productType.category === categoryNow || categoryNow === "all") {
+            let row = `
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>
                     <td>${product.product}</td>
                     <td>${product.price}</td>
                     <td>${product.amount}</td>              
-                    
+                    <td>${product.rating}</td>
+                    <td>${product.productType.category}</td>
                     <td>
             <!-- Buttons of the right column of main table-->
                         <button data-product-id="${product.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#productModalWindow">
@@ -303,15 +301,16 @@ function renderProductsTable(products) {
                     </td>
                 </tr>
                 `;
-        table.append(row)
-        if (product.deleted === false) {
-            $(`#action-button-${product.id}`).attr('data-toggle-id', 'delete')
-            $(`#action-button-${product.id}`).attr('data-toggle', 'modal')
-            $(`#action-button-${product.id}`).text("Delete").removeClass().toggleClass('btn btn-danger delete-product action')
-        } else {
-            $(`#action-button-${product.id}`).attr('data-toggle-id', 'restore')
-            $(`#action-button-${product.id}`).text("Restore").removeClass().toggleClass('btn btn-info restore-product action')
-            $('#tr-' + product.id).toggleClass('table-dark')
+            table.append(row)
+            if (product.deleted === false) {
+                $(`#action-button-${product.id}`).attr('data-toggle-id', 'delete')
+                $(`#action-button-${product.id}`).attr('data-toggle', 'modal')
+                $(`#action-button-${product.id}`).text("Delete").removeClass().toggleClass('btn btn-danger delete-product action')
+            } else {
+                $(`#action-button-${product.id}`).attr('data-toggle-id', 'restore')
+                $(`#action-button-${product.id}`).text("Restore").removeClass().toggleClass('btn btn-info restore-product action')
+                $('#tr-' + product.id).toggleClass('table-dark')
+            }
         }
     }
     $('.edit-button').click(handleEditButton)
@@ -343,4 +342,107 @@ function fetchProductsAndRenderNotDeleteTable() {
             'Content-type': 'application/json; charset=UTF-8'
         }
     }).then(response => response.json()).then(products => renderProductsTable(products))
+}
+
+/**
+ * функция сортировки в таблице
+ */
+document.addEventListener('DOMContentLoaded', () => {
+
+    const getSort = ({target}) => {
+        const order = (target.dataset.order = -(target.dataset.order || -1));
+        const index = [...target.parentNode.cells].indexOf(target);
+        const collator = new Intl.Collator(['en', 'ru'], {numeric: true});
+        const comparator = (index, order) => (a, b) => order * collator.compare(
+            a.children[index].innerHTML,
+            b.children[index].innerHTML
+        );
+
+        for (const tBody of target.closest('table').tBodies)
+            tBody.append(...[...tBody.rows].sort(comparator(index, order)));
+
+        for (const cell of target.parentNode.cells)
+            cell.classList.toggle('sorted', cell === target);
+    };
+
+    document.querySelectorAll('.table-sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
+
+});
+
+/**
+ * функция получения категорий из БД
+ */
+function fetchCategories() {
+    fetch("api/categories/all", {headers: headers}).then(response => response.json())
+        .then(allCategories => renderCategoriesModal(allCategories))
+}
+
+/**
+ * функция рендера модалки категорий
+ */
+function renderCategoriesModal(categories) {
+    let radioList = $('#categoriesContainer')
+    radioList.empty()
+    radioList.append(`<form class= form-group-text-center>`)
+    radioList.append(`
+                     <div class="custom-control custom-radio">
+                     <input value="all" type="radio" id="radio0"
+                            name="radioCategory" class="custom-control-input">
+                     <label class="custom-control-label" for="radio0">Все</label>
+                     </div>
+                        `)
+    for (let i = 0; i < categories.length; i++) {
+        let radiobox = `
+                     <div class="custom-control custom-radio">
+                     <input value="${categories[i].category}" type="radio" id="radio${categories[i].id}"
+                            name="radioCategory" class="custom-control-input">
+                     <label class="custom-control-label" for="radio${categories[i].id}">${categories[i].category}</label>
+                     </div>
+                        `;
+        radioList.append(radiobox)
+    }
+    radioList.append(`</form>`)
+}
+
+/**
+ * функция изменения категории
+ */
+function changeCategory() {
+    let radio = document.getElementsByName('radioCategory');
+    for (let i = 0; i < radio.length; i++) {
+        if (radio[i].checked) {
+            categoryNow = radio[i].value;
+        }
+    }
+}
+
+/**
+ * функция смены категории отображаемых продуктов
+ */
+function changeProducts() {
+    changeCategory();
+    fetchProductsAndRenderTable();
+}
+
+/**
+ * функция создания отчёта
+ */
+function createReport() {
+    changeCategory();
+    fetch(`/manager/products/report?category=${categoryNow}`)
+        .then(function (response) {
+            if (response.status === 200) {
+                if (confirm("Товаров в отчёте будет " + response.headers.get("Size"))) {
+                    response.blob().then(blob => {
+                        let url = window.URL.createObjectURL(blob);
+                        let file = document.createElement('a');
+                        file.href = url;
+                        file.download = `products_report_${categoryNow}.xlsx`;
+                        file.click();
+                    })
+                }
+            } else {
+                alert("Товаров не найдено")
+            }
+        })
 }

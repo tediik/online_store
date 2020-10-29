@@ -44,8 +44,8 @@ public class FavouriteGoodsServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         favouriteGoods = new HashSet<>();
-        product1 = new Product("product1",220,10);
-        product2 = new Product("product2", 300, 1);
+        product1 = new Product("product1",220D,10);
+        product2 = new Product("product2", 300D, 1);
         user = new User("user@mail.ru","1");
         favouriteGoods.add(product1);
         favouriteGoods.add(product2);
@@ -76,7 +76,7 @@ public class FavouriteGoodsServiceImplTest {
     public void addFavouriteGoods() {
         when(userService.findById(any())).thenReturn(Optional.of(user));
         when(productService.findProductById(any())).thenReturn(Optional.of(product1));
-        Product testProduct = new Product("productTest", 500, 10);
+        Product testProduct = new Product("productTest", 500D, 10);
         favouriteGoodsService.addToFavouriteGoods(3L, user);
         verify(userService,times(1)).findById(any());
         verify(productService,times(1)).findProductById(any());

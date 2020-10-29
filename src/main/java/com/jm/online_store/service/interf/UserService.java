@@ -1,6 +1,7 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Address;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,12 @@ public interface UserService {
     Optional<User> findById(Long id);
 
     void addUser(User user);
+
+    void changeUserStatusToLocked(Long id);
+
+    boolean checkUserStatus(String email, String password);
+
+    void restoreUser(String email);
 
     void deleteByID(Long id);
 

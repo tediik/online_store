@@ -26,6 +26,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -74,6 +75,8 @@ public class User implements UserDetails {
 
     private String profilePicture = "";
 
+    private LocalDateTime status;
+
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
     @JoinTable(
@@ -88,6 +91,11 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favouritesGoods = new HashSet<>();
+
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private Set<FavouritesGroup> favouritesGroups = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
