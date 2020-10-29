@@ -1,19 +1,13 @@
-<svg width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg">
     <g>
-        <title>background</title>
-        <rect x="-1" y="-1" width="152" height="152" id="canvas_background" fill="none"/>
-        <g id="canvasGrid" display="none">
-            <rect id="svg_1" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>
+        <rect fill="none" height="62" width="62" y="-1" x="-1"/>
+        <g display="none">
+            <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
         </g>
-    </g>
-    <g>
-        <title>Layer 1</title>
-        <ellipse fill="#e5e5e5" stroke-width="1.5" cx="81.62842" cy="57.0731" id="svg_3" rx="5.37035" ry="5.37035"/>
-        <ellipse fill="#e5e5e5" stroke-width="1.5" cx="59.62151" cy="75.00595" id="svg_4" rx="5.37035" ry="5.37035"/>
-        <ellipse fill="#e5e5e5" stroke-width="1.5" cx="86.28809" cy="91.67256" id="svg_5" rx="5.37035" ry="5.37035"/>
-        <line fill="none" stroke="#e5e5e5" stroke-width="1.5" x1="60.91781" y1="74.4504" x2="82.39922" y2="56.30231"
-              id="svg_9"/>
-        <line fill="none" stroke="#e5e5e5" stroke-width="1.5" x1="86.84365" y1="92.22811" x2="61.28818" y2="75.56151"
-              id="svg_10"/>
+        <ellipse ry="5.37035" rx="5.37035" cy="12.0731" cx="37.62842" stroke-width="1.5" fill="#696969"/>
+        <ellipse ry="5.37035" rx="5.37035" cy="30.00595" cx="15.62151" stroke-width="1.5" fill="#696969"/>
+        <ellipse ry="5.37035" rx="5.37035" cy="46.67256" cx="42.28809" stroke-width="1.5" fill="#696969"/>
+        <line y2="11.30231" x2="38.39922" y1="29.4504" x1="16.91781" stroke-width="1.5" stroke="#696969" fill="none"/>
+        <line y2="30.56151" x2="17.28818" y1="47.22811" x1="42.84365" stroke-width="1.5" stroke="#696969" fill="none"/>
     </g>
 </svg>
