@@ -23,7 +23,11 @@ public class GlobalSharedStockRestController {
 
     @PostMapping
     public ResponseEntity<String> addSharedStock(@RequestBody SharedStock sharedStock) {
-        sharedStock.setUser(userService.getCurrentLoggedInUser());
+        User user = userService.getCurrentLoggedInUser();
+        if (null != user) {
+            sharedStock.setUser(user);
+            System.out.println("User id not null");
+        }
         try {
             sharedStockService.addSharedStock(sharedStock);
         } catch (Exception e) {
