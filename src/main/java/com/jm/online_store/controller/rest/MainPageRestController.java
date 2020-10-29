@@ -10,6 +10,9 @@ import com.jm.online_store.util.Transliteration;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import netscape.javascript.JSObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -100,7 +103,7 @@ public class MainPageRestController {
     }*/
 
     @GetMapping("api/categories/all")
-    public ResponseEntity<List<Categories>> getAllCategories() {
+    public ResponseEntity<JSONArray> getAllCategories() {
         return ResponseEntity.ok(categoriesService.getAllCategories());
     }
 

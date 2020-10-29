@@ -309,32 +309,46 @@
                      aria-labelledby="nav-products-categories-tab">
                     <h2>Управление категориями товаров</h2>
                         <button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
-                                data-target="#addProductCategoryModal">Добавить корневую категорию товара</button>
+                                data-target="#addProductCategoryModal">Добавить корневую категорию</button>
 
                     <div class="accordion-root">
                         <div class="accordion">
                             <div class="accordion-item">
-                                <div class="accordion-header">Заголовок 1</div>
+                                <div class="accordion-header">Компьютеры</div>
                                 <div>
-                                    ...
+                                    <div>
+                                        <table  style="width: 100%">
+                                            <tbody>
+                                            <tr>
+                                                <td style="width: 70%">Something sad</td>
+                                                <td style="width: 30%"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 70%"><button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
+                                                                               data-target="#addProductCategoryModal">Добавить подкатегорию</button></td>
+                                                <td style="width: 30%"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <div class="accordion accordion-child">
                                         <div class="accordion-item">
-                                            <div class="accordion-header">Заголовок 2</div>
+                                            <div class="accordion-header">Бытовая техника</div>
                                             <div>
-                                                ...
+                                                ---
                                                 <div class="accordion accordion-child">
                                                     <div class="accordion-item">
-                                                        <div class="accordion-header">Заголовок 3</div>
+                                                        <div class="accordion-header">Смартфоны и гаджеты</div>
                                                         <div>
                                                             ...
-                                                            <div class="accordion accordion-child" id="depth-4">
+                                                            <div class="accordion accordion-child" >
                                                                 <div class="accordion-item">
-                                                                    <div class="accordion-header">Заголовок 4</div>
+                                                                    <div class="accordion-header" id="depth-4">ТВ и развлечения</div>
                                                                     <div>
                                                                         ...
-                                                                        <div class="accordion accordion-child" id="depth-5">
+                                                                        <div class="accordion accordion-child" >
                                                                             <div class="accordion-item">
-                                                                                <div class="accordion-header" ></div>
+                                                                                <div class="accordion-header" id="depth-5"></div>
                                                                                 <div>
                                                                                     inside 5
                                                                                 </div>

@@ -1,13 +1,15 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Categories;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CategoriesService {
 
-    List<Categories> getAllCategories();
+     JSONArray getAllCategories();//List<Categories>
 
     List<Categories> getCategoriesByParentCategoryId (Long parentCategoryId);
 

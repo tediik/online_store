@@ -8,18 +8,16 @@ $('.accordion').accordion({
     active: true,
     collapsible: true
 });
-$("#depth-5", "#depth-4").accordion({
-    disabled: true
-});
+$("#depth-5, #depth-4").accordion({disabled: true});
 
 async function fillProductCategories() {
     let insideAccordion = $('#accordionProductsCategories');
-    let data = await fetch("/api/categories").then(response => response.json()); //await - ?
+    let data = await fetch("/api/categories/all").then(response => response.json()); //await - ?
     let data2 = await fetch("/api/categories/sub/17").then(response => response.json());
 
     for (let count in data) {
         let tmpCount = data[count].id;
-        console.log('parent - ' + data[count].parentCategoryId);
+        console.log('category - ' + data[count].category);
         let mainCat = `
             <div class="card">
                 <div class="card-header" role="tab" id="mainCategory${tmpCount}">
@@ -48,7 +46,7 @@ async function fillProductCategories() {
     }
 }
 async function fillProductSubCategories(tmpId) {
-    console.log('!!!!!!!!   -   ' + tmpId);
+    console.log('Id   -   ' + tmpId);
     let insideSubAccordion = document.getElementById('subCategory');
     let subCat = `<div class="accordion" id="accordionProductsSubCategories">
                         <p>${tmpId} - jhgfdghs</p>
