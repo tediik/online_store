@@ -1,0 +1,21 @@
+.buttonForSocialShare {
+    text-align: right;
+}
+.buttonForSocialShare img {
+    border-radius: 100px;
+    padding: 5px 5px;
+}
+
+.buttonForSocialShare img:hover {
+    opacity: 0.8;
+    background-color: whitesmoke;
+}
+.menuForSocialShare a {
+    padding-left: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.menuForSocialShare img:hover {
+    background-color: transparent;
+}
