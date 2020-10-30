@@ -79,6 +79,9 @@ public class ManagerTopicsCategoryRestController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<TopicsCategory> updateTopicsCategory(@PathVariable(name = "id") long id, @RequestBody TopicsCategory topicsCategory) {
+        if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
         if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

@@ -62,6 +62,9 @@ public class ManagerTopicRestController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<Topic> editTopic(@PathVariable(name = "id") long id, @RequestBody Topic topic) {
+        if (topicService.existsByTopicName(topic.getTopicName())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
         if(!topicService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
