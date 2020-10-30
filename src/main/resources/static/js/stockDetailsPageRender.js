@@ -1,4 +1,3 @@
-
 /**
  * Global variables declaration
  */
@@ -42,6 +41,7 @@ function getCopyLink() {
         }
     });
 }
+
 /**
  * function that handles share buttons.
  * Sends POST fetch request to shared stock api
@@ -61,7 +61,7 @@ function handleShareButton() {
         method: 'POST',
         headers: myHeaders,
         body: JSON.stringify(body)
-    }).then(response => response.text())
+    }).then(response => response.status)
         .then(text => console.log(text))
 }
 
