@@ -12,6 +12,7 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SentStock;
+import com.jm.online_store.model.SharedNews;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
@@ -32,6 +33,7 @@ import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.SentStockService;
+import com.jm.online_store.service.interf.SharedNewsService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.TaskSettingsService;
@@ -86,6 +88,7 @@ public class DataInitializer {
     private final FavouritesGroupService favouritesGroupService;
     private final TopicsCategoryService topicsCategoryService;
     private final ReviewService reviewService;
+    private final SharedNewsService sharedNewsService;
 
 
     /**
@@ -102,6 +105,7 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
+        sharedNewsInit();
         addressInit();
 //      sentStockInit();  // метод нужен только для тестирования рассылки акций
 //      paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
@@ -978,7 +982,29 @@ public class DataInitializer {
                 sharedStockService.addSharedStock(sharedStock);
             }
         }
+    }
 
+    /**
+     * Метод первичного заполнения новостей, которыми поделились
+     */
+    public void sharedNewsInit() {
+        String[] socialNetworkNames = {"facebook", "vk", "twitter"};
+        List<News> news = newsService.findAll();//10
+        List<User> users = userService.findAll();//23
+        Long firstNumber = news.get(0).getId();//
+        Long lastNumber = news.get(news.size() - 1).getId();//10
+        Random random = new Random();
+        for (News oneNews : news) {
+            for (User user : users) {
+                long generatedLongForSNews = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
+                SharedNews sharedNews = SharedNews.builder()
+                        .user(user)
+                        .news(newsService.findById(generatedLongForSNews))
+                        .socialNetworkName(socialNetworkNames[random.nextInt(socialNetworkNames.length)])
+                        .build();
+                sharedNewsService.addSharedNews(sharedNews);
+            }
+        }
     }
 
     /**
