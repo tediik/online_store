@@ -64,7 +64,7 @@ public class ManagerTopicsCategoryRestController {
     @PostMapping
     public ResponseEntity<TopicsCategory> createTopicsCategory(@RequestBody TopicsCategory topicsCategory) {
         if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.ok(topicsCategoryService.create(topicsCategory));
     }
@@ -79,6 +79,9 @@ public class ManagerTopicsCategoryRestController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<TopicsCategory> updateTopicsCategory(@PathVariable(name = "id") long id, @RequestBody TopicsCategory topicsCategory) {
+        if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        }
         if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

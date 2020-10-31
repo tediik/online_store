@@ -190,6 +190,9 @@ function addNewCategory() {
             })
         })
             .then(response => {
+                if (response.status === 304) {
+                    toastr.error('Такая категория уже существует')
+                }
                 if (response.status === 200) {
                     response.json()
                         .then(topicsCategory => renderCategory(topicsCategory))
@@ -229,6 +232,9 @@ function editCategory(id) {
                 topics: topic
             })
         }).then(response => {
+            if (response.status === 304) {
+                toastr.error('Такая категория уже существует')
+            }
             if (response.status === 200) {
                 response.json()
                     .then(changedCategory => changeCategoryBody(changedCategory));
@@ -352,6 +358,9 @@ function editTopic(id) {
                 topicsCategory: category
             })
         }).then(response => {
+            if (response.status === 304) {
+                toastr.error('Такая тема уже существует')
+            }
             if (response.status === 200) {
                 response.json()
                     .then(changedTopic => changeTopicRow(changedTopic));
@@ -426,6 +435,9 @@ function addNewTopic() {
             })
         })
             .then(response => {
+                if (response.status === 304) {
+                    toastr.error('Такая тема уже существует')
+                }
                 if (response.status === 200) {
                     response.json()
                         .then(topic => renderTopic(topic))
