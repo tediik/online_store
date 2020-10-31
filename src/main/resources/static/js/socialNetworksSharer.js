@@ -81,7 +81,7 @@ function copyLink() {
     link.select();
     document.execCommand('copy');
     document.body.removeChild(link);
-    toastr.success("Ссылка добавлена в буфер обмена");
+    toastr.info("Ссылка добавлена в буфер обмена");
 }
 
 /**
@@ -117,6 +117,5 @@ function handleShareButton() {
             'Content-Type': 'application/json; charset=UTF-8'
         },
         body: JSON.stringify(body)
-    }).then(response => response.status)
-        .then(text => console.log(text));
+    }).then(response => response.status);
 }
