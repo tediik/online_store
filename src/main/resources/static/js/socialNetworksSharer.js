@@ -1,13 +1,16 @@
 /**
- * Global variables declaration
+ * Объявление глобальных переменных
  */
 const urlToShare = document.location.href;
 let splitUrl = urlToShare.split('/');
 const id = splitUrl[splitUrl.length - 1];
 
-console.log(id);
-console.log(urlToShare);
-
+/**
+ * Когда html страница готова, в нее добавляется стиль,
+ * потом html блок с соцсетями,
+ * потом в блок добавляются ссылки,
+ * далее добавляются слушатели событий
+ */
 $(document).ready(function () {
     $('head').append('<link href="/static/css/socialShare.css" rel="stylesheet" type="text/css">');
     renderShareLinks();
@@ -22,7 +25,7 @@ $(document).ready(function () {
 });
 
 /**
- * Share buttons event listeners
+ * Метод для отрисовки html блока - поделиться в соцсетях
  */
 function renderShareLinks() {
     let shareSocialNetworksBody = document.querySelector('#insertSocialNetworksBlock');
@@ -54,7 +57,7 @@ function renderShareLinks() {
 
 
 /**
- * Generates share links
+ * Метод для генерации ссылок для html блока - поделиться в соцсетях
  */
 function generateShareLinks() {
     let encoded = encodeURIComponent(urlToShare);
@@ -68,6 +71,9 @@ function generateShareLinks() {
     $('#shareTwitterLink').attr("href", twitterShareLink);
 }
 
+/**
+ * Метод для копирования ссылки текущей html страницы
+ */
 function copyLink() {
     let link = document.createElement('input');
     link.value = urlToShare;
@@ -75,13 +81,12 @@ function copyLink() {
     link.select();
     document.execCommand('copy');
     document.body.removeChild(link);
-    toastr.error("My name is Inigo Montoya. You killed my father. Prepare to die!");
+    toastr.success("Ссылка добавлена в буфер обмена");
 }
 
 /**
- * function that handles share buttons.
- * Sends POST fetch request to shared stock api
- * name of social network, which button was clicked
+ * Метод для обработки, какой новостью/акцией, в какой соцсети поделились.
+ * Отправляет POST запрос на определенный рест контроллер, согласно информации, котрой поделились (новости или акции)
  */
 function handleShareButton() {
     let sharedStockApiUrl;
