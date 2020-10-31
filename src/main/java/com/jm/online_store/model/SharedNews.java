@@ -18,6 +18,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * Сущность - Новость, которой поделились в социальной сети. Отражает то,
+ * какой пользователь {@link User}, какой новостью {@link News},
+ * в какой социальной сети {@link String} поделился
+ */
 @Entity
 @Data
 @Builder
