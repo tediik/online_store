@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * RestController для добавления новостей, которыми поделились пользователи
+ * в социальных сетях
+ */
 @Slf4j
 @AllArgsConstructor
 @RestController
@@ -19,6 +23,14 @@ public class GlobalSharedNewsRestController {
     private final SharedNewsService sharedNewsService;
     private final UserService userService;
 
+    /**
+     * Метод для добавления информации о том, какой новостью, какой пользователь,
+     * в какой социальной сети поделился
+     *
+     * @param sharedNews содержит в себе id новости, которой поделились и название
+     *                   социальной сети, в которой этой новостью поделились
+     * @return ResponseEntity<String> возвращает статус ответа
+     */
     @PostMapping
     public ResponseEntity<String> addSharedNews(@RequestBody SharedNews sharedNews) {
         sharedNews.setUser(userService.getCurrentLoggedInUser());
