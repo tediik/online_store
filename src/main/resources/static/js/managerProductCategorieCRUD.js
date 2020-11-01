@@ -76,7 +76,7 @@ function addNewMainCategory() {
  * Запрос на добавление подкатегории
  */
 function addNewSubCategory() {
-    console.log("!!!!!!!!!!!!!!!!!!!!!!")
+    console.log("new subcat adding")
     let newSub = '#addSubCategory';
     let subDepth = depthGlobal + 1;
     let subParentCategory = idGlobal;
@@ -181,7 +181,7 @@ function fillMagicModal() {
                         <tr>
                             <td><label for="addSubCategory">Добавить подкатегорию:</label>
                                 <input type="text" class="form-control m-0" name="subcategoryinput" id="addSubCategory"></td>
-                            <td><button type="button" class="btn btn-primary mt-4" id="${addSubCategoryButton}"
+                            <td><button type="button" class="btn btn-primary mt-4" onclick="addNewSubCategory()" id="${addSubCategoryButton}"
                                         data-dismiss="modal">Добавить</button></td>
                         </tr>
                         <tr>
