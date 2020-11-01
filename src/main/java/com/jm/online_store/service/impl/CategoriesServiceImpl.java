@@ -28,6 +28,7 @@ public class CategoriesServiceImpl implements CategoriesService {
             jsonObject.put("parentid", categories.getParentCategoryId());
             jsonObject.put("text", categories.getCategory());
             jsonObject.put("depth", categories.getDepth());
+            jsonObject.put("hasProduct", !categories.getProducts().isEmpty());
             resultArray.add(jsonObject);
         }
         return resultArray;

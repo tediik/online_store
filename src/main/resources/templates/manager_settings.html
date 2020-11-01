@@ -315,6 +315,7 @@
                     <div id="jqxTree">
 
                     </div>
+
                     <button type="button" class="btn btn-outline-success my-2" data-toggle="modal" id="jqxbutton"
                             data-target="#magicButtonModal">Magic button</button>
 
@@ -347,43 +348,16 @@
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="magicButtonModalLabel">Выберите действие для:</h5>
+                                    <h5 class="modal-title" id="magicButtonModalLabel"></h5>
                                 </div>
-                                <div class="modal-body">
-                                    <table class="table m-0 p-0 " style="width: 100%;" >
-                                        <tbody>
-                                        <tr>
-                                            <td><label for="addSubCategory">Добавить подкатегорию:</label>
-                                                <input type="text"class="form-control m-0" name="subcategoryinput" id="addSubCategory"></td>
-                                            <td><button type="button" class="btn btn-primary mt-4" id="addSubCategoryButton"
-                                                        data-dismiss="modal">Добавить</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="editSubCategory">Введи новое название:</label>
-                                                <input type="text" class="form-control m-0" name="editsubcategoryinput" id="editSubCategory"></td>
-                                            <td><button type="button" class="btn btn-primary mt-4" id="editSubCategoryButton"
-                                                        data-dismiss="modal">Изменить</button></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-<!--                                    <form id="addSubCategoryForm">
-                                        <div class="form-group">
-
-
-
-                                        </div>
-                                    </form>-->
-                                </div>
+                                <div class="modal-body" id="magicButtonModalBody"></div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Отменить</button>
-                                    <button type="button" class="btn btn-outline-danger" id="deleteSubCategoryButton"
-                                            data-dismiss="modal">Удалить категорию</button>
+                                    <div id="deleteSubCategoryButtonDiv"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
 
                 </div>
             </div>
