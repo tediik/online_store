@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -88,19 +89,12 @@ public class MainPageRestController {
     public ResponseEntity<List<Categories>> getMainCategories() {
         return ResponseEntity.ok(categoriesService.getCategoriesByParentCategoryId(0L));
     }
-/*    public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
-        List<Categories> categoriesFromDB = categoriesService.getAllCategories();
-        Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
 
-        for (Categories category : categoriesFromDB) {
-            Map<String, String> innerMap = new HashMap<>();
-            innerMap.put(category.getCategory(), Transliteration.сyrillicToLatin(category.getCategory()));
-            categoriesBySuperCategories.merge(category.getSuperCategory(), innerMap,
-                    (oldV, newV) -> Stream.concat(oldV.entrySet().stream(), newV.entrySet().stream())
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-        }
-        return ResponseEntity.ok(categoriesBySuperCategories);
-    }*/
+    @PostMapping("api/categories")
+    public ResponseEntity<Categories> newCategory(@RequestBody Categories categories) {
+        categoriesService.saveCategory(categories);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
     @GetMapping("api/categories/all")
     public ResponseEntity<JSONArray> getAllCategories() {

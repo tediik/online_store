@@ -18,53 +18,18 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     private final CategoriesRepository categoriesRepository;
 
-    private JSONObject jsonObject = new JSONObject();
-    private JSONArray resultArray = new JSONArray();
-
     @Override
     public JSONArray getAllCategories() {
-
+        JSONArray resultArray = new JSONArray();
         List<Categories> categoriesList = categoriesRepository.findAll();
-
-        JSONArray childArray = new JSONArray();
-        int count = 0;
-
-        StringBuilder sb = new StringBuilder();
-
         for (Categories categories : categoriesList) {
-            List<Categories> childrenCat = categoriesList.stream().filter(p -> p.getParentCategoryId() == categories.getId())
-                    .collect(Collectors.toList());
-
-            if (!childrenCat.isEmpty()) {
-                for (Categories child : childrenCat) {
-                    JSONObject childObject = new JSONObject();
-                    childObject.put("id", child.getId());
-                    childObject.put("text", child.getCategory());
-                    childArray.add(childObject);
-                }
-            }
-            jsonObject.put("children", childArray);
-            jsonObject.put("text", categories.getCategory());
+            JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", categories.getId());
-
-            //System.out.println(" " + jsonObject);
-
-            resultArray.add(count++, jsonObject);
-
-//            resultArray.stream().forEach(System.out::println);
-            //System.out.println("after child add RESULTARRAY - " + resultArray.toString());
-            sb.append(resultArray.toString());
-            childArray.clear();
-            jsonObject.clear();
-
-
-            //System.out.println("sb - " + sb);
+            jsonObject.put("parentid", categories.getParentCategoryId());
+            jsonObject.put("text", categories.getCategory());
+            jsonObject.put("depth", categories.getDepth());
+            resultArray.add(jsonObject);
         }
-
-        System.out.println("sb - " + sb);
-        System.out.println();
-        //System.out.println("resultArray after cycle- " + resultArray);
-        //resultArray.stream().forEach(System.out::println);
         return resultArray;
     }
 

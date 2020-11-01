@@ -4,6 +4,7 @@
     <title>Manager Settings</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="/static/css/managerPage.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jqx.base.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <!--    summernote-->
@@ -308,81 +309,82 @@
                 <div class="tab-pane fade" id="nav-products-categories" role="tabpanel"
                      aria-labelledby="nav-products-categories-tab">
                     <h2>Управление категориями товаров</h2>
-                        <button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
-                                data-target="#addProductCategoryModal">Добавить корневую категорию</button>
+                    <button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
+                            data-target="#addNewMainCategoryModal">Добавить корневую категорию</button>
 
-                    <div class="accordion-root">
-                        <div class="accordion">
-                            <div class="accordion-item">
-                                <div class="accordion-header">Компьютеры</div>
-                                <div>
-                                    <div>
-                                        <table  style="width: 100%">
-                                            <tbody>
-                                            <tr>
-                                                <td style="width: 70%">Something sad</td>
-                                                <td style="width: 30%"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 70%"><button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
-                                                                               data-target="#addProductCategoryModal">Добавить подкатегорию</button></td>
-                                                <td style="width: 30%"></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="accordion accordion-child">
-                                        <div class="accordion-item">
-                                            <div class="accordion-header">Бытовая техника</div>
-                                            <div>
-                                                ---
-                                                <div class="accordion accordion-child">
-                                                    <div class="accordion-item">
-                                                        <div class="accordion-header">Смартфоны и гаджеты</div>
-                                                        <div>
-                                                            ...
-                                                            <div class="accordion accordion-child" >
-                                                                <div class="accordion-item">
-                                                                    <div class="accordion-header" id="depth-4">ТВ и развлечения</div>
-                                                                    <div>
-                                                                        ...
-                                                                        <div class="accordion accordion-child" >
-                                                                            <div class="accordion-item">
-                                                                                <div class="accordion-header" id="depth-5"></div>
-                                                                                <div>
-                                                                                    inside 5
-                                                                                </div>
-                                                                            </div>
-<!--                                                                            <div class="accordion-item">
-                                                                                <div class="accordion-header">Заголовок 1.2</div>
-                                                                                <div>...</div>
-                                                                            </div>-->
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-<!--                                                                <div class="accordion-item">
-                                                                    <div class="accordion-header">Заголовок 1.2</div>
-                                                                    <div>...</div>
-                                                                </div>-->
-                                                            </div>
-                                                        </div>
-                                                    </div>
-<!--                                                    <div class="accordion-item">
-                                                        <div class="accordion-header">Заголовок 1.2</div>
-                                                        <div>...</div>
-                                                    </div>-->
-                                                </div>
-                                            </div>
+                    <div id="jqxTree">
+
+                    </div>
+                    <button type="button" class="btn btn-outline-success my-2" data-toggle="modal" id="jqxbutton"
+                            data-target="#magicButtonModal">Magic button</button>
+
+                    <div class="modal fade" id="addNewMainCategoryModal" tabindex="-1" role="dialog"
+                         aria-labelledby="addNewMainCategoryModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addNewMainCategoryModalLabel">Название корневой категории:</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="addProductCategoryForm">
+                                        <div class="form-group">
+                                            <label for="addNewMainCategory"></label>
+                                            <input type="text" class="form-control" name="category" id="addNewMainCategory">
                                         </div>
-<!--                                        <div class="accordion-item">
-                                            <div class="accordion-header">Заголовок 1.2</div>
-                                            <div>...</div>
-                                        </div>-->
-                                    </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Закрыть</button>
+                                    <button type="button" class="btn btn-primary btn-sm" id="addMainCategoryButton" data-dismiss="modal">
+                                        Добавить</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade" id="magicButtonModal" tabindex="-1" role="dialog"
+                         aria-labelledby="magicButtonModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="magicButtonModalLabel">Выберите действие для:</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table m-0 p-0 " style="width: 100%;" >
+                                        <tbody>
+                                        <tr>
+                                            <td><label for="addSubCategory">Добавить подкатегорию:</label>
+                                                <input type="text"class="form-control m-0" name="subcategoryinput" id="addSubCategory"></td>
+                                            <td><button type="button" class="btn btn-primary mt-4" id="addSubCategoryButton"
+                                                        data-dismiss="modal">Добавить</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="editSubCategory">Введи новое название:</label>
+                                                <input type="text" class="form-control m-0" name="editsubcategoryinput" id="editSubCategory"></td>
+                                            <td><button type="button" class="btn btn-primary mt-4" id="editSubCategoryButton"
+                                                        data-dismiss="modal">Изменить</button></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+<!--                                    <form id="addSubCategoryForm">
+                                        <div class="form-group">
+
+
+
+                                        </div>
+                                    </form>-->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Отменить</button>
+                                    <button type="button" class="btn btn-outline-danger" id="deleteSubCategoryButton"
+                                            data-dismiss="modal">Удалить категорию</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </div>
             </div>
         </div>
@@ -408,5 +410,10 @@
 <script src="/static/js/managerCategoriesSetting.js"></script>
 <script src="/static/js/is.js"></script>
 <script src="/static/js/managerProductCategorieCRUD.js"></script>
+<script src="/static/js/jqx/jqxcore.js"></script>
+<script src="/static/js/jqx/jqxbuttons.js"></script>
+<script src="/static/js/jqx/jqxpanel.js"></script>
+<script src="/static/js/jqx/jqxtree.js"></script>
+<script src="/static/js/jqx/jqxscrollbar.js"></script>
 </body>
 </html>
