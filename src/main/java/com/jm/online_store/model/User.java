@@ -136,6 +136,10 @@ public class User implements UserDetails {
     private Set<SharedStock> sharedStocks;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonManagedReference(value = "user-sharedNews")
+    private Set<SharedNews> sharedNews;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonManagedReference(value = "user-sentStock")
     private Set<SentStock> sentStocks;
 

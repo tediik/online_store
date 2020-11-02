@@ -18,14 +18,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * Сущность - Новость, которой поделились в социальной сети. Отражает то,
+ * какой пользователь {@link User}, какой новостью {@link News},
+ * в какой социальной сети {@link String} поделился
+ */
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "shared_stocks")
-public class SharedStock {
+@Table(name = "shared_news")
+public class SharedNews {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,14 +38,13 @@ public class SharedStock {
     @Column(name = "social_network_name")
     private String socialNetworkName;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
-    @JsonBackReference(value = "user-sharedStock")
+    @JsonBackReference(value = "user-sharedNews")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "stock_id", nullable = false)
-    @JsonBackReference(value = "stock-sharedStock")
-    private Stock stock;
-
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "news_id", nullable = false)
+    @JsonBackReference(value = "news-sharedNews")
+    private News news;
 }

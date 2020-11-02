@@ -1,5 +1,7 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,14 +15,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.Set;
 
+@Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "news")
 public class News {
 
     @Id
@@ -45,10 +52,13 @@ public class News {
     @Column(name = "archived")
     private boolean archived;
 
+    @OneToMany(mappedBy = "news", orphanRemoval = true)
+    @JsonManagedReference(value = "news-sharedNews")
+    private Set<SharedNews> sharedNews;
+
     public News(String title, String anons, String fullText) {
         this.title = title;
         this.anons = anons;
         this.fullText = fullText;
     }
-
 }
