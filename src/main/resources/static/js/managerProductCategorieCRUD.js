@@ -3,13 +3,15 @@
 const API_URL = "/api/categories/";
 const addSubCategoryButton = 'addSubCategoryButton';
 let listOfAll;
-let idGlobal;
-let parentidGlobal;
-let depthGlobal;
-let nameGlobal;
+let currentId;
+let currentParentId;
+let currentDepth;
+let currentName;
+let deletedName = "";
 let hasProduct;
 
 $(function () {
+
     fillProductCategories().then();
 
     $('#addMainCategoryButton').click(function (event) {
@@ -17,19 +19,8 @@ $(function () {
         event.preventDefault();
     })
 
-    $('#deleteSubCategoryButton').click(function (event) {
-        alert("Точно удаляем?!");
-        event.preventDefault();
-    })
-
     $('#jqxbutton').click(function (event) {
         prefillMagicModal();
-        event.preventDefault();
-    })
-
-    $('#' + addSubCategoryButton).click(function (event) {
-        console.log("event checking")
-        addNewSubCategory();
         event.preventDefault();
     })
 
@@ -44,22 +35,24 @@ async function fillProductCategories() {
     for (let i = 0; i < listOfAll.length; i++) {
         let item = listOfAll[i];
         let label = item.text;
-        let parentid = item.parentid;
+        let thisParentId = item.parentId;
         let id = item.id;
-        if (items[parentid]) {
-            let tmpitem = { parentid: parentid, label: label, item: item };
-            if (!items[parentid].items) {
-                items[parentid].items = [];
+        if (items[thisParentId]) {
+            let tmpItem = { parentId: thisParentId, label: label, item: item };
+            if (!items[thisParentId].items) {
+                items[thisParentId].items = [];
             }
-            items[parentid].items[items[parentid].items.length] = tmpitem;
-            items[id] = tmpitem;
+            items[thisParentId].items[items[thisParentId].items.length] = tmpItem;
+            items[id] = tmpItem;
         }
         else {
-            items[id] = { parentid: parentid, label: label, item: item };
+            items[id] = { parentId: thisParentId, label: label, item: item };
             source[id] = items[id];
         }
     }
-    $('#jqxTree').jqxTree({ source: source });
+    $('#jqxTree').jqxTree({
+        source: source
+    });
 }
 
 /**
@@ -76,25 +69,69 @@ function addNewMainCategory() {
  * Запрос на добавление подкатегории
  */
 function addNewSubCategory() {
-    console.log("new subcat adding")
     let newSub = '#addSubCategory';
-    let subDepth = depthGlobal + 1;
-    let subParentCategory = idGlobal;
+    let subDepth = currentDepth + 1;
+    let subParentCategory = currentId;
     postCategory(newSub, subDepth, subParentCategory);
+}
+
+/**
+ * Запрос на обновление имени категории
+ */
+function updateCategory() {
+    if ($('#editCategoryInput').val() !== '' && checkIfNotExists('#editCategoryInput')) {
+        fetch(API_URL, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: currentId,
+                category: $('#editCategoryInput').val(),
+                depth: currentDepth,
+                parentCategoryId: currentParentId
+            })
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    toastr.success('Категория обновлена');
+                    fillProductCategories().then();
+                    $('#editCategoryInput').val("");
+                }
+            })
+    } else {
+        toastr.error('Такая категория уже есть, либо поле не заполнено!');
+    }
+}
+
+/**
+ * Запрос на удаление категории
+ */
+function deleteSubCategory() {
+    fetch(API_URL + currentId, {
+        method: "DELETE"
+    })
+        .then(response => {
+            if (response.status === 200) {
+                toastr.success('Удалено!');
+                deletedName = currentName;
+                fillProductCategories().then();
+            }
+        })
 }
 
 /**
  * Fetch-запрос на добавление категории
  */
-function postCategory (url, dep, pCat) {
-    if ($(url).val() !== '' && checkIfNotExists(url)) {
+function postCategory (whatever, dep, pCat) {
+    if ($(whatever).val() !== '' && checkIfNotExists(whatever)) {
         fetch(API_URL, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                category: $(url).val(),
+                category: $(whatever).val(),
                 depth: dep,
                 parentCategoryId: pCat
             })
@@ -102,7 +139,7 @@ function postCategory (url, dep, pCat) {
             .then(response => {
                 if (response.status === 201) {
                     fillProductCategories().then();
-                    $(url).val("");
+                    $(whatever).val("");
                 }
             })
     } else {
@@ -115,7 +152,11 @@ function postCategory (url, dep, pCat) {
  */
 function checkIfNotExists(value) {
     for (let pos = 0; pos < listOfAll.length; pos++) {
-        if (listOfAll[pos].text.localeCompare($(value).val()) === 0) {
+        if (listOfAll[pos].text
+            .toLowerCase()
+            .localeCompare($(value)
+                .val()
+                .toLowerCase()) === 0) {
             return false;
         }
     }
@@ -127,9 +168,25 @@ function checkIfNotExists(value) {
  */
 function checkForSubcategories(value) {
     for (let subCat = 0; subCat < listOfAll.length; subCat++) {
-        if (listOfAll[subCat].parentid === value) {return true;}
+        if (listOfAll[subCat].parentId === value) {
+            return true;
+        }
     }
     return false;
+}
+
+/**
+ * Предзаполнение модального окна magicModal
+ */
+function prefillMagicModal() {
+    let name = $('#jqxTree').jqxTree('getSelectedItem');
+    if (!name || (deletedName.localeCompare(name.label) === 0)) {
+        $('#magicButtonModalLabel').empty().append('Hmmmm...');
+        $('#magicButtonModalBody').empty().append('Looks like no selected category found!');
+        $('#deleteSubCategoryButtonDiv').empty();
+    } else {
+        findByNameAndSetGlobalIds(name);
+    }
 }
 
 /**
@@ -139,10 +196,10 @@ function findByNameAndSetGlobalIds(name) {
     for (let find = 0; find < listOfAll.length; find++) {
         let thisItem = listOfAll[find];
         if (name.label.localeCompare(thisItem.text) === 0) {
-            idGlobal = thisItem.id;
-            parentidGlobal = thisItem.parentid;
-            depthGlobal = thisItem.depth;
-            nameGlobal = name.label;
+            currentId = thisItem.id;
+            currentParentId = thisItem.parentId;
+            currentDepth = thisItem.depth;
+            currentName = name.label;
             hasProduct = thisItem.hasProduct;
             fillMagicModal();
             break;
@@ -151,44 +208,31 @@ function findByNameAndSetGlobalIds(name) {
 }
 
 /**
- * Предзаполнение модального окна magicModal
- */
-function prefillMagicModal() {
-    let name = $('#jqxTree').jqxTree('getSelectedItem');
-    if (!name) {
-        $('#magicButtonModalLabel').empty().append('Hmmmm...');
-        $('#magicButtonModalBody').empty().append('Looks like no selected category found!');
-        $('#deleteSubCategoryButtonDiv').empty();
-    } else findByNameAndSetGlobalIds(name);
-}
-
-/**
  * Заполнение модального окна magicModal
  */
 function fillMagicModal() {
-    $('#magicButtonModalLabel').empty().append('Выберите действие для \"' + nameGlobal + '\"');
-    if (checkForSubcategories(idGlobal) || hasProduct) {
+    $('#magicButtonModalLabel').empty().append('Выберите действие для \"' + currentName + '\"');
+    if (checkForSubcategories(currentId) || hasProduct) {
         $('#deleteSubCategoryButtonDiv').empty()
         .append(`    <button type="button" class="btn btn-outline-danger"
                      id="deleteSubCategoryButton" data-dismiss="modal" disabled>Категория не пуста -> удаление невозможно</button>`);;
     } else {
         $('#deleteSubCategoryButtonDiv').empty()
-        .append(`    <button type="button" class="btn btn-danger"
-                     id="deleteSubCategoryButton" data-dismiss="modal">Удалить категорию</button>`);
+        .append(`    <button type="button" class="btn btn-danger" onclick="deleteSubCategory()" data-dismiss="modal">Удалить категорию</button>`);
     }
     let body =`<table class="table m-0 p-0 " style="width: 100%;" >
                     <tbody>
                         <tr>
                             <td><label for="addSubCategory">Добавить подкатегорию:</label>
                                 <input type="text" class="form-control m-0" name="subcategoryinput" id="addSubCategory"></td>
-                            <td><button type="button" class="btn btn-primary mt-4" onclick="addNewSubCategory()" id="${addSubCategoryButton}"
+                            <td><button type="button" class="btn btn-primary mt-4" onclick="addNewSubCategory()"
                                         data-dismiss="modal">Добавить</button></td>
                         </tr>
                         <tr>
-                        <td><label for="editSubCategory">Введи новое название:</label>
-                        <input type="text" class="form-control m-0" name="editsubcategoryinput" id="editSubCategory" value="${nameGlobal}"></td>
-                        <td><button type="button" class="btn btn-primary mt-4" id="editCategoryButton"
-                            data-dismiss="modal">Изменить</button></td>
+                        <td><label for="editCategoryInput">Введите новое название:</label>
+                        <input type="text" class="form-control m-0" name="editsubcategoryinput" id="editCategoryInput" value="${currentName}"></td>
+                        <td><button type="button" class="btn btn-primary mt-4" onclick="updateCategory()"
+                                    data-dismiss="modal">Изменить</button></td>
                         </tr>
                     </tbody>
                </table>

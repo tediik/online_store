@@ -1,6 +1,8 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +36,7 @@ import java.util.Optional;
 public class ManagerProductsRestController {
 
     private final ProductService productService;
+    private final CategoriesService categoriesService;
 
     /**
      * Метод обрабатывает загрузку файла с товарами на сервер
@@ -100,12 +104,23 @@ public class ManagerProductsRestController {
 
     /**
      * Метод добавляет товар
-     * @param product акиця для добавления
+     * @param product акиця для добавления - @@ wtf "акиця для добавления" ? :) @@
      * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
      */
-    @PostMapping(value = "/rest/products/addProduct", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> addProductM(@RequestBody Product product) {
+    @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Product> addProductM(@RequestBody Product product, @PathVariable(name = "id") Long catId) {
+        System.out.println("prod - " + product.getProduct());
+        System.out.println("price - " + product.getPrice());
+        System.out.println("amount - " + product.getAmount());
+        System.out.println("catid - " + catId);
+        System.out.println("---------------------------------------------------");
+
         productService.saveProduct(product);
+        Categories thisCat = categoriesService.getCategoryById(catId).get();
+        List<Product> thisCatProducts = thisCat.getProducts();
+        thisCatProducts.add(product);
+        thisCat.setProducts(thisCatProducts);
+        categoriesService.saveCategory(thisCat);
         return ResponseEntity.ok(product);
     }
 

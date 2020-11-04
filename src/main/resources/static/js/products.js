@@ -1,7 +1,67 @@
+// документация к jqxtree -
+// https://www.jqwidgets.com/jquery-widgets-documentation/documentation/jqxtree/jquery-tree-getting-started.htm?search=
+const API_CATEGORIES_URL = "/api/categories/"
+let listOfAll
+let currentCategoryId;
 let productRestUrl = "/rest/products/allProducts"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
+
+$(function () {
+    fillProductCategoriesIn()
+        .then(() => {
+        $('#jqxTreeHere').jqxTree('expandAll');
+    })
+        .then(() => {
+            document.querySelector('#searchForCategories').oninput = function () {
+                let val = this.value.trim().toLowerCase();
+                let allItems = document.querySelectorAll('#jqxTreeHere li');
+                if (val != '') {
+                    allItems.forEach(function (element) {
+                        if (element.innerText.toLowerCase().search(val) == -1) {
+                            element.classList.add('hide');
+                        } else {
+                            element.classList.remove('hide');
+                        }
+                    })
+                } else {
+                    allItems.forEach(function (element) {
+                        element.classList.remove('hide');
+                    });
+                }
+            }
+        });
+});
+
+// build hierarchical structure
+async function fillProductCategoriesIn() {
+    listOfAll = await fetch(API_CATEGORIES_URL + "all").then(response => response.json());
+    let source = [];
+    let items = [];
+    for (let i = 0; i < listOfAll.length; i++) {
+        let item = listOfAll[i];
+        let label = item.text;
+        let thisParentId = item.parentId;
+        let id = item.id;
+        if (items[thisParentId]) {
+            let tmpItem = { parentId: thisParentId, label: label, item: item };
+            if (!items[thisParentId].items) {
+                items[thisParentId].items = [];
+            }
+            items[thisParentId].items[items[thisParentId].items.length] = tmpItem;
+            items[id] = tmpItem;
+        }
+        else {
+            items[id] = { parentId: thisParentId, label: label, item: item };
+            source[id] = items[id];
+        }
+    }
+    $('#jqxTreeHere').jqxTree({
+        source: source,
+        height: "250px"
+    });
+}
 
 showAndRefreshNotDeleteHomeTab()
 
@@ -118,7 +178,21 @@ function showAndRefreshNotDeleteHomeTab() {
  * функция обработки кнопки add на форме нового продукта
  */
 function handleAddBtn() {
-    let product = {
+    let selected = $('#jqxTreeHere').jqxTree('getSelectedItem');
+    if (!selected) {
+        alert('Категория не выбрана!');
+        return false;
+    } else {
+        for (let sel = 0; sel < listOfAll.length; sel++) {
+            let currItem = listOfAll[sel];
+            if (selected.label.localeCompare(currItem.text) === 0) {
+
+                currentCategoryId = currItem.id;
+            }
+        }
+    }
+
+    let productToAdd = {
         product: $('#addProduct').val(),
         price: $('#addPrice').val(),
         amount: $('#addAmount').val(),
@@ -134,7 +208,7 @@ function handleAddBtn() {
     /**
      * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
      * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
-     * @param text - текст для вывода в алекрт
+     * @param text - текст для вывода в алерт
      * @param field - поле на каком установить фокус
      */
     function handleNotValidFormField(text, field) {
@@ -153,12 +227,12 @@ function handleAddBtn() {
         }, 5000)
     }
 
-    fetch("/rest/products/addProduct", {
+    fetch("/rest/products/addProduct/" + currentCategoryId, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
-        body: JSON.stringify(product)
-    }).then(
-        function (response) {
+        body: JSON.stringify(productToAdd)
+    })
+        .then(function (response) {
             let field;
             if (response.status !== 200) {
                 response.text()
@@ -166,11 +240,11 @@ function handleAddBtn() {
                         function (text) {
                             if (text === "notValidNameProduct") {
                                 field = "addEmail"
-                                handleNotValidFormField("Вы ввели некоректное Наименование товара!", field)
+                                handleNotValidFormField("Вы ввели некорректное наименование товара!", field)
                             }
                             if (text === "duplicatedNameProductError") {
                                 field = "addEmail"
-                                handleNotValidFormField("Такой наименование уже существует", field)
+                                handleNotValidFormField("Такое наименование уже существует", field)
                             }
                             if (text === "emptyPriceError") {
                                 field = "addPrice"
@@ -184,6 +258,7 @@ function handleAddBtn() {
                         })
             } else {
                 response.text().then(function () {
+                    $("#jqxTreeHere").jqxTree('selectItem', null);
                     showAndRefreshHomeTab();
                     clearFormFields();
                 })
@@ -277,7 +352,7 @@ function renderProductsTable(products) {
                 <th>ID</th>
                 <th>Наименование товара</th>
                 <th>Цена</th>
-                <th>Колличество</th>
+                <th>Количество</th>
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>`)

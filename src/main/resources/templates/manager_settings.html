@@ -310,15 +310,10 @@
                      aria-labelledby="nav-products-categories-tab">
                     <h2>Управление категориями товаров</h2>
                     <button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
-                            data-target="#addNewMainCategoryModal">Добавить корневую категорию</button>
-
-                    <div id="jqxTree">
-
-                    </div>
-
+                            data-target="#addNewMainCategoryModal" data-backdrop="static">Добавить корневую категорию</button>
+                    <div id="jqxTree"></div>
                     <button type="button" class="btn btn-outline-success my-2" data-toggle="modal" id="jqxbutton"
-                            data-target="#magicButtonModal">Magic button</button>
-
+                            data-target="#magicButtonModal" data-backdrop="static">Нажмите для выбора действия</button>
                     <div class="modal fade" id="addNewMainCategoryModal" tabindex="-1" role="dialog"
                          aria-labelledby="addNewMainCategoryModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -342,7 +337,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="modal fade" id="magicButtonModal" tabindex="-1" role="dialog"
                          aria-labelledby="magicButtonModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -382,7 +376,7 @@
 <script src="/static/js/managerPriceChangeSetting.js"></script>
 <script src="/static/js/managerPriceListCreate.js"></script>
 <script src="/static/js/managerCategoriesSetting.js"></script>
-<script src="/static/js/is.js"></script>
+<!--<script src="/static/js/is.js"></script>-->
 <script src="/static/js/managerProductCategorieCRUD.js"></script>
 <script src="/static/js/jqx/jqxcore.js"></script>
 <script src="/static/js/jqx/jqxbuttons.js"></script>

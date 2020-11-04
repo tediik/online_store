@@ -18,10 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -94,6 +96,18 @@ public class MainPageRestController {
     public ResponseEntity<Categories> newCategory(@RequestBody Categories categories) {
         categoriesService.saveCategory(categories);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("api/categories")
+    public ResponseEntity<Categories> updateCategory(@RequestBody Categories categories) {
+        categoriesService.saveCategory(categories);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("api/categories/{id}")
+    public ResponseEntity<Categories> deleteCategory(@PathVariable Long id) {
+        categoriesService.deleteCategory(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("api/categories/all")

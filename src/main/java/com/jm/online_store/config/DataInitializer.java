@@ -602,7 +602,7 @@ public class DataInitializer {
         Categories category13 = new Categories("Периферия", 1L, 2);
         Categories category14 = new Categories("Планшеты", 3L, 2);
         Categories category15 = new Categories("Электронные книги", 3L, 2);
-        Categories category16 =  new Categories("Аксессуары", 3L, 2);
+        Categories category16 =  new Categories("Аксессуары для гаджетов", 3L, 2);
         Categories category17 =  new Categories("Телевизоры", 4L, 2);
         Categories category18 =  new Categories("Игры", 4L, 2);
         Categories category19 =  new Categories("Аудиотехника", 4L, 2);

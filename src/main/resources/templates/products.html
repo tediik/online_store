@@ -1,40 +1,34 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
 
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="/static/css/products.css" rel="stylesheet">
-
+    <link href="/static/css/summernote.css" rel="stylesheet">
+    <link href="/static/css/jqx.base.css" rel="stylesheet" type="text/css">
     <!-- ----------------------JS - jQuery ------------->
     <script src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
-
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <!-- ----------------------JS - jQuery END ------------->
-
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-
     <link rel="stylesheet" type="text/css" href="../static/css/stocksStyle.css">
     <!-- Подключаем библиотеку summernote bs-4 -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet"> <!--это здесь зачем?-->
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -49,9 +43,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div id="alert-modal-div">
-
-            </div>
+            <div id="alert-modal-div"></div>
             <div class="modal-body" id="modalBody">
                 <div class="row justify-content-center">
                     <div class="col">
@@ -108,8 +100,7 @@
                     </div>
                 </nav>
 
-                <!-- Модалка добовления из файла -->
-
+                <!-- Модалка добавления из файла -->
                 <div class="modal fade" id="newProductImportModal" data-backdrop="static" tabindex="-1"
                      role="dialog"
                      aria-labelledby="exampleModalLabel"
@@ -176,11 +167,18 @@
                                         <label for="addAmount">Количество:</label>
                                         <input type="number" id="addAmount" name="amount" placeholder="Количество" class="form-control">
                                     </div>
-                                    <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Add</button>
-                                    <button type="button" class="btn btn-primary" data-toggle='modal'
-                                            data-target='#newProductImportModal'>
-                                        Загрузить товары из файла
-                                    </button>
+                                    <div class="input-group mb-4">
+                                        <input type="text" class="form-control" placeholder="Поиск по категориям" id="searchForCategories">
+                                    </div>
+
+                                    <div id="jqxTreeHere"></div>
+
+                                    <div class="mt-4">
+                                        <button id="addBtn" type="button" class=" btn btn-outline-success btn-md btn">Добавить новый товар</button>
+                                        <button type="button" class="btn btn-outline-primary" data-toggle='modal'
+                                                data-target='#newProductImportModal'>Загрузить товары из файла</button>
+                                    </div>
+
                                 </div>
                             </div>
                         </form>
@@ -190,16 +188,17 @@
         </div>
     </div>
 </div>
-
-<footer th:replace="/blocks/footer :: footer"></footer>
 <script type="text/javascript" src="/static/js/products.js"></script>
 <!--MomentJs (work with dates)-->
 <script type="text/JavaScript" src="../static/js/moment.js"></script>
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <script src="/static/js/textRedactor.js"></script>
-<link href="/static/css/summernote.css" rel="stylesheet">
-<link href="/static/css/products.css" rel="stylesheet">
 <script src="/static/js/date_range.js"></script>
+<script src="/static/js/jqx/jqxcore.js"></script>
+<script src="/static/js/jqx/jqxbuttons.js"></script>
+<script src="/static/js/jqx/jqxpanel.js"></script>
+<script src="/static/js/jqx/jqxtree.js"></script>
+<script src="/static/js/jqx/jqxscrollbar.js"></script>
 </body>
 </html>
