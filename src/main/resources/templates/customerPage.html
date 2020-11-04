@@ -255,6 +255,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!--Profile picture change modal-->
                                     </div>
 
                                     <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}"
@@ -333,6 +334,7 @@
                                             </div>
                                         </div>
                                         <hr/>
+                                        <!--РАССЫЛКА -->
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input"
                                                    id="stockMailingCheckbox"
@@ -357,10 +359,16 @@
                                                 <option value="SUNDAY">Воскресенье</option>
                                             </select>
                                         </div>
+                                        <!--РАССЫЛКА -->
                                         <hr/>
+
+                                        <!-- YELLOW SAVE BUTTON -->
                                         <button type="submit" style="background-color: #ff8e05"
                                                 class="m-2 btn btn-success d-block mx-auto">Сохранить
                                         </button>
+                                        <!--SAVE BUTTON -->
+
+                                        <!--DELETE BUTTON -->
                                         <div>
                                             <button type="button" style="color: #a94442"
                                                     class="m-2 btn btn-link d-block mx-auto"
@@ -369,6 +377,9 @@
                                                     th:data-del-id="${user.id}">Удалить профиль
                                             </button>
                                         </div>
+                                        <!--DELETE BUTTON -->
+
+                                        <!--ДАТА РЕГИТСРАЦИИ -->
                                         <div class="m-2 text-center personal-info_register-container"
                                              style="background-color: #f9f9f9">
                                             Дата регистрации:
@@ -376,6 +387,7 @@
                                                class="personal-info_register-date font-weight-bold"
                                                id="register_date"></a>
                                         </div>
+                                        <!--ДАТА РЕГИТСРАЦИИ -->
                                     </form>
 
                                     <!-- change mail modal -->
