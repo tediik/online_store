@@ -41,21 +41,29 @@
         <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
         <div class="col-md-2">
             <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
                 <a class="btn btn-outline-primary mt-2 nav-link active" id="customerMain-tab" data-toggle="pill"
                    href="#customerMain" role="tab" aria-controls="customerMain" aria-selected="true">Главная</a>
+
                 <a class="btn btn-outline-primary mt-2" id="profile-tab" data-toggle="pill" href="#profile" role="tab"
                    aria-controls="profile" aria-selected="false">Профиль</a>
+
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
                 >Избранное</a>
+
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false"
                    onclick="fillBasket();location.href='#basket'">Корзина</a>
+
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
+
                 <a class="btn btn-outline-primary mt-2" id="feedback-tab" data-toggle="pill" href="#feedback" role="tab"
                    aria-controls="orders" aria-selected="false">Обратная связь</a>
+
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
+
             </div>
         </div>
         <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
@@ -63,12 +71,17 @@
         <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
         <div class="col-md-10" style="background: #edeef0">
             <div class="tab-content" id="v-pills-tabContent">
+
+                <!--ВКЛАДКА Главная пользователя  -->
                 <div class="tab-pane fade" id="customerMain" role="tabpanel" aria-labelledby="customerMain-tab">
                     <h3>Главная пользователя</h3>
 
                     <div class="container-fluid" id="chartContainer" style="height: 370px; width: 100%;"></div>
 
                 </div>
+                <!--ВКЛАДКА Главная пользователя  -->
+
+                <!--ВКЛАДКА ИЗБРАННОЕ  -->
                 <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel"
                      aria-labelledby="favouritesGoods-tab">
                     <h3>Избранное</h3>
@@ -184,6 +197,9 @@
                         </tbody>
                     </table>
                 </div>
+                <!-- ВКЛАДКА ИЗБРАННОЕ  -->
+
+
                 <!-- ВКЛАДКА ПРОФИЛЯ -->
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div form>
@@ -489,7 +505,7 @@
                 </div>
                 <!-- ВКЛАДКА ПРОФИЛЯ -->
 
-
+                <!-- ВКЛАДКА КОРЗИНА  -->
                 <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
                     <div id="order-div"></div>
                     <h3>Корзина</h3>
@@ -610,6 +626,10 @@
                         </div>
                     </div>
                 </div>
+                <!-- ВКЛАДКА КОРЗИНА  -->
+
+
+                <!-- ВКЛАДКА ЗАКАЗЫ  -->
                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                     <div class="container-fluid bg-light">
                         <div class="tab-pane">
@@ -665,6 +685,9 @@
                         </div>
                     </div>
                 </div>
+                <!-- ЗАКАЗЫ  -->
+
+                <!-- ВКЛАДКА ОБРАТНАЯ СВЯЗЬ  -->
                 <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
                     <ul class="nav nav-tabs" id="navFeedback" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -730,6 +753,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- ВКЛАДКА ОБРАТНАЯ СВЯЗЬ  -->
             </div>
         </div>
         <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
@@ -767,6 +791,7 @@
         </div>
     </div>
 </div>
+<!-- Modal for order -->
 </div>
 <!--summernote-->
 <script src="/static/js/summernote.js"></script>
