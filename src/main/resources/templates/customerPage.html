@@ -38,6 +38,7 @@
 <header th:insert="/blocks/header :: header"></header>
 <div class="container-fluid">
     <div class="row min-vh-100">
+        <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
         <div class="col-md-2">
             <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary mt-2 nav-link active" id="customerMain-tab" data-toggle="pill"
@@ -46,7 +47,7 @@
                    aria-controls="profile" aria-selected="false">Профиль</a>
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
-                   >Избранное</a>
+                >Избранное</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false"
                    onclick="fillBasket();location.href='#basket'">Корзина</a>
@@ -57,6 +58,9 @@
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
             </div>
         </div>
+        <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
+
+        <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
         <div class="col-md-10" style="background: #edeef0">
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade" id="customerMain" role="tabpanel" aria-labelledby="customerMain-tab">
@@ -71,8 +75,11 @@
                     <!-- Новый интерфейс -->
                     <div class="favouritesgroups">
                         <div class="btn-group">
-                            <button type="button" class="get-favourites-group-btn btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false" th:id="${favouritesGroupList[0].id}">Все товары</button>
+                            <button type="button" class="get-favourites-group-btn btn btn-secondary dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false" th:id="${favouritesGroupList[0].id}">Все
+                                товары
+                            </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" th:each="favouritesGroup : ${favouritesGroupList}"
                                    th:id="${favouritesGroup.id}" th:text="${favouritesGroup.name}">Все товары</a>
@@ -103,21 +110,27 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <table class="select_group table table-condensed" >
-                                        <tr th:each="favouritesGroup : ${favouritesGroupList}" class="select-group-tr mt-3" th:id="${favouritesGroup.id}">
+                                    <table class="select_group table table-condensed">
+                                        <tr th:each="favouritesGroup : ${favouritesGroupList}"
+                                            class="select-group-tr mt-3" th:id="${favouritesGroup.id}">
                                             <td>
                                                 <input th:id="${favouritesGroup.id}"
                                                        th:class="check-favourites-group" type="checkbox"
                                                        class="form-check-input checkbox_move_group">
                                                 <label class="form-check-label"
                                                        th:for="${favouritesGroup.id}">
-                                                    <input th:id="${favouritesGroup.id}" type="text" th:value="${favouritesGroup.getName()}" class="select-group-tr-input" disabled>
+                                                    <input th:id="${favouritesGroup.id}" type="text"
+                                                           th:value="${favouritesGroup.getName()}"
+                                                           class="select-group-tr-input" disabled>
                                                 </label>
                                             </td>
                                             <td>
-                                                <div class="ok-cancel-edit-fav-group hidden" th:id="${favouritesGroup.id}">
-                                                    <span class="edit-fav-group-ok done" th:id="${favouritesGroup.id}">V</span>
-                                                    <span class="edit-fav-group-cancel" th:id="${favouritesGroup.id}">X</span>
+                                                <div class="ok-cancel-edit-fav-group hidden"
+                                                     th:id="${favouritesGroup.id}">
+                                                    <span class="edit-fav-group-ok done"
+                                                          th:id="${favouritesGroup.id}">V</span>
+                                                    <span class="edit-fav-group-cancel"
+                                                          th:id="${favouritesGroup.id}">X</span>
                                                 </div>
                                                 <button type="button" class="button-edit-fav-group btn btn-secondary"
                                                         th:id="${favouritesGroup.id}">EDIT
@@ -149,7 +162,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div> <!-- Модалка END-->
+                    </div>
+                    <!-- Модалка END-->
+
                     <!--  Новый интерфейс -->
 
                     <table class="table table-striped">
@@ -166,262 +181,271 @@
                         </thead>
                         <tbody id="favouritesGoodsList">
 
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <div form>
-                            <div class="container-fluid bg-light">
-                                <div class="row p-3">
-                                    <div class="col-4">
-                                        <div class="imgContainer">
-                                            <div>
-                                                <img id="profilePic" alt="UserPhoto"
-                                                     class="rounded-circle img-responsive mt-2"
-                                                     height="152"
-                                                     th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}"
-                                                     width="152"></div>
-                                            <div class="imgButton">
-                                                <button type="button" class="btn btn-link" data-toggle="modal"
-                                                        data-target="#myModal"> Edit Profile Picture
-                                                </button>
-                                            </div>
-                                            <!--Profile picture change modal-->
-                                            <div class="modal" id="myModal">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- ВКЛАДКА ПРОФИЛЯ -->
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div form>
+                        <div class="container-fluid bg-light">
+                            <div class="row p-3">
+                                <div class="col-4">
 
-                                                        <!-- Modal Header -->
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Upload your profile picture</h4>
-                                                            <button type="button" class="close" data-dismiss="modal">
-                                                                &times;
-                                                            </button>
-                                                        </div>
-
-                                                        <!-- Modal body -->
-                                                        <div class="modal-body">
-                                                            <input type="file" id="fileInput" name="imageFile"
-                                                                   alt="Picture">
-                                                            <br>
-                                                            <br>
-                                                            <input type="button" id="deletePicBtn"
-                                                                   value="Delete Picture"
-                                                                   data-dismiss="modal"
-                                                                   class="btn btn-sm btn-outline-danger"/>
-                                                            <img id="blah" src="#" alt="your image"
-                                                                 class="rounded-circle img-responsive mt-2 float-right"
-                                                                 height="82" width="82"/>
-                                                        </div>
-                                                        <!-- Modal footer -->
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Cancel
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}"
-                                              method="post" data-role="personal-info-form">
-                                            <div class="form-group text-center font-weight-bold" hidden>
-                                                <label class="input-row_label" for="id_update">ID</label>
-                                                <input th:field="*{id}" type="text" class="form-control" id="id_update"
-                                                       name="id">
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold" hidden>
-                                                <label class="input-row_label" for="password_update">Пароль</label>
-                                                <input th:field="*{password}" type="text" class="form-control"
-                                                       id="password_update" name="password">
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold">
-                                                <label class="input-row_label" for="first_name_update">Имя</label>
-                                                <input th:field="*{firstName}" type="text" class="form-control"
-                                                       id="first_name_update" name="firstName">
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold">
-                                                <label for="last_name_input">Фамилия</label>
-                                                <input th:field="*{lastName}" type="text" class="form-control"
-                                                       id="last_name_input" name="lastName">
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold">
-                                                <label for="email_input">Email</label>
-                                                <input th:field="*{email}" type="text" class="form-control"
-                                                       id="email_input"
-                                                       name="email" readonly>
-                                            </div>
-                                            <div>
-                                                <button type="button" style="background-color: #ff8e05"
-                                                        class="m-2 btn btn-success d-block mx-auto" data-toggle="modal"
-                                                        data-target="#openNewMailModal">Изменить email
-                                                </button>
-
-                                                <button type="button" style="background-color: #ff8e05"
-                                                        class="m-2 btn btn-success d-block mx-auto" data-toggle="modal"
-                                                        data-target="#openChangePassModal">Изменить пароль
-                                                </button>
-                                            </div>
-                                            <div class="form-group text-center font-weight-bold">
-                                                <label for="date_birthday_input" class="col-xs-2 col-form-label">День
-                                                    рождения</label>
-                                                <div class="col-xs-10">
-                                                    <input th:field="*{birthdayDate}" class="form-control"
-                                                           th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
-                                                           type="date" id="date_birthday_input" name="birthdayDate">
-                                                </div>
-                                            </div>
-                                            <div class="form-group-text-center">
-                                                <label for="gender_radio"
-                                                       class="text-center font-weight-bold">Пол</label>
-                                                <div id="gender_radio">
-                                                    <div class="custom-control custom-radio">
-                                                        <input th:field="*{userGender}" value="" type="radio"
-                                                               id="option1"
-                                                               name="genderRadio" class="custom-control-input">
-                                                        <label class="custom-control-label" for="option1">Не
-                                                            выбрано</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio">
-                                                        <input th:field="*{userGender}" value="MAN" type="radio"
-                                                               id="option2" name="genderRadio"
-                                                               class="custom-control-input">
-                                                        <label class="custom-control-label"
-                                                               for="option2">Мужской</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio">
-                                                        <input th:field="*{userGender}" value="WOMAN" type="radio"
-                                                               id="option3" name="genderRadio"
-                                                               class="custom-control-input">
-                                                        <label class="custom-control-label"
-                                                               for="option3">Женский</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <hr/>
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input"
-                                                       id="stockMailingCheckbox"
-                                                       th:checked="*{dayOfWeekForStockSend != null}"
-                                                       onchange="chekboxChanges(this)">
-                                                <label class="form-check-label" for="stockMailingCheckbox">Хотите ли вы
-                                                    получать рассылку?</label>
-                                            </div>
-                                            <br>
-                                            <div
-                                                    th:class="*{dayOfWeekForStockSend != null} ? 'form-group day-of-the-week-drop-list' : 'form-group day-of-the-week-drop-list d-none' ">
-                                                <label for="dayOfWeekDropList">Выберите день недели</label>
-                                                <select class="form-control" id="dayOfWeekDropList"
-                                                        th:field="*{dayOfWeekForStockSend}">
-                                                    <option value=""></option>
-                                                    <option value="MONDAY">Понедельник</option>
-                                                    <option value="TUESDAY">Вторник</option>
-                                                    <option value="WEDNESDAY">Среда</option>
-                                                    <option value="THURSDAY">Четверг</option>
-                                                    <option value="FRIDAY">Пятница</option>
-                                                    <option value="SATURDAY">Суббота</option>
-                                                    <option value="SUNDAY">Воскресенье</option>
-                                                </select>
-                                            </div>
-                                            <hr/>
-                                            <button type="submit" style="background-color: #ff8e05"
-                                                    class="m-2 btn btn-success d-block mx-auto">Сохранить
+                                    <div class="imgContainer">
+                                        <div>
+                                            <img id="profilePic" alt="UserPhoto"
+                                                 class="rounded-circle img-responsive mt-2"
+                                                 height="152"
+                                                 th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}"
+                                                 width="152"></div>
+                                        <div class="imgButton">
+                                            <button type="button" class="btn btn-link" data-toggle="modal"
+                                                    data-target="#myModal"> Edit Profile Picture
                                             </button>
-                                            <div>
-                                                <button type="button" style="color: #a94442"
-                                                        class="m-2 btn btn-link d-block mx-auto"
-                                                        data-toggle="modal"
-                                                        data-target="#deleteProfile"
-                                                        th:data-del-id="${user.id}">Удалить профиль
-                                                </button>
-                                            </div>
-                                            <div class="m-2 text-center personal-info_register-container"
-                                                 style="background-color: #f9f9f9">
-                                                Дата регистрации:
-                                                <a th:field="*{registerDate}" th:text="*{registerDate}"
-                                                   class="personal-info_register-date font-weight-bold"
-                                                   id="register_date"></a>
-                                            </div>
-                                        </form>
-                                        <div id="openNewMailModal" class="modal">
+                                        </div>
+                                        <!--Profile picture change modal-->
+                                        <div class="modal" id="myModal">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
+
+                                                    <!-- Modal Header -->
                                                     <div class="modal-header">
-                                                        <h3 class="modal-title">Изменяем электронную почту:</h3>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">x</span>
+                                                        <h4 class="modal-title">Upload your profile picture</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">
+                                                            &times;
                                                         </button>
                                                     </div>
+
+                                                    <!-- Modal body -->
                                                     <div class="modal-body">
-                                                        <form id="formChangeMail" th:action="@{/customer/changemail}"
-                                                              method="post" class="form-group">
-                                                            <div class="text-center font-weight-bold">
-                                                                <label for="new_mail">Введите новый адрес электронной
-                                                                    почты</label>
-                                                                <input type="email"
-                                                                       id="new_mail"
-                                                                       name="newMail"
-                                                                       class="form-control" required/>
-                                                            </div>
-
-                                                            <div class="messages-after-submit"></div>
-
-                                                            <button type="submit" id="buttonChangeMail"
-                                                                    class="btn btn-primary btn-sm btn-block">
-                                                                Подтвердить
-                                                            </button>
-                                                        </form>
+                                                        <input type="file" id="fileInput" name="imageFile"
+                                                               alt="Picture">
+                                                        <br>
+                                                        <br>
+                                                        <input type="button" id="deletePicBtn"
+                                                               value="Delete Picture"
+                                                               data-dismiss="modal"
+                                                               class="btn btn-sm btn-outline-danger"/>
+                                                        <img id="blah" src="#" alt="your image"
+                                                             class="rounded-circle img-responsive mt-2 float-right"
+                                                             height="82" width="82"/>
+                                                    </div>
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger"
+                                                                data-dismiss="modal">Cancel
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="openChangePassModal" class="modal">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h3 class="modal-title">Название</h3>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">x</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form id="formChangePass"
-                                                              th:action="@{/customer/change-password}"
-                                                              method="post"
-                                                              class="form-group">
-                                                            <div class="form-group text-center font-weight-bold">
-                                                                <label for="old_password">Текущий пароль от личного
-                                                                    кабинета</label>
-                                                                <input type="password" id="old_password"
-                                                                       name="oldPassword"
-                                                                       autofocus="autofocus"
-                                                                       class="form-control" required>
-                                                            </div>
-                                                            <div class="form-group text-center font-weight-bold">
-                                                                <label for="new_password">Придумайте новый
-                                                                    пароль</label>
-                                                                <input type="password" id="new_password"
-                                                                       name="newPassword"
-                                                                       class="form-control" required/>
-                                                                <small id="passwordHelpBlock"
-                                                                       class="form-text text-muted">
-                                                                    Ваш пароль должен состоять из 8-20 символов,
-                                                                    содержать
-                                                                    буквы и цифры и не должны содержать пробелов и
-                                                                    смайлики.
-                                                                </small>
-                                                            </div>
-                                                            <button id="submitNewPassword" type="submit"
-                                                                    class="btn btn-primary btn-sm btn-block">
-                                                                Сохранить
-                                                            </button>
-                                                        </form>
-                                                    </div>
+                                    </div>
+
+                                    <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}"
+                                          method="post" data-role="personal-info-form">
+                                        <div class="form-group text-center font-weight-bold" hidden>
+                                            <label class="input-row_label" for="id_update">ID</label>
+                                            <input th:field="*{id}" type="text" class="form-control" id="id_update"
+                                                   name="id">
+                                        </div>
+                                        <div class="form-group text-center font-weight-bold" hidden>
+                                            <label class="input-row_label" for="password_update">Пароль</label>
+                                            <input th:field="*{password}" type="text" class="form-control"
+                                                   id="password_update" name="password">
+                                        </div>
+                                        <div class="form-group text-center font-weight-bold">
+                                            <label class="input-row_label" for="first_name_update">Имя</label>
+                                            <input th:field="*{firstName}" type="text" class="form-control"
+                                                   id="first_name_update" name="firstName">
+                                        </div>
+                                        <div class="form-group text-center font-weight-bold">
+                                            <label for="last_name_input">Фамилия</label>
+                                            <input th:field="*{lastName}" type="text" class="form-control"
+                                                   id="last_name_input" name="lastName">
+                                        </div>
+                                        <div class="form-group text-center font-weight-bold">
+                                            <label for="email_input">Email</label>
+                                            <input th:field="*{email}" type="text" class="form-control"
+                                                   id="email_input"
+                                                   name="email" readonly>
+                                        </div>
+                                        <div>
+                                            <button type="button" style="background-color: #ff8e05"
+                                                    class="m-2 btn btn-success d-block mx-auto" data-toggle="modal"
+                                                    data-target="#openNewMailModal">Изменить email
+                                            </button>
+
+                                            <button type="button" style="background-color: #ff8e05"
+                                                    class="m-2 btn btn-success d-block mx-auto" data-toggle="modal"
+                                                    data-target="#openChangePassModal">Изменить пароль
+                                            </button>
+                                        </div>
+                                        <div class="form-group text-center font-weight-bold">
+                                            <label for="date_birthday_input" class="col-xs-2 col-form-label">День
+                                                рождения</label>
+                                            <div class="col-xs-10">
+                                                <input th:field="*{birthdayDate}" class="form-control"
+                                                       th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                                                       type="date" id="date_birthday_input" name="birthdayDate">
+                                            </div>
+                                        </div>
+                                        <div class="form-group-text-center">
+                                            <label for="gender_radio"
+                                                   class="text-center font-weight-bold">Пол</label>
+                                            <div id="gender_radio">
+                                                <div class="custom-control custom-radio">
+                                                    <input th:field="*{userGender}" value="" type="radio"
+                                                           id="option1"
+                                                           name="genderRadio" class="custom-control-input">
+                                                    <label class="custom-control-label" for="option1">Не
+                                                        выбрано</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input th:field="*{userGender}" value="MAN" type="radio"
+                                                           id="option2" name="genderRadio"
+                                                           class="custom-control-input">
+                                                    <label class="custom-control-label"
+                                                           for="option2">Мужской</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input th:field="*{userGender}" value="WOMAN" type="radio"
+                                                           id="option3" name="genderRadio"
+                                                           class="custom-control-input">
+                                                    <label class="custom-control-label"
+                                                           for="option3">Женский</label>
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr/>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                   id="stockMailingCheckbox"
+                                                   th:checked="*{dayOfWeekForStockSend != null}"
+                                                   onchange="chekboxChanges(this)">
+                                            <label class="form-check-label" for="stockMailingCheckbox">Хотите ли вы
+                                                получать рассылку?</label>
+                                        </div>
+                                        <br>
+                                        <div
+                                                th:class="*{dayOfWeekForStockSend != null} ? 'form-group day-of-the-week-drop-list' : 'form-group day-of-the-week-drop-list d-none' ">
+                                            <label for="dayOfWeekDropList">Выберите день недели</label>
+                                            <select class="form-control" id="dayOfWeekDropList"
+                                                    th:field="*{dayOfWeekForStockSend}">
+                                                <option value=""></option>
+                                                <option value="MONDAY">Понедельник</option>
+                                                <option value="TUESDAY">Вторник</option>
+                                                <option value="WEDNESDAY">Среда</option>
+                                                <option value="THURSDAY">Четверг</option>
+                                                <option value="FRIDAY">Пятница</option>
+                                                <option value="SATURDAY">Суббота</option>
+                                                <option value="SUNDAY">Воскресенье</option>
+                                            </select>
+                                        </div>
+                                        <hr/>
+                                        <button type="submit" style="background-color: #ff8e05"
+                                                class="m-2 btn btn-success d-block mx-auto">Сохранить
+                                        </button>
+                                        <div>
+                                            <button type="button" style="color: #a94442"
+                                                    class="m-2 btn btn-link d-block mx-auto"
+                                                    data-toggle="modal"
+                                                    data-target="#deleteProfile"
+                                                    th:data-del-id="${user.id}">Удалить профиль
+                                            </button>
+                                        </div>
+                                        <div class="m-2 text-center personal-info_register-container"
+                                             style="background-color: #f9f9f9">
+                                            Дата регистрации:
+                                            <a th:field="*{registerDate}" th:text="*{registerDate}"
+                                               class="personal-info_register-date font-weight-bold"
+                                               id="register_date"></a>
+                                        </div>
+                                    </form>
+
+                                    <!-- change mail modal -->
+                                    <div id="openNewMailModal" class="modal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title">Изменяем электронную почту:</h3>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">x</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="formChangeMail" th:action="@{/customer/changemail}"
+                                                          method="post" class="form-group">
+                                                        <div class="text-center font-weight-bold">
+                                                            <label for="new_mail">Введите новый адрес электронной
+                                                                почты</label>
+                                                            <input type="email"
+                                                                   id="new_mail"
+                                                                   name="newMail"
+                                                                   class="form-control" required/>
+                                                        </div>
+
+                                                        <div class="messages-after-submit"></div>
+
+                                                        <button type="submit" id="buttonChangeMail"
+                                                                class="btn btn-primary btn-sm btn-block">
+                                                            Подтвердить
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- change mail modal -->
+
+                                    <!-- change PASS modal -->
+                                    <div id="openChangePassModal" class="modal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title">Название</h3>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">x</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="formChangePass"
+                                                          th:action="@{/customer/change-password}"
+                                                          method="post"
+                                                          class="form-group">
+                                                        <div class="form-group text-center font-weight-bold">
+                                                            <label for="old_password">Текущий пароль от личного
+                                                                кабинета</label>
+                                                            <input type="password" id="old_password"
+                                                                   name="oldPassword"
+                                                                   autofocus="autofocus"
+                                                                   class="form-control" required>
+                                                        </div>
+                                                        <div class="form-group text-center font-weight-bold">
+                                                            <label for="new_password">Придумайте новый
+                                                                пароль</label>
+                                                            <input type="password" id="new_password"
+                                                                   name="newPassword"
+                                                                   class="form-control" required/>
+                                                            <small id="passwordHelpBlock"
+                                                                   class="form-text text-muted">
+                                                                Ваш пароль должен состоять из 8-20 символов,
+                                                                содержать
+                                                                буквы и цифры и не должны содержать пробелов и
+                                                                смайлики.
+                                                            </small>
+                                                        </div>
+                                                        <button id="submitNewPassword" type="submit"
+                                                                class="btn btn-primary btn-sm btn-block">
+                                                            Сохранить
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- change PASS modal -->
 
                                     <!---------------------- Delete Profile Modal window ------------------->
                                     <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
@@ -457,11 +481,15 @@
                                         </div>
                                     </div>
                                     <!---------------------- End Delete Profile Modal window ------------------->
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- ВКЛАДКА ПРОФИЛЯ -->
+
+
                 <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
                     <div id="order-div"></div>
                     <h3>Корзина</h3>
@@ -471,165 +499,165 @@
                             <table class="table table-striped">
                                 <tbody id="busketList">
 
-                                    </tbody>
-                                </table>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-3">
+                            <tr>
+                                <span>Общее количество товара:</span>
+                                <h3 id="countBasketGoods"></h3>
+                            </tr>
+                            <tr>
+                                <span>Стоимость заказа:</span>
+                                <h3 id="sumBasketGoods"></h3>
+                            </tr>
+                            <div id="buttonBuyInBasket">
+                                <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
+                                        data-target="#orderModalWindow" onclick="userAdresses()">Купить
+                                </button>
                             </div>
-                            <div class="col-md-3">
-                                <tr>
-                                    <span>Общее количество товара:</span>
-                                    <h3 id="countBasketGoods"></h3>
-                                </tr>
-                                <tr>
-                                    <span>Стоимость заказа:</span>
-                                    <h3 id="sumBasketGoods"></h3>
-                                </tr>
-                                <div id="buttonBuyInBasket">
-                                    <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
-                                            data-target="#orderModalWindow" onclick="userAdresses()">Купить
+                        </div>
+                    </div>
+                    <div class="modal fade" id="orderModalWindow" tabindex="-1" role="dialog"
+                         aria-labelledby="EditUserModalWindows"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="orderAdress">Адрес доставки</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="alert-modal-div">
+                                </div>
+                                <div class="modal-body" id="modalBody">
+                                    <div class="raw">
+                                        <label style="font-size: medium; vertical-align: unset">
+                                            <input class="checkbox" type="checkbox" onchange="addressChange()"/>
+                                            Самовывоз
+                                        </label>
+
+                                        <div align="right">
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <div id="shopAddress" hidden="true">
+                                            </div>
+                                            <div id="userAddresses">
+                                            </div>
+                                            <div class="address" id="addressId" hidden="true">
+                                                <div class="h3">Введите адрес доставки</div>
+                                                <h6>
+                                                    Поля помеченные *
+                                                    обязательны к заполнению.
+                                                </h6>
+                                                <form id="addressForm" class="js-form-address">
+                                                    <div class="field">
+                                                        <label>Регион*</label>
+                                                        <input type="text" name="region">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Район</label>
+                                                        <input type="text" name="district">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Город/населённый пункт*</label>
+                                                        <input type="text" name="city">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Улица*</label>
+                                                        <input type="text" name="street">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Дом*</label>
+                                                        <input type="text" name="building">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Квартира(необязательно)</label>
+                                                        <input type="text" name="flat">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Индекс</label>
+                                                        <input type="text" name="zip">
+                                                    </div>
+                                                    <div class="tooltip" style="display: none;"><b></b><span></span>
+                                                    </div>
+                                                </form>
+                                                <button id="clear-button" type="button" class="btn btn-secondary"
+                                                        onclick="clearFields()">Отчистить поля
+                                                </button>
+                                                <button id="add-adress-button" type="button" class="btn btn-success"
+                                                        onclick="addAddress()">Добавить адрес
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="dismissButton" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">
+                                        Закрыть
+                                    </button>
+                                    <button style="float: right" id="acceptButton" type="button"
+                                            class="btn btn-success edit-button"
+                                            onclick="confirmOrder()">
+                                        Оформить заказ
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="orderModalWindow" tabindex="-1" role="dialog"
-                             aria-labelledby="EditUserModalWindows"
-                             aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="orderAdress">Адрес доставки</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div id="alert-modal-div">
-                                    </div>
-                                    <div class="modal-body" id="modalBody">
-                                        <div class="raw">
-                                            <label style="font-size: medium; vertical-align: unset">
-                                                <input class="checkbox" type="checkbox" onchange="addressChange()"/>
-                                                Самовывоз
-                                            </label>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                    <div class="container-fluid bg-light">
+                        <div class="tab-pane">
+                            <ul class="nav nav-tabs">
+                                <!-- вкладка (активная) вывод всех заказов-->
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#tab_all_orders"
+                                       onclick="fillOrders()">Все заказы</a>
+                                </li>
+                                <!-- вкладка заказов в обработке-->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_incarts"
+                                       onclick="fillIncartsOrders()">Открытые</a>
+                                </li>
+                                <!-- вкладка заказов завершенных-->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_completed"
+                                       onclick="fillCompletedOrders()">Завершенные</a>
+                                </li>
+                                <!-- вкладка заказов отмененных-->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_canceled"
+                                       onclick="fillCanceledOrders()">Отменённые</a>
+                                </li>
+                            </ul>
+                            <!-- Блоки с контентом -->
+                            <div class="tab-content">
+                                <!--                        Все заказы-->
+                                <div class="tab-pane fade show active" id="tab_all_orders">
+                                    <div id="allOrdersSet">
 
-                                            <div align="right">
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-center">
-                                            <div class="col">
-                                                <div id="shopAddress" hidden="true">
-                                                </div>
-                                                <div id="userAddresses">
-                                                </div>
-                                                <div class="address" id="addressId" hidden="true">
-                                                    <div class="h3">Введите адрес доставки</div>
-                                                    <h6>
-                                                        Поля помеченные *
-                                                        обязательны к заполнению.
-                                                    </h6>
-                                                    <form id="addressForm" class="js-form-address">
-                                                        <div class="field">
-                                                            <label>Регион*</label>
-                                                            <input type="text" name="region">
-                                                        </div>
-                                                        <div class="field">
-                                                            <label>Район</label>
-                                                            <input type="text" name="district">
-                                                        </div>
-                                                        <div class="field">
-                                                            <label>Город/населённый пункт*</label>
-                                                            <input type="text" name="city">
-                                                        </div>
-                                                        <div class="field">
-                                                            <label>Улица*</label>
-                                                            <input type="text" name="street">
-                                                        </div>
-                                                        <div class="field">
-                                                            <label>Дом*</label>
-                                                            <input type="text" name="building">
-                                                        </div>
-                                                        <div class="field">
-                                                            <label>Квартира(необязательно)</label>
-                                                            <input type="text" name="flat">
-                                                        </div>
-                                                        <div class="field">
-                                                            <label>Индекс</label>
-                                                            <input type="text" name="zip">
-                                                        </div>
-                                                        <div class="tooltip" style="display: none;"><b></b><span></span>
-                                                        </div>
-                                                    </form>
-                                                    <button id="clear-button" type="button" class="btn btn-secondary"
-                                                            onclick="clearFields()">Отчистить поля
-                                                    </button>
-                                                    <button id="add-adress-button" type="button" class="btn btn-success"
-                                                            onclick="addAddress()">Добавить адрес
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="dismissButton" type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">
-                                            Закрыть
-                                        </button>
-                                        <button style="float: right" id="acceptButton" type="button"
-                                                class="btn btn-success edit-button"
-                                                onclick="confirmOrder()">
-                                            Оформить заказ
-                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                        <div class="container-fluid bg-light">
-                            <div class="tab-pane">
-                                <ul class="nav nav-tabs">
-                                    <!-- вкладка (активная) вывод всех заказов-->
-                                    <li class="nav-item">
-                                        <a class="nav-link active" data-toggle="tab" href="#tab_all_orders"
-                                           onclick="fillOrders()">Все заказы</a>
-                                    </li>
-                                    <!-- вкладка заказов в обработке-->
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#tab_incarts"
-                                           onclick="fillIncartsOrders()">Открытые</a>
-                                    </li>
-                                    <!-- вкладка заказов завершенных-->
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#tab_completed"
-                                           onclick="fillCompletedOrders()">Завершенные</a>
-                                    </li>
-                                    <!-- вкладка заказов отмененных-->
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#tab_canceled"
-                                           onclick="fillCanceledOrders()">Отменённые</a>
-                                    </li>
-                                </ul>
-                                <!-- Блоки с контентом -->
-                                <div class="tab-content">
-                                    <!--                        Все заказы-->
-                                    <div class="tab-pane fade show active" id="tab_all_orders">
-                                        <div id="allOrdersSet">
+                                <!--                        Открытые-->
+                                <div class="tab-pane fade show" id="tab_incarts">
+                                    <div id="inCartsOrders">
 
-                                        </div>
                                     </div>
-                                    <!--                        Открытые-->
-                                    <div class="tab-pane fade show" id="tab_incarts">
-                                        <div id="inCartsOrders">
+                                </div>
+                                <!--                        Завершенные-->
+                                <div class="tab-pane fade show" id="tab_completed">
+                                    <div id="completedOrders">
 
-                                        </div>
                                     </div>
-                                    <!--                        Завершенные-->
-                                    <div class="tab-pane fade show" id="tab_completed">
-                                        <div id="completedOrders">
-
-                                        </div>
-                                    </div>
-                                    <!--                        Отменённые-->
-                                    <div class="tab-pane fade show" id="tab_canceled">
-                                        <div id="canceledOrders">
+                                </div>
+                                <!--                        Отменённые-->
+                                <div class="tab-pane fade show" id="tab_canceled">
+                                    <div id="canceledOrders">
 
                                     </div>
                                 </div>
@@ -640,16 +668,19 @@
                 <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
                     <ul class="nav nav-tabs" id="navFeedback" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="messageFeedback-tab" data-toggle="tab" href="#messageFeedback" role="tab"
+                            <a class="nav-link active" id="messageFeedback-tab" data-toggle="tab"
+                               href="#messageFeedback" role="tab"
                                aria-controls="home" aria-selected="true">Сформировать обращение</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="answersFeedback-tab" data-toggle="tab" href="#answersFeedback" role="tab"
+                            <a class="nav-link" id="answersFeedback-tab" data-toggle="tab" href="#answersFeedback"
+                               role="tab"
                                aria-controls="contact" aria-selected="false">Перечень обращений и ответов</a>
                         </li>
                     </ul>
                     <div class="tab-content" id="containerFeedback">
-                        <div class="tab-pane fade show active" id="messageFeedback" role="tabpanel" aria-labelledby="messageFeedback-tab">
+                        <div class="tab-pane fade show active" id="messageFeedback" role="tabpanel"
+                             aria-labelledby="messageFeedback-tab">
                             <div class="container-fluid bg-light">
                                 <div class="row">
                                     <div class="col">
@@ -692,7 +723,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="answersFeedback" role="tabpanel" aria-labelledby="answersFeedback-tab">
+                        <div class="tab-pane fade" id="answersFeedback" role="tabpanel"
+                             aria-labelledby="answersFeedback-tab">
                             <div id="messagesAndAnswersFeedback">
                             </div>
                         </div>
@@ -700,9 +732,11 @@
                 </div>
             </div>
         </div>
+        <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
+
     </div>
 </div>
-<!-- Modalfor order -->
+<!-- Modal for order -->
 <div class="modal fade" id="orderModal" tabindex="-1"
      role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
@@ -720,19 +754,19 @@
                         <div class="col">
                             <div id="orderModalBody">
 
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal">Close
-                    </button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close
+                </button>
             </div>
         </div>
     </div>
+</div>
 </div>
 <!--summernote-->
 <script src="/static/js/summernote.js"></script>
