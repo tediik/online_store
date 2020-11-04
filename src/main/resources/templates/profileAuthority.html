@@ -48,6 +48,7 @@
         <div class="col-md-10"
              style="background: #edeef0">
             <div id="admin_panel"></div>
+
             <div class="tab-content" id="nav-tabContent-p">
                 <div class="tab-pane fade show active" id="pills-home-profile" role="tabpanel"
                      aria-labelledby="nav-home-profile">
@@ -106,31 +107,48 @@
 
                                     <form th:action="@{/authority/profile}" th:object="${user}" th:value="${user.id}"
                                           method="post" data-role="personal-info-form">
+
+                                        <!-- ID hidden input -->
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="id_update">ID</label>
                                             <input th:field="*{id}" type="text" class="form-control" id="id_update"
                                                    name="id">
                                         </div>
+                                        <!-- ID hidden input -->
+
+                                        <!-- pass input -->
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="password_update">Пароль</label>
                                             <input th:field="*{password}" type="text" class="form-control"
                                                    id="password_update" name="password">
                                         </div>
+                                        <!-- pass input -->
+
+                                        <!-- Name input -->
                                         <div class="form-group text-center font-weight-bold">
                                             <label class="input-row_label" for="first_name_update">Имя</label>
                                             <input th:field="*{firstName}" type="text" class="form-control"
                                                    id="first_name_update" name="firstName">
                                         </div>
+                                        <!-- Name input -->
+
+                                        <!-- lastName input -->
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="last_name_input">Фамилия</label>
                                             <input th:field="*{lastName}" type="text" class="form-control"
                                                    id="last_name_input" name="lastName">
                                         </div>
+                                        <!-- lastName input -->
+
+                                        <!-- email input -->
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="email_input">Email</label>
                                             <input th:field="*{email}" type="text" class="form-control" id="email_input"
                                                    name="email" readonly>
                                         </div>
+                                        <!--  email input -->
+
+                                        <!-- buttons for change mail & pass  -->
                                         <div>
                                             <button type="button" style="background-color: #ff8e05"
                                                     class="m-2 btn btn-success d-block mx-auto" data-toggle="modal"
@@ -142,6 +160,10 @@
                                                     data-target="#openChangePassModal">Изменить пароль
                                             </button>
                                         </div>
+                                        <!-- buttons for change mail & pass  -->
+
+
+                                        <!--birthday  -->
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="date_birthday_input" class="col-xs-2 col-form-label">День
                                                 рождения</label>
@@ -151,6 +173,9 @@
                                                        type="date" id="date_birthday_input" name="birthdayDate">
                                             </div>
                                         </div>
+                                        <!--birthday  -->
+
+                                        <!--GENDER  -->
                                         <div class="form-group-text-center">
                                             <label for="gender_radio" class="text-center font-weight-bold">Пол</label>
                                             <div id="gender_radio">
@@ -171,11 +196,13 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!--GENDER  -->
 
-
+                                        <!-- YELLOW BUTTON  сохрнаить -->
                                         <button type="button" style="background-color: #ff8e05"
                                                 class="m-2 btn btn-success d-block mx-auto">Сохранить
                                         </button>
+                                        <!-- YELLOW BUTTON  -->
 
                                         <!-- REGISTRATION DATE -->
                                         <div class="m-2 text-center personal-info_register-container"
