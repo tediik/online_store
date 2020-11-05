@@ -1,7 +1,10 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.UserDto;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -18,6 +22,7 @@ import java.io.IOException;
 public class AllUsersRestController {
 
     private final UserService userService;
+    private final CustomerService customerService;
 
     /**
      * Метод для получения имейла и ролей залогиненного пользователя,
@@ -61,7 +66,7 @@ public class AllUsersRestController {
     @PostMapping("/checkEmail")
     public ResponseEntity<String> checkEmailForRestore(@RequestBody UserDto userDto) {
         try {
-            if (userService.checkUserStatus(userDto.getEmail(), userDto.getPassword())) {
+            if (customerService.checkCustomerStatus(userDto.getEmail(), userDto.getPassword())) {
                 return ResponseEntity.badRequest().body("Профиль будет восстановлен после подтверждения!");
 
             } else {
@@ -74,13 +79,14 @@ public class AllUsersRestController {
 
     /**
      * Метод восстановления пользователя
+     *
      * @param email
      * @return
      */
     @PutMapping("/restore")
     public ResponseEntity<String> restoreUser(@RequestBody String email) {
         try {
-            userService.restoreUser(email);
+            customerService.restoreCustomer(email);
             return ResponseEntity.ok("Профиль успешно восстановлен!");
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.badRequest().body("Пользователь не найден!");

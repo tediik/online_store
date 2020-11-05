@@ -1,9 +1,9 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Stock;
-import com.jm.online_store.model.User;
+import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.StockRepository;
-import com.jm.online_store.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -30,20 +30,20 @@ public class StockMailDistributionTaskSettingsImplTest {
     @Autowired
     StockMailDistributionTaskImpl schedulingService;
     @MockBean
-    private UserRepository userRepository;
+    private CustomerRepository customerRepository;
     @MockBean
     private StockRepository stockRepository;
 
-    User testUser = new User();
-    List<User> testUserList = new ArrayList<>();
+    Customer testCustomer = new Customer();
+    List<Customer> testCustomerList = new ArrayList<>();
     Stock testStock = new Stock();
     List<Stock> testStockList = new ArrayList<>();
 
     //Проверка отправки акции пользователю в указанный день
     @Test
     void send_stocks_to_customers() {
-        testUser.setEmail("jm-online-store@yandex.ru");
-        testUserList.add(testUser);
+        testCustomer.setEmail("jm-online-store@yandex.ru");
+        testCustomerList.add(testCustomer);
         testStock.setStockTitle("Test title");
         testStock.setStockText("Test text");
         testStock.setStartDate(LocalDate.now());
@@ -52,17 +52,17 @@ public class StockMailDistributionTaskSettingsImplTest {
 
         log.info("Before sending Stock");
 
-        when(userRepository.findByDayOfWeekForStockSend(any()))
-                .thenReturn(testUserList);
+        when(customerRepository.findByDayOfWeekForStockSend(any()))
+                .thenReturn(testCustomerList);
         when(stockRepository.findAllByStartDateBetweenAndEndDateIsAfter(any(), any(), any()))
                 .thenReturn(testStockList);
         when(stockRepository.findById(any()))
                 .thenReturn(Optional.of(testStock));
-        when(userRepository.findById(any()))
-                .thenReturn(Optional.of(testUser));
-        Assert.notNull(userRepository.findByDayOfWeekForStockSend(any()),"Проверка, что NotNull");
+        when(customerRepository.findById(any()))
+                .thenReturn(Optional.of(testCustomer));
+        Assert.notNull(customerRepository.findByDayOfWeekForStockSend(any()),"Проверка, что NotNull");
 
-        Mockito.verify(userRepository, Mockito.times(1))
+        Mockito.verify(customerRepository, Mockito.times(1))
                 .findByDayOfWeekForStockSend(any());
         schedulingService.run();
 
@@ -76,12 +76,12 @@ public class StockMailDistributionTaskSettingsImplTest {
 
         log.info("Before sending Stock");
 
-        when(userRepository.findByDayOfWeekForStockSend(SUNDAY))
-                .thenReturn(testUserList);
+        when(customerRepository.findByDayOfWeekForStockSend(Customer.DayOfWeekForStockSend.SUNDAY))
+                .thenReturn(testCustomerList);
         when(stockRepository.findAllByStartDateBetweenAndEndDateIsAfter(any(), any(), any()))
                 .thenReturn(testStockList);
 
-        Mockito.verify(userRepository, Mockito.times(0))
+        Mockito.verify(customerRepository, Mockito.times(0))
                 .findByDayOfWeekForStockSend(any());
         schedulingService.run();
 

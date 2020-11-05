@@ -1,7 +1,9 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
@@ -19,19 +21,19 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerRestController {
 
     @Autowired
-    private UserService userService;
+    private CustomerService customerService;
 
     @PostMapping("/changemail")
     public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
-        User user = userService.getCurrentLoggedInUser();
-        if (userService.isExist(newMail)) {
+        Customer customer = customerService.getCurrentLoggedInUser();
+        if (customerService.isExist(newMail)) {
             log.debug("Попытка ввести дублирующийся email: " + newMail);
             return new ResponseEntity("duplicatedEmailError", HttpStatus.BAD_REQUEST);
         }
         if (ValidationUtils.isNotValidEmail(newMail)) {
             return new ResponseEntity("notValidEmailError", HttpStatus.BAD_REQUEST);
         } else {
-            userService.changeUsersMail(user, newMail);
+            customerService.changeCustomerMail(customer, newMail);
             return ResponseEntity.ok("Email будет изменен после подтверждения.");
         }
     }
@@ -48,22 +50,22 @@ public class CustomerRestController {
     public ResponseEntity changePassword(Model model,
                                          @RequestParam String oldPassword,
                                          @RequestParam String newPassword) {
-        User user = userService.getCurrentLoggedInUser();
-        if (userService.findById(user.getId()).isEmpty()) {
-            log.debug("Нет пользователя с идентификатором: {}", user.getId());
+        Customer customer = customerService.getCurrentLoggedInUser();
+        if (customerService.findById(customer.getId()).isEmpty()) {
+            log.debug("Нет пользователя с идентификатором: {}", customer.getId());
             return ResponseEntity.noContent().build();
         }
-        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+        if (ValidationUtils.isNotValidEmail(customer.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
             return ResponseEntity.badRequest().body("notValidEmailError");
         }
-        if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
-                && userService.isExist(user.getEmail())) {
+        if (!customerService.findById(customer.getId()).get().getEmail().equals(customer.getEmail())
+                && customerService.isExist(customer.getEmail())) {
             log.debug("Пользователь с таким адресом электронной почты уже существует");
             return ResponseEntity.badRequest().body("duplicatedEmailError");
         }
-        if (userService.changePassword(user.getId(), oldPassword, newPassword))
-            log.debug("Изменения для пользователя с идентификатором: {} был успешно добавлен", user.getId());
+        if (customerService.changePassword(customer.getId(), oldPassword, newPassword))
+            log.debug("Изменения для пользователя с идентификатором: {} был успешно добавлен", customer.getId());
         return ResponseEntity.ok().build();
     }
 
@@ -75,7 +77,7 @@ public class CustomerRestController {
      */
     @DeleteMapping("/deleteProfile/{id}")
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
-        userService.changeUserStatusToLocked(id);
+        customerService.changeUserStatusToLocked(id);
         return ResponseEntity.ok("Delete profile");
     }
 }

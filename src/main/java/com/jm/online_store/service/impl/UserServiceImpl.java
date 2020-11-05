@@ -5,6 +5,7 @@ import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
@@ -73,14 +74,14 @@ public class UserServiceImpl implements UserService {
      * @param dayNumber день недели
      * @return List<User>
      */
-    @Override
+/*    @Override
     public List<User> findByDayOfWeekForStockSend(byte dayNumber) {
         List<User> users = userRepository.findByDayOfWeekForStockSend(User.DayOfWeekForStockSend.values()[dayNumber - 1]);
         if (users.isEmpty()) {
             throw new UserNotFoundException();
         }
         return users;
-    }
+    }*/
 
     /**
      * метод получения списка пользователей, отсортированных в соответствии с выбранной ролью
@@ -120,24 +121,18 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод проверяет существование пользователя в БД.
+     *
      * @param email - поле по которому проверяем пользователя
      * @return false -  Если такой пользователь не был найден.
-     *                  Если же все-таки он был найден, и статус удаления у него есть, и 30 дней истекли.
-     *         true -   Если такой пользователь существует и у него отсутствует статус удаления.
-     *                  Если такой пользователь существует и у него есть статус на удаление, но его 30 дней не истекли.
+     * Если же все-таки он был найден, и статус удаления у него есть, и 30 дней истекли.
+     * true -   Если такой пользователь существует и у него отсутствует статус удаления.
+     * Если такой пользователь существует и у него есть статус на удаление, но его 30 дней не истекли.
      */
     @Override
     @Transactional
     public boolean isExist(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
-            return false;
-        }
-        if (user.get().getStatus() == null) {
-            return true;
-        }
-        if (!user.get().getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
-            deleteByID(user.get().getId());
             return false;
         }
         return true;
@@ -189,7 +184,6 @@ public class UserServiceImpl implements UserService {
         updateUser.setLastName(user.getLastName());
         updateUser.setBirthdayDate(user.getBirthdayDate());
         updateUser.setUserGender(user.getUserGender());
-        updateUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         return userRepository.save(updateUser);
     }
 
@@ -219,13 +213,13 @@ public class UserServiceImpl implements UserService {
      * Метод, который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
      * @param id
      */
-    @Override
+/*    @Override
     @Transactional
     public void changeUserStatusToLocked(Long id) {
         User userStatusChange = getCurrentLoggedInUser();
         userStatusChange.setStatus(LocalDateTime.now());
         updateUser(userStatusChange);
-    }
+    }*/
 
     /**
      * Метод проверяет статус клиента, если срок восстановления истек - удаляется
@@ -236,7 +230,7 @@ public class UserServiceImpl implements UserService {
      * и статус больше равен больше 30 дней
      * true - то есть предлагаем пользователю восстановится, если статус меньше 30 дней
      */
-    @Override
+/*    @Override
     @Transactional
     public boolean checkUserStatus(String email, String password) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
@@ -250,20 +244,20 @@ public class UserServiceImpl implements UserService {
             }
         }
         return false;
-    }
+    }*/
 
     /**
      * Метод для восстановления клиента
      *
      * @param email - емейл для восстановления
      */
-    @Override
+/*    @Override
     @Transactional
     public void restoreUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         user.setStatus(null);
         updateUser(user);
-    }
+    }*/
 
     /**
      * метод удаления пользователя по идентификатору.
@@ -508,13 +502,13 @@ public class UserServiceImpl implements UserService {
      *
      * @param id
      */
-    @Override
+/*    @Override
     @Transactional
     public void cancelSubscription(Long id) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         user.setDayOfWeekForStockSend(null);
         updateUserProfile(user);
-    }
+    }*/
 
     /**
      * Метод сервиса для добавления нового адреса пользователю

@@ -4,6 +4,7 @@ import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Description;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
@@ -93,7 +94,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-     //@PostConstruct
+//     @PostConstruct
      //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -129,7 +130,7 @@ public class DataInitializer {
 
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
-        User customer = new User("customer@mail.ru", "1");
+        Customer customer = new Customer("customer@mail.ru", "1");
         User service = new User("service@mail.ru", "1");
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
@@ -161,11 +162,11 @@ public class DataInitializer {
 
         Random random = new Random();
         for (int i = 1; i < 20; i++) {
-            User user = new User("customer" + i + "@mail.ru",
-                    User.DayOfWeekForStockSend.values()[random.nextInt(6)],
+            Customer customer1 = new Customer("customer" + i + "@mail.ru",
+                    Customer.DayOfWeekForStockSend.values()[random.nextInt(6)],
                     String.valueOf(i));
-            user.setRoles(customerRoles);
-            userService.addUser(user);
+            customer1.setRoles(customerRoles);
+            userService.addUser(customer1);
         }
     }
 

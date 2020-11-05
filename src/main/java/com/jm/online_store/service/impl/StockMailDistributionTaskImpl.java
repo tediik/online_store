@@ -1,12 +1,15 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.User;
+import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.SentStockService;
@@ -27,7 +30,7 @@ import java.util.List;
 public class StockMailDistributionTaskImpl implements StockMailDistributionTask {
 
     private final MailSenderService mailSenderService;
-    private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
     private final StockRepository stockRepository;
     private final SentStockService sentStockService;
 
@@ -37,9 +40,9 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
 
     /**
      * Метод выполняется с регулярностью заданным параметром ${emailStockSending.delay} в файле application.yml
-     * берем текущий день, делаем выборку среди всех {@link User} у кого в поле DayOfWeekForStockSend
+     * берем текущий день, делаем выборку среди всех {@link Customer} у кого в поле DayOfWeekForStockSend
      * текущий день недели отправляем заранее сформированный email из текущих и будущих акций.
-     * Акция {@link Stock} и пользователь {@link User}, которому она была отправлена
+     * Акция {@link Stock} и пользователь {@link Customer}, которому она была отправлена
      * связываются при помощи сущности {@link SentStock}
      * Акции отбирабтся следующим условием:
      * - Задается период +- 7 дней от текущего.
@@ -49,13 +52,13 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
     @SneakyThrows
     @Override
     public void run() {
-        User.DayOfWeekForStockSend dayOfWeek = User.DayOfWeekForStockSend.valueOf(LocalDate.now().getDayOfWeek().toString());
-        List<User> usersToSendStock = userRepository.findByDayOfWeekForStockSend(dayOfWeek);
+        Customer.DayOfWeekForStockSend dayOfWeek = Customer.DayOfWeekForStockSend.valueOf(LocalDate.now().getDayOfWeek().toString());
+        List<Customer> customersToSendStock = customerRepository.findByDayOfWeekForStockSend(dayOfWeek);
         List<Stock> currentAndFutureStocks = stockRepository
                 .findAllByStartDateBetweenAndEndDateIsAfter(LocalDate.now().minusDays(7L), LocalDate.now().plusDays(7L), LocalDate.now());
         if (currentAndFutureStocks.size() != 0) {
-            if (usersToSendStock.size() != 0) {
-                for (User user : usersToSendStock) {
+            if (customersToSendStock.size() != 0) {
+                for (User user : customersToSendStock) {
                     for (Stock stock : currentAndFutureStocks) {
                         SentStock sentStock = SentStock.builder()
                                 .user(user)
@@ -73,7 +76,7 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
                     mailSenderService.sendHtmlMessage(user.getEmail(), messageSubject, messageBody, EMAIL_TYPE);
                     log.debug("Stock message was sent to {} with email {}", user, user.getEmail());
                 }
-                log.debug("{} stock emails were sent", usersToSendStock.size());
+                log.debug("{} stock emails were sent", customersToSendStock.size());
             } else {
                 log.debug("There are no users in db with DayOfWeekForStockSend field equals {}", dayOfWeek);
             }
