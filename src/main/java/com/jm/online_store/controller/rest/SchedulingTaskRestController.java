@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.exception.CommonSettingsNotFoundException;
 import com.jm.online_store.exception.TaskNotFoundException;
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.service.interf.PriceListService;
@@ -8,7 +7,6 @@ import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
 import com.jm.online_store.service.interf.TaskSettingsService;
 import lombok.AllArgsConstructor;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;

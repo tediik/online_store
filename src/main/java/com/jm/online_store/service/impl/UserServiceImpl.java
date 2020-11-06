@@ -5,12 +5,15 @@ import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
+import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +38,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -53,6 +56,7 @@ public class UserServiceImpl implements UserService {
     private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CustomerRepository customerRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
@@ -65,21 +69,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
-    }
-
-    /**
-     * метод получения пользователей, подписанных на рассылку, по дню недели
-     *
-     * @param dayNumber день недели
-     * @return List<User>
-     */
-    @Override
-    public List<User> findByDayOfWeekForStockSend(byte dayNumber) {
-        List<User> users = userRepository.findByDayOfWeekForStockSend(User.DayOfWeekForStockSend.values()[dayNumber - 1]);
-        if (users.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-        return users;
     }
 
     /**
@@ -120,24 +109,18 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод проверяет существование пользователя в БД.
+     *
      * @param email - поле по которому проверяем пользователя
      * @return false -  Если такой пользователь не был найден.
-     *                  Если же все-таки он был найден, и статус удаления у него есть, и 30 дней истекли.
-     *         true -   Если такой пользователь существует и у него отсутствует статус удаления.
-     *                  Если такой пользователь существует и у него есть статус на удаление, но его 30 дней не истекли.
+     * Если же все-таки он был найден, и статус удаления у него есть, и 30 дней истекли.
+     * true -   Если такой пользователь существует и у него отсутствует статус удаления.
+     * Если такой пользователь существует и у него есть статус на удаление, но его 30 дней не истекли.
      */
     @Override
     @Transactional
     public boolean isExist(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
-            return false;
-        }
-        if (user.get().getStatus() == null) {
-            return true;
-        }
-        if (!user.get().getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
-            deleteByID(user.get().getId());
             return false;
         }
         return true;
@@ -189,7 +172,6 @@ public class UserServiceImpl implements UserService {
         updateUser.setLastName(user.getLastName());
         updateUser.setBirthdayDate(user.getBirthdayDate());
         updateUser.setUserGender(user.getUserGender());
-        updateUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         return userRepository.save(updateUser);
     }
 
@@ -210,60 +192,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(editUser);
     }
 
-    /**
-     * У нас пользователь изначально не удаляется. При нажатии на кнопку "удалить профиль"
-     * происходит запись времени, когда кнопка была нажата и подтвеждена.
-     * Мы ему даем 30 дней на восстановление.
-     * Время удаления записывается в поле "status" у User
-     *
-     * Метод, который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
-     * @param id
-     */
-    @Override
-    @Transactional
-    public void changeUserStatusToLocked(Long id) {
-        User userStatusChange = getCurrentLoggedInUser();
-        userStatusChange.setStatus(LocalDateTime.now());
-        updateUser(userStatusChange);
-    }
-
-    /**
-     * Метод проверяет статус клиента, если срок восстановления истек - удаляется
-     *
-     * @param email    - нужен для проверки на существование
-     * @param password - нужен для подтверждения подлинности
-     * @return - false - если такой пользователь существует и статус не равен null,
-     * и статус больше равен больше 30 дней
-     * true - то есть предлагаем пользователю восстановится, если статус меньше 30 дней
-     */
-    @Override
-    @Transactional
-    public boolean checkUserStatus(String email, String password) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            if (user.getStatus() != null) {
-                if (!user.getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
-                    deleteByID(user.getId());
-                } else {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Метод для восстановления клиента
-     *
-     * @param email - емейл для восстановления
-     */
-    @Override
-    @Transactional
-    public void restoreUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        user.setStatus(null);
-        updateUser(user);
-    }
 
     /**
      * метод удаления пользователя по идентификатору.
@@ -458,8 +386,19 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
         newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
-        log.debug("User with email: {} was saved successfully", newUser.getEmail());
-        userRepository.save(newUser);
+        Set<Role> roles = newUser.getRoles();
+        for (Role role : roles) {
+            if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
+                    userRepository.save(newUser);
+            } else {
+                Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
+                customer.setRoles(newUser.getRoles());
+                customer.setProfilePicture(newUser.getProfilePicture());
+                customerRepository.save(customer);
+            }
+            log.debug("User with email: {} was saved successfully", newUser.getEmail());
+            return;
+        }
     }
 
     /**
@@ -501,19 +440,6 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         return true;
-    }
-
-    /**
-     * Service method to cancel subscription
-     *
-     * @param id
-     */
-    @Override
-    @Transactional
-    public void cancelSubscription(Long id) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        user.setDayOfWeekForStockSend(null);
-        updateUserProfile(user);
     }
 
     /**

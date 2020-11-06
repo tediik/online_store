@@ -9,9 +9,11 @@ import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.AddressRepository;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
+import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +36,7 @@ import static org.mockito.Mockito.*;
 public class UserServiceImplTest {
 
     private UserRepository userRepository = mock(UserRepository.class);
+    private CustomerRepository customerRepository = mock(CustomerRepository.class);
     private RoleRepository roleRepository = mock(RoleRepository.class);
     private ConfirmationTokenRepository confirmTokenRepository = mock(ConfirmationTokenRepository.class);
     private MailSenderServiceImpl mailSenderService = mock(MailSenderServiceImpl.class);
@@ -41,7 +44,7 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
     private AddressService addressService = mock(AddressService.class);
     private AddressRepository addressRepository = mock(AddressRepository.class);
-    private UserService userService = new UserServiceImpl(userRepository, roleRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService);
+    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService);
 
     private User userFullParameter;
     private User userWithIdEmailPassword;
