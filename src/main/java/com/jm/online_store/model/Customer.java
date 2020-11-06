@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import com.jm.online_store.enums.DayOfWeekForStockSend;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,18 +42,5 @@ public class Customer extends User {
     public Customer(@Email @NotBlank String email, DayOfWeekForStockSend dayOfWeekForStockSend, String password) {
         super(email, password);
         this.dayOfWeekForStockSend = dayOfWeekForStockSend;
-    }
-
-    /**
-     * Дни недели.
-     */
-    public enum DayOfWeekForStockSend {
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
     }
 }

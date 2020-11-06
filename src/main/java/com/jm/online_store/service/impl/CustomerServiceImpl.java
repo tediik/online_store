@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Role;
@@ -109,7 +110,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public List<Customer> findByDayOfWeekForStockSend(byte dayNumber) {
-        List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(Customer.DayOfWeekForStockSend.values()[dayNumber - 1]);
+        List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.values()[dayNumber - 1]);
         if (customers.isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -179,7 +180,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (dayOfWeekForStockSend.isEmpty()) {
             customer.setDayOfWeekForStockSend(null);
         } else {
-            customer.setDayOfWeekForStockSend(Customer.DayOfWeekForStockSend.valueOf(dayOfWeekForStockSend));
+            customer.setDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(dayOfWeekForStockSend));
         }
         updateCustomer(customer);
     }

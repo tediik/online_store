@@ -1,5 +1,6 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Comment;
@@ -165,7 +166,7 @@ public class DataInitializer {
         Random random = new Random();
         for (int i = 1; i < 20; i++) {
             Customer customer1 = new Customer("customer" + i + "@mail.ru",
-                    Customer.DayOfWeekForStockSend.values()[random.nextInt(6)],
+                    DayOfWeekForStockSend.values()[random.nextInt(6)],
                     String.valueOf(i));
             customer1.setRoles(customerRoles);
             userService.addUser(customer1);

@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.SentStock;
@@ -52,7 +53,7 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
     @SneakyThrows
     @Override
     public void run() {
-        Customer.DayOfWeekForStockSend dayOfWeek = Customer.DayOfWeekForStockSend.valueOf(LocalDate.now().getDayOfWeek().toString());
+        DayOfWeekForStockSend dayOfWeek = DayOfWeekForStockSend.valueOf(LocalDate.now().getDayOfWeek().toString());
         List<Customer> customersToSendStock = customerRepository.findByDayOfWeekForStockSend(dayOfWeek);
         List<Stock> currentAndFutureStocks = stockRepository
                 .findAllByStartDateBetweenAndEndDateIsAfter(LocalDate.now().minusDays(7L), LocalDate.now().plusDays(7L), LocalDate.now());

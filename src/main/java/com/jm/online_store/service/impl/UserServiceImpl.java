@@ -389,7 +389,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                userRepository.save(newUser);
+                    userRepository.save(newUser);
             } else {
                 Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
                 customer.setRoles(newUser.getRoles());

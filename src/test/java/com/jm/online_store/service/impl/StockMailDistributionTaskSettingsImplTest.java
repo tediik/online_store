@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.repository.CustomerRepository;
@@ -75,7 +76,7 @@ public class StockMailDistributionTaskSettingsImplTest {
 
         log.info("Before sending Stock");
 
-        when(customerRepository.findByDayOfWeekForStockSend(Customer.DayOfWeekForStockSend.SUNDAY))
+        when(customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.SUNDAY))
                 .thenReturn(testCustomerList);
         when(stockRepository.findAllByStartDateBetweenAndEndDateIsAfter(any(), any(), any()))
                 .thenReturn(testStockList);
