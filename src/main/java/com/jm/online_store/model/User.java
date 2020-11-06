@@ -28,7 +28,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -206,16 +205,6 @@ public class User implements UserDetails {
     public enum Gender {
         MAN,
         WOMAN
-    }
-
-    public enum DayOfWeekForStockSend {
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
     }
 
     @Override

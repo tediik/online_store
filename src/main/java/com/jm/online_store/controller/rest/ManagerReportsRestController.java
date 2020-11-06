@@ -1,13 +1,10 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.SentStockNotFoundException;
-import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SentStockService;
-import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 @AllArgsConstructor
 @RestController

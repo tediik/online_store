@@ -12,14 +12,24 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
+/**
+ * Сущность расширяющая {@link User}.
+ */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class Customer extends User {
+
+    /**
+     * Статус удаления клиента.
+     */
     @Column(name = "status")
     private LocalDateTime status;
 
+    /**
+     * День недели для получения рассылок.
+     */
     @Column(name = "day_of_week_for_stock_send")
     @Enumerated(EnumType.STRING)
     private DayOfWeekForStockSend dayOfWeekForStockSend;
@@ -33,6 +43,9 @@ public class Customer extends User {
         this.dayOfWeekForStockSend = dayOfWeekForStockSend;
     }
 
+    /**
+     * Дни недели.
+     */
     public enum DayOfWeekForStockSend {
         MONDAY,
         TUESDAY,

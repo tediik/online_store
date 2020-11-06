@@ -1,14 +1,11 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -19,9 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/customer")
 @Slf4j
 public class CustomerRestController {
-
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
+    private final UserService userService;
 
     @PostMapping("/changemail")
     public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
@@ -33,7 +29,7 @@ public class CustomerRestController {
         if (ValidationUtils.isNotValidEmail(newMail)) {
             return new ResponseEntity("notValidEmailError", HttpStatus.BAD_REQUEST);
         } else {
-            customerService.changeCustomerMail(customer, newMail);
+            userService.changeUsersMail(customer, newMail);
             return ResponseEntity.ok("Email будет изменен после подтверждения.");
         }
     }
@@ -77,7 +73,7 @@ public class CustomerRestController {
      */
     @DeleteMapping("/deleteProfile/{id}")
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
-        customerService.changeUserStatusToLocked(id);
+        customerService.changeCustomerStatusToLocked(id);
         return ResponseEntity.ok("Delete profile");
     }
 }

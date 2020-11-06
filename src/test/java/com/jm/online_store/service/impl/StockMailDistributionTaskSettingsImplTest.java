@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.jm.online_store.model.User.DayOfWeekForStockSend.SUNDAY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 

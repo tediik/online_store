@@ -1,18 +1,14 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Role;
-import com.jm.online_store.model.User;
-import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,19 +27,28 @@ import java.util.Set;
 @Transactional(readOnly = true)
 public class CustomerServiceImpl implements CustomerService {
     private final UserService userService;
-    private final ConfirmationTokenRepository confirmTokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MailSenderServiceImpl mailSenderService;
     private final CustomerRepository customerRepository;
-    @Value("${spring.server.url}")
-    private String urlActivate;
 
+    /**
+     * Все клиенты.
+     *
+     * @return List<Customer>.
+     */
     @Override
     @Transactional
     public List<Customer> findAll() {
         return customerRepository.findAll();
     }
 
+    /**
+     * Проверка на валидность пароля и изменения пароля.
+     *
+     * @param id          клиента.
+     * @param oldPassword - старый пароль.
+     * @param newPassword - новый пароль.
+     * @return false если пароль не валиден, true если пароль был изменен.
+     */
     @Override
     @Transactional
     public boolean changePassword(Long id, String oldPassword, String newPassword) {
@@ -58,36 +63,35 @@ public class CustomerServiceImpl implements CustomerService {
         return true;
     }
 
+    /**
+     * Поиск клиента по id.
+     *
+     * @param id клиента.
+     * @return Customer.
+     */
     @Override
     @Transactional
     public Optional<Customer> findById(Long id) {
         return customerRepository.findById(id);
     }
 
-    @Override
-    public void changeCustomerMail(Customer customer, String newMail) {
-        String address = customer.getAuthorities().toString().contains("ROLE_CUSTOMER") ? "/customer" : "/authority";
 
-        ConfirmationToken confirmationToken = new ConfirmationToken(customer.getId(), customer.getEmail());
-        confirmTokenRepository.save(confirmationToken);
-
-        String message = String.format(
-                "Здравствуйте, %s! \n" +
-                        "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке: " +
-                        urlActivate + address + "/activatenewmail/%s",
-                customer.getEmail(),
-                confirmationToken.getConfirmationToken()
-        );
-        mailSenderService.send(customer.getEmail(), "Activation code", message, "email address validation");
-        customer.setEmail(newMail);
-    }
-
+    /**
+     * Метод добавления клиента.
+     *
+     * @param customer - клиент для добавления.
+     */
     @Override
     @Transactional
     public void addCustomer(Customer customer) {
         customerRepository.save(customer);
     }
 
+    /**
+     * Метод отписки от рассылки.
+     *
+     * @param id клиента.
+     */
     @Override
     @Transactional
     public void cancelSubscription(Long id) {
@@ -96,6 +100,12 @@ public class CustomerServiceImpl implements CustomerService {
         updateCustomer(customer);
     }
 
+    /**
+     * метод получения клиентов, подписанных на рассылку, по дню недели.
+     *
+     * @param dayNumber день недели
+     * @return List<Customer>
+     */
     @Override
     @Transactional
     public List<Customer> findByDayOfWeekForStockSend(byte dayNumber) {
@@ -106,6 +116,15 @@ public class CustomerServiceImpl implements CustomerService {
         return customers;
     }
 
+    /**
+     * Метод проверяет статус клиента, если срок восстановления истек - удаляется
+     *
+     * @param email    - нужен для проверки на существование
+     * @param password - нужен для подтверждения подлинности
+     * @return - false - если такой пользователь существует и статус не равен null,
+     * и статус больше равен больше 30 дней
+     * true - то есть предлагаем клиенту восстановится, если статус меньше 30 дней
+     */
     @Override
     @Transactional
     public boolean checkCustomerStatus(String email, String password) {
@@ -130,26 +149,46 @@ public class CustomerServiceImpl implements CustomerService {
         return false;
     }
 
+    /**
+     * У нас клиент изначально не удаляется. При нажатии на кнопку "удалить профиль"
+     * происходит запись времени, когда кнопка была нажата и подтвеждена.
+     * Мы ему даем 30 дней на восстановление.
+     * Время удаления записывается в поле "status" у Customer.
+     * <p>
+     * Метод, который изменяет статус клиента при нажатии на кнопку "удалить профиль"
+     *
+     * @param id клиента.
+     */
     @Override
     @Transactional
-    public void changeUserStatusToLocked(Long id) {
+    public void changeCustomerStatusToLocked(Long id) {
         Customer customerStatusChange = getCurrentLoggedInUser();
         customerStatusChange.setStatus(LocalDateTime.now());
         updateCustomer(customerStatusChange);
     }
 
+    /**
+     * метод обновления дня для рассылки.
+     *
+     * @param customer              клиент.
+     * @param dayOfWeekForStockSend день недели.
+     */
     @Override
     @Transactional
-    public Customer updateCustomerProfile(Customer customer) {
-        Customer updateCustomer = customerRepository.findById(customer.getId()).orElseThrow(UserNotFoundException::new);
-        updateCustomer.setFirstName(customer.getFirstName());
-        updateCustomer.setLastName(customer.getLastName());
-        updateCustomer.setBirthdayDate(customer.getBirthdayDate());
-        updateCustomer.setUserGender(customer.getUserGender());
-        updateCustomer.setDayOfWeekForStockSend(customer.getDayOfWeekForStockSend());
-        return customerRepository.save(customer);
+    public void updateCustomerDayOfWeekForStockSend(Customer customer, String dayOfWeekForStockSend) {
+        if (dayOfWeekForStockSend.isEmpty()) {
+            customer.setDayOfWeekForStockSend(null);
+        } else {
+            customer.setDayOfWeekForStockSend(Customer.DayOfWeekForStockSend.valueOf(dayOfWeekForStockSend));
+        }
+        updateCustomer(customer);
     }
 
+    /**
+     * Метод получения текущего залогининового клиента.
+     *
+     * @return Customer.
+     */
     @Override
     @Transactional
     public Customer getCurrentLoggedInUser() {
@@ -160,12 +199,22 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
     }
 
+    /**
+     * Обновление клиента.
+     *
+     * @param customer клиент.
+     */
     @Override
     @Transactional
     public void updateCustomer(Customer customer) {
         customerRepository.save(customer);
     }
 
+    /**
+     * Метод для восстановления клиента
+     *
+     * @param email - емейл для восстановления
+     */
     @Override
     @Transactional
     public void restoreCustomer(String email) {
@@ -174,6 +223,13 @@ public class CustomerServiceImpl implements CustomerService {
         updateCustomer(customer);
     }
 
+    /**
+     * Метод проверки на существование клиента по email.
+     *
+     * @param email клиента.
+     * @return false если такого клиента нет в БД или его статус больше 30 дней.
+     * true если статус null или такой пользователь есть в БД.
+     */
     @Override
     @Transactional
     public boolean isExist(String email) {
@@ -192,6 +248,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
+    /**
+     * Удаление клиента по id.
+     *
+     * @param id клиента.
+     */
     @Override
     @Transactional
     public void deleteByID(Long id) {
