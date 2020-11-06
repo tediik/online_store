@@ -5,12 +5,15 @@ import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
+import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -52,6 +56,7 @@ public class UserServiceImpl implements UserService {
     private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CustomerRepository customerRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
@@ -381,8 +386,19 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
         newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
-        log.debug("User with email: {} was saved successfully", newUser.getEmail());
-        userRepository.save(newUser);
+        Set<Role> roles = newUser.getRoles();
+        for (Role role : roles) {
+            if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
+                userRepository.save(newUser);
+            } else {
+                Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
+                customer.setRoles(newUser.getRoles());
+                customer.setProfilePicture(newUser.getProfilePicture());
+                customerRepository.save(customer);
+            }
+            log.debug("User with email: {} was saved successfully", newUser.getEmail());
+            return;
+        }
     }
 
     /**
