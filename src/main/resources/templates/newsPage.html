@@ -3,21 +3,13 @@
 <head>
     <title>News</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
 </head>
 <body class="d-flex flex-column min-vh-100">
-<div th:fragment="header">
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
-        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="/">Главная</a>
-            <a class="p-2 text-dark" href="/news">Новости</a>
-        </nav>
-        <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/logout">Выйти</a>
-        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/login">Войти</a>
-        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/registration">Регистрация</a>
-    </div>
-</div>
+<header th:insert="/blocks/header :: header"></header>
 <div class="wrapper flex-grow-1 container-fluid">
     <div class="row content">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
@@ -33,6 +25,7 @@
         </div>
     </div>
 </div>
+<script src="../static/js/searchButton.js"></script>
 <footer th:replace="/blocks/footer :: footer"></footer>
 </body>
 </html>

@@ -3,15 +3,17 @@
 <head>
     <title>Manager Feedback</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!--toastr CSS-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 
 </head>
 <body>
-<header th:insert="/blocks/header :: header"></header>
+<header th:insert="/blocks/cabinetHeader :: header"></header>
 <main>
 
     <div class="container-fluid">
@@ -128,7 +130,7 @@
         crossorigin="anonymous"></script>
 <!--toastr-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-
+<script src="../static/js/searchButton.js"></script>
 <script src="/static/js/managerFeedback.js"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="/static/css/products.css" rel="stylesheet">
@@ -24,6 +24,7 @@
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
 
+
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
@@ -36,9 +37,10 @@
     <!-- Подключаем библиотеку summernote bs-4 -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 </head>
 <body class="d-flex flex-column min-vh-100">
-
+<header th:insert="/blocks/header :: header"></header>
 <div class="modal fade" id="productModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditProductModalWindows"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -116,15 +118,6 @@
 
     <div class="container-fluid">
         <div class="container col-11">
-            <!--Display logged in user's name-->
-            <nav class="navbar navbar-dark bg-dark">
-                <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
-                <a class="navbar-brand"
-                   th:each="authority : ${#authentication.getAuthorities()}"
-                   th:text="${authority.getAuthority()} + ' '"></a>
-                <a th:href="@{/manager}" class="btn btn-primary ml-auto">Кабинет менеджера</a>
-                <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
-            </nav>
             <div class="card">
                 <h5 class="card-header">Товары</h5>
                 <div id="alert-div">
@@ -264,6 +257,7 @@
 <script src="/static/js/textRedactor.js"></script>
 <link href="/static/css/summernote.css" rel="stylesheet">
 <link href="/static/css/products.css" rel="stylesheet">
+<script src="../static/js/searchButton.js"></script>
 <script src="/static/js/date_range.js"></script>
 </body>
 </html>

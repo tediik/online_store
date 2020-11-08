@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body class="d-flex flex-column min-vh-100">
-<header th:insert="/blocks/header :: header"></header>
+<header th:insert="/blocks/cabinetHeader :: header"></header>
 <main class="wrapper flex-grow-1" role="main">
 
     <section class="jumbotron text-center">
@@ -166,5 +166,6 @@
     </div>
 </main>
 <footer th:replace="/blocks/footer :: footer"></footer>
+<script src="../static/js/searchButton.js"></script>
 </body>
 </html>
