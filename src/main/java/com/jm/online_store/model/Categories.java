@@ -36,7 +36,7 @@ public class Categories {//очень хочется убрать множест
     private Long parentCategoryId;
     @NonNull
     private int depth;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) // ALL -??? EAGER - ?
     @JoinColumn(name = "category_id")
     private List<Product> products;
 }

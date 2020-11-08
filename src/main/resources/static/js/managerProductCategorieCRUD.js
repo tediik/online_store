@@ -11,19 +11,15 @@ let deletedName = "";
 let hasProduct;
 
 $(function () {
-
     fillProductCategories().then();
-
     $('#addMainCategoryButton').click(function (event) {
         addNewMainCategory();
         event.preventDefault();
-    })
-
+    });
     $('#jqxbutton').click(function (event) {
         prefillMagicModal();
         event.preventDefault();
-    })
-
+    });
 })
 
 // build hierarchical structure
@@ -151,8 +147,8 @@ function postCategory (whatever, dep, pCat) {
  * Проверка "оригинальности" названия категории
  */
 function checkIfNotExists(value) {
-    for (let pos = 0; pos < listOfAll.length; pos++) {
-        if (listOfAll[pos].text
+    for (let j = 0; j < listOfAll.length; j++) {
+        if (listOfAll[j].text
             .toLowerCase()
             .localeCompare($(value)
                 .val()
@@ -167,8 +163,8 @@ function checkIfNotExists(value) {
  * Проверка наличия подкатегорий
  */
 function checkForSubcategories(value) {
-    for (let subCat = 0; subCat < listOfAll.length; subCat++) {
-        if (listOfAll[subCat].parentId === value) {
+    for (let k = 0; k < listOfAll.length; k++) {
+        if (listOfAll[k].parentId === value) {
             return true;
         }
     }
@@ -193,8 +189,8 @@ function prefillMagicModal() {
  * Заполнение глобальных переменных для magicModal
  */
 function findByNameAndSetGlobalIds(name) {
-    for (let find = 0; find < listOfAll.length; find++) {
-        let thisItem = listOfAll[find];
+    for (let x = 0; x < listOfAll.length; x++) {
+        let thisItem = listOfAll[x];
         if (name.label.localeCompare(thisItem.text) === 0) {
             currentId = thisItem.id;
             currentParentId = thisItem.parentId;

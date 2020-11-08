@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.CategoriesRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +9,9 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,22 @@ public class CategoriesServiceImpl implements CategoriesService {
             resultArray.add(jsonObject);
         }
         return resultArray;
+    }
+
+    @Override
+    public String getCategoryNameByProductId(Long productId) {
+        List<Categories> categoriesList = categoriesRepository.findAll();
+        for (Categories categories : categoriesList) {
+            List<Product> listOfProducts = categories.getProducts();
+            if (!listOfProducts.isEmpty()) {
+                for (Product product : listOfProducts) {
+                    if (product.getId() == productId) {
+                        return categories.getCategory();
+                    }
+                }
+            }
+        }
+        return "";
     }
 
     @Override

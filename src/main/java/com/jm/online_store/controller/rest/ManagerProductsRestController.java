@@ -109,12 +109,6 @@ public class ManagerProductsRestController {
      */
     @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> addProductM(@RequestBody Product product, @PathVariable(name = "id") Long catId) {
-        System.out.println("prod - " + product.getProduct());
-        System.out.println("price - " + product.getPrice());
-        System.out.println("amount - " + product.getAmount());
-        System.out.println("catid - " + catId);
-        System.out.println("---------------------------------------------------");
-
         productService.saveProduct(product);
         Categories thisCat = categoriesService.getCategoryById(catId).get();
         List<Product> thisCatProducts = thisCat.getProducts();

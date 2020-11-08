@@ -86,38 +86,16 @@ public class MainPageRestController {
      * "Ноутбуки":"Noutbuki"},
      * "Смартфоны и гаджеты":{"Планшеты":"Planshety",
      * "Смартфоны":"Smartfony"}}
+     *
+     *
+     * ^^^^^^^ Этот коммент от прошлой реализации возможно понадобится при рефакторинге страниц отображения подкатегорий ^^^^^^
+     *
+     * Сейчас метод возвращает список корневых категорий для дальнейшего формирования ссылок на подкатегории
+     *
      */
     @GetMapping("api/categories")
     public ResponseEntity<List<Categories>> getMainCategories() {
         return ResponseEntity.ok(categoriesService.getCategoriesByParentCategoryId(0L));
-    }
-
-    @PostMapping("api/categories")
-    public ResponseEntity<Categories> newCategory(@RequestBody Categories categories) {
-        categoriesService.saveCategory(categories);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @PutMapping("api/categories")
-    public ResponseEntity<Categories> updateCategory(@RequestBody Categories categories) {
-        categoriesService.saveCategory(categories);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping("api/categories/{id}")
-    public ResponseEntity<Categories> deleteCategory(@PathVariable Long id) {
-        categoriesService.deleteCategory(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("api/categories/all")
-    public ResponseEntity<JSONArray> getAllCategories() {
-        return ResponseEntity.ok(categoriesService.getAllCategories());
-    }
-
-    @GetMapping("api/categories/sub/{id}")
-    public ResponseEntity<List<Categories>> getSubCategoriesById(@PathVariable Long id) {
-        return ResponseEntity.ok(categoriesService.getCategoriesByParentCategoryId(id));
     }
 
     /**

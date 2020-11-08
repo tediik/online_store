@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface CategoriesService {
 
-     JSONArray getAllCategories();//List<Categories>
+    JSONArray getAllCategories();//List<Categories>
+
+    String getCategoryNameByProductId(Long productId);
 
     List<Categories> getCategoriesByParentCategoryId (Long parentCategoryId);
 

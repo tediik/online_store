@@ -2,14 +2,15 @@
 // https://www.jqwidgets.com/jquery-widgets-documentation/documentation/jqxtree/jquery-tree-getting-started.htm?search=
 const API_CATEGORIES_URL = "/api/categories/"
 let listOfAll
-let currentCategoryId;
+let currentCategoryIdAdd;
+let currentCategoryNameEdit;
 let productRestUrl = "/rest/products/allProducts"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
 $(function () {
-    fillProductCategoriesIn()
+    fillProductCategoriesIn('#jqxTreeHere')
         .then(() => {
         $('#jqxTreeHere').jqxTree('expandAll');
     })
@@ -35,7 +36,7 @@ $(function () {
 });
 
 // build hierarchical structure
-async function fillProductCategoriesIn() {
+async function fillProductCategoriesIn(htmlId) {
     listOfAll = await fetch(API_CATEGORIES_URL + "all").then(response => response.json());
     let source = [];
     let items = [];
@@ -57,9 +58,9 @@ async function fillProductCategoriesIn() {
             source[id] = items[id];
         }
     }
-    $('#jqxTreeHere').jqxTree({
+    $(htmlId).jqxTree({
         source: source,
-        height: "250px"
+        height: "300px"
     });
 }
 
@@ -98,6 +99,8 @@ function editModalWindowRender(product) {
     $('#productInputModal').val(product.product).prop('readonly', false)
     $('#productPriceInputModal').val(product.price).prop('readonly', false)
     $('#productAmountInputModal').val(product.amount).prop('readonly', false)
+    $('#productCategoryValueModal').val(currentCategoryNameEdit);
+    fillProductCategoriesIn('#jqxTreeModal').then();
 }
 
 /**
@@ -115,7 +118,7 @@ function deleteModalWindowRender(productToEdit) {
 }
 
 /**
- * Функция обраотки нажатия кнопки Edit в таблице продукта
+ * Функция обработки нажатия кнопки Edit в таблице продукта
  * @param event
  */
 function handleEditButton(event) {
@@ -124,7 +127,15 @@ function handleEditButton(event) {
         fetch("/rest/products/" + productId, {headers: headers}),
     ])
         .then(([response]) => Promise.all([response.json()]))
-        .then(([productToEdit]) => editModalWindowRender(productToEdit))
+        .then(([productToEdit]) => {
+            fetch(API_CATEGORIES_URL + 'getOne/' + productId)
+                .then(promiseResult => {
+                    return promiseResult.text()
+                })
+                .then(responseResult => {
+                    currentCategoryNameEdit = "" + responseResult;
+                    editModalWindowRender(productToEdit)});
+                });
 }
 
 /**
@@ -151,7 +162,7 @@ function handleRestoreButton(productId) {
 }
 
 /**
- * функция делает активным таблицу с продуктами
+ * функция делает активной таблицу с продуктами
  * и обновляет в ней данные
  */
 function showAndRefreshHomeTab() {
@@ -163,7 +174,7 @@ function showAndRefreshHomeTab() {
 }
 
 /**
- * функция деалет активным таблицу без
+ * функция делает активной таблицу без
  * удаленных продуктов
  */
 function showAndRefreshNotDeleteHomeTab() {
@@ -178,20 +189,6 @@ function showAndRefreshNotDeleteHomeTab() {
  * функция обработки кнопки add на форме нового продукта
  */
 function handleAddBtn() {
-    let selected = $('#jqxTreeHere').jqxTree('getSelectedItem');
-    if (!selected) {
-        alert('Категория не выбрана!');
-        return false;
-    } else {
-        for (let sel = 0; sel < listOfAll.length; sel++) {
-            let currItem = listOfAll[sel];
-            if (selected.label.localeCompare(currItem.text) === 0) {
-
-                currentCategoryId = currItem.id;
-            }
-        }
-    }
-
     let productToAdd = {
         product: $('#addProduct').val(),
         price: $('#addPrice').val(),
@@ -227,14 +224,31 @@ function handleAddBtn() {
         }, 5000)
     }
 
-    fetch("/rest/products/addProduct/" + currentCategoryId, {
+    /**
+     * проверяем, что выбранная категория != null
+     */
+    let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
+    if (!selectedCat) {
+        alert('Категория не выбрана!');
+        return false;
+    } else {
+        for (let z = 0; z < listOfAll.length; z++) {
+            let currItem = listOfAll[z];
+            if (selectedCat.label.localeCompare(currItem.text) === 0) {
+                currentCategoryIdAdd = currItem.id;
+            }
+        }
+    }
+
+    fetch("/rest/products/addProduct/" + currentCategoryIdAdd, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
         body: JSON.stringify(productToAdd)
     })
         .then(function (response) {
             let field;
-            if (response.status !== 200) {
+            if (response.status !== 200) {  //непонятная логика, мне кажется, что проверять поля нужно до fetch-запроса,
+                                            // а не после того, как на бэк полетел объект с null-полями
                 response.text()
                     .then(
                         function (text) {
@@ -266,10 +280,10 @@ function handleAddBtn() {
         }
     )
 }
+
 /**
  * Добавление товара из файла
  */
-
 $('#inputFileSubmit').click(importProductsFromFile)
 function importProductsFromFile(){
 
@@ -312,7 +326,7 @@ function handleAcceptButtonFromModalWindow(event) {
             headers: headers,
             method: 'DELETE'
         }).then(response => response.text())
-            .then(deletedProduct => console.log('User: ' + deletedProduct + ' was successfully deleted'))
+            .then(deletedProduct => console.log('Product: ' + deletedProduct + ' was successfully deleted'))
             .then(showTable => showAndRefreshHomeTab(showTable))
         $('#productModalWindow').modal('hide')
     } else {
