@@ -47,7 +47,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         switch (update.getMessage().getText()) {
             case "/start": {
-                message.append("Привет" + "\u270C" +
+                message.append("Привет \u270C " +
                         "\nЯ бот магазина online_store: http://localhost:9999" +
                         "\nЯ умею рассказывать об акциях проходящих в нашем магазине." +
                         " Если хочешь узнать о них, отправь мне команду: /getStocks");
@@ -56,14 +56,16 @@ public class TelegramBot extends TelegramLongPollingBot {
             case "/getStocks": {
                 List<Stock> publishedStocks = stockService.findPublishedStocks();
                 for (Stock stock : publishedStocks) {
-                    message.append("\uD83D\uDD25" + stock.getStockTitle() +
-                            ".\nПодробности на http://localhost:9999/global/stockDetails/" +
-                            stock.getId() + "\n\n");
+                    message.append("\uD83D\uDD25")
+                            .append(stock.getStockTitle())
+                            .append(".\nПодробности на http://localhost:9999/global/stockDetails/")
+                            .append(stock.getId())
+                            .append("\n\n");
                 }
                 break;
             }
             default: {
-                message.append("Сейчас я умею рассказывать только о наших акциях" + "\uD83D\uDE2D" +
+                message.append("Сейчас я умею рассказывать только о наших акциях \uD83D\uDE2D " +
                         "\nЕсли хочешь узнать о них, отправь мне команду: /getStocks");
                 break;
             }
