@@ -58,6 +58,6 @@ price-list-service:
 
 spring.profiles.include: 'security'
 
-stocks-bot:
+telegram-bot:
   name: online_store_stocks_bot
   token: 1405685131:AAGZesulLZ-qJZwUtVOSI9wD1JH6MJQl4y8
