@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.OrderDTO;
@@ -8,7 +7,6 @@ import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

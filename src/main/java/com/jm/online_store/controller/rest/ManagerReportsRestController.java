@@ -1,11 +1,10 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.SentStockNotFoundException;
-import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.model.User;
+import com.jm.online_store.model.Customer;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SentStockService;
-import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,13 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "api/manager")
 public class ManagerReportsRestController {
-    private final UserService userService;
+    private final CustomerService customerService;
     private final SentStockService sentStockService;
 
     /**
@@ -35,8 +33,8 @@ public class ManagerReportsRestController {
      * @return список пользователей
      */
     @GetMapping("/users/{dayNumber}")
-    public ResponseEntity<List<User>> allUsers(@PathVariable byte dayNumber) {
-        return ResponseEntity.ok(userService.findByDayOfWeekForStockSend(dayNumber));
+    public ResponseEntity<List<Customer>> allUsers(@PathVariable byte dayNumber) {
+        return ResponseEntity.ok(customerService.findByDayOfWeekForStockSend(dayNumber));
     }
 
     /**
@@ -47,8 +45,7 @@ public class ManagerReportsRestController {
      */
     @PutMapping("/cancel/{id}")
     public ResponseEntity<Long> cancelSubscription(@PathVariable Long id) {
-        userService.cancelSubscription(id);
-
+        customerService.cancelSubscription(id);
         return ResponseEntity.ok().build();
     }
 

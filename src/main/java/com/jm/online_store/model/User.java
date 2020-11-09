@@ -18,6 +18,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -26,7 +28,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ import java.util.Set;
  * основная сущность проекта - USER.
  */
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -75,7 +77,6 @@ public class User implements UserDetails {
 
     private String profilePicture = "";
 
-    private LocalDateTime status;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
@@ -123,9 +124,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "basket_id"))
     private List<SubBasket> userBasket = new ArrayList<>();
 
-    @Column(name = "day_of_week_for_stock_send")
-    @Enumerated(EnumType.STRING)
-    private DayOfWeekForStockSend dayOfWeekForStockSend;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -172,11 +170,6 @@ public class User implements UserDetails {
         this.roles = roleSet;
     }
 
-    public User(@Email @NotBlank String email, DayOfWeekForStockSend dayOfWeekForStockSend, String password) {
-        this.email = email;
-        this.dayOfWeekForStockSend = dayOfWeekForStockSend;
-        this.password = password;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -216,16 +209,6 @@ public class User implements UserDetails {
     public enum Gender {
         MAN,
         WOMAN
-    }
-
-    public enum DayOfWeekForStockSend {
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
     }
 
     @Override
