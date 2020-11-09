@@ -14,18 +14,21 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 
+/**
+ * Телеграм бот. На данный момент умеет отдавать список актуальных акций
+ */
 @RequiredArgsConstructor
 @Getter
 @Setter
 @Component
-public class StocksBot extends TelegramLongPollingBot {
+public class TelegramBot extends TelegramLongPollingBot {
 
     private final StockService stockService;
 
-    @Value("${stocks-bot.name}")
+    @Value("${telegram-bot.name}")
     private String botUsername;
 
-    @Value("${stocks-bot.token}")
+    @Value("${telegram-bot.token}")
     private String botToken;
 
     @Override
@@ -47,7 +50,7 @@ public class StocksBot extends TelegramLongPollingBot {
                 message.append("Привет" + "\u270C" +
                         "\nЯ бот магазина online_store: http://localhost:9999" +
                         "\nЯ умею рассказывать об акциях проходящих в нашем магазине." +
-                        "\nЕсли хочешь узнать о них, отправь мне команду: /getStocks");
+                        " Если хочешь узнать о них, отправь мне команду: /getStocks");
                 break;
             }
             case "/getStocks": {
@@ -70,15 +73,5 @@ public class StocksBot extends TelegramLongPollingBot {
                 .chatId(String.valueOf(chatId))
                 .text(message.toString())
                 .build();
-    }
-
-    @Override
-    public String getBotUsername() {
-        return botUsername;
-    }
-
-    @Override
-    public String getBotToken() {
-        return botToken;
     }
 }
