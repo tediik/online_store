@@ -7,124 +7,157 @@
     <title>Admin panel</title>
 </head>
 <body style="background-color: whitesmoke">
-<div class="modal fade" id="userModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditUserModalWindows"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="Edit user">Edit user</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div id="alert-modal-div">
+
+<header th:insert="/blocks/header :: header"></header>
+
+<main>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!--навигация слева-->
+            <div class="col-md-2">
 
             </div>
-            <div class="modal-body" id="modalBody">
-                <div class="row justify-content-center">
-                    <div class="col">
-                        <div class="form-group" id="editFormContainer">
-                            <label for="idInputModal"><strong>Id</strong></label>
-                            <input type="text" class="form-control" id="idInputModal" readonly>
-                            <label for="emailInputModal"><strong>Email</strong></label>
-                            <input type="email" class="form-control" id="emailInputModal" required>
-                            <label for="firstNameInputModal"><strong>Имя</strong></label>
-                            <input type="text" class="form-control" id="firstNameInputModal">
-                            <label for="lastNameInputModal"><strong>Фамилия</strong></label>
-                            <input type="text" class="form-control" id="lastNameInputModal">
-                            <label for="passwordInputModal" id="passwordLabelModal"><strong>Пароль</strong></label>
-                            <input type="password" class="form-control" id="passwordInputModal">
-                            <label for="rolesSelectModal" id="roleLabelModal"><strong>Роли</strong></label>
-                            <select multiple class="form-control" id="rolesSelectModal" name="newRolesIds" required>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save
-                    changes
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="container col-11">
-        <!--Display logged in user's name-->
-        <nav class="navbar navbar-dark bg-dark">
-            <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
-            <a class="navbar-brand"
-               th:each="authority : ${#authentication.getAuthorities()}"
-               th:text="${authority.getAuthority()} + ' '"></a>
-            <a th:href="@{/}" class="btn btn-info ml-auto">Главная</a>
-            <a th:href="@{/authority/profile}" class="btn btn-primary ml-auto">Профиль</a>
-            <a th:href="@{/logout}" class="btn btn-warning ml-auto">Выйти</a>
-        </nav>
-        <div class="card">
-            <h5 class="card-header">Admin Panel</h5>
-            <div id="alert-div">
+            <!--навигация слева-->
 
-            </div>
-            <div class="card-body">
-                <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                           role="tab" aria-controls="nav-home" aria-selected="true">User Table</a>
-                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                           role="tab" aria-controls="nav-profile" aria-selected="false">Add User</a>
-
-                        <!--                select                -->
-                        <div class="form-group">
-                            <select class="form-control form-control-sm" id="filterRole">
-                                <option value="" disabled selected>User filter by Role</option>
-                                <option th:each="dropDownItem : ${listRoles}" th:value="${dropDownItem.name}"
-                                        th:text="${dropDownItem.name}"></option>
-                                <div class="dropdown-divider"></div>
-                                <option value="default">show all users</option>
-                            </select>
-                        </div>
-                    </div>
+            <!--наполнение справа-->
+            <div class="col-md-10 bg-light">
+                <!--Display logged in user's name-->
+                <nav class="navbar navbar-dark bg-dark">
+                    <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
+                    <a class="navbar-brand"
+                       th:each="authority : ${#authentication.getAuthorities()}"
+                       th:text="${authority.getAuthority()} + ' '"></a>
+                    <a th:href="@{/}" class="btn btn-info ml-auto">Главная</a>
+                    <a th:href="@{/authority/profile}" class="btn btn-primary ml-auto">Профиль</a>
+                    <a th:href="@{/logout}" class="btn btn-warning ml-auto">Выйти</a>
                 </nav>
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <!--                main tab -->
-                        <table class="table table-active table-striped" id="user-table" style="background-color: white">
+                <!--Display logged in user's name-->
+                <div class="card">
+                    <h5 class="card-header">Admin Panel</h5>
+                    <div id="alert-div">
 
-                        </table>
                     </div>
-                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                        <!--                Secondary user addition form-->
-                        <h3>Add User</h3>
-                        <form id="addForm">
-                            <div class="panel panel-default" id="new-user-form">
-                                <div class="panel-body">
-                                    <div id="add-email-form-group" class="form-group">
-                                        <label for="addEmail">Email:</label>
-                                        <input type="email" id="addEmail" autocomplete="new-password" name="email" placeholder="E-mail"
-                                               class="form-control">
-                                    </div>
-                                    <div class="form-group addPasswordDiv">
-                                        <label for="addPassword">Пароль:</label>
-                                        <input type="password" id="addPassword" autocomplete="new-password" name="password" placeholder="Password"
-                                               class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Роли:</label>
-                                        <select id="addRoles" name="roles" class="form-control" multiple="multiple">
-                                        </select>
-                                    </div>
-                                    <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Add</button>
+                    <div class="card-body">
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                                   role="tab" aria-controls="nav-home" aria-selected="true">User Table</a>
+                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                                   role="tab" aria-controls="nav-profile" aria-selected="false">Add User</a>
+
+                                <!--                select                -->
+                                <div class="form-group">
+                                    <select class="form-control form-control-sm" id="filterRole">
+                                        <option value="" disabled selected>User filter by Role</option>
+                                        <option th:each="dropDownItem : ${listRoles}" th:value="${dropDownItem.name}"
+                                                th:text="${dropDownItem.name}"></option>
+                                        <div class="dropdown-divider"></div>
+                                        <option value="default">show all users</option>
+                                    </select>
                                 </div>
                             </div>
-                        </form>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                 aria-labelledby="nav-home-tab">
+                                <!--                main tab -->
+                                <table class="table table-active table-striped" id="user-table"
+                                       style="background-color: white">
+
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-profile" role="tabpanel"
+                                 aria-labelledby="nav-profile-tab">
+                                <!--                Secondary user addition form-->
+                                <h3>Add User</h3>
+                                <form id="addForm">
+                                    <div class="panel panel-default" id="new-user-form">
+                                        <div class="panel-body">
+                                            <div id="add-email-form-group" class="form-group">
+                                                <label for="addEmail">Email:</label>
+                                                <input type="email" id="addEmail" autocomplete="new-password"
+                                                       name="email"
+                                                       placeholder="E-mail"
+                                                       class="form-control">
+                                            </div>
+                                            <div class="form-group addPasswordDiv">
+                                                <label for="addPassword">Пароль:</label>
+                                                <input type="password" id="addPassword" autocomplete="new-password"
+                                                       name="password" placeholder="Password"
+                                                       class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Роли:</label>
+                                                <select id="addRoles" name="roles" class="form-control"
+                                                        multiple="multiple">
+                                                </select>
+                                            </div>
+                                            <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <!--наполнение справа-->
+        </div>
+    </div>
+
+    <!--modal-->
+    <div class="modal fade" id="userModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditUserModalWindows"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Edit user">Edit user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="alert-modal-div">
+
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <div class="form-group" id="editFormContainer">
+                                <label for="idInputModal"><strong>Id</strong></label>
+                                <input type="text" class="form-control" id="idInputModal" readonly>
+                                <label for="emailInputModal"><strong>Email</strong></label>
+                                <input type="email" class="form-control" id="emailInputModal" required>
+                                <label for="firstNameInputModal"><strong>Имя</strong></label>
+                                <input type="text" class="form-control" id="firstNameInputModal">
+                                <label for="lastNameInputModal"><strong>Фамилия</strong></label>
+                                <input type="text" class="form-control" id="lastNameInputModal">
+                                <label for="passwordInputModal" id="passwordLabelModal"><strong>Пароль</strong></label>
+                                <input type="password" class="form-control" id="passwordInputModal">
+                                <label for="rolesSelectModal" id="roleLabelModal"><strong>Роли</strong></label>
+                                <select multiple class="form-control" id="rolesSelectModal" name="newRolesIds" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                    </button>
+                    <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save
+                        changes
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <!--modal-->
+
+</main>
+
+<!--bootstrap scripts-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -132,7 +165,14 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<!--<script type="text/javascript" src="static/main.js"></script>-->
+
+<!--main script-->
 <script src="/static/js/AdminPageRender.js"></script>
+<script src="/static/js/profileAdminManagerService.js"></script>
+<script src="/static/js/profilePicture.js"></script>
+
+
 </body>
 </html>
+
+
