@@ -17,91 +17,124 @@
 
             <!--навигация слева-->
             <div class="col-md-2">
+                <ul class="nav nav-pills flex-column" id="adminSideNavigation">
 
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#Admin"> Администратор </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#Profile"> Настройки профиля  </a>
+                    </li>
+
+                </ul>
             </div>
             <!--навигация слева-->
 
             <!--наполнение справа-->
             <div class="col-md-10 bg-light">
-                <!--Display logged in user's name-->
-                <nav class="navbar navbar-dark bg-dark">
-                    <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
-                    <a class="navbar-brand"
-                       th:each="authority : ${#authentication.getAuthorities()}"
-                       th:text="${authority.getAuthority()} + ' '"></a>
-                    <a th:href="@{/}" class="btn btn-info ml-auto">Главная</a>
-                    <a th:href="@{/authority/profile}" class="btn btn-primary ml-auto">Профиль</a>
-                    <a th:href="@{/logout}" class="btn btn-warning ml-auto">Выйти</a>
-                </nav>
-                <!--Display logged in user's name-->
-                <div class="card">
-                    <h5 class="card-header">Admin Panel</h5>
-                    <div id="alert-div">
 
-                    </div>
-                    <div class="card-body">
-                        <nav>
-                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                                   role="tab" aria-controls="nav-home" aria-selected="true">User Table</a>
-                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                                   role="tab" aria-controls="nav-profile" aria-selected="false">Add User</a>
+                <div class="tab-content">
+                    <!--Admin-->
+                    <div class="tab-pane fade show active" id="Admin" role="tabpanel" aria-labelledby="profile-tab">
 
-                                <!--                select                -->
-                                <div class="form-group">
-                                    <select class="form-control form-control-sm" id="filterRole">
-                                        <option value="" disabled selected>User filter by Role</option>
-                                        <option th:each="dropDownItem : ${listRoles}" th:value="${dropDownItem.name}"
-                                                th:text="${dropDownItem.name}"></option>
-                                        <div class="dropdown-divider"></div>
-                                        <option value="default">show all users</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <!--Display logged in user's name-->
+                        <nav class="navbar navbar-dark bg-dark">
+                            <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
+                            <a class="navbar-brand"
+                               th:each="authority : ${#authentication.getAuthorities()}"
+                               th:text="${authority.getAuthority()} + ' '"></a>
+                            <a th:href="@{/}" class="btn btn-info ml-auto">Главная</a>
+                            <a th:href="@{/authority/profile}" class="btn btn-primary ml-auto">Профиль</a>
+                            <a th:href="@{/logout}" class="btn btn-warning ml-auto">Выйти</a>
                         </nav>
-                        <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                                 aria-labelledby="nav-home-tab">
-                                <!--                main tab -->
-                                <table class="table table-active table-striped" id="user-table"
-                                       style="background-color: white">
+                        <!--Display logged in user's name-->
 
-                                </table>
+                        <div class="card">
+                            <h5 class="card-header">Admin Panel</h5>
+                            <div id="alert-div">
+
                             </div>
-                            <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                 aria-labelledby="nav-profile-tab">
-                                <!--                Secondary user addition form-->
-                                <h3>Add User</h3>
-                                <form id="addForm">
-                                    <div class="panel panel-default" id="new-user-form">
-                                        <div class="panel-body">
-                                            <div id="add-email-form-group" class="form-group">
-                                                <label for="addEmail">Email:</label>
-                                                <input type="email" id="addEmail" autocomplete="new-password"
-                                                       name="email"
-                                                       placeholder="E-mail"
-                                                       class="form-control">
-                                            </div>
-                                            <div class="form-group addPasswordDiv">
-                                                <label for="addPassword">Пароль:</label>
-                                                <input type="password" id="addPassword" autocomplete="new-password"
-                                                       name="password" placeholder="Password"
-                                                       class="form-control">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Роли:</label>
-                                                <select id="addRoles" name="roles" class="form-control"
-                                                        multiple="multiple">
-                                                </select>
-                                            </div>
-                                            <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Add
-                                            </button>
+                            <div class="card-body">
+                                <nav>
+                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
+                                           href="#nav-home"
+                                           role="tab" aria-controls="nav-home" aria-selected="true">User Table</a>
+                                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
+                                           href="#nav-profile"
+                                           role="tab" aria-controls="nav-profile" aria-selected="false">Add User</a>
+
+                                        <!--                select                -->
+                                        <div class="form-group">
+                                            <select class="form-control form-control-sm" id="filterRole">
+                                                <option value="" disabled selected>User filter by Role</option>
+                                                <option th:each="dropDownItem : ${listRoles}"
+                                                        th:value="${dropDownItem.name}"
+                                                        th:text="${dropDownItem.name}"></option>
+                                                <div class="dropdown-divider"></div>
+                                                <option value="default">show all users</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </form>
+                                </nav>
+                                <div class="tab-content" id="nav-tabContent">
+                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                         aria-labelledby="nav-home-tab">
+                                        <!--                main tab -->
+                                        <table class="table table-active table-striped" id="user-table"
+                                               style="background-color: white">
+
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel"
+                                         aria-labelledby="nav-profile-tab">
+                                        <!--                Secondary user addition form-->
+                                        <h3>Add User</h3>
+                                        <form id="addForm">
+                                            <div class="panel panel-default" id="new-user-form">
+                                                <div class="panel-body">
+                                                    <div id="add-email-form-group" class="form-group">
+                                                        <label for="addEmail">Email:</label>
+                                                        <input type="email" id="addEmail" autocomplete="new-password"
+                                                               name="email"
+                                                               placeholder="E-mail"
+                                                               class="form-control">
+                                                    </div>
+                                                    <div class="form-group addPasswordDiv">
+                                                        <label for="addPassword">Пароль:</label>
+                                                        <input type="password" id="addPassword"
+                                                               autocomplete="new-password"
+                                                               name="password" placeholder="Password"
+                                                               class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Роли:</label>
+                                                        <select id="addRoles" name="roles" class="form-control"
+                                                                multiple="multiple">
+                                                        </select>
+                                                    </div>
+                                                    <button id="addBtn" type="button"
+                                                            class=" btn btn-success btn-md btn">
+                                                        Add
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
+                    <!--Admin-->
+
+                    <!--Профиль-->
+                    <div class="tab-pane" id="Profile" role="tabpanel">
+
+                    </div>
+                    <!--Профиль-->
+
                 </div>
             </div>
             <!--наполнение справа-->
