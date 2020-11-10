@@ -5,6 +5,7 @@ import com.jm.online_store.service.interf.StockService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Телеграм бот. На данный момент умеет отдавать список актуальных акций
  */
+@Slf4j
 @RequiredArgsConstructor
 @Getter
 @Setter
@@ -37,6 +39,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
+            log.error("Телеграм бот. Ошибка при отправке сообщения");
             e.printStackTrace();
         }
     }
