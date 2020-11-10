@@ -64,8 +64,10 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     @EventListener({ContextRefreshedEvent.class})
     public void contextRefreshedEvent() {
         List<TaskSettings> allTasks = taskSettingsRepository.findAll();
-        addTaskToScheduler(allTasks.get(0), stockMailDistributionTask);
-        addTaskToScheduler(allTasks.get(1), priceListService);
+        if (!allTasks.isEmpty()) {
+            addTaskToScheduler(allTasks.get(0), stockMailDistributionTask);
+            addTaskToScheduler(allTasks.get(1), priceListService);
+        }
     }
 
     /**
