@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, charset=UTF-8, text/html">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1, charset=UTF-8, text/html">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -13,11 +14,11 @@
     <link href="/static/css/summernote.css" rel="stylesheet">
     <!--toaster CSS-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
-
     <title>Admin panel</title>
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 </head>
 <body style="background-color: whitesmoke">
-
+<header th:insert="/blocks/header :: header"></header>
 <!-- EDIT MODAL -->
 <div class="modal fade" id="userModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditUserModalWindows"
      aria-hidden="true">
@@ -87,7 +88,6 @@
 
 <div class="row">
     <div class="container col-11">
-
         <div class="card">
             <h5 class="card-header">Admin Panel</h5>
             <div id="alert-div">
@@ -179,8 +179,8 @@
 
 <!--main script-->
 <script src="/static/js/AdminPageRender.js"></script>
+<script src="../static/js/searchButton.js"></script>
 <script src="/static/js/profilePicture.js"></script>
-
 
 <!-- jQuery Mask Plugin -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>

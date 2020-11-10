@@ -15,10 +15,14 @@
           integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
           crossorigin="anonymous"/>
     <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header th:insert="/blocks/header :: header"></header>
 <div class="wrapper flex-grow-1 container-fluid">
+    <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+        <a class="btn btn-link" href="/"><---на главную</a>
+    </div>
     <div class="row content justify-content-center">
         <div class="col-sm-8 text-left">
             <div class="alert alert-info mt-2">
@@ -43,6 +47,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous"></script>
+<script src="../static/js/searchButton.js"></script>
 <script src="/static/js/socialNetworksSharer.js"></script>
 </body>
 </html>
