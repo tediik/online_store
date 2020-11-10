@@ -26,16 +26,16 @@
     <script src="../static/js/jquery.fias.min.js" type="text/javascript"></script>
     <!--    summernote CSS-->
     <link href="/static/css/summernote.css" rel="stylesheet">
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
     <!-- Optional JavaScript -->
     <script src="../static/js/orderPlacement.js"></script>
     <script src="../static/js/customer.js"></script>
     <script src="../static/js/busket.js"></script>
     <script src="../static/js/profilePicture.js"></script>
     <script src="../static/js/orders.js"></script>
-    <script src="../static/js/profile.js"></script>
 </head>
 <body>
-<header th:insert="/blocks/header :: header"></header>
+<header th:insert="/blocks/cabinetHeader :: header"></header>
 <div class="container-fluid">
     <div class="row min-vh-100">
         <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
@@ -797,8 +797,7 @@
         </div>
     </div>
 </div>
-<!-- Modal for order -->
-</div>
+<footer th:insert="/blocks/footer :: footer"></footer>
 <!--summernote-->
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
@@ -808,6 +807,6 @@
 <script src="/static/js/moment.js"></script>
 <script src="../static/js/customerProfilePageFunctions.js"></script>
 <script src="/static/js/customer-feedback-form.js"></script>
-<footer th:insert="/blocks/footer :: footer"></footer>
+<script src="../static/js/searchButton.js"></script>
 </body>
 </html>

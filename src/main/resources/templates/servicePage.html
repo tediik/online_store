@@ -4,6 +4,7 @@
     <title>Service Center</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!-- Подключаем CSS summernote bs-4 -->
@@ -12,9 +13,10 @@
     <link href="/static/css/summernote.css" rel="stylesheet">
     <!--toastr CSS-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<header th:insert="/blocks/header :: header"></header>
+<header th:insert="/blocks/cabinetHeader :: header"></header>
 <main>
 
     <!---------------------- Edit RepairOrder Modal window ------------------->
@@ -340,6 +342,7 @@
 <!--toastr-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <!--main script-->
+<script src="../static/js/searchButton.js"></script>
 <script src="/static/js/repairOrder.js"></script>
 <script src="/static/js/profilePicture.js"></script>
 <script src="/static/js/profileAdminManagerService.js"></script>

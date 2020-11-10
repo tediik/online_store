@@ -1,19 +1,39 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="header">
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+
+    <div class="d-flex flex-column  flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom shadow-sm siteHeader">
+        <h5 class="my-0 mr-md-auto font-weight-normal">Online store</h5>
+
         <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="/">Главная</a>
-            <a class="p-2 text-dark" href="/news">Новости</a>
-            <a id="showBasket">
-                <img src="/uploads/images/buscket.jpg" width="25" height="25">
-                <ins style="color: #ff8e05">
-                    Корзина
-                    <i id="countInBasket"></i>
-                </ins>
-            </a>
+            <!-- Search -->
+            <form class="form-inline my-2 my-lg-0" id="mainPageSearchForm">
+                <input class="form-control mr-sm-2" type="text" id="pageSearchInput" placeholder="Поиск по сайту"
+                       aria-label="Search">
+                <button class="btn btn-outline-info my-2 my-sm-0" id="pageSearchButton" type="button"><i
+                        class="fa fa-search"></i></button>
+            </form>
         </nav>
-        <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/logout">Выйти</a>
-        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/login">Войти</a>
-        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-outline-primary p-1" href="/registration">Регистрация</a>
+        <!-- Customer service -->
+        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')"
+           class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           href="/customer">Кабинет покупателя</a>
+        <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           href="/authority/profile">Кабинет администратора</a>
+        <a sec:authorize="hasAnyAuthority('ROLE_MANAGER') and not hasAnyAuthority('ROLE_ADMIN')"
+           class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           href="/authority/profile">Кабинет менеджера</a>
+        <a sec:authorize="hasAnyAuthority('ROLE_SERVICE') and not hasAnyAuthority('ROLE_ADMIN')"
+           class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           href="/service">Кабинет сервисного работника</a>
+        <!-- Registration -->
+        <button th:unless="${#authorization.expression('isAuthenticated()')}"
+                class="btn btn-outline-secondary font-weight-bold secondarybtn"
+                data-toggle="modal" data-target="#openNewRegistrationModal">Регистрация
+        </button>
+        <!-- Login -->
+        <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton"
+           href="/login">Войти</a>
+        <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton" href="/logout">Выйти</a>
     </div>
 </div>
+</html>
