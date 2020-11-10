@@ -6,6 +6,7 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -104,7 +105,7 @@ public class ManagerProductsRestController {
 
     /**
      * Метод добавляет товар
-     * @param product акиця для добавления - @@ wtf "акиця для добавления" ? :) @@
+     * @param product акиця для добавления //// так товар или АКИЦЯ?))
      * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
      */
     @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -127,6 +128,28 @@ public class ManagerProductsRestController {
     public ResponseEntity<Product> editProductM(@RequestBody Product product) {
         productService.editProduct(product);
         return ResponseEntity.ok(product);
+    }
+
+    /**
+     * Редактирует товар и его категорию
+     * @param product товар для редактирования
+     */
+    @PutMapping("/rest/products/editProduct/{idOld}/{idNew}")
+    public ResponseEntity<Product> editProductAndCategory(@RequestBody Product product,
+                                                          @PathVariable Long idOld,
+                                                          @PathVariable Long idNew) {
+        productService.editProduct(product);
+        Categories oldCat = categoriesService.getCategoryById(idOld).get();
+        List<Product> oldList = oldCat.getProducts();
+        oldList.remove(product);
+        oldCat.setProducts(oldList);
+        categoriesService.saveCategory(oldCat);
+        Categories newCat = categoriesService.getCategoryById(idNew).get();
+        List<Product> newList = newCat.getProducts();
+        newList.add(product);
+        newCat.setProducts(newList);
+        categoriesService.saveCategory(newCat);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**

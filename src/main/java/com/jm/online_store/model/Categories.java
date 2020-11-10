@@ -36,6 +36,12 @@ public class Categories {//очень хочется убрать множест
     private Long parentCategoryId;
     @NonNull
     private int depth;
+
+//    @OneToMany(mappedBy = "categories", cascade = CascadeType.ALL)
+//    private List<Product> products;
+
+
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) // ALL -??? EAGER - ?
     @JoinColumn(name = "category_id")
     private List<Product> products;

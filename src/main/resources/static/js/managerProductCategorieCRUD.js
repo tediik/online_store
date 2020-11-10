@@ -1,7 +1,6 @@
 // документация к jqxtree -
 // https://www.jqwidgets.com/jquery-widgets-documentation/documentation/jqxtree/jquery-tree-getting-started.htm?search=
 const API_URL = "/api/categories/";
-const addSubCategoryButton = 'addSubCategoryButton';
 let listOfAll;
 let currentId;
 let currentParentId;
@@ -22,7 +21,9 @@ $(function () {
     });
 })
 
-// build hierarchical structure
+/**
+ * Построение дерева категорий
+ */
 async function fillProductCategories() {
     $('jqxTree').empty();
     listOfAll = await fetch(API_URL + "all").then(response => response.json());
@@ -52,7 +53,7 @@ async function fillProductCategories() {
 }
 
 /**
- * Запрос на добавление корневой категории
+ * Метод добавления корневой категории
  */
 function addNewMainCategory() {
     let newMain = '#addNewMainCategory';
@@ -62,13 +63,41 @@ function addNewMainCategory() {
 }
 
 /**
- * Запрос на добавление подкатегории
+ * Метод добавления подкатегории
  */
 function addNewSubCategory() {
     let newSub = '#addSubCategory';
     let subDepth = currentDepth + 1;
     let subParentCategory = currentId;
     postCategory(newSub, subDepth, subParentCategory);
+}
+
+/**
+ * Fetch-запрос на добавление категории
+ */
+function postCategory (whatever, dep, pCat) {
+    if ($(whatever).val() !== '' && checkIfNotExists(whatever)) {
+        fetch(API_URL, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                category: $(whatever).val(),
+                depth: dep,
+                parentCategoryId: pCat
+            })
+        })
+            .then(response => {
+                if (response.status === 201) {
+                    fillProductCategories().then();
+                    $(whatever).val("");
+                    toastr.success("Категория добавлена");
+                }
+            })
+    } else {
+        toastr.error('Такая категория уже есть, либо поле не заполнено!');
+    }
 }
 
 /**
@@ -109,38 +138,11 @@ function deleteSubCategory() {
     })
         .then(response => {
             if (response.status === 200) {
-                toastr.success('Удалено!');
+                toastr.success('Удалено');
                 deletedName = currentName;
                 fillProductCategories().then();
             }
         })
-}
-
-/**
- * Fetch-запрос на добавление категории
- */
-function postCategory (whatever, dep, pCat) {
-    if ($(whatever).val() !== '' && checkIfNotExists(whatever)) {
-        fetch(API_URL, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                category: $(whatever).val(),
-                depth: dep,
-                parentCategoryId: pCat
-            })
-        })
-            .then(response => {
-                if (response.status === 201) {
-                    fillProductCategories().then();
-                    $(whatever).val("");
-                }
-            })
-    } else {
-        toastr.error('Такая категория уже есть, либо поле не заполнено!');
-    }
 }
 
 /**

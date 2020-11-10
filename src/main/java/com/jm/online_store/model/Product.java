@@ -18,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -87,6 +88,10 @@ public class Product {
             joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")})
     @Column(name = "email")
     private Set<String> priceChangeSubscribers = new HashSet<>();
+
+//    @ManyToOne
+//    @JoinColumn(name = "category_id")
+//    private Categories categories;
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {
         this.product = product;

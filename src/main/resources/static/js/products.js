@@ -14,7 +14,7 @@ $(function () {
         .then(() => {
         $('#jqxTreeHere').jqxTree('expandAll');
     })
-        .then(() => {
+        .then(() => { // поиск по категориям
             document.querySelector('#searchForCategories').oninput = function () {
                 let val = this.value.trim().toLowerCase();
                 let allItems = document.querySelectorAll('#jqxTreeHere li');
@@ -82,7 +82,7 @@ function toggle(check) {
  * fetch запрос на allProducts для получения всех продуктов из бд
  *
  */
-function getAllProducts() {
+function getAllProducts() { // не нашел, где используется эта функция
     fetch(productRestUrl, {headers: headers}).then(response => response.json())
         .then(allProducts => renderProductsTable(allProducts))
 }
@@ -225,7 +225,7 @@ function handleAddBtn() {
     }
 
     /**
-     * проверяем, что выбранная категория != null
+     * проверяем, что выбранная категория продукта != null
      */
     let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
     if (!selectedCat) {
@@ -247,8 +247,7 @@ function handleAddBtn() {
     })
         .then(function (response) {
             let field;
-            if (response.status !== 200) {  //непонятная логика, мне кажется, что проверять поля нужно до fetch-запроса,
-                                            // а не после того, как на бэк полетел объект с null-полями
+            if (response.status !== 200) {
                 response.text()
                     .then(
                         function (text) {
@@ -322,7 +321,7 @@ function handleAcceptButtonFromModalWindow(event) {
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-product')) {
-        fetch("/rest/products" + "/" + product.id, {
+        fetch("/rest/products/" + product.id, {
             headers: headers,
             method: 'DELETE'
         }).then(response => response.text())
@@ -330,14 +329,34 @@ function handleAcceptButtonFromModalWindow(event) {
             .then(showTable => showAndRefreshHomeTab(showTable))
         $('#productModalWindow').modal('hide')
     } else {
-        fetch("/rest/products/editProduct/", {
-            method: 'PUT',
-            headers: headers,
-            body: JSON.stringify(product)
-        }).then(function (response) {
-            fetchProductsAndRenderTable()
-            $('#productModalWindow').modal('hide')
-        })
+        let newCategory = $('#jqxTreeModal').jqxTree('getSelectedItem');
+        if (!newCategory || currentCategoryNameEdit.localeCompare(newCategory.label) === 0) {
+            fetch("/rest/products/editProduct/", {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(product)
+            }).then(function (response) {
+                fetchProductsAndRenderTable()
+                $('#productModalWindow').modal('hide')
+            })
+        } else {
+            fetch("/rest/products/editProduct/" + getCatId(currentCategoryNameEdit)
+                + "/" + getCatId(newCategory.label), {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(product)
+            }).then(function (response) {
+                fetchProductsAndRenderTable()
+                $('#productModalWindow').modal('hide')
+            })
+        }
+    }
+}
+
+function getCatId(category) {
+    for (let i = 0; i < listOfAll.length; i++) {
+        let tempItem = listOfAll[i];
+        if (category.localeCompare(tempItem.text) === 0) { return tempItem.id; }
     }
 }
 
