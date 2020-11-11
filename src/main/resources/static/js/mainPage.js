@@ -29,20 +29,6 @@ function fetchAndRenderSomeProducts() {
     $('#headerForSomeProductsView').text('Актуальные предложения')
 }
 
-/**
- * event listener for search button
- */
-document.getElementById('mainPageSearchButton').addEventListener('click', handleSearchButton)
-
-/**
- * function that handles search button in headder of main page
- */
-function handleSearchButton() {
-    if ($('#mainPageSearchInput').val() !== '') {
-        window.location.href = "/search/" + $('#mainPageSearchInput').val()
-    }
-}
-
 function getCurrent() {
     fetch('/users/getCurrent')
         .then(response => {

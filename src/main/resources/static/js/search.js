@@ -6,13 +6,13 @@ $(document).ready(function ($) {
 
 });
 
-document.getElementById('mainPageSearchButton').addEventListener('click', handleSearchButton)
+document.getElementById('pageSearchButton').addEventListener('click', handleSearchButton)
 
 /**
  * function handles search button click
  */
 function handleSearchButton(){
-    searchProduct($('#mainPageSearchInput').val())
+    searchProduct($('#pageSearchInput').val())
 }
 
 /**

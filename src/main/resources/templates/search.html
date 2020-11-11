@@ -21,9 +21,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Rate YO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<header th:insert="/blocks/mainHeader :: header"></header>
+<header th:insert="/blocks/header :: header"></header>
 
 <div id="openNewRegistrationModal" class="modal">
     <div class="modal-dialog">
@@ -109,6 +110,7 @@
     </div>
 </main>
 <!-- Optional JavaScript -->
+<script src="../static/js/searchButton.js"></script>
 <script src="../static/js/search.js"></script>
 <script src="/static/js/jquery.hoverIntent.minified.js"></script>
 <!-- Bootstrap core JavaScript

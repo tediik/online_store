@@ -57,3 +57,7 @@ price-list-service:
   path-to-zip-file: uploads/files/prices/pricedaily.zip
 
 spring.profiles.include: 'security'
+
+telegram-bot:
+  name: online_store_stocks_bot
+  token: 1405685131:AAGZesulLZ-qJZwUtVOSI9wD1JH6MJQl4y8
