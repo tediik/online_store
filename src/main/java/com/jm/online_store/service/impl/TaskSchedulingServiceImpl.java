@@ -1,10 +1,11 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.TaskNotFoundException;
 import com.jm.online_store.model.TaskSettings;
-import com.jm.online_store.repository.TaskSettingsRepository;
 import com.jm.online_store.service.interf.PriceListService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
+import com.jm.online_store.service.interf.TaskSettingsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -14,7 +15,6 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ScheduledFuture;
@@ -25,8 +25,8 @@ import java.util.concurrent.ScheduledFuture;
 public class TaskSchedulingServiceImpl implements TaskSchedulingService {
 
     private final TaskScheduler scheduler;
-    private final TaskSettingsRepository taskSettingsRepository;
-    private final StockMailDistributionTask stockMailDistributionTask;
+    private final TaskSettingsService taskSettingsService;
+    private final StockMailDistributionTask stockMailDistribution;
     private final PriceListService priceListService;
     private final Map<Long, ScheduledFuture<?>> jobsMap;
 
@@ -63,10 +63,23 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
      */
     @EventListener({ContextRefreshedEvent.class})
     public void contextRefreshedEvent() {
-        List<TaskSettings> allTasks = taskSettingsRepository.findAll();
-        if (!allTasks.isEmpty()) {
-            addTaskToScheduler(allTasks.get(0), stockMailDistributionTask);
-            addTaskToScheduler(allTasks.get(1), priceListService);
+        TaskSettings stockMailDistributionTask = getTaskByName("stockMailDistribution");
+        TaskSettings dailyPriceCreateTask = getTaskByName("dailyPriceCreate");
+        if (stockMailDistributionTask != null && stockMailDistributionTask.isActive()) {
+            addTaskToScheduler(stockMailDistributionTask, stockMailDistribution);
+        }
+        if (dailyPriceCreateTask != null && dailyPriceCreateTask.isActive()) {
+            addTaskToScheduler(dailyPriceCreateTask, priceListService);
+        }
+
+    }
+
+    private TaskSettings getTaskByName(String taskName) {
+        try {
+            return taskSettingsService.findTaskByName(taskName);
+        } catch (TaskNotFoundException e) {
+            log.error("Task " + taskName + " not found");
+            return null;
         }
     }
 
