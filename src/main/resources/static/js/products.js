@@ -354,9 +354,15 @@ function handleAcceptButtonFromModalWindow(event) {
 }
 
 function getCatId(category) {
-    for (let i = 0; i < listOfAll.length; i++) {
-        let tempItem = listOfAll[i];
-        if (category.localeCompare(tempItem.text) === 0) { return tempItem.id; }
+    if (!category) {
+        return -1;
+    } else {
+        for (let i = 0; i < listOfAll.length; i++) {
+            let tempItem = listOfAll[i];
+            if (category.localeCompare(tempItem.text) === 0) {
+                return tempItem.id;
+            }
+        }
     }
 }
 

@@ -109,13 +109,9 @@ public class ManagerProductsRestController {
      * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
      */
     @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> addProductM(@RequestBody Product product, @PathVariable(name = "id") Long catId) {
+    public ResponseEntity<Product> addProductM(@RequestBody Product product, @PathVariable Long id) {
         productService.saveProduct(product);
-        Categories thisCat = categoriesService.getCategoryById(catId).get();
-        List<Product> thisCatProducts = thisCat.getProducts();
-        thisCatProducts.add(product);
-        thisCat.setProducts(thisCatProducts);
-        categoriesService.saveCategory(thisCat);
+        categoriesService.addToProduct(product, id);
         return ResponseEntity.ok(product);
     }
 
@@ -139,16 +135,12 @@ public class ManagerProductsRestController {
                                                           @PathVariable Long idOld,
                                                           @PathVariable Long idNew) {
         productService.editProduct(product);
-        Categories oldCat = categoriesService.getCategoryById(idOld).get();
-        List<Product> oldList = oldCat.getProducts();
-        oldList.remove(product);
-        oldCat.setProducts(oldList);
-        categoriesService.saveCategory(oldCat);
-        Categories newCat = categoriesService.getCategoryById(idNew).get();
-        List<Product> newList = newCat.getProducts();
-        newList.add(product);
-        newCat.setProducts(newList);
-        categoriesService.saveCategory(newCat);
+        if (idOld == -1) {
+            categoriesService.addToProduct(product, idNew);
+        } else {
+            categoriesService.removeFromProduct(product, idOld);
+            categoriesService.addToProduct(product, idNew);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

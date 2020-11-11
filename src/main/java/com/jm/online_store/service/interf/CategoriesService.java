@@ -1,6 +1,7 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.Product;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -24,4 +25,8 @@ public interface CategoriesService {
     void deleteCategory(Long idCategory);
 
     void saveAll(List<Categories> catList);
+
+    void addToProduct(Product product, Long id);
+
+    void removeFromProduct(Product product, Long id);
 }
