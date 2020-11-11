@@ -105,7 +105,7 @@ public class ManagerProductsRestController {
 
     /**
      * Метод добавляет товар
-     * @param product акиця для добавления //// так товар или АКИЦЯ?))
+     * @param product товар для добавления
      * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
      */
     @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

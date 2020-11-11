@@ -29,11 +29,18 @@ import java.util.List;
 public class ProductCategoriesRestController {
     private final CategoriesService categoriesService;
 
+    /**
+     * Возвращает список всех категорий
+     */
     @GetMapping("/all")
     public ResponseEntity<JSONArray> getAllCategories() {
         return ResponseEntity.ok(categoriesService.getAllCategories());
     }
 
+    /**
+     * Возвращает категорию по id
+     * @param id
+     */
     @GetMapping("/getOne/{id}")
     public ResponseEntity<String> getCategoryNameByProductId(@PathVariable Long id) {
         return ResponseEntity.ok(categoriesService.getCategoryNameByProductId(id));
@@ -47,18 +54,27 @@ public class ProductCategoriesRestController {
         return ResponseEntity.ok(categoriesService.getCategoriesByParentCategoryId(id));
     }
 
+    /**
+     * Сохраняет категорию
+     */
     @PostMapping
     public ResponseEntity<Categories> newCategory(@RequestBody Categories categories) {
         categoriesService.saveCategory(categories);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    /**
+     * Обновление категории
+     */
     @PutMapping
     public ResponseEntity<Categories> updateCategory(@RequestBody Categories categories) {
         categoriesService.saveCategory(categories);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Удаление категории
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Categories> deleteCategory(@PathVariable Long id) {
         categoriesService.deleteCategory(id);
