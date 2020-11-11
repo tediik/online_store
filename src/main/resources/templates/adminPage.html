@@ -24,7 +24,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#Profile"> Настройки профиля  </a>
+                        <a class="nav-link" data-toggle="tab" href="#Profile"> Настройки профиля </a>
                     </li>
 
                 </ul>
@@ -35,19 +35,24 @@
             <div class="col-md-10 bg-light">
 
                 <div class="tab-content">
+
                     <!--Admin-->
                     <div class="tab-pane fade show active" id="Admin" role="tabpanel" aria-labelledby="profile-tab">
 
                         <!--Display logged in user's name-->
                         <nav class="navbar navbar-dark bg-dark">
-                            <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
-                            <a class="navbar-brand"
-                               th:each="authority : ${#authentication.getAuthorities()}"
-                               th:text="${authority.getAuthority()} + ' '"></a>
-                            <a th:href="@{/}" class="btn btn-info ml-auto">Главная</a>
-                            <a th:href="@{/authority/profile}" class="btn btn-primary ml-auto">Профиль</a>
-                            <a th:href="@{/logout}" class="btn btn-warning ml-auto">Выйти</a>
+                            <ul class="navbar-nav">
+                                <li class="navbar-text">
+                                    <span sec:authentication="name"></span> with roles:
+                                    <th:block th:each="authority, iter:${#authentication.getAuthorities()}">
+                                        <span th:if="${authority.getAuthority().startsWith('ROLE_')}"
+                                              th:text="${authority.getAuthority().replaceFirst('ROLE_', '')}"></span>
+                                        <th:block th:if="${!iter.last}">,</th:block>
+                                    </th:block>
+                                </li>
+                            </ul>
                         </nav>
+
                         <!--Display logged in user's name-->
 
                         <div class="card">
@@ -131,7 +136,7 @@
 
                     <!--Профиль-->
                     <div class="tab-pane" id="Profile" role="tabpanel">
-
+                        <div th:insert="/blocks/profile :: profile"></div>
                     </div>
                     <!--Профиль-->
 
