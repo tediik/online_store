@@ -92,7 +92,7 @@ public class Product {
     @Column(name = "email")
     private Set<String> priceChangeSubscribers = new HashSet<>();
 
-    public Product(@NonNull String product, @NonNull Double price, @NonNull Integer amount, @NonNull Double rating, @NonNull String productType) {
+    public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating, @NonNull String productType) {
         this.product = product;
         this.price = price;
         this.amount = amount;

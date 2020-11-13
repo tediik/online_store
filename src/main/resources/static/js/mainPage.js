@@ -5,7 +5,7 @@ $(document).ready(function ($) {
     });
     preventDefaultEventForEnterKeyPress()
     getCurrent();
-    fillCategories();
+    fillMainCategories().then();
     fetchAndRenderPublishedStocks();
     fetchAndRenderPublishedNews();
     fetchAndRenderSomeProducts();
@@ -93,15 +93,13 @@ function close() {
     $(".modal-backdrop.show").hide();
 }
 
-async function fillCategories() {
-
+/**
+ * function fills main categories list at left column
+ */
+async function fillMainCategories() {
     let data = await fetch("/api/categories").then(response => response.json());
-    let subdata = await fetch("/api/categories/sub/7").then(response => response.json());
     let siteMenu = document.getElementById('siteMenu');
-    console.log('data - ' + data[0]);
-    console.log('subdata - ' + is.empty(subdata));
         for (let count in data) {
-        console.log(data[count].category);
         let button = `
             <li class="nav-item">
             <a class="btn btn-outline-light text-black-50 font-weight-bold text-left" href="#" id="button
@@ -110,20 +108,6 @@ async function fillCategories() {
         `;
         $(siteMenu).append(button);
     }
-/*    for (let key in data) {
-        let item = `
-            <li class="nav-item dropright">
-                <a class="btn btn-outline-light dropdown-toggle text-secondary font-weight-normal dropdownbtn" 
-                    href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${key}</a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
-        let subItem = ``;
-        for (let innerKey in data[key]) {
-            subItem += `<a class="dropdown-item" href="/categories/${data[key][innerKey]}">
-                            ${innerKey}</a> `;
-        }
-        item += subItem;
-        $(siteMenu).append(item);
-    }*/
 }
 
 /**

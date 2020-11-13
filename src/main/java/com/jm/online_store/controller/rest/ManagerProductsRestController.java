@@ -166,4 +166,33 @@ public class ManagerProductsRestController {
         productService.restoreProduct(id);
         return ResponseEntity.ok(id);
     }
+
+    /**
+     * Метод, который формирует файл с товарами нужной категории и передаёт обратно на страницу
+     *
+     * @param category нужная категория товаров
+     * @param response запрос для возврата информации
+     * @return запрос с файлом xlsx
+     */
+
+    //todo: метод пригодится при написании функционала https://trello.com/c/nMXsujCF/200-страница-менеджера-создать-раздел-рейтинга-товаров
+
+/*    @GetMapping("/manager/products/report")
+    public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@RequestParam String category, HttpServletResponse response) {
+        try {
+            response.setContentType("text/html; charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            List<Product> products;
+            if (category.equals("all")) {
+                products = productService.findAll();
+            } else {
+                products = productService.findProductsByCategory(category);
+            }
+            response.setHeader("Size", String.valueOf(products.size()));
+            productService.createXlsxDoc(products, category).write(response.getOutputStream());
+            return ResponseEntity.ok().build();
+        } catch (NullPointerException | IOException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }*/
 }

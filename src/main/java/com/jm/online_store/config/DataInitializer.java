@@ -182,6 +182,13 @@ public class DataInitializer {
         customerU.setFavouritesGoods(productSet);
         userService.updateUser(customerU);
 
+        //Создание основного списка(Все товары) избранных товаров
+        FavouritesGroup favouritesGroup = new FavouritesGroup();
+        favouritesGroup.setName("Все товары");
+        favouritesGroup.setProducts(productSet);
+        favouritesGroup.setUser(customerU);
+        favouritesGroupService.save(favouritesGroup);
+
         SubBasket subBasket_1 = new SubBasket();
         subBasket_1.setProduct(product_1);
         subBasket_1.setCount(1);
@@ -195,6 +202,8 @@ public class DataInitializer {
         subBasketList.add(subBasket_2);
         customer.setUserBasket(subBasketList);
         userService.updateUser(customerU);
+
+
 
         Random random = new Random();
         for (int i = 1; i < 20; i++) {
