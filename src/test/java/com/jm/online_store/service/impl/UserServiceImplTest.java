@@ -13,7 +13,6 @@ import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
-import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -200,7 +199,7 @@ public class UserServiceImplTest {
 
         verify(passwordEncoder, times(1)).encode(any());
         verify(roleRepository, times(1)).findByName(any());
-        verify(userRepository, times(1)).save(any());
+        verify(customerRepository, times(1)).save(any());
     }
 
     @Test

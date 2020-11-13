@@ -27,7 +27,6 @@ import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
-import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -74,7 +73,6 @@ import java.util.Set;
 public class DataInitializer {
 
     private final UserService userService;
-    private final CustomerService customerService;
     private final RoleService roleService;
     private final CategoriesService categoriesService;
     private final ProductService productService;

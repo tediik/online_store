@@ -5,6 +5,7 @@ import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.StockRepository;
+import com.jm.online_store.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -32,6 +33,8 @@ public class StockMailDistributionTaskSettingsImplTest {
     @MockBean
     private CustomerRepository customerRepository;
     @MockBean
+    private UserRepository userRepository;
+    @MockBean
     private StockRepository stockRepository;
 
     Customer testCustomer = new Customer();
@@ -58,7 +61,7 @@ public class StockMailDistributionTaskSettingsImplTest {
                 .thenReturn(testStockList);
         when(stockRepository.findById(any()))
                 .thenReturn(Optional.of(testStock));
-        when(customerRepository.findById(any()))
+        when(userRepository.findById(any()))
                 .thenReturn(Optional.of(testCustomer));
         Assert.notNull(customerRepository.findByDayOfWeekForStockSend(any()),"Проверка, что NotNull");
 
