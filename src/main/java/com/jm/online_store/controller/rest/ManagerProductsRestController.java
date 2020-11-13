@@ -7,6 +7,7 @@ import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,11 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,9 +61,9 @@ public class ManagerProductsRestController {
             e.printStackTrace();
         }
         log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
-        if(getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")){
+        if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
             productService.importFromXMLFile(file.getOriginalFilename());
-        }else {
+        } else {
             productService.importFromCSVFile(file.getOriginalFilename());
         }
         return ResponseEntity.ok("success");
@@ -72,7 +75,7 @@ public class ManagerProductsRestController {
      */
     private static String getFileExtension(String myFileName) {
         int index = myFileName.indexOf('.');
-        return index == -1? null : myFileName.substring(index);
+        return index == -1 ? null : myFileName.substring(index);
     }
 
     /**
@@ -149,7 +152,7 @@ public class ManagerProductsRestController {
      * @param id идентификатор товара
      */
     @DeleteMapping(value = "/rest/products/{id}")
-    public ResponseEntity<Long>  deleteProductById(@PathVariable("id") Long id) {
+    public ResponseEntity<Long> deleteProductById(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(id);
     }

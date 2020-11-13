@@ -3,6 +3,7 @@ package com.jm.online_store.repository;
 import com.jm.online_store.model.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,4 +41,10 @@ public interface StockRepository extends JpaRepository<Stock, Long>, JpaSpecific
 
     List<Stock> findByEndDateBefore(LocalDate currentDate);
 
+    /**
+     * Published stocks
+     * @return list of published stocks
+     */
+    @Query("SELECT s FROM  Stock s WHERE s.published=true ")
+    List<Stock> findPublishedStocks();
 }

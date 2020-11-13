@@ -19,6 +19,10 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -74,8 +78,61 @@ public class ProductServiceImpl implements ProductService {
         products.removeIf(Product::isDeleted);
         return products;
     }
+
+
     /**
-     * метод поиска Product по иденификатору.
+     * Метод для создания XLSX файла из списка товаров по категории
+     *
+     * @param products товары
+     * @param category нужная категория
+     * @return Excel-документ
+     */
+    @Override
+    public XSSFWorkbook createXlsxDoc(List<Product> products, String category){
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Products report");
+        int rowCount = 0;
+
+        XSSFRow row = sheet.createRow(rowCount++);
+        XSSFCell cell = row.createCell(0);
+        cell.setCellValue("ID");
+        cell = row.createCell(1);
+        cell.setCellValue("Название");
+        cell = row.createCell(2);
+        cell.setCellValue("Цена");
+        cell = row.createCell(3);
+        cell.setCellValue("Количество");
+        cell = row.createCell(4);
+        cell.setCellValue("Рейтинг");
+        cell = row.createCell(5);
+        cell.setCellValue("Категория");
+
+        for (Product aProduct : products) {
+            row = sheet.createRow(rowCount++);
+
+            cell = row.createCell(0);
+            cell.setCellValue(aProduct.getId());
+
+            cell = row.createCell(1);
+            cell.setCellValue(aProduct.getProduct());
+
+            cell = row.createCell(2);
+            cell.setCellValue(aProduct.getPrice());
+
+            cell = row.createCell(3);
+            cell.setCellValue(aProduct.getAmount());
+
+            cell = row.createCell(4);
+            cell.setCellValue(aProduct.getRating());
+
+            cell = row.createCell(5);
+            cell.setCellValue(category);
+        }
+        return workbook;
+    }
+
+    /**
+     * метод поиска Product по идентификатору.
      *
      * @param productId идентификатор Product
      * @return Optional<Product>
@@ -106,6 +163,13 @@ public class ProductServiceImpl implements ProductService {
     public Long saveProduct(Product product) {
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
+    }
+
+    @Override
+    public void saveAllProducts(List<Product> products) {
+        for (Product product : products) {
+            saveProduct(product);
+        }
     }
 
     /**
@@ -301,7 +365,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод формирующий DTO для передачи на страниу товара
+     * метод формирующий DTO для передачи на страницу товара
      *
      * @param productId
      * @param currentUser

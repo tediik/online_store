@@ -1,8 +1,6 @@
 package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.repository.RoleRepository;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

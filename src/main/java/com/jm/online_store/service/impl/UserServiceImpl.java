@@ -5,12 +5,15 @@ import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
+import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -52,6 +56,7 @@ public class UserServiceImpl implements UserService {
     private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CustomerRepository customerRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
     private final AuthenticationManager authenticationManager;
@@ -64,21 +69,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
-    }
-
-    /**
-     * метод получения пользователей, подписанных на рассылку, по дню недели
-     *
-     * @param dayNumber день недели
-     * @return List<User>
-     */
-    @Override
-    public List<User> findByDayOfWeekForStockSend(byte dayNumber) {
-        List<User> users = userRepository.findByDayOfWeekForStockSend(User.DayOfWeekForStockSend.values()[dayNumber - 1]);
-        if (users.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-        return users;
     }
 
     /**
@@ -117,9 +107,23 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByFirstName(FirstName);
     }
 
+    /**
+     * Метод проверяет существование пользователя в БД.
+     *
+     * @param email - поле по которому проверяем пользователя
+     * @return false -  Если такой пользователь не был найден.
+     * Если же все-таки он был найден, и статус удаления у него есть, и 30 дней истекли.
+     * true -   Если такой пользователь существует и у него отсутствует статус удаления.
+     * Если такой пользователь существует и у него есть статус на удаление, но его 30 дней не истекли.
+     */
     @Override
+    @Transactional
     public boolean isExist(String email) {
-        return userRepository.findByEmail(email).isPresent();
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -168,7 +172,6 @@ public class UserServiceImpl implements UserService {
         updateUser.setLastName(user.getLastName());
         updateUser.setBirthdayDate(user.getBirthdayDate());
         updateUser.setUserGender(user.getUserGender());
-        updateUser.setDayOfWeekForStockSend(user.getDayOfWeekForStockSend());
         return userRepository.save(updateUser);
     }
 
@@ -188,6 +191,7 @@ public class UserServiceImpl implements UserService {
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
     }
+
 
     /**
      * метод удаления пользователя по идентификатору.
@@ -382,8 +386,19 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
         newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
-        log.debug("User with email: {} was saved successfully", newUser.getEmail());
-        userRepository.save(newUser);
+        Set<Role> roles = newUser.getRoles();
+        for (Role role : roles) {
+            if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
+                    userRepository.save(newUser);
+            } else {
+                Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
+                customer.setRoles(newUser.getRoles());
+                customer.setProfilePicture(newUser.getProfilePicture());
+                customerRepository.save(customer);
+            }
+            log.debug("User with email: {} was saved successfully", newUser.getEmail());
+            return;
+        }
     }
 
     /**
@@ -428,19 +443,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Service method to cancel subscription
-     *
-     * @param id
-     */
-    @Override
-    @Transactional
-    public void cancelSubscription(Long id) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        user.setDayOfWeekForStockSend(null);
-        updateUserProfile(user);
-    }
-
-    /**
      * Метод сервиса для добавления нового адреса пользователю
      *
      * @param user
@@ -482,7 +484,6 @@ public class UserServiceImpl implements UserService {
      */
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.debug("getCurrentLoggedInUser.auth: {} ", auth.getPrincipal().toString());
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;

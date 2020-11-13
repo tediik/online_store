@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="/static/css/managerPage.css" rel="stylesheet" type="text/css">
     <link href="/static/css/jqx.base.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <!--    summernote-->
@@ -12,18 +13,11 @@
     <!--    Toastr css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
           integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" />
+    <link href="/static/css/mainPage.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #7373ee">
+<header th:insert="/blocks/cabinetHeader :: header"></header>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-            </ul>
-        </div>
-        <div class="navbar-text"><a th:href="@{/logout}">Выйти</a></div>
-    </nav>
-</header>
 <div id="infoDiv">
 </div>
 <div class="container-fluid">
@@ -375,6 +369,7 @@
 <script src="/static/js/managerSettingsPage.js"></script>
 <script src="/static/js/managerPriceChangeSetting.js"></script>
 <script src="/static/js/managerPriceListCreate.js"></script>
+<script src="../static/js/searchButton.js"></script>
 <script src="/static/js/managerCategoriesSetting.js"></script>
 <!--<script src="/static/js/is.js"></script>-->
 <script src="/static/js/managerProductCategorieCRUD.js"></script>

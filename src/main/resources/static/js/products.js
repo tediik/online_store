@@ -71,7 +71,7 @@ showAndRefreshNotDeleteHomeTab()
  * @param check
  */
 function toggle(check) {
-    if(!check.checked) {
+    if (!check.checked) {
         showAndRefreshHomeTab()
     } else {
         showAndRefreshNotDeleteHomeTab()
@@ -284,9 +284,10 @@ function handleAddBtn() {
  * Добавление товара из файла
  */
 $('#inputFileSubmit').click(importProductsFromFile)
-function importProductsFromFile(){
 
-    let  fileData = new FormData();
+function importProductsFromFile() {
+
+    let fileData = new FormData();
     fileData.append('file', $('#file')[0].files[0]);
 
     $.ajax({
@@ -295,7 +296,7 @@ function importProductsFromFile(){
         processData: false,
         contentType: false,
         type: 'POST',
-        success: function(data){
+        success: function (data) {
             showAndRefreshHomeTab()
             toastr.info('Импорт товаров завершен!', {timeOut: 5000})
         },

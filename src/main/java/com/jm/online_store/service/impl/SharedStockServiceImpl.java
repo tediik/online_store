@@ -1,7 +1,7 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SharedStock;
+import com.jm.online_store.model.User;
 import com.jm.online_store.repository.SharedStockRepository;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
@@ -27,10 +27,12 @@ public class SharedStockServiceImpl implements SharedStockService {
     @Override
     @Transactional
     public SharedStock addSharedStock(SharedStock sharedStock) {
+        User user = null != sharedStock.getUser() ?
+                userService.findById(sharedStock.getUser().getId()).get() : null;
         SharedStock sharedStockToAdd = SharedStock.builder()
                 .stock(stockService.findStockById(sharedStock.getStock().getId()))
                 .socialNetworkName(sharedStock.getSocialNetworkName())
-                .user(userService.findById(sharedStock.getUser().getId()).orElseThrow(UserNotFoundException::new))
+                .user(user)
                 .build();
         return sharedStockRepository.save(sharedStockToAdd);
     }

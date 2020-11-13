@@ -24,10 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -136,7 +135,6 @@ public class ManagerRestController {
                     .withOrderedResults(true)
                     .build();
             writer.write(orderService.findAllSalesBetween(startDate, endDate));
-
             return ResponseEntity.ok().build();
         } catch (OrdersNotFoundException e) {
             log.debug("csv file was successfully sent");

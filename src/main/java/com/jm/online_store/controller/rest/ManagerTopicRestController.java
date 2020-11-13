@@ -47,7 +47,7 @@ public class ManagerTopicRestController {
     @PostMapping
     public ResponseEntity<Topic> createTopic(@RequestBody Topic topic){
         if (topicService.existsByTopicName(topic.getTopicName())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.ok(topicService.create(topic));
     }
@@ -62,6 +62,9 @@ public class ManagerTopicRestController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<Topic> editTopic(@PathVariable(name = "id") long id, @RequestBody Topic topic) {
+        if (topicService.existsByTopicName(topic.getTopicName())) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        }
         if(!topicService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

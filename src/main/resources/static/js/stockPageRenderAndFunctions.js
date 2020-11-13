@@ -4,6 +4,7 @@
 let myHeaders = new Headers()
 let sharedStockApiUrl = "/manager/api/sharedStock"
 let stockApiUrl = "/manager/api/stock"
+let stockImgUrl = "../../uploads/images/stocks/"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), number: 0, last: false};
 
@@ -55,6 +56,19 @@ function checkFields(event) {
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
+        let filename = "default.jpg";
+        try {
+            let tempfilename = $('#fileImgInput')[0].files[0].name;
+            if (tempfilename.indexOf('fakepath') === -1) {
+                filename = tempfilename;
+            } else {
+                filename = $(tempfilename).val().replace(/C:\\fakepath\\/i, '')
+                invalidModalField("Ошибка загрузки. Повторите выбор файла", stockImgUrl)
+            }
+        } catch (err) {
+            console.log("name of file not found");
+        }
+
         if (stockTitle.value === '') {
             invalidModalField("Заполните заголовок акции", stockTitle)
         } else if (stockText.value === "") {
@@ -62,7 +76,7 @@ function checkFields(event) {
         } else if (startDate.value === '') {
             invalidModalField("Заполните начальную дату", startDate)
         } else {
-            handleSaveChangesButton(event)
+            handleSaveChangesButton(event, filename)
         }
     }
 }
@@ -158,8 +172,14 @@ function handleDeleteButtonClick(event) {
 /**
  * modal window "save changes" button handler
  */
-function handleSaveChangesButton() {
-    let startDate = $('#startDate').val()
+function handleSaveChangesButton(event, file_name_stockImg) {
+    let startDate = $('#startDate').val();
+    let stockPublished;
+    if (document.getElementById('published').checked) {
+        stockPublished = "true";
+    } else {
+        stockPublished = "false";
+    }
     startDate = moment(startDate).format("YYYY-MM-DD")
     let endDate = ""
     if ($('#endDate').val() !== null || $('#endDate').val() !== "") {
@@ -172,15 +192,14 @@ function handleSaveChangesButton() {
 
     const stock = {
         id: $('#stockId').val(),
-        stockImg: $('#stockImg').val(),
+        stockImg: file_name_stockImg,
         stockTitle: $('#stockTitle').val(),
         stockText: $('#stockText').summernote('code'),
         startDate: startDate,
         endDate: endDate,
-        stock: $('#stockTimeZone').val(),
+        published: stockPublished
     }
     let method = (stock.id !== '' ? 'PUT' : 'POST')
-
     fetchStock(stock, method)
 
     function fetchStock(stock, method) {
@@ -217,12 +236,26 @@ function handleEditButtonClick(event) {
         $('#stockText').summernote('code', stockText)
         $("#startDate").val(stock.startDate)
         $("#endDate").val(stock.endDate)
+        $("#published").prop('checked', stock.published)
     }
 
     fetch(stockApiUrl + `/${stockId}`, {
         method: 'GET',
         headers: myHeaders
     }).then(response => response.json()).then(stock => renderModalWindowEdit(stock))
+}
+
+/**
+ * Обработка чекбокса #published
+ * если галка стоит, то установить published = true
+ * и наоборот
+ */
+function chekboxPublished(o) {
+    if (o.checked === true) {
+        $("#published").val(true);
+    } else {
+        $("#published").val(false);
+    }
 }
 
 /**
@@ -269,7 +302,15 @@ function renderStockList(data) {
     function render(sharedStocks) {
         let sharedStocksQuantity = sharedStocks.length
         for (let i = 0; i < stocks.length; i++) {
-            let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000)
+            let stockId = stocks[i].id
+            let stockImgToRender = "../../uploads/images/stocks/" + stocks[i].stockImg
+            let rating = Math.round(stocks[i].sharedStocks.length / sharedStocksQuantity * 1000);
+            let publish = stocks[i].published;
+            if (publish === true) {
+                publish = "✔"
+            } else {
+                publish = "✘"
+            }
             let endDate = stocks[i].endDate
             if (endDate === null) {
                 endDate = "бессрочно"
@@ -280,27 +321,38 @@ function renderStockList(data) {
             row.append(`<div class=\"card mb-3\">
                         <div class=\"row no-gutters\">
                             <div class=\"col-md-4\">
-                                 <img class=\"card-img\" src=\"../static/img/stocks/1.jpg\" width=\"250\">
+                                 <img class="card-img" src=${stockImgToRender} width=\"250\" alt="Ошибка. Перезагрузите фото акции">
+                                 <p></p>
+                                 <p id="renderedStockId" class="stockId">ID акции: ${stockId}</p>
+                                    <p id="rating" class="rating">Рейтинг: ${rating}</p>
+                                    <div>Срок проведения акции: <br>
+                                    <p class=\"card-date\">
+                                         с ${moment(stocks[i].startDate).format("DD MMM")}
+                                         по ${endDate}
+                                    </p> 
+                                    </div>
+                                    <p>Опубликовано <br> на гл.странице:    
+                                     ${publish} </p>
+                                    
                             </div>
                             <div class=\"col-md-6\">
                                 <div class=\"card-body\">
                                     <h3 class='card-title'>${stocks[i].stockTitle}</h3>
                                     <p class=\"card-text\">${stocks[i].stockText}</p>
-                                    <p id="rating" class="rating">Рейтинг: ${rating}</p>
-                                    <p>Срок проведения акции: </p>
-                                    <div class=\"card-date\">
-                                         с ${moment(stocks[i].startDate).format("DD MMM")}
-                                         по ${endDate}
-                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 flex-row align-items-center">
-                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                            <div class="col-md-2 flex-row align-items-right">
+                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" 
+                                            aria-orientation="vertical">
                                     <button data-toggle-id="edit-stock" class="btn btn-info" data-toggle='modal'
-                                            data-target='#stockModal' id="editButton" data-stock-id="${stocks[i].id}">Edit</button>
+                                            data-target='#stockModal' id="editButton" 
+                                            data-stock-id="${stocks[i].id}">Изменить</button>
                                 </div>
-                                <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                                    <button data-toggle-id="delete-stock" class="btn btn-danger" id="deleteButton" data-stock-id="${stocks[i].id}">Delete</button>
+                                <div  class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" 
+                                            aria-orientation="vertical">
+                                    <button data-toggle-id="delete-stock" class="btn btn-danger" 
+                                            id="deleteButton" 
+                                            data-stock-id="${stocks[i].id}">Удалить</button>
                                 </div>
                             </div>
                         </div>

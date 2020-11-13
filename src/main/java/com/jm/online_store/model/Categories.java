@@ -25,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Categories {//очень хочется убрать множественное число
+public class Categories {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

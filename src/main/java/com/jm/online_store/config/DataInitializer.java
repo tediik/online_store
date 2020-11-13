@@ -1,15 +1,20 @@
 package com.jm.online_store.config;
 
+import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Description;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.Review;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SentStock;
+import com.jm.online_store.model.SharedNews;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
@@ -22,17 +27,22 @@ import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.CustomerService;
+import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.RoleService;
 import com.jm.online_store.service.interf.SentStockService;
+import com.jm.online_store.service.interf.SharedNewsService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.TaskSettingsService;
 import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.TopicService;
+import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -64,6 +74,7 @@ import java.util.Set;
 public class DataInitializer {
 
     private final UserService userService;
+    private final CustomerService customerService;
     private final RoleService roleService;
     private final CategoriesService categoriesService;
     private final ProductService productService;
@@ -79,7 +90,11 @@ public class DataInitializer {
     private final CommonSettingsService commonSettingsService;
     private final TopicService topicService;
     private final CommentService commentService;
+    private final FavouritesGroupService favouritesGroupService;
     private final TopicsCategoryService topicsCategoryService;
+    private final ReviewService reviewService;
+    private final SharedNewsService sharedNewsService;
+
 
     /**
      * Основной метод для заполнения базы данных.
@@ -94,13 +109,15 @@ public class DataInitializer {
         ordersInit();
         stockInit();
         sharedStockInit();
+        sharedNewsInit();
         addressInit();
-//        sentStockInit();  // метод нужен только для тестирования рассылки акций
-//        paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
+//      sentStockInit();  // метод нужен только для тестирования рассылки акций
+//      paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
         taskSettingsInit();
         commonSettingsInit();
         feedbackTopicsInit();
         commentsInit();
+        reviewsInit();
     }
 
     /**
@@ -120,7 +137,7 @@ public class DataInitializer {
 
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
-        User customer = new User("customer@mail.ru", "1");
+        Customer customer = new Customer("customer@mail.ru", "1");
         User service = new User("service@mail.ru", "1");
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
@@ -163,9 +180,9 @@ public class DataInitializer {
         productSet.add(product_2);
         productSet.add(product_3);
 
-        customer = userService.findByEmail("customer@mail.ru").get();
-        customer.setFavouritesGoods(productSet);
-        userService.updateUser(customer);
+        User customerU = userService.findByEmail("customer@mail.ru").get();
+        customerU.setFavouritesGoods(productSet);
+        userService.updateUser(customerU);
 
         SubBasket subBasket_1 = new SubBasket();
         subBasket_1.setProduct(product_1);
@@ -179,13 +196,15 @@ public class DataInitializer {
         subBasketList.add(subBasket_1);
         subBasketList.add(subBasket_2);
         customer.setUserBasket(subBasketList);
-        userService.updateUser(customer);
+        userService.updateUser(customerU);
 
         Random random = new Random();
         for (int i = 1; i < 20; i++) {
-            userService.addUser(new User("customer" + i + "@mail.ru",
-                    User.DayOfWeekForStockSend.values()[random.nextInt(6)],
-                    String.valueOf(i)));
+            Customer customer1 = new Customer("customer" + i + "@mail.ru",
+                    DayOfWeekForStockSend.values()[random.nextInt(6)],
+                    String.valueOf(i));
+            customer1.setRoles(customerRoles);
+            userService.addUser(customer1);
         }
     }
 
@@ -194,7 +213,7 @@ public class DataInitializer {
      */
     private void newsInit() {
         News firstNews = News.builder()
-                .title("Акция от XP-Pen: Выигай обучение в Skillbox!")
+                .title("Акция от XP-Pen: Выиграй обучение в Skillbox!")
                 .anons("Не пропустите розыгрыш потрясающих призов.")
                 .fullText("<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " font-family: &quot;PT Sans&quot;, Arial, sans-serif;\"><b style=\"color: rgb(255, 0, 0);" +
@@ -819,7 +838,7 @@ public class DataInitializer {
                         "2</span><span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
                         " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">&nbsp;–" +
                         " выбор за вами!</span><br>")
-
+                .published(true)
                 .build();
 
         Stock secondStock = Stock.builder()
@@ -888,6 +907,7 @@ public class DataInitializer {
                         "не вправе принимать участие в акции.</span><br style=\"color: rgb(51, 51, 51); " +
                         "font-family: &quot;PT Sans&quot;, Helvetica, Arial, sans-serif; font-size: 18px;" +
                         " letter-spacing: 0.23px; text-align: start;\">")
+                .published(true)
                 .build();
 
         Stock thirdStock = Stock.builder()
@@ -941,6 +961,7 @@ public class DataInitializer {
                         "<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica," +
                         " Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
                         "&nbsp;– выбор за вами!</span>")
+                .published(true)
                 .build();
 
         Stock forthStock = Stock.builder()
@@ -951,6 +972,7 @@ public class DataInitializer {
                         " Эта техника предлагает множество программ для деликатной и эффективной стирки и сушки." +
                         " Оформите беспроцентный кредит на бытовую технику Whirlpool или получите 10% от стоимости" +
                         " покупки на бонусную карту – выбор за вами!")
+                .published(true)
                 .build();
 
         Stock fifthStock = Stock.builder()
@@ -962,6 +984,7 @@ public class DataInitializer {
                         " Закажи компьютер с Windows 10. Забери товар и получи промокод на Kaspersky Internet Security" +
                         " за 990 рублей на свой Email и в личный кабинет в течение трёх дней после получения заказа." +
                         " Обязательно используй Бонусную карту – её можно оформить прямо на сайте.")
+                .published(false)
                 .build();
 
         Stock sixthStock = Stock.builder()
@@ -973,6 +996,7 @@ public class DataInitializer {
                         " Активируй свою скидку на странице товара." +
                         " Товары из акционного списка отмечены специальным знаком \"Требуй скидку!\" на сайте." +
                         " На товары из акционного перечня распространяются правила программы лояльности.")
+                .published(false)
                 .build();
 
         stockService.addStock(firstStock);
@@ -1001,7 +1025,29 @@ public class DataInitializer {
                 sharedStockService.addSharedStock(sharedStock);
             }
         }
+    }
 
+    /**
+     * Метод первичного заполнения новостей, которыми поделились
+     */
+    public void sharedNewsInit() {
+        String[] socialNetworkNames = {"facebook", "vk", "twitter"};
+        List<News> news = newsService.findAll();//10
+        List<User> users = userService.findAll();//23
+        Long firstNumber = news.get(0).getId();//
+        Long lastNumber = news.get(news.size() - 1).getId();//10
+        Random random = new Random();
+        for (News oneNews : news) {
+            for (User user : users) {
+                long generatedLongForSNews = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
+                SharedNews sharedNews = SharedNews.builder()
+                        .user(user)
+                        .news(newsService.findById(generatedLongForSNews))
+                        .socialNetworkName(socialNetworkNames[random.nextInt(socialNetworkNames.length)])
+                        .build();
+                sharedNewsService.addSharedNews(sharedNews);
+            }
+        }
     }
 
     /**
@@ -1234,5 +1280,50 @@ public class DataInitializer {
         commentService.addCommentInit(comment1);
         commentService.addCommentInit(comment2);
         commentService.addCommentInit(comment3);
+    }
+
+    /**
+     * Init method for review
+     */
+    public void reviewsInit() {
+
+        Review review1 = new Review();
+        Review review2 = new Review();
+        Review review3 = new Review();
+
+        review1.setId(1L);
+        review2.setId(2L);
+        review3.setId(3L);
+        review1.setReviewDate(LocalDateTime.now());
+        review2.setReviewDate(LocalDateTime.now());
+        review3.setReviewDate(LocalDateTime.now());
+        review1.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        review2.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        review3.setCustomer(userService.findById(3L).stream().findFirst().orElse(null));
+        review1.setProductId(1L);
+        review2.setProductId(1L);
+        review3.setProductId(1L);
+        review1.setContent("Пожалуй это лучший компьютер который я когда либо видел и держал в руках, надеюсь он сослужит" +
+                " мне хорошую службу.\n" +
+                "Перед покупкой смотрел на конфигурацию с i9 и 5500m, в итоге по опыту прошлых поколений сделал выбор в " +
+                "пользу i7 и 5300m и не прогадал. В моих задачах производительность идентичная MacBook с i9 но более " +
+                "старшая модель при высоких нагрузках нагревается и сбрасывает частоты что у данной модели не обнаружено," +
+                " и в итоге по сравнению с ноутбуком товарища c i9 5500m Xcode работает у меня стабильней, и " +
+                "производительность на одно ядро выше, и работает он куда тише.");
+        review2.setContent("По производительности большой разницы для меня нет.Проект собирается плюс минус так же. " +
+                "Только теперь температура во время сборки доходит максимум до 65 градусов вместо 80-85.Ноутбук стал " +
+                "немного больше по габаритам, но в сумку от пятнашки вошел.Звук вроде хороший, качество экрана особо " +
+                "без изменений. Не понятно достают ли клавиши до экрана когда ноутбук лежит в сумке, вроде отметин " +
+                "пока на нем нет. На старом доставали и царапали покрытие экрана. Можно выкинуть внешнюю клавиатуру. " +
+                "Мышь теперь то же не нужна.");
+        review3.setContent("Для меня важно было найти баланс между решением рабочих задач (разработка на Java), " +
+                "любовью к потреблению контента (YouTube, PornoHub, Горячие мамочки) и периодическими поездками. " +
+                "Производительная начинка вкупе с большой диагональю экрана и автономностью работы у этой прошки " +
+                "полностью меня устроили. Надеюсь, Apple докажет и в этот раз свою состоятельность, и менять мак в связи" +
+                "с не актульностью придется не раньше 2025)");
+
+        reviewService.addReviewInit(review1);
+        reviewService.addReviewInit(review2);
+        reviewService.addReviewInit(review3);
     }
 }

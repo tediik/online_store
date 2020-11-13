@@ -1,0 +1,13 @@
+<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <rect fill="none" height="62" width="62" y="-1" x="-1"/>
+        <g display="none">
+            <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+        </g>
+        <ellipse ry="5.37035" rx="5.37035" cy="12.0731" cx="37.62842" stroke-width="1.5" fill="#696969"/>
+        <ellipse ry="5.37035" rx="5.37035" cy="30.00595" cx="15.62151" stroke-width="1.5" fill="#696969"/>
+        <ellipse ry="5.37035" rx="5.37035" cy="46.67256" cx="42.28809" stroke-width="1.5" fill="#696969"/>
+        <line y2="11.30231" x2="38.39922" y1="29.4504" x1="16.91781" stroke-width="1.5" stroke="#696969" fill="none"/>
+        <line y2="30.56151" x2="17.28818" y1="47.22811" x1="42.84365" stroke-width="1.5" stroke="#696969" fill="none"/>
+    </g>
+</svg>

@@ -6,6 +6,8 @@ $(document).ready(function ($) {
     preventDefaultEventForEnterKeyPress()
     getCurrent();
     fillCategories();
+    fetchAndRenderPublishedStocks();
+    fetchAndRenderPublishedNews();
     fetchAndRenderSomeProducts();
 });
 
@@ -25,21 +27,6 @@ function preventDefaultEventForEnterKeyPress() {
 function fetchAndRenderSomeProducts() {
     fetch("/api/products").then(response => response.json()).then(data => fillSomeProducts(data));
     $('#headerForSomeProductsView').text('Актуальные предложения')
-
-}
-
-/**
- * event listener for search button
- */
-document.getElementById('mainPageSearchButton').addEventListener('click', handleSearchButton)
-
-/**
- * function that handles search button in headder of main page
- */
-function handleSearchButton() {
-    if ($('#mainPageSearchInput').val() !== '') {
-        window.location.href = "/search/" + $('#mainPageSearchInput').val()
-    }
 }
 
 function getCurrent() {
@@ -183,6 +170,101 @@ function fillSomeProducts(data) {
             });
         }
     } else {
-        prodsView.innerHTML = 'Продуктов не найденно'
+        prodsView.innerHTML = 'Ожидайте новые продукты'
+    }
+}
+
+/**
+ * function that renders main page with publishedStocks
+ * @param data - stocks list
+ */
+function fetchAndRenderPublishedStocks() {
+    fetch("/api/publishedstocks")
+        .then(response => response.json())
+        .then(data => fillPublishedStocks(data))
+}
+
+/**
+ * function that fills main page with publishedStocks
+ * @param data - products list
+ */
+function fillPublishedStocks(data) {
+    if (data !== 'error') {
+        let item = ``;
+        let stockCarouselIndicator = ``;
+        let stockCarouselItem = ``;
+
+        for (let key = 0; key < data.length; key++) {
+            let li = key + 1;
+            stockCarouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
+            $("#stockCarousel-indicators").append(stockCarouselIndicator);
+            stockCarouselItem = `
+                 <div class="carousel-item carousel-itemWithStock">
+                        <img class="next-slide"
+                             src="/uploads/images/stocks/${data[key].stockImg}" 
+                             onerror="if (this.src != '/uploads/images/stocks/default.jpg')
+                                 this.src = '/uploads/images/stocks/default.jpg';">
+                        <div class="container">
+                            <div class="carousel-caption">
+                                <p><a class="btn btn-secondary btn-carousel" href="global/stockDetails/${data[key].id}" 
+                                role="button">Подробнее &raquo;</a></p>
+                            </div>
+                             <div class = "card-text stockTitle">
+                                <h5>${data[key].stockTitle}</h5>
+                             </div>
+                        </div>
+            </div>`;
+            $("#stockCarousel-inner").append(stockCarouselItem);
+        }
+    } else {
+        console.log('Нет опубликованных акций');
+    }
+}
+
+
+/**
+ * function that renders main page with publishedNews
+ * @param data - stocks list
+ */
+function fetchAndRenderPublishedNews() {
+    fetch("/api/publishednews")
+        .then(response => response.json())
+        .then(data => fillPublishedNews(data))
+}
+
+/**
+ * function that fills main page with publishedNews
+ * @param data - products list
+ */
+function fillPublishedNews(data) {
+    if (data !== 'error') {
+        let carouselIndicator = ``;
+        let carouselItem = ``;
+
+        for (let key = 0; key < data.length; key++) {
+            let li = key + 1;
+            carouselIndicator = `<li data-target="#carouselExampleIndicators" data-slide-to="${li}"></li>`;
+            $("#newsCarousel-indicators").append(carouselIndicator);
+
+            carouselItem = `
+                 <div class="carousel-item carousel-itemWithNews">
+                        <img class="next-slide"
+                             src="/uploads/images/news/${key}.jpg" 
+                             onerror="if (this.src != '/uploads/images/news/defnews.jpg')
+                                 this.src = '/uploads/images/news/defnews.jpg';">
+                        <div class="container">
+                            <div class="carousel-caption">
+                                <p><a class="btn btn-secondary btn-carousel" href="news/${data[key].id}" 
+                                role="button">Подробнее &raquo;</a></p>
+                            </div>
+                             <div class = "card-text newsTitle">
+                                <h5>${data[key].title}</h5>
+                             </div>
+                        </div>
+            </div>`;
+            $("#newsCarousel-inner").append(carouselItem);
+        }
+    } else {
+        console.log("No news to view");
     }
 }

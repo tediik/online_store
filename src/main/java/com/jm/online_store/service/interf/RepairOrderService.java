@@ -1,8 +1,11 @@
 package com.jm.online_store.service.interf;
 
+import com.itextpdf.text.DocumentException;
 import com.jm.online_store.enums.RepairOrderType;
 import com.jm.online_store.model.RepairOrder;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 public interface RepairOrderService {
@@ -34,4 +37,6 @@ public interface RepairOrderService {
     List<RepairOrderType> findAllRepairOrderType();
 
     RepairOrder findRepairOrderByIdAndTelephoneNumber(Long id, String telephoneNumber);
+
+    void createPdfWorkOrder(RepairOrder repairOrder, HttpServletResponse response) throws IOException, DocumentException;
 }
