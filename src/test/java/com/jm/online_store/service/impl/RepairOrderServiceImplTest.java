@@ -114,10 +114,6 @@ public class RepairOrderServiceImplTest {
         repairOrderList.add(repairOrder4);
         repairOrderList.add(repairOrder5);
         repairOrderList.add(repairOrder6);
-
-
-
-
     }
 
     @Test
@@ -127,7 +123,6 @@ public class RepairOrderServiceImplTest {
         assertEquals(6, list.size());
         verify(repairOrderRepository, times(1)).findAll();
     }
-
 
     @Test
     void getAllAcceptedTest() {
