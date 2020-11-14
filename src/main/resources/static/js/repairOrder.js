@@ -153,7 +153,7 @@ function getAllOrdersWithoutCanceled() {
     fetch('service/findAllWithoutCanceled')
         .then((res) => res.json())
         .then((data) => {
-            renderRepairOrder(data, 'all_all_repairOrders')
+            renderRepairOrder(data, 'all_repairOrders')
         })
 }
 
