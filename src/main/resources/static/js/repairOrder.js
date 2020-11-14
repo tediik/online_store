@@ -147,6 +147,17 @@ function getAllRepairOrders() {
 }
 
 /**
+ * Функция возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ.
+ */
+function getAllOrdersWithoutCanceled() {
+    fetch('service/findAllWithoutCanceled')
+        .then((res) => res.json())
+        .then((data) => {
+            renderRepairOrder(data, 'all_all_repairOrders')
+        })
+}
+
+/**
  * Функция получает все принятые заказы на ремонт
  */
 function getAcceptedRepairOrders() {
