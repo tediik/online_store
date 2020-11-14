@@ -105,7 +105,7 @@ public class RepairOrderRestController {
     }
 
     /**
-     * Метод возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ. Сортирует по дате, от нового заказа к старому.
+     * Метод возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ.
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
     @GetMapping("service/findAllWithoutCanceled")
