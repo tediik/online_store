@@ -37,6 +37,7 @@ public class RepairOrderServiceImplTest {
     private RepairOrderService repairOrderService;
 
     List<RepairOrder> repairOrderList;
+    List<RepairOrder> repairOrdersWithoutCanceled;
     RepairOrder repairOrder1;
     RepairOrder repairOrder2;
     RepairOrder repairOrder3;
@@ -114,6 +115,16 @@ public class RepairOrderServiceImplTest {
         repairOrderList.add(repairOrder4);
         repairOrderList.add(repairOrder5);
         repairOrderList.add(repairOrder6);
+
+        repairOrdersWithoutCanceled = new ArrayList<>();
+        repairOrderList = new ArrayList<>();
+        repairOrderList.add(repairOrder1);
+        repairOrderList.add(repairOrder2);
+        repairOrderList.add(repairOrder3);
+        repairOrderList.add(repairOrder4);
+        repairOrderList.add(repairOrder5);
+
+
     }
 
     @Test
@@ -122,6 +133,14 @@ public class RepairOrderServiceImplTest {
         List<RepairOrder> list = repairOrderService.findAll();
         assertEquals(6, list.size());
         verify(repairOrderRepository, times(1)).findAll();
+    }
+
+    @Test
+    void findAllWithoutCanceled() {
+        when(repairOrderRepository.findAllWithoutCanceled()).thenReturn(repairOrdersWithoutCanceled);
+        List<RepairOrder> list = repairOrderService.findAllWithoutCanceled();
+        assertEquals(5, list.size());
+        verify(repairOrderRepository, times(1)).findAllWithoutCanceled();
     }
 
     @Test
