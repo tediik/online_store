@@ -1,11 +1,70 @@
+// документация к jqxtree -
+// https://www.jqwidgets.com/jquery-widgets-documentation/documentation/jqxtree/jquery-tree-getting-started.htm?search=
+const API_CATEGORIES_URL = "/api/categories/"
+let listOfAll
+let currentCategoryIdAdd;
+let currentCategoryNameEdit;
 let productRestUrl = "/rest/products/allProducts"
-let categoryNow = "all"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
-showAndRefreshNotDeleteHomeTab()
+$(function () {
+    fillProductCategoriesIn('#jqxTreeHere')
+        .then(() => {
+        $('#jqxTreeHere').jqxTree('expandAll');
+    })
+        .then(() => { // поиск по категориям
+            document.querySelector('#searchForCategories').oninput = function () {
+                let val = this.value.trim().toLowerCase();
+                let allItems = document.querySelectorAll('#jqxTreeHere li');
+                if (val != '') {
+                    allItems.forEach(function (element) {
+                        if (element.innerText.toLowerCase().search(val) == -1) {
+                            element.classList.add('hide');
+                        } else {
+                            element.classList.remove('hide');
+                        }
+                    })
+                } else {
+                    allItems.forEach(function (element) {
+                        element.classList.remove('hide');
+                    });
+                }
+            }
+        });
+});
 
+// build hierarchical structure
+async function fillProductCategoriesIn(htmlId) {
+    listOfAll = await fetch(API_CATEGORIES_URL + "all").then(response => response.json());
+    let source = [];
+    let items = [];
+    for (let i = 0; i < listOfAll.length; i++) {
+        let item = listOfAll[i];
+        let label = item.text;
+        let thisParentId = item.parentId;
+        let id = item.id;
+        if (items[thisParentId]) {
+            let tmpItem = { parentId: thisParentId, label: label, item: item };
+            if (!items[thisParentId].items) {
+                items[thisParentId].items = [];
+            }
+            items[thisParentId].items[items[thisParentId].items.length] = tmpItem;
+            items[id] = tmpItem;
+        }
+        else {
+            items[id] = { parentId: thisParentId, label: label, item: item };
+            source[id] = items[id];
+        }
+    }
+    $(htmlId).jqxTree({
+        source: source,
+        height: "300px"
+    });
+}
+
+showAndRefreshNotDeleteHomeTab()
 
 /**
  * Функция обработки действий чекбокса
@@ -23,7 +82,7 @@ function toggle(check) {
  * fetch запрос на allProducts для получения всех продуктов из бд
  *
  */
-function getAllProducts() {
+function getAllProducts() { // не нашел, где используется эта функция
     fetch(productRestUrl, {headers: headers}).then(response => response.json())
         .then(allProducts => renderProductsTable(allProducts))
 }
@@ -40,6 +99,8 @@ function editModalWindowRender(product) {
     $('#productInputModal').val(product.product).prop('readonly', false)
     $('#productPriceInputModal').val(product.price).prop('readonly', false)
     $('#productAmountInputModal').val(product.amount).prop('readonly', false)
+    $('#productCategoryValueModal').val(currentCategoryNameEdit);
+    fillProductCategoriesIn('#jqxTreeModal').then();
 }
 
 /**
@@ -66,7 +127,15 @@ function handleEditButton(event) {
         fetch("/rest/products/" + productId, {headers: headers}),
     ])
         .then(([response]) => Promise.all([response.json()]))
-        .then(([productToEdit]) => editModalWindowRender(productToEdit))
+        .then(([productToEdit]) => {
+            fetch(API_CATEGORIES_URL + 'getOne/' + productId)
+                .then(promiseResult => {
+                    return promiseResult.text()
+                })
+                .then(responseResult => {
+                    currentCategoryNameEdit = "" + responseResult;
+                    editModalWindowRender(productToEdit)});
+                });
 }
 
 /**
@@ -84,16 +153,16 @@ function handleDeleteButton(productId) {
  * @param productId
  */
 function handleRestoreButton(productId) {
-    fetch("/rest/products/restoredeleted" + "/" + productId, {
+    fetch("/rest/products/restoredeleted/" + productId, {
         headers: headers,
         method: 'POST'
     }).then(response => response.text())
-        .then(restoreProduct => console.log('User: ' + restoreProduct + ' was successfully restored'))
+        .then(restoreProduct => console.log('Product: ' + restoreProduct + ' was successfully restored'))
         .then(showTable => showAndRefreshHomeTab(showTable))
 }
 
 /**
- * функция делает активным таблицу с продуктами
+ * функция делает активной таблицу с продуктами
  * и обновляет в ней данные
  */
 function showAndRefreshHomeTab() {
@@ -105,7 +174,7 @@ function showAndRefreshHomeTab() {
 }
 
 /**
- * функция делает активным таблицу без
+ * функция делает активной таблицу без
  * удаленных продуктов
  */
 function showAndRefreshNotDeleteHomeTab() {
@@ -120,7 +189,7 @@ function showAndRefreshNotDeleteHomeTab() {
  * функция обработки кнопки add на форме нового продукта
  */
 function handleAddBtn() {
-    let product = {
+    let productToAdd = {
         product: $('#addProduct').val(),
         price: $('#addPrice').val(),
         amount: $('#addAmount').val(),
@@ -136,7 +205,7 @@ function handleAddBtn() {
     /**
      * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
      * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
-     * @param text - текст для вывода в алекрт
+     * @param text - текст для вывода в алерт
      * @param field - поле на каком установить фокус
      */
     function handleNotValidFormField(text, field) {
@@ -155,12 +224,28 @@ function handleAddBtn() {
         }, 5000)
     }
 
-    fetch("/rest/products/addProduct", {
+    /**
+     * проверяем, что выбранная категория продукта != null
+     */
+    let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
+    if (!selectedCat) {
+        alert('Категория не выбрана!');
+        return false;
+    } else {
+        for (let z = 0; z < listOfAll.length; z++) {
+            let currItem = listOfAll[z];
+            if (selectedCat.label.localeCompare(currItem.text) === 0) {
+                currentCategoryIdAdd = currItem.id;
+            }
+        }
+    }
+
+    fetch("/rest/products/addProduct/" + currentCategoryIdAdd, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
-        body: JSON.stringify(product)
-    }).then(
-        function (response) {
+        body: JSON.stringify(productToAdd)
+    })
+        .then(function (response) {
             let field;
             if (response.status !== 200) {
                 response.text()
@@ -168,11 +253,11 @@ function handleAddBtn() {
                         function (text) {
                             if (text === "notValidNameProduct") {
                                 field = "addEmail"
-                                handleNotValidFormField("Вы ввели некоректное Наименование товара!", field)
+                                handleNotValidFormField("Вы ввели некорректное наименование товара!", field)
                             }
                             if (text === "duplicatedNameProductError") {
                                 field = "addEmail"
-                                handleNotValidFormField("Такой наименование уже существует", field)
+                                handleNotValidFormField("Такое наименование уже существует", field)
                             }
                             if (text === "emptyPriceError") {
                                 field = "addPrice"
@@ -186,6 +271,7 @@ function handleAddBtn() {
                         })
             } else {
                 response.text().then(function () {
+                    $("#jqxTreeHere").jqxTree('selectItem', null);
                     showAndRefreshHomeTab();
                     clearFormFields();
                 })
@@ -197,7 +283,6 @@ function handleAddBtn() {
 /**
  * Добавление товара из файла
  */
-
 $('#inputFileSubmit').click(importProductsFromFile)
 
 function importProductsFromFile() {
@@ -237,22 +322,48 @@ function handleAcceptButtonFromModalWindow(event) {
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-product')) {
-        fetch("/rest/products" + "/" + product.id, {
+        fetch("/rest/products/" + product.id, {
             headers: headers,
             method: 'DELETE'
         }).then(response => response.text())
-            .then(deletedProduct => console.log('User: ' + deletedProduct + ' was successfully deleted'))
+            .then(deletedProduct => console.log('Product: ' + deletedProduct + ' was successfully deleted'))
             .then(showTable => showAndRefreshHomeTab(showTable))
         $('#productModalWindow').modal('hide')
     } else {
-        fetch("/rest/products/editProduct/", {
-            method: 'PUT',
-            headers: headers,
-            body: JSON.stringify(product)
-        }).then(function (response) {
-            fetchProductsAndRenderTable()
-            $('#productModalWindow').modal('hide')
-        })
+        let newCategory = $('#jqxTreeModal').jqxTree('getSelectedItem');
+        if (!newCategory || currentCategoryNameEdit.localeCompare(newCategory.label) === 0) {
+            fetch("/rest/products/editProduct/", {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(product)
+            }).then(function (response) {
+                fetchProductsAndRenderTable()
+                $('#productModalWindow').modal('hide')
+            })
+        } else {
+            fetch("/rest/products/editProduct/" + getCatId(currentCategoryNameEdit)
+                + "/" + getCatId(newCategory.label), {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(product)
+            }).then(function (response) {
+                fetchProductsAndRenderTable()
+                $('#productModalWindow').modal('hide')
+            })
+        }
+    }
+}
+
+function getCatId(category) {
+    if (!category) {
+        return -1;
+    } else {
+        for (let i = 0; i < listOfAll.length; i++) {
+            let tempItem = listOfAll[i];
+            if (category.localeCompare(tempItem.text) === 0) {
+                return tempItem.id;
+            }
+        }
     }
 }
 
@@ -275,19 +386,25 @@ function checkActionButton(event) {
  * @param products
  */
 function renderProductsTable(products) {
-    let table = $('#productsTable')
+    let table = $('#products-table')
     table.empty()
+        .append(`<tr>
+                <th>ID</th>
+                <th>Наименование товара</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Edit</th>
+                <th>Delete</th>
+              </tr>`)
     for (let i = 0; i < products.length; i++) {
         const product = products[i];
-        if (product.productType.category === categoryNow || categoryNow === "all") {
-            let row = `
+        let row = `
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>
                     <td>${product.product}</td>
                     <td>${product.price}</td>
                     <td>${product.amount}</td>              
-                    <td>${product.rating}</td>
-                    <td>${product.productType.category}</td>
+                    
                     <td>
             <!-- Buttons of the right column of main table-->
                         <button data-product-id="${product.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#productModalWindow">
@@ -301,16 +418,15 @@ function renderProductsTable(products) {
                     </td>
                 </tr>
                 `;
-            table.append(row)
-            if (product.deleted === false) {
-                $(`#action-button-${product.id}`).attr('data-toggle-id', 'delete')
-                $(`#action-button-${product.id}`).attr('data-toggle', 'modal')
-                $(`#action-button-${product.id}`).text("Delete").removeClass().toggleClass('btn btn-danger delete-product action')
-            } else {
-                $(`#action-button-${product.id}`).attr('data-toggle-id', 'restore')
-                $(`#action-button-${product.id}`).text("Restore").removeClass().toggleClass('btn btn-info restore-product action')
-                $('#tr-' + product.id).toggleClass('table-dark')
-            }
+        table.append(row)
+        if (product.deleted === false) {
+            $(`#action-button-${product.id}`).attr('data-toggle-id', 'delete')
+            $(`#action-button-${product.id}`).attr('data-toggle', 'modal')
+            $(`#action-button-${product.id}`).text("Delete").removeClass().toggleClass('btn btn-danger delete-product action')
+        } else {
+            $(`#action-button-${product.id}`).attr('data-toggle-id', 'restore')
+            $(`#action-button-${product.id}`).text("Restore").removeClass().toggleClass('btn btn-info restore-product action')
+            $('#tr-' + product.id).toggleClass('table-dark')
         }
     }
     $('.edit-button').click(handleEditButton)
@@ -322,12 +438,9 @@ function renderProductsTable(products) {
  * и передает функции рендера таблицы renderProductsTable
  */
 function fetchProductsAndRenderTable() {
-    fetch("/rest/products/allProducts", {
-        method: 'GET',
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        }
-    }).then(response => response.json()).then(products => renderProductsTable(products))
+    fetch("/rest/products/allProducts")
+        .then(response => response.json())
+        .then(products => renderProductsTable(products))
 }
 
 /**
@@ -336,113 +449,7 @@ function fetchProductsAndRenderTable() {
  * и передает функции рендера таблицы renderProductsTable
  */
 function fetchProductsAndRenderNotDeleteTable() {
-    fetch("/rest/products/getNotDeleteProducts", {
-        method: 'GET',
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        }
-    }).then(response => response.json()).then(products => renderProductsTable(products))
-}
-
-/**
- * функция сортировки в таблице
- */
-document.addEventListener('DOMContentLoaded', () => {
-
-    const getSort = ({target}) => {
-        const order = (target.dataset.order = -(target.dataset.order || -1));
-        const index = [...target.parentNode.cells].indexOf(target);
-        const collator = new Intl.Collator(['en', 'ru'], {numeric: true});
-        const comparator = (index, order) => (a, b) => order * collator.compare(
-            a.children[index].innerHTML,
-            b.children[index].innerHTML
-        );
-
-        for (const tBody of target.closest('table').tBodies)
-            tBody.append(...[...tBody.rows].sort(comparator(index, order)));
-
-        for (const cell of target.parentNode.cells)
-            cell.classList.toggle('sorted', cell === target);
-    };
-
-    document.querySelectorAll('.table-sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
-
-});
-
-/**
- * функция получения категорий из БД
- */
-function fetchCategories() {
-    fetch("api/categories/all", {headers: headers}).then(response => response.json())
-        .then(allCategories => renderCategoriesModal(allCategories))
-}
-
-/**
- * функция рендера модалки категорий
- */
-function renderCategoriesModal(categories) {
-    let radioList = $('#categoriesContainer')
-    radioList.empty()
-    radioList.append(`<form class= form-group-text-center>`)
-    radioList.append(`
-                     <div class="custom-control custom-radio">
-                     <input value="all" type="radio" id="radio0"
-                            name="radioCategory" class="custom-control-input">
-                     <label class="custom-control-label" for="radio0">Все</label>
-                     </div>
-                        `)
-    for (let i = 0; i < categories.length; i++) {
-        let radiobox = `
-                     <div class="custom-control custom-radio">
-                     <input value="${categories[i].category}" type="radio" id="radio${categories[i].id}"
-                            name="radioCategory" class="custom-control-input">
-                     <label class="custom-control-label" for="radio${categories[i].id}">${categories[i].category}</label>
-                     </div>
-                        `;
-        radioList.append(radiobox)
-    }
-    radioList.append(`</form>`)
-}
-
-/**
- * функция изменения категории
- */
-function changeCategory() {
-    let radio = document.getElementsByName('radioCategory');
-    for (let i = 0; i < radio.length; i++) {
-        if (radio[i].checked) {
-            categoryNow = radio[i].value;
-        }
-    }
-}
-
-/**
- * функция смены категории отображаемых продуктов
- */
-function changeProducts() {
-    changeCategory();
-    fetchProductsAndRenderTable();
-}
-
-/**
- * функция создания отчёта
- */
-function createReport() {
-    changeCategory();
-    fetch(`/manager/products/report?category=${categoryNow}`)
-        .then(function (response) {
-            if (response.status === 200) {
-                if (confirm("Товаров в отчёте будет " + response.headers.get("Size"))) {
-                    response.blob().then(blob => {
-                        let url = window.URL.createObjectURL(blob);
-                        let file = document.createElement('a');
-                        file.href = url;
-                        file.download = `products_report_${categoryNow}.xlsx`;
-                        file.click();
-                    })
-                }
-            } else {
-                alert("Товаров не найдено")
-            }
-        })
+    fetch("/rest/products/getNotDeleteProducts")
+        .then(response => response.json())
+        .then(products => renderProductsTable(products))
 }

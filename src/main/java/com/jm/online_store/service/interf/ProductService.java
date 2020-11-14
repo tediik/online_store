@@ -46,8 +46,6 @@ public interface ProductService {
 
     Long editProduct(Product product);
 
-    List<Product> findProductsByCategory(String categoryName);
-
     void saveAllProducts(List<Product> products);
 
     XSSFWorkbook createXlsxDoc(List<Product> products, String category);
