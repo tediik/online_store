@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
- * Рест контроллер для телеграм бота
+ * RestController для телеграм бота
  */
 @Slf4j
 @RestController()
@@ -19,6 +19,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class TelegramBotRestController {
     private final TelegramBot telegramBot;
 
+    /**
+     * Метод получает запрос на обновление от телеграма (ответ на команду, данную боту)
+     *
+     * @param update входящее обновление, содержит в себе мнжество полезной информации,
+     *               в т.ч. команду, данную телеграм боту
+     * @return возвращает обновление, в данном случае SendMessage,
+     * с текстовым ответом на команду
+     */
     @RequestMapping(value = "/telegram-bot", method = RequestMethod.POST)
     public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
         log.debug("Запрос к телеграм боту");
