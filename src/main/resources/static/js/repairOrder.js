@@ -11,7 +11,20 @@ $(document).ready(function () {
     document.getElementById('getRepairOrdersNav').addEventListener('click', function () {
         getAllOrdersWithoutCanceled()
     })
+    /*Слушатель на нажатие чекбокса ОТМЕНЕННЫЕ */
+    document.getElementById('includeCanceled').addEventListener("change", checkBoxCanceledListener)
 });
+
+/**
+ * Функция проверяет был ли нажат чекБокс ОТМЕННЕНЫЕ
+ */
+function checkBoxCanceledListener() {
+    if(document.getElementById('includeCanceled').checked) {
+        getAllRepairOrders()
+    } else {
+        getAllOrdersWithoutCanceled()
+    }
+}
 
 /**
  * Формирует заказ и присваивает уникальный номер
@@ -99,7 +112,7 @@ function getWorkOrder(order) {
 function checkUpperNavButtonRepairOrder(event) {
     let tab = event.target.dataset.toggleId
     if (tab === 'allRepairOrders') {
-        getAllRepairOrders()
+        getAllOrdersWithoutCanceled()
     }
     if (tab === 'acceptedRepairOrders') {
         getAcceptedRepairOrders()
@@ -308,7 +321,7 @@ function updateRepairOrder() {
         }).then(function (response) {
             if (response.status === 200) {
                 $('#editRepairOrder').modal('hide')
-                getAllRepairOrders()
+                checkBoxCanceledListener()
                 getAcceptedRepairOrders()
                 getDiagnosticsRepairOrders()
                 getIn_WorkRepairOrders()
