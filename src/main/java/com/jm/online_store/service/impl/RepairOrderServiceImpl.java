@@ -251,4 +251,14 @@ public class RepairOrderServiceImpl implements RepairOrderService {
         Collections.addAll(orderTypeList, RepairOrderType.values());
         return orderTypeList;
     }
+
+    @Override
+    public boolean existsByOrderNumber(String orderNumber) {
+        return repairOrderRepository.existsByOrderNumber(orderNumber);
+    }
+
+    @Override
+    public RepairOrder findByOrderNumber(String orderNumber) {
+        return repairOrderRepository.findByOrderNumber(orderNumber);
+    }
 }
