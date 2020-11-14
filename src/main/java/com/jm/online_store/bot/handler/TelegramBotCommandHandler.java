@@ -22,7 +22,7 @@ public class TelegramBotCommandHandler {
      *
      * @param update входящее обновление, содержит в себе команду, которую надо обработать,
      *               id чата из которого поступила команда и множество другой полезной информации
-     * @return SendMessage с с текстовым ответом на команду
+     * @return SendMessage с текстовым ответом на команду
      */
     public SendMessage handleCommand(Update update) {
         String command = update.getMessage().getText();
