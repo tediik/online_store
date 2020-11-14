@@ -88,7 +88,7 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Метод возвращает список неудаленых товаров
+     * Метод возвращает список неудаленных товаров
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/rest/products/getNotDeleteProducts")
@@ -97,7 +97,7 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Метод, ищет акции по id
+     * Метод, ищет товар по id
      * @param productId идентификатор товара
      * @return Optional<Product> возвращает товар
      */
@@ -109,7 +109,7 @@ public class ManagerProductsRestController {
     /**
      * Метод добавляет товар
      * @param product товар для добавления
-     * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
+     * @return ResponseEntity<Product> Возвращает добавленный товар с кодом ответа
      */
     @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> addProductM(@RequestBody Product product, @PathVariable Long id) {

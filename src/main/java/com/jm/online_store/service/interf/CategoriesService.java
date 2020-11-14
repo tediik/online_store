@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface CategoriesService {
 
-    JSONArray getAllCategories();//List<Categories>
+    JSONArray getAllCategories();
 
     String getCategoryNameByProductId(Long productId);
 

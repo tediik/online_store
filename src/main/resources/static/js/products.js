@@ -153,11 +153,11 @@ function handleDeleteButton(productId) {
  * @param productId
  */
 function handleRestoreButton(productId) {
-    fetch("/rest/products/restoredeleted" + "/" + productId, {
+    fetch("/rest/products/restoredeleted/" + productId, {
         headers: headers,
         method: 'POST'
     }).then(response => response.text())
-        .then(restoreProduct => console.log('User: ' + restoreProduct + ' was successfully restored'))
+        .then(restoreProduct => console.log('Product: ' + restoreProduct + ' was successfully restored'))
         .then(showTable => showAndRefreshHomeTab(showTable))
 }
 
@@ -438,12 +438,9 @@ function renderProductsTable(products) {
  * и передает функции рендера таблицы renderProductsTable
  */
 function fetchProductsAndRenderTable() {
-    fetch("/rest/products/allProducts", {
-        method: 'GET',
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        }
-    }).then(response => response.json()).then(products => renderProductsTable(products))
+    fetch("/rest/products/allProducts")
+        .then(response => response.json())
+        .then(products => renderProductsTable(products))
 }
 
 /**
@@ -452,10 +449,7 @@ function fetchProductsAndRenderTable() {
  * и передает функции рендера таблицы renderProductsTable
  */
 function fetchProductsAndRenderNotDeleteTable() {
-    fetch("/rest/products/getNotDeleteProducts", {
-        method: 'GET',
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        }
-    }).then(response => response.json()).then(products => renderProductsTable(products))
+    fetch("/rest/products/getNotDeleteProducts")
+        .then(response => response.json())
+        .then(products => renderProductsTable(products))
 }

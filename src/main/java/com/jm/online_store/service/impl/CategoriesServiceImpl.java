@@ -118,6 +118,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public void addToProduct(Product product, Long id) {
         Categories thisCat = getCategoryById(id).get();
+
         List<Product> thisCatProducts = thisCat.getProducts();
         thisCatProducts.add(product);
         thisCat.setProducts(thisCatProducts);

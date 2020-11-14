@@ -60,14 +60,9 @@
                             <input type="number" class="form-control" id="productPriceInputModal">
                             <label for="productAmountInputModal"><strong>Количество</strong></label>
                             <input type="number" class="form-control" id="productAmountInputModal">
-
                             <label for="productCategoryValueModal"><strong>Категория текущая</strong></label>
                             <input type="text" class="form-control mb-4" id="productCategoryValueModal" readonly>
-
-                            <div id="jqxTreeModal">
-
-                            </div>
-
+                            <div id="jqxTreeModal"></div>
                         </div>
                     </div>
                 </div>
@@ -92,9 +87,7 @@
         </nav>
         <div class="card" >
             <h5 class="card-header">Товары</h5>
-            <div id="alert-div">
-
-            </div>
+            <div id="alert-div"></div>
             <div class="card-body" >
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -103,13 +96,11 @@
                         <form class="checkbox">
                             <!-- for keeping checkbox checked when page loads use checked="checked" --->
                             <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
-
                             <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);" checked="checked">
                             <br>
                         </form>
                     </div>
                 </nav>
-
                 <!-- Модалка добавления из файла -->
                 <div class="modal fade" id="newProductImportModal" data-backdrop="static" tabindex="-1"
                      role="dialog"
@@ -126,7 +117,6 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-
                             <div class="modal-body">
                                 <div class="container-fluid col-sm-12">
                                     <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
@@ -142,7 +132,6 @@
                                         data-dismiss="modal">
                                     Close
                                 </button>
-
                                 <button id="inputFileSubmit" type="submit" data-dismiss="modal"
                                         class="btn btn-primary">
                                     Загрузить данные из файла
@@ -180,15 +169,12 @@
                                     <div class="input-group mb-4">
                                         <input type="text" class="form-control" placeholder="Поиск по категориям" id="searchForCategories">
                                     </div>
-
                                     <div id="jqxTreeHere"></div>
-
                                     <div class="mt-4">
                                         <button id="addBtn" type="button" class=" btn btn-outline-success btn-md btn">Добавить новый товар</button>
                                         <button type="button" class="btn btn-outline-primary" data-toggle='modal'
                                                 data-target='#newProductImportModal'>Загрузить товары из файла</button>
                                     </div>
-
                                 </div>
                             </div>
                         </form>

@@ -41,7 +41,6 @@ import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.TaskSettingsService;
 import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.TopicService;
-import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -642,24 +641,6 @@ public class DataInitializer {
         Categories category27 =  new Categories("Игровые", 9L, 3);
         Categories category28 =  new Categories("Недорогие", 9L, 3);
         Categories category29 =  new Categories("Ультрабуки", 9L, 3);
-
-/*        Categories category1 = new Categories("Ноутбуки", "Компьютеры");
-        Categories category2 = new Categories("Моноблоки", "Компьютеры");
-        Categories category3 = new Categories("Смартфоны", "Смартфоны и гаджеты");
-        Categories category4 = new Categories("Комплектующие", "Компьютеры");
-        Categories category5 = new Categories("Периферия", "Компьютеры");
-        Categories category6 = new Categories("Планшеты", "Смартфоны и гаджеты");
-        Categories category7 = new Categories("Электронные книги", "Смартфоны и гаджеты");
-        Categories category8 = new Categories("Аксессуары", "Смартфоны и гаджеты");
-        Categories category9 = new Categories("Телевизоры", "ТВ и развлечения");
-        Categories category10 = new Categories("Игры", "ТВ и развлечения");
-        Categories category11 = new Categories("Аудиотехника", "ТВ и развлечения");
-        Categories category12 = new Categories("Оргтехника", "Офис и сеть");
-        Categories category13 = new Categories("Роутеры и сетевое оборудование", "Офис и сеть");
-        Categories category14 = new Categories("Техника для кухни", "Бытовая техника");
-        Categories category15 = new Categories("Техника для уборки", "Бытовая техника");
-        Categories category16 = new Categories("Стиральные и сушильные машины", "Бытовая техника");
-        Categories category17 = new Categories("Климатическая техника", "Бытовая техника");*/
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
