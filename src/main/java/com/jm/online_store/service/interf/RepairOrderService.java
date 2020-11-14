@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface RepairOrderService {
 
+    List<RepairOrder> findAllWithoutCanceled ();
+
     List<RepairOrder> findAll();
 
     List<RepairOrder> getAllAccepted();

@@ -37,6 +37,18 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     private final RepairOrderRepository repairOrderRepository;
 
     /**
+     * Метод возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ. Сортирует по дате, от нового заказа к старому.
+     * @return лист заказов на ремонт
+     */
+    @Override
+    public List<RepairOrder> findAllWithoutCanceled() {
+        List<RepairOrder> repairOrderList = repairOrderRepository.findAll();
+        repairOrderList.removeIf(repairOrder -> repairOrder.getRepairOrderType().equals(RepairOrderType.CANCELED));
+        repairOrderList.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
+        return  repairOrderList;
+    }
+
+    /**
      * Метод возвращает все заказы на ремонт, сортирует по дате, от нового заказа к старому
      *
      * @return лист заказов на ремонт
