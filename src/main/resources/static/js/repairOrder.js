@@ -9,7 +9,7 @@ $(document).ready(function () {
     document.getElementById('editSave').addEventListener('click', updateRepairOrder)
     /*Слушатель на нажатие по вкладке Заказы*/
     document.getElementById('getRepairOrdersNav').addEventListener('click', function () {
-        getAllRepairOrders()
+        getAllOrdersWithoutCanceled()
     })
 });
 

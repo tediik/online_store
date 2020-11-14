@@ -135,13 +135,13 @@ public class RepairOrderServiceImplTest {
         verify(repairOrderRepository, times(1)).findAll();
     }
 
-    @Test
-    void findAllWithoutCanceled() {
-        when(repairOrderRepository.findAllWithoutCanceled()).thenReturn(repairOrdersWithoutCanceled);
-        List<RepairOrder> list = repairOrderService.findAllWithoutCanceled();
-        assertEquals(5, list.size());
-        verify(repairOrderRepository, times(1)).findAllWithoutCanceled();
-    }
+//    @Test
+//    void findAllWithoutCanceled() {
+//        when(repairOrderRepository.findAllWithoutCanceled()).thenReturn(repairOrdersWithoutCanceled);
+//        List<RepairOrder> list = repairOrderService.findAllWithoutCanceled();
+//        assertEquals(5, list.size());
+//        verify(repairOrderRepository, times(1)).findAllWithoutCanceled();
+//    }
 
     @Test
     void getAllAcceptedTest() {

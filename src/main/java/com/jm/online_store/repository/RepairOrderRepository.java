@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface RepairOrderRepository extends JpaRepository<RepairOrder, Long> {
 
-    List<RepairOrder> findAllWithoutCanceled ();
+   /// List<RepairOrder> findAllWithoutCanceled ();
 
     List<RepairOrder> findAllByRepairOrderTypeEquals(RepairOrderType repairOrderType);
 
