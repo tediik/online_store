@@ -45,7 +45,7 @@ public class TelegramBotCommandHandler {
                 break;
             }
             case "/getstocks": {
-                message = telegramBotService.getPublishedStocks();
+                message = telegramBotService.getActualStocks();
                 break;
             }
             case "/checkrepair": {
