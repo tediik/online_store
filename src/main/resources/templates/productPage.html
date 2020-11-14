@@ -21,12 +21,82 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
     <!-- CSS fot toaster -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
-          integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" />
+          integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+          crossorigin="anonymous"/>
 
 
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header th:insert="/blocks/header :: header"></header>
+
+<!-- Modal for registration -->
+<div id="openNewRegistrationModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Регистрация</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/registration" method="POST" enctype="utf8">
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="email">Email</label>
+                        <input name="email"
+                               value=""
+                               id="email"
+                               placeholder="email"
+                               type="email"
+                               autofocus
+                               class="form-control"/>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="password">Пароль</label>
+                        <input name="password"
+                               value=""
+                               id="password"
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces and emoji.
+                        </small>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="passwordConfirm">Повторите пароль</label>
+                        <input name="passwordConfirm"
+                               value=""
+                               id="passwordConfirm"
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
+                    </div>
+                    <div>
+                        <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
+                    </div>
+                    <div>
+                        <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
+                    </div>
+                    <div>
+                        <span id="passwordValidError" style="display:none" class="error">Пароль не соответствует требованиям</span>
+                    </div>
+                    <div>
+                        <span id="notValidEmailError" style="display:none" class="error">Неверный формат электронной почты</span>
+                    </div>
+                    <div>
+                        <span id="emailConfirmationSent" style="display:none" class="error">Отправлено подтверждение на эл.почту</span>
+                    </div>
+                    <div>
+                        <a onclick="register()" class="btn btn-primary btn-sm btn-block"> Зарегистрироваться</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <main role="main" class="wrapper flex-grow-1 container">
     <nav aria-label="breadcrumb">
@@ -58,7 +128,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                    </button>
                     <button id="acceptButton" type="button" class="btn btn-success" onclick="priceChangeSubscribe()">
                         Подписаться
                     </button>
@@ -125,8 +196,11 @@
             <div class="row mx-5" id="favouriteContainer">
             </div>
             <div class="row mx-5" id="ringContainer">
-                <div id="favoriteLabel"><h5 class="font-weight-normal my-2">&ensp;Подписаться на уведомления при снижении цены </h5></div>
-                <button id="ringButton"  type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#emailModal">Подписаться &#128276</button>
+                <div id="favoriteLabel"><h5 class="font-weight-normal my-2">&ensp;Подписаться на уведомления при
+                    снижении цены </h5></div>
+                <button id="ringButton" type="button" class="btn btn-success edit-button" data-toggle="modal"
+                        data-target="#emailModal">Подписаться &#128276
+                </button>
             </div>
             <br>
             <div class="row mx-5">
@@ -186,12 +260,14 @@
                             <div sec:authorize="isAuthenticated()">
                                 <form method="POST" id="commentForm">
                                     <div class="form-group">
-                                        <input name="content" id="content" class="form-control" placeholder="Enter Comment">
+                                        <input name="content" id="content" class="form-control"
+                                               placeholder="Enter Comment">
                                     </div>
                                     <span id="message"></span>
                                     <div class="form-group">
                                         <input type="hidden" name="parent_id" id="parent_id" value=""/>
-                                        <input type="submit"  name="submit" id="submitCommentBtn" class="btn btn-primary" value="Post Comment"/>
+                                        <input type="submit" name="submit" id="submitCommentBtn" class="btn btn-primary"
+                                               value="Post Comment"/>
                                     </div>
                                 </form>
                             </div>
@@ -212,11 +288,13 @@
                             <div sec:authorize="isAuthenticated()">
                                 <form method="POST" id="reviewForm">
                                     <div class="form-group">
-                                        <input name="content" id="content-review" class="form-control" placeholder="Enter Review">
+                                        <input name="content" id="content-review" class="form-control"
+                                               placeholder="Enter Review">
                                     </div>
                                     <span id="message-review"></span>
                                     <div class="form-group">
-                                        <input type="submit" name="submit" id="submitReviewBtn" class="btn btn-primary" value="Оставить отзыв"/>
+                                        <input type="submit" name="submit" id="submitReviewBtn" class="btn btn-primary"
+                                               value="Оставить отзыв"/>
                                     </div>
                                 </form>
                             </div>
@@ -275,17 +353,19 @@
         </div>
     </div>
 </div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>-->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 <!-- Rate YO -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
 <!-- Toaster -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
-        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous"></script>
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <!--<script src="../static/js/productPriceChange.js"></script>-->
@@ -294,6 +374,7 @@
 <script src="../static/js/comments.js"></script>
 <script src="../static/js/reviews.js"></script>
 <script src="../static/js/searchButton.js"></script>
+<script src="../static/js/registration.js"></script>
 
 <script src="../static/js/productPriceChange.js"></script>
 <footer th:insert="/blocks/footer :: footer"></footer>

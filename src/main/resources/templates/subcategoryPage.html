@@ -17,6 +17,79 @@
 <body class="d-flex flex-column min-vh-100">
 <header th:insert="/blocks/header :: header"></header>
 
+<!-- Modal for registration -->
+<div id="openNewRegistrationModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Регистрация</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/registration" method="POST" enctype="utf8">
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="email">Email</label>
+                        <input name="email"
+                               value=""
+                               id="email"
+                               placeholder="email"
+                               type="email"
+                               autofocus
+                               class="form-control"/>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="password">Пароль</label>
+                        <input name="password"
+                               value=""
+                               id="password"
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            Your password must be 8-20 characters long, contain letters and numbers, and must not
+                            contain
+                            spaces and emoji.
+                        </small>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <label for="passwordConfirm">Повторите пароль</label>
+                        <input name="passwordConfirm"
+                               value=""
+                               id="passwordConfirm"
+                               placeholder="password"
+                               type="password"
+                               autofocus
+                               class="form-control"/>
+                    </div>
+                    <div>
+                        <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
+                    </div>
+                    <div>
+                        <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
+                    </div>
+                    <div>
+                    <span id="passwordValidError" style="display:none"
+                          class="error">Пароль не соответствует требованиям</span>
+                    </div>
+                    <div>
+                    <span id="notValidEmailError" style="display:none"
+                          class="error">Неверный формат электронной почты</span>
+                    </div>
+                    <div>
+                        <span id="emailConfirmationSent" style="display:none" class="error">Отправлено подтверждение на эл.почту</span>
+                    </div>
+                    <div>
+                        <a onclick="register()" class="btn btn-primary btn-sm btn-block"> Зарегистрироваться</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <main role="main" class="wrapper flex-grow-1 container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb" id="categoriesBreadcrumb">
@@ -38,9 +111,11 @@
                     <h6 class="card-title pricing-card-title my-0 font-weight-normal">Цена</h6>
                     <ul class="list-group mb-3">
                         <li class="d-flex">
-                            <input type="text" class="form-control" id="priceFrom" placeholder="от " required style="min-width: 100px;">
+                            <input type="text" class="form-control" id="priceFrom" placeholder="от " required
+                                   style="min-width: 100px;">
                             &ensp;
-                            <input type="text" class="form-control" id="priceTo" placeholder="до " required style="min-width: 100px;">
+                            <input type="text" class="form-control" id="priceTo" placeholder="до " required
+                                   style="min-width: 100px;">
                         </li>
                     </ul>
                     <h6 class="card-title pricing-card-title my-0 font-weight-normal">Производитель</h6>
@@ -48,11 +123,13 @@
                         <li class="list-group-item d-flex justify-content-between">
                             <div class="d-block">
                                 <div class="custom-control custom-radio">
-                                    <input id="acer" name="producer" type="radio" class="custom-control-input" checked required>
+                                    <input id="acer" name="producer" type="radio" class="custom-control-input" checked
+                                           required>
                                     <label class="custom-control-label" for="acer">Acer</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input id="apple" name="producer" type="radio" class="custom-control-input" required>
+                                    <input id="apple" name="producer" type="radio" class="custom-control-input"
+                                           required>
                                     <label class="custom-control-label" for="apple">Apple</label>
                                 </div>
                                 <div class="custom-control custom-radio">
@@ -60,7 +137,8 @@
                                     <label class="custom-control-label" for="asus">ASUS</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input id="other" name="producer" type="radio" class="custom-control-input" required>
+                                    <input id="other" name="producer" type="radio" class="custom-control-input"
+                                           required>
                                     <label class="custom-control-label" for="other"> </label>
                                 </div>
                             </div>
@@ -71,7 +149,8 @@
                         <li class="list-group-item d-flex justify-content-between">
                             <div class="d-block">
                                 <div class="custom-control custom-radio">
-                                    <input id="other1" name="resolution" type="radio" class="custom-control-input" required>
+                                    <input id="other1" name="resolution" type="radio" class="custom-control-input"
+                                           required>
                                     <label class="custom-control-label" for="other1"> </label>
                                 </div>
                             </div>
@@ -105,6 +184,7 @@
 <!-- Optional JavaScript -->
 <script src="../static/js/subcategoryPage.js"></script>
 <script src="../static/js/searchButton.js"></script>
+<script src="../static/js/registration.js"></script>
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -112,7 +192,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 <footer th:insert="/blocks/footer :: footer"></footer>
 </body>
 </html>
