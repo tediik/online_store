@@ -105,6 +105,16 @@ public class RepairOrderRestController {
     }
 
     /**
+     * Метод возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ.
+     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     */
+    @GetMapping("service/findAllWithoutCanceled")
+    public ResponseEntity<List<RepairOrder>> getAllWithoutCanceled() {
+        List<RepairOrder> repairOrderList = repairOrderService.findAllWithoutCanceled();
+        return ResponseEntity.ok(repairOrderList);
+    }
+
+    /**
      * Метод возвращает все принятые заказы на ремонт
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт

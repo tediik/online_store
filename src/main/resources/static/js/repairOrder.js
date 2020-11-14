@@ -9,9 +9,22 @@ $(document).ready(function () {
     document.getElementById('editSave').addEventListener('click', updateRepairOrder)
     /*Слушатель на нажатие по вкладке Заказы*/
     document.getElementById('getRepairOrdersNav').addEventListener('click', function () {
-        getAllRepairOrders()
+        getAllOrdersWithoutCanceled()
     })
+    /*Слушатель на нажатие чекбокса отменённые */
+    document.getElementById('includeCanceled').addEventListener("change", checkBoxCanceledListener)
 });
+
+/**
+ * Функция проверяет был ли нажат чекбокс отмененные
+ */
+function checkBoxCanceledListener() {
+    if(document.getElementById('includeCanceled').checked) {
+        getAllRepairOrders()
+    } else {
+        getAllOrdersWithoutCanceled()
+    }
+}
 
 /**
  * Формирует заказ и присваивает уникальный номер
@@ -99,7 +112,7 @@ function getWorkOrder(order) {
 function checkUpperNavButtonRepairOrder(event) {
     let tab = event.target.dataset.toggleId
     if (tab === 'allRepairOrders') {
-        getAllRepairOrders()
+        checkBoxCanceledListener()
     }
     if (tab === 'acceptedRepairOrders') {
         getAcceptedRepairOrders()
@@ -140,6 +153,17 @@ function checkButtonEditOrDelete(event) {
  */
 function getAllRepairOrders() {
     fetch('/service/getAllRepairOrder')
+        .then((res) => res.json())
+        .then((data) => {
+            renderRepairOrder(data, 'all_repairOrders')
+        })
+}
+
+/**
+ * Функция возвращает все заказы на ремонт кроме отменённых.
+ */
+function getAllOrdersWithoutCanceled() {
+    fetch('service/findAllWithoutCanceled')
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'all_repairOrders')
@@ -297,7 +321,7 @@ function updateRepairOrder() {
         }).then(function (response) {
             if (response.status === 200) {
                 $('#editRepairOrder').modal('hide')
-                getAllRepairOrders()
+                checkBoxCanceledListener()
                 getAcceptedRepairOrders()
                 getDiagnosticsRepairOrders()
                 getIn_WorkRepairOrders()
