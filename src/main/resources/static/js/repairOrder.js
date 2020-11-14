@@ -112,7 +112,7 @@ function getWorkOrder(order) {
 function checkUpperNavButtonRepairOrder(event) {
     let tab = event.target.dataset.toggleId
     if (tab === 'allRepairOrders') {
-        getAllOrdersWithoutCanceled()
+        checkBoxCanceledListener()
     }
     if (tab === 'acceptedRepairOrders') {
         getAcceptedRepairOrders()
