@@ -13,7 +13,6 @@ $(document).ready(function () {
 function fetchEmailPriceTemplate() {
     fetch(apiCommonSettingsUrl + '/price_change_distribution_template').then(function (response) {
         if (response.ok) {
-            console.log("good")
             response.json()
                 .then(emailTemplate => $('#editPriceChangeTemplateSummernote').summernote('code', emailTemplate.textValue))
         }

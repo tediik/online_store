@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
 
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,16 +9,15 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="/static/css/products.css" rel="stylesheet">
-
+    <link href="/static/css/summernote.css" rel="stylesheet">
+    <link href="/static/css/jqx.base.css" rel="stylesheet" type="text/css">
     <!-- ----------------------JS - jQuery ------------->
     <script src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
@@ -29,10 +27,8 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <!-- ----------------------JS - jQuery END ------------->
-
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-
     <link rel="stylesheet" type="text/css" href="../static/css/stocksStyle.css">
     <!-- Подключаем библиотеку summernote bs-4 -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
@@ -51,9 +47,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div id="alert-modal-div">
-
-            </div>
+            <div id="alert-modal-div"></div>
             <div class="modal-body" id="modalBody">
                 <div class="row justify-content-center">
                     <div class="col">
@@ -66,189 +60,130 @@
                             <input type="number" class="form-control" id="productPriceInputModal">
                             <label for="productAmountInputModal"><strong>Количество</strong></label>
                             <input type="number" class="form-control" id="productAmountInputModal">
+                            <label for="productCategoryValueModal"><strong>Категория текущая</strong></label>
+                            <input type="text" class="form-control mb-4" id="productCategoryValueModal" readonly>
+                            <div id="jqxTreeModal"></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save
-                    changes
-                </button>
+                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save changes</button>
             </div>
         </div>
     </div>
 </div>
 <div class="wrapper flex-grow-1 row">
+    <div class="container col-11">
+        <!--Display logged in user's name-->
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
+            <a class="navbar-brand"
+               th:each="authority : ${#authentication.getAuthorities()}"
+               th:text="${authority.getAuthority()} + ' '"></a>
+            <a th:href="@{/manager}" class="btn btn-primary ml-auto">Кабинет менеджера</a>
+            <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
+        </nav>
+        <div class="card" >
+            <h5 class="card-header">Товары</h5>
+            <div id="alert-div"></div>
+            <div class="card-body" >
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Products Table</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
+                        <form class="checkbox">
+                            <!-- for keeping checkbox checked when page loads use checked="checked" --->
+                            <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
+                            <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);" checked="checked">
+                            <br>
+                        </form>
+                    </div>
+                </nav>
+                <!-- Модалка добавления из файла -->
+                <div class="modal fade" id="newProductImportModal" data-backdrop="static" tabindex="-1"
+                     role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
 
-    <div class="modal fade" id="categoryModalWindow" tabindex="-1" role="dialog"
-         aria-labelledby="EditCategoryModalWindows"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="SelectCategory">Select category</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row justify-content-center">
-                        <div class="col">
-                            <div class="form-group" id="categoriesContainer">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
 
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productImportModalLabel">Добавить товар</h5>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid col-sm-12">
+                                    <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
+                                        <label for="file">Выберите файл:</label>
+                                        <input id="file" type="file" name="file">
+                                        <br />
+                                        <br />
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer actions">
+                                <button type="button" id="btnClose" class="btn btn-secondary"
+                                        data-dismiss="modal">
+                                    Close
+                                </button>
+                                <button id="inputFileSubmit" type="submit" data-dismiss="modal"
+                                        class="btn btn-primary">
+                                    Загрузить данные из файла
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" onclick="createReport()">
-                        Create report
-                    </button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="changeProducts()">
-                        Select category
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="container-fluid">
-        <div class="container col-11">
-            <div class="card">
-                <h5 class="card-header">Товары</h5>
-                <div id="alert-div">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <!--                main tab -->
+                        <table class="table table-active table-striped" id="products-table" style="background-color: white">
 
-                </div>
-                <div class="card-body">
-                    <nav>
-                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                               role="tab" aria-controls="nav-home" aria-selected="true">Products Table</a>
-                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                               role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
-                            <form class="checkbox">
-                                <!-- for keeping checkbox checked when page loads use checked="checked" --->
-                                <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
-
-                                <input id="deletedCheckbox" type="checkbox" name="check"
-                                       onclick="toggle(this.form.check);" checked="checked">
-                                <br>
-                            </form>
-                            <button type="button" class="btn btn-primary ml-auto" data-toggle="modal"
-                                    data-target="#categoryModalWindow" onclick="fetchCategories()">
-                                Выбрать категории товаров
-                            </button>
-                        </div>
-                    </nav>
-
-                    <!-- Модалка добавления из файла -->
-
-                    <div class="modal fade" id="newProductImportModal" data-backdrop="static" tabindex="-1"
-                         role="dialog"
-                         aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
-
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="productImportModalLabel">Добавить товар</h5>
-                                    <button type="button" class="close" data-dismiss="modal"
-                                            aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-
-                                <div class="modal-body">
-                                    <div class="container-fluid col-sm-12">
-                                        <form id="productImportModal" name="productImportModal"
-                                              enctype="multipart/form-data" method="post">
-                                            <label for="file">Выберите файл:</label>
-                                            <input id="file" type="file" name="file">
-                                            <br/>
-                                            <br/>
-                                        </form>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <!--                Secondary user addition form-->
+                        <h3>Добавить товар</h3>
+                        <form id="addForm">
+                            <div class="panel panel-default" id="new-user-form">
+                                <div class="panel-body">
+                                    <div id="add-productName-form-group" class="form-group">
+                                        <label for="addProduct">Наименование:</label>
+                                        <input type="email" id="addProduct" name="product" placeholder="Наименование" class="form-control">
                                     </div>
-                                </div>
-                                <div class="modal-footer actions">
-                                    <button type="button" id="btnClose" class="btn btn-secondary"
-                                            data-dismiss="modal">
-                                        Close
-                                    </button>
-
-                                    <button id="inputFileSubmit" type="submit" data-dismiss="modal"
-                                            class="btn btn-primary">
-                                        Загрузить данные из файла
-                                    </button>
+                                    <div class="form-group addPriceDiv">
+                                        <label for="addPrice">Цена:</label>
+                                        <input type="number" id="addPrice" name="price" placeholder="Цена" class="form-control">
+                                    </div>
+                                    <div id="add-email-form-group" class="form-group">
+                                        <label for="addAmount">Количество:</label>
+                                        <input type="number" id="addAmount" name="amount" placeholder="Количество" class="form-control">
+                                    </div>
+                                    <div class="input-group mb-4">
+                                        <input type="text" class="form-control" placeholder="Поиск по категориям" id="searchForCategories">
+                                    </div>
+                                    <div id="jqxTreeHere"></div>
+                                    <div class="mt-4">
+                                        <button id="addBtn" type="button" class=" btn btn-outline-success btn-md btn">Добавить новый товар</button>
+                                        <button type="button" class="btn btn-outline-primary" data-toggle='modal'
+                                                data-target='#newProductImportModal'>Загрузить товары из файла</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                             aria-labelledby="nav-home-tab">
-                            <!--                main tab -->
-                            <table class="table table-active table-striped table-sort" id="products-table"
-                                   style="background-color: white">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Наименование товара</th>
-                                    <th>Цена</th>
-                                    <th>Количество</th>
-                                    <th>Рейтинг</th>
-                                    <th>Категория</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
-                                </tr>
-                                </thead>
-                                <tbody id="productsTable">
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            <!--                Secondary user addition form-->
-                            <h3>Добавить товар</h3>
-                            <form id="addForm">
-                                <div class="panel panel-default" id="new-user-form">
-                                    <div class="panel-body">
-                                        <div id="add-productName-form-group" class="form-group">
-                                            <label for="addProduct">Наименование:</label>
-                                            <input type="email" id="addProduct" name="product"
-                                                   placeholder="Наименование" class="form-control">
-                                        </div>
-                                        <div class="form-group addPriceDiv">
-                                            <label for="addPrice">Цена:</label>
-                                            <input type="number" id="addPrice" name="price" placeholder="Цена"
-                                                   class="form-control">
-                                        </div>
-                                        <div id="add-email-form-group" class="form-group">
-                                            <label for="addAmount">Количество:</label>
-                                            <input type="number" id="addAmount" name="amount" placeholder="Количество"
-                                                   class="form-control">
-                                        </div>
-                                        <button id="addBtn" type="button" class=" btn btn-success btn-md btn">Add
-                                        </button>
-                                        <button type="button" class="btn btn-primary" data-toggle='modal'
-                                                data-target='#newProductImportModal'>
-                                            Загрузить товары из файла
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<footer th:insert="/blocks/footer :: footer"></footer>
 <script type="text/javascript" src="/static/js/products.js"></script>
 <!--MomentJs (work with dates)-->
 <script type="text/JavaScript" src="../static/js/moment.js"></script>
@@ -259,5 +194,10 @@
 <link href="/static/css/products.css" rel="stylesheet">
 <script src="../static/js/searchButton.js"></script>
 <script src="/static/js/date_range.js"></script>
+<script src="/static/js/jqx/jqxcore.js"></script>
+<script src="/static/js/jqx/jqxbuttons.js"></script>
+<script src="/static/js/jqx/jqxpanel.js"></script>
+<script src="/static/js/jqx/jqxtree.js"></script>
+<script src="/static/js/jqx/jqxscrollbar.js"></script>
 </body>
 </html>
