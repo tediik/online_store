@@ -112,7 +112,7 @@ public class ManagerProductsRestController {
      * @return ResponseEntity<Product> Возвращает добавленный товар с кодом ответа
      */
     @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> addProductM(@RequestBody Product product, @PathVariable Long id) {
+    public ResponseEntity<Product> addProduct(@RequestBody Product product, @PathVariable Long id) {
         productService.saveProduct(product);
         categoriesService.addToProduct(product, id);
         return ResponseEntity.ok(product);

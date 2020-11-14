@@ -202,8 +202,6 @@ public class DataInitializer {
         customer.setUserBasket(subBasketList);
         userService.updateUser(customerU);
 
-
-
         Random random = new Random();
         for (int i = 1; i < 20; i++) {
             Customer customer1 = new Customer("customer" + i + "@mail.ru",
@@ -593,7 +591,6 @@ public class DataInitializer {
                 .postingDate(LocalDate.now().plusDays(30L))
                 .archived(false)
                 .build();
-
 
         newsService.save(firstNews);
         newsService.save(secondNews);
