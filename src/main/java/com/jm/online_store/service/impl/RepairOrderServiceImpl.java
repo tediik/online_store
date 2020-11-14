@@ -37,7 +37,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     private final RepairOrderRepository repairOrderRepository;
 
     /**
-     * Метод возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ. Сортирует по дате, от нового заказа к старому.
+     * Метод возвращает все заказы на ремонт кроме отмененных . Сортирует по дате, от нового заказа к старому.
      * @return лист заказов на ремонт
      */
     @Override

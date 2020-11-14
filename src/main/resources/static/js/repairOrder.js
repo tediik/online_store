@@ -11,12 +11,12 @@ $(document).ready(function () {
     document.getElementById('getRepairOrdersNav').addEventListener('click', function () {
         getAllOrdersWithoutCanceled()
     })
-    /*Слушатель на нажатие чекбокса ОТМЕНЕННЫЕ */
+    /*Слушатель на нажатие чекбокса отменённые */
     document.getElementById('includeCanceled').addEventListener("change", checkBoxCanceledListener)
 });
 
 /**
- * Функция проверяет был ли нажат чекБокс ОТМЕННЕНЫЕ
+ * Функция проверяет был ли нажат чекбокс отмененные
  */
 function checkBoxCanceledListener() {
     if(document.getElementById('includeCanceled').checked) {
@@ -160,7 +160,7 @@ function getAllRepairOrders() {
 }
 
 /**
- * Функция возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ.
+ * Функция возвращает все заказы на ремонт кроме отменённых.
  */
 function getAllOrdersWithoutCanceled() {
     fetch('service/findAllWithoutCanceled')
