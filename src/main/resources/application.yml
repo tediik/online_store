@@ -61,4 +61,4 @@ spring.profiles.include: 'security'
 telegram-bot:
   name: online_store_stocks_bot
   token: 1405685131:AAF7CiyhMfTgtkhbxIbAPWt1kipZPRxPuC8
-  webhook-path: https://e38560ebacc6.ngrok.io/telegram-bot
+  webhook-path: https://4b269d85f8e2.ngrok.io/telegram-bot
