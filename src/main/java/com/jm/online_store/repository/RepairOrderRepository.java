@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface RepairOrderRepository extends JpaRepository<RepairOrder, Long> {
+
     List<RepairOrder> findAllByRepairOrderTypeEquals(RepairOrderType repairOrderType);
 
     Optional<RepairOrder> findByIdAndTelephoneNumber(Long id, @NonNull String telephoneNumber);

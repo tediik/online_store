@@ -14,8 +14,8 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.concurrent.ScheduledFuture;
 
@@ -26,7 +26,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
 
     private final TaskScheduler scheduler;
     private final TaskSettingsRepository taskSettingsRepository;
-    private final StockMailDistributionTask stockMailDistributionTask;
+    private final StockMailDistributionTask stockMailDistribution;
     private final PriceListService priceListService;
     private final Map<Long, ScheduledFuture<?>> jobsMap;
 
@@ -63,9 +63,14 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
      */
     @EventListener({ContextRefreshedEvent.class})
     public void contextRefreshedEvent() {
-        List<TaskSettings> allTasks = taskSettingsRepository.findAll();
-        addTaskToScheduler(allTasks.get(0), stockMailDistributionTask);
-        addTaskToScheduler(allTasks.get(1), priceListService);
+        Optional<TaskSettings> stockMailDistributionTask = taskSettingsRepository.findByTaskName("stockMailDistribution");
+        Optional<TaskSettings> dailyPriceCreateTask = taskSettingsRepository.findByTaskName("dailyPriceCreate");
+        if (stockMailDistributionTask.isPresent() && stockMailDistributionTask.get().isActive()) {
+            addTaskToScheduler(stockMailDistributionTask.get(), stockMailDistribution);
+        }
+        if (dailyPriceCreateTask.isPresent() && dailyPriceCreateTask.get().isActive()) {
+            addTaskToScheduler(dailyPriceCreateTask.get(), priceListService);
+        }
     }
 
     /**

@@ -27,7 +27,6 @@ import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
-import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -40,8 +39,8 @@ import com.jm.online_store.service.interf.SharedNewsService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.TaskSettingsService;
-import com.jm.online_store.service.interf.TopicService;
 import com.jm.online_store.service.interf.TopicsCategoryService;
+import com.jm.online_store.service.interf.TopicService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -73,7 +72,6 @@ import java.util.Set;
 public class DataInitializer {
 
     private final UserService userService;
-    private final CustomerService customerService;
     private final RoleService roleService;
     private final CategoriesService categoriesService;
     private final ProductService productService;
@@ -100,8 +98,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//     @PostConstruct
-     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    //@PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -166,6 +163,44 @@ public class DataInitializer {
         userService.addUser(customer);
         userService.addUser(admin);
         userService.addUser(service);
+
+        Product product_1 = new Product("apple", 100000D, 10, 0.1);
+        Product product_2 = new Product("samsung", 80000D, 100, 0.9);
+        Product product_3 = new Product("xiaomi", 30000D, 50, 0.5);
+
+        productService.saveProduct(product_1);
+        productService.saveProduct(product_2);
+        productService.saveProduct(product_3);
+
+        Set<Product> productSet = new HashSet<>();
+        productSet.add(product_1);
+        productSet.add(product_2);
+        productSet.add(product_3);
+
+        User customerU = userService.findByEmail("customer@mail.ru").get();
+        customerU.setFavouritesGoods(productSet);
+        userService.updateUser(customerU);
+
+        //Создание основного списка(Все товары) избранных товаров
+        FavouritesGroup favouritesGroup = new FavouritesGroup();
+        favouritesGroup.setName("Все товары");
+        favouritesGroup.setProducts(productSet);
+        favouritesGroup.setUser(customerU);
+        favouritesGroupService.save(favouritesGroup);
+
+        SubBasket subBasket_1 = new SubBasket();
+        subBasket_1.setProduct(product_1);
+        subBasket_1.setCount(1);
+        basketService.addBasket(subBasket_1);
+        SubBasket subBasket_2 = new SubBasket();
+        subBasket_2.setProduct(product_3);
+        subBasket_2.setCount(1);
+        basketService.addBasket(subBasket_2);
+        List<SubBasket> subBasketList = new ArrayList<>();
+        subBasketList.add(subBasket_1);
+        subBasketList.add(subBasket_2);
+        customer.setUserBasket(subBasketList);
+        userService.updateUser(customerU);
 
         Random random = new Random();
         for (int i = 1; i < 20; i++) {
@@ -557,7 +592,6 @@ public class DataInitializer {
                 .archived(false)
                 .build();
 
-
         newsService.save(firstNews);
         newsService.save(secondNews);
         newsService.save(thirdNews);
@@ -571,51 +605,67 @@ public class DataInitializer {
     }
 
     /**
-     * Метод первичного тестового заполнения товаров, избранного и корзины.
+     * Метод первичного тестового заполнения товаров.
      */
     private void productInit() {
 
-        Categories category1 = new Categories("Ноутбуки", "Компьютеры");
-        Categories category2 = new Categories("Компьютеры", "Компьютеры");
-        Categories category3 = new Categories("Смартфоны", "Смартфоны и гаджеты");
-        Categories category4 = new Categories("Комплектующие", "Компьютеры");
-        Categories category5 = new Categories("Периферия", "Компьютеры");
-        Categories category6 = new Categories("Планшеты", "Смартфоны и гаджеты");
-        Categories category7 = new Categories("Электронные книги", "Смартфоны и гаджеты");
-        Categories category8 = new Categories("Аксессуары", "Смартфоны и гаджеты");
-        Categories category9 = new Categories("Телевизоры", "ТВ и развлечения");
-        Categories category10 = new Categories("Игры", "ТВ и развлечения");
-        Categories category11 = new Categories("Аудиотехника", "ТВ и развлечения");
-        Categories category12 = new Categories("Оргтехника", "Офис и сеть");
-        Categories category13 = new Categories("Роутеры и сетевое оборудование", "Офис и сеть");
-        Categories category14 = new Categories("Техника для кухни", "Бытовая техника");
-        Categories category15 = new Categories("Техника для уборки", "Бытовая техника");
-        Categories category16 = new Categories("Стиральные и сушильные машины", "Бытовая техника");
-        Categories category17 = new Categories("Климатическая техника", "Бытовая техника");
+        Categories category1 = new Categories("Компьютеры", 0L, 1);
+        Categories category2 = new Categories("Бытовая техника", 0L, 1);
+        Categories category3 = new Categories("Смартфоны и гаджеты", 0L, 1);
+        Categories category4 = new Categories("ТВ и развлечения", 0L, 1);
+        Categories category5 = new Categories("Офис и сеть", 0L, 1);
+        Categories category6 = new Categories("Аксессуары", 0L, 1);
+        Categories category7 = new Categories("Автотовары", 0L, 1);
+        Categories category8 = new Categories("Инструменты", 0L, 1);
+        Categories category9 = new Categories("Ноутбуки", 1L, 2);
+        Categories category10 = new Categories("Моноблоки", 1L, 2);
+        Categories category11 = new Categories("Смартфоны", 3L, 2);
+        Categories category12 = new Categories("Комплектующие", 1L, 2);
+        Categories category13 = new Categories("Периферия", 1L, 2);
+        Categories category14 = new Categories("Планшеты", 3L, 2);
+        Categories category15 = new Categories("Электронные книги", 3L, 2);
+        Categories category16 =  new Categories("Аксессуары для гаджетов", 3L, 2);
+        Categories category17 =  new Categories("Телевизоры", 4L, 2);
+        Categories category18 =  new Categories("Игры", 4L, 2);
+        Categories category19 =  new Categories("Аудиотехника", 4L, 2);
+        Categories category20 =  new Categories("Оргтехника", 5L, 2);
+        Categories category21 =  new Categories("Роутеры и сетевое оборудование", 5L, 2);
+        Categories category22 =  new Categories("Техника для кухни", 2L, 2);
+        Categories category23 =  new Categories("Техника для уборки", 2L, 2);
+        Categories category24 =  new Categories("Стиральные и сушильные машины", 2L, 2);
+        Categories category25 =  new Categories("Климатическая техника", 2L, 2);
+        Categories category26 =  new Categories("С сенсорным экраном", 9L, 3);
+        Categories category27 =  new Categories("Игровые", 9L, 3);
+        Categories category28 =  new Categories("Недорогие", 9L, 3);
+        Categories category29 =  new Categories("Ультрабуки", 9L, 3);
 
-        Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, category1);
-        Product product2 = new Product("ACER-543", 399.9, 10, 4.2, category1);
-        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, category1);
+        Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
+        Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
+        Product product3 = new Product("Samsung-7893", 259.9, 20, 4.6, "Computer", false);
 
-        Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, category2);
-        Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, category2);
-        Product product6 = new Product("NY-2345-PC-453", 1223.9, 7, 4.7, category2);
+        Product product4 = new Product("NX-7893-PC-09878", 924.0, 3, 4.2, "Computer", false);
+        Product product5 = new Product("ZX-7654-PC-1", 1223.9, 7, 4.7, "Computer", false);
+        Product product6 = new Product("NY-2345-PC-453", 1223.9, 7, 4.7, "Computer", false);
 
-        Product product7 = new Product("XIAOMI-Mi10", 599.9, 120, 4.9, category3);
-        Product product8 = new Product("LG-2145", 439.5, 78, 3.9, category3);
-        Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, category3);
+        Product product7 = new Product("XIAOMI-Mi10", 599.9, 120, 4.9, "Cellphone", false);
+        Product product8 = new Product("LG-2145", 439.5, 78, 3.9, "Cellphone", false);
+        Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, "Cellphone", false);
 
-        Product product10 = new Product("Roomba 698", 299.9, 6, 4.3, category15);
-        Product product11 = new Product("Bosch BWD41720", 329.9, 8, 4.1, category15);
-        Product product12 = new Product("Samsung SC4131", 69.9, 28, 4.6, category15);
+        Product product10 = new Product("Notebook 1", 99.9, 2, 0.0, "Computer");
+        Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer");
+        Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, "Computer");
 
-        Product product13 = new Product("Samsung WW60K40G00W", 549.9, 3, 4.8, category16);
-        Product product14 = new Product("Hotpoint-Ariston BI WDHG 75148 EU", 999.9, 2, 4.3, category16);
-        Product product15 = new Product("Whirlpool TDLR 60111", 499.9, 6, 3.9, category16);
+        Product product13 = new Product("Roomba 698", 299.9, 6, 4.3, "Cleaning");
+        Product product14 = new Product("Bosch BWD41720", 329.9, 8, 4.1, "Cleaning");
+        Product product15 = new Product("Samsung SC4131", 69.9, 28, 4.6, "Cleaning");
 
-        Product product16 = new Product("Hotpoint-Ariston SPOWHA 409-K", 399.9, 2, 3.8, category17);
-        Product product17 = new Product("LG P09EP2", 529.9, 2, 4.1, category17);
-        Product product18 = new Product("LG Mega Plus P12EP1", 584.9, 2, 4.7, category17);
+        Product product16 = new Product("Samsung WW60K40G00W", 549.9, 3, 4.8, "Washing");
+        Product product17 = new Product("Hotpoint-Ariston BI WDHG 75148 EU", 999.9, 2, 4.3, "Washing");
+        Product product18 = new Product("Whirlpool TDLR 60111", 499.9, 6, 3.9, "Washing");
+
+        Product product19 = new Product("Hotpoint-Ariston SPOWHA 409-K", 399.9, 2, 3.8, "Air_conditioner");
+        Product product20 = new Product("LG P09EP2", 529.9, 2, 4.1, "Air_conditioner");
+        Product product21 = new Product("LG Mega Plus P12EP1", 584.9, 2, 4.7, "Air_conditioner");
 
         Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
         Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
@@ -626,15 +676,18 @@ public class DataInitializer {
         Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim", 512, 512, "1920x960", true, "5.0");
         Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 256, "1920x960", false, "4.0");
         Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 128, "1024x480", true, "5.0");
-        Description description10 = new Description("XYZ270011101230600001", "iRobot", 2, "300x75x300", "silver", 3.0, "Standard suction for an every day clean. Provides personalized cleaning suggestions.");
-        Description description11 = new Description("CFE867594316856743201", "Bosch", 1, "360x350x490", "violet", 10.9, "Моющий пылесос Bosch BWD41720 — надежное устройство, позволяющее поддерживать чистоту напольных покрытий любого типа.");
-        Description description12 = new Description("08UV8NEM703511M", "Samsung", 1, "365x230x275", "blue", 3.8, "Пылесос Samsung SC4131 используется для сухой уборки многокомнатных квартир и жилых домов.");
-        Description description13 = new Description("X54355543455", "Samsung", 2, "850x600x450", "white", 54.0, "Позволяет бережно очищать от загрязнений одежду и текстильные изделия из хлопка, льна, синтетических волокон и деликатных тканей");
-        Description description14 = new Description("A886UW16575632", "Whirlpool Corp.", 1, "815x595x540", "white", 65.0, "Встраиваемая стиральная машина способна за один цикл постирать и высушить до 7 кг вещей", 1024, 256, "1920x960", false, "4.0");
-        Description description15 = new Description("A88563902273", "Whirlpool Corp.", 1, "900x420x600", "white", 49.0, "Автоматически определяется тип белья, расход воды и моющих средств. Устройство бережно относится к ткани и обеспечивает превосходный результат стирки.");
-        Description description16 = new Description("AHP4388843455", "Whirlpool Corp.", 1, "270x835x210", "white", 6.5, "Кондиционер Hotpoint-Ariston SPOWHA 409-K используется для создания благоприятного микроклимата в помещениях площадью 27 м²");
-        Description description17 = new Description("L856XZ11564632", "LG", 1, "265x756x184", "white", 7.4, "Кондиционер LG P09EP2 используется для установки оптимальной температуры в помещении дома или офиса площадью 20 м²");
-        Description description18 = new Description("L014ZZ10018974", "LG", 1, "302x837x189; 483x717x230", "white", 8.7, "Модель LG Mega Plus P12EP1 будет оптимальна для установки в помещении площадью 35 м²");
+        Description description10 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
+        Description description11 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
+        Description description12 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
+        Description description13 = new Description("XYZ270011101230600001", "iRobot", 2, "300x75x300", "silver", 3.0, "Standard suction for an every day clean. Provides personalized cleaning suggestions.");
+        Description description14 = new Description("CFE867594316856743201", "Bosch", 1, "360x350x490", "violet", 10.9, "Моющий пылесос Bosch BWD41720 — надежное устройство, позволяющее поддерживать чистоту напольных покрытий любого типа.");
+        Description description15 = new Description("08UV8NEM703511M", "Samsung", 1, "365x230x275", "blue", 3.8, "Пылесос Samsung SC4131 используется для сухой уборки многокомнатных квартир и жилых домов.");
+        Description description16 = new Description("X54355543455", "Samsung", 2, "850x600x450", "white", 54.0, "Позволяет бережно очищать от загрязнений одежду и текстильные изделия из хлопка, льна, синтетических волокон и деликатных тканей");
+        Description description17 = new Description("A886UW16575632", "Whirlpool Corp.", 1, "815x595x540", "white", 65.0, "Встраиваемая стиральная машина способна за один цикл постирать и высушить до 7 кг вещей", 1024, 256, "1920x960", false, "4.0");
+        Description description18 = new Description("A88563902273", "Whirlpool Corp.", 1, "900x420x600", "white", 49.0, "Автоматически определяется тип белья, расход воды и моющих средств. Устройство бережно относится к ткани и обеспечивает превосходный результат стирки.");
+        Description description19 = new Description("AHP4388843455", "Whirlpool Corp.", 1, "270x835x210", "white", 6.5, "Кондиционер Hotpoint-Ariston SPOWHA 409-K используется для создания благоприятного микроклимата в помещениях площадью 27 м²");
+        Description description20 = new Description("L856XZ11564632", "LG", 1, "265x756x184", "white", 7.4, "Кондиционер LG P09EP2 используется для установки оптимальной температуры в помещении дома или офиса площадью 20 м²");
+        Description description21 = new Description("L014ZZ10018974", "LG", 1, "302x837x189; 483x717x230", "white", 8.7, "Модель LG Mega Plus P12EP1 будет оптимальна для установки в помещении площадью 35 м²");
 
         product1.setDescriptions(description1);
         product2.setDescriptions(description2);
@@ -654,51 +707,22 @@ public class DataInitializer {
         product16.setDescriptions(description16);
         product17.setDescriptions(description17);
         product18.setDescriptions(description18);
+        product18.setDescriptions(description19);
+        product18.setDescriptions(description20);
+        product18.setDescriptions(description21);
 
-        category1.setProducts(Arrays.asList(product1, product2, product3));
-        category2.setProducts(Arrays.asList(product4, product5, product6));
-        category3.setProducts(Arrays.asList(product7, product8, product9));
-        category15.setProducts(Arrays.asList(product10, product11, product12));
-        category16.setProducts(Arrays.asList(product13, product14, product15));
-        category17.setProducts(Arrays.asList(product16, product17, product18));
+        category26.setProducts(Arrays.asList(product1, product2, product3));
+        category28.setProducts(Arrays.asList(product4, product5, product6));
+        category11.setProducts(Arrays.asList(product7, product8, product9));
+        category27.setProducts(Arrays.asList(product10, product11, product12));
+        category23.setProducts(Arrays.asList(product13, product14, product15));
+        category24.setProducts(Arrays.asList(product16, product17, product18));
+        category25.setProducts(Arrays.asList(product19, product20, product21));
 
-        categoriesService.saveAll(Arrays.asList(category1, category2, category3,
-                category4, category5, category6, category7, category8, category9, category10, category11,
-                category12, category13, category14, category15, category16, category17));
-
-        productService.saveAllProducts(Arrays.asList(product1, product2, product3, product4, product5,
-                product6, product7, product8, product9, product10, product11, product12, product13, product14,
-                product15, product16, product17, product18));
-
-        Set<Product> productSet = new HashSet<>();
-        productSet.add(product1);
-        productSet.add(product2);
-        productSet.add(product3);
-
-        User customer = userService.findByEmail("customer@mail.ru").get();
-        customer.setFavouritesGoods(productSet);
-        userService.updateUser(customer);
-
-        //Создание основного списка(Все товары) избранных товаров
-        FavouritesGroup favouritesGroup = new FavouritesGroup();
-        favouritesGroup.setName("Все товары");
-        favouritesGroup.setProducts(productSet);
-        favouritesGroup.setUser(customer);
-        favouritesGroupService.save(favouritesGroup);
-
-        SubBasket subBasket_1 = new SubBasket();
-        subBasket_1.setProduct(product1);
-        subBasket_1.setCount(1);
-        basketService.addBasket(subBasket_1);
-        SubBasket subBasket_2 = new SubBasket();
-        subBasket_2.setProduct(product3);
-        subBasket_2.setCount(1);
-        basketService.addBasket(subBasket_2);
-        List<SubBasket> subBasketList = new ArrayList<>();
-        subBasketList.add(subBasket_1);
-        subBasketList.add(subBasket_2);
-        customer.setUserBasket(subBasketList);
-        userService.updateUser(customer);
+        categoriesService.saveAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7,
+                category8, category9, category10, category11, category12, category13, category14, category15, category16,
+                category17, category18, category19, category20, category21, category22, category23, category24, category25,
+                category26, category27, category28, category29));
     }
 
     /**

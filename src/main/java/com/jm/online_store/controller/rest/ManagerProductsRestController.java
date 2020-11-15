@@ -1,9 +1,12 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +26,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -35,11 +40,11 @@ import java.util.Optional;
 public class ManagerProductsRestController {
 
     private final ProductService productService;
+    private final CategoriesService categoriesService;
 
     /**
      * Метод обрабатывает загрузку файла с товарами на сервер
      * Вызывает соответствующий сервисный метод в зависимости от типа файла(CSV или XML)
-     *
      * @param file файл с данными
      * @return
      */
@@ -66,7 +71,6 @@ public class ManagerProductsRestController {
 
     /**
      * Метод-сепаратор, возвращающий расширение файла
-     *
      * @param myFileName имя файла
      */
     private static String getFileExtension(String myFileName) {
@@ -76,7 +80,6 @@ public class ManagerProductsRestController {
 
     /**
      * Метод выводит список всех товаров
-     *
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/rest/products/allProducts")
@@ -85,8 +88,7 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Метод возвращает список неудаленых товаров
-     *
+     * Метод возвращает список неудаленных товаров
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/rest/products/getNotDeleteProducts")
@@ -95,8 +97,7 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Метод, ищет акции по id
-     *
+     * Метод, ищет товар по id
      * @param productId идентификатор товара
      * @return Optional<Product> возвращает товар
      */
@@ -107,19 +108,18 @@ public class ManagerProductsRestController {
 
     /**
      * Метод добавляет товар
-     *
-     * @param product акиця для добавления
-     * @return ResponseEntity<Product> Возвращает добавленную акцию с кодом ответа
+     * @param product товар для добавления
+     * @return ResponseEntity<Product> Возвращает добавленный товар с кодом ответа
      */
-    @PostMapping(value = "/rest/products/addProduct", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> addProductM(@RequestBody Product product) {
+    @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Product> addProduct(@RequestBody Product product, @PathVariable Long id) {
         productService.saveProduct(product);
+        categoriesService.addToProduct(product, id);
         return ResponseEntity.ok(product);
     }
 
     /**
      * Редактирует товар
-     *
      * @param product товар для редактирования
      * @return ResponseEntity<Product> Возвращает отредактированный товар с кодом ответа
      */
@@ -130,8 +130,25 @@ public class ManagerProductsRestController {
     }
 
     /**
+     * Редактирует товар и его категорию
+     * @param product товар для редактирования
+     */
+    @PutMapping("/rest/products/editProduct/{idOld}/{idNew}")
+    public ResponseEntity<Product> editProductAndCategory(@RequestBody Product product,
+                                                          @PathVariable Long idOld,
+                                                          @PathVariable Long idNew) {
+        productService.editProduct(product);
+        if (idOld == -1) {
+            categoriesService.addToProduct(product, idNew);
+        } else {
+            categoriesService.removeFromProduct(product, idOld);
+            categoriesService.addToProduct(product, idNew);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
      * Метод удаления товара по идентификатору
-     *
      * @param id идентификатор товара
      */
     @DeleteMapping(value = "/rest/products/{id}")
@@ -142,7 +159,6 @@ public class ManagerProductsRestController {
 
     /**
      * Метод восстановления удаленного товара по идентификатору
-     *
      * @param id идентификатор товара
      */
     @PostMapping(value = "/rest/products/restoredeleted/{id}")
@@ -158,7 +174,10 @@ public class ManagerProductsRestController {
      * @param response запрос для возврата информации
      * @return запрос с файлом xlsx
      */
-    @GetMapping("/manager/products/report")
+
+    //todo: метод пригодится при написании функционала https://trello.com/c/nMXsujCF/200-страница-менеджера-создать-раздел-рейтинга-товаров
+
+/*    @GetMapping("/manager/products/report")
     public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@RequestParam String category, HttpServletResponse response) {
         try {
             response.setContentType("text/html; charset=UTF-8");
@@ -175,5 +194,5 @@ public class ManagerProductsRestController {
         } catch (NullPointerException | IOException e) {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 }
