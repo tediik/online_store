@@ -10,3 +10,7 @@
 .checkText {
     font-size: 17px;
 }
+
+#jqxTreeHere li.hide {
+    display: none;
+}

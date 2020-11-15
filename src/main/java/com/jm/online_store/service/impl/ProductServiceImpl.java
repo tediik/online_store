@@ -79,16 +79,6 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
-    /**
-     * Метод для получения товаров по категории
-     *
-     * @param categoryName категория
-     * @return список товаров данной категории
-     */
-    @Override
-    public List<Product> findProductsByCategory(String categoryName) {
-        return productRepository.findProductsByCategory(categoryName);
-    }
 
     /**
      * Метод для создания XLSX файла из списка товаров по категории
@@ -136,7 +126,7 @@ public class ProductServiceImpl implements ProductService {
             cell.setCellValue(aProduct.getRating());
 
             cell = row.createCell(5);
-            cell.setCellValue(aProduct.getProductType().getCategory());
+            cell.setCellValue(category);
         }
         return workbook;
     }
@@ -396,7 +386,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getPrice(),
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
-                        presentProduct.getProductType().getCategory(),
+                        presentProduct.getProductType(),
                         productSet.contains(presentProduct)
                 );
                 return Optional.of(productDto);
@@ -410,7 +400,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getPrice(),
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
-                        presentProduct.getProductType().getCategory(),
+                        presentProduct.getProductType(),
                         false
                 );
                 return Optional.of(productDto);
