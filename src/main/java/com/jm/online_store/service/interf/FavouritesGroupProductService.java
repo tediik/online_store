@@ -6,7 +6,11 @@ import com.jm.online_store.model.Product;
 import java.util.Set;
 
 public interface FavouritesGroupProductService {
+
     void deleteProductFromFavouritesGroup(Product product, FavouritesGroup favouritesGroup);
+
     void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup);
+
     Set<Product> getProductSet(FavouritesGroup favouritesGroup);
+
 }
