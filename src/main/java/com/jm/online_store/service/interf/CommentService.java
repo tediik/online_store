@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface CommentService {
 
-    List<Comment> findAll(Long productId);
+    List<Comment> findAllByProductId(Long productId);
+
+    List<Comment> findAllByReviewId(Long reviewId);
 
     List<Comment> findAllByCustomer(User user);
 

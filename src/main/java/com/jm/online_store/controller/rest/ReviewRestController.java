@@ -2,9 +2,11 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
+import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForReviewDto;
 import com.jm.online_store.model.dto.ReviewDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class ReviewRestController {
 
     private final ProductRepository productRepository;
+    private final CommentService commentService;
     private final ReviewService reviewService;
 
     /**
@@ -45,6 +48,19 @@ public class ReviewRestController {
         return ResponseEntity.ok(reviewDtos);
     }
 
+    /**
+     * Fetches an arrayList of all review comments by reviewId and returns JSON representation response
+     *
+     * @param reviewId
+     * @return ResponseEntity<List<CommentDto>>
+     */
+    @GetMapping("/comments/{reviewId}")
+    public ResponseEntity<List<CommentDto>> findAllComments(@PathVariable Long reviewId) {
+        List<CommentDto> commentDtos = commentService.findAllByReviewId(reviewId).stream()
+                .map(CommentDto::commentEntityToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(commentDtos);
+    }
     /**
      * Receives productReview requestBody and passes it to Service layer for processing
      * Returns JSON representation

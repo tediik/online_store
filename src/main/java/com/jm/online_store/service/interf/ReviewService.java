@@ -5,6 +5,7 @@ import com.jm.online_store.model.User;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewService {
 
@@ -16,5 +17,5 @@ public interface ReviewService {
 
     void addReviewInit(Review review);
 
-    Review findById(Long parentId);
+    Optional<Review> findById(Long parentId);
 }

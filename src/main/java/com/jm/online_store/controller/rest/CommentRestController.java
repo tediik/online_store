@@ -2,10 +2,13 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForCommentDto;
+import com.jm.online_store.model.dto.ReviewForCommentDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CommentService;
+import com.jm.online_store.service.interf.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
 public class CommentRestController {
 
     private final CommentService commentService;
+    private final ReviewService reviewService;
     private final ProductRepository productRepository;
 
     /**
@@ -39,7 +43,7 @@ public class CommentRestController {
      */
     @GetMapping("/{productId}")
     public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
-        List<CommentDto> commentDtos = commentService.findAll(productId).stream()
+        List<CommentDto> commentDtos = commentService.findAllByProductId(productId).stream()
                 .map(CommentDto::commentEntityToDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(commentDtos);
@@ -61,6 +65,31 @@ public class CommentRestController {
             return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
         } else
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
+    }
+
+    /**
+     * Receives reviewComment requestBody and reviewId, passes it to Service layer for processing
+     * Returns JSON representation
+     *
+     *
+     * @param comment
+     * @param reviewId
+     * @return ResponseEntity<ReviewForCommentDto>
+     */
+    @PostMapping("/{reviewId}")
+    public ResponseEntity<ReviewForCommentDto> addReviewComment(@RequestBody @Valid Comment comment,
+                                                                @PathVariable Long reviewId, BindingResult bindingResult) {
+        Review reviewFromDb = reviewService.findById(reviewId).get();
+        if (!bindingResult.hasErrors()) {
+            comment.setReview(reviewFromDb);
+            Comment savedComment = commentService.addComment(comment);
+            reviewFromDb.setComments(List.of(savedComment));
+            CommentDto.commentEntityToDto(comment);
+            return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
+        }
     }
 
     private String getErrors(BindingResult bindingResult) {
