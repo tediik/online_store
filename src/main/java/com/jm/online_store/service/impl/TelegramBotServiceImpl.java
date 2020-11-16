@@ -72,7 +72,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                 return " принят";
             }
             case DIAGNOSTICS: {
-                return " находиться на диагностике";
+                return " находится на диагностике";
             }
             case IN_WORK: {
                 return " в ремонте";
