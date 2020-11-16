@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  * RestController для телеграм бота
  */
 @Slf4j
-@RestController()
+@RestController
 @AllArgsConstructor
 public class TelegramBotRestController {
     private final TelegramBot telegramBot;
@@ -29,7 +29,6 @@ public class TelegramBotRestController {
      */
     @RequestMapping(value = "/telegram-bot", method = RequestMethod.POST)
     public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
-        log.debug("Запрос к телеграм боту");
         return telegramBot.onWebhookUpdateReceived(update);
     }
 }
