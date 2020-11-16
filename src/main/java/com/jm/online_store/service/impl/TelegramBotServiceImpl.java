@@ -84,7 +84,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                 return " заархивирован";
             }
             case CANCELED: {
-                return " завершен";
+                return " отменен";
             }
             default: {
                 return " не найден";
