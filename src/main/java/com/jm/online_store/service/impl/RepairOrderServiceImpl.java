@@ -38,6 +38,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
 
     /**
      * Метод возвращает все заказы на ремонт кроме отмененных . Сортирует по дате, от нового заказа к старому.
+     *
      * @return лист заказов на ремонт
      */
     @Override
@@ -45,7 +46,7 @@ public class RepairOrderServiceImpl implements RepairOrderService {
         List<RepairOrder> repairOrderList = repairOrderRepository.findAll();
         repairOrderList.removeIf(repairOrder -> repairOrder.getRepairOrderType().equals(RepairOrderType.CANCELED));
         repairOrderList.sort((a, b) -> b.getAcceptanceDate().compareTo(a.getAcceptanceDate()));
-        return  repairOrderList;
+        return repairOrderList;
     }
 
     /**
@@ -143,17 +144,19 @@ public class RepairOrderServiceImpl implements RepairOrderService {
      * @param repairOrder принимает в качестве параметра заказ на ремонт
      */
     @Override
-    public void save(RepairOrder repairOrder) {
+    public RepairOrder save(RepairOrder repairOrder) {
+        repairOrder.setOrderNumber(generateOrderNumber(repairOrder));
         repairOrder.setRepairOrderType(RepairOrderType.ACCEPTED);
         repairOrder.setAcceptanceDate(LocalDate.now());
         if (!ValidationUtils.isValidTelephoneNumber(repairOrder.getTelephoneNumber())) {
             throw new InvalidTelephoneNumberException();
         }
-        repairOrderRepository.save(repairOrder);
+        return repairOrderRepository.save(repairOrder);
     }
 
     /**
      * Метод создает PDF документ и помещает в поток response
+     *
      * @param repairOrder заказ на ремонт
      * @param response    изменяемый response с формы заказа на ремонт
      * @throws IOException       ошибка получения потока из response
@@ -272,5 +275,26 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     @Override
     public RepairOrder findByOrderNumber(String orderNumber) {
         return repairOrderRepository.findByOrderNumber(orderNumber);
+    }
+
+    /**
+     * Метод генерирует номер заказа на ремонт из последних 3 цифр номера телефона
+     * и последних 3 цифр времени, прошедшего с 01.01.1970 в мс
+     *
+     * @param repairOrder заказ на ремонт
+     * @return сгенерированный номер заказа на ремонт
+     */
+    public String generateOrderNumber(RepairOrder repairOrder) {
+        StringBuilder orderNumber = new StringBuilder();
+        String timeSequence = String.valueOf(System.currentTimeMillis());
+        if (repairOrder.isGuarantee()) {
+            orderNumber.append("Y");
+        } else {
+            orderNumber.append("N");
+        }
+        orderNumber.append(repairOrder.getTelephoneNumber().subSequence(repairOrder.getTelephoneNumber().length() - 4,
+                repairOrder.getTelephoneNumber().length())).append(timeSequence.substring(timeSequence.length() - 4));
+
+        return orderNumber.toString().replaceAll("\\s+", "");
     }
 }
