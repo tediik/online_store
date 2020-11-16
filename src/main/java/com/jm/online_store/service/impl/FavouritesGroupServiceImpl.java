@@ -13,6 +13,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class FavouritesGroupServiceImpl implements FavouritesGroupService {
+
     private final FavouritesGroupRepository favouritesGroupRepository;
 
     @Override
