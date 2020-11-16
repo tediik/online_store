@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FavouritesGroupRepository extends JpaRepository<FavouritesGroup, Long> {
+
     void deleteById(Long id);
 
     Optional<FavouritesGroup> findByName(String name);
