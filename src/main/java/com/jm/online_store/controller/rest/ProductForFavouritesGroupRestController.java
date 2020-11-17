@@ -24,6 +24,7 @@ import java.util.Set;
 @RestController
 @AllArgsConstructor
 public class ProductForFavouritesGroupRestController {
+
     private final FavouritesGroupProductService favouritesGroupProductService;
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
