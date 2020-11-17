@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -61,8 +62,8 @@ public class ReviewServiceImpl implements ReviewService {
      * @return ProductReview
      */
     @Override
-    public Review findById(Long reviewId) {
-        return reviewRepository.findById(reviewId).get();
+    public Optional<Review> findById(Long reviewId) {
+        return reviewRepository.findById(reviewId);
     }
 
     /**
