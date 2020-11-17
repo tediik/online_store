@@ -9,15 +9,17 @@ $(document).ready(function () {
             success: function (response) {
                 $.each(response, function (i, review) {
                     $('#showReviews').append($(`
-                        <div class="media mb-4"><div>
-                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${review.userPhoto}" width="52"></div>
-                        <div class="media-body" id='mediaBody" + ${review.id} + "'>
-                        <h5 class="mt-0">${review.userEmail} reviewted on ${review.timeStamp}</h5>
-                        <div class="message"> ${review.content}  </div>
-                        <button type='button' id='button${review.id}' class='btn btn-link commentReview'>Комментировать</button>
-                        <div class="commentReviewDisplay" id='commentReviewDisplayId${review.id}'></div>
-                        <div class="commentReviewBoxSpace" id='commentReviewBoxSpace${review.id}'></div>
-                       `));
+                        <div class="media mb-4">
+                            <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${review.userPhoto}" width="52"></div>
+                            <div class="media-body" id='mediaBody" + ${review.id} + "'>
+                                <h5 class="mt-0">${review.userEmail} reviewted on ${review.timeStamp}</h5>
+                                <div class="message"> ${review.content} 
+                            </div>
+                            <button type='button' id='button${review.id}' class='btn btn-link commentReview'>Комментировать</button>
+                            <div class="commentReviewDisplay" id='commentReviewDisplayId${review.id}'></div>
+                            <div class="commentReviewBoxSpace" id='commentReviewBoxSpace${review.id}'></div>
+                        </div>
+                    `));
                     $.ajax({
                         type: "GET",
                         url: '/api/reviews/comments/' + review.id,
@@ -26,15 +28,16 @@ $(document).ready(function () {
                             $.each(response, function (i, comment) {
                                 let replyDisplayId = $('#commentReviewDisplayId' + review.id);
                                 $(replyDisplayId).append($(`
-                            <div class="media mt-4">
-                            <div>
-                            <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                            height="52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
-                            <div class="media-body">
-                            <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                            <div class="message">${comment.content}</div>
-                            </div>
-                            </div>`));
+                                    <div class="media mt-4">
+                                        <div>
+                                            <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                            height="52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
+                                        <div class="media-body">
+                                            <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                            <div class="message">${comment.content}</div>
+                                        </div>
+                                    </div>
+                                `));
                             })
                         }
                     })
@@ -70,8 +73,9 @@ $(document).ready(function () {
                     contentType: "application/json; charset=utf-8",
                     success: function (response) {
 
-                        var review = response.reviews[0];
-                        $('#showReviews').append($(`<div class="media mb-4">
+                        let review = response.reviews[0];
+                        $('#showReviews').append($(`
+                        <div class="media mb-4">
                             <div>
                                     <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
                                     height="52" src="/uploads/images/${review.userPhoto}" width="52"></div>
@@ -81,7 +85,8 @@ $(document).ready(function () {
                                     <button type='button' id='button${review.id}' class='btn btn-link commentReview'>Комментировать</button>
                                     <div class="commentReviewDisplay" id='commentReviewDisplayId${review.id}'> </div>
                                     <div class="commentReviewBoxSpace" id='commentReviewBoxSpace${review.id}'></div>
-                            </div>`))
+                            </div>
+                        `))
                         $('#reviewForm').find('input:text').val('');
                     }
                 })
@@ -89,7 +94,6 @@ $(document).ready(function () {
         });
     });
     $(document).on('click', '.commentReview', function (e) {
-        //Reply to this id
         let reviewId = $(this).attr("id");
 
         reviewId = reviewId.replace(/\D/g, '');
@@ -106,7 +110,7 @@ $(document).ready(function () {
 
         $('#submitCommentReviewBtn').on('click', function (event) {
             if ($("#commentReviewText").val().trim().length < 1) {
-                toastr.error("ведите текст...");
+                toastr.error("введите текст...");
             } else {
                 event.preventDefault();
                 let reviewComment = $('#commentReviewText').val();
@@ -125,14 +129,19 @@ $(document).ready(function () {
 
                         $(replyDisplayId).append($(`
                             <div class="media mt-4">
-                            <div>
-                            <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                            height="52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
-                            <div class="media-body">
-                            <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                            <div class="message">${comment.content}</div>
+                                <div>
+                                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                    height="52" src="/uploads/images/${comment.userPhoto}" width="52">
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                    <div class="message">${comment.content}</div>
+                                </div>
                             </div>
-                            </div>`).last());
+                        `).last());
+                    },
+                    error: function () {
+                        toastr.error("Не удалось добавить комментарий.")
                     }
                 });
             }

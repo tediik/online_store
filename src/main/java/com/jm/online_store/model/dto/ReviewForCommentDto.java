@@ -6,6 +6,10 @@ import lombok.Data;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Сущность для получения из {@link Review} -> ReviewForCommentDto
+ * для дальнейщей отправки в ResponseEntity в виде Json.
+ */
 @Data
 public class ReviewForCommentDto {
     private Long id;

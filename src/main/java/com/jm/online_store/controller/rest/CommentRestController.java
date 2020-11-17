@@ -10,6 +10,7 @@ import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReviewService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/comments")
 @AllArgsConstructor
+@Slf4j
 public class CommentRestController {
 
     private final CommentService commentService;
@@ -63,14 +65,16 @@ public class CommentRestController {
             Comment savedComment = commentService.addComment(comment);
             productFromDb.setComments(List.of(savedComment));
             return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
-        } else
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
+        } else {
+            log.error(String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
+        }
     }
 
     /**
      * Receives reviewComment requestBody and reviewId, passes it to Service layer for processing
      * Returns JSON representation
-     *
      *
      * @param comment
      * @param reviewId
@@ -87,6 +91,7 @@ public class CommentRestController {
             CommentDto.commentEntityToDto(comment);
             return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
         } else {
+            log.error(String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
         }
