@@ -1,8 +1,10 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Comment;
+import com.jm.online_store.model.Review;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CommentRepository;
+import com.jm.online_store.repository.ReviewRepository;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
@@ -10,12 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final ReviewRepository reviewRepository;
     private final UserService userService;
 
     /**
@@ -25,12 +29,17 @@ public class CommentServiceImpl implements CommentService {
      * @return List<comment>
      */
     @Override
-    public List<Comment> findAll(Long productId) {
+    public List<Comment> findAllByProductId(Long productId) {
         return commentRepository.findAllByProductId(productId);
     }
 
+    @Override
+    public List<Comment> findAllByReviewId(Long reviewId) {
+        return commentRepository.findAllByReviewId(reviewId);
+    }
 
-/**
+
+    /**
      * Find and return List of comments from database by Customer Id
      *
      * @return List<comment>
@@ -41,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Method checks if Comment is a new post or reply to previous comment
+     * Method checks if Comment is a new post or reply  to previous comment or comment for review
      * then sets a current user as author of a comment and saves to dataBase
      *
      * @param comment
@@ -53,6 +62,9 @@ public class CommentServiceImpl implements CommentService {
         User loggedInUser = userService.getCurrentLoggedInUser();
         if (comment.getParentId() != null) {
             comment.setParentComment(commentRepository.findById(comment.getParentId()).get());
+        }
+        if (comment.getReview() != null) {
+            comment.setReview(reviewRepository.findById(comment.getReview().getId()).get());
         }
         comment.setCustomer(userService.findById(loggedInUser.getId()).get());
         return commentRepository.save(comment);
