@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 /**
  * Сущность для получения из {@link Review} -> ReviewForCommentDto
- * для дальнейщей отправки в ResponseEntity в виде Json.
+ * для дальнейшей отправки в ResponseEntity в виде Json.
  */
 @Data
 public class ReviewForCommentDto {

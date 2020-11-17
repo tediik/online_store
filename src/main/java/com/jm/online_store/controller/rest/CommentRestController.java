@@ -66,7 +66,7 @@ public class CommentRestController {
             productFromDb.setComments(List.of(savedComment));
             return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
         } else {
-            log.error(String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
+            log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
         }
@@ -91,7 +91,7 @@ public class CommentRestController {
             CommentDto.commentEntityToDto(comment);
             return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
         } else {
-            log.error(String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
+            log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
         }
