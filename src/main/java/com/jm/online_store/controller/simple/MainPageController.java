@@ -39,6 +39,7 @@ public class MainPageController {
      */
     @GetMapping("/activate/{token}")
     public String registerMail(Model model, @PathVariable String token, HttpServletRequest request) {
+        userService.activateUser(token, request);
         try {
             userService.activateUser(token, request);
         } catch (EmailAlreadyExistsException ex) {
