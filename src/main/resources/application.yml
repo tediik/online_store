@@ -58,6 +58,7 @@ price-list-service:
 
 spring.profiles.include: 'security'
 
+# Смотри инструкцию https://trello.com/c/8akD9MhL
 telegram-bot:
   name: online_store_stocks_bot
   token: 1405685131:AAF7CiyhMfTgtkhbxIbAPWt1kipZPRxPuC8
