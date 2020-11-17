@@ -21,6 +21,9 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     public String getActualStocks() {
         StringBuilder message = new StringBuilder();
         List<Stock> actualStocks = stockService.findActualStocks();
+        if (actualStocks.isEmpty()) {
+            return "Акций нет\uD83D\uDE2D";
+        }
         for (Stock stock : actualStocks) {
             message.append("\uD83D\uDD25")
                     .append(stock.getStockTitle())
