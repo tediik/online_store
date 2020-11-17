@@ -84,13 +84,13 @@
                 <div class="tab-pane fade col-12" id="favouritesGoods" role="tabpanel"
                      aria-labelledby="favouritesGoods-tab">
                     <h3>Избранное</h3>
-                    <!-- Новый интерфейс -->
+                    Новый интерфейс
                     <div class="favouritesgroups">
                         <div class="btn-group">
                             <button type="button" class="get-favourites-group-btn btn btn-secondary dropdown-toggle"
                                     data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false" th:id="${favouritesGroupList[0].id}">Все
-                                товары
+                                    aria-haspopup="true" aria-expanded="false">
+                            <!--th:id="${favouritesGroupList[0].id}"--> Ваши списки товаров
                             </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" th:each="favouritesGroup : ${favouritesGroupList}"
@@ -110,13 +110,13 @@
                         <a id="sel_new_group" class="btn btn-outline-secondary hidden" data-toggle="modal"
                            data-target="#exampleModal" href="#">Выбрать группу</a>
                     </div>
-                    <!-- Modal -->
+                    Modal
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                          aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Выбирите список:</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Выберите список:</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -254,7 +254,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    <!--Profile picture change modal-->
+                                        <!--Profile picture change modal-->
                                     </div>
 
                                     <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}"
@@ -360,7 +360,8 @@
                                             </select>
                                         </div><!--РАССЫЛКА -->
                                         <hr/>
-<!-- YELLOW SAVE BUTTON -->                                        <button type="submit" style="background-color: #ff8e05"
+                                        <!-- YELLOW SAVE BUTTON -->
+                                        <button type="submit" style="background-color: #ff8e05"
                                                 class="m-2 btn btn-success d-block mx-auto">Сохранить
                                         </button><!--SAVE BUTTON -->
 
@@ -382,7 +383,7 @@
                                                class="personal-info_register-date font-weight-bold"
                                                id="register_date"></a>
                                         </div>
-                                    <!--ДАТА РЕГИТСРАЦИИ -->
+                                        <!--ДАТА РЕГИТСРАЦИИ -->
                                     </form>
 
                                     <!-- change mail modal -->
