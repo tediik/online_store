@@ -15,6 +15,7 @@ public class CommentDto {
    private String userEmail;
    private LocalDateTime timeStamp;
    private Long productId;
+   private Long reviewId;
 
    public static CommentDto commentEntityToDto(Comment commentEntity){
        CommentDto commentDto = new CommentDto();
@@ -25,6 +26,9 @@ public class CommentDto {
        commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
        commentDto.setTimeStamp(commentEntity.getCommentDate().truncatedTo(ChronoUnit.MINUTES));
        commentDto.setProductId(commentEntity.getProductId());
+       if (commentEntity.getReview() != null) {
+           commentDto.setReviewId(commentEntity.getReview().getId());
+       }
        return commentDto;
    }
 }
