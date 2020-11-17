@@ -4,6 +4,8 @@ import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.util.Transliteration;
 import lombok.AllArgsConstructor;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +47,7 @@ public class SubcategoryPageRestController {
      * @return список Categories
      */
     @GetMapping("/categories")
-    public ResponseEntity<List<Categories>> getAllCategories() {
+    public ResponseEntity<JSONArray> getAllCategories() {
         return ResponseEntity.ok(categoriesService.getAllCategories());
     }
 }

@@ -48,4 +48,12 @@ public class Comment {
 
     @Column(name = "product_id")
     private Long productId;
+
+    @ManyToOne
+    @JoinColumn(name = "review_id")
+    private Review review;
+
+    public Comment(String content) {
+        this.content = content;
+    }
 }

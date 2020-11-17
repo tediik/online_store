@@ -18,7 +18,7 @@
            class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/customer">Кабинет покупателя</a>
         <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
-           href="/authority/profile">Кабинет администратора</a>
+           href="/admin">Кабинет администратора</a>
         <a sec:authorize="hasAnyAuthority('ROLE_MANAGER') and not hasAnyAuthority('ROLE_ADMIN')"
            class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/authority/profile">Кабинет менеджера</a>
