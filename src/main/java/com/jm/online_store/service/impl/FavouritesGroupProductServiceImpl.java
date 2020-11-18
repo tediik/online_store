@@ -14,19 +14,6 @@ public class FavouritesGroupProductServiceImpl implements FavouritesGroupProduct
     private final FavouritesGroupRepository favouritesGroupRepository;
 
 
-
-    /**
-     * Добавление продукта в список избранных товаров
-     * @param product продукт
-     * @param favouritesGroup список
-     */
-    @Override
-    public void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
-        Set<Product> productSet = favouritesGroup.getProducts();
-        productSet.add(product);
-        favouritesGroupRepository.save(favouritesGroup);
-    }
-
     /**
      * Получаем список продуктов из списка избранного
      * @param favouritesGroup список как сущность избранных товаров

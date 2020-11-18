@@ -13,6 +13,8 @@ public interface FavouritesGroupService {
 
     List<FavouritesGroup> findAllByUser(User user);
 
+    void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup);
+
     void addFavouritesGroup(FavouritesGroup favouritesGroup);
 
     void deleteSpecificProductFromSpecificFavouritesGroup(Product product, FavouritesGroup favouritesGroup);

@@ -57,7 +57,7 @@ public class FavouritesGoodsRestController {
         favouriteGoodsService.addToFavouriteGoods(id, user);
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
-        favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup);
+        favouritesGroupService.addProductToFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok().build();
     }
 

@@ -38,7 +38,7 @@ public class ProductForFavouritesGroupRestController {
     @PostMapping(value = "/customer/addProductInFavouritesGroup/{id}")
     public ResponseEntity addProductInFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
-        favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup);
+        favouritesGroupService.addProductToFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok("addProductInFavouritesGroupOK");
     }
 
@@ -97,7 +97,7 @@ public class ProductForFavouritesGroupRestController {
         for (int i = 0; i < idProducts.size(); i++) {
             Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
             favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, oldFavouritesGroup);
-            favouritesGroupProductService.addProductToFavouritesGroup(product, newFavouritesGroup);
+            favouritesGroupService.addProductToFavouritesGroup(product, newFavouritesGroup);
         }
         return ResponseEntity.ok().build();
     }

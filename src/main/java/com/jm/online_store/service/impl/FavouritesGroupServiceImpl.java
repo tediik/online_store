@@ -28,6 +28,18 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
         return favouritesGroupRepository.findAllByUser(user);
     }
 
+    /**
+     * Add specific product , to specific favorite group
+     * @param product product
+     * @param favouritesGroup favorite group
+     */
+    @Override
+    public void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
+        Set<Product> productSet = favouritesGroup.getProducts();
+        productSet.add(product);
+        favouritesGroupRepository.save(favouritesGroup);
+    }
+
     @Override
     public void addFavouritesGroup(FavouritesGroup favouritesGroup) {
         favouritesGroupRepository.save(favouritesGroup);
@@ -35,7 +47,7 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
 
     /**
      * Completely delete all group
-     * @param id
+     * @param id group Id
      */
     @Override
     public void deleteById(Long id) {

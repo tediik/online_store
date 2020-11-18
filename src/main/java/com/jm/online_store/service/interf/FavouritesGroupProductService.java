@@ -7,8 +7,6 @@ import java.util.Set;
 
 public interface FavouritesGroupProductService {
 
-    void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup);
-
     Set<Product> getProductSet(FavouritesGroup favouritesGroup);
 
 }
