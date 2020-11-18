@@ -63,11 +63,11 @@ public class MainPageRestController {
         }
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())) {
             log.debug("Passwords do not match : passwordConfirmError");
-            return ResponseEntity.badRequest().body("passwordError");
+            return ResponseEntity.ok("passwordError");
         }
         if (!ValidationUtils.isValidPassword(userForm.getPassword())) {
             log.debug("Passwords do not match : passwordValidError");
-            return ResponseEntity.badRequest().body("passwordValidError");
+            return ResponseEntity.ok("passwordValidError");
         }
         if (userService.isExist(userForm.getEmail())) {
             log.debug("User with same email already exists");

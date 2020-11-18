@@ -66,14 +66,22 @@ function register() {
                 close();
                 document.location.href = "redirect:/";
             }
-            if (data == "duplicatedEmailError") {
+            if (data === "duplicatedEmailError") {
                 $("#duplicatedEmailError").show();
             }
-            if (data == "notValidEmailError") {
+            if (data === "notValidEmailError") {
                 $("#notValidEmailError").show();
             }
-        },
-        error: function (data) {
+            if (data === "passwordError") {
+                $("#passwordError").show();
+                $("#passwordValidError").hide();
+            }
+            if (data === "passwordValidError") {
+                $("#passwordValidError").show();
+                $("#passwordError").hide();
+            }
+        }
+        /*error: function (data) {
             if (data.status == 400) {
                 if (data == "passwordError") {
                     $("#passwordError").show();
@@ -84,7 +92,7 @@ function register() {
                     $("#passwordError").hide();
                 }
             }
-        }
+        }*/
     });
 }
 
