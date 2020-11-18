@@ -1,21 +1,25 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.service.interf.TelegramBotService;
 import com.jm.online_store.enums.RepairOrderType;
 import com.jm.online_store.model.RepairOrder;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.RepairOrderService;
 import com.jm.online_store.service.interf.StockService;
-import lombok.AllArgsConstructor;
+import com.jm.online_store.service.interf.TelegramBotService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TelegramBotServiceImpl implements TelegramBotService {
     private final StockService stockService;
     private final RepairOrderService repairOrderService;
+
+    @Value("${spring.server.url}")
+    private String url;
 
     @Override
     public String getActualStocks() {
@@ -27,7 +31,9 @@ public class TelegramBotServiceImpl implements TelegramBotService {
         for (Stock stock : actualStocks) {
             message.append("\uD83D\uDD25")
                     .append(stock.getStockTitle())
-                    .append(".\nПодробности на http://localhost:9999/global/stockDetails/")
+                    .append(".\nПодробности на ")
+                    .append(url)
+                    .append("/global/stockDetails/")
                     .append(stock.getId())
                     .append("\n\n");
         }
@@ -48,7 +54,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     @Override
     public String getHelloMessage() {
         return "Привет \u270C " +
-                "\nЯ бот магазина online_store: http://localhost:9999/" +
+                "\nЯ бот магазина online_store: " + url +
                 "\nЯ умею рассказывать об акциях проходящих в нашем магазине " +
                 "и могу узнать о статусе вашего заказа на ремонт." +
                 "\nВведите /help, чтобы узнать, что я умею";
