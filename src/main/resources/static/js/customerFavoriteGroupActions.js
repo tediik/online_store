@@ -171,7 +171,7 @@ $(document).on("click", "#favouritesGoods-tab", function () {
     fillFavouritesProducts(id);
 });
 /**
- * Нажымием на кнопку "Выбрать группу"
+ * Нажимаем на кнопку "Выбрать группу"
  */
 $(document).on("click", "#sel_new_group", function () {
     $(".get-favourites-group-btn").attr("disabled", false);

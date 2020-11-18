@@ -68,12 +68,12 @@ public class CustomerController {
         model.addAttribute("user", updateUser);
         return "redirect:/customer";
     }
-
+    // looks like useless
     @GetMapping("/change-password")
     public String changePassword() {
         return "changePassword";
     }
-
+// looks like useless
     @GetMapping("/activatenewmail/{token}")
     public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateNewUsersMail(token, request);
