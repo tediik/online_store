@@ -50,7 +50,7 @@ public class ProductForFavouritesGroupRestController {
     @GetMapping(value = "/customer/getProductFromFavouritesGroup/{id}")
     public ResponseEntity<Set<Product>> getProductFromFavouritesGroup(@PathVariable Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
-        return ResponseEntity.ok(favouritesGroupProductService.getProductSet(favouritesGroup));
+        return ResponseEntity.ok(favouritesGroupService.getProductSet(favouritesGroup));
     }
 
     /**

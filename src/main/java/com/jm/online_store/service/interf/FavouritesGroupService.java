@@ -6,6 +6,7 @@ import com.jm.online_store.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface FavouritesGroupService {
 
@@ -28,5 +29,7 @@ public interface FavouritesGroupService {
     FavouritesGroup getOneFavouritesGroupByUserAndByName(User user, String name);
 
     void save (FavouritesGroup favouritesGroup);
+
+    Set<Product> getProductSet(FavouritesGroup favouritesGroup);
 
 }

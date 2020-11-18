@@ -81,6 +81,18 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
         return favouritesGroupRepository.getOneFavouritesGroupByUserAndByName(user, name);
     }
 
+    /**
+     * Getting Set from FavouritesGroup
+     * @param favouritesGroup entity
+     * @return set from entity
+     */
+    @Override
+    public Set<Product> getProductSet(FavouritesGroup favouritesGroup) {
+        Set<Product> productSet = favouritesGroup.getProducts();
+        return productSet;
+    }
+
+
     @Override
     public void save(FavouritesGroup favouritesGroup) {
         favouritesGroupRepository.save(favouritesGroup);
