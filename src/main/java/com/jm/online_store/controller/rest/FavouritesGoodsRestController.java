@@ -6,7 +6,6 @@ import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FavouriteGoodsService;
-import com.jm.online_store.service.interf.FavouritesGroupProductService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
@@ -29,7 +28,6 @@ import java.util.Set;
 public class FavouritesGoodsRestController {
     private final FavouriteGoodsService favouriteGoodsService;
     private final UserService userService;
-    private final FavouritesGroupProductService favouritesGroupProductService;
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
     /**

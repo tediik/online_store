@@ -2,7 +2,6 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.service.interf.FavouritesGroupProductService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
@@ -25,7 +24,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class ProductForFavouritesGroupRestController {
 
-    private final FavouritesGroupProductService favouritesGroupProductService;
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
 
