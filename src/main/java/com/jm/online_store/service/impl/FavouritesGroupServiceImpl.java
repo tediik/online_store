@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.FavouritesGroup;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.FavouritesGroupRepository;
 import com.jm.online_store.service.interf.FavouritesGroupService;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -31,9 +33,25 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
         favouritesGroupRepository.save(favouritesGroup);
     }
 
+    /**
+     * Completely delete all group
+     * @param id
+     */
     @Override
     public void deleteById(Long id) {
         favouritesGroupRepository.deleteById(id);
+    }
+
+    /**
+     * Remove specific product from specific group
+     * @param product  product
+     * @param favouritesGroup group
+     */
+    @Override
+    public void deleteSpecificProductFromSpecificFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
+        Set<Product> productSet = favouritesGroup.getProducts();
+        productSet.remove(product);
+        favouritesGroupRepository.save(favouritesGroup);
     }
 
     @Override

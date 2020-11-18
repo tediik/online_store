@@ -73,7 +73,7 @@ public class FavouritesGoodsRestController {
         favouriteGoodsService.deleteFromFavouriteGoods(id, user);
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
-        favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup);
+        favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok().build();
     }
 

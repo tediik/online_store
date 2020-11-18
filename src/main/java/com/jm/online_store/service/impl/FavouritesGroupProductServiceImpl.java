@@ -13,17 +13,7 @@ import java.util.Set;
 public class FavouritesGroupProductServiceImpl implements FavouritesGroupProductService {
     private final FavouritesGroupRepository favouritesGroupRepository;
 
-    /**
-     * Удаление продукта из списка избранных товаров
-     * @param product  продукт
-     * @param favouritesGroup список
-     */
-    @Override
-    public void deleteProductFromFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
-        Set<Product> productSet = favouritesGroup.getProducts();
-        productSet.remove(product);
-        favouritesGroupRepository.save(favouritesGroup);
-    }
+
 
     /**
      * Добавление продукта в список избранных товаров

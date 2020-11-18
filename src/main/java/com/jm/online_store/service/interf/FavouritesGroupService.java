@@ -1,6 +1,7 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.FavouritesGroup;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface FavouritesGroupService {
     List<FavouritesGroup> findAllByUser(User user);
 
     void addFavouritesGroup(FavouritesGroup favouritesGroup);
+
+    void deleteSpecificProductFromSpecificFavouritesGroup(Product product, FavouritesGroup favouritesGroup);
 
     void deleteById(Long id);
 
