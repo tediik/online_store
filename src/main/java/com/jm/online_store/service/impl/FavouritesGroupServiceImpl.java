@@ -18,6 +18,10 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
 
     private final FavouritesGroupRepository favouritesGroupRepository;
 
+    /**
+     * find all existing favorite groups
+     * @return list
+     */
     @Override
     public List<FavouritesGroup> findAll() {
         return favouritesGroupRepository.findAll();
