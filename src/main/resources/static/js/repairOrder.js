@@ -27,7 +27,7 @@ function checkBoxCanceledListener() {
 }
 
 /**
- * Формирует заказ и присваивает уникальный номер
+ * Формирует заказ
  * @returns Заказ на ремонт
  */
 function formOrder() {
@@ -36,16 +36,8 @@ function formOrder() {
         telephoneNumber: document.getElementById('telephoneNumber').value,
         nameDevice: document.getElementById('nameDevice').value,
         guarantee: document.getElementById('guaranteeCheckbox').checked,
-        fullTextProblem: document.getElementById('fullTextProblem').value,
-        orderNumber: ""
+        fullTextProblem: document.getElementById('fullTextProblem').value
     }
-    order.orderNumber += order.guarantee ? "Y" : "N";
-    order.orderNumber += order.telephoneNumber.slice(order.telephoneNumber.length - 4, order.telephoneNumber.length).split(' ').join('');
-    fetch("/service/getTime").then(function (response) {
-        return response.text().then(function (text) {
-            order.orderNumber += text;
-        })
-    })
     return order;
 }
 
@@ -65,7 +57,8 @@ function addRepairOrder() {
         }).then(function (response) {
             if (response.status === 200) {
                 toastr.success("Заявка успешно добавлена.");
-                getWorkOrder(order);
+                response.json()
+                    .then(addedOrder => getWorkOrder(addedOrder));
                 $('#fullTextProblem').summernote('code', '')
                 document.getElementById('fullNameClient').value = ''
                 document.getElementById('telephoneNumber').value = ''
@@ -282,6 +275,7 @@ function openEditModalWindow(repairOrderId) {
             if (response.status === 200) {
                 response.json().then(repairOrder => {
                     $('#idRepairOrderUpdate').val(repairOrder.id);
+                    $('#orderNumberUpdate').val(repairOrder.orderNumber);
                     $('#fullNameClientUpdate').val(repairOrder.fullNameClient);
                     $('#telephoneNumberUpdate').val(repairOrder.telephoneNumber);
                     $('#nameDeviceUpdate').val(repairOrder.nameDevice);
@@ -302,6 +296,7 @@ function openEditModalWindow(repairOrderId) {
 function updateRepairOrder() {
     let repairOrder = {
         id: document.getElementById('idRepairOrderUpdate').value,
+        orderNumber: document.getElementById('orderNumberUpdate').value,
         fullNameClient: document.getElementById('fullNameClientUpdate').value,
         telephoneNumber: document.getElementById('telephoneNumberUpdate').value,
         nameDevice: document.getElementById('nameDeviceUpdate').value,

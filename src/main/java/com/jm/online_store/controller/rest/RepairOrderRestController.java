@@ -44,12 +44,12 @@ public class RepairOrderRestController {
      * Метод сохраняет заказ на ремонт
      *
      * @param repairOrder сущность для сохранения в базу данных
-     * @return ResponseEntity<String> возвращает статус запроса
+     * @return ResponseEntity<RepairOrder> возвращает добавленный заказ на ремонт
+     * со статусом ответа
      */
     @PostMapping("/service/addRepairOrder")
-    public ResponseEntity<String> addRepairOrder(@RequestBody RepairOrder repairOrder) {
-        repairOrderService.save(repairOrder);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<RepairOrder> addRepairOrder(@RequestBody RepairOrder repairOrder) {
+        return ResponseEntity.ok(repairOrderService.save(repairOrder));
     }
 
     /**
@@ -208,15 +208,5 @@ public class RepairOrderRestController {
         } catch (DocumentException | IOException e) {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    /**
-     * Простое получение времени Unix
-     * @return String с последними 5 цифрами времени
-     */
-    @GetMapping("/service/getTime")
-    public ResponseEntity<String> getUnixTime() {
-        String result = String.valueOf(System.currentTimeMillis());
-        return ResponseEntity.ok(result.substring(result.length() - 4));
     }
 }
