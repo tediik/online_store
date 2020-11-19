@@ -1,11 +1,11 @@
 package com.jm.online_store.controller.rest.manager;
 
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONArray;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class ProductCategoriesRestController {
      * Возвращает список всех категорий
      */
     @GetMapping("/all")
-    public ResponseEntity<JSONArray> getAllCategories() {
+    public ResponseEntity<ArrayNode> getAllCategories() {
         return ResponseEntity.ok(categoriesService.getAllCategories());
     }
 
