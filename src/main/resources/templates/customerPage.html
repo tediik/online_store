@@ -29,7 +29,7 @@
     <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
     <!-- Optional JavaScript -->
     <script src="../static/js/orderPlacement.js"></script>
-    <script src="../static/js/customer.js"></script>
+    <script src="../static/js/customerFavoriteGroupActions.js"></script>
     <script src="../static/js/busket.js"></script>
     <script src="../static/js/profilePicture.js"></script>
     <script src="../static/js/orders.js"></script>
@@ -37,8 +37,10 @@
 <body>
 <header th:insert="/blocks/cabinetHeader :: header"></header>
 <div class="container-fluid">
+
     <div class="row min-vh-100">
         <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
+
         <div class="col-md-2">
             <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
@@ -51,6 +53,7 @@
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
                 >Избранное</a>
+
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false"
                    onclick="fillBasket();location.href='#basket'">Корзина</a>
@@ -64,6 +67,7 @@
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
 
             </div>
+
         </div>
         <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
 
@@ -196,7 +200,6 @@
                     </table>
                 </div>
                 <!-- ВКЛАДКА ИЗБРАННОЕ  -->
-
 
                 <!-- ВКЛАДКА ПРОФИЛЯ -->
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -633,7 +636,6 @@
                     </div>
                 </div>
                 <!-- ВКЛАДКА КОРЗИНА  -->
-
 
                 <!-- ВКЛАДКА ЗАКАЗЫ  -->
                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">

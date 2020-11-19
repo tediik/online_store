@@ -1,9 +1,19 @@
+/**
+ * class for customer modals changePass & changMail
+ */
 $(document).ready(function () {
+    /*Слушатель для кнопки смены email modal*/
     $(document).delegate("#buttonChangeMail", "click", changeMail);
+    /*Слушатель для кнопки смены пароля modal*/
     $(document).delegate("#submitNewPassword", "click", changePass);
+    /*Слушатель для ввода пароля modal*/
     $(document).delegate("#new_password", "keyup", checkPassword);
 });
 
+/**
+ * Method for customer's pass changing
+ * @returns {boolean}
+ */
 function changePass() {
     var formData = $('#formChangePass').serialize();
        $.ajax({
@@ -32,7 +42,10 @@ function changePass() {
     return false;
 }
 
-
+/**
+ * Method for changing customer's mail
+ * @returns {boolean}
+ */
 function changeMail() {
 
     var formData = $('#formChangeMail').serialize();
@@ -61,17 +74,19 @@ function changeMail() {
     return false;
 }
 
+/**
+ * Method for closing modals
+ */
 function close() {
     $('#openNewMailModal').hide();
     $('#openChangePassModal').hide();
     $(".modal-backdrop.show").hide();
 }
 
-function successChangePass() {
-    toastr.success('Пароль успешно изменен!', {timeOut: 5000})
-
-}
-
+//ToDo вроде есть класс ютил для проверки паролей у всех , можно прикручивать в контролллере или сервисе ... разобраться
+/**
+ * Method for checking that new customer's pass is match requirements
+ */
 function checkPassword() {
     regularExpression = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}");
     newPassword = document.getElementById("new_password").value;
