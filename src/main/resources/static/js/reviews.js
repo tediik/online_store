@@ -10,7 +10,10 @@ $(document).ready(function () {
                 $.each(response, function (i, review) {
                     $('#showReviews').append($(`
                         <div class="media mb-4">
-                            <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${review.userPhoto}" width="52"></div>
+                            <div>
+                               <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                            height="52" src="/uploads/images/${review.userPhoto}" width="52">
+                            </div>
                             <div class="media-body" id='mediaBody" + ${review.id} + "'>
                                 <h5 class="mt-0">${review.userEmail} reviewted on ${review.timeStamp}</h5>
                                 <div class="message"> ${review.content} 
@@ -26,15 +29,18 @@ $(document).ready(function () {
                         dataType: "json",
                         success: function (response) {
                             $.each(response, function (i, comment) {
-                                let replyDisplayId = $('#commentReviewDisplayId' + review.id);
-                                $(replyDisplayId).append($(`
+                                let commentDisplayId = $('#commentReviewDisplayId' + review.id);
+                                $(commentDisplayId).append($(`
                                     <div class="media mt-4">
                                         <div>
                                             <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                                            height="52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
+                                            height="52" src="/uploads/images/${comment.userPhoto}" width="52">
+                                        </div>
                                         <div class="media-body">
                                             <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
                                             <div class="message">${comment.content}</div>
+                                            <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                                            <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
                                         </div>
                                     </div>
                                 `));
@@ -135,7 +141,9 @@ $(document).ready(function () {
                                 </div>
                                 <div class="media-body">
                                     <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                                    <div class="message">${comment.content}</div>
+                                    <div class="message" ${comment.content}</div>
+                                    <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                                    <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${review.id}'></div>
                                 </div>
                             </div>
                         `).last());

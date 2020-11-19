@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 public interface CommentService {
+    List<Comment> findAll();
 
     List<Comment> findAllByProductId(Long productId);
 

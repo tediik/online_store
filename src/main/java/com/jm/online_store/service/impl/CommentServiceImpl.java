@@ -22,6 +22,11 @@ public class CommentServiceImpl implements CommentService {
     private final ReviewRepository reviewRepository;
     private final UserService userService;
 
+    @Override
+    public List<Comment> findAll() {
+        return commentRepository.findAll();
+    }
+
     /**
      * Fetches an arrayList of all Comments by productId
      *
