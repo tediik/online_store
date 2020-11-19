@@ -39,4 +39,10 @@ public class FavouritesGroup {
             joinColumns = @JoinColumn(name = "favourites_group_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> products = new HashSet<>();
+
+    public FavouritesGroup(String name, User user, Set<Product> products) {
+        this.name = name;
+        this.user = user;
+        this.products = products;
+    }
 }

@@ -41,6 +41,8 @@ public interface StockRepository extends JpaRepository<Stock, Long>, JpaSpecific
 
     List<Stock> findByEndDateBefore(LocalDate currentDate);
 
+    List<Stock> findAllByPublishedIsTrueAndEndDateAfterOrEndDateEquals(LocalDate endDate, LocalDate endDate2);
+
     /**
      * Published stocks
      * @return list of published stocks
