@@ -34,18 +34,6 @@ function register() {
                 $("#passwordError").hide();
             }
         }
-        /*error: function (data) {
-            if (data.status === 400) {
-                if (data === "passwordError") {
-                    $("#passwordError").show();
-                    $("#passwordValidError").hide();
-                }
-                if (data === "passwordValidError") {
-                    $("#passwordValidError").show();
-                    $("#passwordError").hide();
-                }
-            }
-        }*/
     });
 }
 
