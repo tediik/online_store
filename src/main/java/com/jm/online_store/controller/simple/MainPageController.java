@@ -39,19 +39,7 @@ public class MainPageController {
      */
     @GetMapping("/activate/{token}")
     public String registerMail(Model model, @PathVariable String token, HttpServletRequest request) {
-        try {
-            userService.activateUser(token, request);
-        } catch (EmailAlreadyExistsException ex) {
-            ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
-            User user = userService.getUserByToken(token);
-            model.addAttribute("user", user);
-            try {
-                request.login(user.getEmail(), confirmationToken.getUserPassword());
-            } catch (ServletException e) {
-                log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
-            }
-            return "redirect:/customer";
-        }
+        userService.activateUser(token, request);
         User user = userService.getUserByToken(token);
         model.addAttribute("message", "User email address confirmed successfully");
         model.addAttribute("user", user);

@@ -33,6 +33,7 @@
                 class="btn btn-outline-secondary font-weight-bold secondarybtn"
                 data-toggle="modal" data-target="#openNewRegistrationModal">Регистрация
         </button>
+
         <!-- Login -->
         <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton"
            href="/login">Войти</a>

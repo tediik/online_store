@@ -216,6 +216,7 @@ public class DataInitializer {
                     DayOfWeekForStockSend.values()[random.nextInt(6)],
                     String.valueOf(i));
             customer1.setRoles(customerRoles);
+
             userService.addUser(customer1);
         }
     }
