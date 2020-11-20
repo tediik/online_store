@@ -21,21 +21,6 @@ public class CategoriesServiceImpl implements CategoriesService {
     /**
      * Метод возвращает все категории без излишней информации
      */
-//    @Override
-//    public JSONArray getAllCategories() {
-//        JSONArray resultArray = new JSONArray();
-//        List<Categories> categoriesList = categoriesRepository.findAll();
-//        for (Categories categories : categoriesList) {
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("id", categories.getId());
-//            jsonObject.put("parentId", categories.getParentCategoryId());
-//            jsonObject.put("text", categories.getCategory());
-//            jsonObject.put("depth", categories.getDepth());
-//            jsonObject.put("hasProduct", !categories.getProducts().isEmpty());
-//            resultArray.add(jsonObject);
-//        }
-//        return resultArray;
-//    }
     @Override
     public ArrayNode getAllCategories() {
         List<Categories> categoriesList = categoriesRepository.findAll();
