@@ -20,6 +20,8 @@ public interface ProductService {
 
     void deleteProduct(Long idProduct);
 
+    int findProductAmount(Long idProduct);
+
     void restoreProduct(Long idProduct);
 
     List<Product> findAll();

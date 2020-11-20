@@ -237,6 +237,8 @@ function addToProductToCart(event) {
             toastr.success('Продукт добавлен в корзину', '', {timeOut: 1000})
         } else if (response.status === 405) {
             toastr.warning('Необходимо авторизоваться что бы добавить в корзину', '', {timeOut: 1000})
+        } else if (response.status === 410) {
+            toastr.warning('Данный товар закончился', '', {timeOut: 1000})
         } else {
             toastr.warning('Товар не найден', '', {timeOut: 1000})
         }
