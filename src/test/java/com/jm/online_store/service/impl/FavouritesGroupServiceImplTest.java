@@ -135,10 +135,10 @@ public class FavouritesGroupServiceImplTest {
      * Find all by user test.
      */
     @Test
-    void findAllByUserTest () {
+    void findAllByUserTest() {
         when(favouritesGroupRepository.findAllByUser(user1)).thenReturn(findByUser);
         List<FavouritesGroup> list = favouritesGroupService.findAllByUser(user1);
-        assertEquals(list,findByUser);
+        assertEquals(list, findByUser);
         verify(favouritesGroupRepository, times(1)).findAllByUser(user1);
     }
 
@@ -150,7 +150,7 @@ public class FavouritesGroupServiceImplTest {
         Set<Product> set = new HashSet<>();
         set.add(product1);
         FavouritesGroup someGroup = new FavouritesGroup();
-        favouritesGroupService.addProductToFavouritesGroup(product1,someGroup);
+        favouritesGroupService.addProductToFavouritesGroup(product1, someGroup);
         assertEquals(set, someGroup.getProducts());
     }
 
@@ -161,18 +161,18 @@ public class FavouritesGroupServiceImplTest {
     void addFavouritesGroupTest() {
         when(favouritesGroupRepository.save(group1)).thenReturn(group1);
         favouritesGroupService.save(group1);
-        verify(favouritesGroupRepository,times(1)).save(group1);
+        verify(favouritesGroupRepository, times(1)).save(group1);
     }
 
     /**
      * Delete specific product from specific favourites group test.
      */
     @Test
-    void deleteSpecificProductFromSpecificFavouritesGroupTest(){
+    void deleteSpecificProductFromSpecificFavouritesGroupTest() {
         FavouritesGroup group = new FavouritesGroup();
         group.setProducts(set2);
-        favouritesGroupService.addProductToFavouritesGroup(product1,group);
-        favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product1,group);
+        favouritesGroupService.addProductToFavouritesGroup(product1, group);
+        favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product1, group);
         assertEquals(group2.getProducts(), group.getProducts());
     }
 
@@ -190,7 +190,7 @@ public class FavouritesGroupServiceImplTest {
      * Find by id test.
      */
     @Test
-    void findByIdTest(){
+    void findByIdTest() {
         group3.setId(3L);
         when(favouritesGroupRepository.findById(3L)).thenReturn(Optional.ofNullable(group3));
         Optional<FavouritesGroup> testGroup = favouritesGroupService.findById(3L);

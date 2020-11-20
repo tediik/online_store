@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface FavouritesGroupRepository extends JpaRepository<FavouritesGroup, Long> {
 
-    @Query("from FavouritesGroup a where a.name = :name")
+    @Query("from FavouritesGroup fg where fg.name = :name")
     Optional<FavouritesGroup> findByName(@Param("name") String name);
 
     @Query("from FavouritesGroup f where f.user = :user")
