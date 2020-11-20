@@ -15,9 +15,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -118,6 +120,9 @@ public class FavouritesGroupServiceImplTest {
         findByUser.clear();
     }
 
+    /**
+     * Find all test.
+     */
     @Test
     void findAllTest() {
         when(favouritesGroupRepository.findAll()).thenReturn(all);
@@ -126,28 +131,102 @@ public class FavouritesGroupServiceImplTest {
         verify(favouritesGroupRepository, times(1)).findAll();
     }
 
+    /**
+     * Find all by user test.
+     */
     @Test
-    void findAllByUser () {
+    void findAllByUserTest () {
         when(favouritesGroupRepository.findAllByUser(user1)).thenReturn(findByUser);
         List<FavouritesGroup> list = favouritesGroupService.findAllByUser(user1);
         assertEquals(list,findByUser);
         verify(favouritesGroupRepository, times(1)).findAllByUser(user1);
     }
 
+    /**
+     * Add product to favorite group test.
+     */
     @Test
-    void addFavouritesGroup() {
+    void addProductToFavoriteGroupTest() {
+        Set<Product> set = new HashSet<>();
+        set.add(product1);
+        FavouritesGroup someGroup = new FavouritesGroup();
+        favouritesGroupService.addProductToFavouritesGroup(product1,someGroup);
+        assertEquals(set, someGroup.getProducts());
+    }
+
+    /**
+     * Add favourites group test.
+     */
+    @Test
+    void addFavouritesGroupTest() {
         when(favouritesGroupRepository.save(group1)).thenReturn(group1);
         favouritesGroupService.save(group1);
         verify(favouritesGroupRepository,times(1)).save(group1);
     }
 
+    /**
+     * Delete specific product from specific favourites group test.
+     */
     @Test
-    void deleteById() {
+    void deleteSpecificProductFromSpecificFavouritesGroupTest(){
+        FavouritesGroup group = new FavouritesGroup();
+        group.setProducts(set2);
+        favouritesGroupService.addProductToFavouritesGroup(product1,group);
+        favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product1,group);
+        assertEquals(group2.getProducts(), group.getProducts());
+    }
+
+    /**
+     * Delete by id test.
+     */
+    @Test
+    void deleteByIdTest() {
         doNothing().when(favouritesGroupRepository).deleteById(group2.getId());
         favouritesGroupService.deleteById(group2.getId());
         verify(favouritesGroupRepository, times(1)).deleteById(group2.getId());
     }
 
+    /**
+     * Find by id test.
+     */
+    @Test
+    void findByIdTest(){
+        group3.setId(3L);
+        when(favouritesGroupRepository.findById(3L)).thenReturn(Optional.ofNullable(group3));
+        Optional<FavouritesGroup> testGroup = favouritesGroupService.findById(3L);
+        assertEquals(testGroup.get().getId(), group3.getId());
+        verify(favouritesGroupRepository, times(1)).findById(3L);
+    }
 
+    /**
+     * Find by name test.
+     */
+    @Test
+    void findByNameTest() {
+        when(favouritesGroupRepository.findByName("apple")).thenReturn(Optional.ofNullable(group1));
+        Optional<FavouritesGroup> groupOptional = favouritesGroupService.findByName("apple");
+        assertEquals(Optional.ofNullable(group1), groupOptional);
+        verify(favouritesGroupRepository, times(1)).findByName("apple");
+    }
+
+    /**
+     * Gets one favourites group by user and by name test.
+     */
+    @Test
+    void getOneFavouritesGroupByUserAndByNameTest() {
+        when(favouritesGroupRepository.getOneFavouritesGroupByUserAndByName(user3, "Amazon")).thenReturn(group3);
+        FavouritesGroup someGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user3, "Amazon");
+        assertEquals(group3, someGroup);
+        verify(favouritesGroupRepository, times(1)).getOneFavouritesGroupByUserAndByName(user3, "Amazon");
+    }
+
+    /**
+     * Gets product set test.
+     */
+    @Test
+    void getProductSetTest() {
+        Set<Product> someSet = favouritesGroupService.getProductSet(group3);
+        assertEquals(set3, someSet);
+    }
 
 }
