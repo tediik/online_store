@@ -1,12 +1,13 @@
 package com.jm.online_store.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.CategoriesRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -21,19 +22,20 @@ public class CategoriesServiceImpl implements CategoriesService {
      * Метод возвращает все категории без излишней информации
      */
     @Override
-    public JSONArray getAllCategories() {
-        JSONArray resultArray = new JSONArray();
+    public ArrayNode getAllCategories() {
         List<Categories> categoriesList = categoriesRepository.findAll();
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode arrayNode = mapper.createArrayNode();
         for (Categories categories : categoriesList) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", categories.getId());
-            jsonObject.put("parentId", categories.getParentCategoryId());
-            jsonObject.put("text", categories.getCategory());
-            jsonObject.put("depth", categories.getDepth());
-            jsonObject.put("hasProduct", !categories.getProducts().isEmpty());
-            resultArray.add(jsonObject);
+            ObjectNode root = mapper.createObjectNode();
+            root.put("id", categories.getId());
+            root.put("parentId", categories.getParentCategoryId());
+            root.put("text", categories.getCategory());
+            root.put("depth", categories.getDepth());
+            root.put("hasProduct", !categories.getProducts().isEmpty());
+            arrayNode.add(root);
         }
-        return resultArray;
+        return arrayNode;
     }
 
     /**
