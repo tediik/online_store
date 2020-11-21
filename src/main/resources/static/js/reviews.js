@@ -131,9 +131,9 @@ $(document).ready(function () {
                     success: function (response) {
                         let comment = response.comments[0];
                         commentBox.remove();
-                        let replyDisplayId = $('#commentReviewDisplayId' + reviewId);
+                        let commentReviewDisplayId = $('#commentReviewDisplayId' + reviewId);
 
-                        $(replyDisplayId).append($(`
+                        $(commentReviewDisplayId).append($(`
                             <div class="media mt-4">
                                 <div>
                                     <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
@@ -141,9 +141,9 @@ $(document).ready(function () {
                                 </div>
                                 <div class="media-body">
                                     <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                                    <div class="message" ${comment.content}</div>
+                                    <div class="message">${comment.content}</div>
                                     <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
-                                    <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${review.id}'></div>
+                                    <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
                                 </div>
                             </div>
                         `).last());

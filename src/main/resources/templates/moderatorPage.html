@@ -17,10 +17,12 @@
                 <a class="btn btn-outline-primary" href="/moderator">Главная</a>
             </div>
             <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/moderator/comments">Комментарии</a>
+                <a class="btn btn-outline-primary" href="/moderator/comments">Комментарии для проверки</a>
             </div>
         </div>
-        <div class="col-sm-8 text-left"></div>
+        <div class="col-sm-8 text-left">
+            <h4>Количество комментариев ждущих проверки <label th:text="${numberOfReports}"></label>.</h4>
+        </div>
     </div>
 </div>
 <script src="../static/js/searchButton.js"></script>
