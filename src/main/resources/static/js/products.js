@@ -203,28 +203,6 @@ function handleAddBtn() {
     }
 
     /**
-     * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
-     * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
-     * @param text - текст для вывода в алерт
-     * @param field - поле на каком установить фокус
-     */
-    function handleNotValidFormField(text, field) {
-        $('#alert-div').empty().append(`
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>${text}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            `)
-        $('#' + field).focus()
-
-        window.setTimeout(function () {
-            $('.alert').alert('close');
-        }, 5000)
-    }
-
-    /**
      * проверяем, что выбранная категория продукта != null
      */
     let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
@@ -240,6 +218,49 @@ function handleAddBtn() {
         }
     }
 
+    /**
+     * проверяем, что наименование, цена продукта и количество != null
+     */
+    if (!productToAdd.price && !productToAdd.amount && !productToAdd.product) {
+        toastr.error('Заполните поле количества товара');
+        toastr.error('Заполните поле стоимости товара');
+        toastr.error('Заполните поле наименования товара');
+        return false;
+    }
+
+    /**
+     * проверяем, что цена продукта и количество != null
+     */
+    if (!productToAdd.price && !productToAdd.amount) {
+        toastr.error('Заполните поле количества товара');
+        toastr.error('Заполните поле стоимости товара');
+        return false;
+    }
+
+    /**
+     * проверяем, что цена продукта != null
+     */
+    if (!productToAdd.price) {
+        toastr.error('Заполните поле стоимости товара');
+        return false;
+    }
+
+    /**
+     * проверяем, что количество продукта != null
+     */
+    if (!productToAdd.amount) {
+        toastr.error('Заполните поле количества товара');
+        return false;
+    }
+
+    /**
+     * проверяем, что наименование продукта != null
+     */
+    if (!productToAdd.product) {
+        toastr.error('Заполните поле наименования товара');
+        return false;
+    }
+
     fetch("/rest/products/addProduct/" + currentCategoryIdAdd, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
@@ -251,22 +272,11 @@ function handleAddBtn() {
                 response.text()
                     .then(
                         function (text) {
-                            if (text === "notValidNameProduct") {
-                                field = "addEmail"
-                                handleNotValidFormField("Вы ввели некорректное наименование товара!", field)
-                            }
+
                             if (text === "duplicatedNameProductError") {
-                                field = "addEmail"
-                                handleNotValidFormField("Такое наименование уже существует", field)
+                                toastr.error('Такое наименование уже существует');
                             }
-                            if (text === "emptyPriceError") {
-                                field = "addPrice"
-                                handleNotValidFormField("Заполните поле цены", field)
-                            }
-                            if (text === "amountError") {
-                                field = "addAmount"
-                                handleNotValidFormField("Необходимо выбрать количество", field)
-                            }
+
                             console.log(text)
                         })
             } else {
@@ -274,6 +284,7 @@ function handleAddBtn() {
                     $("#jqxTreeHere").jqxTree('selectItem', null);
                     showAndRefreshHomeTab();
                     clearFormFields();
+                    toastr.success('Товар успешно добавлен')
                 })
             }
         }
@@ -327,7 +338,14 @@ function handleAcceptButtonFromModalWindow(event) {
             method: 'DELETE'
         }).then(response => response.text())
             .then(deletedProduct => console.log('Product: ' + deletedProduct + ' was successfully deleted'))
-            .then(showTable => showAndRefreshHomeTab(showTable))
+            .then(showTable => {
+                if (document.getElementById("deletedCheckbox").checked) {
+                    showAndRefreshNotDeleteHomeTab(showTable)
+                }
+                else {
+                    showAndRefreshHomeTab(showTable)
+                }
+            })
         $('#productModalWindow').modal('hide')
     } else {
         let newCategory = $('#jqxTreeModal').jqxTree('getSelectedItem');
