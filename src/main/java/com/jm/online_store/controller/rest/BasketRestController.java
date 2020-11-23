@@ -76,7 +76,6 @@ public class BasketRestController {
             basketService.updateBasket(basketService.findBasketById(id), difference);
             return ResponseEntity.ok().build();
         }catch (ProductsNotFoundException e) {
-            System.out.println("Вылетает исключение, когда нельзя добавить товар в корзину");
             return ResponseEntity.badRequest().build();
         }
 
@@ -90,7 +89,6 @@ public class BasketRestController {
         } catch (UserNotFoundException | ProductNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (ProductsNotFoundException e) {
-            //return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
             return ResponseEntity.badRequest().build();
         }
     }

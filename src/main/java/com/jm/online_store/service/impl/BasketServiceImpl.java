@@ -88,7 +88,6 @@ public class BasketServiceImpl implements BasketService {
                 subBasket.setCount(count);
             } else {
                 subBasket.setCount(subBasket.getProduct().getAmount());
-                System.out.println("Корзина не обновилась");
                 basketRepository.saveAndFlush(subBasket);
                 throw new ProductsNotFoundException("products zakonchilis");
             }
@@ -145,7 +144,6 @@ public class BasketServiceImpl implements BasketService {
 
        int amount = productToAdd.getAmount();
        if(amount <= 0) {
-            System.out.println("Закончился товар в бд");
             throw new ProductsNotFoundException("В БД закончился данный продукт");
        }else {
            for (SubBasket basket : userBasket) {
