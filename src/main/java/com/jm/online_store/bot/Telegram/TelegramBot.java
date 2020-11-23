@@ -1,6 +1,7 @@
-package com.jm.online_store.bot;
+package com.jm.online_store.bot.Telegram;
 
-import com.jm.online_store.bot.handler.TelegramBotCommandHandler;
+
+import com.jm.online_store.bot.Telegram.handler.TelegramBotCommandHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Setter
 @Component
 public class TelegramBot extends TelegramWebhookBot {
+
     private final TelegramBotCommandHandler telegramBotCommandHandler;
 
     @Value("${telegram-bot.name}")

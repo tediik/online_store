@@ -1,11 +1,11 @@
-package com.jm.online_store.service.impl;
+package com.jm.online_store.bot.Telegram.service;
 
 import com.jm.online_store.enums.RepairOrderType;
 import com.jm.online_store.model.RepairOrder;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.RepairOrderService;
 import com.jm.online_store.service.interf.StockService;
-import com.jm.online_store.service.interf.TelegramBotService;
+import com.jm.online_store.bot.Telegram.service.TelegramBotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TelegramBotServiceImpl implements TelegramBotService {
+
     private final StockService stockService;
+
     private final RepairOrderService repairOrderService;
 
     @Value("${spring.server.url}")

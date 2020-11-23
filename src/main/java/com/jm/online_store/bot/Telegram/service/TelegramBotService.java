@@ -1,6 +1,7 @@
-package com.jm.online_store.service.interf;
+package com.jm.online_store.bot.Telegram.service;
 
 public interface TelegramBotService {
+
     String getActualStocks();
 
     String getRepairOrder(String orderNumber);

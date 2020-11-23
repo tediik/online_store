@@ -1,6 +1,6 @@
-package com.jm.online_store.bot.handler;
+package com.jm.online_store.bot.Telegram.handler;
 
-import com.jm.online_store.service.interf.TelegramBotService;
+import com.jm.online_store.bot.Telegram.service.TelegramBotService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,6 +15,7 @@ import java.util.LinkedList;
 @Component
 @AllArgsConstructor
 public class TelegramBotCommandHandler {
+
     private final TelegramBotService telegramBotService;
 
     /**

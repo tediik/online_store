@@ -1,6 +1,6 @@
-package com.jm.online_store.controller.rest;
+package com.jm.online_store.bot.Telegram.controller;
 
-import com.jm.online_store.bot.TelegramBot;
+import com.jm.online_store.bot.Telegram.TelegramBot;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @RestController
 @AllArgsConstructor
 public class TelegramBotRestController {
+
     private final TelegramBot telegramBot;
 
     /**
