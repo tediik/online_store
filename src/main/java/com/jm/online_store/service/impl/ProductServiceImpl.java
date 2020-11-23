@@ -320,6 +320,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * метод возвращает продукты из категории
+     * @param id необходимой категории
+     * @return список продуктов из данной категории
+     */
+    @Override
+    public List<Product> getProductsByCategoryId(Long id) {
+        return productRepository.getProductsByCategoryId(id);
+    }
+
+    /**
      * метод получения коллекции по мониторингу изменения цены на Product.
      *
      * @param idProduct идентификатор Product

@@ -32,6 +32,8 @@ public interface ProductService {
 
     List<Product> findNumProducts(Integer num);
 
+    List<Product> getProductsByCategoryId(Long id);
+
     Map getProductPriceChange(Long idProduct);
 
     double changeProductRating(Long productId, double rating, User user);
