@@ -56,6 +56,7 @@ function close() {
 /**
  * function fills main categories list at left column
  */
+
 async function fillMainCategories() {
     let data = await fetch("/api/categories").then(response => response.json());
     let siteMenu = document.getElementById('siteMenu');
@@ -66,15 +67,14 @@ async function fillMainCategories() {
                     href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${data[key].category}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
         let subItem = ``;
-        for (let innerKey in data[key]) {
-            subItem += `<a class="dropdown-item" href="/categories/${data[key][innerKey]}">
-                            ${innerKey}</a> `;
-        }
+            subItem += `<a class="dropdown-item" href="/categories/${data[key].category}">
+                            ${data[key].category}</a> `;
+
         item += subItem;
         $(siteMenu).append(item);
+
     }
 }
-
 /**
  * function that fills main page with products
  * @param data - products list

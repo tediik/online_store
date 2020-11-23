@@ -15,12 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/products")
 public class ProductController {
 
-
-
     @GetMapping("/{id}")
-  public String getProductPage() {
-    return "productPage";
+    public String getProductPage() {
+        return "productPage";
   }
-
-
 }
