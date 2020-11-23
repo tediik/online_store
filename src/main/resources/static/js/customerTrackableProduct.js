@@ -97,4 +97,8 @@ function stopTrackingProduct(id) {
 function deleteProductBodyFromTrackableProducts(untraceableProduct) {
     let cardsBody = document.querySelector(`#trackableProductCard${untraceableProduct}`);
     cardsBody.remove();
+
+    if(!$("#trackableProduct").find(".col").length) {
+        renderInfoMessage();
+    }
 }
