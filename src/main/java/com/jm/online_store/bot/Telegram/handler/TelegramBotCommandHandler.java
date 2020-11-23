@@ -60,6 +60,7 @@ public class TelegramBotCommandHandler {
             }
             case "/getNews": {
                 message = telegramBotService.getSomeQuantityOfNews(quantity);
+                break;
             }
 
             default: {
