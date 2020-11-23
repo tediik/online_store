@@ -478,4 +478,18 @@ public class ProductServiceImpl implements ProductService {
                 .getPriceChangeSubscribers());
         return saveProduct(product);
     }
+
+    /**
+     * Метод проверяет существование товара в БД.
+     *
+     * @param productName - поле по которому проверяем товар
+     * @return false -  Если такой товар не был найден.
+     * true -   Если такой товар существует.
+     */
+    @Override
+    @Transactional
+    public boolean isExist(String productName) {
+        Optional<Product> product = productRepository.findByProduct(productName);
+        return product.isPresent();
+    }
 }

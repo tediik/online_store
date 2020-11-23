@@ -49,4 +49,6 @@ public interface ProductService {
     void saveAllProducts(List<Product> products);
 
     XSSFWorkbook createXlsxDoc(List<Product> products, String category);
+
+    boolean isExist(String productName);
 }
