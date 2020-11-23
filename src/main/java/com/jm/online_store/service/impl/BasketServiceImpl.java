@@ -88,6 +88,9 @@ public class BasketServiceImpl implements BasketService {
                 subBasket.setCount(count);
             } else {
                 subBasket.setCount(subBasket.getProduct().getAmount());
+                System.out.println("Корзина не обновилась");
+                basketRepository.saveAndFlush(subBasket);
+                throw new ProductsNotFoundException("products zakonchilis");
             }
         } else {
             if (count > 1) {
@@ -140,7 +143,7 @@ public class BasketServiceImpl implements BasketService {
                 .orElseThrow(ProductNotFoundException::new);
         List<SubBasket> userBasket = userWhoseBasketToModify.getUserBasket();
 
-       int amount = productService.findProductAmount(id);
+       int amount = productToAdd.getAmount();
        if(amount <= 0) {
             System.out.println("Закончился товар в бд");
             throw new ProductsNotFoundException("В БД закончился данный продукт");

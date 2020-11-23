@@ -114,6 +114,10 @@ async function updateCountBasket(id, count) {
             count: count
         }),
         headers: {"Content-Type": "application/json; charset=utf-8"}
+    }).then(function (response) {
+        if(response.status === 400) {
+            toastr.warning('Данный товар закончился', '', {timeOut: 1000})
+        }
     });
     await fillBasket();
 }

@@ -72,8 +72,14 @@ public class BasketRestController {
     public ResponseEntity<String> updateUpBasket(@RequestBody ObjectNode json) {
         Long id = json.get("id").asLong();
         int difference = json.get("count").asInt();
-        basketService.updateBasket(basketService.findBasketById(id), difference);
-        return ResponseEntity.ok().build();
+        try {
+            basketService.updateBasket(basketService.findBasketById(id), difference);
+            return ResponseEntity.ok().build();
+        }catch (ProductsNotFoundException e) {
+            System.out.println("Вылетает исключение, когда нельзя добавить товар в корзину");
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 
     @PutMapping("/api/basket/add/{id}")
