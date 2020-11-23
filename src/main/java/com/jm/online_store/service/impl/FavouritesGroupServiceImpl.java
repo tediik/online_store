@@ -44,13 +44,17 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
         favouritesGroupRepository.save(favouritesGroup);
     }
 
+    /**
+     * Add new favorites Group
+     * @param favouritesGroup favorite group
+     */
     @Override
     public void addFavouritesGroup(FavouritesGroup favouritesGroup) {
         favouritesGroupRepository.save(favouritesGroup);
     }
 
     /**
-     * Completely delete all group
+     * Completely delete all group from DB
      * @param id group Id
      */
     @Override
@@ -59,7 +63,7 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
     }
 
     /**
-     * Remove specific product from specific group
+     * Remove specific product from specific group and save changes to DB
      * @param product  product
      * @param favouritesGroup group
      */
@@ -70,16 +74,32 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
         favouritesGroupRepository.save(favouritesGroup);
     }
 
+    /**
+     * Find favorite group by Id
+     * @param id favorite group Id
+     * @return favorite group
+     */
     @Override
     public Optional<FavouritesGroup> findById(Long id) {
         return favouritesGroupRepository.findById(id);
     }
 
+    /**
+     * Find favorite group by group name
+     * @param name group name
+     * @return FavouritesGroup
+     */
     @Override
     public Optional<FavouritesGroup> findByName(String name) {
         return favouritesGroupRepository.findByName(name);
     }
 
+    /**
+     * Find and retrieve favoriteGroup from DB, by name of group and user of this group
+     * @param user user of that group
+     * @param name name of Favorite Group
+     * @return FavouritesGroup
+     */
     @Override
     public FavouritesGroup getOneFavouritesGroupByUserAndByName(User user, String name) {
         return favouritesGroupRepository.getOneFavouritesGroupByUserAndByName(user, name);
@@ -96,9 +116,13 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
         return productSet;
     }
 
-
+    /**
+     * Save new group in DB
+     * @param favouritesGroup FavouritesGroup
+     */
     @Override
     public void save(FavouritesGroup favouritesGroup) {
         favouritesGroupRepository.save(favouritesGroup);
     }
+
 }
