@@ -1,6 +1,6 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Evaluation;
@@ -13,7 +13,6 @@ import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
-import com.jm.online_store.util.ValidationUtils;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -88,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
      * @return Excel-документ
      */
     @Override
-    public XSSFWorkbook createXlsxDoc(List<Product> products, String category){
+    public XSSFWorkbook createXlsxDoc(List<Product> products, String category) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Products report");
         int rowCount = 0;
@@ -432,21 +431,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * добавляет новые email в рассылку при измененеии цены на товар
+     * Метод для добавления нового email в рассылку при изменении цены на товар
      *
-     * @param id    товара
-     * @param email для рассылки
-     * @return true если удалось добавить email, false если не удалось
+     * @param body тело запроса
+     * @return true если удалось добавить email, false если такой email уже есть
      */
     @Override
-    public boolean addNewSubscriber(Long id, String email) {
-        if (!ValidationUtils.isValidEmail(email)) {
-            return false;
+    public boolean addNewSubscriber(ObjectNode body) {
+        String email;
+        if (body.has("email")) {
+            email = body.get("email").asText();
+        } else {
+            email = userService.getCurrentLoggedInUser().getEmail();
         }
-        Product product = findProductById(id).orElseThrow(ProductNotFoundException::new);
+
+        Product product = findProductById(body.get("id").asLong()).orElseThrow(ProductNotFoundException::new);
         Set<String> emails = product.getPriceChangeSubscribers();
         if (emails.contains(email)) {
-            throw new EmailAlreadyExistsException();
+            return false;
         } else {
             emails.add(email);
             product.setPriceChangeSubscribers(emails);
@@ -477,5 +479,31 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(ProductNotFoundException::new)
                 .getPriceChangeSubscribers());
         return saveProduct(product);
+    }
+
+    /**
+     * Метод для поиска товаров, на изменения цен которых
+     * подписан авторизованный пользователь по email
+     *
+     * @return List<Product> список товаров
+     */
+    @Override
+    public List<Product> findTrackableProductsByLoggedInUser() {
+        return productRepository.findProductByPriceChangeSubscribersEquals(userService.getCurrentLoggedInUser().getEmail());
+    }
+
+    /**
+     * Метод для удаления подписки залогиненного пользователя на изменение цены товара
+     *
+     * @param productId уникальный идентификатор товара
+     */
+    @Override
+    public void deleteProductFromTrackedForLoggedInUser(long productId) {
+        Product product = productRepository.getOne(productId);
+        Set<String> emails = product.getPriceChangeSubscribers();
+        String currentUserEmail = userService.getCurrentLoggedInUser().getEmail();
+        emails.removeIf(email -> email.contains(currentUserEmail));
+        product.setPriceChangeSubscribers(emails);
+        saveProduct(product);
     }
 }
