@@ -67,7 +67,7 @@ async function fillMainCategories() {
                     href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${data[key].category}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
         let subItem = ``;
-            subItem += `<a class="dropdown-item" href="/categories/${data[key].category}">
+        subItem += `<a class="dropdown-item" href="/categories/${data[key].category}">
                             ${data[key].category}</a> `;
 
         item += subItem;
@@ -75,6 +75,7 @@ async function fillMainCategories() {
 
     }
 }
+
 /**
  * function that fills main page with products
  * @param data - products list
