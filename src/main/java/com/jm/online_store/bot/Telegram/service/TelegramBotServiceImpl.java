@@ -1,11 +1,12 @@
 package com.jm.online_store.bot.Telegram.service;
 
 import com.jm.online_store.enums.RepairOrderType;
+import com.jm.online_store.model.News;
 import com.jm.online_store.model.RepairOrder;
 import com.jm.online_store.model.Stock;
+import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.RepairOrderService;
 import com.jm.online_store.service.interf.StockService;
-import com.jm.online_store.bot.Telegram.service.TelegramBotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,38 @@ public class TelegramBotServiceImpl implements TelegramBotService {
 
     private final RepairOrderService repairOrderService;
 
+    private final NewsService newsService;
+
     @Value("${spring.server.url}")
     private String url;
+
+    @Override
+    public String getSomeQuantityOfNews(String qt) {
+        long quantity = Long.parseLong(qt);
+        StringBuilder massage = new StringBuilder();
+        List<News> newsList = newsService.getAllPublished();
+        if (quantity >= newsList.size()) {
+            newsList.forEach(news ->
+                    massage.append("\uD83E\uDD4B")
+                            .append(news.getTitle())
+                            .append(".\nПодробности на ")
+                            .append(url)
+                            .append("/news")
+                            .append(news.getId())
+                            .append("\n\n"));
+        } else {
+            newsList.stream().limit(quantity).forEach(news ->
+                    massage.append("\uD83E\uDD4B")
+                            .append(news.getTitle())
+                            .append(".\nПодробности на ")
+                            .append(url)
+                            .append("/news")
+                            .append(news.getId())
+                            .append("\n\n"));
+
+        }
+        return massage.toString();
+    }
 
     @Override
     public String getActualStocks() {
