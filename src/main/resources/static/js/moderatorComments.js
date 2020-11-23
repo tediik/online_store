@@ -1,8 +1,26 @@
-fetchCommentsAndRenderTable();
+let stompClient = null;
 
-function renderCommentsTable(reports) {
+connect();
+
+function connect() {
+    let socket = new SockJS('/reportComments');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/table/report',function (allReports) {
+            renderCommentsTable(JSON.parse(allReports.body));
+        });
+        sendMessage();
+    })
+}
+
+function sendMessage() {
+    stompClient.send("/app/report")
+}
+
+function renderCommentsTable(allReports) {
     let table = $('#comments-table');
-    if (reports.length === 0) {
+    if (allReports.length === 0) {
         table.empty()
             .append(`
             <h4>На данный момент нет комментариев для проверки.</h4>
@@ -17,8 +35,8 @@ function renderCommentsTable(reports) {
                 <th>Оставить</th>
                 <th>Удалить</th>
               </tr>`);
-        for (let i = 0; i < reports.length; i++) {
-            const report = reports[i];
+        for (let i = 0; i < allReports.length; i++) {
+            const report = allReports[i];
             let row = `
                 <tr>
                     <td>${report.reportId}</td>
@@ -47,10 +65,9 @@ function renderCommentsTable(reports) {
             method: "DELETE",
             success: function () {
                 toastr.info("Комментарий оставлен");
-                fetchCommentsAndRenderTable();
+                sendMessage();
             }
         });
-        fetchCommentsAndRenderTable();
     });
     $('.delete-button').on('click', function () {
         let commentId = $(this).attr("id");
@@ -59,16 +76,11 @@ function renderCommentsTable(reports) {
             method: "DELETE",
             success: function () {
                 toastr.info("Комментарий удален");
-                fetchCommentsAndRenderTable();
+                sendMessage();
             }
         })
     });
 }
 
-function fetchCommentsAndRenderTable() {
-    fetch("/api/moderator")
-        .then(response => response.json())
-        .then(reports => renderCommentsTable(reports))
-}
 
 

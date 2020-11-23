@@ -1,6 +1,5 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.ReportComment;
 import com.jm.online_store.repository.CommentRepository;
 import com.jm.online_store.repository.ReportCommentRepository;

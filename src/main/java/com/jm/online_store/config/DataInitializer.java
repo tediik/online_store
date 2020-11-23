@@ -138,7 +138,8 @@ public class DataInitializer {
         User manager = new User("manager@mail.ru", "1");
         Customer customer = new Customer("customer@mail.ru", "1");
         User service = new User("service@mail.ru", "1");
-        User moderator = new User("moderator@mail.ru", "1");
+        User moderator1 = new User("moderator1@mail.ru", "1");
+        User moderator2 = new User("moderator2@mail.ru", "2");
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
@@ -164,13 +165,15 @@ public class DataInitializer {
         admin.setRoles(adminRoles);
         customer.setRoles(customerRoles);
         service.setRoles(serviceRoles);
-        moderator.setRoles(moderatorRoles);
+        moderator1.setRoles(moderatorRoles);
+        moderator2.setRoles(moderatorRoles);
 
         userService.addUser(manager);
         userService.addUser(customer);
         userService.addUser(admin);
         userService.addUser(service);
-        userService.addUser(moderator);
+        userService.addUser(moderator1);
+        userService.addUser(moderator2);
 
         Product product_1 = new Product("apple", 100000D, 10, 0.1);
         Product product_2 = new Product("samsung", 80000D, 100, 0.9);

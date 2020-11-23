@@ -38,6 +38,7 @@ $(document).on('click', '.report', function () {
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
                 success: function () {
+                    sendMessage();
                     $('#reportCommentBoxSpace' + commentId).empty();
                     toastr.info("Жалоба успешна отправлена.")
                 }
