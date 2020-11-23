@@ -26,7 +26,7 @@ public interface RepairOrderService {
 
     List<RepairOrder> getAllCanceled();
 
-    void save(RepairOrder repairOrder);
+    RepairOrder save(RepairOrder repairOrder);
 
     RepairOrder findById(Long id);
 
@@ -41,4 +41,8 @@ public interface RepairOrderService {
     RepairOrder findRepairOrderByIdAndTelephoneNumber(Long id, String telephoneNumber);
 
     void createPdfWorkOrder(RepairOrder repairOrder, HttpServletResponse response) throws IOException, DocumentException;
+
+    boolean existsByOrderNumber(String orderNumber);
+
+    RepairOrder findByOrderNumber(String orderNumber);
 }

@@ -109,6 +109,11 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    public List<Stock> findActualStocks() {
+        return stockRepository.findAllByPublishedIsTrueAndEndDateAfterOrEndDateEquals(LocalDate.now(), LocalDate.now());
+    }
+
+    @Override
     public void updateStock(Stock stock) {
         Stock modifiedStock = stockRepository.findById(stock.getId()).orElseThrow(StockNotFoundException::new);
         modifiedStock.setStartDate(stock.getStartDate());

@@ -2,7 +2,6 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.service.interf.FavouritesGroupProductService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,7 @@ import java.util.Set;
 @RestController
 @AllArgsConstructor
 public class ProductForFavouritesGroupRestController {
-    private final FavouritesGroupProductService favouritesGroupProductService;
+
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
 
@@ -37,7 +36,7 @@ public class ProductForFavouritesGroupRestController {
     @PostMapping(value = "/customer/addProductInFavouritesGroup/{id}")
     public ResponseEntity addProductInFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
-        favouritesGroupProductService.addProductToFavouritesGroup(product, favouritesGroup);
+        favouritesGroupService.addProductToFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok("addProductInFavouritesGroupOK");
     }
 
@@ -49,7 +48,7 @@ public class ProductForFavouritesGroupRestController {
     @GetMapping(value = "/customer/getProductFromFavouritesGroup/{id}")
     public ResponseEntity<Set<Product>> getProductFromFavouritesGroup(@PathVariable Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
-        return ResponseEntity.ok(favouritesGroupProductService.getProductSet(favouritesGroup));
+        return ResponseEntity.ok(favouritesGroupService.getProductSet(favouritesGroup));
     }
 
     /**
@@ -62,7 +61,7 @@ public class ProductForFavouritesGroupRestController {
     public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody Long idProduct, @PathVariable("idGroup") Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         Product product = productService.findProductById(idProduct).orElseThrow();
-        favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup);
+        favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok().build();
     }
 
@@ -77,7 +76,7 @@ public class ProductForFavouritesGroupRestController {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(idGroup).orElseThrow();
         for (int i = 0; i < idProducts.size(); i++){
             Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
-            favouritesGroupProductService.deleteProductFromFavouritesGroup(product, favouritesGroup);
+            favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, favouritesGroup);
         }
         return ResponseEntity.ok().build();
     }
@@ -95,8 +94,8 @@ public class ProductForFavouritesGroupRestController {
         FavouritesGroup oldFavouritesGroup = favouritesGroupService.findById(idOldGroup).orElseThrow();
         for (int i = 0; i < idProducts.size(); i++) {
             Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
-            favouritesGroupProductService.deleteProductFromFavouritesGroup(product, oldFavouritesGroup);
-            favouritesGroupProductService.addProductToFavouritesGroup(product, newFavouritesGroup);
+            favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, oldFavouritesGroup);
+            favouritesGroupService.addProductToFavouritesGroup(product, newFavouritesGroup);
         }
         return ResponseEntity.ok().build();
     }

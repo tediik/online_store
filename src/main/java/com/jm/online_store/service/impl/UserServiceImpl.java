@@ -283,15 +283,15 @@ public class UserServiceImpl implements UserService {
                 .map(Collections::singleton)
                 .orElse(Collections.emptySet());
 
-        User user = new User();
-        user.setEmail(confirmationToken.getUserEmail());
-        user.setPassword(confirmationToken.getUserPassword());
-        user.setRoles(userRoles);
+        Customer customer = new Customer();
+        customer.setEmail(confirmationToken.getUserEmail());
+        customer.setPassword(confirmationToken.getUserPassword());
+        customer.setRoles(userRoles);
 
-        addUser(user);
+        addUser(customer);
 
         try {
-            request.login(user.getEmail(), confirmationToken.getUserPassword());
+            request.login(customer.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {
             log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
         }

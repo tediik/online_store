@@ -46,6 +46,10 @@
                                         <input type="text" class="form-control" id="idRepairOrderUpdate" readonly>
                                     </div>
 
+                                    <label for="orderNumberUpdate"></label>
+                                    <input type="text" id="orderNumberUpdate" name="orderNumber"
+                                           class="form-control" hidden>
+
                                     <br>
                                     <label for="fullNameClientUpdate">ФИО</label>
                                     <input type="text" id="fullNameClientUpdate" name="fullNameClient"
@@ -153,7 +157,7 @@
 
                     <!--профиль-->
                     <div class="tab-pane fade show active" id="Profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <div th:insert="/blocks/profile :: profile"></div>
+                        <div th:insert="/blocks/profileAdminManagerService :: profile"></div>
                     </div>
                     <!--конец профиля-->
 
