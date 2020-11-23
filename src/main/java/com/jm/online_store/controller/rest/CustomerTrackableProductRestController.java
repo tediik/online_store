@@ -31,7 +31,7 @@ public class CustomerTrackableProductRestController {
      */
     @GetMapping
     public ResponseEntity<List<Product>> getAllTrackableProducts() {
-        List<Product> trackableProducts = productService.findAllTrackableProductsByCurrentLoggedInUser();
+        List<Product> trackableProducts = productService.findTrackableProductsByLoggedInUser();
         if (trackableProducts.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -47,7 +47,7 @@ public class CustomerTrackableProductRestController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteProducts(@PathVariable(name = "id") long id) {
-        productService.deleteProductFromTrackedForCurrentLoggedInUser(id);
+        productService.deleteProductFromTrackedForLoggedInUser(id);
         return ResponseEntity.ok(id);
     }
 }
