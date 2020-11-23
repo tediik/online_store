@@ -142,6 +142,7 @@ public class BasketServiceImpl implements BasketService {
 
        int amount = productService.findProductAmount(id);
        if(amount <= 0) {
+            System.out.println("Закончился товар в бд");
             throw new ProductsNotFoundException("В БД закончился данный продукт");
        }else {
            for (SubBasket basket : userBasket) {

@@ -84,7 +84,8 @@ public class BasketRestController {
         } catch (UserNotFoundException | ProductNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (ProductsNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            //return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            return ResponseEntity.badRequest().build();
         }
     }
 }

@@ -11,7 +11,7 @@ $(document).ready(function (){
 async function fillBasket() {
     let response = await fetch("/customer/basketGoods");
     let content = await response.json();
-    let basketGoodsJson = document.getElementById('basketList');
+    let basketGoodsJson = document.getElementById('busketTable');
     let countGoods = 0;
     let sumBasket = 0;
     let key;

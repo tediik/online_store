@@ -95,6 +95,7 @@ public class MainPageRestController {
     @GetMapping("api/products")
     public ResponseEntity<List<Product>> getSomeProducts() {
         return ResponseEntity.ok(productService.findNumProducts(15));
+    //    return ResponseEntity.ok(productService.findAll());
     }
 
     /**
