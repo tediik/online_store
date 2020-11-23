@@ -96,16 +96,17 @@ public class ProductRestController {
     }
 
     /**
-     * Контроллер для добавления нового email в лист рассылок
+     * Метод для добавления нового email в лист рассылок
+     *
      * @param body тело запроса
-     * @return ResponseEntity
+     * @return ResponseEntity<String> со статусом ответа
      */
     @PostMapping("/subscribe")
     public ResponseEntity<String> addNewSubscriber(@RequestBody ObjectNode body) {
-        if(productService.addNewSubscriber(body.get("id").asLong(), body.get("email").asText())) {
+        if (productService.addNewSubscriber(body)) {
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body("incorrectEmail");
+            return ResponseEntity.badRequest().build();
         }
     }
 }
