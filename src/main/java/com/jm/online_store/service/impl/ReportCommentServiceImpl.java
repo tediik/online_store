@@ -16,7 +16,7 @@ public class ReportCommentServiceImpl implements ReportCommentService {
     private final CommentRepository commentRepository;
 
     /**
-     * Добавление жалобы в.
+     * Добавление жалобы.
      *
      * @param reportComment жалоба на комментарий.
      */
