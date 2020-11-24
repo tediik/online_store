@@ -39,6 +39,14 @@ public class CategoriesServiceImpl implements CategoriesService {
     }
 
     /**
+     * Метод возвращает все категории
+     */
+    @Override
+    public List<Categories> findAll() {
+        return categoriesRepository.findAll();
+    }
+
+    /**
      * Метод возвращает имя категории по id продукта
      * @param productId идентификатор продукта
      */

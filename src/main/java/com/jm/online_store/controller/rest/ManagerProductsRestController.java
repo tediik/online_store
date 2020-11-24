@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
@@ -165,6 +166,17 @@ public class ManagerProductsRestController {
     public ResponseEntity<Long> restoreProductById(@PathVariable("id") Long id) {
         productService.restoreProduct(id);
         return ResponseEntity.ok(id);
+    }
+
+    /**
+     * Метод выбора продукта по категории
+     *
+     * @param categoryId - id выбранной категории
+     * @return List<Product> отредактированный лист продуктов
+     */
+    @PutMapping(value = "/rest/products/{category}")
+    public List<Product> filterByCategory(@PathVariable Long categoryId) {
+        return productService.getProductsByCategoryId(categoryId);
     }
 
     /**

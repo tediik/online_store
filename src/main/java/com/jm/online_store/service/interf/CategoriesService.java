@@ -11,6 +11,8 @@ public interface CategoriesService {
 
     ArrayNode getAllCategories();
 
+    List<Categories> findAll();
+
     String getCategoryNameByProductId(Long productId);
 
     List<Categories> getCategoriesByParentCategoryId (Long parentCategoryId);
