@@ -50,5 +50,6 @@ public interface ProductService {
 
     XSSFWorkbook createXlsxDoc(List<Product> products, String category);
 
-    boolean isExist(String productName);
+    boolean existsProductByProduct(String productName);
+
 }

@@ -116,14 +116,11 @@ public class ManagerProductsRestController {
     @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> addProduct(@RequestBody Product product, @PathVariable Long id) {
 
-        if (productService.isExist(product.getProduct())) {
+        if (productService.existsProductByProduct(product.getProduct())) {
             log.debug("Product with same productName already exists");
             return new ResponseEntity("duplicatedNameProductError", HttpStatus.BAD_REQUEST);
         }
-        if (product.getProduct().equals("")) {
-            log.debug("ProductName is empty");
-            return new ResponseEntity("emptyNameProductError", HttpStatus.BAD_REQUEST);
-        }
+
         productService.saveProduct(product);
         categoriesService.addToProduct(product, id);
         return ResponseEntity.ok(product);

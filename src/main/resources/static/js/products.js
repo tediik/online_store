@@ -12,8 +12,8 @@ document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 $(function () {
     fillProductCategoriesIn('#jqxTreeHere')
         .then(() => {
-        $('#jqxTreeHere').jqxTree('expandAll');
-    })
+            $('#jqxTreeHere').jqxTree('expandAll');
+        })
         .then(() => { // поиск по категориям
             document.querySelector('#searchForCategories').oninput = function () {
                 let val = this.value.trim().toLowerCase();
@@ -46,15 +46,14 @@ async function fillProductCategoriesIn(htmlId) {
         let thisParentId = item.parentId;
         let id = item.id;
         if (items[thisParentId]) {
-            let tmpItem = { parentId: thisParentId, label: label, item: item };
+            let tmpItem = {parentId: thisParentId, label: label, item: item};
             if (!items[thisParentId].items) {
                 items[thisParentId].items = [];
             }
             items[thisParentId].items[items[thisParentId].items.length] = tmpItem;
             items[id] = tmpItem;
-        }
-        else {
-            items[id] = { parentId: thisParentId, label: label, item: item };
+        } else {
+            items[id] = {parentId: thisParentId, label: label, item: item};
             source[id] = items[id];
         }
     }
@@ -134,8 +133,9 @@ function handleEditButton(event) {
                 })
                 .then(responseResult => {
                     currentCategoryNameEdit = "" + responseResult;
-                    editModalWindowRender(productToEdit)});
+                    editModalWindowRender(productToEdit)
                 });
+        });
 }
 
 /**
@@ -267,28 +267,32 @@ function handleAddBtn() {
         body: JSON.stringify(productToAdd)
     })
         .then(function (response) {
-            let field;
-            if (response.status !== 200) {
-                response.text()
-                    .then(
-                        function (text) {
+                let field;
+                if (response.status !== 200) {
+                    response.text()
+                        .then(
+                            function (text) {
 
-                            if (text === "duplicatedNameProductError") {
-                                toastr.error('Такое наименование уже существует');
-                            }
+                                if (text === "duplicatedNameProductError") {
+                                    toastr.error('Такое наименование уже существует');
+                                }
 
-                            console.log(text)
-                        })
-            } else {
-                response.text().then(function () {
-                    $("#jqxTreeHere").jqxTree('selectItem', null);
-                    showAndRefreshHomeTab();
-                    clearFormFields();
-                    toastr.success('Товар успешно добавлен')
-                })
+                                console.log(text)
+                            })
+                } else {
+                    response.text().then(function () {
+                        $("#jqxTreeHere").jqxTree('selectItem', null);
+                        if (document.getElementById("deletedCheckbox").checked) {
+                            showAndRefreshNotDeleteHomeTab()
+                        } else {
+                            showAndRefreshHomeTab()
+                        }
+                        clearFormFields();
+                        toastr.success('Товар успешно добавлен')
+                    })
+                }
             }
-        }
-    )
+        )
 }
 
 /**
@@ -308,7 +312,11 @@ function importProductsFromFile() {
         contentType: false,
         type: 'POST',
         success: function (data) {
-            showAndRefreshHomeTab()
+            if (document.getElementById("deletedCheckbox").checked) {
+                showAndRefreshNotDeleteHomeTab()
+            } else {
+                showAndRefreshHomeTab()
+            }
             toastr.info('Импорт товаров завершен!', {timeOut: 5000})
         },
         error: function () {
@@ -341,8 +349,7 @@ function handleAcceptButtonFromModalWindow(event) {
             .then(showTable => {
                 if (document.getElementById("deletedCheckbox").checked) {
                     showAndRefreshNotDeleteHomeTab(showTable)
-                }
-                else {
+                } else {
                     showAndRefreshHomeTab(showTable)
                 }
             })
@@ -355,7 +362,11 @@ function handleAcceptButtonFromModalWindow(event) {
                 headers: headers,
                 body: JSON.stringify(product)
             }).then(function (response) {
-                fetchProductsAndRenderTable()
+                if (document.getElementById("deletedCheckbox").checked) {
+                    fetchProductsAndRenderNotDeleteTable();
+                } else {
+                    fetchProductsAndRenderTable()
+                }
                 $('#productModalWindow').modal('hide')
             })
         } else {
@@ -365,7 +376,11 @@ function handleAcceptButtonFromModalWindow(event) {
                 headers: headers,
                 body: JSON.stringify(product)
             }).then(function (response) {
-                fetchProductsAndRenderTable()
+                if (document.getElementById("deletedCheckbox").checked) {
+                    fetchProductsAndRenderNotDeleteTable();
+                } else {
+                    fetchProductsAndRenderTable()
+                }
                 $('#productModalWindow').modal('hide')
             })
         }

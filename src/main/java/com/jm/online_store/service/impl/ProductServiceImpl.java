@@ -488,8 +488,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     @Transactional
-    public boolean isExist(String productName) {
-        Optional<Product> product = productRepository.findByProduct(productName);
-        return product.isPresent();
+    public boolean existsProductByProduct(String productName) {
+        return productRepository.existsProductByProduct(productName);
     }
 }
