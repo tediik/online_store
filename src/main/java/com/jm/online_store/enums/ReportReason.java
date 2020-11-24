@@ -8,5 +8,5 @@ public enum  ReportReason {
     ABUSIVE,
     FRAUD,
     BAD_CONTENT,
-    OTHER;
+    OTHER
 }

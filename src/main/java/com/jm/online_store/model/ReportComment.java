@@ -27,13 +27,22 @@ public class ReportComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Комментарий к причине жалобы.
+     */
     @Column(name = "reasonComment")
     private String reasonComment;
 
+    /**
+     * Причина жалобы.
+     */
     @Column(name = "reportReason")
     @Enumerated(EnumType.STRING)
     private ReportReason reportReason;
 
+    /**
+     * Комментарий на который пожаловались.
+     */
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private Comment comment;

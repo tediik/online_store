@@ -5,8 +5,7 @@ connect();
 function connect() {
     let socket = new SockJS('/reportComments');
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
+    stompClient.connect({}, function () {
         stompClient.subscribe('/table/report',function (allReports) {
             renderCommentsTable(JSON.parse(allReports.body));
         });
@@ -15,7 +14,7 @@ function connect() {
 }
 
 function sendMessage() {
-    stompClient.send("/app/report")
+    stompClient.send("/app/report");
 }
 
 function renderCommentsTable(allReports) {
@@ -27,14 +26,16 @@ function renderCommentsTable(allReports) {
             `);
     } else {
         table.empty()
-            .append(`<tr>
-                <th>ID</th>
-                <th>Комментарий</th>
-                <th>Причина жалобы</th>
-                <th>Комментарий к жалобе</th>
-                <th>Оставить</th>
-                <th>Удалить</th>
-              </tr>`);
+            .append(`
+                    <tr>
+                        <th>ID</th>
+                        <th>Комментарий</th>
+                        <th>Причина жалобы</th>
+                        <th>Комментарий к жалобе</th>
+                        <th>Оставить</th>
+                        <th>Удалить</th>
+                    </tr>
+                    `);
         for (let i = 0; i < allReports.length; i++) {
             const report = allReports[i];
             let row = `

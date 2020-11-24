@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Рест контроллер для модератора.
+ */
 @RestController
 @RequestMapping("/api/moderator")
 @AllArgsConstructor
@@ -27,13 +29,24 @@ public class ModeratorRestController {
     private final CommentService commentService;
     private final ReportCommentService reportCommentService;
 
-    @GetMapping
-    public List<ReportCommentDto> allComments() {
+    /**
+     * Получения списка всех жалоб на комментарии с помощью WebSocket.
+     *
+     * @return ReportCommentDto
+     */
+    @MessageMapping("/report")
+    @SendTo("/table/report")
+    public List<ReportCommentDto> allReportComments() {
         return reportCommentService.findAllReportComments().stream()
                 .map(ReportCommentDto::entityToDto)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Добавление жалобы на комментарий.
+     *
+     * @param reportCommentDto
+     */
     @PostMapping
     public ResponseEntity<ReportCommentDto> addReportComment(@RequestBody ReportCommentDto reportCommentDto) {
         ReportComment reportComment = ReportCommentDto.DtoToEntity(reportCommentDto);
@@ -42,23 +55,25 @@ public class ModeratorRestController {
         return ResponseEntity.ok(reportCommentDto);
     }
 
+    /**
+     * Удаления жалобы.
+     *
+     * @param id жалобы.
+     */
     @DeleteMapping("/leave/{id}")
     public ResponseEntity<ReportComment> deleteReport(@PathVariable("id") Long id) {
         reportCommentService.deleteReport(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Удаление жалобы и коментария.
+     *
+     * @param id комментария.
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ReportComment> deleteReportAndComment(@PathVariable("id") Long id) {
         reportCommentService.deleteReportAndComment(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @MessageMapping("/report")
-    @SendTo("/table/report")
-    public List<ReportCommentDto> allReportComments() {
-        return reportCommentService.findAllReportComments().stream()
-                .map(ReportCommentDto::entityToDto)
-                .collect(Collectors.toList());
     }
 }

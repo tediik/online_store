@@ -83,14 +83,14 @@ $(document).ready(function () {
                         $('#showReviews').append($(`
                         <div class="media mb-4">
                             <div>
-                                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                                    height="52" src="/uploads/images/${review.userPhoto}" width="52"></div>
-                                    <div class="media-body" id='mediaBody${response.id}'>
-                                    <h5 class="mt-0">${review.userEmail} reviewed on ${review.timeStamp}</h5>
-                                    <div class="message">${review.content}</div>
-                                    <button type='button' id='button${review.id}' class='btn btn-link commentReview'>Комментировать</button>
-                                    <div class="commentReviewDisplay" id='commentReviewDisplayId${review.id}'> </div>
-                                    <div class="commentReviewBoxSpace" id='commentReviewBoxSpace${review.id}'></div>
+                                <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                height="52" src="/uploads/images/${review.userPhoto}" width="52"></div>
+                                <div class="media-body" id='mediaBody${response.id}'>
+                                <h5 class="mt-0">${review.userEmail} reviewed on ${review.timeStamp}</h5>
+                                <div class="message">${review.content}</div>
+                                <button type='button' id='button${review.id}' class='btn btn-link commentReview'>Комментировать</button>
+                                <div class="commentReviewDisplay" id='commentReviewDisplayId${review.id}'> </div>
+                                <div class="commentReviewBoxSpace" id='commentReviewBoxSpace${review.id}'></div>
                             </div>
                         `))
                         $('#reviewForm').find('input:text').val('');
@@ -104,13 +104,13 @@ $(document).ready(function () {
 
         reviewId = reviewId.replace(/\D/g, '');
         let commentBox = $(`
-                                <div class="well">
-                                    <h4>Leave a Comment:</h4>
-                                        <div class="form-group">
-                                            <textarea class="form-control" id="commentReviewText" rows="3"></textarea>
-                                        </div>
-                                     <button type="button" id='submitCommentReviewBtn' class="btn btn-primary">Submit</button>
-                                </div>`);
+                            <div class="well">
+                                <h4>Leave a Comment:</h4>
+                                    <div class="form-group">
+                                        <textarea class="form-control" id="commentReviewText" rows="3"></textarea>
+                                    </div>
+                                 <button type="button" id='submitCommentReviewBtn' class="btn btn-primary">Submit</button>
+                            </div>`);
 
         $('#commentReviewBoxSpace' + reviewId).html(commentBox);
 

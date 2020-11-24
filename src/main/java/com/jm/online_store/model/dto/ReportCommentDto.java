@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Dto для построения жалобы для дальнейшего получения и отправки в {@Link ModeratorRestController}.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +19,12 @@ public class ReportCommentDto {
     private String reasonComment;
     private String reportedComment;
 
+    /**
+     * Получение из ReportComment -> ReportCommentDto.
+     *
+     * @param reportComment
+     * @return ReportCommentDto
+     */
     public static ReportCommentDto entityToDto(ReportComment reportComment) {
         ReportCommentDto reportCommentDto = new ReportCommentDto();
         reportCommentDto.setReportId(reportComment.getId());
@@ -26,6 +35,12 @@ public class ReportCommentDto {
         return reportCommentDto;
     }
 
+    /**
+     * Получение из ReportCommentDto -> ReportComment.
+     *
+     * @param reportCommentDto
+     * @return ReportComment
+     */
     public static ReportComment DtoToEntity(ReportCommentDto reportCommentDto) {
         ReportComment reportComment = new ReportComment();
         reportComment.setReportReason(ReportReason.valueOf(reportCommentDto.getReportReason()));

@@ -11,29 +11,37 @@ $(document).ready(function () {
                 $.each(response, function (i, comment) {
                     if (comment.parentId === null) {
                         $('#showComments').append($(`
-                        <div class="media mb-4"><div>
-                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
-                        <div class="media-body" id='mediaBody" + ${comment.id} + "'>
-                        <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                        <div class="message"> ${comment.content}  </div>
-                        <button type='button' id='button${comment.id}' class='btn btn-link reply'>Ответить</button>
-                        <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
-                        <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
-                        <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
-                        <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>`))
+                        <div class="media mb-4">
+                            <div>
+                                <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52">
+                            </div>
+                            <div class="media-body" id='mediaBody" + ${comment.id} + "'>
+                                <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                <div class="message">${comment.content}</div>
+                                <button type='button' id='button${comment.id}' class='btn btn-link reply'>Ответить</button>
+                                <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                                <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                                <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
+                                <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
+                            </div>
+                    `))
                     }
 
                     var replyDisplayId = $('#replyDisplayId' + comment.parentId);
                     if (comment.parentId !== null) {
-                        $(replyDisplayId).append($(`<div class="media mt-4">
-                    <div>
-                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
-                    <div class="media-body"> 
-                    <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp} </h5>
-                    <div class="message"> ${comment.content} </div>
-                    <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
-                    <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
-                     </div>`));
+                        $(replyDisplayId).append($(`
+                            <div class="media mt-4">
+                                <div>
+                                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" 
+                                    src="/uploads/images/${comment.userPhoto}" width="52">
+                                </div>
+                            <div class="media-body"> 
+                                <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp} </h5>
+                                <div class="message">${comment.content}</div>
+                                <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                                <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                            </div>
+                        `));
                     }
                 })
             }
@@ -69,19 +77,22 @@ $(document).ready(function () {
                     success: function (response) {
 
                         var comment = response.comments[0];
-                        $('#showComments').append($(`<div class="media mb-4">
-                            <div>
+                        $('#showComments').append($(`
+                            <div class="media mb-4">
+                                <div>
                                     <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                                    height="52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
-                                    <div class="media-body" id='mediaBody${response.id}'>
-                                    <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                                    <div class="message">${comment.content}</div>
-                                    <button type='button' id='button${comment.id}' class='btn btn-link reply'>Ответить</button>
-                                    <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
-                                   <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
-                                   <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
-                                   <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
-                               </div>`))
+                                    height="52" src="/uploads/images/${comment.userPhoto}" width="52">
+                                </div>
+                                <div class="media-body" id='mediaBody${response.id}'>
+                                <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                <div class="message">${comment.content}</div>
+                                <button type='button' id='button${comment.id}' class='btn btn-link reply'>Ответить</button>
+                                <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                                <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
+                                <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
+                                <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                            </div>
+                        `))
 
                         $('#commentForm').find('input:text').val('');
                     }
@@ -130,17 +141,20 @@ $(document).ready(function () {
                             commentBox.remove();
                             var replyDisplayId = $('#replyDisplayId' + commentId);
 
-                            $(replyDisplayId).append($(`<div class="media mt-4">
-                            <div>
-                            <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                            height="52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
-                            <div class="media-body">
-                            <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                            <div class="message">${comment.content}</div>
-                            <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
-                            <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                            $(replyDisplayId).append($(`
+                                <div class="media mt-4">
+                                    <div>
+                                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                        height="52" src="/uploads/images/${comment.userPhoto}" width="52">
+                                    </div>
+                                    <div class="media-body">
+                                    <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                    <div class="message">${comment.content}</div>
+                                    <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                                    <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                                </div>
                             </div>
-                            </div>`).last());
+                        `).last());
                         }
                     });
                 }
