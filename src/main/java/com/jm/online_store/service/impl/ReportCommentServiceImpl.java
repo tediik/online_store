@@ -16,7 +16,7 @@ public class ReportCommentServiceImpl implements ReportCommentService {
     private final CommentRepository commentRepository;
 
     /**
-     * Добавление жалобы в БД.
+     * Добавление жалобы в.
      *
      * @param reportComment жалоба на комментарий.
      */
@@ -36,7 +36,7 @@ public class ReportCommentServiceImpl implements ReportCommentService {
     }
 
     /**
-     * УДаления жалобы.
+     * Удаления жалобы.
      *
      * @param id жалобы.
      */
