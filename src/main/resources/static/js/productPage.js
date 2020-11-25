@@ -219,18 +219,18 @@ function priceChangeSubscribe(auth) {
             body: JSON.stringify(request),
             headers: {'Content-Type': 'application/json;charset=utf-8'}
         }).then(function (response) {
-            if (response.ok) {
+            if (response.status === 200) {
                 $('#dismissButton').click();
                 toastr.success("Мы уведомим вас об изменении цены на товар")
                 $("#emailInputModal").val("");
             } else {
-                response.text().then(function (text) {
+                if (response.status === 208) {
                     toastr.error("Вы уже подписались на изменение цены этого товара");
-                })
+                }
             }
         })
     } else {
-        toastr.error("Введён некорректный Email");
+        toastr.error("Проверьте правильность ввода Email");
     }
 }
 
