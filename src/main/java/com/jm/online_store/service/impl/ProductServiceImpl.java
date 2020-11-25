@@ -226,8 +226,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int findProductAmount(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
-        int amount = product.getAmount();
-        return amount;
+        return product.getAmount();
+
     }
 
     /**

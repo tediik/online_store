@@ -89,7 +89,7 @@ public class BasketServiceImpl implements BasketService {
             } else {
                 subBasket.setCount(subBasket.getProduct().getAmount());
                 basketRepository.saveAndFlush(subBasket);
-                throw new ProductsNotFoundException("products zakonchilis");
+                throw new ProductsNotFoundException("products run out");
             }
         } else {
             if (count > 1) {
@@ -142,8 +142,7 @@ public class BasketServiceImpl implements BasketService {
                 .orElseThrow(ProductNotFoundException::new);
         List<SubBasket> userBasket = userWhoseBasketToModify.getUserBasket();
 
-       int amount = productToAdd.getAmount();
-       if(amount <= 0) {
+       if(productToAdd.getAmount() <= 0) {
             throw new ProductsNotFoundException("В БД закончился данный продукт");
        }else {
            for (SubBasket basket : userBasket) {
