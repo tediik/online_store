@@ -5,6 +5,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>currently_basic_module</module>
+		<module>bots_module</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
