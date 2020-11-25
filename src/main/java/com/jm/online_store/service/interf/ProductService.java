@@ -27,6 +27,7 @@ public interface ProductService {
     List<Product> getNotDeleteProducts();
 
     void importFromXMLFile(String fileName);
+    void importFromXMLFile(String fileName,Long categoryId);
 
     void importFromCSVFile(String fileName) throws FileNotFoundException;
 

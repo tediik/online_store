@@ -8,6 +8,7 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
@@ -57,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
     private final UserService userService;
     private final CommonSettingsService commonSettingsService;
     private final MailSenderService mailSenderService;
+    private final CategoriesService categoriesService;
 
     /**
      * метод получения списка товаров
@@ -256,8 +258,9 @@ public class ProductServiceImpl implements ProductService {
                     String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
                     String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
                     String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
+                    String categoryId = eElement.getElementsByTagName("categoryid").item(0).getTextContent();
                     Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
-                    saveProduct(product);
+                    categoriesService.addToProduct(product,Long.parseLong(categoryId));
                 }
             }
 
@@ -272,6 +275,47 @@ public class ProductServiceImpl implements ProductService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void importFromXMLFile(String fileName, Long categoryId) {
+
+        try {
+            // Создается построитель документа
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+            // Создается дерево DOM документа из файла
+            Document document = documentBuilder.parse("uploads/import/" + fileName);
+            document.getDocumentElement().normalize();
+
+            NodeList nList = document.getElementsByTagName("product");
+
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+
+                Node nNode = nList.item(temp);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element eElement = (Element) nNode;
+
+                    String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
+                    String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
+                    String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
+                    Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
+                    categoriesService.addToProduct(product,categoryId);
+                }
+            }
+
+        } catch (ParserConfigurationException e) {
+            log.error("Ошибка конфигурации парсера");
+            e.printStackTrace();
+        } catch (SAXException e) {
+            log.error("Ошибка XML синтаксиса");
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("Ошибка ввода/вывода");
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Метод импортирует список товаров из сохраненного CSV файла

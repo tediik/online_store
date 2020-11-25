@@ -34,7 +34,32 @@ $(function () {
             }
         });
 });
-
+$(function () {
+    fillProductCategoriesIn('#jqxTreeHere1')
+        .then(() => {
+            $('#jqxTreeHere1').jqxTree('expandAll');
+        });
+        // .then(() => { // поиск по категориям
+        //     document.querySelector('#searchForCategories1').oninput = function () {
+        //         let val = this.value.trim().toLowerCase();
+        //         let allItems = document.querySelectorAll('#jqxTreeHere1 li');
+        //
+        //         if (val != '') {
+        //             allItems.forEach(function (element) {
+        //                 if (element.innerText.toLowerCase().search(val) == -1) {
+        //                     element.classList.add('hide');
+        //                 } else {
+        //                     element.classList.remove('hide');
+        //                 }
+        //             })
+        //         } else {
+        //             allItems.forEach(function (element) {
+        //                 element.classList.remove('hide');
+        //             });
+        //         }
+        //     }
+        // });
+});
 // build hierarchical structure
 async function fillProductCategoriesIn(htmlId) {
     listOfAll = await fetch(API_CATEGORIES_URL + "all").then(response => response.json());
@@ -283,28 +308,59 @@ function handleAddBtn() {
 /**
  * Добавление товара из файла
  */
+
 $('#inputFileSubmit').click(importProductsFromFile)
 
 function importProductsFromFile() {
+    let selectedCatForImport = $('#jqxTreeHere1').jqxTree('getSelectedItem');
+    if (!selectedCatForImport) {
+        alert('Категория не выбрана!');
+            let fileData = new FormData();
+            fileData.append('file', $('#file')[0].files[0]);
 
-    let fileData = new FormData();
-    fileData.append('file', $('#file')[0].files[0]);
+            $.ajax({
+                url: '/rest/products/uploadProductsFile/',
+                data: fileData,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function (data) {
+                    showAndRefreshHomeTab()
+                    toastr.info('Импорт товаров завершен!', {timeOut: 5000})
+                },
+                error: function () {
+                    alert("Некорретный путь к файлу!")
+                }
+            });
 
-    $.ajax({
-        url: '/rest/products/uploadProductsFile',
-        data: fileData,
-        processData: false,
-        contentType: false,
-        type: 'POST',
-        success: function (data) {
-            showAndRefreshHomeTab()
-            toastr.info('Импорт товаров завершен!', {timeOut: 5000})
-        },
-        error: function () {
-            alert("Некорретный путь к файлу!")
+    } else {
+        for (let z = 0; z < listOfAll.length; z++) {
+            let currItem = listOfAll[z];
+            if (selectedCatForImport.label.localeCompare(currItem.text) === 0) {
+                currentCategoryIdAdd = currItem.id;
+            }
         }
-    });
+
+        let fileData = new FormData();
+        fileData.append('file', $('#file')[0].files[0]);
+
+        $.ajax({
+            url: '/rest/products/uploadProductsFile/' + currentCategoryIdAdd,
+            data: fileData,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (data) {
+                showAndRefreshHomeTab()
+                toastr.info('Импорт товаров завершен!', {timeOut: 5000})
+            },
+            error: function () {
+                alert("Некорретный путь к файлу!")
+            }
+        });
+    }
 }
+
 
 /**
  * функция обработки нажатия кнопки accept в модальном окне

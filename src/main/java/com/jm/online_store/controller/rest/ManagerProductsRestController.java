@@ -48,6 +48,26 @@ public class ManagerProductsRestController {
      * @param file файл с данными
      * @return
      */
+    @PostMapping(value = "/rest/products/uploadProductsFile/{id}")
+    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
+        try {
+            byte[] bytes = file.getBytes();
+            BufferedOutputStream stream =
+                    new BufferedOutputStream(new FileOutputStream(new File("uploads/import/" + file.getOriginalFilename())));
+            stream.write(bytes);
+            stream.close();
+        } catch (Exception e) {
+            log.error("Ошибка сохранения файла");
+            e.printStackTrace();
+        }
+        log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
+        if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
+            productService.importFromXMLFile(file.getOriginalFilename(),id);
+        } else {
+            productService.importFromCSVFile(file.getOriginalFilename());
+        }
+        return ResponseEntity.ok("success");
+    }
     @PostMapping(value = "/rest/products/uploadProductsFile")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws FileNotFoundException {
         try {
