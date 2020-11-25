@@ -219,46 +219,41 @@ function handleAddBtn() {
     }
 
     /**
-     * проверяем, что наименование, цена продукта и количество != null
+     * проверяем, что наименование, цена продукта и количество заполнены
      */
-    if (!productToAdd.price && !productToAdd.amount && !productToAdd.product) {
-        toastr.error('Заполните поле количества товара');
-        toastr.error('Заполните поле стоимости товара');
-        toastr.error('Заполните поле наименования товара');
-        return false;
-    }
+    switch (true) {
+        case (!productToAdd.price && !productToAdd.amount && !productToAdd.product) :
+            toastr.error('Заполните поле количества товара');
+            toastr.error('Заполните поле стоимости товара');
+            toastr.error('Заполните поле наименования товара');
+            return;
 
-    /**
-     * проверяем, что цена продукта и количество != null
-     */
-    if (!productToAdd.price && !productToAdd.amount) {
-        toastr.error('Заполните поле количества товара');
-        toastr.error('Заполните поле стоимости товара');
-        return false;
-    }
+        case (!productToAdd.price && !productToAdd.product) :
+            toastr.error('Заполните поле стоимости товара');
+            toastr.error('Заполните поле наименования товара');
+            return;
 
-    /**
-     * проверяем, что цена продукта != null
-     */
-    if (!productToAdd.price) {
-        toastr.error('Заполните поле стоимости товара');
-        return false;
-    }
+        case (!productToAdd.amount && !productToAdd.product) :
+            toastr.error('Заполните поле количества товара');
+            toastr.error('Заполните поле наименования товара');
+            return;
 
-    /**
-     * проверяем, что количество продукта != null
-     */
-    if (!productToAdd.amount) {
-        toastr.error('Заполните поле количества товара');
-        return false;
-    }
+        case (!productToAdd.price && !productToAdd.amount) :
+            toastr.error('Заполните поле количества товара');
+            toastr.error('Заполните поле стоимости товара');
+            return;
 
-    /**
-     * проверяем, что наименование продукта != null
-     */
-    if (!productToAdd.product) {
-        toastr.error('Заполните поле наименования товара');
-        return false;
+        case !productToAdd.price :
+            toastr.error('Заполните поле стоимости товара');
+            return;
+
+        case !productToAdd.amount :
+            toastr.error('Заполните поле количества товара');
+            return;
+
+        case !productToAdd.product :
+            toastr.error('Заполните поле наименования товара');
+            return;
     }
 
     fetch("/rest/products/addProduct/" + currentCategoryIdAdd, {
