@@ -171,12 +171,13 @@ public class ManagerProductsRestController {
     /**
      * Метод выбора продукта по категории
      *
-     * @param categoryId - id выбранной категории
+     * @param categoryName - id выбранной категории
      * @return List<Product> отредактированный лист продуктов
      */
-    @PutMapping(value = "/rest/products/{category}")
-    public List<Product> filterByCategory(@PathVariable Long categoryId) {
-        return productService.getProductsByCategoryId(categoryId);
+
+    @PutMapping(value = "/rest/products/{categoryName}")
+    public List<Product> filterByCategory(@PathVariable String categoryName) {
+        return productService.findProductsByCategoryName(categoryName);
     }
 
     /**

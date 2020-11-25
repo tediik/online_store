@@ -14,9 +14,9 @@ $('#filterCategory').on("change", function() {
     if(categorySelect !== 'default') {
         $.ajax({
             type: 'PUT',
-            url: '/rest/products/' + categorySelect.id,
+            url: '/rest/products/' + categorySelect,
             success: function (filteredProducts) {
-                renderUsersTable(filteredProducts)
+                renderProductsRatingTable(filteredProducts)
             }
         });
     }

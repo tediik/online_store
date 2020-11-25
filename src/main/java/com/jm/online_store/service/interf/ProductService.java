@@ -16,6 +16,7 @@ public interface ProductService {
 
     Optional<Product> findProductByName(String productName);
 
+
     Long saveProduct(Product product);
 
     void deleteProduct(Long idProduct);
@@ -25,6 +26,8 @@ public interface ProductService {
     List<Product> findAll();
 
     List<Product> getNotDeleteProducts();
+
+    List<Product> findProductsByCategoryName(String categoryName);
 
     void importFromXMLFile(String fileName);
 

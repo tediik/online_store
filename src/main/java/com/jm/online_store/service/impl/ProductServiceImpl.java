@@ -3,11 +3,13 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
@@ -23,6 +25,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -57,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
     private final UserService userService;
     private final CommonSettingsService commonSettingsService;
     private final MailSenderService mailSenderService;
+    private final CategoriesService categoriesService;
 
     /**
      * метод получения списка товаров
@@ -79,6 +83,23 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
+    @Override
+    public List<Product> findProductsByCategoryName(String categoryName) {
+        Categories category = categoriesService.getCategoryByCategoryName(categoryName).get();
+
+        return category.getProducts();
+    }
+
+    /**
+     * Метод для получения списка товаров по id категории
+     */
+   /* @Override
+    public List<Product> findProductsByCategoryId(Long categoryId) {
+        Categories category = categoriesService.getCategoryById(categoryId).get();
+
+        return category.getProducts();
+    }*/
+
 
     /**
      * Метод для создания XLSX файла из списка товаров по категории
@@ -88,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
      * @return Excel-документ
      */
     @Override
-    public XSSFWorkbook createXlsxDoc(List<Product> products, String category){
+    public XSSFWorkbook createXlsxDoc(List<Product> products, String category) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Products report");
         int rowCount = 0;
