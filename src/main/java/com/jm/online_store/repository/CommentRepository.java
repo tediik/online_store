@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findAllByParentId(Long id);
+    void deleteAllByParentId(Long id);
 
     List<Comment> findAllByProductId(Long productId);
 

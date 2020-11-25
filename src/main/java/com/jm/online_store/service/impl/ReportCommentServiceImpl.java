@@ -6,6 +6,7 @@ import com.jm.online_store.repository.ReportCommentRepository;
 import com.jm.online_store.service.interf.ReportCommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -51,11 +52,9 @@ public class ReportCommentServiceImpl implements ReportCommentService {
      * @param id комментария.
      */
     @Override
+    @Transactional
     public void deleteReportAndComment(Long id) {
-        reportCommentRepository.findAllByCommentId(id)
-                .forEach(reportComment -> reportCommentRepository.deleteById(reportComment.getId()));
-        commentRepository.findAllByParentId(id)
-                .forEach(commentRepository::delete);
+        commentRepository.deleteAllByParentId(id);
         commentRepository.deleteById(id);
     }
 }

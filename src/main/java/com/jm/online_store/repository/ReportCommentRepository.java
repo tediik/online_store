@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
 public interface ReportCommentRepository extends JpaRepository<ReportComment, Long> {
     List<ReportComment> findAllByCommentId(Long id);

@@ -5,7 +5,6 @@ import com.jm.online_store.model.dto.ReportCommentDto;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReportCommentService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -63,7 +62,7 @@ public class ModeratorRestController {
     @DeleteMapping("/leave/{id}")
     public ResponseEntity<ReportComment> deleteReport(@PathVariable("id") Long id) {
         reportCommentService.deleteReport(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -74,6 +73,6 @@ public class ModeratorRestController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ReportComment> deleteReportAndComment(@PathVariable("id") Long id) {
         reportCommentService.deleteReportAndComment(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }
