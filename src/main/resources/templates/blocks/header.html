@@ -25,6 +25,9 @@
         <a sec:authorize="hasAnyAuthority('ROLE_SERVICE') and not hasAnyAuthority('ROLE_ADMIN')"
            class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/service">Кабинет сервисного работника</a>
+        <a sec:authorize="hasAnyAuthority('ROLE_MODERATOR') and not hasAnyAuthority('ROLE_ADMIN')"
+           class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           href="/moderator">Кабинет модератора</a>
         <!-- Registration -->
         <button th:unless="${#authorization.expression('isAuthenticated()')}"
                 class="btn btn-outline-secondary font-weight-bold secondarybtn"
