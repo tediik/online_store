@@ -222,33 +222,13 @@ function handleAddBtn() {
      * проверяем, что наименование, цена продукта и количество заполнены
      */
     switch (true) {
-        case (!productToAdd.price && !productToAdd.amount && !productToAdd.product) :
-            toastr.error('Заполните поле количества товара');
-            toastr.error('Заполните поле стоимости товара');
-            toastr.error('Заполните поле наименования товара');
-            return;
 
-        case (!productToAdd.price && !productToAdd.product) :
-            toastr.error('Заполните поле стоимости товара');
-            toastr.error('Заполните поле наименования товара');
-            return;
-
-        case (!productToAdd.amount && !productToAdd.product) :
+        case !productToAdd.amount :
             toastr.error('Заполните поле количества товара');
-            toastr.error('Заполните поле наименования товара');
-            return;
-
-        case (!productToAdd.price && !productToAdd.amount) :
-            toastr.error('Заполните поле количества товара');
-            toastr.error('Заполните поле стоимости товара');
             return;
 
         case !productToAdd.price :
             toastr.error('Заполните поле стоимости товара');
-            return;
-
-        case !productToAdd.amount :
-            toastr.error('Заполните поле количества товара');
             return;
 
         case !productToAdd.product :
