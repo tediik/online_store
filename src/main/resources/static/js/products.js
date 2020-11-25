@@ -12,8 +12,8 @@ document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 $(function () {
     fillProductCategoriesIn('#jqxTreeHere')
         .then(() => {
-        $('#jqxTreeHere').jqxTree('expandAll');
-    })
+            $('#jqxTreeHere').jqxTree('expandAll');
+        })
         .then(() => { // поиск по категориям
             document.querySelector('#searchForCategories').oninput = function () {
                 let val = this.value.trim().toLowerCase();
@@ -46,15 +46,14 @@ async function fillProductCategoriesIn(htmlId) {
         let thisParentId = item.parentId;
         let id = item.id;
         if (items[thisParentId]) {
-            let tmpItem = { parentId: thisParentId, label: label, item: item };
+            let tmpItem = {parentId: thisParentId, label: label, item: item};
             if (!items[thisParentId].items) {
                 items[thisParentId].items = [];
             }
             items[thisParentId].items[items[thisParentId].items.length] = tmpItem;
             items[id] = tmpItem;
-        }
-        else {
-            items[id] = { parentId: thisParentId, label: label, item: item };
+        } else {
+            items[id] = {parentId: thisParentId, label: label, item: item};
             source[id] = items[id];
         }
     }
@@ -134,8 +133,9 @@ function handleEditButton(event) {
                 })
                 .then(responseResult => {
                     currentCategoryNameEdit = "" + responseResult;
-                    editModalWindowRender(productToEdit)});
+                    editModalWindowRender(productToEdit)
                 });
+        });
 }
 
 /**
@@ -218,47 +218,39 @@ function handleAddBtn() {
         }
     }
 
-    /**
-     * проверяем, что наименование, цена продукта и количество != null
-     */
-    if (!productToAdd.price && !productToAdd.amount && !productToAdd.product) {
-        toastr.error('Заполните поле количества товара');
-        toastr.error('Заполните поле стоимости товара');
-        toastr.error('Заполните поле наименования товара');
-        return false;
-    }
+    switch (true) {
+        case (!productToAdd.price && !productToAdd.amount && !productToAdd.product) :
+            toastr.error('Заполните поле количества товара');
+            toastr.error('Заполните поле стоимости товара');
+            toastr.error('Заполните поле наименования товара');
+            return;
 
-    /**
-     * проверяем, что цена продукта и количество != null
-     */
-    if (!productToAdd.price && !productToAdd.amount) {
-        toastr.error('Заполните поле количества товара');
-        toastr.error('Заполните поле стоимости товара');
-        return false;
-    }
+        case (!productToAdd.price && !productToAdd.product) :
+            toastr.error('Заполните поле стоимости товара');
+            toastr.error('Заполните поле наименования товара');
+            return;
 
-    /**
-     * проверяем, что цена продукта != null
-     */
-    if (!productToAdd.price) {
-        toastr.error('Заполните поле стоимости товара');
-        return false;
-    }
+        case (!productToAdd.amount && !productToAdd.product) :
+            toastr.error('Заполните поле количества товара');
+            toastr.error('Заполните поле наименования товара');
+            return;
 
-    /**
-     * проверяем, что количество продукта != null
-     */
-    if (!productToAdd.amount) {
-        toastr.error('Заполните поле количества товара');
-        return false;
-    }
+        case (!productToAdd.price && !productToAdd.amount) :
+            toastr.error('Заполните поле количества товара');
+            toastr.error('Заполните поле стоимости товара');
+            return;
 
-    /**
-     * проверяем, что наименование продукта != null
-     */
-    if (!productToAdd.product) {
-        toastr.error('Заполните поле наименования товара');
-        return false;
+        case !productToAdd.price :
+            toastr.error('Заполните поле стоимости товара');
+            return;
+
+        case !productToAdd.amount :
+            toastr.error('Заполните поле количества товара');
+            return;
+
+        case !productToAdd.product :
+            toastr.error('Заполните поле наименования товара');
+            return;
     }
 
     fetch("/rest/products/addProduct/" + currentCategoryIdAdd, {
@@ -267,28 +259,28 @@ function handleAddBtn() {
         body: JSON.stringify(productToAdd)
     })
         .then(function (response) {
-            let field;
-            if (response.status !== 200) {
-                response.text()
-                    .then(
-                        function (text) {
+                let field;
+                if (response.status !== 200) {
+                    response.text()
+                        .then(
+                            function (text) {
 
-                            if (text === "duplicatedNameProductError") {
-                                toastr.error('Такое наименование уже существует');
-                            }
+                                if (text === "duplicatedNameProductError") {
+                                    toastr.error('Такое наименование уже существует');
+                                }
 
-                            console.log(text)
-                        })
-            } else {
-                response.text().then(function () {
-                    $("#jqxTreeHere").jqxTree('selectItem', null);
-                    showAndRefreshHomeTab();
-                    clearFormFields();
-                    toastr.success('Товар успешно добавлен')
-                })
+                                console.log(text)
+                            })
+                } else {
+                    response.text().then(function () {
+                        $("#jqxTreeHere").jqxTree('selectItem', null);
+                        showAndRefreshHomeTab();
+                        clearFormFields();
+                        toastr.success('Товар успешно добавлен')
+                    })
+                }
             }
-        }
-    )
+        )
 }
 
 /**
@@ -341,8 +333,7 @@ function handleAcceptButtonFromModalWindow(event) {
             .then(showTable => {
                 if (document.getElementById("deletedCheckbox").checked) {
                     showAndRefreshNotDeleteHomeTab(showTable)
-                }
-                else {
+                } else {
                     showAndRefreshHomeTab(showTable)
                 }
             })
