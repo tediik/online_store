@@ -55,12 +55,13 @@
 
                         <div class="form-group">
                             <select class="form-control form-control-sm" id="filterCategory">
-                                <option value="" disabled selected>Все категории</option>
+                                <option value="default">Все категории</option>
+                                <!--<option value="" disabled selected>Все категории</option>-->
                                 <option th:each="dropDownItem : ${listCategories}"
                                         th:value="${dropDownItem}"
                                         th:text="${dropDownItem}"></option>
                                 <div class="dropdown-divider"></div>
-                                <!--<option value="default">show all categories</option>-->
+                                <!--<option value="default">Все категории</option>-->
                             </select>
                         </div>
                     </div>

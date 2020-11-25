@@ -21,7 +21,7 @@ $('#filterCategory').on("change", function() {
         });
     }
     else{
-        renderProductsRatingTable()
+        fetchProductsAndRenderTable()
     }
 });
 /**
