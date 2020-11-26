@@ -21,6 +21,8 @@ public interface CategoriesService {
 
     Optional<Categories> getCategoryByCategoryName(String category);
 
+    List<Categories> getCategoriesWithoutParentCategory();
+
     void saveCategory (Categories categories);
 
     void deleteCategory(Long idCategory);

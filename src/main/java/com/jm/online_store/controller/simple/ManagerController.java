@@ -57,7 +57,7 @@ public class ManagerController {
 
     @GetMapping("/rating")
     public String getRating(Model model) {
-        model.addAttribute("listCategories", categoriesService.findAll().stream().map(Categories::getCategory).collect(Collectors.toList()));
+        model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
 
         return "productsRating";
     }

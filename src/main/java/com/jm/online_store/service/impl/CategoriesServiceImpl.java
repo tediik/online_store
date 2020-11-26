@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,6 +92,11 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public Optional<Categories> getCategoryByCategoryName(String category) {
         return categoriesRepository.findByCategory(category);
+    }
+
+    @Override
+    public List<Categories> getCategoriesWithoutParentCategory() {
+        return categoriesRepository.findAll().stream().filter(category -> category.getParentCategoryId() > 0).collect(Collectors.toList());
     }
 
     /**
