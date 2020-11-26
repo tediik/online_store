@@ -245,21 +245,6 @@ function handleAddBtn() {
         }
     }
 
-    /*switch (true) {
-
-        case !productToAdd.amount :
-            toastr.error('Заполните поле количества товара');
-            return;
-
-        case !productToAdd.price :
-            toastr.error('Заполните поле стоимости товара');
-            return;
-
-        case !productToAdd.product :
-            toastr.error('Заполните поле наименования товара');
-            return;
-    }*/
-
     fetch("/rest/products/addProduct/" + currentCategoryIdAdd, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
