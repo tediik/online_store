@@ -499,11 +499,6 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void deleteProductFromTrackedForLoggedInUser(long productId) {
-        Product product = productRepository.getOne(productId);
-        Set<String> emails = product.getPriceChangeSubscribers();
-        String currentUserEmail = userService.getCurrentLoggedInUser().getEmail();
-        emails.removeIf(email -> email.contains(currentUserEmail));
-        product.setPriceChangeSubscribers(emails);
-        saveProduct(product);
+        productRepository.deletePriceChangeSubscriber(userService.getCurrentLoggedInUser().getEmail(), productId);
     }
 }
