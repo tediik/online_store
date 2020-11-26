@@ -221,7 +221,31 @@ function handleAddBtn() {
     /**
      * проверяем, что наименование, цена продукта и количество заполнены
      */
-    switch (true) {
+    if (!productToAdd.product || !productToAdd.price || !productToAdd.amount) {
+
+        if (!productToAdd.product) {
+            let confirmName = document.getElementById('addProduct');
+
+            confirmName.focus();
+            toastr.error('Заполните поле наименования товара');
+        }
+
+        if (!productToAdd.price) {
+            let confirmPrice = document.getElementById('addPrice');
+
+            confirmPrice.focus();
+            toastr.error('Заполните поле стоимости товара');
+        }
+
+        if (!productToAdd.amount) {
+            let confirmAmount = document.getElementById('addAmount');
+
+            confirmAmount.focus();
+            toastr.error('Заполните поле количества товара');
+        }
+    }
+
+    /*switch (true) {
 
         case !productToAdd.amount :
             toastr.error('Заполните поле количества товара');
@@ -234,7 +258,7 @@ function handleAddBtn() {
         case !productToAdd.product :
             toastr.error('Заполните поле наименования товара');
             return;
-    }
+    }*/
 
     fetch("/rest/products/addProduct/" + currentCategoryIdAdd, {
         method: 'POST',
