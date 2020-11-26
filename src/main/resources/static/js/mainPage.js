@@ -59,14 +59,19 @@ function close() {
 async function fillMainCategories() {
     let data = await fetch("/api/categories").then(response => response.json());
     let siteMenu = document.getElementById('siteMenu');
-        for (let count in data) {
-        let button = `
-            <li class="nav-item">
-            <a class="btn btn-outline-light text-black-50 font-weight-bold text-left" href="#" id="button
-            + '${data[count].id}'">${data[count].category}</a>
-            </li>
-        `;
-        $(siteMenu).append(button);
+    for (let key in data) {
+        let item = `
+            <li class="nav-item dropright">
+                <a class="btn btn-outline-light dropdown-toggle text-secondary font-weight-normal dropdownbtn" 
+                    href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${data[key].category}</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
+        let subItem = ``;
+        subItem += `<a class="dropdown-item" href="/categories/${data[key].category}">
+                            ${data[key].category}</a> `;
+
+        item += subItem;
+        $(siteMenu).append(item);
+
     }
 }
 
