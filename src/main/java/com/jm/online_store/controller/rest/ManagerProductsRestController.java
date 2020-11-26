@@ -122,7 +122,7 @@ public class ManagerProductsRestController {
         }
 
         if (productService.existsProductByProduct(product.getProduct())) {
-            log.debug("Product with same productName already exists");
+            log.debug("Product with name: {} already exists", product.getProduct());
             return new ResponseEntity("duplicatedNameProductError", HttpStatus.BAD_REQUEST);
         }
 
