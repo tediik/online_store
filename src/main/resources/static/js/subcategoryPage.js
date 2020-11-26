@@ -28,7 +28,6 @@ function fillBreadcrumb(data) {
 
     // формирование навигационной цепочки
     $(breadcr).append(`<li class="breadcrumb-item"><a href="/">Главная</a></li>`);
-    $(breadcr).append(`<li class="breadcrumb-item"><a>${data.superCategory}</a></li>`);
     $(breadcr).append(`<li class="breadcrumb-item"><a>${data.category}</a></li>`);
 
     // определение правильного окончания слова "товар" в зависимости от количества

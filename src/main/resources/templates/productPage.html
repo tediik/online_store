@@ -118,13 +118,13 @@
         </div>
         <div class="col">
             <br>
-            <div class="row mx-5">
-                <button class="btn btn-warning btn-lg" type="submit" style="width: 15rem"><h4
+            <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="row mx-5">
+                <button  class="btn btn-warning btn-lg" type="submit" style="width: 15rem"><h4
                         class="font-weight-normal my-auto" id="addToCartButton">Купить</h4></button>
 
             </div>
             <br>
-            <div class="row mx-5" id="favouriteContainer">
+            <div sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="row mx-5" id="favouriteContainer">
             </div>
             <div class="row mx-5" id="ringContainer">
                 <div id="favoriteLabel"><h5 class="font-weight-normal my-2">&ensp;Подписаться на уведомления при
@@ -298,9 +298,12 @@
         crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+<script src="/static/js/websocket/sockjs-0.3.4.js"></script>
+<script src="/static/js/websocket/stomp.js"></script>
+<script src="/static/js/moderatorComments.js"></script>
 <script src="../static/js/productPage.js"></script>
 <script src="../static/js/comments.js"></script>
+<script src="../static/js/reportComment.js"></script>
 <script src="../static/js/reviews.js"></script>
 <script src="../static/js/searchButton.js"></script>
 <script src="../static/js/registration.js"></script>

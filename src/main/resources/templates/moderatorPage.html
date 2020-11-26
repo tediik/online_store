@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Moderator Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<header th:insert="/blocks/cabinetHeader :: header"></header>
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <div class="nav flex-column nav-pills mt-2" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" aria-selected="true" href="/moderator">Главная</a>
+            </div>
+            <div id="user-profile" class="nav flex-column nav-pills mt-2" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/moderator/comments">Комментарии для проверки</a>
+            </div>
+        </div>
+        <div class="col-sm-8 text-left">
+            <h4>Количество комментариев ждущих проверки <label th:text="${numberOfReports}"></label>.</h4>
+        </div>
+    </div>
+</div>
+<script src="../static/js/searchButton.js"></script>
+</body>
+</html>
