@@ -22,4 +22,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProductByDescriptionsContains(@Param("searchString") String searchString);
 
     boolean existsProductByProduct(String productName);
+
+    @Query("FROM Product p order by p.rating")
+    List<Product> findAllOrderByRatingAsc();
+
+    @Query("FROM Product p order by p.rating DESC")
+    List<Product> findAllOrderByRatingDesc();
 }

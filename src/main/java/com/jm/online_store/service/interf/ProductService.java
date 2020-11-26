@@ -16,6 +16,9 @@ public interface ProductService {
 
     Optional<Product> findProductByName(String productName);
 
+    List<Product> findAllOrderByRatingAsc();
+
+    List<Product> findAllOrderByRatingDesc();
 
     Long saveProduct(Product product);
 

@@ -174,6 +174,16 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByProduct(productName);
     }
 
+    @Override
+    public List<Product> findAllOrderByRatingAsc() {
+        return productRepository.findAllOrderByRatingAsc();
+    }
+
+    @Override
+    public List<Product> findAllOrderByRatingDesc() {
+        return productRepository.findAllOrderByRatingDesc();
+    }
+
     /**
      * метод обновления Product.
      *

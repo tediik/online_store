@@ -31,8 +31,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Контроллер для работы с добавлением/изменением товаров
@@ -97,6 +99,24 @@ public class ManagerProductsRestController {
     @GetMapping(value = "/rest/products/getNotDeleteProducts")
     public List<Product> getNotDeleteProducts() {
         return productService.getNotDeleteProducts();
+    }
+
+    /**
+     * Метод возвращает список отсортированных по убыванию рейтинга товаров
+     * @return List<Product> возвращает список товаров
+     */
+    @GetMapping(value = "/rest/products/getProductsSortedInDescendingOrder")
+    public List<Product> getProductsSortedInDescendingOrder() {
+        return productService.findAllOrderByRatingDesc();
+    }
+
+    /**
+     * Метод возвращает список отсортированных по возрастанию рейтинга товаров
+     * @return List<Product> возвращает список товаров
+     */
+    @GetMapping(value = "/rest/products/getProductsSortedInAscendingOrder")
+    public List<Product> getProductsSortedInAscendingOrder() {
+        return productService.findAllOrderByRatingAsc();
     }
 
     /**
@@ -192,6 +212,8 @@ public class ManagerProductsRestController {
     public List<Product> filterByCategory(@PathVariable String categoryName) {
         return productService.findProductsByCategoryName(categoryName);
     }
+
+
 
     /**
      * Метод, который формирует файл с товарами нужной категории и передаёт обратно на страницу

@@ -60,3 +60,18 @@ function fetchProductsAndRenderTable() {
         .then(response => response.json())
         .then(products => renderProductsRatingTable(products))
 }
+
+/*
+function fetchSortedByRatingProductsAndRenderTable() {
+    fetch("/rest/products/allProducts")
+        .then(response => response.json().sort(function (o1, o2) {
+            return o1.rating - o2.rating;
+        }))
+        .then(products => renderProductsRatingTable(products))
+}*/
+
+function fetchSortedByRatingProductsInAscendingOrderAndRenderTable() {
+    fetch("/rest/products/getProductsSortedInAscendingOrder")
+        .then(response => response.json())
+        .then(products => renderProductsRatingTable(products))
+}
