@@ -4,6 +4,7 @@ import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Validation;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -133,6 +135,17 @@ public class ManagerProductsRestController {
      */
     @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> addProduct(@RequestBody Product product, @PathVariable Long id) {
+
+        if (product.getProduct().equals("")) {
+            log.debug("EmptyProductName");
+            return new ResponseEntity("EmptyProductName", HttpStatus.BAD_REQUEST);
+        }
+
+        if (productService.existsProductByProduct(product.getProduct())) {
+            log.debug("Product with name: {} already exists", product.getProduct());
+            return new ResponseEntity("duplicatedNameProductError", HttpStatus.BAD_REQUEST);
+        }
+
         productService.saveProduct(product);
         categoriesService.addToProduct(product, id);
         return ResponseEntity.ok(product);
