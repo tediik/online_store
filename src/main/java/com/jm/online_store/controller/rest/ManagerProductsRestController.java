@@ -66,7 +66,7 @@ public class ManagerProductsRestController {
         if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
             productService.importFromXMLFile(file.getOriginalFilename(),id);
         } else {
-            productService.importFromCSVFile(file.getOriginalFilename());
+            productService.importFromCSVFile(file.getOriginalFilename(),id);
         }
         return ResponseEntity.ok("success");
     }
