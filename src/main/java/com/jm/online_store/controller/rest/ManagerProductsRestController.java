@@ -213,6 +213,82 @@ public class ManagerProductsRestController {
         return productService.findProductsByCategoryName(categoryName);
     }
 
+    /**
+     * Метод выбора продукта по категории и сортирующий по возрастанию
+     *
+     * @param categoryName - id выбранной категории
+     * @return List<Product> отредактированный лист продуктов
+     */
+
+    @GetMapping(value = "/rest/products/ascOrder/{categoryName}")
+    public List<Product> filterByCategoryInAscOrder(@PathVariable String categoryName) {
+        if (categoryName.equals("default")) {
+            return productService.findAllOrderByRatingAsc();
+        }
+        return productService.findProductsByCategoryName(categoryName).stream()
+                .sorted((p1, p2) -> {
+                    if (p1.getRating() == null && p2.getRating() == null) {
+                        return 0;
+                    }
+                    if (p1.getRating() == null && p2.getRating() != null) {
+                        return -1;
+                    }
+                    if (p2.getRating() == null && p1.getRating() != null) {
+                        return 1;
+                    }
+                    if (p1.getRating() > p2.getRating()) {
+                        return 1;
+                    }
+                    if (p1.getRating().equals(p2.getRating())) {
+                        return 0;
+                    }
+                    if (p1.getRating() < p2.getRating()) {
+                        return -1;
+                    }
+
+                    return 1;
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Метод выбора продукта по категории и сортирующий по убыванию
+     *
+     * @param categoryName - id выбранной категории
+     * @return List<Product> отредактированный лист продуктов
+     */
+
+    @GetMapping(value = "/rest/products/descOrder/{categoryName}")
+    public List<Product> filterByCategoryInDescOrder(@PathVariable String categoryName) {
+        if (categoryName.equals("default")) {
+            return productService.findAllOrderByRatingDesc();
+        }
+        return productService.findProductsByCategoryName(categoryName).stream()
+                .sorted((p1, p2) -> {
+                    if (p1.getRating() == null && p2.getRating() == null) {
+                        return 0;
+                    }
+                    if (p1.getRating() == null && p2.getRating() != null) {
+                        return 1;
+                    }
+                    if (p2.getRating() == null && p1.getRating() != null) {
+                        return -1;
+                    }
+                    if (p1.getRating() > p2.getRating()) {
+                        return -1;
+                    }
+                    if (p1.getRating().equals(p2.getRating())) {
+                        return 0;
+                    }
+                    if (p1.getRating() < p2.getRating()) {
+                        return 1;
+                    }
+
+                    return -1;
+                })
+                .collect(Collectors.toList());
+    }
+
 
 
     /**

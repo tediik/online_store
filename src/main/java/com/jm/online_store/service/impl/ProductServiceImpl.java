@@ -44,6 +44,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -86,19 +87,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findProductsByCategoryName(String categoryName) {
         Categories category = categoriesService.getCategoryByCategoryName(categoryName).get();
-
         return category.getProducts();
     }
-
-    /**
-     * Метод для получения списка товаров по id категории
-     */
-   /* @Override
-    public List<Product> findProductsByCategoryId(Long categoryId) {
-        Categories category = categoriesService.getCategoryById(categoryId).get();
-
-        return category.getProducts();
-    }*/
 
 
     /**
