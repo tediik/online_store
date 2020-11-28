@@ -81,24 +81,26 @@ $(document).on("click", ".btn-copy-product", function () {
 /**
  * Закрываем модальное окно
  */
-$(document).on("click", ".modal-footer button", function (){
+$(document).on("click", ".modal-footer button", function () {
     defaultInterface();
     cancelNevGroup();
 })
-$(document).on("click", 'button[class="close"]', function (){
+$(document).on("click", 'button[class="close"]', function () {
     defaultInterface();
     cancelNevGroup();
 })
+
 /**
  * Закрыть модалку выбора/создания списка избранных товаров
  */
 function closeModalFavouritesList() {
     $("#exampleModal").removeClass("show");
     $("body").removeClass("modal-open");
-    defaultBtnGroup ();
+    defaultBtnGroup();
     defaultInterface();
     cancelNevGroup();
 }
+
 /**
  * Нажатие на чекбоксы для выбора списка в который будем перемещать продукты
  */
@@ -116,10 +118,11 @@ $(document).on("click", ".check-favourites-group", function () {
         }
     }
 );
+
 /**
  * Делаем стили по умолчанию(как будто только зашли в ИЗБРАННОЕ)
  */
-function defaultInterface(){
+function defaultInterface() {
     $(".favouritesgroups").removeClass("selected");
     $("#addInOverGroup").removeClass("hidden");
     $(".btn-group").removeClass("hidden");
@@ -134,6 +137,7 @@ function defaultInterface(){
     $("#sel_new_group").addClass("hidden");
     $(".get-favourites-group-btn").attr("disabled", false);
 }
+
 /**
  * Достаем продукты заданного списка
  * @param id списка
@@ -164,6 +168,7 @@ async function fillFavouritesProducts(id) {
         $(favoriteGoodsJson).append(product);
     }
 }
+
 /**
  * Переход во вкладку "Избранное" - рисуем таблицу Списка "Все товары"
  */
@@ -201,7 +206,7 @@ $(document).on("click", "#addInOverGroup", function (event) {
  * Обработчик кнопки Отмена (Появляется после нажатия на "Добавить товары в другой список")
  */
 $(document).on("click", "#escape", function () {
-        defaultInterface();
+    defaultInterface();
 });
 /**
  * Чекбокс "Выбрать все"
@@ -221,6 +226,7 @@ $(document).on("click", ".btn-group .dropdown-item", function () {
     $(".get-favourites-group-btn").attr("id", this.id);
     fillFavouritesProducts(this.id);
 });
+
 /**
  * Перерисовываем обновленный список избранных товаров после переноса
  * продукта в другой список
@@ -231,6 +237,7 @@ function defaultBtnGroup() {
     $(".get-favourites-group-btn").text(text);
     fillFavouritesProducts(id);
 }
+
 /**
  * Кнопка "создать новый список"  в модалке работы со списками избранных
  */
@@ -252,6 +259,7 @@ $(document).on("click", "#clear_group", function () {
         clearFavouritGroup(idGroup, listIdProducts);
     }
 });
+
 /**
  * Метод Очистки списка   "Очистить список"
  * @param idGroup
@@ -271,6 +279,7 @@ async function clearFavouritGroup(idGroup, listIdProducts) {
     });
     defaultBtnGroup();
 }
+
 /**
  * Обработчик нажатия на кнопку EDIT в выборе списка избранного
  */
@@ -280,6 +289,7 @@ $(document).on("click", ".button-edit-fav-group", function () {
     if ($(".select-group-tr-input[id='" + thisId + "']").val() != noEditGroup) {
         $(".ok-cancel-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
         $(this).addClass("hidden");
+        $(".button-delete-fav-group[id='" + thisId + "']").addClass("hidden");
         $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", false);
     } else {
         toastr.error("Редактирование невозможно, основной список!");
@@ -308,6 +318,7 @@ $(document).on("click", ".edit-fav-group-ok", function () {
     let newNameFavouritesGroup = $(".select-group-tr-input[id='" + thisId + "']").val();
     $(".ok-cancel-edit-fav-group[id='" + thisId + "']").addClass("hidden");
     $(".button-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
+    $(".button-delete-fav-group[id='" + thisId + "']").removeClass("hidden");
     updateFavouritesGroupInBD(newNameFavouritesGroup, thisId);
     $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", true);
 });
@@ -318,6 +329,7 @@ $(document).on("click", ".edit-fav-group-cancel", function () {
     let thisId = $(this).attr("id");
     $(".ok-cancel-edit-fav-group[id='" + thisId + "']").addClass("hidden");
     $(".button-edit-fav-group[id='" + thisId + "']").removeClass("hidden");
+    $(".button-delete-fav-group[id='" + thisId + "']").removeClass("hidden");
     $(".select-group-tr-input[id='" + thisId + "']").val($(".dropdown-item[id='" + thisId + "']").text());
     $(".select-group-tr-input[id='" + thisId + "']").prop("disabled", true);
 });
@@ -344,15 +356,17 @@ $(document).on("click", ".add-group-input-ok", function () {
 $(document).on("click", ".add-group-input-cancel", function () {
     cancelNevGroup();
 });
+
 /**
  * Функция к кнопке отмены от создания нового списка
  */
-function cancelNevGroup(){
+function cancelNevGroup() {
     $(".polya-input").addClass("hidden");
     $(".add-group-new").removeClass("hidden");
     $(".new-group-checkbox").prop('checked', false);
     $(".new-group-checkbox").prop("disabled", false);
 }
+
 /**
  * Обновление название списка в БД
  * @param nameGroup   Новое название списка
@@ -371,6 +385,7 @@ async function updateFavouritesGroupInBD(nameGroup, idGroup) {
         return respons;
     });
 };
+
 /**
  * Функция перемещения товаров из одного списка ИЗБРАННОГО в другой
  * @param idNewGroup     id списка В который перемещаем
@@ -391,6 +406,7 @@ async function moveProductsFavouritesGroup(idNewGroup, idOldGroup, idProducts) {
     });
     defaultBtnGroup();
 };
+
 /**
  * Добавляем название нового списка в БД
  * @param nameGroup   Название новой группы
@@ -414,17 +430,17 @@ async function addFavouritesGroupInBD(nameGroup) {
                 <td>
                     <input id="${data.id}" type="checkbox" class="check-favourites-group">
                         <label class="form-check-label" for="${data.id}">
-                            <input id="${data.id}" type="text" value="${data.name}" class="select-group-tr-input" disabled="">
+                            <input id="${data.id}" type="text" value="${data.name}" class="select-group-tr-input border-0 bg-white" disabled="">
                         </label>
                 </td>
-                <td>
+                <td class="text-right">
                     <div class="ok-cancel-edit-fav-group hidden" id="${data.id}">
-                        <span class="edit-fav-group-ok" id="${data.id}">V</span>
-                        <span class="edit-fav-group-cancel" id="${data.id}">X</span>
+                        <span class="edit-fav-group-ok btn btn-outline-success btn-sm" id="${data.id}">Ok</span>
+                        <span class="edit-fav-group-cancel btn btn-outline-danger btn-sm" id="${data.id}">Cancel</span>
                     </div>
-                    <button type="button" class="button-edit-fav-group btn btn-secondary" id="${data.id}">EDIT
+                    <button type="button" class="button-edit-fav-group btn btn-secondary btn-sm" id="${data.id}">EDIT
                     </button>
-                    <button type="button" class="button-delete-fav-group btn btn-danger" id="${data.id}">DELETE
+                    <button type="button" class="button-delete-fav-group btn btn-danger btn-sm" id="${data.id}">DELETE
                     </button>
                 </td>
             </tr>
@@ -432,6 +448,7 @@ async function addFavouritesGroupInBD(nameGroup) {
             $('.select_group').append(kusok);
         });
 };
+
 /**
  * Удаляем из БД имя скписка Избранного Кнопкой DELETE
  * @param id

@@ -136,24 +136,26 @@
                                                        th:for="${favouritesGroup.id}">
                                                     <input th:id="${favouritesGroup.id}" type="text"
                                                            th:value="${favouritesGroup.getName()}"
-                                                           class="border-0 bg-white" disabled>
+                                                           class="select-group-tr-input border-0 bg-white" disabled>
                                                 </label>
                                             </td>
                                             <td class="text-right">
                                                 <div class="ok-cancel-edit-fav-group hidden"
                                                      th:id="${favouritesGroup.id}">
                                                     <span class="edit-fav-group-ok done btn btn-outline-success btn-sm"
-                                                          th:id="${favouritesGroup.id}">V</span>
+                                                          th:id="${favouritesGroup.id}">Ok</span>
                                                     <span class="edit-fav-group-cancel btn btn-outline-danger btn-sm"
-                                                          th:id="${favouritesGroup.id}">X</span>
+                                                          th:id="${favouritesGroup.id}">Cancel</span>
                                                 </div>
                                                 <th:block th:if="${favouritesGroup.id} != 1">
-                                                <button type="button" class="edd button-edit-fav-group btn btn-secondary btn-sm"
-                                                        th:id="${favouritesGroup.id}">EDIT
-                                                </button>
-                                                <button type="button" class="button-delete-fav-group btn btn-danger btn-sm"
-                                                        th:id="${favouritesGroup.id}">DELETE
-                                                </button>
+                                                    <button type="button"
+                                                            class="edd button-edit-fav-group btn btn-secondary btn-sm"
+                                                            th:id="${favouritesGroup.id}">EDIT
+                                                    </button>
+                                                    <button type="button"
+                                                            class="button-delete-fav-group btn btn-danger btn-sm"
+                                                            th:id="${favouritesGroup.id}">DELETE
+                                                    </button>
                                                 </th:block>
                                             </td>
                                         </tr>
@@ -163,8 +165,8 @@
                                             <input type="checkbox" class="new-group-checkbox">
                                             <input type="text" class="new-group-input"
                                                    th:value="@{'Мой список '+${execInfo.now.time}}" size="40">
-                                            <span class="add-group-input-ok btn btn-outline-success btn-sm">V</span>
-                                            <span class="add-group-input-cancel btn btn-outline-danger btn-sm">X</span>
+                                            <span class="add-group-input-ok btn btn-outline-success btn-sm">Ok</span>
+                                            <span class="add-group-input-cancel btn btn-outline-danger btn-sm">Cancel</span>
                                         </div>
                                         <div class="add-group-new">
                                             <a href="#">Создать новый список</a>
