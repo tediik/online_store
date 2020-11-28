@@ -169,11 +169,19 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByProduct(productName);
     }
 
+    /**
+     * Метод получения списка всех продуктов по возрастанию рейтинга
+     * @return List<Product>
+     */
     @Override
     public List<Product> findAllOrderByRatingAsc() {
         return productRepository.findAllOrderByRatingAsc();
     }
 
+    /**
+     * Метод получения списка всех продуктов по убыванию рейтинга
+     * @return List<Product>
+     */
     @Override
     public List<Product> findAllOrderByRatingDesc() {
         return productRepository.findAllOrderByRatingDesc();

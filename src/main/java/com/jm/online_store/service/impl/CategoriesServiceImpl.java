@@ -94,6 +94,10 @@ public class CategoriesServiceImpl implements CategoriesService {
         return categoriesRepository.findByCategory(category);
     }
 
+    /**
+     * Метод получения списка категорий без родительских
+     * @return List<Categories>
+     */
     @Override
     public List<Categories> getCategoriesWithoutParentCategory() {
         return categoriesRepository.findAll().stream().filter(category -> category.getParentCategoryId() > 0).collect(Collectors.toList());
