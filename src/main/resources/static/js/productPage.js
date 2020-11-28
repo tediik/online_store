@@ -123,6 +123,7 @@ function addToFavourite() {
                 $("#heart").toggleClass("filled");
                 $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;В избранное</h5>`)
                 toastr.success("Товар успешно удалён из избранного");
+                toastr.success("Товар успешно удалён из избранного");
             } else {
                 toastr.error("Авторизуйтесь/зарегистрируйтесь");
             }
@@ -262,4 +263,4 @@ function showModalError(message) {
     }, 5000)
 }
 
-document.getElementById('addToCartButton').addEventListener('click', addToProductToCart)
+//document.getElementById('addToCartButton').addEventListener('click', addToProductToCart)

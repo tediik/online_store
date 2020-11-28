@@ -80,6 +80,29 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findById(commentId).get();
     }
 
+
+    /**
+     * Delete ProductComment from database by comment Id
+     *
+     *
+     */
+    @Override
+    public void removeById(Long commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
+    /**
+     * Обновляет комментарий. Из измененного коммента с фронта достается контент
+     * и присваивается этому же комментарию в БД
+     *
+     */
+    @Override
+    public void update(Comment commentEdited) {
+        Comment commentToUpdate = findById(commentEdited.getId());
+        commentToUpdate.setContent(commentEdited.getContent());
+        commentRepository.save(commentToUpdate);
+    }
+
     /**
      * For init comments only
      *
