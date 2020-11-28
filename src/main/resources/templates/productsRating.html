@@ -75,6 +75,45 @@
                         </div>
                     </div>
                 </nav>
+                <!--Модалка для выгрузки отчета-->
+                <div class="modal fade" id="newReportGenerationModal" data-backdrop="static" tabindex="-1"
+                     role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productImportModalLabel">Выбор количества товаров</h5>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid col-sm-12">
+                                    <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
+                                        <label for="addNumber">Колиство товаров:</label>
+                                        <input id="addNumber" type="number" name="number">
+                                        <br />
+                                        <br />
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer actions">
+                                <button type="button" id="btnClose" class="btn btn-secondary"
+                                        data-dismiss="modal">
+                                    Close
+                                </button>
+                                <button id="inputFileSubmit" type="submit" data-dismiss="modal"
+                                        class="btn btn-primary">
+                                    Загрузить данные из файла
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">

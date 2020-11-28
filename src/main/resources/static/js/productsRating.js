@@ -128,11 +128,21 @@ function fetchCategorySelectProducrsInDescOrderAndRender(categorySelect) {
         .then(products => renderProductsRatingTable(products))
 }
 
-$('#newReportGenerationModal').click(createReportXls)
-function createReportXls() {
-    $.ajax({
-        url: '/manager/products/report/{categoryName}',
-        type: 'GET',
-
-    });
+function createReport() {
+    let categorySelect = $('#filterCategory').val();
+    fetch('/manager/products/report/' +  categorySelect + '/' + number)
+        .then(function (response) {
+            if (response.status === 200) {
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let file = document.createElement('a');
+                    file.href = url;
+                    file.download = 'products_report_'+ categorySelect+'.xlsx';
+                    file.click();
+                    toastr.success('Данные успешно выгружены')
+                })
+            } else {
+                toastr.error('Товаров не найдено')
+            }
+        })
 }

@@ -299,16 +299,19 @@ public class ManagerProductsRestController {
      * @return запрос с файлом xlsx
      */
 
-    @GetMapping("/manager/products/report/{categoryName}")
-    public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@PathVariable String categoryName, HttpServletResponse response) {
+    @GetMapping("/manager/products/report/{categoryName}/{number}")
+    public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@PathVariable String categoryName,
+                                                                               @PathVariable Long number,
+                                                                               HttpServletResponse response) {
         try {
             response.setContentType("text/html; charset=UTF-8");
             response.setCharacterEncoding("UTF-8");
             List<Product> products;
-            if (categoryName.equals("all")) {
-                products = productService.findAll();
+            if (categoryName.equals("default")) {
+                products = productService.findAll().stream().limit(number).collect(Collectors.toList());
             } else {
-                products = productService.findProductsByCategoryName(categoryName);
+                products = productService.findProductsByCategoryName(categoryName).stream()
+                        .limit(number).collect(Collectors.toList());
             }
             response.setHeader("Size", String.valueOf(products.size()));
             productService.createXlsxDoc(products, categoryName).write(response.getOutputStream());
