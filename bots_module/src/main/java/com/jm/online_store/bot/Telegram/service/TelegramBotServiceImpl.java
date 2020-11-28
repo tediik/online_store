@@ -99,7 +99,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                 "\n/help - получить справку по командам" +
                 "\n/getstocks - узнать о наших акциях " +
                 "\n/checkrepair [номер вашего заказа] - узнать статус вашего заказа на ремонт"+
-                "\n/getNews(Enter) <- узнать все новости или /getNews[<пробелл>число] <- чтоб узнать [n] кол-во последних новостей ";
+                "\n/getNews(Enter) <- узнать все новости или /getNews [<пробелл>число] <- чтоб узнать [n] кол-во последних новостей ";
     }
 
     @Override

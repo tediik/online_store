@@ -12,8 +12,8 @@ document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 $(function () {
     fillProductCategoriesIn('#jqxTreeHere')
         .then(() => {
-        $('#jqxTreeHere').jqxTree('expandAll');
-    })
+            $('#jqxTreeHere').jqxTree('expandAll');
+        })
         .then(() => { // поиск по категориям
             document.querySelector('#searchForCategories').oninput = function () {
                 let val = this.value.trim().toLowerCase();
@@ -46,15 +46,14 @@ async function fillProductCategoriesIn(htmlId) {
         let thisParentId = item.parentId;
         let id = item.id;
         if (items[thisParentId]) {
-            let tmpItem = { parentId: thisParentId, label: label, item: item };
+            let tmpItem = {parentId: thisParentId, label: label, item: item};
             if (!items[thisParentId].items) {
                 items[thisParentId].items = [];
             }
             items[thisParentId].items[items[thisParentId].items.length] = tmpItem;
             items[id] = tmpItem;
-        }
-        else {
-            items[id] = { parentId: thisParentId, label: label, item: item };
+        } else {
+            items[id] = {parentId: thisParentId, label: label, item: item};
             source[id] = items[id];
         }
     }
@@ -134,8 +133,9 @@ function handleEditButton(event) {
                 })
                 .then(responseResult => {
                     currentCategoryNameEdit = "" + responseResult;
-                    editModalWindowRender(productToEdit)});
+                    editModalWindowRender(productToEdit)
                 });
+        });
 }
 
 /**
@@ -203,28 +203,6 @@ function handleAddBtn() {
     }
 
     /**
-     * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
-     * и ставится фокус на это поле. Предупреждение автоматически закрывается через 5 сек
-     * @param text - текст для вывода в алерт
-     * @param field - поле на каком установить фокус
-     */
-    function handleNotValidFormField(text, field) {
-        $('#alert-div').empty().append(`
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>${text}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            `)
-        $('#' + field).focus()
-
-        window.setTimeout(function () {
-            $('.alert').alert('close');
-        }, 5000)
-    }
-
-    /**
      * проверяем, что выбранная категория продукта != null
      */
     let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
@@ -240,44 +218,65 @@ function handleAddBtn() {
         }
     }
 
+    /**
+     * проверяем, что наименование, цена продукта и количество заполнены
+     */
+    if (!productToAdd.product || !productToAdd.price || !productToAdd.amount) {
+
+        if (!productToAdd.product) {
+            let confirmName = document.getElementById('addProduct');
+
+            confirmName.focus();
+            toastr.error('Заполните поле наименования товара');
+        }
+
+        if (!productToAdd.price) {
+            let confirmPrice = document.getElementById('addPrice');
+
+            confirmPrice.focus();
+            toastr.error('Заполните поле стоимости товара');
+        }
+
+        if (!productToAdd.amount) {
+            let confirmAmount = document.getElementById('addAmount');
+
+            confirmAmount.focus();
+            toastr.error('Заполните поле количества товара');
+        }
+    }
+
     fetch("/rest/products/addProduct/" + currentCategoryIdAdd, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
         body: JSON.stringify(productToAdd)
     })
         .then(function (response) {
-            let field;
-            if (response.status !== 200) {
-                response.text()
-                    .then(
-                        function (text) {
-                            if (text === "notValidNameProduct") {
-                                field = "addEmail"
-                                handleNotValidFormField("Вы ввели некорректное наименование товара!", field)
-                            }
-                            if (text === "duplicatedNameProductError") {
-                                field = "addEmail"
-                                handleNotValidFormField("Такое наименование уже существует", field)
-                            }
-                            if (text === "emptyPriceError") {
-                                field = "addPrice"
-                                handleNotValidFormField("Заполните поле цены", field)
-                            }
-                            if (text === "amountError") {
-                                field = "addAmount"
-                                handleNotValidFormField("Необходимо выбрать количество", field)
-                            }
-                            console.log(text)
-                        })
-            } else {
-                response.text().then(function () {
-                    $("#jqxTreeHere").jqxTree('selectItem', null);
-                    showAndRefreshHomeTab();
-                    clearFormFields();
-                })
+                let field;
+                if (response.status !== 200) {
+                    response.text()
+                        .then(
+                            function (text) {
+
+                                if (text === "duplicatedNameProductError") {
+                                    toastr.error('Такое наименование уже существует');
+                                }
+
+                                console.log(text)
+                            })
+                } else {
+                    response.text().then(function () {
+                        $("#jqxTreeHere").jqxTree('selectItem', null);
+                        if (document.getElementById("deletedCheckbox").checked) {
+                            showAndRefreshNotDeleteHomeTab()
+                        } else {
+                            showAndRefreshHomeTab()
+                        }
+                        clearFormFields();
+                        toastr.success('Товар успешно добавлен')
+                    })
+                }
             }
-        }
-    )
+        )
 }
 
 /**
@@ -297,7 +296,11 @@ function importProductsFromFile() {
         contentType: false,
         type: 'POST',
         success: function (data) {
-            showAndRefreshHomeTab()
+            if (document.getElementById("deletedCheckbox").checked) {
+                showAndRefreshNotDeleteHomeTab()
+            } else {
+                showAndRefreshHomeTab()
+            }
             toastr.info('Импорт товаров завершен!', {timeOut: 5000})
         },
         error: function () {
@@ -327,7 +330,13 @@ function handleAcceptButtonFromModalWindow(event) {
             method: 'DELETE'
         }).then(response => response.text())
             .then(deletedProduct => console.log('Product: ' + deletedProduct + ' was successfully deleted'))
-            .then(showTable => showAndRefreshHomeTab(showTable))
+            .then(showTable => {
+                if (document.getElementById("deletedCheckbox").checked) {
+                    showAndRefreshNotDeleteHomeTab(showTable)
+                } else {
+                    showAndRefreshHomeTab(showTable)
+                }
+            })
         $('#productModalWindow').modal('hide')
     } else {
         let newCategory = $('#jqxTreeModal').jqxTree('getSelectedItem');
@@ -337,7 +346,11 @@ function handleAcceptButtonFromModalWindow(event) {
                 headers: headers,
                 body: JSON.stringify(product)
             }).then(function (response) {
-                fetchProductsAndRenderTable()
+                if (document.getElementById("deletedCheckbox").checked) {
+                    fetchProductsAndRenderNotDeleteTable();
+                } else {
+                    fetchProductsAndRenderTable()
+                }
                 $('#productModalWindow').modal('hide')
             })
         } else {
@@ -347,7 +360,11 @@ function handleAcceptButtonFromModalWindow(event) {
                 headers: headers,
                 body: JSON.stringify(product)
             }).then(function (response) {
-                fetchProductsAndRenderTable()
+                if (document.getElementById("deletedCheckbox").checked) {
+                    fetchProductsAndRenderNotDeleteTable();
+                } else {
+                    fetchProductsAndRenderTable()
+                }
                 $('#productModalWindow').modal('hide')
             })
         }
