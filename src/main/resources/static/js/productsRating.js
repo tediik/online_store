@@ -130,6 +130,7 @@ function fetchCategorySelectProducrsInDescOrderAndRender(categorySelect) {
 
 function createReport() {
     let categorySelect = $('#filterCategory').val();
+    let number = $('#addNumber').val();
     fetch('/manager/products/report/' +  categorySelect + '/' + number)
         .then(function (response) {
             if (response.status === 200) {

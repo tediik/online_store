@@ -94,7 +94,7 @@
                             <div class="modal-body">
                                 <div class="container-fluid col-sm-12">
                                     <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
-                                        <label for="addNumber">Колиство товаров:</label>
+                                        <label for="addNumber">Количество товаров:</label>
                                         <input id="addNumber" type="number" name="number">
                                         <br />
                                         <br />
@@ -106,9 +106,9 @@
                                         data-dismiss="modal">
                                     Close
                                 </button>
-                                <button id="inputFileSubmit" type="submit" data-dismiss="modal"
+                                <button onclick="createReport()" type="submit" data-dismiss="modal"
                                         class="btn btn-primary">
-                                    Загрузить данные из файла
+                                    Сформировать отчет
                                 </button>
                             </div>
                         </div>
