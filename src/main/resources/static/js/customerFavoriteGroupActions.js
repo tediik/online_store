@@ -122,6 +122,7 @@ $(document).on("click", ".check-favourites-group", function () {
 function defaultInterface(){
     $(".favouritesgroups").removeClass("selected");
     $("#addInOverGroup").removeClass("hidden");
+    $(".btn-group").removeClass("hidden");
     $("#escape").addClass("hidden");
     $('.ch_select_all').prop('checked', false);
     $(".select_product:checked").prop('checked', false);
@@ -184,6 +185,7 @@ $(document).on("click", "#addInOverGroup", function (event) {
     let activeAddInOverGroup = $(".favouritesgroups");
     if (!activeAddInOverGroup.hasClass("selected")) {
         activeAddInOverGroup.addClass("selected");
+        $(".btn-group").addClass("hidden");
         $("#addInOverGroup").addClass("hidden");
         $("#escape").removeClass("hidden");
         $(".ch_select_all").removeClass("hidden");
