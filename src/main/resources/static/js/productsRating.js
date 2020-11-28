@@ -1,47 +1,35 @@
-abv('default')
+sortProducts('default')
 
-/*function getAllProducts() { // не нашел, где используется эта функция
-    fetch(productRestUrl, {headers: headers}).then(response => response.json())
-        .then(allProducts => renderProductsRatingTable(allProducts))
-}*/
-
-function abv(categorySelect) {
+/**
+ * Обработка события с выбором порядка сортировки товаров
+ */
+function sortProducts(categorySelect) {
     $('#filterRating').on("change", function () {
         let orderSelect = $('#filterRating').val();
+        let categorySelect1 = $('#filterCategory').val();
         if (orderSelect === 'descOrder') {
-            fetchCategorySelectProducrsInDescOrderAndRender(categorySelect)
+            fetchCategorySelectProductsInDescOrderAndRender(categorySelect1)
         }
         if (orderSelect === 'ascOrder') {
-            fetchCategorySelectProducrsInAscOrderAndRender(categorySelect)
+            fetchCategorySelectProductsInAscOrderAndRender(categorySelect1)
         }
 
     });
     let orderSelect = $('#filterRating').val();
     if (orderSelect === 'descOrder') {
-        fetchCategorySelectProducrsInDescOrderAndRender(categorySelect)
+        fetchCategorySelectProductsInDescOrderAndRender(categorySelect)
     }
     if (orderSelect === 'ascOrder') {
-        fetchCategorySelectProducrsInAscOrderAndRender(categorySelect)
+        fetchCategorySelectProductsInAscOrderAndRender(categorySelect)
     }
 }
 
-/*$('#filterRating').on("change", function () {
-    let orderSelect = $('#filterRating').val();
-    if (orderSelect === 'descOrder') {
-        fetchSortedByRatingProductsInDescendingOrderAndRenderTable()
-    }
-    if (orderSelect === 'ascOrder') {
-        fetchSortedByRatingProductsInAscendingOrderAndRenderTable()
-    }
-
-});*/
-
 /**
- * Обработка события с выбором роли для фильтрации списка зарегистрированных пользователей по роли
+ * Обработка события с выбором категории для фильтрации списка товаров по выбранной категории
  */
 $('#filterCategory').on("change", function () {
     let categorySelect = $('#filterCategory').val();
-    abv(categorySelect)
+    sortProducts(categorySelect)
 
 });
 
@@ -73,44 +61,12 @@ function renderProductsRatingTable(products) {
 }
 
 /**
- * функция делает fetch запрос на рест контроллер, преобразует полученный объект в json
- * и передает функции рендера таблицы renderProductsRatingTable
- */
-function fetchProductsAndRenderTable() {
-    fetch("/rest/products/allProducts")
-        .then(response => response.json())
-        .then(products => renderProductsRatingTable(products))
-}
-
-/**
- * функция делает fetch запрос на рест контроллер, получает список продуктов по возрастанию их рейтинга,
- * преобразует полученный объект в json
- * и передает функции рендера таблицы renderProductsRatingTable
- */
-function fetchSortedByRatingProductsInAscendingOrderAndRenderTable() {
-    fetch("/rest/products/getProductsSortedInAscendingOrder")
-        .then(response => response.json())
-        .then(products => renderProductsRatingTable(products))
-}
-
-/**
- * функция делает fetch запрос на рест контроллер, получает список продуктов по убыванию их рейтинга,
- * преобразует полученный объект в json
- * и передает функции рендера таблицы renderProductsRatingTable
- */
-function fetchSortedByRatingProductsInDescendingOrderAndRenderTable() {
-    fetch("/rest/products/getProductsSortedInDescendingOrder")
-        .then(response => response.json())
-        .then(products => renderProductsRatingTable(products))
-}
-
-/**
  * функция делает fetch запрос на рест контроллер, получает список продуктов выбранной категории
  * по возрастанию их рейтинга,
  * преобразует полученный объект в json
  * и передает функции рендера таблицы renderProductsRatingTable
  */
-function fetchCategorySelectProducrsInAscOrderAndRender(categorySelect) {
+function fetchCategorySelectProductsInAscOrderAndRender(categorySelect) {
     fetch("/rest/products/ascOrder/" + categorySelect)
         .then(response => response.json())
         .then(products => renderProductsRatingTable(products))
@@ -122,23 +78,28 @@ function fetchCategorySelectProducrsInAscOrderAndRender(categorySelect) {
  * преобразует полученный объект в json
  * и передает функции рендера таблицы renderProductsRatingTable
  */
-function fetchCategorySelectProducrsInDescOrderAndRender(categorySelect) {
+function fetchCategorySelectProductsInDescOrderAndRender(categorySelect) {
     fetch("/rest/products/descOrder/" + categorySelect)
         .then(response => response.json())
         .then(products => renderProductsRatingTable(products))
 }
 
+/**
+ * Функция отвечает за процесс создания отчета по продуктам, учитывая выбранную категорию и сортировку
+ *
+ */
 function createReport() {
     let categorySelect = $('#filterCategory').val();
     let number = $('#addNumber').val();
-    fetch('/manager/products/report/' +  categorySelect + '/' + number)
+    let orderSelect = $('#filterRating').val();
+    fetch('/rest/products/report/' + categorySelect + '/' + number + '/' + orderSelect)
         .then(function (response) {
             if (response.status === 200) {
                 response.blob().then(blob => {
                     let url = window.URL.createObjectURL(blob);
                     let file = document.createElement('a');
                     file.href = url;
-                    file.download = 'products_report_'+ categorySelect+'.xlsx';
+                    file.download = 'products_report_' + categorySelect + '.xlsx';
                     file.click();
                     toastr.success('Данные успешно выгружены')
                 })

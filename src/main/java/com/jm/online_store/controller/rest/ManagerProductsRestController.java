@@ -102,24 +102,6 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Метод возвращает список отсортированных по убыванию рейтинга товаров
-     * @return List<Product> возвращает список товаров
-     */
-    @GetMapping(value = "/rest/products/getProductsSortedInDescendingOrder")
-    public List<Product> getProductsSortedInDescendingOrder() {
-        return productService.findAllOrderByRatingDesc();
-    }
-
-    /**
-     * Метод возвращает список отсортированных по возрастанию рейтинга товаров
-     * @return List<Product> возвращает список товаров
-     */
-    @GetMapping(value = "/rest/products/getProductsSortedInAscendingOrder")
-    public List<Product> getProductsSortedInAscendingOrder() {
-        return productService.findAllOrderByRatingAsc();
-    }
-
-    /**
      * Метод, ищет товар по id
      * @param productId идентификатор товара
      * @return Optional<Product> возвращает товар
@@ -226,28 +208,8 @@ public class ManagerProductsRestController {
             return productService.findAllOrderByRatingAsc();
         }
         return productService.findProductsByCategoryName(categoryName).stream()
-                .sorted((p1, p2) -> {
-                    if (p1.getRating() == null && p2.getRating() == null) {
-                        return 0;
-                    }
-                    if (p1.getRating() == null && p2.getRating() != null) {
-                        return -1;
-                    }
-                    if (p2.getRating() == null && p1.getRating() != null) {
-                        return 1;
-                    }
-                    if (p1.getRating() > p2.getRating()) {
-                        return 1;
-                    }
-                    if (p1.getRating().equals(p2.getRating())) {
-                        return 0;
-                    }
-                    if (p1.getRating() < p2.getRating()) {
-                        return -1;
-                    }
+                .sorted(Comparator.comparing(Product::getRating))
 
-                    return 1;
-                })
                 .collect(Collectors.toList());
     }
 
@@ -264,32 +226,9 @@ public class ManagerProductsRestController {
             return productService.findAllOrderByRatingDesc();
         }
         return productService.findProductsByCategoryName(categoryName).stream()
-                .sorted((p1, p2) -> {
-                    if (p1.getRating() == null && p2.getRating() == null) {
-                        return 0;
-                    }
-                    if (p1.getRating() == null && p2.getRating() != null) {
-                        return 1;
-                    }
-                    if (p2.getRating() == null && p1.getRating() != null) {
-                        return -1;
-                    }
-                    if (p1.getRating() > p2.getRating()) {
-                        return -1;
-                    }
-                    if (p1.getRating().equals(p2.getRating())) {
-                        return 0;
-                    }
-                    if (p1.getRating() < p2.getRating()) {
-                        return 1;
-                    }
-
-                    return -1;
-                })
+                .sorted((p1, p2) -> p2.getRating().compareTo(p1.getRating()))
                 .collect(Collectors.toList());
     }
-
-
 
     /**
      * Метод, который формирует файл с товарами нужной категории и передаёт обратно на страницу
@@ -299,19 +238,31 @@ public class ManagerProductsRestController {
      * @return запрос с файлом xlsx
      */
 
-    @GetMapping("/manager/products/report/{categoryName}/{number}")
+    @GetMapping("/rest/products/report/{categoryName}/{number}/{orderSelect}")
     public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@PathVariable String categoryName,
                                                                                @PathVariable Long number,
+                                                                               @PathVariable String orderSelect,
                                                                                HttpServletResponse response) {
         try {
             response.setContentType("text/html; charset=UTF-8");
             response.setCharacterEncoding("UTF-8");
             List<Product> products;
             if (categoryName.equals("default")) {
-                products = productService.findAll().stream().limit(number).collect(Collectors.toList());
+                if (orderSelect.equals("descOrder")) {
+                    products = productService.findAllOrderByRatingDesc().stream().limit(number).collect(Collectors.toList());
+                } else {
+                    products = productService.findAllOrderByRatingAsc().stream().limit(number).collect(Collectors.toList());
+                }
             } else {
-                products = productService.findProductsByCategoryName(categoryName).stream()
-                        .limit(number).collect(Collectors.toList());
+                if (orderSelect.equals("descOrder")) {
+                    products = productService.findProductsByCategoryName(categoryName).stream()
+                            .sorted((p1, p2) -> p2.getRating().compareTo(p1.getRating())).limit(number)
+                            .collect(Collectors.toList());
+                } else {
+                    products = productService.findProductsByCategoryName(categoryName).stream()
+                            .sorted(Comparator.comparing(Product::getRating)).limit(number)
+                            .collect(Collectors.toList());
+                }
             }
             response.setHeader("Size", String.valueOf(products.size()));
             productService.createXlsxDoc(products, categoryName).write(response.getOutputStream());
