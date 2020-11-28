@@ -127,3 +127,12 @@ function fetchCategorySelectProducrsInDescOrderAndRender(categorySelect) {
         .then(response => response.json())
         .then(products => renderProductsRatingTable(products))
 }
+
+$('#newReportGenerationModal').click(createReportXls)
+function createReportXls() {
+    $.ajax({
+        url: '/manager/products/report/{categoryName}',
+        type: 'GET',
+
+    });
+}
