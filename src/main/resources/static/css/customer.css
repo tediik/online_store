@@ -28,7 +28,7 @@ svg{
     padding: 10px;
 }
 .favouritesgroups.selected {
-    background-color: #555;
+    background-color: #dee2e6;
 }
 .hidden {
     display: none;
