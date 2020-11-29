@@ -42,7 +42,6 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -76,9 +75,7 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public List<Product> getNotDeleteProducts() {
-		List<Product> products = findAll();
-		products.removeIf(Product::isDeleted);
-		return products;
+		return productRepository.findDeletedProducts(false);
 	}
 
 
@@ -169,9 +166,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void saveAllProducts(List<Product> products) {
-		for (Product product : products) {
-			saveProduct(product);
-		}
+		productRepository.saveAll(products);
 	}
 
 	/**
@@ -347,14 +342,12 @@ public class ProductServiceImpl implements ProductService {
 					.withSkipLines(1)
 					.withIgnoreLeadingWhiteSpace(true)
 					.build();
-			Iterator<Product> productIterator = csvToBean.iterator();
 
-			while (productIterator.hasNext()) {
-				Product product = productIterator.next();
-				saveProduct(product);
-			}
+			productRepository.saveAll(csvToBean);
+
 		} catch (IOException e) {
 			e.printStackTrace();
+			log.warn(e.toString());
 		}
 	}
 
@@ -364,8 +357,7 @@ public class ProductServiceImpl implements ProductService {
 	 * Для правильного считывания используется кастомная MappingStrategy
 	 * чтобы не перегружать Products лишними аннотациями
 	 *
-	 *
-	 * @param fileName имя скачанного файла
+	 * @param fileName   имя скачанного файла
 	 * @param categoryId категория , полученная из окна загрузки файла в кабинете менеджера
 	 */
 	public void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException {
@@ -385,14 +377,12 @@ public class ProductServiceImpl implements ProductService {
 					.withIgnoreLeadingWhiteSpace(true)
 					.build();
 
-			Iterator<Product> productIterator = csvToBean.iterator();
-
-			while (productIterator.hasNext()) {
-				Product product = productIterator.next();
+			for (Product product : csvToBean) {
 				categoriesService.addToProduct(product, categoryId);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			log.warn(e.toString());
 		}
 	}
 

@@ -65,7 +65,7 @@ public class ManagerProductsRestController {
         log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
         if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
             productService.importFromXMLFile(file.getOriginalFilename(),id);
-        } else {
+        } else if(getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
             productService.importFromCSVFile(file.getOriginalFilename(),id);
         }
         return ResponseEntity.ok("success");
@@ -85,7 +85,7 @@ public class ManagerProductsRestController {
         log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
         if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
             productService.importFromXMLFile(file.getOriginalFilename());
-        } else {
+        } else if(getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
             productService.importFromCSVFile(file.getOriginalFilename());
         }
         return ResponseEntity.ok("success");

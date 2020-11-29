@@ -12,46 +12,48 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    Optional<Product> findProductById(Long productId);
+	Optional<Product> findProductById(Long productId);
 
-    Optional<Product> findProductByName(String productName);
+	Optional<Product> findProductByName(String productName);
 
-    Long saveProduct(Product product);
+	Long saveProduct(Product product);
 
-    void deleteProduct(Long idProduct);
+	void deleteProduct(Long idProduct);
 
-    void restoreProduct(Long idProduct);
+	void restoreProduct(Long idProduct);
 
-    List<Product> findAll();
+	List<Product> findAll();
 
-    List<Product> getNotDeleteProducts();
+	List<Product> getNotDeleteProducts();
 
-    void importFromXMLFile(String fileName);
-    void importFromXMLFile(String fileName,Long categoryId);
+	void importFromXMLFile(String fileName);
 
-    void importFromCSVFile(String fileName) throws FileNotFoundException;
-    void importFromCSVFile(String fileName,Long categoryId) throws FileNotFoundException;
+	void importFromXMLFile(String fileName, Long categoryId);
 
-    List<Product> findNumProducts(Integer num);
+	void importFromCSVFile(String fileName) throws FileNotFoundException;
 
-    Map getProductPriceChange(Long idProduct);
+	void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException;
 
-    double changeProductRating(Long productId, double rating, User user);
+	List<Product> findNumProducts(Integer num);
 
-    Optional<ProductDto> getProductDto(Long productI, User user);
+	Map getProductPriceChange(Long idProduct);
 
-    List<Product> findProductsByNameContains(String searchString);
+	double changeProductRating(Long productId, double rating, User user);
 
-    List<Product> findProductsByDescriptionContains(String searchString);
+	Optional<ProductDto> getProductDto(Long productI, User user);
 
-    boolean addNewSubscriber(Long id, String email);
+	List<Product> findProductsByNameContains(String searchString);
 
-    Long editProduct(Product product);
+	List<Product> findProductsByDescriptionContains(String searchString);
 
-    void saveAllProducts(List<Product> products);
+	boolean addNewSubscriber(Long id, String email);
 
-    XSSFWorkbook createXlsxDoc(List<Product> products, String category);
+	Long editProduct(Product product);
 
-    boolean existsProductByProduct(String productName);
+	void saveAllProducts(List<Product> products);
+
+	XSSFWorkbook createXlsxDoc(List<Product> products, String category);
+
+	boolean existsProductByProduct(String productName);
 
 }
