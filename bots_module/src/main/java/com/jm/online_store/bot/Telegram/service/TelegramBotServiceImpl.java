@@ -35,7 +35,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                             .append(news.getTitle())
                             .append(".\nПодробности на ")
                             .append(url)
-                            .append("/news")
+                            .append("/news/")
                             .append(news.getId())
                             .append("\n\n"));
 
