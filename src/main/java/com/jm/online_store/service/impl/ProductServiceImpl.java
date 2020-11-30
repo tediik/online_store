@@ -497,6 +497,7 @@ public class ProductServiceImpl implements ProductService {
      *
      * @param productId уникальный идентификатор товара
      */
+    @Transactional
     @Override
     public void deleteProductFromTrackedForLoggedInUser(long productId) {
         productRepository.deletePriceChangeSubscriber(userService.getCurrentLoggedInUser().getEmail(), productId);
