@@ -8,19 +8,19 @@ function sortProducts(categorySelect) {
         let orderSelect = $('#filterRating').val();
         let categorySelect1 = $('#filterCategory').val();
         if (orderSelect === 'descOrder') {
-            fetchCategorySelectProductsInDescOrderAndRender(categorySelect1)
+            fetchCategorySelectProductsInDescOrderAndRender(categorySelect1, orderSelect)
         }
         if (orderSelect === 'ascOrder') {
-            fetchCategorySelectProductsInAscOrderAndRender(categorySelect1)
+            fetchCategorySelectProductsInAscOrderAndRender(categorySelect1, orderSelect)
         }
 
     });
     let orderSelect = $('#filterRating').val();
     if (orderSelect === 'descOrder') {
-        fetchCategorySelectProductsInDescOrderAndRender(categorySelect)
+        fetchCategorySelectProductsInDescOrderAndRender(categorySelect, orderSelect)
     }
     if (orderSelect === 'ascOrder') {
-        fetchCategorySelectProductsInAscOrderAndRender(categorySelect)
+        fetchCategorySelectProductsInAscOrderAndRender(categorySelect, orderSelect)
     }
 }
 
@@ -66,8 +66,8 @@ function renderProductsRatingTable(products) {
  * преобразует полученный объект в json
  * и передает функции рендера таблицы renderProductsRatingTable
  */
-function fetchCategorySelectProductsInAscOrderAndRender(categorySelect) {
-    fetch("/rest/products/ascOrder/" + categorySelect)
+function fetchCategorySelectProductsInAscOrderAndRender(categorySelect, orderSelect) {
+    fetch("/rest/products/sort/" + categorySelect + '/' + orderSelect)
         .then(response => response.json())
         .then(products => renderProductsRatingTable(products))
 }
@@ -78,8 +78,8 @@ function fetchCategorySelectProductsInAscOrderAndRender(categorySelect) {
  * преобразует полученный объект в json
  * и передает функции рендера таблицы renderProductsRatingTable
  */
-function fetchCategorySelectProductsInDescOrderAndRender(categorySelect) {
-    fetch("/rest/products/descOrder/" + categorySelect)
+function fetchCategorySelectProductsInDescOrderAndRender(categorySelect, orderSelect) {
+    fetch("/rest/products/sort/" + categorySelect + '/' + orderSelect)
         .then(response => response.json())
         .then(products => renderProductsRatingTable(products))
 }
@@ -91,6 +91,11 @@ function fetchCategorySelectProductsInDescOrderAndRender(categorySelect) {
 function createReport() {
     let categorySelect = $('#filterCategory').val();
     let number = $('#addNumber').val();
+    let numberField = document.getElementById('addNumber');
+    if (!number) {
+        toastr.error('Заполните поле количества товаров');
+        return false;
+    }
     let orderSelect = $('#filterRating').val();
     fetch('/rest/products/report/' + categorySelect + '/' + number + '/' + orderSelect)
         .then(function (response) {
