@@ -11,6 +11,20 @@
 
     <artifactId>main_class_module</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.jm.online_store</groupId>
+            <artifactId>basic_module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jm.online_store</groupId>
+            <artifactId>bots_module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 
 </project>
