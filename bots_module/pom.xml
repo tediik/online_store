@@ -14,7 +14,7 @@
 
     <dependency>
         <groupId>com.jm.online_store</groupId>
-        <artifactId>currently_basic_module</artifactId>
+        <artifactId>basic_module</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <scope>compile</scope>
     </dependency>
