@@ -51,6 +51,9 @@ public interface ProductService {
 
     XSSFWorkbook createXlsxDoc(List<Product> products, String category);
 
+    boolean existsProductByProduct(String productName);
+
+
     List<Product> findTrackableProductsByLoggedInUser();
 
     void deleteProductFromTrackedForLoggedInUser(long productId);

@@ -109,10 +109,10 @@
                                 Выбрать все
                             </label>
                         </span>
-                        <a id="escape" class="btn btn-outline-secondary hidden" href="#">Отмена</a>
                         <a id="clear_group" class="btn btn-outline-secondary" href="#">Очистить список</a>
                         <a id="sel_new_group" class="btn btn-outline-secondary hidden" data-toggle="modal"
                            data-target="#exampleModal" href="#">Выбрать группу</a>
+                        <a id="escape" class="btn btn-outline-secondary hidden" href="#">Отмена</a>
                     </div>
                     <!--Modal-->
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
@@ -126,7 +126,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <table class="select_group table table-condensed">
+                                    <table class="select_group table table-condensed table-borderless">
                                         <tr th:each="favouritesGroup : ${favouritesGroupList}"
                                             class="select-group-tr mt-3" th:id="${favouritesGroup.id}">
                                             <td>
@@ -137,24 +137,27 @@
                                                        th:for="${favouritesGroup.id}">
                                                     <input th:id="${favouritesGroup.id}" type="text"
                                                            th:value="${favouritesGroup.getName()}"
-                                                           class="select-group-tr-input" disabled>
+                                                           class="select-group-tr-input border-0 bg-white" disabled>
                                                 </label>
                                             </td>
-                                            <td>
+                                            <td class="text-right">
                                                 <div class="ok-cancel-edit-fav-group hidden"
                                                      th:id="${favouritesGroup.id}">
-                                                    <span class="edit-fav-group-ok done"
-                                                          th:id="${favouritesGroup.id}">V</span>
-                                                    <span class="edit-fav-group-cancel"
-                                                          th:id="${favouritesGroup.id}">X</span>
+                                                    <span class="edit-fav-group-ok done btn btn-outline-success btn-sm"
+                                                          th:id="${favouritesGroup.id}">Ok</span>
+                                                    <span class="edit-fav-group-cancel btn btn-outline-danger btn-sm"
+                                                          th:id="${favouritesGroup.id}">Cancel</span>
                                                 </div>
-                                                <button type="button" class="button-edit-fav-group btn btn-secondary"
-                                                        th:id="${favouritesGroup.id}">EDIT
-                                                </button>
-                                                <button type="button" class="button-delete-fav-group btn btn-danger"
-                                                        th:id="${favouritesGroup.id}">DELETE
-                                                </button>
-
+                                                <th:block th:if="${favouritesGroup.id} != 1">
+                                                    <button type="button"
+                                                            class="edd button-edit-fav-group btn btn-secondary btn-sm"
+                                                            th:id="${favouritesGroup.id}">EDIT
+                                                    </button>
+                                                    <button type="button"
+                                                            class="button-delete-fav-group btn btn-danger btn-sm"
+                                                            th:id="${favouritesGroup.id}">DELETE
+                                                    </button>
+                                                </th:block>
                                             </td>
                                         </tr>
                                     </table>
@@ -163,11 +166,11 @@
                                             <input type="checkbox" class="new-group-checkbox">
                                             <input type="text" class="new-group-input"
                                                    th:value="@{'Мой список '+${execInfo.now.time}}" size="40">
-                                            <span class="add-group-input-ok">V</span>
-                                            <span class="add-group-input-cancel">X</span>
+                                            <span class="add-group-input-ok btn btn-outline-success btn-sm">Ok</span>
+                                            <span class="add-group-input-cancel btn btn-outline-danger btn-sm">Cancel</span>
                                         </div>
                                         <div class="add-group-new">
-                                            Создать новый список
+                                            <a href="#">Создать новый список</a>
                                         </div>
                                     </div>
                                 </div>
