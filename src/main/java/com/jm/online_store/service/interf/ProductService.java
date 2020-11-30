@@ -1,5 +1,6 @@
 package com.jm.online_store.service.interf;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
@@ -42,7 +43,7 @@ public interface ProductService {
 
     List<Product> findProductsByDescriptionContains(String searchString);
 
-    boolean addNewSubscriber(Long id, String email);
+    boolean addNewSubscriber(ObjectNode body);
 
     Long editProduct(Product product);
 
@@ -52,4 +53,8 @@ public interface ProductService {
 
     boolean existsProductByProduct(String productName);
 
+
+    List<Product> findTrackableProductsByLoggedInUser();
+
+    void deleteProductFromTrackedForLoggedInUser(long productId);
 }

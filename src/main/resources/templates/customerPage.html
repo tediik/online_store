@@ -51,9 +51,11 @@
                    aria-controls="profile" aria-selected="false">Профиль</a>
 
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
-                   href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
-                >Избранное</a>
-
+                   href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false">
+                    Избранное</a>
+                <a class="btn btn-outline-primary mt-2" id="subscribe-to-products-tab" data-toggle="pill"
+                   href="#subscribe-to-products" role="tab" aria-controls="subscribe-to-products" aria-selected="false">
+                    Подписки</a>
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false"
                    onclick="fillBasket();location.href='#basket'">Корзина</a>
@@ -67,7 +69,6 @@
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
 
             </div>
-
         </div>
         <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
 
@@ -203,6 +204,17 @@
                     </table>
                 </div>
                 <!-- ВКЛАДКА ИЗБРАННОЕ  -->
+
+                <!-- ВКЛАДКА ПОДПИСКА НА ИЗМЕНЕНИЕ ЦЕНЫ ТОВАРОВ -->
+                <div class="tab-pane fade" id="subscribe-to-products" role="tabpanel"
+                     aria-labelledby="subscribe-to-products-tab">
+                    <h1 class="font-weight mt-3 pb-1">Вы подписаны на изменение цен следующих товаров</h1>
+                    <div class="container-fluid">
+                        <div class="row row-cols-1 row-cols-md-3" id="trackableProduct">
+                        </div>
+                    </div>
+                </div>
+                <!-- ВКЛАДКА ПОДПИСКА НА ИЗМЕНЕНИЕ ЦЕНЫ ТОВАРОВ -->
 
                 <!-- ВКЛАДКА ПРОФИЛЯ -->
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -813,5 +825,6 @@
 <script src="../static/js/customerProfilePageFunctions.js"></script>
 <script src="/static/js/customer-feedback-form.js"></script>
 <script src="../static/js/searchButton.js"></script>
+<script src="../static/js/customerTrackableProduct.js"></script>
 </body>
 </html>
