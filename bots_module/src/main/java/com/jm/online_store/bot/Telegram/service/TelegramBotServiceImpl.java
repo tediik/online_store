@@ -76,8 +76,9 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     public String getHelloMessage() {
         return "Привет \u270C " +
                 "\nЯ бот магазина online_store: " + url +
-                "\nЯ умею рассказывать об акциях проходящих в нашем магазине " +
-                "и могу узнать о статусе вашего заказа на ремонт." +
+                "\nЯ умею рассказывать об акциях проходящих в нашем магазине, " +
+                "могу узнать о статусе вашего заказа на ремонт," +
+                "\nсообщать вам новости нашего магазина ." +
                 "\nВведите /help, чтобы узнать, что я умею";
     }
 
@@ -88,7 +89,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                 "\n/help - получить справку по командам" +
                 "\n/getstocks - узнать о наших акциях " +
                 "\n/checkrepair [номер вашего заказа] - узнать статус вашего заказа на ремонт"+
-                "\n/getNews(Enter) <- узнать все новости";
+                "\n/getNews узнать все новости";
     }
 
     @Override

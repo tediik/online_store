@@ -29,15 +29,13 @@ public class TelegramBotCommandHandler {
         String command = update.getMessage().getText();
         String message;
         String orderNumber = "";
-        String quantity = "";
 
         if (command.contains("/checkrepair")) {
             LinkedList<String> s = new LinkedList<>(Arrays.asList(update.getMessage().getText().split(" ")));
             orderNumber = s.getLast();
             command = "/checkrepair";
         } else if (command.contains("/getNews")) {
-            LinkedList<String> q = new LinkedList<>(Arrays.asList(update.getMessage().getText().split(" ")));
-            quantity = q.getLast();
+
             command = "/getNews";
         }
 
