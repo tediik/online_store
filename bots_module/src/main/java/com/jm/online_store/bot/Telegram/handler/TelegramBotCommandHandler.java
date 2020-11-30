@@ -59,7 +59,7 @@ public class TelegramBotCommandHandler {
                 break;
             }
             case "/getNews": {
-                message = telegramBotService.getSomeQuantityOfNews(quantity);
+                message = telegramBotService.getSomeQuantityOfNews();
                 break;
             }
 

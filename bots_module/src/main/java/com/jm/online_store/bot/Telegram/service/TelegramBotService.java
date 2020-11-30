@@ -8,10 +8,10 @@ public interface TelegramBotService {
     /**
      * Gets some quantity of news.
      *
-     * @param qt the qt
+     *
      * @return the some quantity of news
      */
-    String getSomeQuantityOfNews(String qt);
+    String getSomeQuantityOfNews();
 
     /**
      * Gets actual stocks.

@@ -27,10 +27,9 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     private String url;
 
     @Override
-    public String getSomeQuantityOfNews(String qt) {
+    public String getSomeQuantityOfNews() {
         StringBuilder massage = new StringBuilder();
         List<News> newsList = newsService.getAllPublished();
-        if ( qt == null || Long.parseLong(qt) >= newsList.size()) {
             newsList.forEach(news ->
                     massage.append("\uD83E\uDD4B")
                             .append(news.getTitle())
@@ -39,17 +38,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                             .append("/news")
                             .append(news.getId())
                             .append("\n\n"));
-        } else {
-            newsList.stream().limit(Long.parseLong(qt)).forEach(news ->
-                    massage.append("\uD83E\uDD4B")
-                            .append(news.getTitle())
-                            .append(".\nПодробности на ")
-                            .append(url)
-                            .append("/news")
-                            .append(news.getId())
-                            .append("\n\n"));
 
-        }
         return massage.toString();
     }
 
@@ -99,7 +88,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                 "\n/help - получить справку по командам" +
                 "\n/getstocks - узнать о наших акциях " +
                 "\n/checkrepair [номер вашего заказа] - узнать статус вашего заказа на ремонт"+
-                "\n/getNews(Enter) <- узнать все новости или /getNews [<пробелл>число] <- чтоб узнать [n] кол-во последних новостей ";
+                "\n/getNews(Enter) <- узнать все новости";
     }
 
     @Override
