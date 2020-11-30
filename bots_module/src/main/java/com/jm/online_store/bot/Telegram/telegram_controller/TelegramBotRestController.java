@@ -1,4 +1,4 @@
-package com.jm.online_store.bot.Telegram.controller;
+package com.jm.online_store.bot.Telegram.telegram_controller;
 
 import com.jm.online_store.bot.Telegram.TelegramBot;
 import lombok.AllArgsConstructor;
