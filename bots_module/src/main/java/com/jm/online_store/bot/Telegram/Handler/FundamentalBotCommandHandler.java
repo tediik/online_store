@@ -8,10 +8,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.util.Arrays;
-import java.util.LinkedList;
 
 /**
  * Обработчик команд для телеграм бота
@@ -34,47 +32,73 @@ public class FundamentalBotCommandHandler {
      */
     public BotApiMethod<?> handleCommand(Update update) {
         String command = update.getMessage().getText();
-        String message;
+        //String message;
         String orderNumber = "";
 
-        if (command.contains("/checkrepair")) {
-            LinkedList<String> s = new LinkedList<>(Arrays.asList(update.getMessage().getText().split(" ")));
-            orderNumber = s.getLast();
-            command = "/checkrepair";
-        } else if (command.contains("/getNews")) {
-
-            command = "/getNews";
+        if (update.hasCallbackQuery()) {
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
+                    callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
+            return processCallbackQuery(callbackQuery);
         }
 
-        switch (command) {
-            case "/start": {
-                message = telegramBotService.getHelloMessage();
-                break;
-            }
-            case "/getstocks": {
-                message = telegramBotService.getActualStocks();
-                break;
-            }
-            case "/checkrepair": {
-                message = telegramBotService.repairOrderStatus(orderNumber);
-                break;
-            }
-            case "/getNews": {
-                message = telegramBotService.getNews();
-                break;
-            }
-
-            default: {
-                message = telegramBotService.getDefaultMessage();
-                break;
-            }
+        Message message = update.getMessage();
+        if (message != null && message.getText().startsWith("Y") || message.getText().startsWith("N")) {
+            log.info(" order number:{}", message.getText());
+            telegramBotService.repairOrderStatus(message.getText());
         }
+        return mainMenuService.getMainMenuMessage(message.getChatId(), "Готов к работе ");
 
-        return SendMessage.builder()
-                .chatId(update.getMessage().getChatId().toString())
-                .text(message)
-                .build();
+//        if (command.contains("/checkrepair")) {
+//            LinkedList<String> s = new LinkedList<>(Arrays.asList(update.getMessage().getText().split(" ")));
+//            orderNumber = s.getLast();
+//            command = "/checkrepair";
+//        } else if (command.contains("/getNews")) {
+//
+//            command = "/getNews";
+//        }
+//
+//        switch (command) {
+//            case "/start": {
+//                message = telegramBotService.getHelloMessage();
+//                break;
+//            }
+//            case "/getstocks": {
+//                message = telegramBotService.getActualStocks();
+//                break;
+//            }
+//            case "/checkrepair": {
+//                message = telegramBotService.repairOrderStatus(orderNumber);
+//                break;
+//            }
+//            case "/getNews": {
+//                message = telegramBotService.getNews();
+//                break;
+//            }
+//
+//            default: {
+//                message = telegramBotService.getDefaultMessage();
+//                break;
+//            }
+//        }
+//
+//        return SendMessage.builder()
+//                .chatId(update.getMessage().getChatId().toString())
+//                .text(message)
+//                .build();
     }
+
+//    private SendMessage handleInputMessage(Message message) {
+//        SendMessage replyMessage;
+//        long chatId = message.getChatId();
+//        String inputMessageFromTelegram = message.getText();
+//
+//        switch (inputMessageFromTelegram) {
+//           case
+//        }
+//
+//
+//    }
 
     private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
 

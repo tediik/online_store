@@ -63,7 +63,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
 
     @Override
     public String askingOrderNumber() {
-        return "\uFE0F Введите пожалуйста номер своего заказа \u1F51";
+        return "Введите пожалуйста номер своего заказа";
     }
 
     @Override
