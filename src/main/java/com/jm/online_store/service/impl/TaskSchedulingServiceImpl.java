@@ -38,7 +38,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
      */
     @Override
     public void addTaskToScheduler(TaskSettings taskSettings, Runnable task) {
-        String cronExpression = DateTimeToCron(taskSettings.getStartTime().minusHours(2));
+        String cronExpression = DateTimeToCron(taskSettings.getStartTime());
         ScheduledFuture<?> scheduledTask = scheduler.schedule(task,
                 new CronTrigger(cronExpression, TimeZone.getTimeZone(TimeZone.getDefault().getID())));
         jobsMap.put(taskSettings.getId(), scheduledTask);
