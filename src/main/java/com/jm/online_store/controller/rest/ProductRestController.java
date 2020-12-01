@@ -8,6 +8,7 @@ import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,16 +97,17 @@ public class ProductRestController {
     }
 
     /**
-     * Контроллер для добавления нового email в лист рассылок
+     * Метод для добавления нового email в лист рассылок
+     *
      * @param body тело запроса
-     * @return ResponseEntity
+     * @return ResponseEntity<String> со статусом ответа
      */
     @PostMapping("/subscribe")
     public ResponseEntity<String> addNewSubscriber(@RequestBody ObjectNode body) {
-        if(productService.addNewSubscriber(body.get("id").asLong(), body.get("email").asText())) {
+        if (productService.addNewSubscriber(body)) {
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body("incorrectEmail");
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
         }
     }
 }

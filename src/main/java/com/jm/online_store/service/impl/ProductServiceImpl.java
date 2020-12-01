@@ -1,6 +1,6 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Evaluation;
@@ -14,7 +14,6 @@ import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
-import com.jm.online_store.util.ValidationUtils;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -79,18 +78,18 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 
-	/**
-	 * Метод для создания XLSX файла из списка товаров по категории
-	 *
-	 * @param products товары
-	 * @param category нужная категория
-	 * @return Excel-документ
-	 */
-	@Override
-	public XSSFWorkbook createXlsxDoc(List<Product> products, String category) {
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		XSSFSheet sheet = workbook.createSheet("Products report");
-		int rowCount = 0;
+    /**
+     * Метод для создания XLSX файла из списка товаров по категории
+     *
+     * @param products товары
+     * @param category нужная категория
+     * @return Excel-документ
+     */
+    @Override
+    public XSSFWorkbook createXlsxDoc(List<Product> products, String category) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Products report");
+        int rowCount = 0;
 
 		XSSFRow row = sheet.createRow(rowCount++);
 		XSSFCell cell = row.createCell(0);
@@ -508,29 +507,32 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.findProductByDescriptionsContains(searchString);
 	}
 
-	/**
-	 * добавляет новые email в рассылку при измененеии цены на товар
-	 *
-	 * @param id    товара
-	 * @param email для рассылки
-	 * @return true если удалось добавить email, false если не удалось
-	 */
-	@Override
-	public boolean addNewSubscriber(Long id, String email) {
-		if (!ValidationUtils.isValidEmail(email)) {
-			return false;
-		}
-		Product product = findProductById(id).orElseThrow(ProductNotFoundException::new);
-		Set<String> emails = product.getPriceChangeSubscribers();
-		if (emails.contains(email)) {
-			throw new EmailAlreadyExistsException();
-		} else {
-			emails.add(email);
-			product.setPriceChangeSubscribers(emails);
-			saveProduct(product);
-			return true;
-		}
-	}
+    /**
+     * Метод для добавления нового email в рассылку при изменении цены на товар
+     *
+     * @param body тело запроса
+     * @return true если удалось добавить email, false если такой email уже есть
+     */
+    @Override
+    public boolean addNewSubscriber(ObjectNode body) {
+        String email;
+        if (body.has("email")) {
+            email = body.get("email").asText();
+        } else {
+            email = userService.getCurrentLoggedInUser().getEmail();
+        }
+
+        Product product = findProductById(body.get("id").asLong()).orElseThrow(ProductNotFoundException::new);
+        Set<String> emails = product.getPriceChangeSubscribers();
+        if (emails.contains(email)) {
+            return false;
+        } else {
+            emails.add(email);
+            product.setPriceChangeSubscribers(emails);
+            saveProduct(product);
+            return true;
+        }
+    }
 
 	/**
 	 * Метод для редактирования информации о товаре
@@ -556,16 +558,38 @@ public class ProductServiceImpl implements ProductService {
 		return saveProduct(product);
 	}
 
-	/**
-	 * Метод проверяет существование товара в БД.
-	 *
-	 * @param productName - поле по которому проверяем товар
-	 * @return false -  Если такой товар не был найден.
-	 * true -   Если такой товар существует.
-	 */
-	@Override
-	@Transactional
-	public boolean existsProductByProduct(String productName) {
-		return productRepository.existsProductByProduct(productName);
-	}
+    /**
+     * Метод проверяет существование товара в БД.
+     *
+     * @param productName - поле по которому проверяем товар
+     * @return false -  Если такой товар не был найден.
+     * true -   Если такой товар существует.
+     */
+    @Override
+    @Transactional
+    public boolean existsProductByProduct(String productName) {
+        return productRepository.existsProductByProduct(productName);
+    }
+
+    /**
+     * Метод для поиска товаров, на изменения цен которых
+     * подписан авторизованный пользователь по email
+     *
+     * @return List<Product> список товаров
+     */
+    @Override
+    public List<Product> findTrackableProductsByLoggedInUser() {
+        return productRepository.findProductByPriceChangeSubscribersEquals(userService.getCurrentLoggedInUser().getEmail());
+    }
+
+    /**
+     * Метод для удаления подписки залогиненного пользователя на изменение цены товара
+     *
+     * @param productId уникальный идентификатор товара
+     */
+    @Transactional
+    @Override
+    public void deleteProductFromTrackedForLoggedInUser(long productId) {
+        productRepository.deletePriceChangeSubscriber(userService.getCurrentLoggedInUser().getEmail(), productId);
+    }
 }

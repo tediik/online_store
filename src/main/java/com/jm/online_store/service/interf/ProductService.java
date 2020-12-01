@@ -1,5 +1,6 @@
 package com.jm.online_store.service.interf;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
@@ -14,46 +15,50 @@ public interface ProductService {
 
 	Optional<Product> findProductById(Long productId);
 
-	Optional<Product> findProductByName(String productName);
+    Optional<Product> findProductByName(String productName);
 
-	Long saveProduct(Product product);
+    Long saveProduct(Product product);
 
-	void deleteProduct(Long idProduct);
+    void deleteProduct(Long idProduct);
 
-	void restoreProduct(Long idProduct);
+    void restoreProduct(Long idProduct);
 
-	List<Product> findAll();
+    List<Product> findAll();
 
-	List<Product> getNotDeleteProducts();
+    List<Product> getNotDeleteProducts();
 
-	void importFromXMLFile(String fileName);
+    void importFromXMLFile(String fileName);
 
-	void importFromXMLFile(String fileName, Long categoryId);
+    void importFromXMLFile(String fileName, Long categoryId);
 
-	void importFromCSVFile(String fileName) throws FileNotFoundException;
+    void importFromCSVFile(String fileName) throws FileNotFoundException;
 
-	void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException;
+    void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException;
 
-	List<Product> findNumProducts(Integer num);
+    List<Product> findNumProducts(Integer num);
 
-	Map getProductPriceChange(Long idProduct);
+    Map getProductPriceChange(Long idProduct);
 
-	double changeProductRating(Long productId, double rating, User user);
+    double changeProductRating(Long productId, double rating, User user);
 
-	Optional<ProductDto> getProductDto(Long productI, User user);
+    Optional<ProductDto> getProductDto(Long productI, User user);
 
-	List<Product> findProductsByNameContains(String searchString);
+    List<Product> findProductsByNameContains(String searchString);
 
-	List<Product> findProductsByDescriptionContains(String searchString);
+    List<Product> findProductsByDescriptionContains(String searchString);
 
-	boolean addNewSubscriber(Long id, String email);
+    boolean addNewSubscriber(ObjectNode body);
 
-	Long editProduct(Product product);
+    Long editProduct(Product product);
 
-	void saveAllProducts(List<Product> products);
+    void saveAllProducts(List<Product> products);
 
-	XSSFWorkbook createXlsxDoc(List<Product> products, String category);
+    XSSFWorkbook createXlsxDoc(List<Product> products, String category);
 
-	boolean existsProductByProduct(String productName);
+    boolean existsProductByProduct(String productName);
 
+
+    List<Product> findTrackableProductsByLoggedInUser();
+
+    void deleteProductFromTrackedForLoggedInUser(long productId);
 }

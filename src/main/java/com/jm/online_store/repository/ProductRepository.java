@@ -2,6 +2,7 @@ package com.jm.online_store.repository;
 
 import com.jm.online_store.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,5 +25,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("FROM Product p WHERE p.descriptions.information LIKE %:searchString%")
 	List<Product> findProductByDescriptionsContains(@Param("searchString") String searchString);
 
-	boolean existsProductByProduct(String productName);
+    boolean existsProductByProduct(String productName);
+
+    List<Product> findProductByPriceChangeSubscribersEquals(String email);
+
+    @Modifying
+    @Query(value = "delete from product_subscribers_mails where product_id =:id and email =:email", nativeQuery = true)
+    void deletePriceChangeSubscriber(String email, long id);
 }
