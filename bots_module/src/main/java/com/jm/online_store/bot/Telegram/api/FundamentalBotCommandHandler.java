@@ -14,7 +14,7 @@ import java.util.LinkedList;
  */
 @Component
 @AllArgsConstructor
-public class TelegramBotCommandHandler {
+public class FundamentalBotCommandHandler {
 
     private final TelegramBotService telegramBotService;
 
