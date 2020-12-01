@@ -3,7 +3,9 @@ package com.jm.online_store.controller.simple;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.stream.Collectors;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/manager")
 public class ManagerController {
-
-    private final ProductService productService;
+    private final UserService userService;
     private final CategoriesService categoriesService;
-
-    @Autowired
-    public ManagerController(ProductService productService, CategoriesService categoriesService) {
-        this.productService = productService;
-        this.categoriesService = categoriesService;
-    }
 
     @GetMapping
     public String getManagerPage() {
@@ -59,5 +55,15 @@ public class ManagerController {
         model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
 
         return "productsRating";
+    }
+
+    /*
+     добавил маппинг для отображения профиля на странице менеджера
+     */
+    @GetMapping("/profile")
+    public String getPersonalInfo(Model model) {
+        User user = userService.getCurrentLoggedInUser();
+        model.addAttribute("user", user);
+        return "managerProfile";
     }
 }

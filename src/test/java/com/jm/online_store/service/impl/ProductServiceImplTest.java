@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.ProductRepository;
@@ -24,7 +25,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -39,7 +44,7 @@ class ProductServiceImplTest {
     private final MailSenderService mailSenderService = mock(MailSenderService.class);
     private final CommonSettingsService commonSettingsService = mock(CommonSettingsService.class);
     private final CategoriesService categoriesService = mock(CategoriesService.class);
-    private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService, mailSenderService, categoriesService);
+    private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService, mailSenderService,categoriesService);
     private Product product;
     private Set<String> subscribers;
     private Map<LocalDateTime, Double> prices;
@@ -96,11 +101,20 @@ class ProductServiceImplTest {
      */
     @Test
     void addNewSubscriberTest() {
-        assertFalse(productService.addNewSubscriber(any(),"wrongMail"));
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        ObjectNode newMail = objectMapper.createObjectNode();
+        newMail.put("id", 1);
+        newMail.put("email", "mail@mail.ru");
+
+        ObjectNode existMail = objectMapper.createObjectNode();
+        existMail.put("id", 1);
+        existMail.put("email", "mail@mail.ru");
 
         when(productService.findProductById(1L)).thenReturn(Optional.of(product));
         when(productRepository.save(any())).thenReturn(product);
-        assertTrue(productService.addNewSubscriber(1L,"correct@mail.ru"));
+        assertTrue(productService.addNewSubscriber(newMail));
+        assertFalse(productService.addNewSubscriber(existMail));
     }
 
     /**
@@ -108,11 +122,14 @@ class ProductServiceImplTest {
      */
     @Test
     void addNewSubscriberThrowsExceptionTest() {
-        when(productService.findProductById(any())).thenReturn(Optional.empty());
-        assertThrows(ProductNotFoundException.class, () -> productService.addNewSubscriber(any(),"correct@mail.ru"));
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        when(productService.findProductById(any())).thenReturn(Optional.of(product));
-        assertThrows(EmailAlreadyExistsException.class, () -> productService.addNewSubscriber(any(),"user@mail.ru"));
+        ObjectNode subscriberMail = objectMapper.createObjectNode();
+        subscriberMail.put("id", 1L);
+        subscriberMail.put("email", "mail@mail.ru");
+
+        when(productService.findProductById(any())).thenReturn(Optional.empty());
+        assertThrows(ProductNotFoundException.class, () -> productService.addNewSubscriber(subscriberMail));
     }
 
     /**
