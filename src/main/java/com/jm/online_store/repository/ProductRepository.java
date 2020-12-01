@@ -32,4 +32,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = "delete from product_subscribers_mails where product_id =:id and email =:email", nativeQuery = true)
     void deletePriceChangeSubscriber(String email, long id);
+
+    @Query("FROM Product p order by p.rating")
+    List<Product> findAllOrderByRatingAsc();
+
+    @Query("FROM Product p order by p.rating DESC")
+    List<Product> findAllOrderByRatingDesc();
+
 }

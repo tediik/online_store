@@ -3,6 +3,7 @@ package com.jm.online_store.service.impl;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
@@ -51,12 +52,12 @@ import java.util.Set;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
-	private final ProductRepository productRepository;
-	private final EvaluationService evaluationService;
-	private final UserService userService;
-	private final CommonSettingsService commonSettingsService;
-	private final MailSenderService mailSenderService;
-	private final CategoriesService categoriesService;
+    private final ProductRepository productRepository;
+    private final EvaluationService evaluationService;
+    private final UserService userService;
+    private final CommonSettingsService commonSettingsService;
+    private final MailSenderService mailSenderService;
+    private final CategoriesService categoriesService;
 
 	/**
 	 * метод получения списка товаров
@@ -76,6 +77,18 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> getNotDeleteProducts() {
 		return productRepository.findProductsByDelete(false);
 	}
+
+    /**
+     * метод для получения списка Product по имени категории.
+     *
+     * @param categoryName идентификатор Product
+     * @return List<Product>
+     */
+    @Override
+    public List<Product> findProductsByCategoryName(String categoryName) {
+        Categories category = categoriesService.getCategoryByCategoryName(categoryName).get();
+        return category.getProducts();
+    }
 
 
     /**
@@ -151,6 +164,38 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.findByProduct(productName);
 	}
 
+    /**
+     * Метод получения списка всех продуктов по возрастанию рейтинга
+     * @return List<Product>
+     */
+    @Override
+    public List<Product> findAllOrderByRatingAsc() {
+        return productRepository.findAllOrderByRatingAsc();
+    }
+
+    /**
+     * Метод получения списка всех продуктов по убыванию рейтинга
+     * @return List<Product>
+     */
+    @Override
+    public List<Product> findAllOrderByRatingDesc() {
+        return productRepository.findAllOrderByRatingDesc();
+    }
+
+    /**
+     * метод обновления Product.
+     *
+     * @param product экземпляр класса Product
+     * @return идентификатор обновленного Product
+     */
+    @Override
+    public Long saveProduct(Product product) {
+        if (product.getRating() == null) {
+            product.setRating(0d);
+        }
+        Product savedProduct = productRepository.save(product);
+        return savedProduct.getId();
+    }
 	/**
 	 * метод обновления Product.
 	 *

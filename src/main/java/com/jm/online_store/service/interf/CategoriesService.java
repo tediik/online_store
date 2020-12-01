@@ -11,6 +11,8 @@ public interface CategoriesService {
 
     ArrayNode getAllCategories();
 
+    List<Categories> findAll();
+
     String getCategoryNameByProductId(Long productId);
 
     List<Categories> getCategoriesByParentCategoryId (Long parentCategoryId);
@@ -18,6 +20,8 @@ public interface CategoriesService {
     Optional<Categories> getCategoryById(Long categoryId);
 
     Optional<Categories> getCategoryByCategoryName(String category);
+
+    List<Categories> getCategoriesWithoutParentCategory();
 
     void saveCategory (Categories categories);
 
