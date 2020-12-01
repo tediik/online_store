@@ -75,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public List<Product> getNotDeleteProducts() {
-		return productRepository.findDeletedProducts(false);
+		return productRepository.findProductsByDelete(false);
 	}
 
 

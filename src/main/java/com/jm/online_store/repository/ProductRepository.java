@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-	@Query(value = "select * from Product where deleted = :bool", nativeQuery = true)
-	List<Product> findDeletedProducts(@Param("bool") boolean isDeleted);
+	@Query(value = "From Product where deleted = :isDeleted")
+	List<Product> findProductsByDelete(@Param("isDeleted") boolean isDeleted);
 
 	Optional<Product> findByProduct(String productName);
 
