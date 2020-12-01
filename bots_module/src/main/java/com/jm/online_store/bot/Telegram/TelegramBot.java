@@ -1,7 +1,7 @@
 package com.jm.online_store.bot.Telegram;
 
 
-import com.jm.online_store.bot.Telegram.handler.TelegramBotCommandHandler;
+import com.jm.online_store.bot.Telegram.api.TelegramBotCommandHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -34,7 +34,7 @@ public class TelegramBot extends TelegramWebhookBot {
     private String botPath;
 
     @Override
-    public BotApiMethod onWebhookUpdateReceived(Update update) {
+    public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         return telegramBotCommandHandler.handleCommand(update);
     }
 }

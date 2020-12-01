@@ -58,6 +58,7 @@ price-list-service:
 
 spring.profiles.include: 'security'
 
+ #ToDo переделать инстркцию
 # Смотри инструкцию https://trello.com/c/8akD9MhL
 telegram-bot:
   name: JM_store_bot
