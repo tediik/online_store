@@ -100,7 +100,7 @@ public class CategoriesServiceImpl implements CategoriesService {
      */
     @Override
     public List<Categories> getCategoriesWithoutParentCategory() {
-        return categoriesRepository.findAll().stream().filter(category -> category.getParentCategoryId() > 0).collect(Collectors.toList());
+        return categoriesRepository.getCategoriesWithoutParentCategory();
     }
 
     /**
