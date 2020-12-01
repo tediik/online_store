@@ -1,7 +1,7 @@
 package com.jm.online_store.bot.Telegram;
 
 
-import com.jm.online_store.bot.Telegram.api.FundamentalBotCommandHandler;
+import com.jm.online_store.bot.Telegram.Handler.FundamentalBotCommandHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

@@ -1,8 +1,10 @@
-package com.jm.online_store.bot.Telegram.api;
+package com.jm.online_store.bot.Telegram.Handler;
 
 import com.jm.online_store.bot.Telegram.service.TelegramBotService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -14,6 +16,7 @@ import java.util.LinkedList;
  */
 @Component
 @AllArgsConstructor
+@Slf4j
 public class FundamentalBotCommandHandler {
 
     private final TelegramBotService telegramBotService;
@@ -25,7 +28,7 @@ public class FundamentalBotCommandHandler {
      *               id чата из которого поступила команда и множество другой полезной информации
      * @return SendMessage с текстовым ответом на команду
      */
-    public SendMessage handleCommand(Update update) {
+    public BotApiMethod<?> handleCommand(Update update) {
         String command = update.getMessage().getText();
         String message;
         String orderNumber = "";
@@ -72,4 +75,7 @@ public class FundamentalBotCommandHandler {
                 .text(message)
                 .build();
     }
+
+
+
 }

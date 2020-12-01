@@ -1,5 +1,7 @@
 package com.jm.online_store.bot.Telegram.service;
 
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+
 /**
  * The interface Telegram bot service.
  */
@@ -48,4 +50,13 @@ public interface TelegramBotService {
      * @return the help message
      */
     String getHelpMessage();
+
+
+    /**
+     * Gets main menu keyboard.
+     *
+     * @return the main menu keyboard
+     */
+    ReplyKeyboardMarkup getMainMenuKeyboard();
+
 }
