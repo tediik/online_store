@@ -10,11 +10,7 @@ import com.jm.online_store.service.interf.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,17 +27,17 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     private String url;
 
     @Override
-    public String getSomeQuantityOfNews() {
+    public String getNews() {
         StringBuilder massage = new StringBuilder();
         List<News> newsList = newsService.getAllPublished();
-            newsList.forEach(news ->
-                    massage.append("\uD83E\uDD4B")
-                            .append(news.getTitle())
-                            .append(".\nПодробности на ")
-                            .append(url)
-                            .append("/news/")
-                            .append(news.getId())
-                            .append("\n\n"));
+        newsList.forEach(news ->
+                massage.append("\uD83E\uDD4B")
+                        .append(news.getTitle())
+                        .append(".\nПодробности на ")
+                        .append(url)
+                        .append("/news/")
+                        .append(news.getId())
+                        .append("\n\n"));
 
         return massage.toString();
     }
@@ -66,7 +62,12 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     }
 
     @Override
-    public String getRepairOrder(String orderNumber) {
+    public String askingOrderNumber() {
+        return "\uFE0F Введите пожалуйста номер своего заказа \u1F51";
+    }
+
+    @Override
+    public String repairOrderStatus(String orderNumber) {
         if (repairOrderService.existsByOrderNumber(orderNumber)) {
             RepairOrder repairOrder = repairOrderService.findByOrderNumber(orderNumber);
             return "Заказа с номером " + repairOrder.getOrderNumber() +
@@ -86,15 +87,6 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                 "\nВведите /help, чтобы узнать, что я умею";
     }
 
-    @Override
-    public String getHelpMessage() {
-        return "Поддерживаемые команды: " +
-                "\n/start - начать общение с ботом" +
-                "\n/help - получить справку по командам" +
-                "\n/getstocks - узнать о наших акциях " +
-                "\n/checkrepair [номер вашего заказа] - узнать статус вашего заказа на ремонт"+
-                "\n/getNews узнать все новости";
-    }
 
     @Override
     public String getDefaultMessage() {
@@ -128,26 +120,4 @@ public class TelegramBotServiceImpl implements TelegramBotService {
         }
     }
 
-    @Override
-    public ReplyKeyboardMarkup getMainMenuKeyboard() {
-        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
-
-        List<KeyboardRow> keyboard = new ArrayList<>();
-
-        KeyboardRow row1 = new KeyboardRow();
-        KeyboardRow row2 = new KeyboardRow();
-        KeyboardRow row3 = new KeyboardRow();
-
-        row1.add(new KeyboardButton("Узнать о наших акциях"));
-        row2.add(new KeyboardButton("Узнать статус вашей заявки на ремонт "));
-        row3.add(new KeyboardButton("Будьте в курсе событий. Наши новости"));
-        keyboard.add(row1);
-        keyboard.add(row2);
-        keyboard.add(row3);
-        replyKeyboardMarkup.setKeyboard(keyboard);
-        return replyKeyboardMarkup;
-    }
 }

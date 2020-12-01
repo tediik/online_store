@@ -1,11 +1,13 @@
 package com.jm.online_store.bot.Telegram.Handler;
 
+import com.jm.online_store.bot.Telegram.service.MainMenuService;
 import com.jm.online_store.bot.Telegram.service.TelegramBotService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Arrays;
@@ -20,6 +22,8 @@ import java.util.LinkedList;
 public class FundamentalBotCommandHandler {
 
     private final TelegramBotService telegramBotService;
+
+    private final MainMenuService mainMenuService;
 
     /**
      * Метод для обработки команды, поступившей к нашему боту
@@ -47,20 +51,16 @@ public class FundamentalBotCommandHandler {
                 message = telegramBotService.getHelloMessage();
                 break;
             }
-            case "/help": {
-                message = telegramBotService.getHelpMessage();
-                break;
-            }
             case "/getstocks": {
                 message = telegramBotService.getActualStocks();
                 break;
             }
             case "/checkrepair": {
-                message = telegramBotService.getRepairOrder(orderNumber);
+                message = telegramBotService.repairOrderStatus(orderNumber);
                 break;
             }
             case "/getNews": {
-                message = telegramBotService.getSomeQuantityOfNews();
+                message = telegramBotService.getNews();
                 break;
             }
 
@@ -76,6 +76,23 @@ public class FundamentalBotCommandHandler {
                 .build();
     }
 
+    private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
+
+        Long chatId = buttonQuery.getMessage().getChatId();
+        BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Здравствуйте \uFE0F" +
+                "\nВоспользуйтесь главным меню.");
+
+        if (buttonQuery.getData().equals("Узнать о наших акциях")) {
+            callBackAnswer = new SendMessage(chatId.toString(), telegramBotService.getActualStocks());
+        } else if (buttonQuery.getData().equals("Будьте в курсе событий. Наши новости")) {
+            callBackAnswer = new SendMessage(chatId.toString(), telegramBotService.getNews());
+        } else if (buttonQuery.getData().equals("Перезапустить бота \u1F4a")) {
+            callBackAnswer = new SendMessage(chatId.toString(), telegramBotService.getHelloMessage());
+        } else if (buttonQuery.getData().equals("Узнать статус вашей заявки на ремонт")) {
+            callBackAnswer = new SendMessage(chatId.toString(), telegramBotService.askingOrderNumber());
+        }
+        return callBackAnswer;
+    }
 
 
 }

@@ -1,7 +1,5 @@
 package com.jm.online_store.bot.Telegram.service;
 
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-
 /**
  * The interface Telegram bot service.
  */
@@ -13,7 +11,7 @@ public interface TelegramBotService {
      *
      * @return the some quantity of news
      */
-    String getSomeQuantityOfNews();
+    String getNews();
 
     /**
      * Gets actual stocks.
@@ -28,7 +26,9 @@ public interface TelegramBotService {
      * @param orderNumber the order number
      * @return the repair order
      */
-    String getRepairOrder(String orderNumber);
+    String repairOrderStatus(String orderNumber);
+
+    String askingOrderNumber();
 
     /**
      * Gets hello message.
@@ -44,19 +44,5 @@ public interface TelegramBotService {
      */
     String getDefaultMessage();
 
-    /**
-     * Gets help message.
-     *
-     * @return the help message
-     */
-    String getHelpMessage();
-
-
-    /**
-     * Gets main menu keyboard.
-     *
-     * @return the main menu keyboard
-     */
-    ReplyKeyboardMarkup getMainMenuKeyboard();
 
 }
