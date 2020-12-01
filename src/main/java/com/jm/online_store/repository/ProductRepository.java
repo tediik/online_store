@@ -12,15 +12,18 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    Optional<Product> findByProduct(String productName);
+	@Query(value = "From Product where deleted = :isDeleted")
+	List<Product> findProductsByDelete(@Param("isDeleted") boolean isDeleted);
 
-    @Query(value = "SELECT * FROM Product LIMIT :num", nativeQuery = true)
-    List<Product> findNumProducts(@Param("num") Integer num);
+	Optional<Product> findByProduct(String productName);
 
-    List<Product> findProductByProductContains(String searchString);
+	@Query(value = "SELECT * FROM Product LIMIT :num", nativeQuery = true)
+	List<Product> findNumProducts(@Param("num") Integer num);
 
-    @Query("FROM Product p WHERE p.descriptions.information LIKE %:searchString%")
-    List<Product> findProductByDescriptionsContains(@Param("searchString") String searchString);
+	List<Product> findProductByProductContains(String searchString);
+
+	@Query("FROM Product p WHERE p.descriptions.information LIKE %:searchString%")
+	List<Product> findProductByDescriptionsContains(@Param("searchString") String searchString);
 
     boolean existsProductByProduct(String productName);
 

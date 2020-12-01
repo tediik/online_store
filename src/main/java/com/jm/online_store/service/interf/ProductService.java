@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    Optional<Product> findProductById(Long productId);
+	Optional<Product> findProductById(Long productId);
 
     Optional<Product> findProductByName(String productName);
 
@@ -29,7 +29,11 @@ public interface ProductService {
 
     void importFromXMLFile(String fileName);
 
+    void importFromXMLFile(String fileName, Long categoryId);
+
     void importFromCSVFile(String fileName) throws FileNotFoundException;
+
+    void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException;
 
     List<Product> findNumProducts(Integer num);
 
