@@ -81,12 +81,30 @@ public class MainPageRestController {
         return new ResponseEntity("success", HttpStatus.OK);
     }
 
+
     /**
-     * Метод возвращает список корневых категорий для дальнейшего формирования ссылок на подкатегории
+     * Создаёт мапу - ключ - название категории, значение - мапа с названиями подкатегории.
+     * Во внутренних мапах - ключ - подкатегория кириллицей и значение - латиницей.
+     *
+     * @return Пример: {"Компьютеры":{"Комплектующие":"Komplektuyushchiye",
+     * "Компьютеры":"Kompʹyutery",
+     * "Ноутбуки":"Noutbuki"},
+     * "Смартфоны и гаджеты":{"Планшеты":"Planshety",
+     * "Смартфоны":"Smartfony"}}
      */
     @GetMapping("api/categories")
-    public ResponseEntity<List<Categories>> getMainCategories() {
-        return ResponseEntity.ok(categoriesService.getCategoriesByParentCategoryId(0L));
+    public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
+        List<Categories> categoriesFromDB = categoriesService.findAll();
+        Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
+
+        for (Categories category : categoriesFromDB) {
+            Map<String, String> innerMap = new HashMap<>();
+            innerMap.put(category.getCategory(), Transliteration.сyrillicToLatin(category.getCategory()));
+            categoriesBySuperCategories.merge(categoriesService.getCategoryById(category.getParentCategoryId()).orElse(category).getCategory(), innerMap,
+                    (oldV, newV) -> Stream.concat(oldV.entrySet().stream(), newV.entrySet().stream())
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        }
+        return ResponseEntity.ok(categoriesBySuperCategories);
     }
 
     /**
