@@ -1,5 +1,6 @@
 package com.jm.online_store.service.interf;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
@@ -12,9 +13,13 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    Optional<Product> findProductById(Long productId);
+	Optional<Product> findProductById(Long productId);
 
     Optional<Product> findProductByName(String productName);
+
+    List<Product> findAllOrderByRatingAsc();
+
+    List<Product> findAllOrderByRatingDesc();
 
     Long saveProduct(Product product);
 
@@ -28,9 +33,15 @@ public interface ProductService {
 
     List<Product> getNotDeleteProducts();
 
+    List<Product> findProductsByCategoryName(String categoryName);
+
     void importFromXMLFile(String fileName);
 
+    void importFromXMLFile(String fileName, Long categoryId);
+
     void importFromCSVFile(String fileName) throws FileNotFoundException;
+
+    void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException;
 
     List<Product> findNumProducts(Integer num);
 
@@ -44,11 +55,18 @@ public interface ProductService {
 
     List<Product> findProductsByDescriptionContains(String searchString);
 
-    boolean addNewSubscriber(Long id, String email);
+    boolean addNewSubscriber(ObjectNode body);
 
     Long editProduct(Product product);
 
     void saveAllProducts(List<Product> products);
 
     XSSFWorkbook createXlsxDoc(List<Product> products, String category);
+
+    boolean existsProductByProduct(String productName);
+
+
+    List<Product> findTrackableProductsByLoggedInUser();
+
+    void deleteProductFromTrackedForLoggedInUser(long productId);
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Рест контроллер страницы подкатегории
  */
@@ -43,8 +45,9 @@ public class SubcategoryPageRestController {
      *
      * @return список Categories
      */
+
     @GetMapping("/categories")
-    public ResponseEntity<ArrayNode> getAllCategories() {
-        return ResponseEntity.ok(categoriesService.getAllCategories());
+    public ResponseEntity<List<Categories>> getAllCategories() {
+        return ResponseEntity.ok(categoriesService.findAll());
     }
 }

@@ -38,7 +38,7 @@
     </nav>
     <hr class="mb-4">
     <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModal"
-         aria-hidden="true">
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -60,8 +60,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button id="acceptButton" type="button" class="btn btn-success" onclick="priceChangeSubscribe()">
+                    <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Закрыть
+                    </button>
+                    <button id="acceptButton" type="button" class="btn btn-success"
+                            onclick="priceChangeSubscribe(false)">
                         Подписаться
                     </button>
                 </div>
@@ -129,9 +132,16 @@
             <div class="row mx-5" id="ringContainer">
                 <div id="favoriteLabel"><h5 class="font-weight-normal my-2">&ensp;Подписаться на уведомления при
                     снижении цены </h5></div>
-                <button id="ringButton" type="button" class="btn btn-success edit-button" data-toggle="modal"
-                        data-target="#emailModal">Подписаться &#128276
-                </button>
+                <div sec:authorize="isAuthenticated()">
+                    <button type="ringButton" class="btn btn-success" onclick="priceChangeSubscribe(true)">
+                        Подписаться &#128276
+                    </button>
+                </div>
+                <div sec:authorize="isAnonymous()">
+                    <button id="ringButton" type="button" class="btn btn-success edit-button" data-toggle="modal"
+                            data-target="#emailModal">Подписаться &#128276
+                    </button>
+                </div>
             </div>
             <br>
             <div class="row mx-5">
@@ -287,6 +297,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
@@ -298,9 +309,12 @@
         crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+<script src="/static/js/websocket/sockjs-0.3.4.js"></script>
+<script src="/static/js/websocket/stomp.js"></script>
+<script src="/static/js/moderatorComments.js"></script>
 <script src="../static/js/productPage.js"></script>
 <script src="../static/js/comments.js"></script>
+<script src="../static/js/reportComment.js"></script>
 <script src="../static/js/reviews.js"></script>
 <script src="../static/js/searchButton.js"></script>
 <script src="../static/js/registration.js"></script>

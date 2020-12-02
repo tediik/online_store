@@ -42,7 +42,7 @@ server:
 logging:
   file:
     name: src/main/logs/my.log
-    max-history=1: 1
+    max-history: 1
   level:
     com:
       jm: debug

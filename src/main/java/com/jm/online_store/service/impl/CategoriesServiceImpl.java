@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,14 @@ public class CategoriesServiceImpl implements CategoriesService {
             arrayNode.add(root);
         }
         return arrayNode;
+    }
+
+    /**
+     * Метод возвращает все категории
+     */
+    @Override
+    public List<Categories> findAll() {
+        return categoriesRepository.findAll();
     }
 
     /**
@@ -83,6 +92,15 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public Optional<Categories> getCategoryByCategoryName(String category) {
         return categoriesRepository.findByCategory(category);
+    }
+
+    /**
+     * Метод получения списка категорий без родительских
+     * @return List<Categories>
+     */
+    @Override
+    public List<Categories> getCategoriesWithoutParentCategory() {
+        return categoriesRepository.getCategoriesWithoutParentCategory();
     }
 
     /**

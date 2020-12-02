@@ -2,6 +2,7 @@ package com.jm.online_store.repository;
 
 import com.jm.online_store.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -11,14 +12,30 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    Optional<Product> findByProduct(String productName);
+	@Query(value = "From Product where deleted = :isDeleted")
+	List<Product> findProductsByDelete(@Param("isDeleted") boolean isDeleted);
 
-    @Query(value = "SELECT * FROM Product LIMIT :num", nativeQuery = true)
-    List<Product> findNumProducts(@Param("num") Integer num);
+	Optional<Product> findByProduct(String productName);
 
-    List<Product> findProductByProductContains(String searchString);
+	@Query(value = "SELECT * FROM Product LIMIT :num", nativeQuery = true)
+	List<Product> findNumProducts(@Param("num") Integer num);
 
-    @Query("FROM Product p WHERE p.descriptions.information LIKE %:searchString%")
-    List<Product> findProductByDescriptionsContains(@Param("searchString") String searchString);
+	List<Product> findProductByProductContains(String searchString);
 
+	@Query("FROM Product p WHERE p.descriptions.information LIKE %:searchString%")
+	List<Product> findProductByDescriptionsContains(@Param("searchString") String searchString);
+
+    boolean existsProductByProduct(String productName);
+
+    List<Product> findProductByPriceChangeSubscribersEquals(String email);
+
+    @Modifying
+    @Query(value = "delete from product_subscribers_mails where product_id =:id and email =:email", nativeQuery = true)
+    void deletePriceChangeSubscriber(String email, long id);
+
+    @Query("FROM Product p order by p.rating")
+    List<Product> findAllOrderByRatingAsc();
+
+    @Query("FROM Product p order by p.rating DESC")
+    List<Product> findAllOrderByRatingDesc();
 }
