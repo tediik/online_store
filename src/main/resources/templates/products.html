@@ -94,6 +94,7 @@
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Products Table</a>
                         <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
+                        <a class="nav-item nav-link" id="nav-products-categories-tab" data-toggle="tab" href="#nav-products-categories" role="tab" aria-controls="nav-products-categories" aria-selected="false">Категории товаров</a>
                         <form class="checkbox">
                             <!-- for keeping checkbox checked when page loads use checked="checked" --->
                             <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
@@ -181,6 +182,56 @@
                             </div>
                         </form>
                     </div>
+<!--                    Начала слоя отображения категорий -->
+                    <div class="tab-pane fade" id="nav-products-categories" role="tabpanel"
+                         aria-labelledby="nav-products-categories-tab">
+                        <h2>Управление категориями товаров</h2>
+                        <button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
+                                data-target="#addNewMainCategoryModal" data-backdrop="static">Добавить корневую категорию</button>
+                        <div id="jqxTree"></div>
+                        <button type="button" class="btn btn-outline-success my-2" data-toggle="modal" id="jqxbutton"
+                                data-target="#magicButtonModal" data-backdrop="static">Нажмите для выбора действия</button>
+                        <div class="modal fade" id="addNewMainCategoryModal" tabindex="-1" role="dialog"
+                             aria-labelledby="addNewMainCategoryModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addNewMainCategoryModalLabel">Название корневой категории:</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="addProductCategoryForm">
+                                            <div class="form-group">
+                                                <label for="addNewMainCategory"></label>
+                                                <input type="text" class="form-control" name="category" id="addNewMainCategory">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Закрыть</button>
+                                        <button type="button" class="btn btn-primary btn-sm" id="addMainCategoryButton" data-dismiss="modal">
+                                            Добавить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="magicButtonModal" tabindex="-1" role="dialog"
+                             aria-labelledby="magicButtonModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="magicButtonModalLabel"></h5>
+                                    </div>
+                                    <div class="modal-body" id="magicButtonModalBody"></div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Отменить</button>
+                                        <div id="deleteSubCategoryButtonDiv"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+<!--                    Конец слоя отображения категорий -->
                 </div>
             </div>
         </div>
