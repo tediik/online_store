@@ -33,6 +33,8 @@
     <script src="../static/js/customerFavoriteGroupActions.js"></script>
     <script src="../static/js/profilePicture.js"></script>
     <script src="../static/js/orders.js"></script>
+
+
 </head>
 <body>
 <header th:insert="/blocks/cabinetHeader :: header"></header>
@@ -54,9 +56,10 @@
                    href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
                 >Избранное</a>
 
-                <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
+                <a class="btn btn-outline-primary mt-2 nav-link" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false"
-                   onclick="fillBasket();location.href='#basket'">Корзина</a>
+                   onclick="fillBasket()">Корзина</a>
+               <!-- ;location.href='#basket' -->
 
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
@@ -770,11 +773,11 @@
 </div>
 <!-- Modal for order -->
 <div class="modal fade" id="orderModal" tabindex="-1"
-     role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     role="dialog" aria-labelledby="exampleModalLabelForOrder" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">заказ</h5>
+                <h5 class="modal-title" id="exampleModalLabelForOrder">заказ</h5>
                 <button type="button" class="close" data-dismiss="modal"
                         aria-label="Close">
                     <span aria-hidden="true">&times;</span>
