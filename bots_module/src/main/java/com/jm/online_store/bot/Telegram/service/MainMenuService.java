@@ -33,7 +33,7 @@ public class MainMenuService {
         KeyboardRow row3 = new KeyboardRow();
 
         row1.add(new KeyboardButton("Узнать о наших акциях"));
-        row1.add(new KeyboardButton("Будьте в курсе событий. Наши новости"));
+        row1.add(new KeyboardButton("Наши новости"));
         row2.add(new KeyboardButton("Узнать статус вашей заявки на ремонт"));
         row3.add(new KeyboardButton("Перезапустить бота"));
         keyboard.add(row1);

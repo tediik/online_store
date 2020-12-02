@@ -71,7 +71,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     public String repairOrderStatus(String orderNumber) {
         if (repairOrderService.existsByOrderNumber(orderNumber)) {
             RepairOrder repairOrder = repairOrderService.findByOrderNumber(orderNumber);
-            return "Заказа с номером " + repairOrder.getOrderNumber() +
+            return "Заказ с номером заявки " + repairOrder.getOrderNumber() +
                     transformRepairOrderStatus(repairOrder.getRepairOrderType());
         }
         return "Заказ с номером " + orderNumber + " не найден \uD83D\uDE2D" +
@@ -91,25 +91,25 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     public String transformRepairOrderStatus(RepairOrderType orderStatus) {
         switch (orderStatus) {
             case ACCEPTED: {
-                return " принят";
+                return" находится в статусе ПРИНЯТ";
             }
             case DIAGNOSTICS: {
-                return " находится на диагностике";
+                return " находится в статусе НА ДИАГНО́СТИКЕ";
             }
             case IN_WORK: {
-                return " в ремонте";
+                return " находится в статусе В РЕМОНТЕ";
             }
             case COMPLETE: {
-                return " выполнен";
+                return " находится в статусе ВЫПОЛНЕН";
             }
             case ARCHIVED: {
-                return " заархивирован";
+                return " находится в статусе ЗААРХИВИРОВАН";
             }
             case CANCELED: {
-                return " отменен";
+                return " находится в статусе ОТМЕНЕН";
             }
             default: {
-                return " не найден";
+                return "НЕ НАЙДЕН";
             }
         }
     }

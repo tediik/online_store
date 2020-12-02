@@ -23,8 +23,9 @@ public class FundamentalBotCommandHandler {
     private final MainMenuService mainMenuService;
 
     /**
-     * Метод для обработки команды, поступившей к нашему боту
-     *
+     * Метод для обработки команды, поступившей к нашему боту.
+     *В двух словах как обрабатывется входящий update и как на него отвечать обхяснить не получится,
+     * по этому , если вам выпала таска добавить новую фичу , гугл в помщь :)
      * @param update входящее обновление, содержит в себе команду, которую надо обработать,
      *               id чата из которого поступила команда и множество другой полезной информации
      * @return SendMessage с текстовым ответом на команду
@@ -62,7 +63,7 @@ public class FundamentalBotCommandHandler {
                 message = telegramBotService.repairOrderStatus(orderNumber);
                 break;
             }
-            case "Будьте в курсе событий. Наши новости": {
+            case "Наши новости": {
                 message = telegramBotService.getNews();
                 break;
             }
