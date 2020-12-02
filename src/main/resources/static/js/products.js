@@ -55,6 +55,15 @@ $(function () {
         event.preventDefault();
     });
 });
+/**
+функция добавляет дерево выбора категорий на страницу менеджера в окно загрузки товаров из файла
+ */
+$(function () {
+    fillProductCategoriesIn('#jqxTreeHere1')
+        .then(() => {
+            $('#jqxTreeHere1').jqxTree('expandAll');
+        });
+});
 
 // build hierarchical structure
 async function fillProductCategoriesIn(htmlId) {
@@ -302,32 +311,59 @@ function handleAddBtn() {
 
 /**
  * Добавление товара из файла
+ *
+ * проверяем выбрана ли категория, если да , то добавляем товары и присваиваем им выбранную категорию,
+ * если не выбрана то парсим файл в поиски категорий описанных в нём (позволяет добавлять много товаров разных категорий одним файлом)
  */
 $('#inputFileSubmit').click(importProductsFromFile)
 
 function importProductsFromFile() {
+    let selectedCatForImport = $('#jqxTreeHere1').jqxTree('getSelectedItem');
+    if (!selectedCatForImport) {
+        let fileData = new FormData();
+        fileData.append('file', $('#file')[0].files[0]);
 
-    let fileData = new FormData();
-    fileData.append('file', $('#file')[0].files[0]);
-
-    $.ajax({
-        url: '/rest/products/uploadProductsFile',
-        data: fileData,
-        processData: false,
-        contentType: false,
-        type: 'POST',
-        success: function (data) {
-            if (document.getElementById("deletedCheckbox").checked) {
-                showAndRefreshNotDeleteHomeTab()
-            } else {
+        $.ajax({
+            url: '/rest/products/uploadProductsFile/',
+            data: fileData,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (data) {
                 showAndRefreshHomeTab()
+                toastr.info('Импорт товаров завершен!', {timeOut: 5000})
+            },
+            error: function () {
+                alert("Некорретный путь к файлу!")
             }
-            toastr.info('Импорт товаров завершен!', {timeOut: 5000})
-        },
-        error: function () {
-            alert("Некорретный путь к файлу!")
+        });
+
+    } else {
+        for (let z = 0; z < listOfAll.length; z++) {
+            let currItem = listOfAll[z];
+            if (selectedCatForImport.label.localeCompare(currItem.text) === 0) {
+                currentCategoryIdAdd = currItem.id;
+            }
         }
-    });
+
+        let fileData = new FormData();
+        fileData.append('file', $('#file')[0].files[0]);
+
+        $.ajax({
+            url: '/rest/products/uploadProductsFile/' + currentCategoryIdAdd,
+            data: fileData,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (data) {
+                showAndRefreshHomeTab()
+                toastr.info('Импорт товаров завершен!', {timeOut: 5000})
+            },
+            error: function () {
+                alert("Некорретный путь к файлу!")
+            }
+        });
+    }
 }
 
 /**

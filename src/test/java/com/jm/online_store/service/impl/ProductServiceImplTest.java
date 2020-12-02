@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
@@ -15,7 +16,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,7 +43,8 @@ class ProductServiceImplTest {
     private final UserService userService = mock(UserService.class);
     private final MailSenderService mailSenderService = mock(MailSenderService.class);
     private final CommonSettingsService commonSettingsService = mock(CommonSettingsService.class);
-    private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService, mailSenderService);
+    private final CategoriesService categoriesService = mock(CategoriesService.class);
+    private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService, mailSenderService,categoriesService);
     private Product product;
     private Set<String> subscribers;
     private Map<LocalDateTime, Double> prices;

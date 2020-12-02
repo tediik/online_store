@@ -3,11 +3,13 @@ package com.jm.online_store.service.impl;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
@@ -40,7 +42,6 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -56,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
     private final UserService userService;
     private final CommonSettingsService commonSettingsService;
     private final MailSenderService mailSenderService;
+    private final CategoriesService categoriesService;
 
     /**
      * метод получения списка товаров
@@ -73,9 +75,19 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> getNotDeleteProducts() {
-        List<Product> products = findAll();
-        products.removeIf(Product::isDeleted);
-        return products;
+        return productRepository.findProductsByDelete(false);
+    }
+
+    /**
+     * метод для получения списка Product по имени категории.
+     *
+     * @param categoryName идентификатор Product
+     * @return List<Product>
+     */
+    @Override
+    public List<Product> findProductsByCategoryName(String categoryName) {
+        Categories category = categoriesService.getCategoryByCategoryName(categoryName).get();
+        return category.getProducts();
     }
 
 
@@ -153,6 +165,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * Метод получения списка всех продуктов по возрастанию рейтинга
+     *
+     * @return List<Product>
+     */
+    @Override
+    public List<Product> findAllOrderByRatingAsc() {
+        return productRepository.findAllOrderByRatingAsc();
+    }
+
+    /**
+     * Метод получения списка всех продуктов по убыванию рейтинга
+     *
+     * @return List<Product>
+     */
+    @Override
+    public List<Product> findAllOrderByRatingDesc() {
+        return productRepository.findAllOrderByRatingDesc();
+    }
+
+    /**
      * метод обновления Product.
      *
      * @param product экземпляр класса Product
@@ -160,15 +192,16 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long saveProduct(Product product) {
+        if (product.getRating() == null) {
+            product.setRating(0d);
+        }
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
     }
 
     @Override
     public void saveAllProducts(List<Product> products) {
-        for (Product product : products) {
-            saveProduct(product);
-        }
+        productRepository.saveAll(products);
     }
 
     /**
@@ -231,6 +264,7 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Метод импортирует список товаров из сохраненного XML файла
      * Записывает товары в БД
+     * парсит категории из файла
      */
     @Override
     public void importFromXMLFile(String fileName) {
@@ -255,8 +289,9 @@ public class ProductServiceImpl implements ProductService {
                     String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
                     String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
                     String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
+                    String categoryId = eElement.getElementsByTagName("categoryid").item(0).getTextContent();
                     Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
-                    saveProduct(product);
+                    categoriesService.addToProduct(product, Long.parseLong(categoryId));
                 }
             }
 
@@ -271,6 +306,52 @@ public class ProductServiceImpl implements ProductService {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Метод импортирует список товаров из сохраненного XML файла
+     * Записывает товары в БД
+     * категорию получает из окна загрузки файла в кабинете менеджера
+     */
+    @Override
+    public void importFromXMLFile(String fileName, Long categoryId) {
+
+        try {
+            // Создается построитель документа
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+            // Создается дерево DOM документа из файла
+            Document document = documentBuilder.parse("uploads/import/" + fileName);
+            document.getDocumentElement().normalize();
+
+            NodeList nList = document.getElementsByTagName("product");
+
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+
+                Node nNode = nList.item(temp);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element eElement = (Element) nNode;
+
+                    String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
+                    String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
+                    String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
+                    Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
+                    categoriesService.addToProduct(product, categoryId);
+                }
+            }
+
+        } catch (ParserConfigurationException e) {
+            log.error("Ошибка конфигурации парсера");
+            e.printStackTrace();
+        } catch (SAXException e) {
+            log.error("Ошибка XML синтаксиса");
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("Ошибка ввода/вывода");
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Метод импортирует список товаров из сохраненного CSV файла
@@ -297,14 +378,46 @@ public class ProductServiceImpl implements ProductService {
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
 
-            Iterator<Product> productIterator = csvToBean.iterator();
+            productRepository.saveAll(csvToBean);
 
-            while (productIterator.hasNext()) {
-                Product product = productIterator.next();
-                saveProduct(product);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.warn(e.toString());
+        }
+    }
+
+    /**
+     * Метод импортирует список товаров из сохраненного CSV файла
+     * Записывает товары в БД
+     * Для правильного считывания используется кастомная MappingStrategy
+     * чтобы не перегружать Products лишними аннотациями
+     *
+     * @param fileName   имя скачанного файла
+     * @param categoryId категория , полученная из окна загрузки файла в кабинете менеджера
+     */
+    public void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException {
+
+        try (
+                Reader reader = Files.newBufferedReader(Paths.get("uploads/import/" + fileName));
+        ) {
+
+            ColumnPositionMappingStrategy strategy = new ColumnPositionMappingStrategy();
+            strategy.setType(Product.class);
+            String[] memberFieldsToBindTo = {"product", "price", "amount"};
+            strategy.setColumnMapping(memberFieldsToBindTo);
+
+            CsvToBean<Product> csvToBean = new CsvToBeanBuilder(reader)
+                    .withMappingStrategy(strategy)
+                    .withSkipLines(1)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+
+            for (Product product : csvToBean) {
+                categoriesService.addToProduct(product, categoryId);
             }
         } catch (IOException e) {
             e.printStackTrace();
+            log.warn(e.toString());
         }
     }
 
