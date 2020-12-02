@@ -105,7 +105,7 @@ public class PriceListServiceImpl implements PriceListService {
         row.createCell(4).setCellValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         //придаем читабельность файлу
-        IntStream.range(0,3).forEach(i -> sheet.autoSizeColumn(i));
+        IntStream.range(0,3).forEach(sheet::autoSizeColumn);
 
         return workbook;
     }

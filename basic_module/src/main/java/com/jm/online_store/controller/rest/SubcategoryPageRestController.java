@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.util.Transliteration;
@@ -10,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Рест контроллер страницы подкатегории
@@ -43,8 +44,9 @@ public class SubcategoryPageRestController {
      *
      * @return список Categories
      */
+
     @GetMapping("/categories")
-    public ResponseEntity<ArrayNode> getAllCategories() {
-        return ResponseEntity.ok(categoriesService.getAllCategories());
+    public ResponseEntity<List<Categories>> getAllCategories() {
+        return ResponseEntity.ok(categoriesService.findAll());
     }
 }

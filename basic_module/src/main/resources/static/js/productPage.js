@@ -80,7 +80,7 @@ async function fillAboutProduct(data) {
         $("#heart").toggleClass("filled");
         $("#favoriteLabel").empty().append(`<h5 class="font-weight-normal my-2">&ensp;Удалить</h5>`)
     }
-    if(data.rating !== null) {
+    if (data.rating !== null) {
         $("#rateNumber").empty().append(`<h5>${data.rating}<h5>`)
     } else {
         $("#rateNumber").empty().append(`<h5>Товар ещё никто не оценил<h5>`)
@@ -149,7 +149,7 @@ function addToFavourite() {
  * @param rating текущий рейтинг товара
  */
 function rateInitialize(rating) {
-    if(rating !== null) {
+    if (rating !== null) {
         $("#rate").rateYo({
             onSet: function (rating) {
                 newRateForProduct(rating);
@@ -197,30 +197,41 @@ function newRateForProduct(rating) {
 /**
  * Функция добавления email в список подписанных на рассылку при изменении цены товара
  */
-function priceChangeSubscribe() {
-    let email = $("#emailInputModal").val();
-    fetch(`/api/products/subscribe`, {
-        method: 'POST',
-        body: JSON.stringify({
-            email: email,
-            id: productIdFromPath
-        }),
-        headers: {'Content-Type': 'application/json;charset=utf-8'}
-    }).then(function (response) {
-        if (response.ok) {
-            $('#dismissButton').click();
-            toastr.success("Мы уведомим вас об изменении цены на товар")
-            $("#emailInputModal").val("");
-        } else {
-            response.text().then(function (text) {
-                if (text == "incorrectEmail") {
-                    showModalError("Введён некорректный Email")
-                } else {
-                    showModalError("Вы уже подписались на изменение цены этого товара")
-                }
-            })
+function priceChangeSubscribe(auth) {
+    let isValidateMail = true;
+    let request = {
+        id: productIdFromPath
+    }
+
+    if (!auth) {
+        request = {
+            id: productIdFromPath,
+            email: $("#emailInputModal").val()
         }
-    })
+
+        let regex = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+        regex.test(request.email) ? isValidateMail = true : isValidateMail = false;
+    }
+
+    if (isValidateMail) {
+        fetch('/api/products/subscribe', {
+            method: 'POST',
+            body: JSON.stringify(request),
+            headers: {'Content-Type': 'application/json;charset=utf-8'}
+        }).then(function (response) {
+            if (response.status === 200) {
+                $('#dismissButton').click();
+                toastr.success("Мы уведомим вас об изменении цены на товар")
+                $("#emailInputModal").val("");
+            } else {
+                if (response.status === 208) {
+                    toastr.error("Вы уже подписались на изменение цены этого товара");
+                }
+            }
+        })
+    } else {
+        toastr.error("Проверьте правильность ввода Email");
+    }
 }
 
 /**
@@ -235,8 +246,10 @@ function addToProductToCart(event) {
     }).then(function (response) {
         if (response.status === 200) {
             toastr.success('Продукт добавлен в корзину', '', {timeOut: 1000})
-        } else if (response.status === 405) {
+        } else if (response.status === 404) {
             toastr.warning('Необходимо авторизоваться что бы добавить в корзину', '', {timeOut: 1000})
+        } else if (response.status === 400) {
+            toastr.warning('Данный товар закончился', '', {timeOut: 1000})
         } else {
             toastr.warning('Товар не найден', '', {timeOut: 1000})
         }

@@ -63,18 +63,17 @@ async function fillMainCategories() {
         let item = `
             <li class="nav-item dropright">
                 <a class="btn btn-outline-light dropdown-toggle text-secondary font-weight-normal dropdownbtn" 
-                    href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${data[key].category}</a>
+                    href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${key}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">`;
         let subItem = ``;
-        subItem += `<a class="dropdown-item" href="/categories/${data[key].category}">
-                            ${data[key].category}</a> `;
-
+        for (let innerKey in data[key]) {
+            subItem += `<a class="dropdown-item" href="/categories/${data[key][innerKey]}">
+                            ${innerKey}</a> `;
+        }
         item += subItem;
         $(siteMenu).append(item);
-
     }
 }
-
 /**
  * function that fills main page with products
  * @param data - products list

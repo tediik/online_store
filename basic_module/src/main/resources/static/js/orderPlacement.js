@@ -163,6 +163,7 @@ function confirmOrder() {
             if (response.ok) {
                 $('#dismissButton').click();
                 showInformation(true, "Заказ успешно оформлен!")
+                fillBasket();
             } else {
                 showInformation(false, "Не удалось оформить заказ по указанному адресу!")
             }

@@ -29,10 +29,12 @@
     <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
     <!-- Optional JavaScript -->
     <script src="../static/js/orderPlacement.js"></script>
-    <script src="../static/js/customerFavoriteGroupActions.js"></script>
     <script src="../static/js/busket.js"></script>
+    <script src="../static/js/customerFavoriteGroupActions.js"></script>
     <script src="../static/js/profilePicture.js"></script>
     <script src="../static/js/orders.js"></script>
+
+
 </head>
 <body>
 <header th:insert="/blocks/cabinetHeader :: header"></header>
@@ -51,9 +53,13 @@
                    aria-controls="profile" aria-selected="false">Профиль</a>
 
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
-                   href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false"
-                >Избранное</a>
-
+                   href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false">
+                    Избранное</a>
+              
+                <a class="btn btn-outline-primary mt-2" id="subscribe-to-products-tab" data-toggle="pill"
+                   href="#subscribe-to-products" role="tab" aria-controls="subscribe-to-products" aria-selected="false">
+                    Подписки</a>
+              
                 <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
                    role="tab" aria-controls="basketGoods" aria-selected="false"
                    onclick="fillBasket();location.href='#basket'">Корзина</a>
@@ -67,7 +73,6 @@
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
 
             </div>
-
         </div>
         <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
 
@@ -108,10 +113,10 @@
                                 Выбрать все
                             </label>
                         </span>
-                        <a id="escape" class="btn btn-outline-secondary hidden" href="#">Отмена</a>
                         <a id="clear_group" class="btn btn-outline-secondary" href="#">Очистить список</a>
                         <a id="sel_new_group" class="btn btn-outline-secondary hidden" data-toggle="modal"
                            data-target="#exampleModal" href="#">Выбрать группу</a>
+                        <a id="escape" class="btn btn-outline-secondary hidden" href="#">Отмена</a>
                     </div>
                     <!--Modal-->
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
@@ -125,7 +130,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <table class="select_group table table-condensed">
+                                    <table class="select_group table table-condensed table-borderless">
                                         <tr th:each="favouritesGroup : ${favouritesGroupList}"
                                             class="select-group-tr mt-3" th:id="${favouritesGroup.id}">
                                             <td>
@@ -136,24 +141,27 @@
                                                        th:for="${favouritesGroup.id}">
                                                     <input th:id="${favouritesGroup.id}" type="text"
                                                            th:value="${favouritesGroup.getName()}"
-                                                           class="select-group-tr-input" disabled>
+                                                           class="select-group-tr-input border-0 bg-white" disabled>
                                                 </label>
                                             </td>
-                                            <td>
+                                            <td class="text-right">
                                                 <div class="ok-cancel-edit-fav-group hidden"
                                                      th:id="${favouritesGroup.id}">
-                                                    <span class="edit-fav-group-ok done"
-                                                          th:id="${favouritesGroup.id}">V</span>
-                                                    <span class="edit-fav-group-cancel"
-                                                          th:id="${favouritesGroup.id}">X</span>
+                                                    <span class="edit-fav-group-ok done btn btn-outline-success btn-sm"
+                                                          th:id="${favouritesGroup.id}">Ok</span>
+                                                    <span class="edit-fav-group-cancel btn btn-outline-danger btn-sm"
+                                                          th:id="${favouritesGroup.id}">Cancel</span>
                                                 </div>
-                                                <button type="button" class="button-edit-fav-group btn btn-secondary"
-                                                        th:id="${favouritesGroup.id}">EDIT
-                                                </button>
-                                                <button type="button" class="button-delete-fav-group btn btn-danger"
-                                                        th:id="${favouritesGroup.id}">DELETE
-                                                </button>
-
+                                                <th:block th:if="${favouritesGroup.id} != 1">
+                                                    <button type="button"
+                                                            class="edd button-edit-fav-group btn btn-secondary btn-sm"
+                                                            th:id="${favouritesGroup.id}">EDIT
+                                                    </button>
+                                                    <button type="button"
+                                                            class="button-delete-fav-group btn btn-danger btn-sm"
+                                                            th:id="${favouritesGroup.id}">DELETE
+                                                    </button>
+                                                </th:block>
                                             </td>
                                         </tr>
                                     </table>
@@ -162,11 +170,11 @@
                                             <input type="checkbox" class="new-group-checkbox">
                                             <input type="text" class="new-group-input"
                                                    th:value="@{'Мой список '+${execInfo.now.time}}" size="40">
-                                            <span class="add-group-input-ok">V</span>
-                                            <span class="add-group-input-cancel">X</span>
+                                            <span class="add-group-input-ok btn btn-outline-success btn-sm">Ok</span>
+                                            <span class="add-group-input-cancel btn btn-outline-danger btn-sm">Cancel</span>
                                         </div>
                                         <div class="add-group-new">
-                                            Создать новый список
+                                            <a href="#">Создать новый список</a>
                                         </div>
                                     </div>
                                 </div>
@@ -200,6 +208,17 @@
                     </table>
                 </div>
                 <!-- ВКЛАДКА ИЗБРАННОЕ  -->
+
+                <!-- ВКЛАДКА ПОДПИСКА НА ИЗМЕНЕНИЕ ЦЕНЫ ТОВАРОВ -->
+                <div class="tab-pane fade" id="subscribe-to-products" role="tabpanel"
+                     aria-labelledby="subscribe-to-products-tab">
+                    <h1 class="font-weight mt-3 pb-1">Вы подписаны на изменение цен следующих товаров</h1>
+                    <div class="container-fluid">
+                        <div class="row row-cols-1 row-cols-md-3" id="trackableProduct">
+                        </div>
+                    </div>
+                </div>
+                <!-- ВКЛАДКА ПОДПИСКА НА ИЗМЕНЕНИЕ ЦЕНЫ ТОВАРОВ -->
 
                 <!-- ВКЛАДКА ПРОФИЛЯ -->
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -521,7 +540,7 @@
                     <div class="row min-vh-100">
                         <div class="col-md-9">
                             <!--                            сама корзина-->
-                            <table class="table table-striped">
+                            <table class="table table-striped" id="busketTable">
                                 <tbody id="busketList">
 
                                 </tbody>
@@ -770,11 +789,11 @@
 </div>
 <!-- Modal for order -->
 <div class="modal fade" id="orderModal" tabindex="-1"
-     role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     role="dialog" aria-labelledby="exampleModalLabelForOrder" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">заказ</h5>
+                <h5 class="modal-title" id="exampleModalLabelForOrder">заказ</h5>
                 <button type="button" class="close" data-dismiss="modal"
                         aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -810,5 +829,6 @@
 <script src="../static/js/customerProfilePageFunctions.js"></script>
 <script src="/static/js/customer-feedback-form.js"></script>
 <script src="../static/js/searchButton.js"></script>
+<script src="../static/js/customerTrackableProduct.js"></script>
 </body>
 </html>
