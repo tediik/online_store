@@ -2,6 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
+import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.SubBasketNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
@@ -87,6 +88,8 @@ public class BasketServiceImpl implements BasketService {
                 subBasket.setCount(count);
             } else {
                 subBasket.setCount(subBasket.getProduct().getAmount());
+                basketRepository.saveAndFlush(subBasket);
+                throw new ProductsNotFoundException("products run out");
             }
         } else {
             if (count > 1) {
@@ -138,19 +141,24 @@ public class BasketServiceImpl implements BasketService {
                 .findProductById(id)
                 .orElseThrow(ProductNotFoundException::new);
         List<SubBasket> userBasket = userWhoseBasketToModify.getUserBasket();
-        for (SubBasket basket : userBasket) {
-            if (basket.getProduct().getId() == id) {
-                basket.setCount(basket.getCount() + 1);
-                return;
-            }
-        }
-        SubBasket subBasket = SubBasket.builder()
-                .product(productToAdd)
-                .count(1)
-                .build();
-        basketRepository.save(subBasket);
-        userBasket.add(subBasket);
-        userService.updateUser(userWhoseBasketToModify);
+
+       if(productToAdd.getAmount() <= 0) {
+            throw new ProductsNotFoundException("В БД закончился данный продукт");
+       }else {
+           for (SubBasket basket : userBasket) {
+               if (basket.getProduct().getId() == id) {
+                   basket.setCount(basket.getCount() + 1);
+                   return;
+               }
+           }
+           SubBasket subBasket = SubBasket.builder()
+                   .product(productToAdd)
+                   .count(1)
+                   .build();
+           basketRepository.save(subBasket);
+           userBasket.add(subBasket);
+           userService.updateUser(userWhoseBasketToModify);
+       }
     }
 
     /**

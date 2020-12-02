@@ -250,6 +250,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * Метод находит кол-во определенного продукта в БД Product
+     *
+     * @param idProduct идентификатор Product
+     * @return количество данного продукта в БД Product
+     */
+    @Override
+    public int findProductAmount(Long idProduct) {
+        Product product = productRepository.getOne(idProduct);
+        return product.getAmount();
+
+    }
+
+    /**
      * метод восстановления удаленного Product.
      *
      * @param idProduct идентификатор Product

@@ -11,7 +11,7 @@ $(document).ready(function (){
 async function fillBasket() {
     let response = await fetch("/customer/basketGoods");
     let content = await response.json();
-    let basketGoodsJson = document.getElementById('basketList');
+    let basketGoodsJson = document.getElementById('busketTable');
     let countGoods = 0;
     let sumBasket = 0;
     let key;
@@ -114,6 +114,10 @@ async function updateCountBasket(id, count) {
             count: count
         }),
         headers: {"Content-Type": "application/json; charset=utf-8"}
+    }).then(function (response) {
+        if(response.status === 400) {
+            toastr.warning('Данный товар закончился', '', {timeOut: 1000})
+        }
     });
     await fillBasket();
 }

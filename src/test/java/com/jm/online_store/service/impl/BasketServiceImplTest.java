@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.SubBasketNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.SubBasket;
@@ -116,8 +117,7 @@ public class BasketServiceImplTest {
     @Test
     void updateBasket() {
         when(basketRepository.saveAndFlush(subBasket_1)).thenReturn(subBasket_1);
-        SubBasket subBasket = basketService.updateBasket(subBasket_1, 1);
-        assertEquals(subBasket.getCount(), 4);
+        assertThrows(ProductsNotFoundException.class, () -> basketService.updateBasket(subBasket_1, 1));
         verify(basketRepository, times(1)).saveAndFlush(subBasket_1);
     }
 
