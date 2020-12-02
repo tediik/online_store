@@ -4,6 +4,19 @@ let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
+document.getElementById('onBtn').addEventListener('click', handleOnBtn)
+document.getElementById('offBtn').addEventListener('click', handleOffBtn)
+
+function handleOnBtn() {
+    let urlOn = location.href + '?=maintenance_true'
+    fetch(urlOn).then(data => console.log(data))
+}
+function handleOffBtn() {
+    let urlOff = location.href + '?=maintenance_false'
+    fetch(urlOff).then(data => console.log(data))
+}
+
+
 addRolesOnNewUserForm()
 fetchUsersAndRenderTable()
 

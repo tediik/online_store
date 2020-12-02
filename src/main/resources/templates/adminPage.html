@@ -28,6 +28,10 @@
                         <a class="nav-link" data-toggle="tab" href="#Profile"> Настройки профиля </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#Maintenance"> Maintenance mode </a>
+                    </li>
+
                 </ul>
             </div>
             <!--навигация слева-->
@@ -65,16 +69,16 @@
                                 <nav>
                                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                         <!-- USER TABLE-->
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
+                                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
                                            href="#nav-home"
                                            role="tab" aria-controls="nav-home" aria-selected="true">User Table</a>
                                         <!-- USER TABLE-->
 
-                        <!-- ADD USER -->
-                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
+                                        <!-- ADD USER -->
+                                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
                                            href="#nav-profile"
                                            role="tab" aria-controls="nav-profile" aria-selected="false">Add User</a>
-                        <!-- ADD USER  -->
+                                        <!-- ADD USER  -->
 
                                         <!--                select                -->
                                         <div class="form-group">
@@ -145,6 +149,15 @@
                         <div th:insert="/blocks/profileAdminManagerService :: profile"></div>
                     </div>
                     <!--Профиль-->
+
+                    <!--Maintenance-->
+                    <div class="tab-pane" id="Maintenance" role="tabpanel">
+                        <div>
+                            <button type="button" class="btn btn-success" id="onBtn">TurnOn</button>
+                            <button type="submit" class="btn btn-danger" id="offBtn">TurnOff</button>
+                        </div>
+                    </div>
+                    <!--Maintenance-->
 
                 </div>
             </div>
