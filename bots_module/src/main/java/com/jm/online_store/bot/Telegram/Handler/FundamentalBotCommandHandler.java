@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
@@ -31,91 +30,53 @@ public class FundamentalBotCommandHandler {
      * @return SendMessage с текстовым ответом на команду
      */
     public BotApiMethod<?> handleCommand(Update update) {
-        String command = update.getMessage().getText();
-        //String message;
-        String orderNumber = "";
+
+        String command;
+        CallbackQuery callbackQuery;
 
         if (update.hasCallbackQuery()) {
-            CallbackQuery callbackQuery = update.getCallbackQuery();
-            log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
-                    callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
-            return processCallbackQuery(callbackQuery);
+            callbackQuery = update.getCallbackQuery();
+            command = callbackQuery.getData();
+        } else {
+            command = update.getMessage().getText();
         }
 
-        Message message = update.getMessage();
-        if (message != null && message.getText().startsWith("Y") || message.getText().startsWith("N")) {
-            log.info(" order number:{}", message.getText());
-            telegramBotService.repairOrderStatus(message.getText());
+        String message;
+        String orderNumber = "";
+
+        if (command.startsWith("Y") || command.startsWith("N")) {
+            orderNumber = command;
+            command = "Проверяем статус вашего заказа";
         }
-        return mainMenuService.getMainMenuMessage(message.getChatId(), "Готов к работе ");
 
-//        if (command.contains("/checkrepair")) {
-//            LinkedList<String> s = new LinkedList<>(Arrays.asList(update.getMessage().getText().split(" ")));
-//            orderNumber = s.getLast();
-//            command = "/checkrepair";
-//        } else if (command.contains("/getNews")) {
-//
-//            command = "/getNews";
-//        }
-//
-//        switch (command) {
-//            case "/start": {
-//                message = telegramBotService.getHelloMessage();
-//                break;
-//            }
-//            case "/getstocks": {
-//                message = telegramBotService.getActualStocks();
-//                break;
-//            }
-//            case "/checkrepair": {
-//                message = telegramBotService.repairOrderStatus(orderNumber);
-//                break;
-//            }
-//            case "/getNews": {
-//                message = telegramBotService.getNews();
-//                break;
-//            }
-//
-//            default: {
-//                message = telegramBotService.getDefaultMessage();
-//                break;
-//            }
-//        }
-//
-//        return SendMessage.builder()
-//                .chatId(update.getMessage().getChatId().toString())
-//                .text(message)
-//                .build();
-    }
-
-//    private SendMessage handleInputMessage(Message message) {
-//        SendMessage replyMessage;
-//        long chatId = message.getChatId();
-//        String inputMessageFromTelegram = message.getText();
-//
-//        switch (inputMessageFromTelegram) {
-//           case
-//        }
-//
-//
-//    }
-
-    private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
-
-        Long chatId = buttonQuery.getMessage().getChatId();
-        BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Здравствуйте \uFE0F" +
-                "\nВоспользуйтесь главным меню.");
-
-        if (buttonQuery.getData().equals("Узнать о наших акциях")) {
-            callBackAnswer = new SendMessage(chatId.toString(), telegramBotService.getActualStocks());
-        } else if (buttonQuery.getData().equals("Будьте в курсе событий. Наши новости")) {
-            callBackAnswer = new SendMessage(chatId.toString(), telegramBotService.getNews());
-        } else if (buttonQuery.getData().equals("Перезапустить бота \u1F4a")) {
-            callBackAnswer = new SendMessage(chatId.toString(), telegramBotService.getHelloMessage());
-        } else if (buttonQuery.getData().equals("Узнать статус вашей заявки на ремонт")) {
-            callBackAnswer = new SendMessage(chatId.toString(), telegramBotService.askingOrderNumber());
+        switch (command) {
+            case "Узнать о наших акциях": {
+                message = telegramBotService.getActualStocks();
+                break;
+            }
+            case "Узнать статус вашей заявки на ремонт": {
+                message = telegramBotService.askingOrderNumber();
+                break;
+            }
+            case "Проверяем статус вашего заказа": {
+                message = telegramBotService.repairOrderStatus(orderNumber);
+                break;
+            }
+            case "Будьте в курсе событий. Наши новости": {
+                message = telegramBotService.getNews();
+                break;
+            }
+            case "Перезапустить бота":
+            default: {
+                message = telegramBotService.getHelloMessage();
+                break;
+            }
         }
-        return callBackAnswer;
+
+        return SendMessage.builder().replyMarkup(mainMenuService.getMainMenuKeyboard())
+                .chatId(update.getMessage().getChatId().toString())
+                .text(message)
+                .build();
     }
 
 

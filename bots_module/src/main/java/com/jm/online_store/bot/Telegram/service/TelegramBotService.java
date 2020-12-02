@@ -8,7 +8,6 @@ public interface TelegramBotService {
     /**
      * Gets some quantity of news.
      *
-     *
      * @return the some quantity of news
      */
     String getNews();
@@ -28,6 +27,11 @@ public interface TelegramBotService {
      */
     String repairOrderStatus(String orderNumber);
 
+    /**
+     * Asking order number string.
+     *
+     * @return the string
+     */
     String askingOrderNumber();
 
     /**
@@ -36,13 +40,5 @@ public interface TelegramBotService {
      * @return the hello message
      */
     String getHelloMessage();
-
-    /**
-     * Gets default message.
-     *
-     * @return the default message
-     */
-    String getDefaultMessage();
-
 
 }

@@ -63,7 +63,8 @@ public class TelegramBotServiceImpl implements TelegramBotService {
 
     @Override
     public String askingOrderNumber() {
-        return "Введите пожалуйста номер своего заказа";
+        return "Введите пожалуйста номер заявки на ремонт." +
+                "\nОна начинается с N . . .(семь цифр) или Y . . . (семь цифр)";
     }
 
     @Override
@@ -83,16 +84,9 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                 "\nЯ бот магазина online_store: " + url +
                 "\nЯ умею рассказывать об акциях проходящих в нашем магазине, " +
                 "могу узнать о статусе вашего заказа на ремонт," +
-                "\nсообщать вам новости нашего магазина ." +
-                "\nВведите /help, чтобы узнать, что я умею";
+                "\nсообщать вам новости нашего магазина ." ;
     }
 
-
-    @Override
-    public String getDefaultMessage() {
-        return "\uD83E\uDD37" +
-                "\nВведите /help, чтобы узнать, что я умею";
-    }
 
     public String transformRepairOrderStatus(RepairOrderType orderStatus) {
         switch (orderStatus) {

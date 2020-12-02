@@ -58,9 +58,9 @@ price-list-service:
 
 spring.profiles.include: 'security'
 
- #ToDo переделать инстркцию
+#ToDo переделать инстркцию
 # Смотри инструкцию https://trello.com/c/8akD9MhL
 telegram-bot:
   name: JM_store_bot
   token: 1432791063:AAH1j664T9RnRPhS7elFAfvFcA5enPunWeE
-  webhook-path: https://e14f963960a5.ngrok.io/telegram-bot
+  webhook-path: https://ad7f6a7f7482.ngrok.io/telegram-bot
