@@ -241,25 +241,27 @@ public class UserServiceImpl implements UserService {
                 "Здравствуйте, %s! \n" +
                         "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке: " +
                         urlActivate + address + "/activatenewmail/%s",
-                user.getEmail(),
+                user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
-        mailSenderService.send(user.getEmail(), "Activation code", message, "email address validation");
+        mailSenderService.send(newMail, "Activation code", message, "email address validation");
         user.setEmail(newMail);
+        userRepository.save(user);
     }
 
     @Transactional
-    public void changeUsersPass(User user, String newMail) {
-        user.setEmail(newMail);
+    public void changeUsersPass(User user, String newPassword) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
                 "Привет, %s! \n Ваш пароль изменен ",
-                user.getEmail(),
+                user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
         mailSenderService.send(user.getEmail(), "Пароль успешно изменен", message, "pass change");
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     /**
