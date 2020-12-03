@@ -52,7 +52,7 @@ public class News {
     @Column(name = "archived")
     private boolean archived;
 
-    @OneToMany(mappedBy = "news", orphanRemoval = true)
+    @OneToMany(mappedBy = "news"/*, orphanRemoval = true*/)
     @JsonManagedReference(value = "news-sharedNews")
     private Set<SharedNews> sharedNews;
 
