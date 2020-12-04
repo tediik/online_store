@@ -107,13 +107,7 @@ $(document).ready(function () {
             commentId = commentId.replace(/\D/g, '');
             //Добавил проверку, анонимный пользователи или нет
             //От этого, показываем разные формы
-            if ($("#noname").length) {
-                var commentNone = $(`
-                                <div class="well">
-                                    <h5 style="color: blue">Авторизуйтесь или зарегистрируйтесь, чтобы ответить на комментарий</h5>
-                                </div>`)
-                $('#commentBoxSpace' + commentId).html(commentNone);
-            } else {
+            if ($("#sayYesComment").length) {
                 var commentBox = $(`
                                 <div class="well">
                                     <h4>Leave a Comment:</h4>
@@ -123,6 +117,12 @@ $(document).ready(function () {
                                      <button type="button" id='submitReplyBtn' class="btn btn-primary">Submit</button>
                                 </div>`)
                 $('#commentBoxSpace' + commentId).html(commentBox);
+            } else {
+                var commentNone = $(`
+                                <div class="well">
+                                    <h5 style="color: blue">Авторизуйтесь или зарегистрируйтесь, чтобы ответить на комментарий</h5>
+                                </div>`)
+                $('#commentBoxSpace' + commentId).html(commentNone);
             }
             $('#submitReplyBtn').on('click', function (event) {
                 let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));

@@ -103,17 +103,25 @@ $(document).ready(function () {
         let reviewId = $(this).attr("id");
 
         reviewId = reviewId.replace(/\D/g, '');
-        let commentBox = $(`
-                            <div class="well">
+        //Добавил проверку, анонимный пользователи или нет
+        //От этого, показываем разные формы
+        if ($("#sayYesReview").length) {
+            let commentBox = $(`
+                             <div class="well">
                                 <h4>Leave a Comment:</h4>
                                     <div class="form-group">
                                         <textarea class="form-control" id="commentReviewText" rows="3"></textarea>
                                     </div>
                                  <button type="button" id='submitCommentReviewBtn' class="btn btn-primary">Submit</button>
                             </div>`);
-
-        $('#commentReviewBoxSpace' + reviewId).html(commentBox);
-
+            $('#commentReviewBoxSpace' + reviewId).html(commentBox);
+        } else {
+            var commentNone = $(`
+                                <div class="well">
+                                    <h5 style="color: blue">Авторизуйтесь или зарегистрируйтесь, чтобы ответить на отзыв</h5>
+                                </div>`)
+            $('#commentReviewBoxSpace' + reviewId).html(commentNone);
+        }
         $('#submitCommentReviewBtn').on('click', function (event) {
             if ($("#commentReviewText").val().trim().length < 1) {
                 toastr.error("введите текст...");
