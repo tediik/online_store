@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+
+//todo тоже не совсем понятно зачем этот класс . . . разобраться
 public class LoginListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
     private final UserService userService;
