@@ -31,14 +31,13 @@ function checkBoxCanceledListener() {
  * @returns Заказ на ремонт
  */
 function formOrder() {
-    let order = {
+    return {
         fullNameClient: document.getElementById('fullNameClient').value,
         telephoneNumber: document.getElementById('telephoneNumber').value,
         nameDevice: document.getElementById('nameDevice').value,
         guarantee: document.getElementById('guaranteeCheckbox').checked,
         fullTextProblem: document.getElementById('fullTextProblem').value
-    }
-    return order;
+    };
 }
 
 /**
@@ -59,7 +58,7 @@ function addRepairOrder() {
                 toastr.success("Заявка успешно добавлена.");
                 response.json()
                     .then(addedOrder => getWorkOrder(addedOrder));
-                $('#fullTextProblem').summernote('code', '')
+                document.getElementById('fullTextProblem').value()
                 document.getElementById('fullNameClient').value = ''
                 document.getElementById('telephoneNumber').value = ''
                 document.getElementById('nameDevice').value = ''
@@ -279,7 +278,7 @@ function openEditModalWindow(repairOrderId) {
                     $('#fullNameClientUpdate').val(repairOrder.fullNameClient);
                     $('#telephoneNumberUpdate').val(repairOrder.telephoneNumber);
                     $('#nameDeviceUpdate').val(repairOrder.nameDevice);
-                    $('#fullTextProblemUpdate').summernote('code', repairOrder.fullTextProblem);
+                    $('#fullTextProblemUpdate').val(repairOrder.fullTextProblem);
                     $("#postingDateUpdate").val(moment(repairOrder.acceptanceDate).format("yyyy-MM-DD"));
                     $('#guaranteeCheckboxUpdate').prop('checked', repairOrder.guarantee);
                     $('#statusRepairOrderSelect').val(repairOrder.repairOrderType);

@@ -5,7 +5,7 @@ document.getElementById('checkStatusRepairOrder').addEventListener("click", getR
  * Функция для проверки текущей информации по своему заказу на ремонт и отрисовки тела ответа
  */
 function getRepairOrder() {
-    let id = document.getElementById('idCheck').value;
+    let orderNumber = document.getElementById('orderNumberCheck').value;
     let telephoneNumber = document.getElementById('telCheck').value;
     fetch('/api/checkStatus', {
         method: 'POST',
@@ -14,7 +14,7 @@ function getRepairOrder() {
             'Content-type': 'application/json; charset=UTF-8'
         },
         body: JSON.stringify({
-            id: id,
+            orderNumber: orderNumber,
             telephoneNumber: telephoneNumber
         })
     }).then(function (res) {
@@ -24,7 +24,7 @@ function getRepairOrder() {
                         <table class="table table-bordered">
                             <tr>
                                 <td>Номер заказа</td>
-                                <td>${repairOrder.id}</td>
+                                <td>${repairOrder.orderNumber}</td>
                             </tr>
 
                             <tr>
