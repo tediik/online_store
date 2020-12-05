@@ -1,6 +1,8 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
@@ -28,6 +30,8 @@ import java.util.List;
 public class AdminRestController {
 
     private final UserService userService;
+
+    private final FavouritesGroupService favouritesGroupService;
 
     /**
      * Rest mapping to  receive authenticated user. from admin page
@@ -144,6 +148,15 @@ public class AdminRestController {
             return new ResponseEntity("emptyRolesError", HttpStatus.BAD_REQUEST);
         }
         userService.addNewUserFromAdmin(newUser);
+        User customer = userService.findByEmail(newUser.getEmail()).get();
+        userService.updateUser(customer);
+
+        FavouritesGroup favouritesGroup = new FavouritesGroup();
+        favouritesGroup.setName("Все товары");
+
+        favouritesGroup.setUser(customer);
+        favouritesGroupService.save(favouritesGroup);
+        userService.updateUser(customer);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
