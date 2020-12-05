@@ -211,9 +211,10 @@
                                                value="Post Comment"/>
                                     </div>
                                 </form>
+                                <div id="sayYesComment" hidden="true"></div>
                             </div>
                             <div sec:authorize="isAnonymous()">
-                                <h3 style="color: blue">Log in or register to add comments</h3>
+                                <h3 style="color: blue">Авторизуйтесь или зарегистрируйтесь, чтобы добавить комментарий</h3>
                                 <br>
                             </div>
                         </div>
@@ -238,6 +239,7 @@
                                                value="Оставить отзыв"/>
                                     </div>
                                 </form>
+                                <div id="sayYesReview" hidden="true"></div>
                             </div>
                             <div sec:authorize="isAnonymous()">
                                 <h3 style="color: blue">Авторизуйтесь или зарегистрируйтесь, чтобы добавить отзыв</h3>
