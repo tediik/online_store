@@ -43,7 +43,7 @@ public class SharedNews {
     @JsonBackReference(value = "user-sharedNews")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "news_id", nullable = false)
     @JsonBackReference(value = "news-sharedNews")
     private News news;
