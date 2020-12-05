@@ -16,6 +16,8 @@ public interface RepairOrderRepository extends JpaRepository<RepairOrder, Long> 
 
     Optional<RepairOrder> findByIdAndTelephoneNumber(Long id, @NonNull String telephoneNumber);
 
+    Optional<RepairOrder> findByOrderNumberAndTelephoneNumber(String orderNumber, @NonNull String telephoneNumber);
+
     boolean existsByOrderNumber(String orderNumber);
 
     RepairOrder findByOrderNumber(String orderNumber);
