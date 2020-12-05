@@ -6,18 +6,18 @@ import com.jm.online_store.config.security.vk.VkApiClient;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 @AllArgsConstructor
 @Controller
 @RequestMapping("/")
-public class LoginController {
+public class Oauth2LoginController {
 
     private final OAuth2Odnoklassniki oAuth2Odnoklassniki;
     private final TwitterAuth twitterAuth;
