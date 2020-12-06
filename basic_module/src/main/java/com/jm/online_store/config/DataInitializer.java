@@ -3,6 +3,7 @@ package com.jm.online_store.config;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Customer;
@@ -11,6 +12,7 @@ import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.ProductCharacteristic;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SentStock;
@@ -25,11 +27,13 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.ReviewService;
@@ -58,6 +62,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * класс первичного заполнения таблиц.
@@ -91,6 +96,8 @@ public class DataInitializer {
     private final TopicsCategoryService topicsCategoryService;
     private final ReviewService reviewService;
     private final SharedNewsService sharedNewsService;
+    private final CharacteristicService characteristicService;
+    private final ProductCharacteristicService productCharacteristicService;
 
 
     /**
@@ -115,6 +122,7 @@ public class DataInitializer {
         feedbackTopicsInit();
         commentsInit();
         reviewsInit();
+        characteristicsInit();
     }
 
     /**
@@ -1322,5 +1330,41 @@ public class DataInitializer {
         reviewService.addReviewInit(review1);
         reviewService.addReviewInit(review2);
         reviewService.addReviewInit(review3);
+    }
+
+    public void characteristicsInit() {
+        List<Characteristic> characteristicList = new ArrayList<>();
+
+        characteristicList.add(new Characteristic("Диагональ экрана"));
+        characteristicList.add(new Characteristic("Разрешение экрана"));
+        characteristicList.add(new Characteristic("Модель процессора"));
+        characteristicList.add(new Characteristic("Год выпуска"));
+        characteristicList.add(new Characteristic("Объем оперативной памяти"));
+        characteristicList.add(new Characteristic("Объем встроенной памяти"));
+        characteristicList.add(new Characteristic("Количество камер"));
+        characteristicList.add(new Characteristic("NFC"));
+        characteristicList.add(new Characteristic("GPS"));
+        characteristicList.add(new Characteristic("Емкость аккумулятора"));
+        characteristicList.add(new Characteristic("Вес"));
+
+        List<Long> charactersticIds = new ArrayList<>();
+        for (Characteristic characteristic : characteristicList) {
+            charactersticIds.add(characteristicService.addCharacteristic(characteristic));
+        }
+
+        long productId = productService.findProductByName("XIAOMI-Mi10").get().getId();
+
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(0), "6.67");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(1), "2340x1080");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(2), "Qualcomm Snapdragon 865");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(3), "2020");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(4), "8");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(5), "256");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(6), "4");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(7), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(8), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(9), "4780");
+        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(10), "208");
+
     }
 }
