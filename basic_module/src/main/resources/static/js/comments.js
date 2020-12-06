@@ -55,7 +55,6 @@ $(document).ready(function () {
         $('#commentForm').on('submit', function (event) {
             event.preventDefault();
             if ($("#commentForm").find('input:text').val().trim().length < 1) {
-                alert("Please Enter Text...");
                 return;
             } else {
 
@@ -128,7 +127,6 @@ $(document).ready(function () {
                 let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
 
                 if ($("#replyText").val().trim().length < 1) {
-                    alert("Please Enter Text...");
                     return;
                 } else {
 
