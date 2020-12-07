@@ -240,13 +240,13 @@ public class UserServiceImpl implements UserService {
         String message = String.format(
                 "Здравствуйте, %s! \n" +
                         "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке: " +
-                        urlActivate + address + "/activatenewmail/%s",
+                        urlActivate +  "/activatenewmail/%s",
                 user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
+
         mailSenderService.send(newMail, "Activation code", message, "email address validation");
         user.setEmail(newMail);
-        userRepository.save(user);
     }
 
     @Transactional
@@ -303,7 +303,9 @@ public class UserServiceImpl implements UserService {
     /**
      * Method receives token and request after User confirms mail change via link
      * After that, new email address is saved to users DB table
+     *
      */
+    //TODO: доработать метод
     @Override
     @Transactional
     public boolean activateNewUsersMail(String token, HttpServletRequest request) {
@@ -313,7 +315,8 @@ public class UserServiceImpl implements UserService {
         }
         User user = userRepository.findById(confirmationToken.getUserId()).get();
         user.setEmail(confirmationToken.getUserEmail());
-        userRepository.saveAndFlush(user);
+        System.out.println(user.getEmail());
+        userRepository.save(user);
         return true;
     }
 

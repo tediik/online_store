@@ -46,4 +46,12 @@ public class MainPageController {
         return "redirect:/customer";
     }
 
+    @GetMapping("/activatenewmail/{token}")
+    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
+        userService.activateNewUsersMail(token, request);
+        User user = userService.getUserByToken(token);
+        model.addAttribute("message", "User email address confirmed successfully");
+        model.addAttribute("user", user);
+        return "redirect:/customer";
+    }
 }
