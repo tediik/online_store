@@ -18,6 +18,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+/**
+ * Класс выводящий в лог информацию об авторизации .
+ */
 public class LoginListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
     private final UserService userService;
@@ -25,7 +28,7 @@ public class LoginListener implements ApplicationListener<InteractiveAuthenticat
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.debug("Current authentication is " + authentication);
+        log.debug("Current authentication of user" + authentication.getName() + " is");
 
         //Checking if Authentication coming from OAuth
         if (authentication.getClass().isAssignableFrom(OAuth2AuthenticationToken.class)) {

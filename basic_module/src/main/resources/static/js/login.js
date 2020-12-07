@@ -13,7 +13,7 @@ myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 /**
  * Прослушиватель событий для кнопки "Sing in"
  */
-document.getElementById('checkUserStatus').addEventListener('click', checkUserStatus)
+// document.getElementById('checkUserStatus').addEventListener('click', checkUserStatus)
 
 /**
  * Функция, которая обрабатывает кнопку "Sing in" перед входом на странице логина

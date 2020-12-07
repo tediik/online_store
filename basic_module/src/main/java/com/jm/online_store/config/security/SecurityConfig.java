@@ -1,5 +1,6 @@
 package com.jm.online_store.config.security;
 
+import com.jm.online_store.config.handler.LoginFailureHandler;
 import com.jm.online_store.config.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final LoginSuccessHandler successHandler;
     private final MyUserDetailsService myUserDetailsService;
+    private final LoginFailureHandler loginFailureHandler;
+
 
     @Autowired
     @Setter
@@ -49,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login")// указываем action с формы логина
                 .usernameParameter("login_username") // Указываем параметры логина и пароля с формы логина
                 .passwordParameter("login_password")
+                .failureHandler(loginFailureHandler)
                 .permitAll(); // даем доступ к форме логина всем
 
         http.logout().permitAll() // разрешаем делать логаут всем

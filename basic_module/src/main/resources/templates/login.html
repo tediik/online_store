@@ -36,7 +36,7 @@
             <div class="row justify-content-center align-items-center">
                 <div class="col-sm-4 col-sm-offset-6">
                     <h2 class="form-signin-heading">Please sign in</h2>
-                    <form id="formLogin" th:action="@{/login}" method="post" class="form-group">
+                    <form id="formLogin"  method="post" class="form-group">
                         <input type="email" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
                                class="form-control">
 
@@ -48,10 +48,13 @@
                                 Remember me
                             </label>
                         </div>
+                        <!-- alert for login failure-->
+                        <div class="alert alert-danger" th:if="${param.loginError}" role="alert" >
+                            <strong>Ошибка авторизации!</strong> Проверьте правильность ввода данных.
+                        </div>
+                        <!-- alert for login failure-->
+                        <button id="checkUserStatus" class="btn btn-primary btn-sm btn-block">Sign In</button>
                     </form>
-
-                    <button id="checkUserStatus" class="btn btn-primary btn-sm btn-block">Sign In</button>
-                    <br>
 
                     <!--facebook-->
                     <div>
