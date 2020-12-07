@@ -7,10 +7,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <!-- Подключаем CSS summernote bs-4 -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-    <!--summernote CSS-->
-    <link href="/static/css/summernote.css" rel="stylesheet">
     <!--toastr CSS-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
     <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
@@ -94,7 +90,7 @@
                                     <br>
                                     <div class="form-group">
                                         <label for="fullTextProblemUpdate">Описание проблемы</label>
-                                        <textarea id="fullTextProblemUpdate" name="fullTextUpdate"
+                                        <textarea type="text" id="fullTextProblemUpdate" name="fullTextUpdate"
                                                   placeholder="Введите описание проблемы"
                                                   class="form-control" required></textarea>
                                     </div>
@@ -305,7 +301,7 @@
                                         <br>
                                         <div class="form-group">
                                             <label for="fullTextProblem">Описание проблемы</label>
-                                            <textarea class="form-control" id="fullTextProblem" name="fullText"
+                                            <textarea type="text" class="form-control" id="fullTextProblem" name="fullText"
                                                       placeholder="Введите полный текст" required></textarea>
                                         </div>
                                         <br>
@@ -343,12 +339,6 @@
 
 <!--moment-->
 <script src="/static/js/moment.js"></script>
-<!-- Подключаем библиотеку summernote bs-4 -->
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-<!--summernote-->
-<script src="/static/js/summernote.js"></script>
-<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
-<script src="/static/js/textRedactor.js"></script>
 <!--toastr-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <!--main script-->
