@@ -1,5 +1,6 @@
 package com.jm.online_store.config.security;
 
+import com.jm.online_store.config.filters.MaintenanceFilter;
 import com.jm.online_store.config.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import javax.servlet.annotation.WebFilter;
 
 
 @Configuration

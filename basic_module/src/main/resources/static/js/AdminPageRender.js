@@ -4,28 +4,19 @@ let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
-document.getElementById('onBtn').addEventListener('click', handleOnBtn)
-document.getElementById('offBtn').addEventListener('click', handleOffBtn)
-
-function handleOnBtn() {
-    let urlOn = location.href + '?=maintenance_true'
-    fetch(urlOn).then(data => console.log(data))
-}
-function handleOffBtn() {
-    let urlOff = location.href + '?=maintenance_false'
-    fetch(urlOff).then(data => console.log(data))
-}
-
+/*Слушатель для кнопки Подтвердить в Режиме техобслуживания*/
+document.getElementById('maintenanceBtn').addEventListener('click', handleMaintenanceBtn)
 
 addRolesOnNewUserForm()
+addRolesOnMaintenanceMode()
 fetchUsersAndRenderTable()
 
 /**
  * Обработка события с выбором роли для фильтрации списка зарегистрированных пользователей по роли
  */
-$('#filterRole').on("change", function() {
+$('#filterRole').on("change", function () {
     var roleSelect = $('#filterRole').val();
-    if(roleSelect !== 'default') {
+    if (roleSelect !== 'default') {
         $.ajax({
             type: 'PUT',
             url: '/api/admin/' + roleSelect,
@@ -33,8 +24,7 @@ $('#filterRole').on("change", function() {
                 renderUsersTable(filteredUsers)
             }
         });
-    }
-    else{
+    } else {
         showAndRefreshHomeTab()
     }
 });
@@ -58,6 +48,7 @@ function renderRolesSelectOnNewUserForm(allRoles) {
         selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
     })
 }
+
 /**
  * Функция рендера модального окна Edit user
  * @param user пользователь из таблицы
@@ -108,6 +99,7 @@ function deleteModalWindowRender(userToDelete) {
         $('#rolesSelectModal').append(`<option disabled>${role.name}</option>>`)
     })
 }
+
 /**
  * Функция обраотки нажатия кнопки Edit в таблице пользователей
  * @param event
@@ -151,7 +143,7 @@ function showAndRefreshHomeTab() {
  * Функция для очистки всех полей с формы
  * @param fieldIdForm - принимает id формы
  */
-function clearFieldsForm(fieldIdForm){
+function clearFieldsForm(fieldIdForm) {
     document.getElementById(fieldIdForm).reset();
 }
 
@@ -283,8 +275,8 @@ function handleAcceptButtonFromModalWindow(event) {
             method: 'PUT',
             headers: headers,
             body: JSON.stringify(user)
-        }).then(function (response){
-            if (response.ok){
+        }).then(function (response) {
+            if (response.ok) {
                 fetchUsersAndRenderTable()
                 $('#userModalWindow').modal('hide')
             } else {
@@ -402,4 +394,52 @@ function fetchUsersAndRenderTable() {
             'Content-type': 'application/json; charset=UTF-8'
         }
     }).then(response => response.json()).then(users => renderUsersTable(users))
+}
+
+/**
+ * fetch запрос на roleRestUrl для получения всех ролей из бд
+ * и добавления их на страницу Режим Техобслуживания
+ */
+function addRolesOnMaintenanceMode() {
+    fetch(roleRestUrl, {headers: headers}).then(response => response.json())
+        .then(allRoles => renderRolesSelectOnMaintenanceMode(allRoles))
+}
+
+/**
+ * рендерит <Select> c выбором ролей на странице Режим техобслуживания
+ * @param allRoles - принимается список всех ролей
+ */
+function renderRolesSelectOnMaintenanceMode(allRoles) {
+    let selectRoles = $('#rolesMode').empty()
+    $.each(allRoles, function (i, role) {
+        selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
+    })
+    const select = document.querySelector('#rolesMode').getElementsByTagName('option');
+    for (let i = 0; i < select.length; i++) {
+        if (select[i].value === '1') {
+            select[i].defaultSelected = true
+        }
+    }
+}
+
+/**
+ * функция обработки нажатия кнопки Подтвердить на странице Режим техобслуживания
+ * функция делает fetch запрос с данным для фильтрации в MaintenanceFilter.java, затем выводит
+ * toast, если техобслуживание включено и скрывыет, если выключено
+ * @param event
+ */
+function handleMaintenanceBtn(event) {
+    event.preventDefault();
+    let urlOn = '/admin?maintenance=' + $('#maintenance-mode').val() + '&rolesMode=' + getSelectValues(document.getElementById("rolesMode"))
+    let text = $('#maintenance-mode').val();
+    fetch(urlOn, {
+        method: 'GET',
+        headers: {'Content-type': 'text/html; charset=UTF-8'},
+    }).then()
+    if (text === '1') {
+        $('.toast').toast('show')
+    }
+    if (text === '0') {
+        $('.toast').toast('hide')
+    }
 }
