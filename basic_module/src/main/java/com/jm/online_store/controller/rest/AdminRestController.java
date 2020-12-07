@@ -149,7 +149,6 @@ public class AdminRestController {
         }
         userService.addNewUserFromAdmin(newUser);
         User customer = userService.findByEmail(newUser.getEmail()).get();
-        userService.updateUser(customer);
 
         FavouritesGroup favouritesGroup = new FavouritesGroup();
         favouritesGroup.setName("Все товары");
