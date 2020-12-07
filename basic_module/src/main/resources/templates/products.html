@@ -86,19 +86,24 @@
             <a th:href="@{/manager}" class="btn btn-primary ml-auto">Кабинет менеджера</a>
             <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
         </nav>
-        <div class="card" >
+        <div class="card">
             <h5 class="card-header">Товары</h5>
             <div id="alert-div"></div>
-            <div class="card-body" >
+            <div class="card-body">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Products Table</a>
-                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
-                        <a class="nav-item nav-link" id="nav-products-categories-tab" data-toggle="tab" href="#nav-products-categories" role="tab" aria-controls="nav-products-categories" aria-selected="false">Категории товаров</a>
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                           role="tab" aria-controls="nav-home" aria-selected="true">Products Table</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                           role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
+                        <a class="nav-item nav-link" id="nav-products-categories-tab" data-toggle="tab"
+                           href="#nav-products-categories" role="tab" aria-controls="nav-products-categories"
+                           aria-selected="false">Категории товаров</a>
                         <form class="checkbox">
                             <!-- for keeping checkbox checked when page loads use checked="checked" --->
                             <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
-                            <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);" checked="checked">
+                            <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);"
+                                   checked="checked">
                             <br>
                         </form>
                     </div>
@@ -121,11 +126,12 @@
                             </div>
                             <div class="modal-body">
                                 <div class="container-fluid col-sm-12">
-                                    <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
+                                    <form id="productImportModal" name="productImportModal"
+                                          enctype="multipart/form-data" method="post">
                                         <label for="file">Выберите файл:</label>
                                         <input id="file" type="file" name="file">
-                                        <br />
-                                        <br />
+                                        <br/>
+                                        <br/>
                                     </form>
                                 </div>
                             </div>
@@ -147,69 +153,157 @@
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <!--                main tab -->
-                        <table class="table table-active table-striped" id="products-table" style="background-color: white">
+                        <table class="table table-active table-striped" id="products-table"
+                               style="background-color: white">
 
                         </table>
                     </div>
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <!--                Secondary user addition form-->
-                        <h3>Добавить товар</h3>
-                        <form id="addForm">
-                            <div class="panel panel-default" id="new-user-form">
-                                <div class="panel-body">
-                                    <div id="add-productName-form-group" class="form-group">
-                                        <label for="addProduct">Наименование:</label>
-                                        <input type="email" id="addProduct" name="product" placeholder="Наименование" class="form-control">
-                                    </div>
-                                    <div class="form-group addPriceDiv">
-                                        <label for="addPrice">Цена:</label>
-                                        <input type="number" id="addPrice" name="price" placeholder="Цена" class="form-control">
-                                    </div>
-                                    <div id="add-email-form-group" class="form-group">
-                                        <label for="addAmount">Количество:</label>
-                                        <input type="number" id="addAmount" name="amount" placeholder="Количество" class="form-control">
-                                    </div>
-                                    <div class="input-group mb-4">
-                                        <input type="text" class="form-control" placeholder="Поиск по категориям" id="searchForCategories">
-                                    </div>
-                                    <div id="jqxTreeHere"></div>
-                                    <div class="mt-4">
-                                        <button id="addBtn" type="button" class=" btn btn-outline-success btn-md btn">Добавить новый товар</button>
-                                        <button type="button" class="btn btn-outline-primary" data-toggle='modal'
-                                                data-target='#newProductImportModal'>Загрузить товары из файла</button>
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab1" role="tablist">
+                                <a class="nav-item nav-link active" id="navAddProduct-tab" data-toggle="tab"
+                                   href="#navAddProduct" role="tab" aria-controls="nav-profile" aria-selected="true">Добавить
+                                    товар</a>
+                                <a class="nav-item nav-link" id="navCharacteristicAdd-tab" data-toggle="tab"
+                                   href="#navCharacteristicAdd" role="tab" aria-controls="nav-profile"
+                                   aria-selected="false">Задать характеристики</a>
+                            </div>
+                        </nav>
+                        <div class="tab-pane fade show active" id="navAddProduct" role="tabpanel"
+                             aria-labelledby="navAddProduct-tab">
+                            <h3>Добавить товар</h3>
+                            <form id="addForm">
+                                <div class="panel panel-default" id="new-user-form">
+                                    <div class="panel-body">
+                                        <div id="add-productName-form-group" class="form-group">
+                                            <label for="addProduct">Наименование:</label>
+                                            <input type="email" id="addProduct" name="product"
+                                                   placeholder="Наименование"
+                                                   class="form-control">
+                                        </div>
+                                        <div class="form-group addPriceDiv">
+                                            <label for="addPrice">Цена:</label>
+                                            <input type="number" id="addPrice" name="price" placeholder="Цена"
+                                                   class="form-control">
+                                        </div>
+                                        <div id="add-email-form-group" class="form-group">
+                                            <label for="addAmount">Количество:</label>
+                                            <input type="number" id="addAmount" name="amount" placeholder="Количество"
+                                                   class="form-control">
+                                        </div>
+                                        <div class="input-group mb-4">
+                                            <input type="text" class="form-control" placeholder="Поиск по категориям"
+                                                   id="searchForCategories">
+                                        </div>
+                                        <div id="jqxTreeHere"></div>
+                                        <div class="mt-4">
+                                            <button id="addBtn" type="button"
+                                                    class=" btn btn-outline-success btn-md btn">
+                                                Добавить новый товар
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary" data-toggle='modal'
+                                                    data-target='#newProductImportModal'>Загрузить товары из файла
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="navCharacteristicAdd" role="tabpanel"
+                             aria-labelledby="navCharacteristicAdd-tab">
+                            <form id="characteristicForm">
+                                <div class="panel panel-default" id="addCharacteristicForm">
+                                    <div class="panel-body">
+                                        <div id="add-diagonal-form-group" class="form-group">
+                                            <label for="addDiagonal">Диагональ экрана:</label>
+                                            <input type="text" id="addDiagonal" name="diagonal"
+                                                   placeholder="Диагональ экрана"
+                                                   class="form-control">
+                                        </div>
+                                        <div id="add-screenResolution-form-group" class="form-group">
+                                            <label for="addScreenResolution">Разрешение экрана:</label>
+                                            <input type="text" id="addScreenResolution" name="screenResolution"
+                                                   placeholder="Разрешение экрана"
+                                                   class="form-control">
+                                        </div>
+                                        <div id="add-processor-form-group" class="form-group">
+                                            <label for="addProcessor">Модель процессора:</label>
+                                            <input type="text" id="addProcessor" name="processor"
+                                                   placeholder="Модель процессора"
+                                                   class="form-control">
+                                        </div>
+                                        <div id="add-year-form-group" class="form-group">
+                                            <label for="addYear">Год выпуска:</label>
+                                            <input type="text" id="addYear" name="year" placeholder="Год выпуска"
+                                                   class="form-control">
+                                        </div>
+                                        <div id="add-RAM-form-group" class="form-group">
+                                            <label for="addRAM">Объем оперативной памяти:</label>
+                                            <input type="text" id="addRAM" name="RAM"
+                                                   placeholder="Объем оперативной памяти"
+                                                   class="form-control">
+                                        </div>
+                                        <div id="add-internalMemory-form-group" class="form-group">
+                                            <label for="addInternalMemory">Объем встроенной памяти:</label>
+                                            <input type="text" id="addInternalMemory" name="internalMemory"
+                                                   placeholder="Объем встроенной памяти"
+                                                   class="form-control">
+                                        </div>
+                                        <div id="add-batteryСapacity-form-group" class="form-group">
+                                            <label for="addBatteryСapacity">Емкость аккумулятора:</label>
+                                            <input type="text" id="addBatteryСapacity" name="batteryСapacity"
+                                                   placeholder="Емкость аккумулятора"
+                                                   class="form-control">
+                                        </div>
+                                        <div id="add-weight-form-group" class="form-group">
+                                            <label for="addWeight">Вес:</label>
+                                            <input type="text" id="addWeight" name="weight"
+                                                   placeholder="Вес"
+                                                   class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-<!--                    Начала слоя отображения категорий -->
+                    <!--                    Начала слоя отображения категорий -->
                     <div class="tab-pane fade" id="nav-products-categories" role="tabpanel"
                          aria-labelledby="nav-products-categories-tab">
                         <h2>Управление категориями товаров</h2>
                         <button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
-                                data-target="#addNewMainCategoryModal" data-backdrop="static">Добавить корневую категорию</button>
+                                data-target="#addNewMainCategoryModal" data-backdrop="static">Добавить корневую
+                            категорию
+                        </button>
                         <div id="jqxTree"></div>
                         <button type="button" class="btn btn-outline-success my-2" data-toggle="modal" id="jqxbutton"
-                                data-target="#magicButtonModal" data-backdrop="static">Нажмите для выбора действия</button>
+                                data-target="#magicButtonModal" data-backdrop="static">Нажмите для выбора действия
+                        </button>
                         <div class="modal fade" id="addNewMainCategoryModal" tabindex="-1" role="dialog"
                              aria-labelledby="addNewMainCategoryModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="addNewMainCategoryModalLabel">Название корневой категории:</h5>
+                                        <h5 class="modal-title" id="addNewMainCategoryModalLabel">Название корневой
+                                            категории:</h5>
                                     </div>
                                     <div class="modal-body">
                                         <form id="addProductCategoryForm">
                                             <div class="form-group">
                                                 <label for="addNewMainCategory"></label>
-                                                <input type="text" class="form-control" name="category" id="addNewMainCategory">
+                                                <input type="text" class="form-control" name="category"
+                                                       id="addNewMainCategory">
                                             </div>
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Закрыть</button>
-                                        <button type="button" class="btn btn-primary btn-sm" id="addMainCategoryButton" data-dismiss="modal">
-                                            Добавить</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
+                                            Закрыть
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" id="addMainCategoryButton"
+                                                data-dismiss="modal">
+                                            Добавить
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -223,7 +317,9 @@
                                     </div>
                                     <div class="modal-body" id="magicButtonModalBody"></div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Отменить</button>
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                            Отменить
+                                        </button>
                                         <div id="deleteSubCategoryButtonDiv"></div>
                                     </div>
                                 </div>
@@ -231,7 +327,7 @@
                         </div>
 
                     </div>
-<!--                    Конец слоя отображения категорий -->
+                    <!--                    Конец слоя отображения категорий -->
                 </div>
             </div>
         </div>

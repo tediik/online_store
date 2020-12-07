@@ -4,7 +4,6 @@ import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.ProductCharacteristic;
 import com.jm.online_store.repository.ProductCharacteristicRepository;
-import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;

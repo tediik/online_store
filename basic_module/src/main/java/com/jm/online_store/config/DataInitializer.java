@@ -12,7 +12,6 @@ import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.ProductCharacteristic;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SentStock;
@@ -50,7 +49,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -62,7 +60,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * класс первичного заполнения таблиц.
