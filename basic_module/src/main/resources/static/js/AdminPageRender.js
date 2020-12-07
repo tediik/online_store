@@ -414,10 +414,10 @@ function renderRolesSelectOnMaintenanceMode(allRoles) {
     $.each(allRoles, function (i, role) {
         selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
     })
-    const select = document.querySelector('#rolesMode').getElementsByTagName('option');
+    const select = document.querySelector('#rolesMode').getElementsByTagName('option')
     for (let i = 0; i < select.length; i++) {
         if (select[i].value === '1') {
-            select[i].defaultSelected = true
+            select[i].disabled = true
         }
     }
 }
@@ -430,7 +430,14 @@ function renderRolesSelectOnMaintenanceMode(allRoles) {
  */
 function handleMaintenanceBtn(event) {
     event.preventDefault();
-    let urlOn = '/admin?maintenance=' + $('#maintenance-mode').val() + '&rolesMode=' + getSelectValues(document.getElementById("rolesMode"))
+    const select = document.querySelector('#rolesMode').getElementsByTagName('option')
+    let adminId;
+    for (let i = 0; i < select.length; i++) {
+        if (select[i].value === '1') {
+            adminId = select[i].text + ','
+        }
+    }
+    let urlOn = '/admin?maintenance=' + $('#maintenance-mode').val() + '&rolesMode=' + adminId + getSelectValues(document.getElementById("rolesMode"))
     let text = $('#maintenance-mode').val();
     fetch(urlOn, {
         method: 'GET',
