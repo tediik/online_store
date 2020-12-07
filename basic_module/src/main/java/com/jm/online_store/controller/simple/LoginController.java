@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 @AllArgsConstructor
 @Controller
 @RequestMapping("/")
-public class Oauth2LoginController {
+public class LoginController {
 
     private final OAuth2Odnoklassniki oAuth2Odnoklassniki;
     private final TwitterAuth twitterAuth;
