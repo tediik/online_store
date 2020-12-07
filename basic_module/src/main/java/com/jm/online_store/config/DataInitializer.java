@@ -49,6 +49,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -102,11 +103,14 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+//    @PostConstruct
+    //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
+        characteristicsInit();
         productInit();
+        productCharacteristicsInit();
         ordersInit();
         stockInit();
         sharedStockInit();
@@ -119,7 +123,6 @@ public class DataInitializer {
         feedbackTopicsInit();
         commentsInit();
         reviewsInit();
-        characteristicsInit();
     }
 
     /**
@@ -654,20 +657,20 @@ public class DataInitializer {
         Categories category13 = new Categories("Периферия", 1L, 2);
         Categories category14 = new Categories("Планшеты", 3L, 2);
         Categories category15 = new Categories("Электронные книги", 3L, 2);
-        Categories category16 =  new Categories("Аксессуары для гаджетов", 3L, 2);
-        Categories category17 =  new Categories("Телевизоры", 4L, 2);
-        Categories category18 =  new Categories("Игры", 4L, 2);
-        Categories category19 =  new Categories("Аудиотехника", 4L, 2);
-        Categories category20 =  new Categories("Оргтехника", 5L, 2);
-        Categories category21 =  new Categories("Роутеры и сетевое оборудование", 5L, 2);
-        Categories category22 =  new Categories("Техника для кухни", 2L, 2);
-        Categories category23 =  new Categories("Техника для уборки", 2L, 2);
-        Categories category24 =  new Categories("Стиральные и сушильные машины", 2L, 2);
-        Categories category25 =  new Categories("Климатическая техника", 2L, 2);
-        Categories category26 =  new Categories("С сенсорным экраном", 9L, 3);
-        Categories category27 =  new Categories("Игровые", 9L, 3);
-        Categories category28 =  new Categories("Недорогие", 9L, 3);
-        Categories category29 =  new Categories("Ультрабуки", 9L, 3);
+        Categories category16 = new Categories("Аксессуары для гаджетов", 3L, 2);
+        Categories category17 = new Categories("Телевизоры", 4L, 2);
+        Categories category18 = new Categories("Игры", 4L, 2);
+        Categories category19 = new Categories("Аудиотехника", 4L, 2);
+        Categories category20 = new Categories("Оргтехника", 5L, 2);
+        Categories category21 = new Categories("Роутеры и сетевое оборудование", 5L, 2);
+        Categories category22 = new Categories("Техника для кухни", 2L, 2);
+        Categories category23 = new Categories("Техника для уборки", 2L, 2);
+        Categories category24 = new Categories("Стиральные и сушильные машины", 2L, 2);
+        Categories category25 = new Categories("Климатическая техника", 2L, 2);
+        Categories category26 = new Categories("С сенсорным экраном", 9L, 3);
+        Categories category27 = new Categories("Игровые", 9L, 3);
+        Categories category28 = new Categories("Недорогие", 9L, 3);
+        Categories category29 = new Categories("Ультрабуки", 9L, 3);
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
@@ -719,6 +722,32 @@ public class DataInitializer {
         Description description20 = new Description("L856XZ11564632", "LG", 1, "265x756x184", "white", 7.4, "Кондиционер LG P09EP2 используется для установки оптимальной температуры в помещении дома или офиса площадью 20 м²");
         Description description21 = new Description("L014ZZ10018974", "LG", 1, "302x837x189; 483x717x230", "white", 8.7, "Модель LG Mega Plus P12EP1 будет оптимальна для установки в помещении площадью 35 м²");
 
+        Set<Characteristic> smartphones = new HashSet<>();
+        smartphones.add(characteristicService.findCharacteristicById(1L).get());
+        smartphones.add(characteristicService.findCharacteristicById(2L).get());
+        smartphones.add(characteristicService.findCharacteristicById(3L).get());
+        smartphones.add(characteristicService.findCharacteristicById(4L).get());
+        smartphones.add(characteristicService.findCharacteristicById(5L).get());
+        smartphones.add(characteristicService.findCharacteristicById(6L).get());
+        smartphones.add(characteristicService.findCharacteristicById(7L).get());
+        smartphones.add(characteristicService.findCharacteristicById(8L).get());
+        smartphones.add(characteristicService.findCharacteristicById(9L).get());
+        smartphones.add(characteristicService.findCharacteristicById(10L).get());
+        smartphones.add(characteristicService.findCharacteristicById(11L).get());
+
+        Set<Characteristic> laptops = new HashSet<>();
+        laptops.add(characteristicService.findCharacteristicById(1L).get());
+        laptops.add(characteristicService.findCharacteristicById(2L).get());
+        laptops.add(characteristicService.findCharacteristicById(3L).get());
+        laptops.add(characteristicService.findCharacteristicById(4L).get());
+        laptops.add(characteristicService.findCharacteristicById(5L).get());
+        laptops.add(characteristicService.findCharacteristicById(6L).get());
+        laptops.add(characteristicService.findCharacteristicById(10L).get());
+        laptops.add(characteristicService.findCharacteristicById(11L).get());
+        laptops.add(characteristicService.findCharacteristicById(12L).get());
+        laptops.add(characteristicService.findCharacteristicById(13L).get());
+        laptops.add(characteristicService.findCharacteristicById(15L).get());
+
         product1.setDescriptions(description1);
         product2.setDescriptions(description2);
         product3.setDescriptions(description3);
@@ -741,6 +770,14 @@ public class DataInitializer {
         product18.setDescriptions(description20);
         product18.setDescriptions(description21);
 
+        category11.setCharacteristics(smartphones);
+        category14.setCharacteristics(smartphones);
+        category28.setCharacteristics(laptops);
+        category29.setCharacteristics(laptops);
+        category27.setCharacteristics(laptops);
+        category26.setCharacteristics(laptops);
+        category10.setCharacteristics(laptops);
+
         category26.setProducts(Arrays.asList(product1, product2, product3));
         category28.setProducts(Arrays.asList(product4, product5, product6));
         category11.setProducts(Arrays.asList(product7, product8, product9));
@@ -748,6 +785,7 @@ public class DataInitializer {
         category23.setProducts(Arrays.asList(product13, product14, product15));
         category24.setProducts(Arrays.asList(product16, product17, product18));
         category25.setProducts(Arrays.asList(product19, product20, product21));
+
 
         categoriesService.saveAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7,
                 category8, category9, category10, category11, category12, category13, category14, category15, category16,
@@ -1356,25 +1394,65 @@ public class DataInitializer {
         characteristicList.add(new Characteristic("GPS"));
         characteristicList.add(new Characteristic("Емкость аккумулятора"));
         characteristicList.add(new Characteristic("Вес"));
+        characteristicList.add(new Characteristic("Тип экрана"));
+        characteristicList.add(new Characteristic("Частота обновления дисплея"));
+        characteristicList.add(new Characteristic("Частота оперативной памяти"));
+        characteristicList.add(new Characteristic("Сенсорный экран"));
 
-        List<Long> charactersticIds = new ArrayList<>();
-        for (Characteristic characteristic : characteristicList) {
-            charactersticIds.add(characteristicService.addCharacteristic(characteristic));
-        }
+        characteristicList.forEach(characteristicService :: addCharacteristic);
 
+        /*smartphones.add(new Characteristic("Диагональ экрана"));
+        smartphones.add(new Characteristic("Разрешение экрана"));
+        smartphones.add(new Characteristic("Модель процессора"));
+        smartphones.add(new Characteristic("Год выпуска"));
+        smartphones.add(new Characteristic("Объем оперативной памяти"));
+        smartphones.add(new Characteristic("Объем встроенной памяти"));
+        smartphones.add(new Characteristic("Количество камер"));
+        smartphones.add(new Characteristic("NFC"));
+        smartphones.add(new Characteristic("GPS"));
+        smartphones.add(new Characteristic("Емкость аккумулятора"));
+        smartphones.add(new Characteristic("Вес"));
+        smartphones.add(new Characteristic("Частота обновления дисплея"));
+
+        categoriesService.getCategoryByCategoryName("Смартфоны").get().setCharacteristics(smartphones);
+        categoriesService.getCategoryByCategoryName("Планшеты").get().setCharacteristics(smartphones);
+
+        Set<Characteristic> laptops = new HashSet<>();
+        laptops.add(new Characteristic("Диагональ экрана"));
+        laptops.add(new Characteristic("Разрешение экрана"));
+        laptops.add(new Characteristic("Модель процессора"));
+        laptops.add(new Characteristic("Год выпуска"));
+        laptops.add(new Characteristic("Объем оперативной памяти"));
+        laptops.add(new Characteristic("Объем встроенной памяти"));
+        laptops.add(new Characteristic("Количество камер"));
+        laptops.add(new Characteristic("NFC"));
+        laptops.add(new Characteristic("GPS"));
+        laptops.add(new Characteristic("Емкость аккумулятора"));
+        laptops.add(new Characteristic("Вес"));
+        laptops.add(new Characteristic("Тип экрана"));
+        laptops.add(new Characteristic("Частота обновления дисплея"));
+        laptops.add(new Characteristic("Сенсорный экран"));
+
+        categoriesService.getCategoryByCategoryName("Недорогие").get().setCharacteristics(laptops);
+        categoriesService.getCategoryByCategoryName("Ультрабуки").get().setCharacteristics(laptops);
+        categoriesService.getCategoryByCategoryName("Игровые").get().setCharacteristics(laptops);
+        categoriesService.getCategoryByCategoryName("С сенсорным экраном").get().setCharacteristics(laptops);*/
+
+    }
+
+    private void productCharacteristicsInit() {
         long productId = productService.findProductByName("XIAOMI-Mi10").get().getId();
 
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(0), "6.67");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(1), "2340x1080");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(2), "Qualcomm Snapdragon 865");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(3), "2020");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(4), "8");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(5), "256");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(6), "4");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(7), "Да");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(8), "Да");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(9), "4780");
-        productCharacteristicService.addProductCharacteristic(productId, charactersticIds.get(10), "208");
-
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(1L).get().getId(), "6.67");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(2L).get().getId(), "2340x1080");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(3L).get().getId(), "Qualcomm Snapdragon 865");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(4L).get().getId(), "2020");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(5L).get().getId(), "8");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(6L).get().getId(), "256");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(7L).get().getId(), "4");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(8L).get().getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(9L).get().getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(10L).get().getId(), "4780");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(11L).get().getId(), "208");
     }
 }
