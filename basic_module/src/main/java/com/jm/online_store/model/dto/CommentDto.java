@@ -1,8 +1,9 @@
 package com.jm.online_store.model.dto;
 
-import ch.qos.logback.classic.Logger;
+
 import com.jm.online_store.model.Comment;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
+@Slf4j
 @Data
 public class CommentDto {
 
@@ -42,10 +44,7 @@ public class CommentDto {
            commentDto.setTimeStamp(formatToYesterdayOrToday(commentEntity.getCommentDate().format(dTF2)));  //commentEntity.getCommentDate().truncatedTo(ChronoUnit.MINUTES));
        } catch (ParseException e) {
            e.printStackTrace();
-           Logger logger = null;
-           if (logger.isDebugEnabled()) {
-               logger.debug("Starting rate charge calculation for account " + e);
-           }
+           log.debug("e: {}", e);
        }
        commentDto.setProductId(commentEntity.getProductId());
        if (commentEntity.getReview() != null) {
