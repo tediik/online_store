@@ -18,6 +18,11 @@ import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.security.MD5Encoder;
+import org.passay.CharacterData;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -232,9 +237,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void changeUsersMail(User user, String newMail) {
-        String address = user.getAuthorities().toString().contains("ROLE_CUSTOMER") ? "/customer" : "/authority";
-
-        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
+    ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
@@ -246,8 +249,9 @@ public class UserServiceImpl implements UserService {
         );
 
         mailSenderService.send(newMail, "Activation code", message, "email address validation");
-        user.setEmail(newMail);
     }
+
+
 
     @Transactional
     public void changeUsersPass(User user, String newPassword) {
@@ -256,12 +260,66 @@ public class UserServiceImpl implements UserService {
 
         String message = String.format(
                 "Привет, %s! \n Ваш пароль изменен ",
-                user.getFirstName(),
-                confirmationToken.getConfirmationToken()
+                user.getFirstName()
         );
         mailSenderService.send(user.getEmail(), "Пароль успешно изменен", message, "pass change");
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+    }
+
+    /**
+     *
+     * @param user - customer  , запросивший смену пароля
+     *
+     *  Метод генерирует новый пароль и отправляет его юзеру на почту
+     */
+    @Transactional
+    @Override
+    public void restorePassword(User user) {
+        String newPass = generatePassayPassword();
+        mailSenderService.send(user.getEmail(), "Сгенерирован временный новый пароль", newPass, "pass change");
+        user.setPassword(passwordEncoder.encode(newPass));
+        log.info("Сгенерирован новый пароль " + newPass);
+
+    }
+
+    /**
+     * Метод использует библиотеку Passay для генерации рандомного пароля в соответствии с указанными требованиями к паролю
+     * @return рандомный сгенерированный пароль
+     */
+    private String generatePassayPassword() {
+        PasswordGenerator gen = new PasswordGenerator();
+        CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
+        CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
+        lowerCaseRule.setNumberOfCharacters(2);
+
+        CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
+        CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
+        upperCaseRule.setNumberOfCharacters(2);
+
+        CharacterData digitChars = EnglishCharacterData.Digit;
+        CharacterRule digitRule = new CharacterRule(digitChars);
+        digitRule.setNumberOfCharacters(2);
+
+
+        return gen.generatePassword(10, lowerCaseRule,
+                upperCaseRule, digitRule);
+    }
+
+    /**
+     *
+     * метод генерирует токен для сброса пароля и отправляет на указанную юзером почту
+     */
+    @Override
+    @Transactional
+    public void resetPasswordConfirmationToken(User user){
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
+        confirmTokenRepository.save(confirmationToken);
+        String message = String.format(
+                "Привет, %s! \n Вы сделали запрос на сброс пароля, для подтверждения перейдите по ссылке "+ urlActivate + "/restorepassword/%s",
+                user.getFirstName(),
+                confirmationToken.getConfirmationToken()
+        );
+        mailSenderService.send(user.getEmail(), "Сгенерирован временный новый пароль", message, "pass change");
     }
 
     /**
@@ -305,7 +363,6 @@ public class UserServiceImpl implements UserService {
      * After that, new email address is saved to users DB table
      *
      */
-    //TODO: доработать метод
     @Override
     @Transactional
     public boolean activateNewUsersMail(String token, HttpServletRequest request) {
@@ -313,9 +370,8 @@ public class UserServiceImpl implements UserService {
         if (confirmationToken == null) {
             return false;
         }
-        User user = userRepository.findById(confirmationToken.getUserId()).get();
+        User user = userRepository.findById(confirmationToken.getUserId()).orElseThrow(UserNotFoundException::new);
         user.setEmail(confirmationToken.getUserEmail());
-        System.out.println(user.getEmail());
         userRepository.save(user);
         return true;
     }
