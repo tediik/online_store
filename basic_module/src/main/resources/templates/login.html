@@ -14,16 +14,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ваш аккаунт был удален, хотите востановить?</h5>
+                <h5 class="modal-title">Для восстановления профиля введите пожалуйста  email</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+                <input type="email" id="emailForRestore" name="restore_username" autofocus="autofocus" placeholder="Email"
+                       class="form-control">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Нет</button>
-                <button id="buttonRestore" type="button" class="btn btn-success">Да</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Отмена</button>
+                <button id="buttonRestore" type="button" class="btn btn-primary">Восстановить</button>
             </div>
         </div>
     </div>
@@ -48,12 +50,21 @@
                                 Remember me
                             </label>
                         </div>
-                        <!-- alert for login failure-->
+                        <!-- alert for login failure Bad credentials-->
                         <div class="alert alert-danger" th:if="${param.loginBadCredentials}" role="alert" >
                             <strong>Ошибка авторизации!</strong> Проверьте правильность ввода данных.
                         </div>
-                        <!-- alert for login failure-->
-                        <button id="checkUserStatus" class="btn btn-primary btn-sm btn-block">Sign In</button>
+                        <!-- alert for login failure Bad credentials-->
+
+                        <!-- alert for login failure аккаунт заблокирован-->
+                        <div class="alert alert-danger" th:if="${param.accountBlocked}" role="alert">
+                            <strong>Ваш акаунт был удален.</strong>
+                            <a id="linkForOpenRestoreModal" href="#" class="alert-link">Восстановить</a>
+
+                        </div>
+                        <!-- alert for login failure аккаунт заблокирован-->
+
+                        <button id="signIn" class="btn btn-primary btn-sm btn-block">Sign In</button>
                     </form>
 
                     <!--facebook-->

@@ -11,31 +11,17 @@ let myHeaders = new Headers();
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
 /**
- * Прослушиватель событий для кнопки "Sing in"
+ * Прослушиватель событий для ссылки "Восстановить"
+ * алерта выпадающегоесли пытается залогниться кастомер который удалил свой профиль
+ * но 30 дней еще не прошло
  */
-// document.getElementById('checkUserStatus').addEventListener('click', checkUserStatus)
+document.getElementById('linkForOpenRestoreModal').addEventListener('click', showModalForRestore)
 
 /**
- * Функция, которая обрабатывает кнопку "Sing in" перед входом на странице логина
+ * функиця показывает модалку для восстановления профиля
  */
-function checkUserStatus() {
-    let email = document.getElementById('email').value;
-    let password = document.getElementById('password').value;
-    let param = {
-        "email": email,
-        "password": password
-    };
-    fetch('/users/checkEmail', {
-        method: 'POST',
-        headers: myHeaders,
-        body: JSON.stringify(param)
-    }).then(function (response) {
-        if (response.status === 200) {
-            document.getElementById("formLogin").submit();
-        } else {
-            $('#askUserForRestore').modal('show')
-        }
-    })
+function showModalForRestore() {
+    $('#askUserForRestore').modal('show')
 }
 
 /**
@@ -47,18 +33,17 @@ document.getElementById('buttonRestore').addEventListener('click', functionResto
  * Функция, которая обрабатывает кнопку восстановления профиля
  */
 function functionRestore() {
-    let email = document.getElementById('email').value;
+    let email = document.getElementById('emailForRestore').value;
     fetch('/users/restore', {
         method: 'PUT',
         headers: myHeaders,
         body: email
     }).then(function (res) {
         if (res.status === 200) {
-            toastr.success(res, {timeOut: 5000});
-            document.getElementById("formLogin").submit();
+            alert("Ваш аккаунт был успешно восстановлен")
+            document.location.href = "/login";
         } else {
             toastr.error(res, {timeOut: 5000});
-            document.location.href = "/login";
         }
     })
 }
