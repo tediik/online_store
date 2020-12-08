@@ -53,11 +53,7 @@ public class CustomerController {
         return "customerPage";
     }
 
-    /**
-     * Связываем страницу корзины с адресом
-     *
-     * @return
-     */
+
     @GetMapping("/basket")
     public String getUserBasket() {
         return "basketPage";
