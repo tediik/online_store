@@ -1,11 +1,11 @@
 package com.jm.online_store.config.security;
 
-import com.jm.online_store.exception.InvalidEmailException;
-import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +17,9 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
-public class MyUserDetailsService implements UserDetailsService {
+public class SecurityUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -27,6 +28,10 @@ public class MyUserDetailsService implements UserDetailsService {
             throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UsernameNotFoundException("User Not Found with -> username or email: " + email));
+        if(!user.isAccountNonLocked()){
+            log.warn("Пользователь с почтой " + user.getEmail() + " заблокирован");
+            throw new LockedException("Аккаунт заблокирован !!!");
+        }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 mapRolesToAuthorities(user.getRoles()));
     }

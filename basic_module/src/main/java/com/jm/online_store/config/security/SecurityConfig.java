@@ -22,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final LoginSuccessHandler successHandler;
-    private final MyUserDetailsService myUserDetailsService;
+    private final SecurityUserDetailsService securityUserDetailsService;
     private final LoginFailureHandler loginFailureHandler;
 
 
@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(myUserDetailsService)
+        auth.userDetailsService(securityUserDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
 
