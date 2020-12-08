@@ -60,9 +60,8 @@
                    href="#subscribe-to-products" role="tab" aria-controls="subscribe-to-products" aria-selected="false">
                     Подписки</a>
               
-                <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
-                   role="tab" aria-controls="basketGoods" aria-selected="false"
-                   onclick="fillBasket();location.href='#basket'">Корзина</a>
+                <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" href="/customer/basket"
+                   >Корзина</a>
 
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
@@ -533,128 +532,6 @@
                 </div>
                 <!-- ВКЛАДКА ПРОФИЛЯ -->
 
-                <!-- ВКЛАДКА КОРЗИНА  -->
-                <div class="tab-pane fade" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
-                    <div id="order-div"></div>
-                    <h3>Корзина</h3>
-                    <div class="row min-vh-100">
-                        <div class="col-md-9">
-                            <!--                            сама корзина-->
-                            <table class="table table-striped" id="busketTable">
-                                <tbody id="busketList">
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-md-3">
-                            <tr>
-                                <span>Общее количество товара:</span>
-                                <h3 id="countBasketGoods"></h3>
-                            </tr>
-                            <tr>
-                                <span>Стоимость заказа:</span>
-                                <h3 id="sumBasketGoods"></h3>
-                            </tr>
-                            <div id="buttonBuyInBasket">
-                                <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
-                                        data-target="#orderModalWindow" onclick="userAdresses()">Купить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="orderModalWindow" tabindex="-1" role="dialog"
-                         aria-labelledby="EditUserModalWindows"
-                         aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="orderAdress">Адрес доставки</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div id="alert-modal-div">
-                                </div>
-                                <div class="modal-body" id="modalBody">
-                                    <div class="raw">
-                                        <label style="font-size: medium; vertical-align: unset">
-                                            <input class="checkbox" type="checkbox" onchange="addressChange()"/>
-                                            Самовывоз
-                                        </label>
-
-                                        <div align="right">
-                                        </div>
-                                    </div>
-                                    <div class="row justify-content-center">
-                                        <div class="col">
-                                            <div id="shopAddress" hidden="true">
-                                            </div>
-                                            <div id="userAddresses">
-                                            </div>
-                                            <div class="address" id="addressId" hidden="true">
-                                                <div class="h3">Введите адрес доставки</div>
-                                                <h6>
-                                                    Поля помеченные *
-                                                    обязательны к заполнению.
-                                                </h6>
-                                                <form id="addressForm" class="js-form-address">
-                                                    <div class="field">
-                                                        <label>Регион*</label>
-                                                        <input type="text" name="region">
-                                                    </div>
-                                                    <div class="field">
-                                                        <label>Район</label>
-                                                        <input type="text" name="district">
-                                                    </div>
-                                                    <div class="field">
-                                                        <label>Город/населённый пункт*</label>
-                                                        <input type="text" name="city">
-                                                    </div>
-                                                    <div class="field">
-                                                        <label>Улица*</label>
-                                                        <input type="text" name="street">
-                                                    </div>
-                                                    <div class="field">
-                                                        <label>Дом*</label>
-                                                        <input type="text" name="building">
-                                                    </div>
-                                                    <div class="field">
-                                                        <label>Квартира(необязательно)</label>
-                                                        <input type="text" name="flat">
-                                                    </div>
-                                                    <div class="field">
-                                                        <label>Индекс</label>
-                                                        <input type="text" name="zip">
-                                                    </div>
-                                                    <div class="tooltip" style="display: none;"><b></b><span></span>
-                                                    </div>
-                                                </form>
-                                                <button id="clear-button" type="button" class="btn btn-secondary"
-                                                        onclick="clearFields()">Отчистить поля
-                                                </button>
-                                                <button id="add-adress-button" type="button" class="btn btn-success"
-                                                        onclick="addAddress()">Добавить адрес
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="dismissButton" type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">
-                                        Закрыть
-                                    </button>
-                                    <button style="float: right" id="acceptButton" type="button"
-                                            class="btn btn-success edit-button"
-                                            onclick="confirmOrder()">
-                                        Оформить заказ
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- ВКЛАДКА КОРЗИНА  -->
 
                 <!-- ВКЛАДКА ЗАКАЗЫ  -->
                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
