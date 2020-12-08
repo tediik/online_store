@@ -45,7 +45,6 @@ public class CommentDto {
            e.printStackTrace();
            log.debug("Ошибка парсинга даты внутри метода formatToYesterdayOrToday(String date) : {}", e);
        }
-       log.debug("Парсинг прошел успешно в методе formatToYesterdayOrTformatToYesterdayOrToday(String date)");
        commentDto.setProductId(commentEntity.getProductId());
        if (commentEntity.getReview() != null) {
            commentDto.setReviewId(commentEntity.getReview().getId());
