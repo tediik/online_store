@@ -54,6 +54,16 @@ public class CustomerController {
     }
 
     /**
+     * Связываем страницу корзины с адресом
+     *
+     * @return
+     */
+    @GetMapping("/basket")
+    public String getUserBasket() {
+        return "basketPage";
+    }
+
+    /**
      * метод для формирования данных для обновления User.
      *
      * @param user  пользователь
