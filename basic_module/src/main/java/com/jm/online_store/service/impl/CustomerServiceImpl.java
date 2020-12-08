@@ -137,7 +137,7 @@ public class CustomerServiceImpl implements CustomerService {
             if (role.getName().equals("ROLE_CUSTOMER")) {
                 Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
                 if (customer != null && passwordEncoder.matches(password, customer.getPassword())) {
-                    if (customer.getAnchorForDelete() != null) {
+                    if (!customer.isAccountNonLocked() && customer.getAnchorForDelete() != null) {
                         if (!customer.getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
                             deleteByID(customer.getId());
                         } else {
@@ -154,7 +154,9 @@ public class CustomerServiceImpl implements CustomerService {
      * У нас клиент изначально не удаляется. При нажатии на кнопку "удалить профиль"
      * происходит запись времени, когда кнопка была нажата и подтвеждена.
      * Мы ему даем 30 дней на восстановление.
-     * Время удаления записывается в поле "status" у Customer.
+     * Время удаления записывается в поле "anchorForDelete" у Customer,
+     * затем мы меняем его AccountNonBlockedStatus на false ,
+     * это нужно для обработки в spring security.
      * <p>
      * Метод, который изменяет статус клиента при нажатии на кнопку "удалить профиль"
      *
@@ -164,8 +166,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void changeCustomerStatusToLocked(Long id) {
         Customer customerStatusChange = getCurrentLoggedInUser();
+        customerStatusChange.setAccountNonBlockedStatus(false);
         customerStatusChange.setAnchorForDelete(LocalDateTime.now());
         updateCustomer(customerStatusChange);
+        log.info("профиль покупателя с почтой " + customerStatusChange.getEmail() + "заблокирован");
     }
 
     /**
@@ -220,6 +224,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void restoreCustomer(String email) {
         Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        customer.setAccountNonBlockedStatus(true);
         customer.setAnchorForDelete(null);
         updateCustomer(customer);
     }
@@ -238,11 +243,12 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.isEmpty()) {
             return false;
         }
-        if (customer.get().getAnchorForDelete() == null) {
+        if (customer.get().isAccountNonLocked() || customer.get().getAnchorForDelete() == null) {
             return true;
         }
         if (!customer.get().getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
             deleteByID(customer.get().getId());
+            log.info("время для восстнаовления истекло, удаляем клиента ");
             return false;
         }
         return true;
