@@ -26,6 +26,9 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         } else if (exceptionMessage.contains("Аккаунт заблокирован !!!")) {
             response.sendRedirect("/login?accountBlocked=true");
             response.setStatus(HttpStatus.LOCKED.value());
+        } else if (exceptionMessage.contains("Аккаунт был удален")) {
+            response.sendRedirect("/login?accountExpired=true");
+            response.setStatus(HttpStatus.LOCKED.value());
         }
 
     }
