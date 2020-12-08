@@ -57,6 +57,8 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
+    private boolean isAccountNonBlockedStatus = true;
+
     @Transient
     @NotBlank
     private String passwordConfirm;

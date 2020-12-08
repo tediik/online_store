@@ -137,8 +137,8 @@ public class CustomerServiceImpl implements CustomerService {
             if (role.getName().equals("ROLE_CUSTOMER")) {
                 Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
                 if (customer != null && passwordEncoder.matches(password, customer.getPassword())) {
-                    if (customer.getStatus() != null) {
-                        if (!customer.getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
+                    if (customer.getAnchorForDelete() != null) {
+                        if (!customer.getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
                             deleteByID(customer.getId());
                         } else {
                             return true;
@@ -164,7 +164,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void changeCustomerStatusToLocked(Long id) {
         Customer customerStatusChange = getCurrentLoggedInUser();
-        customerStatusChange.setStatus(LocalDateTime.now());
+        customerStatusChange.setAnchorForDelete(LocalDateTime.now());
         updateCustomer(customerStatusChange);
     }
 
@@ -220,7 +220,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void restoreCustomer(String email) {
         Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        customer.setStatus(null);
+        customer.setAnchorForDelete(null);
         updateCustomer(customer);
     }
 
@@ -238,10 +238,10 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.isEmpty()) {
             return false;
         }
-        if (customer.get().getStatus() == null) {
+        if (customer.get().getAnchorForDelete() == null) {
             return true;
         }
-        if (!customer.get().getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
+        if (!customer.get().getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
             deleteByID(customer.get().getId());
             return false;
         }
