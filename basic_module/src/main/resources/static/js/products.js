@@ -3,11 +3,13 @@
 const API_CATEGORIES_URL = "/api/categories/"
 let listOfAll
 let currentCategoryIdAdd;
+let moepolelkategorii;
 let currentCategoryNameEdit;
 let productRestUrl = "/rest/products/allProducts"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
+/*document.getElementById('renderCharacteristic').addEventListener('click', fetchCharacteristicsAndRenderFields($('#jqxTreeHere').jqxTree('getSelectedItem')))*/
 /**
  * Переменные для отдельной вкладки "Категории товаров
  */
@@ -56,7 +58,7 @@ $(function () {
     });
 });
 /**
-функция добавляет дерево выбора категорий на страницу менеджера в окно загрузки товаров из файла
+ функция добавляет дерево выбора категорий на страницу менеджера в окно загрузки товаров из файла
  */
 $(function () {
     fillProductCategoriesIn('#jqxTreeHere1')
@@ -95,6 +97,22 @@ async function fillProductCategoriesIn(htmlId) {
 
 showAndRefreshNotDeleteHomeTab()
 
+//Метод для попробовать, убрать
+function vizovRenderaHarakteristik() {
+    let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
+    if (!selectedCat) {
+        alert('Категория не выбрана!');
+        return false;
+    } else {
+        for (let z = 0; z < listOfAll.length; z++) {
+            let currItem = listOfAll[z];
+            if (selectedCat.label.localeCompare(currItem.text) === 0) {
+                moepolelkategorii = currItem.id;
+            }
+        }
+    }
+    fetchCharacteristicsAndRenderFields(moepolelkategorii);
+}
 /**
  * Функция обработки действий чекбокса
  * @param check
@@ -508,6 +526,37 @@ function renderProductsTable(products) {
 }
 
 /**
+ * функция рендера полей характеристик(для выбранной категории)
+ * @param characteristics
+ */
+function renderCharacteristicFields(characteristics) {
+    let div = $('#addCharacteristicForm')
+    for (let i = 0; i < characteristics.length; i++) {
+        const characteristic = characteristics[i];
+        let characteristicName = characteristic.characteristicName;
+        div.append(`
+                    <div id="add-${characteristicName}-form-group" class="form-group">
+                    <label for="add${characteristicName}">${characteristicName}:</label>
+                    <input type="text" id="add${characteristicName}" name="${characteristicName}"
+                        placeholder="${characteristicName}"
+                        class="form-control">
+                    </div>
+    
+    `)
+    }
+}
+
+/**
+ * функция делает fetch запрос на рест контроллер, преобразует полученный объект в json
+ * и передает функции рендера полей характеристик renderCharacteristicFields
+ */
+function fetchCharacteristicsAndRenderFields(categoryId) {
+    fetch("rest/characteristics/" + categoryId)
+        .then(response => response.json())
+        .then(characteristics => renderCharacteristicFields(characteristics))
+}
+
+/**
  * функция делает fetch запрос на рест контроллер, преобразует полученный объект в json
  * и передает функции рендера таблицы renderProductsTable
  */
@@ -548,15 +597,14 @@ async function fillProductCategories() {
         let thisParentId = item.parentId;
         let id = item.id;
         if (items[thisParentId]) {
-            let tmpItem = { parentId: thisParentId, label: label, item: item };
+            let tmpItem = {parentId: thisParentId, label: label, item: item};
             if (!items[thisParentId].items) {
                 items[thisParentId].items = [];
             }
             items[thisParentId].items[items[thisParentId].items.length] = tmpItem;
             items[id] = tmpItem;
-        }
-        else {
-            items[id] = { parentId: thisParentId, label: label, item: item };
+        } else {
+            items[id] = {parentId: thisParentId, label: label, item: item};
             source[id] = items[id];
         }
     }
@@ -588,7 +636,7 @@ function addNewSubCategory() {
 /**
  * Fetch-запрос на добавление категории
  */
-function postCategory (whatever, dep, pCat) {
+function postCategory(whatever, dep, pCat) {
     if ($(whatever).val() !== '' && checkIfNotExists(whatever)) {
         fetch(API_CATEGORIES_URL, {
             method: "POST",
@@ -726,12 +774,13 @@ function fillMagicModal() {
     if (checkForSubcategories(currentId) || hasProduct) {
         $('#deleteSubCategoryButtonDiv').empty()
             .append(`    <button type="button" class="btn btn-outline-danger"
-                     id="deleteSubCategoryButton" data-dismiss="modal" disabled>Категория не пуста -> удаление невозможно</button>`);;
+                     id="deleteSubCategoryButton" data-dismiss="modal" disabled>Категория не пуста -> удаление невозможно</button>`);
+        ;
     } else {
         $('#deleteSubCategoryButtonDiv').empty()
             .append(`    <button type="button" class="btn btn-danger" onclick="deleteSubCategory()" data-dismiss="modal">Удалить категорию</button>`);
     }
-    let body =`<table class="table m-0 p-0 " style="width: 100%;" >
+    let body = `<table class="table m-0 p-0 " style="width: 100%;" >
                     <tbody>
                         <tr>
                             <td><label for="addSubCategory">Добавить подкатегорию:</label>
@@ -750,6 +799,7 @@ function fillMagicModal() {
     `;
     $('#magicButtonModalBody').empty().append(body);
 }
+
 /**
  *  Конец методов из файла managerProductCategorieCRUD
  *  Для отдельной вкладка Категории товаров

@@ -212,10 +212,14 @@
                         </div>
                         <div class="tab-pane fade" id="navCharacteristicAdd" role="tabpanel"
                              aria-labelledby="navCharacteristicAdd-tab">
+                            <button onclick="vizovRenderaHarakteristik()" id="renderCharacteristic" type="button"
+                                    class=" btn btn-outline-success btn-md btn">
+                                Зарендерить характеристики
+                            </button>
                             <form id="characteristicForm">
-                                <div class="panel panel-default" id="addCharacteristicForm">
-                                    <div class="panel-body">
-                                        <div id="add-diagonal-form-group" class="form-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-body" id="addCharacteristicForm">
+                                        <!--<div id="add-diagonal-form-group" class="form-group">
                                             <label for="addDiagonal">Диагональ экрана:</label>
                                             <input type="text" id="addDiagonal" name="diagonal"
                                                    placeholder="Диагональ экрана"
@@ -261,7 +265,7 @@
                                             <input type="text" id="addWeight" name="weight"
                                                    placeholder="Вес"
                                                    class="form-control">
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                             </form>
@@ -348,5 +352,6 @@
 <script src="/static/js/jqx/jqxpanel.js"></script>
 <script src="/static/js/jqx/jqxtree.js"></script>
 <script src="/static/js/jqx/jqxscrollbar.js"></script>
+
 </body>
 </html>

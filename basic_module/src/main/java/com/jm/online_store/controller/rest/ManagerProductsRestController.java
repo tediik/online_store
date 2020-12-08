@@ -1,7 +1,9 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +43,7 @@ public class ManagerProductsRestController {
 
     private final ProductService productService;
     private final CategoriesService categoriesService;
+    private final CharacteristicService characteristicService;
 
     /**
      * Метод обрабатывает загрузку файла с товарами на сервер
@@ -305,5 +309,16 @@ public class ManagerProductsRestController {
         } catch (NullPointerException | IOException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    /**
+     * Метод, который возвращает характеристи для выбранной категории
+     *
+     * @param categoryId  id нужной категории товаров
+     * @return List<Characteristic> лист харктеристик
+     */
+    @GetMapping("/manager/rest/characteristics/{categoryId}")
+    public List<Characteristic> getCharacteristicsByCategory(@PathVariable Long categoryId) {
+        return characteristicService.findByCategoryId(categoryId);
     }
 }

@@ -722,7 +722,7 @@ public class DataInitializer {
         Description description20 = new Description("L856XZ11564632", "LG", 1, "265x756x184", "white", 7.4, "Кондиционер LG P09EP2 используется для установки оптимальной температуры в помещении дома или офиса площадью 20 м²");
         Description description21 = new Description("L014ZZ10018974", "LG", 1, "302x837x189; 483x717x230", "white", 8.7, "Модель LG Mega Plus P12EP1 будет оптимальна для установки в помещении площадью 35 м²");
 
-        Set<Characteristic> smartphones = new HashSet<>();
+        List<Characteristic> smartphones = new ArrayList<>();
         smartphones.add(characteristicService.findCharacteristicById(1L).get());
         smartphones.add(characteristicService.findCharacteristicById(2L).get());
         smartphones.add(characteristicService.findCharacteristicById(3L).get());
@@ -735,7 +735,7 @@ public class DataInitializer {
         smartphones.add(characteristicService.findCharacteristicById(10L).get());
         smartphones.add(characteristicService.findCharacteristicById(11L).get());
 
-        Set<Characteristic> laptops = new HashSet<>();
+        List<Characteristic> laptops = new ArrayList<>();
         laptops.add(characteristicService.findCharacteristicById(1L).get());
         laptops.add(characteristicService.findCharacteristicById(2L).get());
         laptops.add(characteristicService.findCharacteristicById(3L).get());
@@ -1399,44 +1399,8 @@ public class DataInitializer {
         characteristicList.add(new Characteristic("Частота оперативной памяти"));
         characteristicList.add(new Characteristic("Сенсорный экран"));
 
+
         characteristicList.forEach(characteristicService :: addCharacteristic);
-
-        /*smartphones.add(new Characteristic("Диагональ экрана"));
-        smartphones.add(new Characteristic("Разрешение экрана"));
-        smartphones.add(new Characteristic("Модель процессора"));
-        smartphones.add(new Characteristic("Год выпуска"));
-        smartphones.add(new Characteristic("Объем оперативной памяти"));
-        smartphones.add(new Characteristic("Объем встроенной памяти"));
-        smartphones.add(new Characteristic("Количество камер"));
-        smartphones.add(new Characteristic("NFC"));
-        smartphones.add(new Characteristic("GPS"));
-        smartphones.add(new Characteristic("Емкость аккумулятора"));
-        smartphones.add(new Characteristic("Вес"));
-        smartphones.add(new Characteristic("Частота обновления дисплея"));
-
-        categoriesService.getCategoryByCategoryName("Смартфоны").get().setCharacteristics(smartphones);
-        categoriesService.getCategoryByCategoryName("Планшеты").get().setCharacteristics(smartphones);
-
-        Set<Characteristic> laptops = new HashSet<>();
-        laptops.add(new Characteristic("Диагональ экрана"));
-        laptops.add(new Characteristic("Разрешение экрана"));
-        laptops.add(new Characteristic("Модель процессора"));
-        laptops.add(new Characteristic("Год выпуска"));
-        laptops.add(new Characteristic("Объем оперативной памяти"));
-        laptops.add(new Characteristic("Объем встроенной памяти"));
-        laptops.add(new Characteristic("Количество камер"));
-        laptops.add(new Characteristic("NFC"));
-        laptops.add(new Characteristic("GPS"));
-        laptops.add(new Characteristic("Емкость аккумулятора"));
-        laptops.add(new Characteristic("Вес"));
-        laptops.add(new Characteristic("Тип экрана"));
-        laptops.add(new Characteristic("Частота обновления дисплея"));
-        laptops.add(new Characteristic("Сенсорный экран"));
-
-        categoriesService.getCategoryByCategoryName("Недорогие").get().setCharacteristics(laptops);
-        categoriesService.getCategoryByCategoryName("Ультрабуки").get().setCharacteristics(laptops);
-        categoriesService.getCategoryByCategoryName("Игровые").get().setCharacteristics(laptops);
-        categoriesService.getCategoryByCategoryName("С сенсорным экраном").get().setCharacteristics(laptops);*/
 
     }
 
