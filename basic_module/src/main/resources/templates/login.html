@@ -49,7 +49,7 @@
                             </label>
                         </div>
                         <!-- alert for login failure-->
-                        <div class="alert alert-danger" th:if="${param.loginError}" role="alert" >
+                        <div class="alert alert-danger" th:if="${param.loginBadCredentials}" role="alert" >
                             <strong>Ошибка авторизации!</strong> Проверьте правильность ввода данных.
                         </div>
                         <!-- alert for login failure-->

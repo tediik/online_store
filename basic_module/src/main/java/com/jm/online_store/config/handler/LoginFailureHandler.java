@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 @Component
 @Slf4j
 public class LoginFailureHandler implements AuthenticationFailureHandler {
@@ -17,8 +18,15 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        log.info(exception.getMessage());
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.sendRedirect("/login?loginError=true");
+        String exceptionMessage = exception.getMessage();
+        log.info(exceptionMessage);
+        if (exceptionMessage.contains("Bad credentials")) {
+            response.sendRedirect("/login?loginBadCredentials=true");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        } else if (exceptionMessage.contains("Аккаунт заблокирован !!!")) {
+            response.sendRedirect("/login?accountBlocked=true");
+            response.setStatus(HttpStatus.LOCKED.value());
+        }
+
     }
 }
