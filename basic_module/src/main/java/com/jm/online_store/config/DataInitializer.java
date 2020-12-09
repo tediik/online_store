@@ -98,7 +98,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+//    @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -221,6 +221,19 @@ public class DataInitializer {
             customer1.setRoles(customerRoles);
 
             userService.addUser(customer1);
+
+            User customerU1 = userService.findByEmail("customer" + i + "@mail.ru").get();
+            customerU1.setFavouritesGoods(productSet);
+            userService.updateUser(customerU1);
+
+            FavouritesGroup favouritesGroup1 = new FavouritesGroup();
+            favouritesGroup1.setName("Все товары");
+            favouritesGroup1.setProducts(productSet);
+            favouritesGroup1.setUser(customerU1);
+            favouritesGroupService.save(favouritesGroup1);
+
+            customer1.setUserBasket(subBasketList);
+            userService.updateUser(customerU1);
         }
     }
 

@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -52,7 +53,7 @@ public class News {
     @Column(name = "archived")
     private boolean archived;
 
-    @OneToMany(mappedBy = "news", orphanRemoval = true)
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "news-sharedNews")
     private Set<SharedNews> sharedNews;
 

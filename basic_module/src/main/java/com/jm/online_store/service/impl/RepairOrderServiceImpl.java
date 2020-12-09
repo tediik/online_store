@@ -16,6 +16,7 @@ import com.jm.online_store.repository.RepairOrderRepository;
 import com.jm.online_store.service.interf.RepairOrderService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -180,12 +181,11 @@ public class RepairOrderServiceImpl implements RepairOrderService {
         document.add(paragraph);
         paragraph = new Paragraph("От " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(LocalDate.now()),
                 infoFont);
-        paragraph.add(new Paragraph("Заказчик " + repairOrder.getFullNameClient(), infoFont));
-        paragraph.add(new Paragraph("Номер телефона " + repairOrder.getTelephoneNumber(), infoFont));
-        paragraph.add(new Paragraph("Название устройства " + repairOrder.getNameDevice(), infoFont));
-        paragraph.add(new Paragraph("Гарантия " + (repairOrder.isGuarantee() ? "да" : "нет"), infoFont));
-        paragraph.add(new Paragraph("Описание проблемы " + repairOrder.getFullTextProblem()
-                .substring(3, repairOrder.getFullTextProblem().length() - 4), infoFont));
+        paragraph.add(new Paragraph("Заказчик: " + repairOrder.getFullNameClient(), infoFont));
+        paragraph.add(new Paragraph("Номер телефона: " + repairOrder.getTelephoneNumber(), infoFont));
+        paragraph.add(new Paragraph("Название устройства: " + repairOrder.getNameDevice(), infoFont));
+        paragraph.add(new Paragraph("Гарантия: " + (repairOrder.isGuarantee() ? "да" : "нет"), infoFont));
+        paragraph.add(new Paragraph("Описание проблемы: " + repairOrder.getFullTextProblem(), infoFont));
         paragraph.add(new Paragraph("Исполнитель ____________________  Заказчик ____________________", infoFont));
         paragraph.setAlignment(Element.ALIGN_LEFT);
         document.add(paragraph);
@@ -232,6 +232,19 @@ public class RepairOrderServiceImpl implements RepairOrderService {
     @Override
     public RepairOrder findRepairOrderByIdAndTelephoneNumber(Long id, String telephoneNumber) {
         return repairOrderRepository.findByIdAndTelephoneNumber(id, telephoneNumber).orElseThrow(RepairOrderNotFoundException::new);
+    }
+
+    /**
+     * Метод находит заказ по {@param orderNumber} и {@param telephoneNumber}, в случае если его нет,
+     * бросается исключение {@throws RepairOrderNotFoundException}
+     *
+     * @param orderNumber     номер заказ - наряда
+     * @param telephoneNumber номер телефона клиента
+     * @return RepairOrder заказ на ремонт
+     */
+    @Override
+    public RepairOrder findByOrderNumberAndTelephoneNumber(String orderNumber, String telephoneNumber) {
+        return repairOrderRepository.findByOrderNumberAndTelephoneNumber(orderNumber, telephoneNumber).orElseThrow(RepairOrderNotFoundException::new);
     }
 
     /**
