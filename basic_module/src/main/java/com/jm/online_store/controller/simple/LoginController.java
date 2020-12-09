@@ -8,7 +8,6 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,7 +70,7 @@ public class LoginController {
     @PostMapping("/restorePassword")
     public String loginRestore(@RequestParam("login_username") String email){
         User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        userService.resetPasswordConfirmationToken(user);
+        userService.sendConfirmationTokenToResetPassword(user);
         return "redirect:/login";
     }
 
