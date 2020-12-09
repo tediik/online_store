@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
