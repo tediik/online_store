@@ -3,7 +3,6 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.Role;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -118,39 +116,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод проверяет статус клиента, если срок восстановления истек - удаляется
-     *
-     * @param email    - нужен для проверки на существование
-     * @param password - нужен для подтверждения подлинности
-     * @return - false - если такой пользователь существует и статус не равен null,
-     * и статус больше равен больше 30 дней
-     * true - то есть предлагаем клиенту восстановится, если статус меньше 30 дней
-     */
-    @Override
-    @Transactional
-    public boolean checkCustomerStatus(String email, String password) {
-        Set<Role> roles = userService.findByEmail(email).get().getRoles();
-        if (roles.size() > 1) {
-            return false;
-        }
-        for (Role role : roles) {
-            if (role.getName().equals("ROLE_CUSTOMER")) {
-                Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-                if (customer != null && passwordEncoder.matches(password, customer.getPassword())) {
-                    if (!customer.isAccountNonLocked() && customer.getAnchorForDelete() != null) {
-                        if (!customer.getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
-                            deleteByID(customer.getId());
-                        } else {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * У нас клиент изначально не удаляется. При нажатии на кнопку "удалить профиль"
      * происходит запись времени, когда кнопка была нажата и подтвеждена.
      * Мы ему даем 30 дней на восстановление.
@@ -242,14 +207,8 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<Customer> customer = customerRepository.findByEmail(email);
         if (customer.isEmpty()) {
             return false;
-        }
-        if (customer.get().isAccountNonLocked() || customer.get().getAnchorForDelete() == null) {
+        } else if (customer.get().isAccountNonLocked() || customer.get().getAnchorForDelete() == null) {
             return true;
-        }
-        if (!customer.get().getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
-            deleteByID(customer.get().getId());
-            log.info("время для восстнаовления истекло, удаляем клиента ");
-            return false;
         }
         return true;
     }

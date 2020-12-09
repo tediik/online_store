@@ -14,6 +14,17 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class LoginFailureHandler implements AuthenticationFailureHandler {
+
+    /**
+     * Метод обработки эксепшенов при попытке Аутентификации
+     * которые приходят от SecurityUserDetailsService
+     *
+     * @param request   HttpServletRequest
+     * @param response  HttpServletResponse
+     * @param exception AuthenticationException
+     * @throws IOException      e
+     * @throws ServletException e
+     */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,

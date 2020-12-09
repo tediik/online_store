@@ -26,23 +26,39 @@ public class SecurityUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    /**
+     * Если такго пользователся не существует throws UsernameNotFoundException
+     * Если Юзер - кастомер проверяем :
+     * 1) если заблокмрован но срок данный ему на восстановление не прошел throw new LockedException
+     * выводим сообщение с сылкой на восстановление
+     * 2) если заблокирован и срок данный ему на восстановление прошел throw new CredentialsExpiredException
+     * удаляем его и сообщаем ему об этом
+     * эти экспшены обрабатываются в классе LoginFailureHandler, дальнейшую логику смотри там
+     *
+     * @param email email
+     * @return user for security
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UsernameNotFoundException("User Not Found with -> username or email: " + email));
-        Customer customer = (Customer) user;
-        if(!customer.isAccountNonLocked() && customer.getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))){
-            log.warn("Пользователь с почтой " + user.getEmail() + " заблокирован");
-            throw new LockedException("Аккаунт заблокирован !!!");
-        } else if(!customer.isAccountNonLocked() &&
-                !customer.getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
-            userRepository.deleteById(customer.getId());
-            log.info("Говорим пользователю что его аккаунт был удален, т.к. 30 дней истекло");
-            throw new CredentialsExpiredException("Аккаунт был удален");
+        if (user.getClass().equals(Customer.class)) {
+            Customer customer = (Customer) user;
+            if (!customer.isAccountNonLocked() && customer.getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
+                log.warn("Пользователь с почтой " + user.getEmail() + " заблокирован");
+                throw new LockedException("Аккаунт заблокирован !!!");
+            } else if (!customer.isAccountNonLocked() &&
+                    !customer.getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
+                userRepository.deleteById(customer.getId());
+                log.info("Говорим пользователю " + customer.getEmail() + " что его аккаунт был удален, т.к. 30 дней истекло");
+                throw new CredentialsExpiredException("Аккаунт был удален");
+            }
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 mapRolesToAuthorities(user.getRoles()));
+
     }
 
     public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
