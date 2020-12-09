@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод получения списка пользователей, отсортированных в соответствии с выбранной ролью
+     * Получение списка пользователей, отсортированных в соответствии с выбранной ролью
      *
      * @param roleString роль, по которой фильтруется список пользователей
      * @return List<User> отфильтрованный список пользователей
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод проверяет существование пользователя в БД.
+     * Проверяет существование пользователя в БД.
      *
      * @param email - поле по которому проверяем пользователя
      * @return false -  Если такой пользователь не был найден.
@@ -132,8 +132,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод добавления нового пользователя.
-     * проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение)
+     * Добавление нового пользователя.
+     * Проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение).
      *
      * @param user полученный объект User
      */
@@ -159,8 +159,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод обновления пользователя.
-     *
+     * Обновление пользователя.
      * @param user пользователь, полученный из контроллера.
      */
     @Override
@@ -196,11 +195,9 @@ public class UserServiceImpl implements UserService {
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
     }
-
-
+    
     /**
-     * метод удаления пользователя по идентификатору.
-     *
+     * Удаляет пользователя по идентификатору.
      * @param id идентификатор.
      */
     @Override
@@ -210,8 +207,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод регистрации нового User.
-     *
+     * Регистрация нового User.
      * @param userForm User построенный из данных формы.
      */
     @Override
@@ -252,7 +248,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод принимает в качестве параметров юзера и новый пароль, устанавливет данному юзеру новый пароль
+     * Устанавливет переданному пользователю новый пароль.
+     * @param user Пользователь
+     * @param newPassword новый пароль
      */
     @Override
     @Transactional
@@ -270,10 +268,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     *
-     * @param user - customer  , запросивший смену пароля
-     *
-     *  Метод генерирует новый пароль и отправляет его юзеру на почту
+     * Генерирует новый пароль и отправляет его пользователю на почту.
+     * @param user - Покупатель, запросивший смену пароля.
      */
     @Transactional
     @Override
@@ -282,7 +278,6 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(user.getEmail(), "Сгенерирован временный новый пароль", newPass, "pass change");
         user.setPassword(passwordEncoder.encode(newPass));
         log.info("для юзера с логином {} сгенерирован новый пароль: {}", user.getEmail(), newPass);
-
     }
 
     /**
@@ -304,8 +299,9 @@ public class UserServiceImpl implements UserService {
         return gen.generatePassword(10, lowerCaseRule,
                 upperCaseRule, digitRule);
     }
+    
     /**
-     * метод генерирует токен для сброса пароля и отправляет на указанную юзером почту
+     * Генерирует токен для сброса пароля и отправляет на указанную пользователем почту
      */
     @Override
     @Transactional
@@ -318,7 +314,7 @@ public class UserServiceImpl implements UserService {
                 confirmationToken.getConfirmationToken()
         );
         mailSenderService.send(user.getEmail(), "Ссылка подтверждение для генерации нового пароля", message, "pass change");
-        log.info("На почту {} отправлена ссылка подтверждение для генерации нового пароля {}", user.getEmail(), message);
+        log.info("На почту: {} отправлена ссылка-подтверждение для генерации нового пароля. Текст: {}", user.getEmail(), message);
     }
 
     /**
@@ -371,7 +367,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(confirmationToken.getUserId()).orElseThrow(UserNotFoundException::new);
         user.setEmail(confirmationToken.getUserEmail());
         userRepository.save(user);
-        log.info("для юзера с логином {} установлен новый логин: {}", user.getEmail(), confirmationToken.getUserEmail());
+        log.info("Для пользователя с логином: {} установлен новый логин: {}", user.getEmail(), confirmationToken.getUserEmail());
         return true;
     }
 
@@ -437,7 +433,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to add new user from admin page
-     *
      * @param newUser
      */
     @Override
@@ -463,9 +458,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
-     *
      * @param user
-     * @return
+     * @return User
      */
     @Override
     @Transactional
@@ -504,10 +498,9 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
-     *
-     * @param user
-     * @param address
-     * @throws UserNotFoundException
+     * @param user переданный пользователь
+     * @param address новый адрес для пользователя
+     * @throws UserNotFoundException вылетает, если пользователь не найден в БД
      */
     @Transactional
     @Override
@@ -539,7 +532,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which builds and returns currently logged in User from Authentication
-     *
      * @return User
      */
     public User getCurrentLoggedInUser() {
@@ -553,7 +545,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which finds and returns the User by token after email confirmation
-     *
      * @return User
      */
     @Transactional
