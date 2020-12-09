@@ -77,6 +77,7 @@ function changeMail() {
  * Method for closing modals
  */
 function close() {
+    $("body").removeClass('modal-open');
     $('#openNewMailModal').hide();
     $('#openChangePassModal').hide();
     $(".modal-backdrop.show").hide();

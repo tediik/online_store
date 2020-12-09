@@ -60,6 +60,11 @@ public class MainPageController {
 		return "redirect:/logout";
 	}
 
+	/**
+	 *
+	 *
+	 * Метод отрабатывает при переходе по ссылке-подтверждению полученной на почту при запросе на сброс и генерацию нового пароля
+	 */
 	@GetMapping("/restorepassword/{token}")
 	public String restorePassword(Model model, @PathVariable String token) {
 		ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);

@@ -252,7 +252,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
+    @Override
     @Transactional
     public void changeUsersPass(User user, String newPassword) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
