@@ -251,7 +251,9 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(newMail, "Activation code", message, "email address validation");
     }
 
-
+    /**
+     * Метод принимает в качестве параметров юзера и новый пароль, устанавливет данному юзеру новый пароль
+     */
     @Override
     @Transactional
     public void changeUsersPass(User user, String newPassword) {
@@ -264,6 +266,7 @@ public class UserServiceImpl implements UserService {
         );
         mailSenderService.send(user.getEmail(), "Пароль успешно изменен", message, "pass change");
         user.setPassword(passwordEncoder.encode(newPassword));
+        log.info("для юзера с логином {} установлен новый пароль: {}", user.getEmail(), newPassword);
     }
 
     /**
@@ -278,7 +281,7 @@ public class UserServiceImpl implements UserService {
         String newPass = generatePassayPassword();
         mailSenderService.send(user.getEmail(), "Сгенерирован временный новый пароль", newPass, "pass change");
         user.setPassword(passwordEncoder.encode(newPass));
-        log.info("Сгенерирован новый пароль " + newPass);
+        log.info("для юзера с логином {} сгенерирован новый пароль: {}", user.getEmail(), newPass);
 
     }
 
@@ -288,30 +291,25 @@ public class UserServiceImpl implements UserService {
      */
     private String generatePassayPassword() {
         PasswordGenerator gen = new PasswordGenerator();
-        CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
-        CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
+
+        CharacterRule lowerCaseRule = new CharacterRule(EnglishCharacterData.LowerCase);
         lowerCaseRule.setNumberOfCharacters(2);
 
-        CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
-        CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
+        CharacterRule upperCaseRule = new CharacterRule(EnglishCharacterData.UpperCase);
         upperCaseRule.setNumberOfCharacters(2);
 
-        CharacterData digitChars = EnglishCharacterData.Digit;
-        CharacterRule digitRule = new CharacterRule(digitChars);
+        CharacterRule digitRule = new CharacterRule(EnglishCharacterData.Digit);
         digitRule.setNumberOfCharacters(2);
-
 
         return gen.generatePassword(10, lowerCaseRule,
                 upperCaseRule, digitRule);
     }
-
     /**
-     *
      * метод генерирует токен для сброса пароля и отправляет на указанную юзером почту
      */
     @Override
     @Transactional
-    public void resetPasswordConfirmationToken(User user){
+    public void sendConfirmationTokenToResetPassword(User user){
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
         String message = String.format(
@@ -319,7 +317,8 @@ public class UserServiceImpl implements UserService {
                 user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
-        mailSenderService.send(user.getEmail(), "Сгенерирован временный новый пароль", message, "pass change");
+        mailSenderService.send(user.getEmail(), "Ссылка подтверждение для генерации нового пароля", message, "pass change");
+        log.info("На почту {} отправлена ссылка подтверждение для генерации нового пароля {}", user.getEmail(), message);
     }
 
     /**
@@ -361,7 +360,6 @@ public class UserServiceImpl implements UserService {
     /**
      * Method receives token and request after User confirms mail change via link
      * After that, new email address is saved to users DB table
-     *
      */
     @Override
     @Transactional
@@ -373,6 +371,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(confirmationToken.getUserId()).orElseThrow(UserNotFoundException::new);
         user.setEmail(confirmationToken.getUserEmail());
         userRepository.save(user);
+        log.info("для юзера с логином {} установлен новый логин: {}", user.getEmail(), confirmationToken.getUserEmail());
         return true;
     }
 

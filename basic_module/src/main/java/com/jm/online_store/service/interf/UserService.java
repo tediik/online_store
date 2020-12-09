@@ -50,7 +50,7 @@ public interface UserService {
 
     void changeUsersPass(User user, String newMail);
 
-    void resetPasswordConfirmationToken(User user);
+    void sendConfirmationTokenToResetPassword(User user);
 
     void restorePassword(User user);
 
