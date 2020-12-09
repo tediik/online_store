@@ -63,11 +63,11 @@ public class LoginController {
         return "denied";
     }
 
-    @GetMapping("/restorePassword")
-    public String loginRestore(){
-        return "loginRestore";
-    }
-
+    /**
+     * метод проверяет существует ли юзер под таким email и если да , то высылает ссылку подтверждение
+     * @param email на который высылается ссылка - подтверждение для сброса игенерации нового пароля
+     * @return редирект на страницу логина
+     */
     @PostMapping("/restorePassword")
     public String loginRestore(@RequestParam("login_username") String email){
         User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
