@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerService {
+
+    void deleteAllBlockedWithThirtyDaysPassed();
+
     List<Customer> findAll();
 
     boolean changePassword(Long id, String oldPassword, String newPassword);

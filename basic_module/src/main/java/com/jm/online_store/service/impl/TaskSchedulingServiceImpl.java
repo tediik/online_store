@@ -2,6 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.repository.TaskSettingsRepository;
+import com.jm.online_store.service.interf.DeleteExpiredProfileTask;
 import com.jm.online_store.service.interf.PriceListService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
@@ -28,6 +29,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     private final TaskSettingsRepository taskSettingsRepository;
     private final StockMailDistributionTask stockMailDistribution;
     private final PriceListService priceListService;
+    private final DeleteExpiredProfileTask deleteExpiredProfileTask;
     private final Map<Long, ScheduledFuture<?>> jobsMap;
 
     /**
@@ -65,11 +67,15 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     public void contextRefreshedEvent() {
         Optional<TaskSettings> stockMailDistributionTask = taskSettingsRepository.findByTaskName("stockMailDistribution");
         Optional<TaskSettings> dailyPriceCreateTask = taskSettingsRepository.findByTaskName("dailyPriceCreate");
+        Optional<TaskSettings> deleteExpiredCustomersProfile = taskSettingsRepository.findByTaskName("deleteExpiredCustomersProfile");
         if (stockMailDistributionTask.isPresent() && stockMailDistributionTask.get().isActive()) {
             addTaskToScheduler(stockMailDistributionTask.get(), stockMailDistribution);
         }
         if (dailyPriceCreateTask.isPresent() && dailyPriceCreateTask.get().isActive()) {
             addTaskToScheduler(dailyPriceCreateTask.get(), priceListService);
+        }
+        if (deleteExpiredCustomersProfile.isPresent() && deleteExpiredCustomersProfile.get().isActive()) {
+            addTaskToScheduler(deleteExpiredCustomersProfile.get(), deleteExpiredProfileTask);
         }
     }
 

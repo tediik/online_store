@@ -59,7 +59,7 @@ public class CustomerServiceImpl implements CustomerService {
             log.debug("Новый пароль не прошел валидацию");
             return false;
         }
-        userService.changeUsersPass(customer,newPassword);
+        userService.changeUsersPass(customer, newPassword);
         return true;
     }
 
@@ -214,7 +214,6 @@ public class CustomerServiceImpl implements CustomerService {
         return true;
     }
 
-
     /**
      * Удаление клиента по id.
      *
@@ -226,4 +225,19 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.deleteById(id);
     }
 
+    /**
+     * Удаление кастомеров с удалнным профилем, у которых срок, 30 дней, для восстановления прошел.
+     */
+    @Override
+    @Transactional
+    public void deleteAllBlockedWithThirtyDaysPassed() {
+        LocalDateTime timeAfterThirtyDaysFromNow = LocalDateTime.now().minusDays(30);
+        List<Customer> listForDelete = customerRepository.findAllByAnchorForDeleteThirtyDays(timeAfterThirtyDaysFromNow);
+        if (listForDelete.isEmpty()) {
+            log.info("Список профилей для удаления пуст, метод для удаления не будет вызвыан");
+        } else {
+            log.info("В списке на удаление есть профили , вызываем метод для удаления");
+            customerRepository.deleteInBatch(listForDelete);
+        }
+    }
 }
