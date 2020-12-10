@@ -1,3 +1,5 @@
+let stopWords = [];
+let getFilter = false;
 $(document).ready(function () {
     function showComments() {
         let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
@@ -8,6 +10,8 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 console.log(response);
+                //подгружаем список стоп-слов и включаем фильтрацию
+                loadWord();
                 $.each(response, function (i, comment) {
                     if (comment.parentId === null) {
                         $('#showComments').append($(`
@@ -57,7 +61,40 @@ $(document).ready(function () {
             if ($("#commentForm").find('input:text').val().trim().length < 1) {
                 alert("Please Enter Text...");
                 return;
-            } else {
+            }
+            else {
+                let task = $("#commentForm").find('input:text').val().trim();
+                console.log('len=' + stopWords.length)
+                console.log('getFilter=' + getFilter)
+
+                //Если включен фильтр стоп слов. Ищем в тексте стоп-слова
+                if (getFilter) {
+                    let textCheck = task.toLowerCase();
+                    let i, len = stopWords.length, findStop;
+                    let currentBadWords = [];
+                    let countWord = 0;
+                    for (i = 0; i < len; i++) {
+                        findStop = new RegExp(stopWords[i], 'g');
+                        if (findStop.test(textCheck)) {
+                            countWord++;
+                            currentBadWords.push(stopWords[i]);
+
+                            //если хотим возвращать пользователю подсвеченные слова
+                            //let tag = 'span'; textCheck = textCheck.replace(re, '<'+ tag +' class="text-danger">$&</'+ tag +'>');
+                        }
+                    }
+
+                    // Если в тексте нашлись стоп-слова
+                    if (countWord > 0) {
+                        let stopAlert = 'В вашем тексте есть запрещенные слова (' + currentBadWords + '). \nПожалуйста удалите их!'
+                        if (countWord === 1) stopAlert = 'В вашем тексте есть запрещенное слово (' + currentBadWords + '). \nПожалуйста удалите его!'
+                        toastr.error(stopAlert);
+
+                        //если хотим возвращать пользователю подсвеченные слова
+                        //$('#commentForm').find('input:text').val(textCheck);
+                        return;
+                    }
+                }
 
                 var formData = $(this).serializeArray();
                 var formDataObject = {};
@@ -169,5 +206,34 @@ $(document).ready(function () {
             });
         });
     });
-});
 
+    /**
+     * Функция проверяет включен фильтр стоп слов. Если да,
+     * запрашивает стоп слова из базы
+     * @returns {Promise<void>}
+     */
+    async function loadWord() {
+        await fetch('/rest/bad-words/status')
+            .then((response) => {
+                response.json().then((data) => {
+                    if (data.textValue === 'yes') {
+                        getFilter = true;
+
+                        // подгружаем стоп-слова
+                        fetch('/rest/bad-words/get-active')
+                            .then((response) => {
+                                response.json().then((dataNew) => {
+                                    dataNew.forEach(function (itemNew) {
+                                        stopWords.push(itemNew.badword.toString().toLowerCase())
+                                    })
+                                })
+                            })
+                    }
+                    if (data.textValue === 'no') {
+                        getFilter = false;
+                    }
+                })
+            })
+    }
+
+});
