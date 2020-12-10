@@ -20,7 +20,7 @@ $(document).ready(function () {
                                 <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52">
                             </div>
                             <div class="media-body" id='mediaBody" + ${comment.id} + "'>
-                                <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                <h5 class="mt-0">${comment.firstName} ${comment.lastName}  ${comment.timeStamp}</h5>
                                 <div class="message">${comment.content}</div>
                                 <button type='button' id='button${comment.id}' class='btn btn-link reply'>Ответить</button>
                                 <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
@@ -40,7 +40,7 @@ $(document).ready(function () {
                                     src="/uploads/images/${comment.userPhoto}" width="52">
                                 </div>
                             <div class="media-body"> 
-                                <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp} </h5>
+                                <h5 class="mt-0">${comment.firstName} ${comment.lastName}  ${comment.timeStamp}</h5>
                                 <div class="message">${comment.content}</div>
                                 <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
                                 <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
@@ -59,7 +59,6 @@ $(document).ready(function () {
         $('#commentForm').on('submit', function (event) {
             event.preventDefault();
             if ($("#commentForm").find('input:text').val().trim().length < 1) {
-                alert("Please Enter Text...");
                 return;
             }
             else {
@@ -121,7 +120,7 @@ $(document).ready(function () {
                                     height="52" src="/uploads/images/${comment.userPhoto}" width="52">
                                 </div>
                                 <div class="media-body" id='mediaBody${response.id}'>
-                                <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                <h5 class="mt-0">${comment.firstName} ${comment.lastName}  ${comment.timeStamp}</h5>
                                 <div class="message">${comment.content}</div>
                                 <button type='button' id='button${comment.id}' class='btn btn-link reply'>Ответить</button>
                                 <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
@@ -165,7 +164,6 @@ $(document).ready(function () {
                 let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
 
                 if ($("#replyText").val().trim().length < 1) {
-                    alert("Please Enter Text...");
                     return;
                 } else {
 
@@ -193,7 +191,7 @@ $(document).ready(function () {
                                         height="52" src="/uploads/images/${comment.userPhoto}" width="52">
                                     </div>
                                     <div class="media-body">
-                                    <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                    <h5 class="mt-0">${comment.firstName} ${comment.lastName}  ${comment.timeStamp}</h5>
                                     <div class="message">${comment.content}</div>
                                     <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
                                     <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
