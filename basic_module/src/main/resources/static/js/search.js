@@ -2,10 +2,23 @@ let productSearchByNameUrl = '/api/products/searchByName/'
 let productSearchByDescription = '/api/products/searchByDescription/'
 $(document).ready(function ($) {
     searchProduct(window.location.pathname.split('/')[2])
+    preventDefaultEventForEnterKeyPress()
 });
 
 document.getElementById('pageSearchButton').addEventListener('click', handleSearchButton)
 
+/**
+ * function that prevents submit event on Enter keypress in search input
+ */
+let focusButton = document.querySelector('#pageSearchButton');
+function preventDefaultEventForEnterKeyPress() {
+    $(window).keydown(function (event) {
+        if (event.keyCode === 13) {
+            focusButton.focus();
+            handleSearchButton()
+        }
+    })
+}
 /**
  * function handles search button click
  */
