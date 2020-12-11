@@ -53,6 +53,12 @@ public class CustomerController {
         return "customerPage";
     }
 
+
+    @GetMapping("/basket")
+    public String getUserBasket() {
+        return "basketPage";
+    }
+
     /**
      * метод для формирования данных для обновления User.
      *

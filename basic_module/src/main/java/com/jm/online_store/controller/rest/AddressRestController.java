@@ -29,10 +29,11 @@ public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;
 
-    @GetMapping(value = "/rest/allShops")
+    @GetMapping(value = "/customer/rest/allShops")
     public ResponseEntity<List<Address>> findAll() {
         return ResponseEntity.ok(addressService.findAllShops());
     }
+
     @GetMapping(value = "/rest/userAddresses")
     public ResponseEntity<Set<Address>> userAddresses() {
             if(userService.getCurrentLoggedInUser().getUserAddresses() != null) {
