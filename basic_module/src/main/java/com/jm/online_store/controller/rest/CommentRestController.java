@@ -110,9 +110,8 @@ public class CommentRestController {
 
     /**
      * Удаляет комментарий по его айди
-     *
      * @param commentId
-     * @return ResponseEntity<List < CommentDto>>
+     * @return ResponseEntity<List <CommentDto>>
      */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId) {
@@ -134,9 +133,8 @@ public class CommentRestController {
 
     /**
      * Обновляет комментарий
-     *
      * @param comment
-     * @return ResponseEntity<List < CommentDto>>
+     * @return ResponseEntity<?>
      */
     @PutMapping
     public ResponseEntity<?> updateComment(@RequestBody @Valid Comment comment) {

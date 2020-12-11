@@ -2,7 +2,9 @@ package com.jm.online_store.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.CascadeType;
@@ -58,6 +60,10 @@ public class Comment {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<ReportComment> reportComments;
+
+    @Column
+    @NonNull
+    private boolean deletedHaveKids;
 
     public Comment(String content) {
         this.content = content;

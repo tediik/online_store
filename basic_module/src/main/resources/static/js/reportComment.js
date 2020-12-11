@@ -1,3 +1,4 @@
+/*
 $(document).on('click', '.report', function () {
     let commentId = $(this).attr("id").replace(/\D/g, '');
     let reportCommentBox = $(`
@@ -47,3 +48,4 @@ $(document).on('click', '.report', function () {
     });
 });
 
+*/
