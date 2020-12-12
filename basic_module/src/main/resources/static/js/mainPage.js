@@ -10,12 +10,12 @@ $(document).ready(function ($) {
 /**
  * function that prevents submit event on Enter keypress in search input
  */
+let focusButton = document.querySelector('#pageSearchButton');
 function preventDefaultEventForEnterKeyPress() {
     $(window).keydown(function (event) {
         if (event.keyCode === 13) {
-            event.preventDefault();
+            focusButton.focus();
             handleSearchButton()
-            return false;
         }
     })
 }
