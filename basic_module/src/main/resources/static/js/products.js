@@ -259,7 +259,7 @@ function handleAddBtn() {
      * функция очистки формы характеристик нового продукта
      */
     function clearCharacteristicForm() {
-        $('#characteristicForm')[0].remove();
+        $('#addCharacteristicForm')[0].remove();
     }
 
     /**
