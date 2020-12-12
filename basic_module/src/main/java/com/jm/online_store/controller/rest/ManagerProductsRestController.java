@@ -165,28 +165,6 @@ public class ManagerProductsRestController {
     }
 
     /**
-     * Метод добавляет характеристики, только что добавденному, товару
-     *
-     * @param addedProductName название добавденного товара
-     * @return ResponseEntity<ProductCharacteristic> Возвращает добавленный товар с кодом ответа
-     */
-    @PostMapping(value = "/rest/products/addCharacteristics/{addedProductName}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Long>> addCharacteristics(@RequestBody ProductCharacteristicDto[] productCharacteristicsDto,
-                                                         @PathVariable String addedProductName) {
-        List<Long> productCharacteristicIds = new ArrayList<>();
-
-        for (ProductCharacteristicDto productCharacteristicDto : productCharacteristicsDto) {
-            if (!productCharacteristicDto.getValue().equals("")) {
-                productCharacteristicIds.add(productCharacteristicService.addProductCharacteristic(
-                        productService.findProductByName(addedProductName).get().getId(),
-                        productCharacteristicDto.getCharacteristicId(), productCharacteristicDto.getValue()));
-            }
-        }
-
-        return ResponseEntity.ok(productCharacteristicIds);
-    }
-
-    /**
      * Редактирует товар
      *
      * @param product товар для редактирования
@@ -337,16 +315,5 @@ public class ManagerProductsRestController {
         } catch (NullPointerException | IOException e) {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    /**
-     * Метод, который возвращает характеристи для выбранной категории
-     *
-     * @param categoryId id нужной категории товаров
-     * @return List<Characteristic> лист харктеристик
-     */
-    @GetMapping("/manager/rest/characteristics/{categoryId}")
-    public List<Characteristic> getCharacteristicsByCategory(@PathVariable Long categoryId) {
-        return characteristicService.findByCategoryId(categoryId);
     }
 }

@@ -52,4 +52,15 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
         return categoriesService.getCategoryById(categoryId).get().getCharacteristics();
     }
+
+    /**
+     * Метод получения всех характеристик
+     *
+     * @return List<Characteristic>
+     */
+
+    @Override
+    public List<Characteristic> findAll() {
+        return characteristicRepository.findAll();
+    }
 }

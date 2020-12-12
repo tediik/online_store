@@ -120,7 +120,6 @@ function vizovRenderaHarakteristik() {
         toastr.error("Категория не выбрана!")
         return false;
     } else {
-        clearCharacteristicForm()
         for (let z = 0; z < listOfAll.length; z++) {
             let currItem = listOfAll[z];
             if (selectedCat.label.localeCompare(currItem.text) === 0) {
@@ -344,8 +343,11 @@ function handleAddBtn() {
 
 }
 
+/**
+ * функция делает fetch запрос на рест контроллер, отправляя заполненные характеристики и имя товара
+ */
 function fetchToAddCharacteristics(addedProductName) {
-    fetch("/rest/products/addCharacteristics/" + addedProductName, {
+    fetch("/manager/characteristics/addCharacteristics/" + addedProductName, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
         body: JSON.stringify(createProductCharacteristicArray(characteristicsSelectedCategory))
@@ -596,20 +598,10 @@ function createProductCharacteristicArray(characteristics) {
  * и передает функции рендера полей характеристик renderCharacteristicFields
  */
 function fetchCharacteristicsAndRenderFields(categoryId) {
-    fetch("rest/characteristics/" + categoryId)
+    fetch("/manager/characteristics/" + categoryId)
         .then(response => response.json())
         .then(characteristics => renderCharacteristicFields(characteristics))
 }
-
-/*/!**
- * функция делает fetch запрос на рест контроллер,получает характеристики для выбранной категории,
- * преобразует полученный объект в json
- *!/
-function fetchCharacteristicsSelectedProduct(categoryId) {
-    fetch("rest/characteristics/" + categoryId)
-        .then(response => response.json())
-        .then(characteristics => characteristicsSelectedCategory = characteristics)
-}*/
 
 /**
  * функция делает fetch запрос на рест контроллер, преобразует полученный объект в json
@@ -633,7 +625,7 @@ function fetchProductsAndRenderNotDeleteTable() {
 }
 
 /**
- *  Ниже методы, из файла managerProductCategorieCRUD
+ *  Ниже методы, из файла managerProductCategoriesCRUD
  *  Для отдельной вкладка Категории товаров
  */
 

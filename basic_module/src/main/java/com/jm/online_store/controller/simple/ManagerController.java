@@ -56,6 +56,12 @@ public class ManagerController {
         return "productsRating";
     }
 
+    @GetMapping("/characteristics")
+    public String getCharacteristics() {
+
+        return "characteristics";
+    }
+
     /*
      добавил маппинг для отображения профиля на странице менеджера
      */
