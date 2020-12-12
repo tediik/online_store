@@ -33,5 +33,5 @@ public class CommonSettings {
     private String textValue;
 
     @Column(name = "status")
-    private String status;
+    private boolean status;
 }

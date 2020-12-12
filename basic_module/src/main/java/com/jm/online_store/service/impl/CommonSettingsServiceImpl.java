@@ -41,7 +41,7 @@ public class CommonSettingsServiceImpl implements CommonSettingsService {
     @Transactional
     @Override
     public void updateTextValue(CommonSettings settings) {
-       if(commonSettingsRepository.updateTextValue(settings.getTextValue(), settings.getStatus(),settings.getSettingName()) != 1){
+       if(commonSettingsRepository.updateTextValue(settings.getTextValue(), settings.isStatus(),settings.getSettingName()) != 1){
            throw new CommonSettingsNotFoundException();
        }
     }

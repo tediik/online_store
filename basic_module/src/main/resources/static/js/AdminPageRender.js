@@ -473,7 +473,7 @@ function renderAcceptedRolesInMaintenance() {
                 selectRoles.append(`<option value=${rolesArr[i]}>${rolesArr[i]}</option>>`)
         }
 
-        if (modeStatus === 'false') {
+        if (modeStatus === false) {
             selectMode.namedItem('false').selected = true
         } else {
             selectMode.namedItem('true').selected = true

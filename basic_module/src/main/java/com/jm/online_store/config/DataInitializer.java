@@ -1175,7 +1175,7 @@ public class DataInitializer {
         CommonSettings maintenanceModeTemplate = CommonSettings.builder()
                 .settingName("maintenance_mode")
                 .textValue("ROLE_ADMIN")
-                .status("false")
+                .status(false)
                 .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);

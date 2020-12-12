@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * Контролллер страницы "Технические работы (maintenanceMode.html)"
  */
 @Controller
-public class MaintenanceSimpleController {
+public class MaintenanceModeController {
 
     @GetMapping("maintenanceMode")
     public String maintenanceMode() {

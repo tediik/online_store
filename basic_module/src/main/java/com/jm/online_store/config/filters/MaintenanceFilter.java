@@ -29,8 +29,8 @@ import java.util.Set;
 @Component
 @WebFilter("/admin")
 public class MaintenanceFilter implements Filter {
-    private static final String STATUS_NORMAL_OPERATION = "false";
-    private String status = STATUS_NORMAL_OPERATION;
+    private static final boolean STATUS_NORMAL_OPERATION = false;
+    private boolean status = STATUS_NORMAL_OPERATION;
     private Set<String> userRoles = new HashSet<>();
     private final CommonSettingsRepository commonSettingsRepository;
 
@@ -58,7 +58,7 @@ public class MaintenanceFilter implements Filter {
 
         CommonSettings commonSettings = commonSettingsRepository.findBySettingName("maintenance_mode")
                 .orElseThrow(CommonSettingsNotFoundException::new);
-        status = commonSettings.getStatus();
+        status = commonSettings.isStatus();
         userRoles = Set.of(commonSettings.getTextValue().split(","));
 
         if (roles.stream().anyMatch(userRoles::contains) || "/maintenanceMode".equals(path) || path.contains("login")) {
@@ -66,7 +66,7 @@ public class MaintenanceFilter implements Filter {
             return;
         }
 
-        if (!status.equals(STATUS_NORMAL_OPERATION)) {
+        if (status != STATUS_NORMAL_OPERATION) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/maintenanceMode");
             return;
         }

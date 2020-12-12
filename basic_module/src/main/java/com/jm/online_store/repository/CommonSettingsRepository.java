@@ -13,5 +13,5 @@ public interface CommonSettingsRepository extends JpaRepository<CommonSettings, 
 
     @Modifying
     @Query("UPDATE CommonSettings set textValue = :textValue, status = :status WHERE settingName = :settingName")
-    int updateTextValue(@Param("textValue") String textValue, @Param("status") String status, @Param("settingName") String settingName);
+    int updateTextValue(@Param("textValue") String textValue, @Param("status") boolean status, @Param("settingName") String settingName);
 }
