@@ -1,10 +1,12 @@
 package com.jm.online_store.model.dto;
 
-import com.jm.online_store.model.Characteristic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * модель DTO для создания ProductCharacteristic по id характеристики
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

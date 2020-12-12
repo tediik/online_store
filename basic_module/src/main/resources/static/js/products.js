@@ -101,23 +101,6 @@ async function fillProductCategoriesIn(htmlId) {
 
 showAndRefreshNotDeleteHomeTab()
 
-//Метод для попробовать, убрать
-function vizovRenderaHarakteristik() {
-    let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
-    if (!selectedCat) {
-        toastr.error("Категория не выбрана!")
-        return false;
-    } else {
-        for (let z = 0; z < listOfAll.length; z++) {
-            let currItem = listOfAll[z];
-            if (selectedCat.label.localeCompare(currItem.text) === 0) {
-                selectedCategory = currItem.id;
-            }
-        }
-    }
-    fetchCharacteristicsAndRenderFields(selectedCategory);
-}
-
 /**
  * Функция обработки действий чекбокса
  * @param check
@@ -128,6 +111,24 @@ function toggle(check) {
     } else {
         showAndRefreshNotDeleteHomeTab()
     }
+}
+
+//Метод для попробовать, убрать
+function vizovRenderaHarakteristik() {
+    let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
+    if (!selectedCat) {
+        toastr.error("Категория не выбрана!")
+        return false;
+    } else {
+        clearCharacteristicForm()
+        for (let z = 0; z < listOfAll.length; z++) {
+            let currItem = listOfAll[z];
+            if (selectedCat.label.localeCompare(currItem.text) === 0) {
+                selectedCategory = currItem.id;
+            }
+        }
+    }
+    fetchCharacteristicsAndRenderFields(selectedCategory);
 }
 
 /**
@@ -239,6 +240,13 @@ function showAndRefreshNotDeleteHomeTab() {
 }
 
 /**
+ * функция очистки формы характеристик нового продукта
+ */
+function clearCharacteristicForm() {
+    $('#addCharacteristicForm')[0].remove();
+}
+
+/**
  * функция обработки кнопки add на форме нового продукта
  */
 function handleAddBtn() {
@@ -253,13 +261,6 @@ function handleAddBtn() {
      */
     function clearFormFields() {
         $('#addForm')[0].reset();
-    }
-
-    /**
-     * функция очистки формы характеристик нового продукта
-     */
-    function clearCharacteristicForm() {
-        $('#addCharacteristicForm')[0].remove();
     }
 
     /**

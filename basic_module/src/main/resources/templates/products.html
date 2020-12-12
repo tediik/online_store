@@ -99,6 +99,9 @@
                         <a class="nav-item nav-link" id="nav-products-categories-tab" data-toggle="tab"
                            href="#nav-products-categories" role="tab" aria-controls="nav-products-categories"
                            aria-selected="false">Категории товаров</a>
+                        <a class="nav-item nav-link" id="nav-products-characteristics-tab" data-toggle="tab"
+                           href="#nav-products-characteristics" role="tab" aria-controls="nav-products-categories"
+                           aria-selected="false">Управление характеристиками</a>
                         <form class="checkbox">
                             <!-- for keeping checkbox checked when page loads use checked="checked" --->
                             <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
@@ -160,77 +163,51 @@
                     </div>
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <!--                Secondary user addition form-->
-                        <nav>
-                            <div class="nav nav-pills" id="nav-tab1" role="tablist">
-                                <a class="nav-link active" id="navAddProduct-tab" data-toggle="tab"
-                                   href="#navAddProduct" role="tab" aria-controls="nav-profile" aria-selected="true">Добавить
-                                    товар</a>
-                                <a class="nav-link" id="navCharacteristicAdd-tab" data-toggle="tab"
-                                   href="#navCharacteristicAdd" role="tab" aria-controls="nav-profile"
-                                   aria-selected="false">Задать характеристики</a>
+                        <h3>Добавить товар</h3>
+                        <form id="addForm">
+                            <div class="panel panel-default" id="new-user-form">
+                                <div class="panel-body">
+                                    <div id="add-productName-form-group" class="form-group">
+                                        <label for="addProduct">Наименование:</label>
+                                        <input type="email" id="addProduct" name="product"
+                                               placeholder="Наименование"
+                                               class="form-control">
+                                    </div>
+                                    <div class="form-group addPriceDiv">
+                                        <label for="addPrice">Цена:</label>
+                                        <input type="number" id="addPrice" name="price" placeholder="Цена"
+                                               class="form-control">
+                                    </div>
+                                    <div id="add-email-form-group" class="form-group">
+                                        <label for="addAmount">Количество:</label>
+                                        <input type="number" id="addAmount" name="amount" placeholder="Количество"
+                                               class="form-control">
+                                    </div>
+                                    <div class="input-group mb-4">
+                                        <input type="text" class="form-control" placeholder="Поиск по категориям"
+                                               id="searchForCategories">
+                                    </div>
+                                    <div id="jqxTreeHere"></div>
+                                    <div class="panel-body" id="addCharacteristicForm">
+
+                                    </div>
+                                    <div class="mt-4">
+                                        <button id="addBtn" type="button"
+                                                class=" btn btn-outline-success btn-md btn">
+                                            Добавить новый товар
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary" data-toggle='modal'
+                                                data-target='#newProductImportModal'>Загрузить товары из файла
+                                        </button>
+                                        <button onclick="vizovRenderaHarakteristik()" id="renderCharacteristic"
+                                                type="button"
+                                                class=" btn btn-outline-info btn-md btn">
+                                            Задать характеристики
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </nav>
-                        <div class="tab-pane fade show active" id="navAddProduct" role="tabpanel"
-                             aria-labelledby="navAddProduct-tab">
-                            <h3>Добавить товар</h3>
-                            <form id="addForm">
-                                <div class="panel panel-default" id="new-user-form">
-                                    <div class="panel-body">
-                                        <div id="add-productName-form-group" class="form-group">
-                                            <label for="addProduct">Наименование:</label>
-                                            <input type="email" id="addProduct" name="product"
-                                                   placeholder="Наименование"
-                                                   class="form-control">
-                                        </div>
-                                        <div class="form-group addPriceDiv">
-                                            <label for="addPrice">Цена:</label>
-                                            <input type="number" id="addPrice" name="price" placeholder="Цена"
-                                                   class="form-control">
-                                        </div>
-                                        <div id="add-email-form-group" class="form-group">
-                                            <label for="addAmount">Количество:</label>
-                                            <input type="number" id="addAmount" name="amount" placeholder="Количество"
-                                                   class="form-control">
-                                        </div>
-                                        <div class="input-group mb-4">
-                                            <input type="text" class="form-control" placeholder="Поиск по категориям"
-                                                   id="searchForCategories">
-                                        </div>
-                                        <div id="jqxTreeHere"></div>
-                                        <div class="panel-body" id="addCharacteristicForm">
-
-                                        </div>
-                                        <div class="mt-4">
-                                            <button id="addBtn" type="button"
-                                                    class=" btn btn-outline-success btn-md btn">
-                                                Добавить новый товар
-                                            </button>
-                                            <button type="button" class="btn btn-outline-primary" data-toggle='modal'
-                                                    data-target='#newProductImportModal'>Загрузить товары из файла
-                                            </button>
-                                            <button onclick="vizovRenderaHarakteristik()" id="renderCharacteristic" type="button"
-                                                    class=" btn btn-outline-info btn-md btn">
-                                                Задать характеристики
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="tab-pane fade" id="navCharacteristicAdd" role="tabpanel"
-                             aria-labelledby="navCharacteristicAdd-tab">
-                            <!--<button onclick="vizovRenderaHarakteristik()" id="renderCharacteristic" type="button"
-                                    class=" btn btn-outline-success btn-md btn">
-                                Зарендерить характеристики
-                            </button>-->
-                            <form id="characteristicForm">
-                                <div class="panel panel-default">
-                                    <div class="panel-body" >
-
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                        </form>
                     </div>
                     <!--                    Начала слоя отображения категорий -->
                     <div class="tab-pane fade" id="nav-products-categories" role="tabpanel"
@@ -293,6 +270,22 @@
 
                     </div>
                     <!--                    Конец слоя отображения категорий -->
+
+                    <!--                    Начала слоя отображения харакетристик -->
+                    <div class="tab-pane fade" id="nav-products-characteristics" role="tabpanel"
+                         aria-labelledby="nav-products-categories-tab">
+                        <h2>Управление характеристиками</h2>
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" data-toggle="tab"
+                                   data-toggle-id="allCharacteristics">Все характеристики</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item nav-link" href="#" data-toggle="tab"
+                                   data-toggle-id="categoriesCharacteristics">Характеристики по категориям</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
