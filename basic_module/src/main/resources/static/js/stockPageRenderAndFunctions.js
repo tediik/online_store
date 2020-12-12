@@ -170,6 +170,22 @@ function handleDeleteButtonClick(event) {
 }
 
 /**
+ * по нажатию на Save changes сохраняет картинку в uploads\images\stocks
+ * @returns {Promise<void>}
+ */
+async function submit() {
+    var input = document.querySelector('#fileImgInput')
+
+    var data = new FormData()
+    data.append('file', input.files[0])
+
+    fetch('/uploadFile', {
+        method: 'POST',
+        body: data,
+    })
+}
+
+/**
  * modal window "save changes" button handler
  */
 function handleSaveChangesButton(event, file_name_stockImg) {
