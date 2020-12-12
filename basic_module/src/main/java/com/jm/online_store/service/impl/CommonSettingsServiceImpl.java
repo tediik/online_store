@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -40,7 +41,7 @@ public class CommonSettingsServiceImpl implements CommonSettingsService {
     @Transactional
     @Override
     public void updateTextValue(CommonSettings settings) {
-       if(commonSettingsRepository.updateTextValue(settings.getTextValue(), settings.getSettingName()) != 1){
+       if(commonSettingsRepository.updateTextValue(settings.getTextValue(), settings.getStatus(),settings.getSettingName()) != 1){
            throw new CommonSettingsNotFoundException();
        }
     }

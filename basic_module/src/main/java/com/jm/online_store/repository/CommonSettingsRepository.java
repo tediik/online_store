@@ -12,6 +12,6 @@ public interface CommonSettingsRepository extends JpaRepository<CommonSettings, 
     Optional<CommonSettings> findBySettingName(String settingName);
 
     @Modifying
-    @Query("UPDATE CommonSettings set textValue = :textValue WHERE settingName = :settingName")
-    int updateTextValue(@Param("textValue") String textValue, @Param("settingName") String settingName);
+    @Query("UPDATE CommonSettings set textValue = :textValue, status = :status WHERE settingName = :settingName")
+    int updateTextValue(@Param("textValue") String textValue, @Param("status") String status, @Param("settingName") String settingName);
 }

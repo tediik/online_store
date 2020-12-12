@@ -10,6 +10,7 @@ document.getElementById('maintenanceBtn').addEventListener('click', handleMainte
 addRolesOnNewUserForm()
 addRolesOnMaintenanceMode()
 fetchUsersAndRenderTable()
+renderAcceptedRolesInMaintenance()
 
 /**
  * Обработка события с выбором роли для фильтрации списка зарегистрированных пользователей по роли
@@ -414,39 +415,69 @@ function renderRolesSelectOnMaintenanceMode(allRoles) {
     $.each(allRoles, function (i, role) {
         selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
     })
-    const select = document.querySelector('#rolesMode').getElementsByTagName('option')
-    for (let i = 0; i < select.length; i++) {
-        if (select[i].value === '1') {
-            select[i].disabled = true
-        }
-    }
 }
 
 /**
  * функция обработки нажатия кнопки Подтвердить на странице Режим техобслуживания
- * функция делает fetch запрос с данным для фильтрации в MaintenanceFilter.java, затем выводит
+ * функция делает fetch запрос с данным в базу данных common_setting, которые нужны
+ * для фильтрации в MaintenanceFilter.java, затем выводит
  * toast, если техобслуживание включено и скрывыет, если выключено
  * @param event
  */
 function handleMaintenanceBtn(event) {
     event.preventDefault();
-    const select = document.querySelector('#rolesMode').getElementsByTagName('option')
-    let adminId;
-    for (let i = 0; i < select.length; i++) {
-        if (select[i].value === '1') {
-            adminId = select[i].text + ','
-        }
+
+    let roles = getSelectValues(document.getElementById('rolesMode')).toString()
+    if (!roles.includes('ROLE_ADMIN')) {
+        roles = roles.concat(',ROLE_ADMIN')
     }
-    let urlOn = '/admin?maintenance=' + $('#maintenance-mode').val() + '&rolesMode=' + adminId + getSelectValues(document.getElementById("rolesMode"))
-    let text = $('#maintenance-mode').val();
+    let urlOn = '/api/commonSettings'
+    let text = $('#maintenance-mode').val()
+    let commonSetting = {
+        settingName: 'maintenance_mode',
+        textValue: roles,
+        status: text
+    }
     fetch(urlOn, {
-        method: 'GET',
-        headers: {'Content-type': 'text/html; charset=UTF-8'},
-    }).then()
-    if (text === '1') {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(commonSetting)
+    }).then($('#maintenance-mode-access').empty()).then(renderAcceptedRolesInMaintenance)
+    if (text === 'true') {
         $('.toast').toast('show')
     }
-    if (text === '0') {
+    if (text === 'false') {
         $('.toast').toast('hide')
     }
+}
+
+/**
+ * функция заполняет "Кому открыт доступ" на страние Режим техобслуживания
+ * выполняет fetch запрос на maintenance_mode для получения данных из дб настроек
+ */
+function renderAcceptedRolesInMaintenance() {
+    let settingName = '/api/commonSettings/maintenance_mode'
+    fetch(settingName, {
+        method: 'GET',
+        headers: headers
+    }).then(response => response.json())
+        .then(allRoles1 => f(allRoles1))
+
+    function f(allRoles1) {
+        let selectRoles = $('#maintenance-mode-access').empty()
+        let selectMode = document.querySelector('#maintenance-mode').getElementsByTagName('option')
+        let modeStatus = allRoles1.status
+        let rolesArr = allRoles1.textValue.split(',')
+        for (let i = 0; i < rolesArr.length; i++) {
+            if (rolesArr[i])
+                selectRoles.append(`<option value=${rolesArr[i]}>${rolesArr[i]}</option>>`)
+        }
+
+        if (modeStatus === 'false') {
+            selectMode.namedItem('false').selected = true
+        } else {
+            selectMode.namedItem('true').selected = true
+        }
+    }
+
 }

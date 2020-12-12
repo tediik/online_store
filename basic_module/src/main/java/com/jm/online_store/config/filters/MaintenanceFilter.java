@@ -1,5 +1,8 @@
 package com.jm.online_store.config.filters;
 
+import com.jm.online_store.exception.CommonSettingsNotFoundException;
+import com.jm.online_store.model.CommonSettings;
+import com.jm.online_store.repository.CommonSettingsRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,24 +24,30 @@ import java.util.Set;
 /**
  * Фильтр для закрытия сайта на техническое обслуживание.
  * Сравнивает роли аутентицифированного пользователя и закрывает доступ к страницам сайта, если
- * роли не совпадают с указанными в параметре rolesMode, который приходит с фронта.
+ * роли не совпадают с указанными в параметре rolesMode, которые приходит с фронта в базу common_settings.
  */
 @Component
 @WebFilter("/admin")
 public class MaintenanceFilter implements Filter {
-    private static final int MODE_NORMAL_OPERATION = 0;
-    private int mode = MODE_NORMAL_OPERATION;
+    private static final String STATUS_NORMAL_OPERATION = "false";
+    private String status = STATUS_NORMAL_OPERATION;
     private Set<String> userRoles = new HashSet<>();
+
+    private final CommonSettingsRepository commonSettingsRepository;
+
+    public MaintenanceFilter(CommonSettingsRepository commonSettingsRepository) {
+        this.commonSettingsRepository = commonSettingsRepository;
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain filterChain)
             throws IOException, ServletException {
+        response.setContentType("application/json; charset=UTF-8;");
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -48,18 +57,18 @@ public class MaintenanceFilter implements Filter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
-        if (request.getParameter("maintenance") != null) {
-            mode = Integer.parseInt(request.getParameter("maintenance"));
-            userRoles = Set.of(request.getParameter("rolesMode").split(","));
-            return;
-        }
+        CommonSettings commonSettings = commonSettingsRepository.findBySettingName("maintenance_mode")
+                .orElseThrow(CommonSettingsNotFoundException::new);
+        status = commonSettings.getStatus();
+        userRoles = Set.of(commonSettings.getTextValue().split(","));
+
 
         if (roles.stream().anyMatch(userRoles::contains) || "/maintenanceMode".equals(path) || path.contains("login")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (mode != MODE_NORMAL_OPERATION) {
+        if (!status.equals(STATUS_NORMAL_OPERATION)) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/maintenanceMode");
             return;
         }

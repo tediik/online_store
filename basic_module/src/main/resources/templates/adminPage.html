@@ -153,17 +153,26 @@
                     <!--Режим техобслуживания-->
                     <div class="tab-pane" id="Maintenance" role="tabpanel">
                         <div class="form-group" id="maintenance-mode-form">
-                            <form method="">
-                                <div class="form-group text-center w-25 mx-auto font-weight-bold">
+                            <form>
+                                <div class="text-center w-25 mx-auto font-weight-bold">
                                     <label for="maintenance-mode" class="col-form-label">Выбор режима:</label>
                                     <select size="2"
                                             class="custom-select" name="maintenance" id="maintenance-mode">
-                                        <option value="0" selected>Нормальный режим</option>
-                                        <option value="1">Режим техобслуживания</option>
+                                        <option name="false" value="false">Нормальный режим</option>
+                                        <option name="true" value="true">Режим техобслуживания</option>
                                     </select>
                                 </div>
+
                                 <div class="form-group text-center w-25 mx-auto font-weight-bold">
-                                    <label for="rolesMode" class="col-form-label">Роли, которым открыт доступ:</label>
+                                    <label for="maintenance-mode-access" class="col-form-label">Кому открыт
+                                        доступ:</label>
+                                    <select multiple="multiple" class="custom-select" name="maintenance-mode-access"
+                                            id="maintenance-mode-access" disabled>
+                                    </select>
+                                </div>
+
+                                <div class="form-group text-center w-25 mx-auto font-weight-bold">
+                                    <label for="rolesMode" class="col-form-label">Изменить доступ:</label>
                                     <select id="rolesMode" name="roles" class="custom-select"
                                             multiple="multiple">
                                     </select>
