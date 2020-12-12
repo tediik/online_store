@@ -32,7 +32,6 @@ public class MaintenanceFilter implements Filter {
     private static final String STATUS_NORMAL_OPERATION = "false";
     private String status = STATUS_NORMAL_OPERATION;
     private Set<String> userRoles = new HashSet<>();
-
     private final CommonSettingsRepository commonSettingsRepository;
 
     public MaintenanceFilter(CommonSettingsRepository commonSettingsRepository) {
@@ -61,7 +60,6 @@ public class MaintenanceFilter implements Filter {
                 .orElseThrow(CommonSettingsNotFoundException::new);
         status = commonSettings.getStatus();
         userRoles = Set.of(commonSettings.getTextValue().split(","));
-
 
         if (roles.stream().anyMatch(userRoles::contains) || "/maintenanceMode".equals(path) || path.contains("login")) {
             filterChain.doFilter(request, response);
