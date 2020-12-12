@@ -2,14 +2,10 @@
 // https://www.jqwidgets.com/jquery-widgets-documentation/documentation/jqxtree/jquery-tree-getting-started.htm?search=
 const API_CATEGORIES_URL = "/api/categories/"
 let listOfAll
-let currentCategoryIdAdd;
-let moepolelkategorii;
-let currentCategoryNameEdit;
 let productRestUrl = "/rest/products/allProducts"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
-/*document.getElementById('renderCharacteristic').addEventListener('click', fetchCharacteristicsAndRenderFields($('#jqxTreeHere').jqxTree('getSelectedItem')))*/
 /**
  * Переменные для отдельной вкладки "Категории товаров
  */
@@ -19,6 +15,14 @@ let currentDepth;
 let currentName;
 let deletedName = "";
 let hasProduct;
+
+/**
+ * Переменные для добавления характеристик
+ */
+let currentCategoryIdAdd;
+let currentCategoryNameEdit;
+let selectedCategory;
+let characteristicsSelectedCategory;
 
 $(function () {
     fillProductCategoriesIn('#jqxTreeHere')
@@ -101,18 +105,19 @@ showAndRefreshNotDeleteHomeTab()
 function vizovRenderaHarakteristik() {
     let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
     if (!selectedCat) {
-        alert('Категория не выбрана!');
+        toastr.error("Категория не выбрана!")
         return false;
     } else {
         for (let z = 0; z < listOfAll.length; z++) {
             let currItem = listOfAll[z];
             if (selectedCat.label.localeCompare(currItem.text) === 0) {
-                moepolelkategorii = currItem.id;
+                selectedCategory = currItem.id;
             }
         }
     }
-    fetchCharacteristicsAndRenderFields(moepolelkategorii);
+    fetchCharacteristicsAndRenderFields(selectedCategory);
 }
+
 /**
  * Функция обработки действий чекбокса
  * @param check
@@ -251,6 +256,13 @@ function handleAddBtn() {
     }
 
     /**
+     * функция очистки формы характеристик нового продукта
+     */
+    function clearCharacteristicForm() {
+        $('#characteristicForm')[0].remove();
+    }
+
+    /**
      * проверяем, что выбранная категория продукта != null
      */
     let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
@@ -314,6 +326,8 @@ function handleAddBtn() {
                 } else {
                     response.text().then(function () {
                         $("#jqxTreeHere").jqxTree('selectItem', null);
+                        fetchToAddCharacteristics($('#addProduct').val());
+                        clearCharacteristicForm();
                         if (document.getElementById("deletedCheckbox").checked) {
                             showAndRefreshNotDeleteHomeTab()
                         } else {
@@ -325,6 +339,16 @@ function handleAddBtn() {
                 }
             }
         )
+    /*fetchToAddCharacteristics($('#addProduct').val());*/ //срабатывает до добавления товара, хз почему
+
+}
+
+function fetchToAddCharacteristics(addedProductName) {
+    fetch("/rest/products/addCharacteristics/" + addedProductName, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json;charset=utf-8'},
+        body: JSON.stringify(createProductCharacteristicArray(characteristicsSelectedCategory))
+    })
 }
 
 /**
@@ -530,20 +554,40 @@ function renderProductsTable(products) {
  * @param characteristics
  */
 function renderCharacteristicFields(characteristics) {
+    characteristicsSelectedCategory = characteristics;
     let div = $('#addCharacteristicForm')
     for (let i = 0; i < characteristics.length; i++) {
         const characteristic = characteristics[i];
         let characteristicName = characteristic.characteristicName;
+        let characteristicId = characteristic.id;
         div.append(`
-                    <div id="add-${characteristicName}-form-group" class="form-group">
-                    <label for="add${characteristicName}">${characteristicName}:</label>
-                    <input type="text" id="add${characteristicName}" name="${characteristicName}"
+                    <div id="add-${characteristicId}-form-group" class="form-group">
+                    <label for="add${characteristicId}">${characteristicName}:</label>
+                    <input type="text" id="add${characteristicId}" name="${characteristicName}"
                         placeholder="${characteristicName}"
                         class="form-control">
                     </div>
     
     `)
     }
+}
+
+/**
+ * функция создания массива с характеристиками добавляемого объекта
+ * @param characteristics
+ */
+function createProductCharacteristicArray(characteristics) {
+    let arr = [];
+
+    for (let i = 0; i < characteristics.length; i++) {
+        const characteristic = characteristics[i];
+        let productCharacteristics = {
+            characteristicId: characteristic.id,
+            value: $('#add' + characteristic.id).val(),
+        }
+        arr.push(productCharacteristics);
+    }
+    return arr;
 }
 
 /**
@@ -555,6 +599,16 @@ function fetchCharacteristicsAndRenderFields(categoryId) {
         .then(response => response.json())
         .then(characteristics => renderCharacteristicFields(characteristics))
 }
+
+/*/!**
+ * функция делает fetch запрос на рест контроллер,получает характеристики для выбранной категории,
+ * преобразует полученный объект в json
+ *!/
+function fetchCharacteristicsSelectedProduct(categoryId) {
+    fetch("rest/characteristics/" + categoryId)
+        .then(response => response.json())
+        .then(characteristics => characteristicsSelectedCategory = characteristics)
+}*/
 
 /**
  * функция делает fetch запрос на рест контроллер, преобразует полученный объект в json

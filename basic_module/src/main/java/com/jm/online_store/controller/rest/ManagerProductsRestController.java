@@ -2,8 +2,11 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.ProductCharacteristic;
+import com.jm.online_store.model.dto.ProductCharacteristicDto;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
+import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +48,7 @@ public class ManagerProductsRestController {
     private final ProductService productService;
     private final CategoriesService categoriesService;
     private final CharacteristicService characteristicService;
+    private final ProductCharacteristicService productCharacteristicService;
 
     /**
      * Метод обрабатывает загрузку файла с товарами на сервер
@@ -66,12 +71,13 @@ public class ManagerProductsRestController {
         }
         log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
         if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
-            productService.importFromXMLFile(file.getOriginalFilename(),id);
-        } else if(getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
-            productService.importFromCSVFile(file.getOriginalFilename(),id);
+            productService.importFromXMLFile(file.getOriginalFilename(), id);
+        } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
+            productService.importFromCSVFile(file.getOriginalFilename(), id);
         }
         return ResponseEntity.ok("success");
     }
+
     @PostMapping(value = "/rest/products/uploadProductsFile")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws FileNotFoundException {
         try {
@@ -87,7 +93,7 @@ public class ManagerProductsRestController {
         log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
         if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
             productService.importFromXMLFile(file.getOriginalFilename());
-        } else if(getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
+        } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
             productService.importFromCSVFile(file.getOriginalFilename());
         }
         return ResponseEntity.ok("success");
@@ -156,6 +162,28 @@ public class ManagerProductsRestController {
         productService.saveProduct(product);
         categoriesService.addToProduct(product, id);
         return ResponseEntity.ok(product);
+    }
+
+    /**
+     * Метод добавляет характеристики, только что добавденному, товару
+     *
+     * @param addedProductName название добавденного товара
+     * @return ResponseEntity<ProductCharacteristic> Возвращает добавленный товар с кодом ответа
+     */
+    @PostMapping(value = "/rest/products/addCharacteristics/{addedProductName}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Long>> addCharacteristics(@RequestBody ProductCharacteristicDto[] productCharacteristicsDto,
+                                                         @PathVariable String addedProductName) {
+        List<Long> productCharacteristicIds = new ArrayList<>();
+
+        for (ProductCharacteristicDto productCharacteristicDto : productCharacteristicsDto) {
+            if (!productCharacteristicDto.getValue().equals("")) {
+                productCharacteristicIds.add(productCharacteristicService.addProductCharacteristic(
+                        productService.findProductByName(addedProductName).get().getId(),
+                        productCharacteristicDto.getCharacteristicId(), productCharacteristicDto.getValue()));
+            }
+        }
+
+        return ResponseEntity.ok(productCharacteristicIds);
     }
 
     /**
@@ -314,7 +342,7 @@ public class ManagerProductsRestController {
     /**
      * Метод, который возвращает характеристи для выбранной категории
      *
-     * @param categoryId  id нужной категории товаров
+     * @param categoryId id нужной категории товаров
      * @return List<Characteristic> лист харктеристик
      */
     @GetMapping("/manager/rest/characteristics/{categoryId}")

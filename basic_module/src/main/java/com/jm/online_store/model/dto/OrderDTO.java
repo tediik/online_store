@@ -1,6 +1,5 @@
 package com.jm.online_store.model.dto;
 
-import com.jm.online_store.model.Order;
 import com.jm.online_store.model.ProductInOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * модель DTO для построения заказа по ижентификатору.
+ * модель DTO для построения заказа по идентификатору.
  */
 @Data
 @NoArgsConstructor
