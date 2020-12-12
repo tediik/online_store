@@ -1,6 +1,4 @@
-
 document.addEventListener('DOMContentLoaded', () => {
-
     let commentsCache;
     let currentUserEmail;
     let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
@@ -8,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     getLoggedInUser().then(showComments);
 
+    /* Получает залогиненного юзера, сохроняет его email в currentUserEmail*/
     async function getLoggedInUser() {
         try {
             await $.ajax({
@@ -26,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /*При загрузке страницы задает кнопки сортировки и вызыаеет вывод списка комментов*/
     function showComments() {
         let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
-
         $('#showComments').append($(`
             <div class="container">
                <div>
@@ -44,18 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
                </div>
             </div>
         `))
-
         $('#CommentsNewFirst,#CommentsOldFirst').on('change', function () {
             commentsCache.reverse(); //переворачивает массив комментариев
             showOrRefreshComments();
         })
-
         showOrRefreshComments();
     }
 
-    /!*Загружает комменты из БД или commentCache.*!/
+    /*Загружает комменты из БД или commentCache.*/
     async function showOrRefreshComments() {
-
         if (commentsCache == null) {
             await $.ajax({
                 //Get comment html code
@@ -70,11 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-
         if (document.getElementById('commentsList')) {
             document.getElementById('commentsList').remove();
         }
-
         $('#showComments').append($(`<div class="container-fluid mt-4" id="commentsList"></div>`));
 
         /* Отображение основных комментариев (не reply) */
@@ -150,29 +144,71 @@ document.addEventListener('DOMContentLoaded', () => {
         /*Если это удаленный комментарий с reply-ответами - вставляет заглушку*/
         function isDeleted(commentData) {
             if (commentData.deletedHaveKids) {
-
                 document.getElementById("mt-0" + commentData.id).hidden =true;
                 document.getElementById("commentContent" + commentData.id).hidden =true;
                 document.getElementById("editButton" + commentData.id).hidden =true;
                 document.getElementById("deleteButton" + commentData.id).hidden =true;
                 document.getElementById("replyButton" + commentData.id).hidden =true;
                 document.getElementById("reportButton" + commentData.id).hidden =true;
-
                 let replaceBlock = document.createElement("div");
                 replaceBlock.innerHTML = "<h5>Комментарий был удалён</h5>";
                 replaceBlock.setAttribute("style", "background-color: #DCDCDC;");
                 replaceBlock.setAttribute("class", "align-middle py-3 px-2");
                 replaceBlock.setAttribute("style", "background-color: #E8E8E8;");
                 document.getElementById('image' + commentData.id).setAttribute("style", "background-color: #E8E8E8;");
-
                 document.getElementById("replyDisplayId" + commentData.id).before(replaceBlock);
             }
         }
     }
 
+    /* При нажатии на "Отправить" новый комментарий */
+    $('#commentForm').on('submit', function (event) {
+        event.preventDefault();
+        if ($("#commentForm").find('input:text').val().trim().length < 1) {
+            alert("Please Enter Text...");
+        } else {
+            let formData = $(this).serializeArray();
+            let formDataObject = {};
+            $.each(formData,
+                function (i, v) {
+                    formDataObject[v.name] = v.value;
+                });
+            formDataObject["productId"] = productId;
+            $.ajax({
+                //Post comment
+                url: '/api/comments',
+                method: "POST",
+                data: JSON.stringify(formDataObject),
+                dataType: 'json',
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $('#commentForm').find('input:text').val('');
+                    commentsCache = null;
+                    showOrRefreshComments();
+                }
+
+            })
+        }
+    });
+
+    /* При нажатии на "Ответить" */
+    function replyOnAComment(replyCommentId) {
+        replyCommentId = replyCommentId.replace(/\D/g, '');
+        let commentBox = $(`
+                                <div class="well">
+                                    <h4>Leave a Comment:</h4>
+                                        <div class="form-group">
+                                            <textarea class="form-control" id="replyCommentText" rows="3"></textarea>
+                                        </div>
+                                     <button type="button"  id='submitReplyBtn${replyCommentId}' class="btn btn-primary">Отправить ответ</button>
+                                     <button type="button"  id='cancelReplyBtn${replyCommentId}' class="btn btn-secondary">Отмена</button>
+                                </div>`)
+
+        $('#commentBoxSpace' + replyCommentId).html(commentBox);
+    }
 
     /* При нажатии на "Отправить ответ" на комментарий */
-
     function replySubmit(replyCommentId) {
         let content = document.getElementById(replyCommentId).parentElement.querySelector('textarea').value;
         if ($("#replyCommentText").val().trim().length < 1) {
@@ -218,60 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /* При нажатии на "Отправить" новый комментарий */
-
-    $('#commentForm').on('submit', function (event) {
-        event.preventDefault();
-        if ($("#commentForm").find('input:text').val().trim().length < 1) {
-            alert("Please Enter Text...");
-        } else {
-            let formData = $(this).serializeArray();
-            let formDataObject = {};
-            $.each(formData,
-                function (i, v) {
-                    formDataObject[v.name] = v.value;
-                });
-            formDataObject["productId"] = productId;
-            $.ajax({
-                //Post comment
-                url: '/api/comments',
-                method: "POST",
-                data: JSON.stringify(formDataObject),
-                dataType: 'json',
-                cache: false,
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                    $('#commentForm').find('input:text').val('');
-                    commentsCache = null;
-                    showOrRefreshComments();
-                }
-
-            })
-        }
-    });
-
-
-    /* При нажатии на "Ответить" */
-
-    function replyOnAComment(replyCommentId) {
-        replyCommentId = replyCommentId.replace(/\D/g, '');
-
-        let commentBox = $(`
-                                <div class="well">
-                                    <h4>Leave a Comment:</h4>
-                                        <div class="form-group">
-                                            <textarea class="form-control" id="replyCommentText" rows="3"></textarea>
-                                        </div>
-                                     <button type="button"  id='submitReplyBtn${replyCommentId}' class="btn btn-primary">Отправить ответ</button>
-                                     <button type="button"  id='cancelReplyBtn${replyCommentId}' class="btn btn-secondary">Отмена</button>
-                                </div>`)
-
-        $('#commentBoxSpace' + replyCommentId).html(commentBox);
-    }
-
-
     /* При нажатии на "Править" */
-
     function editComment(commentId) {
         commentId = commentId.replace(/\D/g, '');
         let commentText = document.getElementById('commentContent' + commentId).textContent.trim();
@@ -288,7 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                      <button type="button" id='submitEditBtn${commentId}' class="btn btn-primary">Сохранить изменения</button>
                                      <button type="button" id='cancelEditBtn${commentId}' class="btn btn-secondary">Отмена</button>
         `;
-
         let commentContent = document.getElementById('commentContent' + commentId);
         document.getElementById(`mediaBody${commentId}`).insertBefore(editCommentBox, commentContent);
 
@@ -302,7 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* При нажатии на "Сохранить изменения" при редактировании комментария*/
-
     async function submitEdit(commentId) {
         let editBlock = document.getElementById(commentId).parentElement;
 
@@ -326,10 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(dataObject)
                 })
                     .then(function (response) {
-
                         let commentContent = document.getElementById('commentContent' + commentId.replace(/\D/g, ''));
                         commentContent.textContent = editContent;
-
                         $(commentContent).show();
                         editBlock.remove();
                         if (document.getElementById('replyButton' + commentId.replace(/\D/g, ''))) {
@@ -338,7 +317,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         $('#editButton' + commentId.replace(/\D/g, '')).show();
                         $('#deleteButton' + commentId.replace(/\D/g, '')).show();
                         $('#reportButton' + commentId.replace(/\D/g, '')).show();
-
 
                         commentsCache.forEach((item, i) => {
                             if (item.id == commentId) {
@@ -351,16 +329,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     /* При нажатии на "Удалить" */
-
     function deleteComment(commentId) {
         commentId = commentId.replace(/\D/g, '');
-
         if (document.getElementById('deleteCommentModal')) {
             document.getElementById('deleteCommentModal').remove();
         }
-
         let deleteCommentModal = document.createElement("div");
         deleteCommentModal.className = 'modal fade';
         deleteCommentModal.setAttribute("id", `deleteCommentModal`);
@@ -386,15 +360,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
         `;
-
         allCommentsBlock.append(deleteCommentModal);
         let id = $('#deleteCommentModal').data('id');
         $('#deleteCommentModal').data('id', commentId).modal('show');
-
     }
 
     /* При нажатии подтвердить удаление */
-
     document.addEventListener('click', (event) => {
         if (event.target && event.target.textContent === 'Да' && event.target.id.includes('btnDeleteCommentYes')) {
             $('#deleteCommentModal').modal('hide');
@@ -403,12 +374,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             //Если у удаляемого комментария есть ответы - они остаются, а коммент отображается как удаленный
             if (replyDisplay && replyDisplay.childElementCount > 0) {
-
                 let dataObject = {};
                 dataObject["id"] = commentId;
                 dataObject["deletedHaveKids"] = "true";
                 dataObject["content"] = document.getElementById('commentContent' + commentId).textContent;
-
                 (async () => {
                     const rawResponse = await fetch('/api/comments', {
                         method: 'PUT',
@@ -425,18 +394,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         .catch(err => console.log(err));
                 })();
             } else {
-
                 //Если у удаляемого комментария нет ответов - он просто удаляется
                 (async () => {
                     const rawResponse = await fetch('/api/comments/' + commentId, {
                         method: 'DELETE',
                     })
                         .then(function () {
-
                             //если это был последний reply-комментарий у удаленного основного комментария
                             let media = document.getElementById('media' + commentId);
                             if (media.parentElement.parentElement.innerHTML.includes("Комментарий был удалён") && media.parentElement.childElementCount === 1) {
-
                                 let parentCommentId = media.parentElement.parentElement.id.replace(/\D/g, '');
                                 (async () => {
                                     const rawResponse = await fetch('/api/comments/' + parentCommentId, {
@@ -456,7 +422,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                     }
                                 })
                             }
-
                         })
                         .catch(err => console.error(err));
                 })();
@@ -486,18 +451,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                                 <button type="button" id='submitReportCommentBtn${commentId}' class="btn btn-primary">Отправить жалобу</button>
                                 <button type="button" id='declineReportCommentBtn${commentId}' class="btn btn-secondary">Отмена</button>
-
                             </div>
                                 `);
         $('#reportCommentBoxSpace' + commentId).html(reportCommentBox);
     }
 
-
     /* При нажатии "Отправить жалобу" */
-
     function sendReportSubmit(commentId) {
         commentId = commentId.replace(/\D/g, '');
-
         if (!$('#reportCommentText' + commentId).val()) {
             toastr.error("Оставьте свой комментарий к жалобе");
         } else {
@@ -506,7 +467,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 reasonComment: $('#reportCommentText' + commentId).val(),
                 commentId: commentId
             };
-
             $.ajax({
                 url: '/api/moderator',
                 method: "POST",
@@ -523,12 +483,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* Обработчик клика на все кнопки существующих комментариев (кроме модального Delete) */
-
     allCommentsBlock.addEventListener('click', (event) => {
         if (event.target) {
             let commentId = event.target.id;
             let commentBtnName = event.target.textContent;
-
             if (commentBtnName === 'Ответить') {
                 replyOnAComment(commentId);
             } else if (commentBtnName === 'Отправить ответ') {
