@@ -22,7 +22,7 @@ public class CommonSettingsRestController {
 
     /**
      * Exception handler method that catches all {@link CommonSettingsNotFoundException}
-     * in current class and return ResponseEntity with not found status
+     * in current class and return ResponseEntity with not found status/
      *
      * @return - {@link ResponseEntity<String>}
      */
