@@ -28,7 +28,7 @@ public class LoginListener implements ApplicationListener<InteractiveAuthenticat
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.debug("Current authentication of user" + authentication.getName() + " is");
+        log.debug("Current authentication of user {} is", authentication.getName());
 
         //Checking if Authentication coming from OAuth
         if (authentication.getClass().isAssignableFrom(OAuth2AuthenticationToken.class)) {

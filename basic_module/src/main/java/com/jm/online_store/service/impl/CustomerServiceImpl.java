@@ -230,16 +230,17 @@ public class CustomerServiceImpl implements CustomerService {
      * Метод который будет ходить по базе раз в день,
      * и удалять кастомеров которые удалили свой профиль и у которых срок для восстановления истек.
      * Время и таска создается в Datainitializer'e
+     * настройка времени находится в  application.yml
      */
     @Override
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "${delete_expired_customer_period.cron}")
     @Transactional
     public void deleteAllBlockedWithThirtyDaysPassed() {
         log.info("Метод удаляющий пользователей с удаленным профилем , у которых 30 дней на восстановление прошло - запущен");
         LocalDateTime timeAfterThirtyDaysFromNow = LocalDateTime.now().minusDays(30);
         List<Customer> listForDelete = customerRepository.findAllByAnchorForDeleteThirtyDays(timeAfterThirtyDaysFromNow);
         if (listForDelete.isEmpty()) {
-            log.info("Список профилей для удаления пуст, метод для удаления не будет вызвыан");
+            log.debug("Список профилей для удаления пуст, метод для удаления не будет вызван");
         } else {
             log.info("Удалено {} профилей", listForDelete.size());
             customerRepository.deleteAll(listForDelete);
