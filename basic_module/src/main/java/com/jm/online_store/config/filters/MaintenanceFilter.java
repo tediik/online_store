@@ -3,6 +3,7 @@ package com.jm.online_store.config.filters;
 import com.jm.online_store.exception.CommonSettingsNotFoundException;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.repository.CommonSettingsRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,15 +29,12 @@ import java.util.Set;
  */
 @Component
 @WebFilter("/admin")
+@RequiredArgsConstructor
 public class MaintenanceFilter implements Filter {
     private static final boolean STATUS_NORMAL_OPERATION = false;
     private boolean status = STATUS_NORMAL_OPERATION;
     private Set<String> userRoles = new HashSet<>();
     private final CommonSettingsRepository commonSettingsRepository;
-
-    public MaintenanceFilter(CommonSettingsRepository commonSettingsRepository) {
-        this.commonSettingsRepository = commonSettingsRepository;
-    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -61,7 +59,8 @@ public class MaintenanceFilter implements Filter {
         status = commonSettings.isStatus();
         userRoles = Set.of(commonSettings.getTextValue().split(","));
 
-        if (roles.stream().anyMatch(userRoles::contains) || "/maintenanceMode".equals(path) || path.contains("login")) {
+        if (roles.stream().anyMatch(userRoles::contains) || "/maintenanceMode".equals(path) || path.contains("login") ||
+                path.contains("maintenancemode.css")) {
             filterChain.doFilter(request, response);
             return;
         }

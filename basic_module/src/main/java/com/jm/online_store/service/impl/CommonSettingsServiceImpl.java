@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,13 +35,14 @@ public class CommonSettingsServiceImpl implements CommonSettingsService {
      * if repository returns int 1, that means that 1 row was updated.
      * if it will be 0 that means that there is no row with such name
      * and method throws {@link CommonSettingsNotFoundException}
+     *
      * @param settings - settings to be updated
      */
     @Transactional
     @Override
     public void updateTextValue(CommonSettings settings) {
-       if(commonSettingsRepository.updateTextValue(settings.getTextValue(), settings.isStatus(),settings.getSettingName()) != 1){
-           throw new CommonSettingsNotFoundException();
-       }
+        if (commonSettingsRepository.updateTextValue(settings.getTextValue(), settings.isStatus(), settings.getSettingName()) != 1) {
+            throw new CommonSettingsNotFoundException();
+        }
     }
 }
