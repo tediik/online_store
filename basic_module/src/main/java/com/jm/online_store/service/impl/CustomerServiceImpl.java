@@ -232,7 +232,7 @@ public class CustomerServiceImpl implements CustomerService {
      * Время и таска создается в Datainitializer'e
      */
     @Override
-    @Scheduled(cron = "@daily")
+    @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void deleteAllBlockedWithThirtyDaysPassed() {
         log.info("Метод удаляющий пользователей с удаленным профилем , у которых 30 дней на восстановление прошло - запущен");
