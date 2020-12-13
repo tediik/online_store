@@ -71,7 +71,7 @@ function checkFields(event) {
 
         if (stockTitle.value === '') {
             invalidModalField("Заполните заголовок акции", stockTitle)
-        } else if (stockText.value === "") {
+        } else if (stockText.value === '') {
             invalidModalField("Заполните описание акции", stockText)
         } else if (startDate.value === '') {
             invalidModalField("Заполните начальную дату", startDate)
