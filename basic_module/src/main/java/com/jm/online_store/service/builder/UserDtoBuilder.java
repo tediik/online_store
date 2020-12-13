@@ -15,7 +15,7 @@ public class UserDtoBuilder {
         UserDto userDto = new UserDto();
         userDto.setEmail(user.getEmail());
         userDto.setFirstName(user.getFirstName());
-        
+
         return userDto;
     }
 }
