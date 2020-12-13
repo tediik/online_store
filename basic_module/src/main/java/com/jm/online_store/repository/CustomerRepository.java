@@ -14,9 +14,12 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    @Query("select customer from Customer customer where customer.anchorForDelete > :nowMinusThirtyDays")
+    @Query("select customer from Customer customer where customer.anchorForDelete < :nowMinusThirtyDays")
     List<Customer> findAllByAnchorForDeleteThirtyDays(
             @Param("nowMinusThirtyDays") LocalDateTime time);
+
+    @Override
+    void deleteAll(Iterable<? extends Customer> iterable);
 
     Optional<Customer> findByEmail(String username);
 

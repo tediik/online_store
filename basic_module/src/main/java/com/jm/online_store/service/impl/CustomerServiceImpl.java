@@ -9,6 +9,7 @@ import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -231,15 +232,17 @@ public class CustomerServiceImpl implements CustomerService {
      * Время и таска создается в Datainitializer'e
      */
     @Override
+    @Scheduled(cron = "@daily")
     @Transactional
     public void deleteAllBlockedWithThirtyDaysPassed() {
+        log.info("Метод удаляющий пользователей с удаленным профилем , у которых 30 дней на восстановление прошло - запущен");
         LocalDateTime timeAfterThirtyDaysFromNow = LocalDateTime.now().minusDays(30);
         List<Customer> listForDelete = customerRepository.findAllByAnchorForDeleteThirtyDays(timeAfterThirtyDaysFromNow);
         if (listForDelete.isEmpty()) {
             log.info("Список профилей для удаления пуст, метод для удаления не будет вызвыан");
         } else {
-            log.info("В списке на удаление есть профили , вызываем метод для удаления");
-            customerRepository.deleteInBatch(listForDelete);
+            log.info("Удалено {} профилей", listForDelete.size());
+            customerRepository.deleteAll(listForDelete);
         }
     }
 }

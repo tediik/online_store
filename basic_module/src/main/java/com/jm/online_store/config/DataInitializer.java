@@ -1157,7 +1157,7 @@ public class DataInitializer {
         TaskSettings taskSettings3 = TaskSettings.builder()
                 .taskName("deleteExpiredCustomersProfile")
                 .active(true)
-                .startTime(LocalTime.now().truncatedTo(ChronoUnit.DAYS))
+                .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings3);
     }
