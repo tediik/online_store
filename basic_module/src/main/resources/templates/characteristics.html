@@ -30,6 +30,38 @@
 <body>
 <header th:insert="/blocks/header :: header"></header>
 
+<div class="modal fade" id="characteristicModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditCharacteristicModalWindows"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Edit characteristic">Изменить характеристику</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="alert-modal-div"></div>
+            <div class="modal-body" id="modalBody">
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <div class="form-group" id="editFormContainer">
+                            <label for="idInputModal"><strong>Id</strong></label>
+                            <input type="text" class="form-control" id="idInputModal" readonly>
+                            <label for="characteristicInputModal"><strong>Наименование характеристики</strong></label>
+                            <input type="text" class="form-control" id="characteristicInputModal" required>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="wrapper flex-grow-1 row">
     <div class="container col-11">
         <nav class="navbar navbar-dark bg-dark">

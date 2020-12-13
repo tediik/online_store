@@ -6,6 +6,7 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,9 +59,18 @@ public class CharacteristicServiceImpl implements CharacteristicService {
      *
      * @return List<Characteristic>
      */
-
     @Override
     public List<Characteristic> findAll() {
         return characteristicRepository.findAll();
+    }
+
+    /**
+     * Обновление характеристики.
+     * @param characteristic пользователь, полученный из контроллера.
+     */
+    @Override
+    @Transactional
+    public void updateCharacteristic(Characteristic characteristic) {
+        characteristicRepository.save(characteristic);
     }
 }
