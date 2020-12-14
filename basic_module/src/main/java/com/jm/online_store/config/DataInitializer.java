@@ -1184,8 +1184,14 @@ public class DataInitializer {
                         "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
                         "<p>С Уважением</p><p>Online-store.ru</p>")
                 .build();
+        CommonSettings maintenanceModeTemplate = CommonSettings.builder()
+                .settingName("maintenance_mode")
+                .textValue("ROLE_ADMIN")
+                .status(false)
+                .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
+        commonSettingsService.addSetting(maintenanceModeTemplate);
     }
 
     /**
