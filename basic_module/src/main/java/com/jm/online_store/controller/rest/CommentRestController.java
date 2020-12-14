@@ -110,47 +110,42 @@ public class CommentRestController {
 
     /**
      * Удаляет комментарий по его айди
+     *
      * @param commentId
-     * @return ResponseEntity<List <CommentDto>>
+     * @return ResponseEntity<List < CommentDto>>
      */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId) {
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = auth.getName();
-            User user = userService.findByEmail(email).orElse(new User());
-            System.out.println(user);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        if (userService.findByEmail(email).isPresent()) {
+            User user = userService.findByEmail(email).get();
             if (commentService.findById(commentId).getCustomer().getId().equals(user.getId())) {
                 commentService.removeById(commentId);
-            } else {
-                throw new RuntimeException();
+                return new ResponseEntity<>(HttpStatus.OK);
             }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
     /**
      * Обновляет комментарий
+     *
      * @param comment
      * @return ResponseEntity<?>
      */
     @PutMapping
     public ResponseEntity<?> updateComment(@RequestBody @Valid Comment comment) {
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = auth.getName();
-            User user = userService.findByEmail(email).orElse(new User());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        if (userService.findByEmail(email).isPresent()) {
+            User user = userService.findByEmail(email).get();
             if (commentService.findById(comment.getId()).getCustomer().getId().equals(user.getId())) {
                 commentService.update(comment);
-            } else {
-                throw new RuntimeException();
+                return new ResponseEntity<>(HttpStatus.OK);
             }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
     private String getErrors(BindingResult bindingResult) {

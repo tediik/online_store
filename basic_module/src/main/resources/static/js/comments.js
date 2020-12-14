@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 url: '/users/getCurrent',
                 dataType: "json",
                 success: function (response) {
-                    if(response !== undefined) {
+                    if (response !== undefined) {
                         currentUserEmail = response.email;
                     }
                 }
@@ -144,12 +144,12 @@ document.addEventListener('DOMContentLoaded', () => {
         /*Если это удаленный комментарий с reply-ответами - вставляет заглушку*/
         function isDeleted(commentData) {
             if (commentData.deletedHaveKids) {
-                document.getElementById("mt-0" + commentData.id).hidden =true;
-                document.getElementById("commentContent" + commentData.id).hidden =true;
-                document.getElementById("editButton" + commentData.id).hidden =true;
-                document.getElementById("deleteButton" + commentData.id).hidden =true;
-                document.getElementById("replyButton" + commentData.id).hidden =true;
-                document.getElementById("reportButton" + commentData.id).hidden =true;
+                document.getElementById("mt-0" + commentData.id).hidden = true;
+                document.getElementById("commentContent" + commentData.id).hidden = true;
+                document.getElementById("editButton" + commentData.id).hidden = true;
+                document.getElementById("deleteButton" + commentData.id).hidden = true;
+                document.getElementById("replyButton" + commentData.id).hidden = true;
+                document.getElementById("reportButton" + commentData.id).hidden = true;
                 let replaceBlock = document.createElement("div");
                 replaceBlock.innerHTML = "<h5>Комментарий был удалён</h5>";
                 replaceBlock.setAttribute("style", "background-color: #DCDCDC;");
@@ -307,22 +307,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(dataObject)
                 })
                     .then(function (response) {
-                        let commentContent = document.getElementById('commentContent' + commentId.replace(/\D/g, ''));
-                        commentContent.textContent = editContent;
-                        $(commentContent).show();
-                        editBlock.remove();
-                        if (document.getElementById('replyButton' + commentId.replace(/\D/g, ''))) {
-                            $('#replyButton' + commentId.replace(/\D/g, '')).show();
-                        }
-                        $('#editButton' + commentId.replace(/\D/g, '')).show();
-                        $('#deleteButton' + commentId.replace(/\D/g, '')).show();
-                        $('#reportButton' + commentId.replace(/\D/g, '')).show();
-
-                        commentsCache.forEach((item, i) => {
-                            if (item.id == commentId) {
-                                item.content = editContent;
+                        if (!response.ok) {
+                            toastr.error("Произошла ошибка " + response.status);
+                            commentsCache = null;
+                            showOrRefreshComments();
+                        } else {
+                            let commentContent = document.getElementById('commentContent' + commentId.replace(/\D/g, ''));
+                            commentContent.textContent = editContent;
+                            $(commentContent).show();
+                            editBlock.remove();
+                            if (document.getElementById('replyButton' + commentId.replace(/\D/g, ''))) {
+                                $('#replyButton' + commentId.replace(/\D/g, '')).show();
                             }
-                        });
+                            $('#editButton' + commentId.replace(/\D/g, '')).show();
+                            $('#deleteButton' + commentId.replace(/\D/g, '')).show();
+                            $('#reportButton' + commentId.replace(/\D/g, '')).show();
+
+                            commentsCache.forEach((item, i) => {
+                                if (item.id == commentId) {
+                                    item.content = editContent;
+                                }
+                            });
+                        }
                     })
                     .catch(err => console.log(err));
             })();
@@ -388,6 +394,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         body: JSON.stringify(dataObject)
                     })
                         .then(function (response) {
+                            if (!response.ok) {
+                                toastr.error("Произошла ошибка " + response.status);
+                            }
                             commentsCache = null;
                             showOrRefreshComments();
                         })
@@ -399,7 +408,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const rawResponse = await fetch('/api/comments/' + commentId, {
                         method: 'DELETE',
                     })
-                        .then(function () {
+                        .then(function (response) {
+                            if (!response.ok) {
+                                toastr.error("Произошла ошибка " + response.status);
+                            }
                             //если это был последний reply-комментарий у удаленного основного комментария
                             let media = document.getElementById('media' + commentId);
                             if (media.parentElement.parentElement.innerHTML.includes("Комментарий был удалён") && media.parentElement.childElementCount === 1) {
@@ -408,11 +420,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                     const rawResponse = await fetch('/api/comments/' + parentCommentId, {
                                         method: 'DELETE',
                                     })
-                                        .then(function () {
+                                        .then(function (response) {
+                                            if (!response.ok) {
+                                                toastr.error("Произошла ошибка " + response.status);
+                                            }
                                             commentsCache = null;
                                             showOrRefreshComments();
                                         })
-                                        .catch(err => console.error(err + "Ошибка"));
+                                        .catch(err => console.error(err));
                                 })();
                             } else {
                                 document.getElementById('mediaBody' + commentId).parentElement.remove();
