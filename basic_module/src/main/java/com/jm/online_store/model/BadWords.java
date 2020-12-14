@@ -1,6 +1,5 @@
 package com.jm.online_store.model;
 
-import com.jm.online_store.enums.BadWordStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -33,10 +32,10 @@ public class BadWords {
     @NonNull
     private String badword;
     @NonNull
-    private BadWordStatus status;
+    private boolean isEnabled;
 
-    public BadWords(@NonNull String badword, @NonNull BadWordStatus status) {
+    public BadWords(@NonNull String badword, @NonNull boolean isEnabled) {
         this.badword = badword;
-        this.status = status;
+        this.isEnabled = isEnabled;
     }
 }

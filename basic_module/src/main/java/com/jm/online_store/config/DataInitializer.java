@@ -1,6 +1,5 @@
 package com.jm.online_store.config;
 
-import com.jm.online_store.enums.BadWordStatus;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.BadWords;
@@ -1356,7 +1355,7 @@ public class DataInitializer {
 
         for (String textToSave:startBadWord) {
             if (badWordsService.existsBadWordByName(textToSave)) continue;
-            BadWords badWordsToSave = new BadWords(textToSave, BadWordStatus.ACTIVE);
+            BadWords badWordsToSave = new BadWords(textToSave, true);
             badWordsService.saveWord(badWordsToSave);
         }
     }

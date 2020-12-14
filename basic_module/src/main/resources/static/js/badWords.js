@@ -1,6 +1,6 @@
 let badWordsRestUrl = "/rest/bad-words/"
-let headers = new Headers()
-headers.append('Content-type', 'application/json; charset=UTF-8')
+let headersBW = new Headers()
+headersBW.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtnWord').addEventListener('click', handleAddBtn)
 document.getElementById('addBtnImport').addEventListener('click', handleImportBtn)
 
@@ -30,7 +30,7 @@ function renderBadWordsTable(wordsArray) {
         .append(`<tr>
                 <th>ID</th>
                 <th>Стоп-слово</th>
-                <th>Статус</th>
+                <th>Включено</th>
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>`)
@@ -40,7 +40,7 @@ function renderBadWordsTable(wordsArray) {
                 <tr id="tr-${word.id}">
                     <td>${word.id}</td>
                     <td>${word.badword}</td>
-                    <td>${word.status}</td>                
+                    <td>${word.enabled}</td>           
                     <td>
                         <button data-product-id="${word.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#wordModalWindow">Edit</button>
                     </td>
@@ -80,12 +80,12 @@ function handleEditButton(event) {
  * @param word
  */
 function editModalWindowRender(word) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off("click").on("click", "#acceptButton-bw", handleAcceptButtonFromModalWindow)
     $('.modal-title').text("Edit word")
-    $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
-    $('#idInputModal').val(word.id)
+    $('#acceptButton-bw').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
+    $('#idInputModal-bw').val(word.id)
     $('#badwordInputModal').val(word.badword).prop('readonly', false)
-    $('#statusInputModal').val(word.status).prop('readonly', false)
+    $('#statusInputModal').val(word.enabled.toString()).prop('readonly', false)
 }
 
 /**
@@ -103,12 +103,12 @@ function handleDeleteButton(wordId) {
  * @param word
  */
 function deleteModalWindowRender(wordId) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off("click").on("click", "#acceptButton-bw", handleAcceptButtonFromModalWindow)
     $('.modal-title').text("Delete product")
-    $('#acceptButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
-    $('#idInputModal').val(wordId.id)
+    $('#acceptButton-bw').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
+    $('#idInputModal-bw').val(wordId.id)
     $('#badwordInputModal').val(wordId.badword).prop('readonly', true)
-    $('#statusInputModal').val(wordId.status).prop('readonly', true)
+    $('#statusInputModal').val(wordId.enabled.toString()).prop('readonly', true)
 }
 
 /**
@@ -117,15 +117,15 @@ function deleteModalWindowRender(wordId) {
  */
 function handleAcceptButtonFromModalWindow() {
     const word = {
-        id: $('#idInputModal').val(),
+        id: $('#idInputModal-bw').val(),
         badword: $('#badwordInputModal').val().toLowerCase(),
-        status: $('#statusInputModal').val(),
+        enabled: $('#statusInputModal').val(),
     };
 
     /**
      * Проверка кнопки delete или edit
      */
-    if ($('#acceptButton').hasClass('delete-product')) {
+    if ($('#acceptButton-bw').hasClass('delete-product')) {
         fetch(badWordsRestUrl + 'delete/' + word.id, {
             headers: headers,
             method: 'DELETE'
@@ -166,20 +166,20 @@ function showAndRefreshHomeTab() {
 function handleAddBtn() {
     let wordToAdd = {
         badword: $('#addBadWord').val().toLowerCase(),
-        status: $('#addBadWordStatus').val(),
+        enabled: $('#addBadWordStatus').val(),
     }
 
     /**
      * функция очистки полей формы
      */
     function clearFormFields() {
-        $('#addForm')[0].reset();
+        $('#addFormBW')[0].reset();
     }
 
     /**
      * проверяем, что все поля заполнены
      */
-    if (!wordToAdd.badword || !wordToAdd.status) {
+    if (!wordToAdd.badword || !wordToAdd.enabled) {
 
         if (!wordToAdd.badword) {
             let confirmName = document.getElementById('addBadWord');
@@ -188,7 +188,7 @@ function handleAddBtn() {
             toastr.error('Заполните поле стоп-слово');
         }
 
-        if (!wordToAdd.status) {
+        if (!wordToAdd.enabled) {
             let confirmPrice = document.getElementById('addBadWordStatus');
 
             confirmPrice.focus();
@@ -231,10 +231,10 @@ function renderEnabled() {
     fetch('/rest/bad-words/status')
         .then((response) => {
             response.json().then((data) => {
-                if (data.textValue === 'yes') {
+                if (data.textValue === 'true') {
                     $("#activateBadWords").attr('checked', true)
                 }
-                if (data.textValue === 'no') {
+                if (data.textValue === 'false') {
                     $("#activateBadWords").attr('checked', false)
                 }
             })
@@ -250,13 +250,13 @@ function toggle(check) {
         fetch('/rest/bad-words/status', {
             method: 'POST',
             headers: {'Content-Type': 'application/json;charset=utf-8'},
-            body: 'yes'
+            body: true
         })
     } else {
         fetch('/rest/bad-words/status', {
             method: 'POST',
             headers: {'Content-Type': 'application/json;charset=utf-8'},
-            body: 'no'
+            body: false
         })
     }
     renderEnabled();
@@ -266,9 +266,6 @@ function toggle(check) {
  * функция обработки кнопки Импорт
  */
 function handleImportBtn() {
-    /*let wordToAdd = {
-        text: $('#addBadWord').val().toLowerCase(),
-    }*/
     let wordToAdd = $('#importWordText').val().toLowerCase();
 
     /**
@@ -289,7 +286,7 @@ function handleImportBtn() {
         fetch(badWordsRestUrl + 'import', {
             method: 'POST',
             headers: {'Content-Type': 'application/json;charset=utf-8'},
-            body: wordToAdd //JSON.stringify(wordToAdd)
+            body: wordToAdd
         })
             .then(function (response) {
                     let field;

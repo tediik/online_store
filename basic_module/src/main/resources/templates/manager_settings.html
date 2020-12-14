@@ -57,9 +57,6 @@
                     <a class="nav-item nav-link" id="nav-categories-and-topics-tab" data-toggle="tab"
                        href="#nav-categories-and-topics" role="tab"
                        aria-controls="nav-categories-and-topics" aria-selected="false">Обратная связь</a>
-                    <a class="nav-item nav-link" id="nav-badwords-tab" data-toggle="tab"
-                       href="#navBadwordsTab" role="tab"
-                       aria-controls="nav-categories-and-topics" aria-selected="false">Запрещенные слова</a>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -299,133 +296,6 @@
                     <!-- Конец модального окна для редактирования темы -->
                 </div>
                 <!--  Конец раздела для редактирования категорий и тем -->
-
-<!--                Начало блока вкладок для Стоп-Слов-->
-                <div class="tab-pane fade" id="navBadwordsTab" role="tabpanel" aria-labelledby="nav-3-tab">
-                    <div class="nav nav-tabs" id="nav-tab-badwords" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab-badwords" data-toggle="tab"
-                           href="#nav-home-badwords" role="tab" aria-controls="nav-home-badwords"
-                           aria-selected="true">Список Стоп-Слов</a>
-                        <a class="nav-item nav-link" id="nav-profile-tab-badwords" data-toggle="tab"
-                           href="#nav-profile-badwords" role="tab" aria-controls="nav-profile-badwords"
-                           aria-selected="false">Добавить Стоп-Слово</a>
-                        <a class="nav-item nav-link" id="nav-badwords-import-tab" data-toggle="tab"
-                           href="#nav-badwords-import" role="tab" aria-controls="nav-badwords-import"
-                           aria-selected="false">Импорт Стоп-Слов</a>
-                    </div>
-                    <div class="tab-content" id="nav-tabContent-badwords">
-
-                        <div class="tab-pane fade show active" id="nav-home-badwords" role="tabpanel"
-                             aria-labelledby="nav-home-tab-badwords">
-                            <h5>Список Стоп-Слов</h5>
-                            <br>
-                            <form class="checkbox">
-                                <div class="custom-control custom-switch">
-                                    <input name="check" type="checkbox" class="custom-control-input"
-                                           id="activateBadWords" onclick="toggle(this.form.check);">
-                                    <label class="custom-control-label" for="activateBadWords">Включение фильтра</label>
-                                </div>
-
-                                <br>
-                            </form>
-                            <div id="getBadWords"></div>
-
-                            <table class="table table-active table-striped" id="badWordsTable"
-                                   style="background-color: white">
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="nav-profile-badwords" role="tabpanel"
-                             aria-labelledby="nav-profile-tab-badwords">
-                            <h5>Добавить Стоп-Слово</h5>
-                            <br>
-                            <form id="addForm">
-                                <div class="panel panel-default" id="new-user-form">
-                                    <div class="panel-body">
-                                        <div id="add-Word-form-group" class="form-group">
-                                            <label for="addBadWord">Стоп-Слово:</label>
-                                            <input type="text" id="addBadWord" name="badword" placeholder="Стоп-Слово"
-                                                   class="form-control">
-                                        </div>
-                                        <div id="add-Status-form-group" class="form-group">
-                                            <label for="addBadWordStatus">Стутус:</label>
-                                            <select id="addBadWordStatus" name="status" class="form-control">
-                                                <option value="ACTIVE">Активно</option>
-                                                <option value="DEACTIVATED">Отключено</option>
-                                            </select>
-
-                                        </div>
-
-                                        <div class="mt-4">
-                                            <button id="addBtnWord" type="button"
-                                                    class=" btn btn-outline-success btn-md btn">Добавить новое
-                                                Стоп-Слово
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="tab-pane fade" id="nav-badwords-import" role="tabpanel"
-                             aria-labelledby="nav-badwords-import-tab">
-                            <h5>Импорт Стоп-Слово</h5>
-                            <br>
-                            <form id="importWord">
-                                <div class="form-group">
-                                    <label for="importWord">Импорт стоп-слов (через запятую (,)</label>
-                                    <textarea class="form-control" id="importWordText" rows="5"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <button id="addBtnImport" type="button" class="btn btn-primary">Импорт</button>
-                                </div>
-
-                            </form>
-                        </div>
-
-                    </div>
-                </div>
-<!--            конец блок вкладок Стоп-Слов    -->
-<!--            Модальное окно Стоп-Слов Edit Bad Word-->
-                <div class="modal fade" id="wordModalWindow" tabindex="-1" role="dialog"
-                     aria-labelledby="EditWordModalWindows"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="Edit product">Edit Bad Words</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div id="alert-modal-div"></div>
-                            <div class="modal-body" id="modalBody">
-                                <div class="row justify-content-center">
-                                    <div class="col">
-                                        <div class="form-group" id="editFormContainer">
-                                            <label for="idInputModal"><strong>Id</strong></label>
-                                            <input type="text" class="form-control" id="idInputModal" readonly>
-                                            <label for="badwordInputModal"><strong>Стоп-Слово</strong></label>
-                                            <input type="text" class="form-control" id="badwordInputModal" required>
-                                            <label for="statusInputModal"><strong>Статус</strong></label>
-                                            <select class="form-control" id="statusInputModal" name="status" required>
-                                                <option value="ACTIVE">Активно</option>
-                                                <option value="DEACTIVATED">Отключено</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">
-                                    Close
-                                </button>
-                                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save
-                                    changes
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--END Модальное окно Edit Bad Word-->
             </div>
         </div>
     </div>
@@ -449,7 +319,6 @@
 <script src="/static/js/managerPriceListCreate.js"></script>
 <script src="../static/js/searchButton.js"></script>
 <script src="/static/js/managerCategoriesSetting.js"></script>
-<script src="/static/js/badWords.js"></script>  <!--!!!!!!!!!!!!!!!!!!!!!!!-->
 <!--<script src="/static/js/is.js"></script>-->
 <script src="/static/js/jqx/jqxcore.js"></script>
 <script src="/static/js/jqx/jqxbuttons.js"></script>
