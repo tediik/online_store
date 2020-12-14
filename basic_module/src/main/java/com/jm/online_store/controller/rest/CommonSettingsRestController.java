@@ -39,7 +39,11 @@ public class CommonSettingsRestController {
 
     @PutMapping
     public ResponseEntity<CommonSettings> updateSetting(@RequestBody CommonSettings commonSettings) {
-        commonSettingsService.updateTextValue(commonSettings);
+        if (commonSettings.getSettingName().equals("maintenance_mode")) {
+            commonSettingsService.updateMaintenanceMode(commonSettings);
+        } else {
+            commonSettingsService.updateTextValue(commonSettings);
+        }
         return ResponseEntity.ok().build();
     }
 

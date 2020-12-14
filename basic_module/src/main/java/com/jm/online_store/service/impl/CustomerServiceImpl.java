@@ -61,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
             log.debug("Новый пароль не прошел валидацию");
             return false;
         }
-        userService.changeUsersPass(customer,newPassword);
+        userService.changeUsersPass(customer, newPassword);
         return true;
     }
 
