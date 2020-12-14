@@ -47,12 +47,12 @@ public class SecurityUserDetailsService implements UserDetailsService {
         if (user.getClass().equals(Customer.class)) {
             Customer customer = (Customer) user;
             if (!customer.isAccountNonLocked() && customer.getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
-                log.warn("Пользователь с почтой " + user.getEmail() + " заблокирован");
+                log.debug("Пользователь с почтой {} заблокирован", user.getEmail());
                 throw new LockedException("Аккаунт заблокирован !!!");
             } else if (!customer.isAccountNonLocked() &&
                     !customer.getAnchorForDelete().isAfter(LocalDateTime.now().minusDays(30))) {
                 userRepository.deleteById(customer.getId());
-                log.info("Говорим пользователю " + customer.getEmail() + " что его аккаунт был удален, т.к. 30 дней истекло");
+                log.info("Говорим пользователю {} что его аккаунт был удален, т.к. 30 дней истекло", customer.getEmail());
                 throw new CredentialsExpiredException("Аккаунт был удален");
             }
         }
