@@ -65,19 +65,6 @@
                         </div>
                         <!-- alert for login failure аккаунт заблокирован-->
 
-                        <!-- alert сообщаем customer'u что 30 дней прошло , и его аккаунт удален-->
-                        <div th:if="${param.accountExpired}" class="alert alert-warning alert-dismissible fade show"
-                             role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            30 дней для восстановления профиля уже прошло.
-                            <strong>Ваш аккаунт был удален!</strong>
-                            Не расстраивайтесь, вы можете зарегистрировать новый аккаунт и продолжать покупки в нашем
-                            магазине !!!
-                        </div>
-                        <!-- alert сообщаем customer'u что 30 дней прошло , и его аккаунт удален-->
-
                         <div>
                     <button id="signIn" class="btn btn-primary btn-sm btn-block">Sign In</button>
                     </div>

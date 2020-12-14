@@ -2,6 +2,8 @@ package com.jm.online_store.config.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -29,16 +31,13 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        String exceptionMessage = exception.getMessage();
-        log.info(exceptionMessage);
-        if (exceptionMessage.contains("Bad credentials")) {
+
+        log.debug(exception.getMessage());
+        if (exception.getClass().equals(BadCredentialsException.class)) {
             response.sendRedirect("/login?loginBadCredentials=true");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        } else if (exceptionMessage.contains("Аккаунт заблокирован !!!")) {
+        } else if (exception.getClass().equals(LockedException.class)) {
             response.sendRedirect("/login?accountBlocked=true");
-            response.setStatus(HttpStatus.LOCKED.value());
-        } else if (exceptionMessage.contains("Аккаунт был удален")) {
-            response.sendRedirect("/login?accountExpired=true");
             response.setStatus(HttpStatus.LOCKED.value());
         }
 
