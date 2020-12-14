@@ -41,8 +41,25 @@ public class CommonSettingsServiceImpl implements CommonSettingsService {
     @Transactional
     @Override
     public void updateTextValue(CommonSettings settings) {
-        if (commonSettingsRepository.updateTextValue(settings.getTextValue(), settings.isStatus(), settings.getSettingName()) != 1) {
+        if (commonSettingsRepository.updateTextValue(settings.getTextValue(), settings.getSettingName()) != 1) {
             throw new CommonSettingsNotFoundException();
         }
+    }
+
+    /**
+     * method update row in common_settings table with taking into account boolean field "status".
+     * if repository returns int 1, that means that 1 row was updated.
+     * if it will be 0 that means that there is no row with such name
+     * and method throws {@link CommonSettingsNotFoundException}
+     *
+     * @param settings - settings to be updated
+     */
+    @Transactional
+    @Override
+    public void updateMaintenanceMode(CommonSettings settings) {
+        if (commonSettingsRepository.updateMaintenanceMode(settings.getTextValue(), settings.isStatus(), settings.getSettingName()) != 1) {
+            throw new CommonSettingsNotFoundException();
+        }
+
     }
 }
