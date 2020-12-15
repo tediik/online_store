@@ -56,7 +56,7 @@ function checkFields(event) {
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
-        let filename = "default.jpg";
+        let filename = $('#fileImgInputHidden').val();
         try {
             let tempfilename = $('#fileImgInput')[0].files[0].name;
             if (tempfilename.indexOf('fakepath') === -1) {
@@ -247,6 +247,7 @@ function handleEditButtonClick(event) {
 
     function renderModalWindowEdit(stock) {
         let stockText = stock.stockText
+        let  testText = $('#fileImgInputHidden').val()
         $("#stockId").val(stock.id)
         $("#stockTitle").val(stock.stockTitle)
         $('#stockText').summernote('code', stockText)

@@ -148,6 +148,10 @@
                                                     <label for="fileImgInput">Изображение</label>
                                                     <input id="fileImgInput" type="file" accept="image/*"
                                                            class="form-control">
+                                                    <script>
+                                                        const selectedFile = document.getElementById('input').files[0].name;
+                                                    </script>
+                                                    <input type="hidden" name="name" id="fileImgInputHidden" value="${selectedFile}">
                                                 </div>
                                             </form>
                                             <br>
