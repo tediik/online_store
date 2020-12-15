@@ -146,4 +146,5 @@ public class ManagerCharacteristicsRestController {
 
         return ResponseEntity.ok(productCharacteristicIds);
     }
+    
 }

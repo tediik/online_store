@@ -57,7 +57,8 @@ public class ManagerController {
     }
 
     @GetMapping("/characteristics")
-    public String getCharacteristics() {
+    public String getCharacteristics(Model model) {
+        model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
 
         return "characteristics";
     }

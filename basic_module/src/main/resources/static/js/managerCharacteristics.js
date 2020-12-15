@@ -4,6 +4,7 @@ document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 
 fetchCharacteristicsAndRenderTable()
 
+
 /**
  * функция делает fetch запрос на рест контроллер,получает все характеристики, преобразует полученный объект в json
  * и передает функции рендера таблицы renderCharacteristicsTable
@@ -203,3 +204,9 @@ function handleAddBtn() {
             }
         )
 }
+
+/**
+ *  Функции для отдельной вкладки характеристики по категориям
+ */
+
+

@@ -30,7 +30,8 @@
 <body>
 <header th:insert="/blocks/header :: header"></header>
 
-<div class="modal fade" id="characteristicModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditCharacteristicModalWindows"
+<div class="modal fade" id="characteristicModalWindow" tabindex="-1" role="dialog"
+     aria-labelledby="EditCharacteristicModalWindows"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -56,7 +57,8 @@
             </div>
             <div class="modal-footer">
                 <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Изменить характеристику</button>
+                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Изменить характеристику
+                </button>
             </div>
         </div>
     </div>
@@ -78,22 +80,40 @@
             <div class="card-body">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-characteristics-tab" data-toggle="tab" href="#nav-characteristics"
+                        <a class="nav-item nav-link active" id="nav-characteristics-tab" data-toggle="tab"
+                           href="#nav-characteristics"
                            role="tab" aria-controls="nav-characteristics" aria-selected="true">Все характеристики</a>
-                        <a class="nav-item nav-link" id="nav-addCharacteristics-tab" data-toggle="tab" href="#nav-addCharacteristics"
-                           role="tab" aria-controls="nav-addCharacteristics" aria-selected="false">Добавление харакетеристик</a>
+                        <a class="nav-item nav-link" id="nav-addCharacteristics-tab" data-toggle="tab"
+                           href="#nav-addCharacteristics"
+                           role="tab" aria-controls="nav-addCharacteristics" aria-selected="false">Добавление
+                            харакетеристик</a>
+                        <a class="nav-item nav-link" id="nav-categoryCharacteristics-tab" data-toggle="tab"
+                           href="#nav-categoryCharacteristics"
+                           role="tab" aria-controls="nav-categoryCharacteristics" aria-selected="false">Характеристики
+                            по категориям</a>
 
                     </div>
                 </nav>
 
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-characteristics" role="tabpanel" aria-labelledby="nav-characteristics-tab">
+                    <div class="tab-pane fade show active" id="nav-characteristics" role="tabpanel"
+                         aria-labelledby="nav-characteristics-tab">
+                        <div class="form-group col-3">
+                            <select class="form-control form-control-sm" id="filterCategory">
+                                <option value="default">Все категории</option>
+                                <option th:each="dropDownItem : ${listCategories}"
+                                        th:value="${dropDownItem}"
+                                        th:text="${dropDownItem}"></option>
+                                <div class="dropdown-divider"></div>
+                            </select>
+                        </div>
                         <!--                main tab -->
                         <table class="table table-active table-striped bg-white" id="characteristic-table">
 
                         </table>
                     </div>
-                    <div class="tab-pane fade" id="nav-addCharacteristics" role="tabpanel" aria-labelledby="nav-addCharacteristics-tab">
+                    <div class="tab-pane fade" id="nav-addCharacteristics" role="tabpanel"
+                         aria-labelledby="nav-addCharacteristics-tab">
                         <!--                Secondary user addition form-->
                         <h3>Добавить характеристику</h3>
                         <form id="addForm">
@@ -115,6 +135,31 @@
                             </div>
                         </form>
                     </div>
+                    <div class="tab-pane" id="nav-categoryCharacteristics" role="tabpanel"
+                         aria-labelledby="nav-categoryCharacteristics-tab">
+                        <!--<div class="btn-group">
+                            <button onclick="" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Нажми на меня
+                            </button>
+                            <div class="dropdown-menu" id="dropdownCategories">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Separated link</a>
+                            </div>
+                        </div>-->
+                        <h2>Управление характеристиками категорий</h2>
+                        <!--<div class="form-group col-3">
+                            <select class="form-control form-control-sm" id="filterCategory">
+                                <option value="default">Все категории</option>
+                                <option th:each="dropDownItem : ${listCategories}"
+                                        th:value="${dropDownItem}"
+                                        th:text="${dropDownItem}"></option>
+                                <div class="dropdown-divider"></div>
+                            </select>
+                        </div>-->
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,5 +170,10 @@
 <script src="../static/js/searchButton.js"></script>
 <script src="/static/js/textRedactor.js"></script>
 <script src="/static/js/date_range.js"></script>
+<script src="/static/js/jqx/jqxcore.js"></script>
+<script src="/static/js/jqx/jqxbuttons.js"></script>
+<script src="/static/js/jqx/jqxpanel.js"></script>
+<script src="/static/js/jqx/jqxtree.js"></script>
+<script src="/static/js/jqx/jqxscrollbar.js"></script>
 </body>
 </html>
