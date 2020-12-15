@@ -339,8 +339,6 @@ function handleAddBtn() {
                 }
             }
         )
-    /*fetchToAddCharacteristics($('#addProduct').val());*/ //срабатывает до добавления товара, хз почему
-
 }
 
 /**

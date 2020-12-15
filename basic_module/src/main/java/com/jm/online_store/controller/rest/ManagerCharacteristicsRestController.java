@@ -2,7 +2,6 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.dto.ProductCharacteristicDto;
-import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
@@ -31,7 +30,6 @@ import java.util.List;
 public class ManagerCharacteristicsRestController {
 
     private final ProductService productService;
-    private final CategoriesService categoriesService;
     private final CharacteristicService characteristicService;
     private final ProductCharacteristicService productCharacteristicService;
 
@@ -69,7 +67,7 @@ public class ManagerCharacteristicsRestController {
      * @return new ResponseEntity<>(HttpStatus)
      */
     @PutMapping(value = "/manager/characteristics")
-    public ResponseEntity editCharacteristic(@RequestBody Characteristic characteristic) {
+    public ResponseEntity<Characteristic> editCharacteristic(@RequestBody Characteristic characteristic) {
         if (characteristicService.findCharacteristicById(characteristic.getId()).isEmpty()) {
             log.debug("There are no characteristic with id: {}", characteristic.getId());
             return ResponseEntity.noContent().build();
