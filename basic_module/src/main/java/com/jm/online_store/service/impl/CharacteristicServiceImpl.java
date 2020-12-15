@@ -30,7 +30,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
      */
     @Override
     @Transactional
-    public Long addCharacteristic(Characteristic characteristic) {
+    public Long saveCharacteristic(Characteristic characteristic) {
 
         return characteristicRepository.save(characteristic).getId();
     }

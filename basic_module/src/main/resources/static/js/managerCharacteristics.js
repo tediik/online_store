@@ -15,6 +15,18 @@ function fetchCharacteristicsAndRenderTable() {
 }
 
 /**
+ * функция делает активной таблицу с харакетристиками
+ * и обновляет в ней данные
+ */
+function showAndRefreshHomeTab() {
+    fetchCharacteristicsAndRenderTable()
+    $('#nav-characteristics').addClass('tab-pane fade active show')
+    $('#nav-addCharacteristics').removeClass('active show')
+    $('#nav-addCharacteristics-tab').removeClass('active')
+    $('#nav-characteristics').addClass('active')
+}
+
+/**
  * функция рендера таблицы характеристик
  * @param characteristics
  */
@@ -131,8 +143,8 @@ function handleAcceptButtonFromModalWindow(event) {
             method: 'PUT',
             headers: headers,
             body: JSON.stringify(characteristic)
-        }).then(function (response){
-            if (response.ok){
+        }).then(function (response) {
+            if (response.ok) {
                 fetchCharacteristicsAndRenderTable()
                 $('#characteristicModalWindow').modal('hide')
                 toastr.success("Характеристика успешно изменена")
@@ -145,92 +157,47 @@ function handleAcceptButtonFromModalWindow(event) {
  * функция обработки кнопки add на форме новой характеристики
  */
 function handleAddBtn() {
-    let productToAdd = {
-        product: $('#addProduct').val(),
-        price: $('#addPrice').val(),
-        amount: $('#addAmount').val(),
+    let characteristicToAdd = {
+        characteristicName: $('#addCharacteristicName').val(),
     }
 
     /**
-     * функция очистки полей формы нового продукта
+     * функция очистки полей формы новой харакетристики
      */
     function clearFormFields() {
         $('#addForm')[0].reset();
     }
 
     /**
-     * проверяем, что выбранная категория продукта != null
-     */
-    let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
-    if (!selectedCat) {
-        alert('Категория не выбрана!');
-        return false;
-    } else {
-        for (let z = 0; z < listOfAll.length; z++) {
-            let currItem = listOfAll[z];
-            if (selectedCat.label.localeCompare(currItem.text) === 0) {
-                currentCategoryIdAdd = currItem.id;
-            }
-        }
-    }
-
-    /**
      * проверяем, что наименование, цена продукта и количество заполнены
      */
-    if (!productToAdd.product || !productToAdd.price || !productToAdd.amount) {
 
-        if (!productToAdd.product) {
-            let confirmName = document.getElementById('addProduct');
+    if (!characteristicToAdd.characteristicName) {
+        let confirmName = document.getElementById('addCharacteristicName');
 
-            confirmName.focus();
-            toastr.error('Заполните поле наименования товара');
-        }
-
-        if (!productToAdd.price) {
-            let confirmPrice = document.getElementById('addPrice');
-
-            confirmPrice.focus();
-            toastr.error('Заполните поле стоимости товара');
-        }
-
-        if (!productToAdd.amount) {
-            let confirmAmount = document.getElementById('addAmount');
-
-            confirmAmount.focus();
-            toastr.error('Заполните поле количества товара');
-        }
+        confirmName.focus();
+        toastr.error('Заполните поле наименования характеристкии');
     }
 
-    fetch("/rest/products/addProduct/" + currentCategoryIdAdd, {
+    fetch("/rest/characteristics/addCharacteristic", {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
-        body: JSON.stringify(productToAdd)
+        body: JSON.stringify(characteristicToAdd)
     })
         .then(function (response) {
-                let field;
                 if (response.status !== 200) {
                     response.text()
                         .then(
                             function (text) {
-
-                                if (text === "duplicatedNameProductError") {
-                                    toastr.error('Такое наименование уже существует');
-                                }
+                                toastr.error("Харакетристика не добавлена")
 
                                 console.log(text)
                             })
                 } else {
                     response.text().then(function () {
-                        $("#jqxTreeHere").jqxTree('selectItem', null);
-                        fetchToAddCharacteristics($('#addProduct').val());
-                        clearCharacteristicForm();
-                        if (document.getElementById("deletedCheckbox").checked) {
-                            showAndRefreshNotDeleteHomeTab()
-                        } else {
-                            showAndRefreshHomeTab()
-                        }
                         clearFormFields();
-                        toastr.success('Товар успешно добавлен')
+                        showAndRefreshHomeTab();
+                        toastr.success('Харакетристика успешно добавлена')
                     })
                 }
             }

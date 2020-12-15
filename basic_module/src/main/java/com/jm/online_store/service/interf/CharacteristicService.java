@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CharacteristicService {
 
-    Long addCharacteristic(Characteristic characteristic);
+    Long saveCharacteristic(Characteristic characteristic);
 
     Optional<Characteristic> findCharacteristicById(Long id);
 

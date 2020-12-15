@@ -45,6 +45,24 @@ public class ManagerCharacteristicsRestController {
     }
 
     /**
+     * Метод добавляет характеристику
+     *
+     * @param characteristic характеристика для добавления
+     * @return ResponseEntity<Characteristic> Возвращает добавленную харакетристику с кодом ответа
+     */
+    @PostMapping(value = "/rest/characteristics/addCharacteristic")
+    public ResponseEntity<Characteristic> addCharacteristic(@RequestBody Characteristic characteristic) {
+
+        if (characteristic.getCharacteristicName().equals("")) {
+            log.debug("EmptyCharacteristicName");
+            return new ResponseEntity("EmptyCharacteristicName", HttpStatus.BAD_REQUEST);
+        }
+
+        characteristicService.saveCharacteristic(characteristic);
+        return ResponseEntity.ok(characteristic);
+    }
+
+    /**
      * Метод возвращает характеристику по id
      *
      * @param id - characteristic id (Long)
