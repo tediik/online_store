@@ -51,75 +51,75 @@
         <div class="col-10">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-distribution"
-                       role="tab" aria-controls="nav-home" aria-selected="true">E-mail рассылка</a>
-                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-priceChange" role="tab"
-                       aria-controls="nav-profile" aria-selected="false">Снижение цен</a>
-                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#priceListCreate" role="tab"
-                       aria-controls="nav-contact" aria-selected="false">Ежедневный прайс</a>
+<!--                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-distribution"-->
+<!--                       role="tab" aria-controls="nav-home" aria-selected="true">E-mail рассылка</a>-->
+<!--                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-priceChange" role="tab"-->
+<!--                       aria-controls="nav-profile" aria-selected="false">Снижение цен</a>-->
+                    <a class="nav-item nav-link active" id="nav-contact-tab" data-toggle="tab" href="#priceListCreate" role="tab"
+                       aria-controls="nav-contact" aria-selected="true">Ежедневный прайс</a>
                     <a class="nav-item nav-link" id="nav-categories-and-topics-tab" data-toggle="tab"
                        href="#nav-categories-and-topics" role="tab"
                        aria-controls="nav-categories-and-topics" aria-selected="false">Обратная связь</a>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-distribution" role="tabpanel"
-                     aria-labelledby="nav-home-tab">
-                    <br>
-                    <form id="distributionSettingsForm">
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="emailDistributionCheckbox">
-                            <label class="form-check-label" for="emailDistributionCheckbox">Включить рассылку акций на
-                                почту</label>
-                        </div>
-                        <div class="form-group" id="distributionTimeDiv">
-                            <label for="distributionTimeInput">Выберите время для рассылки</label>
-                            <input class="form-control" type="time" id="distributionTimeInput" style="width: 10%">
-                        </div>
-                        <button class="btn btn-primary" id="saveSettingsChanges">Сохранить</button>
-                    </form>
-                    <hr>
-                    <form id="emailTemplateEditForm">
-                        <div class="form-group">
-                            <div class="form-col">
-                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
-                                    рассылки</label>
-                                <textarea id="editTemplateSummernote"></textarea>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" id="saveTemplateChanges">Сохранить шаблон</button>
-                    </form>
-                    <hr>
-                    <h2>Важная информация!</h2>
-                    <ul>
-                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
-                        <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
-                        <li>@@stockList@@ - вместо этого тега в письме подставляется List действующих и будущих акций
-                        </li>
-                    </ul>
-                </div>
-                <div class="tab-pane fade" id="nav-priceChange" role="tabpanel" aria-labelledby="nav-2-tab">
-                    <form id="priceChangeTemplateEditForm">
-                        <div class="form-group">
-                            <div class="form-col">
-                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
-                                    рассылки при изменнеии цены</label>
-                                <textarea id="editPriceChangeTemplateSummernote"></textarea>
-                            </div>
-                        </div>
-                    </form>
-                    <hr>
-                    <h2>Важная информация!</h2>
-                    <ul>
-                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
-                        <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
-                        <li>@@oldPrice@@ - вместо этого тега в письме подставится старая цена на товар</li>
-                        <li>@@newPrice@@ - вместо этого тега в письме подставится новая цена на товар</li>
-                        <li>@@product@@ - вместо этого тега в письме подставится название товара</li>
-                    </ul>
-                    <button class="btn btn-primary" id="savePriceChangeTemplateChanges">Сохранить шаблон</button>
-                </div>
-                <div class="tab-pane fade" id="priceListCreate" role="tabpanel" aria-labelledby="nav-3-tab">
+<!--                <div class="tab-pane fade show active" id="nav-distribution" role="tabpanel"-->
+<!--                     aria-labelledby="nav-home-tab">-->
+<!--                    <br>-->
+<!--                    <form id="distributionSettingsForm">-->
+<!--                        <div class="form-group form-check">-->
+<!--                            <input type="checkbox" class="form-check-input" id="emailDistributionCheckbox">-->
+<!--                            <label class="form-check-label" for="emailDistributionCheckbox">Включить рассылку акций на-->
+<!--                                почту</label>-->
+<!--                        </div>-->
+<!--                        <div class="form-group" id="distributionTimeDiv">-->
+<!--                            <label for="distributionTimeInput">Выберите время для рассылки</label>-->
+<!--                            <input class="form-control" type="time" id="distributionTimeInput" style="width: 10%">-->
+<!--                        </div>-->
+<!--                        <button class="btn btn-primary" id="saveSettingsChanges">Сохранить</button>-->
+<!--                    </form>-->
+<!--                    <hr>-->
+<!--                    <form id="emailTemplateEditForm">-->
+<!--                        <div class="form-group">-->
+<!--                            <div class="form-col">-->
+<!--                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона-->
+<!--                                    рассылки</label>-->
+<!--                                <textarea id="editTemplateSummernote"></textarea>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <button class="btn btn-primary" id="saveTemplateChanges">Сохранить шаблон</button>-->
+<!--                    </form>-->
+<!--                    <hr>-->
+<!--                    <h2>Важная информация!</h2>-->
+<!--                    <ul>-->
+<!--                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>-->
+<!--                        <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>-->
+<!--                        <li>@@stockList@@ - вместо этого тега в письме подставляется List действующих и будущих акций-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <div class="tab-pane fade" id="nav-priceChange" role="tabpanel" aria-labelledby="nav-2-tab">-->
+<!--                    <form id="priceChangeTemplateEditForm">-->
+<!--                        <div class="form-group">-->
+<!--                            <div class="form-col">-->
+<!--                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона-->
+<!--                                    рассылки при изменнеии цены</label>-->
+<!--                                <textarea id="editPriceChangeTemplateSummernote"></textarea>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                    <hr>-->
+<!--                    <h2>Важная информация!</h2>-->
+<!--                    <ul>-->
+<!--                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>-->
+<!--                        <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>-->
+<!--                        <li>@@oldPrice@@ - вместо этого тега в письме подставится старая цена на товар</li>-->
+<!--                        <li>@@newPrice@@ - вместо этого тега в письме подставится новая цена на товар</li>-->
+<!--                        <li>@@product@@ - вместо этого тега в письме подставится название товара</li>-->
+<!--                    </ul>-->
+<!--                    <button class="btn btn-primary" id="savePriceChangeTemplateChanges">Сохранить шаблон</button>-->
+<!--                </div>-->
+                <div class="tab-pane fade show active" id="priceListCreate" role="tabpanel" aria-labelledby="nav-3-tab">
                     <form id="priceListCreateTimeChange">
                         <div class="form-group" id="priceListCreateTimeChangeHere">
                             <label for="priceTimeInput">Выберите время создания прайс-листа</label>
