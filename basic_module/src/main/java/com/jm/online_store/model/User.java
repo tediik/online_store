@@ -57,6 +57,8 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
+    private boolean isAccountNonBlockedStatus = true;
+
     @Transient
     @NotBlank
     private String passwordConfirm;
@@ -193,7 +195,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isAccountNonBlockedStatus;
     }
 
     @Override

@@ -46,7 +46,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -1160,6 +1159,13 @@ public class DataInitializer {
                 .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings2);
+
+        TaskSettings taskSettings3 = TaskSettings.builder()
+                .taskName("deleteExpiredCustomersProfile")
+                .active(true)
+                .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .build();
+        taskSettingsService.addNewTaskSetting(taskSettings3);
     }
 
     /**
