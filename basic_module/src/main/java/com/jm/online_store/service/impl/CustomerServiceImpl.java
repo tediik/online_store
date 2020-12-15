@@ -105,13 +105,13 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * метод получения клиентов, подписанных на рассылку, по дню недели.
      *
-     * @param dayNumber день недели
+     * @param dayOfWeek день недели
      * @return List<Customer>
      */
     @Override
     @Transactional
-    public List<Customer> findByDayOfWeekForStockSend(byte dayNumber) {
-        List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.values()[dayNumber - 1]);
+    public List<Customer> findByDayOfWeekForStockSend(String dayOfWeek) {
+        List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(dayOfWeek));
         if (customers.isEmpty()) {
             throw new UserNotFoundException();
         }

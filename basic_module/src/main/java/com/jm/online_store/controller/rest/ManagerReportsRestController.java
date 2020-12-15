@@ -29,12 +29,12 @@ public class ManagerReportsRestController {
     /**
      * метод получения списка пользователей, подписанных на рассылку по номеру дня
      *
-     * @param dayNumber день недели
+     * @param dayOfWeek день недели
      * @return список пользователей
      */
-    @GetMapping("/users/{dayNumber}")
-    public ResponseEntity<List<Customer>> allUsers(@PathVariable byte dayNumber) {
-        return ResponseEntity.ok(customerService.findByDayOfWeekForStockSend(dayNumber));
+    @GetMapping("/users/{dayOfWeek}")
+    public ResponseEntity<List<Customer>> allUsers(@PathVariable String dayOfWeek) {
+        return ResponseEntity.ok(customerService.findByDayOfWeekForStockSend(dayOfWeek));
     }
 
     /**

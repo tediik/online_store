@@ -3,7 +3,7 @@
  * @param day
  */
 
-$(document).ready(fetchUsersAndRenderTable(currentDay()), dataPickerInitializer());
+$(document).ready(fetchUsersAndRenderTable(onChangeDataInput()), dataPickerInitializer());
 
 
 /**
@@ -95,17 +95,18 @@ function cancelSubscripption(element) {
  * функция изменения даты для отображения
  */
 function onChangeDataInput() {
-    var date = new Date(document.getElementById('date_range2').value);
-    fetchUsersAndRenderTable([7, 1, 2, 3, 4, 5, 6][date.getDay()]);
+    let date = document.getElementById('date_range2').value;
+    fetchUsersAndRenderTable(date);
 }
 
 /**
  * функция возвращает сегодняшний день
  */
-function currentDay() {
-    let now = new Date();
-    return [7, 1, 2, 3, 4, 5, 6][now.getDay()];
-}
+// УДАЛИТЬ ПОСЛЕ ПРОВЕРКИ!!!
+// function currentDay() {
+//     let now = new Date();
+//     return [7, 1, 2, 3, 4, 5, 6][now.getDay()];
+// }
 
 function fetchSentStocks(begin, end) {
     fetch("/api/manager/report?beginDate=" + begin + "&endDate=" + end, {
@@ -204,11 +205,11 @@ function dataPickerInitializer() {
             }
         })
     })
-    $(function () {
-        $('#date_range2').datepicker({
-            showButtonPanel: true,
-        })
-    })
+    // $(function () {
+    //     $('#date_range2').datepicker({
+    //         showButtonPanel: true,
+    //     })
+    // })
 }
 
 /**
