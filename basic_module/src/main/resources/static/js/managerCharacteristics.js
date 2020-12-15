@@ -20,8 +20,8 @@ function renderCharacteristicsTable(characteristics) {
         .append(`<tr class="d-flex">
                  <th class="col-1">ID<th/>
                  <th class="col-3">Наименование категории</th>
-                 <th class="col-1">Edit</th>
-                 <th class="col-1">Delete</th>
+                 <th class="col-1">Изменить</th>
+                 <th class="col-1">Удалить</th>
                  </tr>`)
     for (let i = 0; i < characteristics.length; i++) {
         const characteristic = characteristics[i];
@@ -31,13 +31,13 @@ function renderCharacteristicsTable(characteristics) {
                     <td class="col-sm-3">${characteristic.characteristicName}</td>
                     <td class="col-sm-1">
             <!-- Buttons of the right column of main table-->
-                        <button data-characteristic-id="${characteristic.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#userModalWindow">
-                        Edit
+                        <button data-characteristic-id="${characteristic.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#characteristicModalWindow">
+                        Изменить
                         </button>
                     </td>
                     <td class="col-sm-1">
-                        <button data-characteristic-id="${characteristic.id}" type="button" class="btn btn-danger delete-button" data-toggle="modal" data-target="#userModalWindow">
-                        Delete
+                        <button data-characteristic-id="${characteristic.id}" type="button" class="btn btn-danger delete-button" data-toggle="modal" data-target="#characteristicModalWindow">
+                        Удалить
                         </button>
                     </td>
                 </tr>
@@ -61,16 +61,39 @@ function handleEditButton(event) {
 }
 
 /**
+ * Функция обработки нажатия кнопки Delete в таблице характеристик
+ * @param event
+ */
+function handleDeleteButton(event) {
+    const characteristicId = event.target.dataset["characteristicId"]
+    fetch("/manager/characteristic/" + characteristicId)
+        .then(response => response.json())
+        .then(characteristicToDelete => deleteModalWindowRender(characteristicToDelete))
+}
+
+/**
  * Функция рендера модального окна Edit characteristic
  * @param characteristicToEdit
  */
 function editModalWindowRender(characteristicToEdit) {
     $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-title').text("Изменение характеристики")
     $('#idInputModal').val(characteristicToEdit.id)
     $('#acceptButton').text("Сохранить изменения").removeClass().toggleClass('btn btn-success edit-characteristic')
-    $('.modal-title').text("Изменение характеристики")
     $('#characteristicInputModal').val(characteristicToEdit.characteristicName).prop('readonly', false)
 
+}
+
+/**
+ * Функция рендера модального окна Delete characteristic
+ * @param characteristicToDelete
+ */
+function deleteModalWindowRender(characteristicToDelete) {
+    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-title').text("Удаление характеристики")
+    $('#acceptButton').text("Удалить").removeClass().toggleClass('btn btn-danger delete-characteristic')
+    $('#idInputModal').val(characteristicToDelete.id)
+    $('#characteristicInputModal').val(characteristicToDelete.characteristicName).prop('readonly', true)
 }
 
 /**
@@ -91,18 +114,16 @@ function handleAcceptButtonFromModalWindow(event) {
     /**
      * Проверка кнопки delete или edit
      */
-    if ($('#acceptButton').hasClass('delete-user')) {
-        fetch(adminRestUrl + "/" + user.id, {
-            headers: headers,
+    if ($('#acceptButton').hasClass('delete-characteristic')) {
+        fetch("/manager/characteristics/" + characteristic.id, {
             method: 'DELETE'
         }).then(response => response.text())
-            .then(deletedUser => console.log('User: ' + deletedUser + ' was successfully deleted'))
-            .then($('#tr-' + user.id).remove())
-        $('#userModalWindow').modal('hide')
+            .then(deletedCharacteristic => console.log('Characteristic: ' + deletedCharacteristic + ' was successfully deleted'))
+            .then($('#tr-' + characteristic.id).remove())
+        $('#characteristicModalWindow').modal('hide')
     } else {
         fetch("/manager/characteristics", {
             method: 'PUT',
-            headers: headers,
             body: JSON.stringify(characteristic)
         }).then(function (response){
             if (response.ok){

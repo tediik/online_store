@@ -1,19 +1,17 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Characteristic;
-import com.jm.online_store.model.Product;
-import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductCharacteristicDto;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
-import com.jm.online_store.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,7 +69,7 @@ public class ManagerCharacteristicsRestController {
      * @return new ResponseEntity<>(HttpStatus)
      */
     @PutMapping(value = "/manager/characteristics")
-    public ResponseEntity editUser(@RequestBody Characteristic characteristic) {
+    public ResponseEntity editCharacteristic(@RequestBody Characteristic characteristic) {
         if (characteristicService.findCharacteristicById(characteristic.getId()).isEmpty()) {
             log.debug("There are no characteristic with id: {}", characteristic.getId());
             return ResponseEntity.noContent().build();
@@ -80,6 +78,24 @@ public class ManagerCharacteristicsRestController {
         characteristicService.updateCharacteristic(characteristic);
         log.debug("Changes to characteristic with id: {} was successfully added", characteristic.getId());
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Метод для удаления характеристики
+     *
+     * @param id - id харакетристики для удаления
+     * @return ResponseEntity<>(HttpStatus)
+     */
+    @DeleteMapping(value = "/manager/characteristics/{id}")
+    public ResponseEntity<Characteristic> deleteCharacteristic(@PathVariable Long id) {
+        try {
+            characteristicService.deleteByID(id);
+        } catch (IllegalArgumentException e) {
+            log.debug("There is no characteristic with id: {}", id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        log.debug("Characteristic with id: {}, was deleted successfully", id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**

@@ -9,9 +9,11 @@ import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class ProductCharacteristicServiceImpl implements ProductCharacteristicService {
 
     ProductCharacteristicRepository productCharacteristicRepository;
@@ -19,6 +21,7 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
     CharacteristicService characteristicService;
 
     @Override
+    @Transactional
     public Long addProductCharacteristic(long productId, long characteristicId, String value) {
 
         Product product = productService.findProductById(productId).get();
@@ -26,4 +29,5 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
 
         return productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, value)).getId();
     }
+
 }

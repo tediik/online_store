@@ -1,7 +1,6 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Characteristic;
-import com.jm.online_store.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,4 +16,6 @@ public interface CharacteristicService {
     List<Characteristic> findAll();
 
     void updateCharacteristic(Characteristic characteristic);
+
+    void deleteByID(Long id);
 }
