@@ -316,6 +316,8 @@
                                                     data-target="#openChangePassModal">Изменить пароль
                                             </button>
                                         </div>
+
+                                        <!--день рождения-->
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="date_birthday_input" class="col-xs-2 col-form-label">День
                                                 рождения</label>
@@ -325,6 +327,9 @@
                                                        type="date" id="date_birthday_input" name="birthdayDate">
                                             </div>
                                         </div>
+                                        <!--день рождения-->
+
+                                        <!--пол-->
                                         <div class="form-group-text-center">
                                             <label for="gender_radio"
                                                    class="text-center font-weight-bold">Пол</label>
@@ -352,8 +357,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!--пол-->
                                         <hr/>
-                                        <!--РАССЫЛКА -->
+                                        <!--ЧЕК БОКС РАССЫЛКИ -->
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input"
                                                    id="stockMailingCheckbox"
@@ -362,7 +368,9 @@
                                             <label class="form-check-label" for="stockMailingCheckbox">Хотите ли вы
                                                 получать рассылку?</label>
                                         </div>
+                                        <!--ЧЕК БОКС РАССЫЛКИ -->
                                         <br>
+                                        <!--ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ -->
                                         <div
                                                 th:class="${customer.dayOfWeekForStockSend != null} ? 'form-group day-of-the-week-drop-list' : 'form-group day-of-the-week-drop-list d-none' ">
                                             <label for="dayOfWeekDropList">Выберите день недели</label>
@@ -378,7 +386,8 @@
                                                 <option value="SATURDAY">Суббота</option>
                                                 <option value="SUNDAY">Воскресенье</option>
                                             </select>
-                                        </div><!--РАССЫЛКА -->
+                                        </div>
+                                        <!--ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ -->
                                         <hr/>
                                         <!-- YELLOW SAVE BUTTON -->
                                         <button type="submit" style="background-color: #ff8e05"
@@ -488,7 +497,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><!-- change PASS modal -->
+                                    </div>
+                                    <!-- change PASS modal -->
 
                                     <!---------------------- Delete Profile Modal window ------------------->
                                     <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
@@ -524,7 +534,6 @@
                                         </div>
                                     </div>
                                     <!---------------------- End Delete Profile Modal window ------------------->
-
                                 </div>
                             </div>
                         </div>
