@@ -85,12 +85,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public List<Customer> findSubscriberByEmail(String email) {
-        List<Customer> customers = customerRepository.findSubscriberByEmail(email);
-        if (customers.isEmpty()) {
-            log.debug("Пользователь не подписан на рассылку");
-            throw new UserNotFoundException();
-        }
-        return customers;
+        return customerRepository.findSubscriberByEmail(email);
     }
 
     /**

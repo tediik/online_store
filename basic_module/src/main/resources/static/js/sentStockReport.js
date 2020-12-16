@@ -219,11 +219,6 @@ function dataPickerInitializer() {
             }
         })
     })
-    // $(function () {
-    //     $('#date_range2').datepicker({
-    //         showButtonPanel: true,
-    //     })
-    // })
 }
 
 /**
