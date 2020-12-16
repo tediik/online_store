@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.config.security.MyUserDetailsService;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
@@ -44,7 +43,6 @@ public class CommentRestController {
     private final CommentService commentService;
     private final ReviewService reviewService;
     private final ProductRepository productRepository;
-    private final MyUserDetailsService myUserDetailsService;
     private final UserService userService;
 
 

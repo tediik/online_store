@@ -16,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -61,9 +63,8 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<ReportComment> reportComments;
 
-    @Column
-    @NonNull
-    private boolean deletedHaveKids;
+    @Column(nullable = false)
+    private boolean deletedHasKids = false;
 
     public Comment(String content) {
         this.content = content;

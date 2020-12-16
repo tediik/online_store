@@ -36,7 +36,7 @@ public class CommentDto {
        commentDto.setFirstName(commentEntity.getCustomer().getFirstName());
        commentDto.setLastName(commentEntity.getCustomer().getLastName());
        commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
-       commentDto.setDeletedHaveKids(commentEntity.isDeletedHaveKids());
+       commentDto.setDeletedHaveKids(commentEntity.isDeletedHasKids());
 
        DateTimeFormatter dTF2 = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
        try {

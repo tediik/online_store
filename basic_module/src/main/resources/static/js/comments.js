@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /*Если это удаленный комментарий с reply-ответами - вставляет заглушку*/
         function isDeleted(commentData) {
-            if (commentData.deletedHaveKids) {
+            if (commentData.deletedHasKids) {
                 document.getElementById("mt-0" + commentData.id).hidden = true;
                 document.getElementById("commentContent" + commentData.id).hidden = true;
                 document.getElementById("editButton" + commentData.id).hidden = true;
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (replyDisplay && replyDisplay.childElementCount > 0) {
                 let dataObject = {};
                 dataObject["id"] = commentId;
-                dataObject["deletedHaveKids"] = "true";
+                dataObject["deletedHasKids"] = "true";
                 dataObject["content"] = document.getElementById('commentContent' + commentId).textContent;
                 (async () => {
                     const rawResponse = await fetch('/api/comments', {
