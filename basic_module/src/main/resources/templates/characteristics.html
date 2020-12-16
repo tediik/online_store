@@ -88,20 +88,20 @@
                            role="tab" aria-controls="nav-addCharacteristics" aria-selected="false">Добавление
                             харакетеристик</a>
                     </div>
-                    <div class="form-group col-3 mr-3 pull-right">
-                        <select class="form-control form-control-sm" id="filterCategory">
-                            <option value="default">Все категории</option>
-                            <option th:each="dropDownItem : ${listCategories}"
-                                    th:value="${dropDownItem}"
-                                    th:text="${dropDownItem}"></option>
-                            <div class="dropdown-divider"></div>
-                        </select>
-                    </div>
                 </nav>
 
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-characteristics" role="tabpanel"
                          aria-labelledby="nav-characteristics-tab">
+                        <div class="form-group col-3 mt-3">
+                            <select class="form-control form-control-sm" id="filterCategory">
+                                <option value="default">Все категории</option>
+                                <option th:each="dropDownItem : ${listCategories}"
+                                        th:value="${dropDownItem}"
+                                        th:text="${dropDownItem}"></option>
+                                <div class="dropdown-divider"></div>
+                            </select>
+                        </div>
                         <!--                main tab -->
                         <table class="table table-active table-striped bg-white" id="characteristic-table">
 
@@ -139,14 +139,22 @@
                                 </div>
                                 <div class="col-sm">
                                     <h4>Добавление характеристик к выбранной категории</h4>
+                                    <select class="form-control form-control-sm" id="filterCategoryToAdd">
+                                        <option value="default">Выберите категорию</option>
+                                        <option th:each="dropDownItem : ${listCategories}"
+                                                th:value="${dropDownItem}"
+                                                th:text="${dropDownItem}"></option>
+                                        <div class="dropdown-divider"></div>
+                                    </select>
                                     <div class="form-group">
                                         <label>Характеристики, которых нет в выбранной категории:</label>
                                         <select id="addCharacteristics" name="characteristics" class="form-control"
-                                                multiple="multiple">
+                                                multiple="multiple" size="15">
                                         </select>
                                         <div class="mt-4"></div>
                                         <button id="addCharacteristicsToCategory" type="button"
-                                                class=" btn btn-outline-success btn-md btn">
+                                                class=" btn btn-outline-success btn-md btn"
+                                                onclick="handleAcceptAddCharacteristicsToCategoryButton()">
                                             Добавить характеристики
                                         </button>
                                     </div>

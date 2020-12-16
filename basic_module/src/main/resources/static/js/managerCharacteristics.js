@@ -1,18 +1,31 @@
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
-let categorySelect1 = 'default';
+let categorySelectAllCharacteristics = 'default';
+let categorySelectToAddCharacteristics;
 
 fetchCharacteristicsAndRenderTable("default")
 addCharacteristicsOnNewCharacteristicForm("default")
 
 /**
  * Обработка события с выбором категории для фильтрации списка харакетристик по выбранной категории
+ * для вкладки "Все характеристики"
  */
 $('#filterCategory').on("change", function () {
     let categorySelect = $('#filterCategory').val();
-    categorySelect1 = categorySelect;
+    categorySelectAllCharacteristics = categorySelect;
     fetchCharacteristicsAndRenderTable(categorySelect)
+
+});
+
+
+/**
+ * Обработка события с выбором категории для фильтрации списка харакетристик по выбранной категории
+ * для вкладки "Добавление харакетристик"
+ */
+$('#filterCategoryToAdd').on("change", function () {
+    let categorySelect = $('#filterCategoryToAdd').val();
+    categorySelectToAddCharacteristics = categorySelect;
     addCharacteristicsOnNewCharacteristicForm(categorySelect)
 
 });
@@ -221,6 +234,7 @@ function handleAddBtn() {
             }
         )
 }
+
 /**
  * fetch запрос для получения харакетристик, которых нет в выбранной категории
  *
@@ -241,4 +255,56 @@ function renderCharacteristicsOtherThenSelected(characteristics) {
     $.each(characteristics, function (i, characteristic) {
         selectCharacteristics.append(`<option value=${characteristic.id}>${characteristic.characteristicName}</option>>`)
     })
+}
+
+/**
+ * Функция возвращает массив выбранных харакетристик
+ * @param select
+ * @returns {[]}
+ */
+function getSelectValues(select) {
+    let arr = [];
+    let characteristics = select;
+    let characteristic1;
+
+    for (let i = 0; i < characteristics.length; i++) {
+
+        let characteristic = {
+            characteristicName : characteristics[i].text,
+        }
+        characteristic1 = characteristics[i];
+
+        if (characteristic1.selected) {
+            arr.push(characteristic);
+        }
+    }
+    return arr;
+}
+
+/**
+ * функция обработки нажатия кнопки добавить характеристики во вкладке добавление характеристик
+ */
+function handleAcceptAddCharacteristicsToCategoryButton() {
+    let arr = getSelectValues(document.getElementById("addCharacteristics"));
+    let characteristics = [getSelectValues(document.getElementById("addCharacteristics"))];
+    let selectedCategory = $('#filterCategoryToAdd').val();
+
+    //clearFieldsForm('addForm');
+    //addRolesOnNewUserForm();
+
+    fetch("/manager/characteristics/addCharacteristicsToCategory/" + selectedCategory, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json;charset=utf-8'},
+        body: JSON.stringify(arr)
+    }).then(
+        function (response) {
+            if (response.status !== 200) {
+                toastr.error("Характеристики не были добавлены")
+            } else {
+                response.text().then(function () {
+                    document.getElementById('#addCharacteristics').reset();
+                })
+            }
+        }
+    )
 }

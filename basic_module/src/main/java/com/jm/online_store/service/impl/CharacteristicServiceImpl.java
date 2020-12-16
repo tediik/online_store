@@ -128,4 +128,14 @@ public class CharacteristicServiceImpl implements CharacteristicService {
         characteristicList.remove(characteristicToDelete);
         categoriesService.updateCategory(categories);
     }
+
+    /**
+     * Ищет харакетристику по имени характеристики
+     *
+     * @param characteristicName имя харакетристики
+     */
+    @Override
+    public Optional<Characteristic> findByCharacteristicName(String characteristicName) {
+        return characteristicRepository.findByCharacteristicName(characteristicName);
+    }
 }

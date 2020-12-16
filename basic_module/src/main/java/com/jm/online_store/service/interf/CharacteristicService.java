@@ -24,4 +24,6 @@ public interface CharacteristicService {
 
     @Transactional
     void deleteByIDInSelectedCategory(Long id, String category);
+
+    Optional<Characteristic> findByCharacteristicName(String characteristicName);
 }

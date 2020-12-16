@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CategoriesRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import lombok.RequiredArgsConstructor;

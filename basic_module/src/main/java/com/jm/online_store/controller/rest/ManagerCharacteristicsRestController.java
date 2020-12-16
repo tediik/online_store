@@ -1,7 +1,9 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.dto.ProductCharacteristicDto;
+import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,6 +35,7 @@ public class ManagerCharacteristicsRestController {
     private final ProductService productService;
     private final CharacteristicService characteristicService;
     private final ProductCharacteristicService productCharacteristicService;
+    private final CategoriesService categoriesService;
 
     /**
      * Метод выводит список всех характеристик
@@ -166,6 +170,7 @@ public class ManagerCharacteristicsRestController {
 
     /**
      * Метод возвращает список всех характеристик, кроме характеристик выбранной категории
+     *
      * @param categoryName наименование хаарктеристики
      * @return List<Characteristic>> возвращает список характеристик
      */
@@ -177,4 +182,24 @@ public class ManagerCharacteristicsRestController {
         return allCharacteristics;
     }
 
+    /**
+     * Метод добавляет характеристики выбранной категории
+     *
+     * @param selectedCategory название выбранной категории
+     * @return ResponseEntity<List < Characteristic>> Возвращает добавленный товар с кодом ответа
+     */
+    @PostMapping(value = "/manager/characteristics/addCharacteristicsToCategory/{selectedCategory}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Characteristic>> addCharacteristicsToCategory(@RequestBody Characteristic[] characteristics,
+                                                                             @PathVariable String selectedCategory) {
+        Categories category = categoriesService.getCategoryByCategoryName(selectedCategory).get();
+        List<Characteristic> characteristicsSelectedCategory = category.getCharacteristics();
+       /* for (CharacteristicDto characteristicDto : characteristicsDto) {
+            characteristicsSelectedCategory.add(characteristicService.findByCharacteristicName(characteristicDto.getCharacteristicName()).get());
+        }*/
+        characteristicsSelectedCategory.addAll(Arrays.asList(characteristics));
+        category.setCharacteristics(characteristicsSelectedCategory);
+        categoriesService.saveCategory(category);
+
+        return ResponseEntity.ok(characteristicsSelectedCategory);
+    }
 }
