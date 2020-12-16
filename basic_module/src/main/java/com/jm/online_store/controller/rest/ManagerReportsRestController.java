@@ -38,6 +38,17 @@ public class ManagerReportsRestController {
     }
 
     /**
+     * метод поиска пользователя, подписанного на рассылку по email
+     *
+     * @param email почта подписчика
+     * @return список пользователей
+     */
+    @GetMapping("/user/{email}")
+    public ResponseEntity<List<Customer>> findSubscriberByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(customerService.findSubscriberByEmail(email));
+    }
+
+    /**
      * метод отмены подписки со страницы менеджера
      *
      * @param id пользователя

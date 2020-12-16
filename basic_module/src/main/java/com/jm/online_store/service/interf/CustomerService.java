@@ -18,6 +18,8 @@ public interface CustomerService {
 
     List<Customer> findByDayOfWeekForStockSend(String dayOfWeek);
 
+    List<Customer> findSubscriberByEmail(String email);
+
     boolean checkCustomerStatus(String email, String password);
 
     void changeCustomerStatusToLocked(Long id);

@@ -151,9 +151,9 @@
                     <br>
                     <input id="date_range" readonly>
                     <br>
-                    <label for="date_range2" class="col-xs-2 col-form-label">Выберите день недели</label>
+                    <label class="col-xs-2 col-form-label">Выберите день недели</label>
                     <br>
-                    <select id="date_range2" name="date_range2" class="form-control" onchange="onChangeDataInput()" style="width: 15%">
+                    <select id="date_range2" class="form-control" onchange="onChangeDataInput()" style="width: 15%">
                         <option value="MONDAY" selected>Monday</option>
                         <option value="TUESDAY">Tuesday</option>
                         <option value="WEDNESDAY">Wednesday</option>
@@ -162,7 +162,8 @@
                         <option value="SATURDAY">Saturday</option>
                         <option value="SUNDAY">Sunday</option>
                     </select>
-<!--                    <input id="date_range2" onchange="onChangeDataInput()" readonly>-->
+                    <br>
+                    <input type="email" class="form-control" placeholder="Поиск по подписчикам" id="searchForSubscribers">
                     <div id="success-div" style="display: none">
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Подписка успешно отменена!</strong>
