@@ -13,6 +13,8 @@ public interface CharacteristicService {
 
     List<Characteristic> findByCategoryId(Long categoryId);
 
+    List<Characteristic> findByCategoryName(String category);
+
     List<Characteristic> findAll();
 
     void updateCharacteristic(Characteristic characteristic);

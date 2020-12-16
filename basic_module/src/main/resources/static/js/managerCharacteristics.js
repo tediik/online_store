@@ -1,16 +1,25 @@
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
+let categorySelect1;
 
-fetchCharacteristicsAndRenderTable()
+fetchCharacteristicsAndRenderTable("default")
 
+/**
+ * Обработка события с выбором категории для фильтрации списка харакетристик по выбранной категории
+ */
+$('#filterCategory').on("change", function () {
+    let categorySelect = $('#filterCategory').val();
+    categorySelect1 = categorySelect;
+    fetchCharacteristicsAndRenderTable(categorySelect)
 
+});
 /**
  * функция делает fetch запрос на рест контроллер,получает все характеристики, преобразует полученный объект в json
  * и передает функции рендера таблицы renderCharacteristicsTable
  */
-function fetchCharacteristicsAndRenderTable() {
-    fetch("/manager/characteristics/allCharacteristics")
+function fetchCharacteristicsAndRenderTable(categorySelect) {
+    fetch("characteristicsByCategoryName/" + categorySelect)
         .then(response => response.json())
         .then(characteristics => renderCharacteristicsTable(characteristics))
 }
@@ -19,8 +28,8 @@ function fetchCharacteristicsAndRenderTable() {
  * функция делает активной таблицу с харакетристиками
  * и обновляет в ней данные
  */
-function showAndRefreshHomeTab() {
-    fetchCharacteristicsAndRenderTable()
+function showAndRefreshHomeTab(categorySelect) {
+    fetchCharacteristicsAndRenderTable(categorySelect)
     $('#nav-characteristics').addClass('tab-pane fade active show')
     $('#nav-addCharacteristics').removeClass('active show')
     $('#nav-addCharacteristics-tab').removeClass('active')
@@ -197,7 +206,7 @@ function handleAddBtn() {
                 } else {
                     response.text().then(function () {
                         clearFormFields();
-                        showAndRefreshHomeTab();
+                        showAndRefreshHomeTab(categorySelect1);
                         toastr.success('Харакетристика успешно добавлена')
                     })
                 }
@@ -209,4 +218,13 @@ function handleAddBtn() {
  *  Функции для отдельной вкладки характеристики по категориям
  */
 
-
+/**
+ * функция делает fetch запрос на рест контроллер, получает список характеристик выбранной категории,
+ * преобразует полученный объект в json
+ * и передает функции рендера таблицы renderCharacteristicsTable
+ */
+/*function fetchCharacteristicsByCategoryAndRenderTable(categorySelect) {
+    fetch("manager/characteristics/" + categorySelect)
+        .then(response => response.json())
+        .then(characteristics => renderCharacteristicsTable(characteristics))
+}*/

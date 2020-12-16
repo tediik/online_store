@@ -126,6 +126,20 @@ public class ManagerCharacteristicsRestController {
     }
 
     /**
+     * Метод, который возвращает характеристи для выбранной категории
+     *
+     * @param category имя нужной категории товаров
+     * @return List<Characteristic> лист харктеристик
+     */
+    @GetMapping("manager/characteristicsByCategoryName/{category}")
+    public List<Characteristic> getCharacteristicsByCategoryName(@PathVariable String category) {
+        if (category.equals("default")) {
+            return characteristicService.findAll();
+        }
+        return characteristicService.findByCategoryName(category);
+    }
+
+    /**
      * Метод добавляет характеристики, только что добавденному, товару
      *
      * @param addedProductName название добавденного товара
@@ -146,5 +160,5 @@ public class ManagerCharacteristicsRestController {
 
         return ResponseEntity.ok(productCharacteristicIds);
     }
-    
+
 }

@@ -2,6 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
+import com.jm.online_store.repository.CategoriesRepository;
 import com.jm.online_store.repository.CharacteristicRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
@@ -21,6 +22,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
     private final CharacteristicRepository characteristicRepository;
     private final CategoriesService categoriesService;
+    private final CategoriesRepository categoriesRepository;
 
     /**
      * Метод добавления характеристики
@@ -57,6 +59,18 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     public List<Characteristic> findByCategoryId(Long categoryId) {
 
         return categoriesService.getCategoryById(categoryId).get().getCharacteristics();
+    }
+
+    /**
+     * Метод поиска характеристик по названию категории
+     *
+     * @param category название категории, по которой идет поиск харакетристик
+     * @return List<Characteristic>
+     */
+    @Override
+    public List<Characteristic> findByCategoryName(String category) {
+
+        return categoriesRepository.getCategoriesByCategory(category).get().getCharacteristics();
     }
 
     /**
