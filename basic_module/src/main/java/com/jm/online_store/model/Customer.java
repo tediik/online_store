@@ -23,10 +23,13 @@ import java.time.LocalDateTime;
 public class Customer extends User {
 
     /**
-     * Статус удаления клиента.
+     * Отсчет времени удаления клиента(+30 дней).
+     * По уолчанию значение null.Когда клиент , в своем кабинете нажимает кнопку
+     * "удалить профиль " мы присваем этому полю текущую дату .
+     *
      */
-    @Column(name = "status")
-    private LocalDateTime status;
+    @Column(name = "anchorForDelete")
+    private LocalDateTime anchorForDelete;
 
     /**
      * День недели для получения рассылок.

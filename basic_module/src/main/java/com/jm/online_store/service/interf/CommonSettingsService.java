@@ -9,5 +9,7 @@ public interface CommonSettingsService {
 
     void updateTextValue(CommonSettings settings);
 
+    void updateMaintenanceMode(CommonSettings settings);
+
     CommonSettings addSetting(CommonSettings setting);
 }
