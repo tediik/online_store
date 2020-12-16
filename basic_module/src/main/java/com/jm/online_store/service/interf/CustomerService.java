@@ -19,7 +19,9 @@ public interface CustomerService {
 
     void cancelSubscription(Long id);
 
-    List<Customer> findByDayOfWeekForStockSend(byte dayNumber);
+    List<Customer> findByDayOfWeekForStockSend(String dayOfWeek);
+
+    List<Customer> findSubscriberByEmail(String email);
 
     void changeCustomerStatusToLocked(Long id);
 

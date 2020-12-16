@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (document.getElementById('CommentsNewFirst').checked) {
                         commentsCache.reverse();
                     }
+                    console.log(commentsCache)
                 }
             });
         }
@@ -247,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             </div>
                     `).last());
-
                     commentsCache.push(response.comments[0]);
                 }
             })

@@ -76,6 +76,17 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findById(id);
     }
 
+    /**
+     * Поиск подписчика по email "на лету".
+     *
+     * @param email клиента.
+     * @return Customer.
+     */
+    @Override
+    @Transactional
+    public List<Customer> findSubscriberByEmail(String email) {
+        return customerRepository.findSubscriberByEmail(email);
+    }
 
     /**
      * Метод добавления клиента.
@@ -104,13 +115,13 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * метод получения клиентов, подписанных на рассылку, по дню недели.
      *
-     * @param dayNumber день недели
+     * @param dayOfWeek день недели
      * @return List<Customer>
      */
     @Override
     @Transactional
-    public List<Customer> findByDayOfWeekForStockSend(byte dayNumber) {
-        List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.values()[dayNumber - 1]);
+    public List<Customer> findByDayOfWeekForStockSend(String dayOfWeek) {
+        List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(dayOfWeek));
         if (customers.isEmpty()) {
             throw new UserNotFoundException();
         }
