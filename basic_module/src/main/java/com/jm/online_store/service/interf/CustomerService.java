@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerService {
+
+    void deleteAllBlockedWithThirtyDaysPassed();
+
     List<Customer> findAll();
 
     boolean changePassword(Long id, String oldPassword, String newPassword);
@@ -17,8 +20,6 @@ public interface CustomerService {
     void cancelSubscription(Long id);
 
     List<Customer> findByDayOfWeekForStockSend(byte dayNumber);
-
-    boolean checkCustomerStatus(String email, String password);
 
     void changeCustomerStatusToLocked(Long id);
 

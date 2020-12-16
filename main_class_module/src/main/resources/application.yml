@@ -56,9 +56,12 @@ price-list-service:
   path-to-xls-file: uploads/files/prices/pricedaily.xls
   path-to-zip-file: uploads/files/prices/pricedaily.zip
 
+delete_expired_customer_period:
+  cron: '0 0 0 * * *'
+
 spring.profiles.include: 'security'
 
-#ToDo переделать инстркцию
+
 # Смотри инструкцию https://trello.com/c/8akD9MhL
 telegram-bot:
   name: JM_store_bot

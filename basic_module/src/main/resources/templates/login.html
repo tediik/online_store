@@ -9,24 +9,29 @@
 
 <body>
 <header th:insert="/blocks/cabinetHeader :: header"></header>
+<!--restore profile modal-->
 <div class="modal" id="askUserForRestore">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ваш аккаунт был удален, хотите востановить?</h5>
+                <h5 class="modal-title">Для восстановления профиля введите пожалуйста email</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+                <input type="email" id="emailForRestore" name="restore_username" autofocus="autofocus"
+                       placeholder="Email"
+                       class="form-control">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Нет</button>
-                <button id="buttonRestore" type="button" class="btn btn-success">Да</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Отмена</button>
+                <button id="buttonRestore" type="button" class="btn btn-primary">Восстановить</button>
             </div>
         </div>
     </div>
 </div>
+<!--restore profile modal-->
 
 <section id="loginform" class="outer-wrapper">
     <div class="inner-wrapper">
@@ -34,7 +39,7 @@
             <div class="row justify-content-center align-items-center">
                 <div class="col-sm-4 col-sm-offset-6">
                     <h2 class="form-signin-heading">Please sign in</h2>
-                    <form id="formLogin" th:action="@{/login}" method="post" class="form-group">
+                    <form id="formLogin" method="post" class="form-group">
                         <input type="email" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
                                class="form-control">
 
@@ -46,9 +51,22 @@
                                 Remember me
                             </label>
                         </div>
-                    </form>
-                    <div>
-                    <button id="checkUserStatus" class="btn btn-primary btn-sm btn-block">Sign In</button>
+                        <!-- alert for login failure Bad credentials-->
+                        <div class="alert alert-danger" th:if="${param.loginBadCredentials}" role="alert">
+                            <strong>Ошибка авторизации!</strong> Проверьте правильность ввода данных.
+                        </div>
+                        <!-- alert for login failure Bad credentials-->
+
+                        <!-- alert for login failure аккаунт заблокирован-->
+                        <div class="alert alert-danger" th:if="${param.accountBlocked}" role="alert">
+                            <strong>Ваш акаунт был удален.</strong>
+                            <a id="linkForOpenRestoreModal" href="#" class="alert-link">Восстановить</a>
+
+                        </div>
+                        <!-- alert for login failure аккаунт заблокирован-->
+
+                        <div>
+                    <button id="signIn" class="btn btn-primary btn-sm btn-block">Sign In</button>
                     </div>
                     <div>
                         <button type="button"
@@ -58,9 +76,9 @@
                         </button>
                         <!--a href="/restorePassword" class="btn btn-info btn-sm btn-block loginBtn">Forgot password?</a-->
                     </div>
-                    <div>
-                        <a href="/registration" class="btn btn-warning btn-sm btn-block loginBtn"> Log in </a>
-                    </div>
+                    </form>
+
+                    <!--facebook-->
                     <div>
                         <!--Кнопка блокирована с помощью скрипта "/static/js/login.js"-->
                         <a id="noLinkFacebook" href="/oauth2/authorization/facebook" title="Facebook"
@@ -68,7 +86,9 @@
                             <span class="fa fa-facebook"></span> Sign in with Facebook
                         </a>
                     </div>
+                    <!--facebook-->
                     <br>
+                    <!--odnoklassniki-->
                     <div>
                         <a id="odnoklassnikiBtn" class="btn btn-block btn-social btn-odnoklassniki">
                             <span class="fa fa-odnoklassniki"></span>
@@ -76,18 +96,23 @@
                             with Odnoklassniki
                         </a>
                     </div>
+                    <!--odnoklassniki-->
                     <br>
+                    <!--twitter-->
                     <div>
                         <a id="twitterBtn" class="btn btn-block btn-social btn-twitter">
                             <span class="fa fa-twitter"></span> Sign in with Twitter
                         </a>
                     </div>
+                    <!--twitter-->
                     <br>
+                    <!--vk-->
                     <div>
                         <a id="vkBtn" title="VKontakte" class="btn btn-block btn-social btn-vk">
                             <i class="fa fa-vk"></i> Sign in with VKontakte
                         </a>
                     </div>
+                    <!--vk-->
                 </div>
             </div>
         </div>

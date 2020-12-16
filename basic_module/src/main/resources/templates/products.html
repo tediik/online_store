@@ -92,20 +92,11 @@
             <div class="card-body">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                           role="tab" aria-controls="nav-home" aria-selected="true">Products Table</a>
-                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                           role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
-                        <a class="nav-item nav-link" id="nav-products-categories-tab" data-toggle="tab"
-                           href="#nav-products-categories" role="tab" aria-controls="nav-products-categories"
-                           aria-selected="false">Категории товаров</a>
-                        <form class="checkbox">
-                            <!-- for keeping checkbox checked when page loads use checked="checked" --->
-                            <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
-                            <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);"
-                                   checked="checked">
-                            <br>
-                        </form>
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Продукты</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
+                        <a class="nav-item nav-link" id="nav-products-categories-tab" data-toggle="tab" href="#nav-products-categories" role="tab" aria-controls="nav-products-categories" aria-selected="false">Категории товаров</a>
+
+
                     </div>
                 </nav>
                 <!-- Модалка добавления из файла -->
@@ -152,6 +143,12 @@
 
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <form class="checkbox mt-2 mb-2 ">
+                            <!-- for keeping checkbox checked when page loads use checked="checked" --->
+                            <label class="checkText" for="deletedCheckbox">Спрятать удаленные товары</label>
+                            <input id="deletedCheckbox" type="checkbox" name="check" onclick="toggle(this.form.check);" checked="checked">
+                            <br>
+                        </form>
                         <!--                main tab -->
                         <table class="table table-active table-striped" id="products-table"
                                style="background-color: white">
@@ -288,6 +285,5 @@
 <script src="/static/js/jqx/jqxpanel.js"></script>
 <script src="/static/js/jqx/jqxtree.js"></script>
 <script src="/static/js/jqx/jqxscrollbar.js"></script>
-
 </body>
 </html>
