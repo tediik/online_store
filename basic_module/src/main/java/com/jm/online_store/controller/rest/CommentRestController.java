@@ -110,27 +110,28 @@ public class CommentRestController {
 
     /**
      * Удаляет комментарий по его айди
-     *
      * @param commentId
-     * @return ResponseEntity<List < CommentDto>>
+     * @return ResponseEntity<?>
      */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        if (userService.findByEmail(email).isPresent()) {
-            User user = userService.findByEmail(email).get();
-            if (commentService.findById(commentId).getCustomer().getId().equals(user.getId())) {
-                commentService.removeById(commentId);
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        ResponseEntity<?>[] answer = new ResponseEntity[1];
+        userService.findByEmail(email).ifPresentOrElse(e -> {
+                    if (e.getId().equals(commentService.findById(commentId).getCustomer().getId())) {
+                        commentService.removeById(commentId);
+                        answer[0] = new ResponseEntity<>(HttpStatus.OK);
+                    } else
+                        answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+                },
+                () -> answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED)
+        );
+        return answer[0];
     }
 
     /**
      * Обновляет комментарий
-     *
      * @param comment
      * @return ResponseEntity<?>
      */
@@ -138,14 +139,17 @@ public class CommentRestController {
     public ResponseEntity<?> updateComment(@RequestBody @Valid Comment comment) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        if (userService.findByEmail(email).isPresent()) {
-            User user = userService.findByEmail(email).get();
-            if (commentService.findById(comment.getId()).getCustomer().getId().equals(user.getId())) {
-                commentService.update(comment);
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        ResponseEntity<?>[] answer = new ResponseEntity[1];
+        userService.findByEmail(email).ifPresentOrElse(e -> {
+                    if (e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
+                        commentService.update(comment);
+                        answer[0] = new ResponseEntity<>(HttpStatus.OK);
+                    } else
+                        answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+                },
+                () -> answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED)
+        );
+        return answer[0];
     }
 
     private String getErrors(BindingResult bindingResult) {
