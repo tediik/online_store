@@ -48,7 +48,7 @@ public class MainPageRestController {
     private final ProductService productService;
     private final StockService stockService;
     private final NewsService newsService;
-
+    
     @PostMapping("/registration")
     @ResponseBody
     public ResponseEntity registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
