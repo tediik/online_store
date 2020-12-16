@@ -7,5 +7,5 @@ public enum DayOfWeekForStockSend {
     THURSDAY,
     FRIDAY,
     SATURDAY,
-    SUNDAY;
+    SUNDAY
 }
