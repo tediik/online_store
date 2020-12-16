@@ -243,17 +243,24 @@ function handleEditButtonClick(event) {
     $('#stockIdDiv').removeClass('d-none')
     $('.modal-title').text("Редактировать акцию")
     let stockId = event.target.dataset.stockId
+    let filename = ""
     stockModalClearFields()
-
+    $.ajax('/rest/' + stockId, {
+        type: 'GET',
+        async: false,
+        success: function (data) {
+                    filename = data.stockImg;
+                }
+    })
     function renderModalWindowEdit(stock) {
         let stockText = stock.stockText
-        let  testText = $('#fileImgInputHidden').val()
         $("#stockId").val(stock.id)
         $("#stockTitle").val(stock.stockTitle)
         $('#stockText').summernote('code', stockText)
         $("#startDate").val(stock.startDate)
         $("#endDate").val(stock.endDate)
         $("#published").prop('checked', stock.published)
+        $("#fileImgInputHidden").val(filename)
     }
 
     fetch(stockApiUrl + `/${stockId}`, {
