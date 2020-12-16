@@ -3,13 +3,13 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.Role;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -61,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
             log.debug("Новый пароль не прошел валидацию");
             return false;
         }
-        userService.changeUsersPass(customer,newPassword);
+        userService.changeUsersPass(customer, newPassword);
         return true;
     }
 
@@ -119,43 +118,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод проверяет статус клиента, если срок восстановления истек - удаляется
-     *
-     * @param email    - нужен для проверки на существование
-     * @param password - нужен для подтверждения подлинности
-     * @return - false - если такой пользователь существует и статус не равен null,
-     * и статус больше равен больше 30 дней
-     * true - то есть предлагаем клиенту восстановится, если статус меньше 30 дней
-     */
-    @Override
-    @Transactional
-    public boolean checkCustomerStatus(String email, String password) {
-        Set<Role> roles = userService.findByEmail(email).get().getRoles();
-        if (roles.size() > 1) {
-            return false;
-        }
-        for (Role role : roles) {
-            if (role.getName().equals("ROLE_CUSTOMER")) {
-                Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-                if (customer != null && passwordEncoder.matches(password, customer.getPassword())) {
-                    if (customer.getStatus() != null) {
-                        if (!customer.getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
-                            deleteByID(customer.getId());
-                        } else {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * У нас клиент изначально не удаляется. При нажатии на кнопку "удалить профиль"
      * происходит запись времени, когда кнопка была нажата и подтвеждена.
      * Мы ему даем 30 дней на восстановление.
-     * Время удаления записывается в поле "status" у Customer.
+     * Время удаления записывается в поле "anchorForDelete" у Customer,
+     * затем мы меняем его AccountNonBlockedStatus на false ,
+     * это нужно для обработки в spring security.
      * <p>
      * Метод, который изменяет статус клиента при нажатии на кнопку "удалить профиль"
      *
@@ -165,8 +133,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void changeCustomerStatusToLocked(Long id) {
         Customer customerStatusChange = getCurrentLoggedInUser();
-        customerStatusChange.setStatus(LocalDateTime.now());
+        customerStatusChange.setAccountNonBlockedStatus(false);
+        customerStatusChange.setAnchorForDelete(LocalDateTime.now());
         updateCustomer(customerStatusChange);
+        log.info("профиль покупателя с почтой " + customerStatusChange.getEmail() + "заблокирован");
     }
 
     /**
@@ -221,7 +191,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void restoreCustomer(String email) {
         Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        customer.setStatus(null);
+        customer.setAccountNonBlockedStatus(true);
+        customer.setAnchorForDelete(null);
         updateCustomer(customer);
     }
 
@@ -238,17 +209,11 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<Customer> customer = customerRepository.findByEmail(email);
         if (customer.isEmpty()) {
             return false;
-        }
-        if (customer.get().getStatus() == null) {
+        } else if (customer.get().isAccountNonLocked() || customer.get().getAnchorForDelete() == null) {
             return true;
-        }
-        if (!customer.get().getStatus().isAfter(LocalDateTime.now().minusDays(30))) {
-            deleteByID(customer.get().getId());
-            return false;
         }
         return true;
     }
-
 
     /**
      * Удаление клиента по id.
@@ -261,4 +226,24 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.deleteById(id);
     }
 
+    /**
+     * Метод который будет ходить по базе раз в день,
+     * и удалять кастомеров которые удалили свой профиль и у которых срок для восстановления истек.
+     * Время и таска создается в Datainitializer'e
+     * настройка времени находится в  application.yml
+     */
+    @Override
+    @Scheduled(cron = "${delete_expired_customer_period.cron}")
+    @Transactional
+    public void deleteAllBlockedWithThirtyDaysPassed() {
+        log.info("Метод удаляющий пользователей с удаленным профилем , у которых 30 дней на восстановление прошло - запущен");
+        LocalDateTime timeAfterThirtyDaysFromNow = LocalDateTime.now().minusDays(30);
+        List<Customer> listForDelete = customerRepository.findAllByAnchorForDeleteThirtyDays(timeAfterThirtyDaysFromNow);
+        if (listForDelete.isEmpty()) {
+            log.debug("Список профилей для удаления пуст, метод для удаления не будет вызван");
+        } else {
+            log.info("Удалено {} профилей", listForDelete.size());
+            customerRepository.deleteAll(listForDelete);
+        }
+    }
 }

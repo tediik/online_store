@@ -83,7 +83,6 @@ function close() {
     $(".modal-backdrop.show").hide();
 }
 
-//ToDo вроде есть класс ютил для проверки паролей у всех , можно прикручивать в контролллере или сервисе ... разобраться
 /**
  * Method for checking that new customer's pass is match requirements
  */
