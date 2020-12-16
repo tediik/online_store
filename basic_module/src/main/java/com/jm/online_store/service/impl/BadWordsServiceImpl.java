@@ -68,6 +68,7 @@ public class BadWordsServiceImpl implements BadWordsService {
      * Удаляет лишние проблемы, запятые
      * Принимает текст для обработки String words
      * Возвращает массив результатов обработки String[]
+     *
      * @param words
      * @return
      */
@@ -90,7 +91,6 @@ public class BadWordsServiceImpl implements BadWordsService {
         String textForCheck = checkText.toLowerCase();
 
         List<BadWords> allActiveBW = findAllWordsActive();
-        System.out.println("allActiveBW=" + allActiveBW.toString());
         List<String> foundWords = new ArrayList<>();
         for (BadWords wordCheck : allActiveBW) {
             String findMe = wordCheck.getBadword().toLowerCase();

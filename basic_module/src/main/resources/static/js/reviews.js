@@ -61,7 +61,7 @@ $(document).ready(function () {
             if ($("#reviewForm").find('input:text').val().trim().length < 1) {
                 toastr.error("ведите текст...");
             } else {
-                let checkComment = $("#reviewForm").find('input:text').val().trim();
+
                 var formData = $(this).serializeArray();
                 var formDataObject = {};
                 $.each(formData,
@@ -69,57 +69,37 @@ $(document).ready(function () {
                         formDataObject[v.name] = v.value;
                     });
                 formDataObject["productId"] = productId;
-                //----------------------------------------------------------
-                // отправляем полученные ревью не проверку
-                fetch('/rest/bad-words/check-comment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8'
-                    },
-                    body: checkComment
-                }).then(function (response) {
-                    if (response.status !== 200) {
-                        response.text().then(function (text) {
-                            toastr.error('Ошибка сохранения  =' + text);
-                        })
-                    } else {
-                        response.text().then(function (text) {
-                            if (text === 'TextOK') {
-                                // если текст проверен, публикуем
-                                $.ajax({
-                                    //Post review
-                                    url: '/api/reviews',
-                                    method: "POST",
-                                    data: JSON.stringify(formDataObject),
-                                    dataType: 'json',
-                                    cache: false,
-                                    contentType: "application/json; charset=utf-8",
-                                    success: function (response) {
-
-                                        let review = response.reviews[0];
-                                        $('#showReviews').append($(`
-                                            <div class="media mb-4">
-                                                <div>
-                                                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                                                    height="52" src="/uploads/images/${review.userPhoto}" width="52"></div>
-                                                    <div class="media-body" id='mediaBody${response.id}'>
-                                                    <h5 class="mt-0">${review.userEmail} reviewed on ${review.timeStamp}</h5>
-                                                    <div class="message">${review.content}</div>
-                                                    <button type='button' id='button${review.id}' class='btn btn-link commentReview'>Комментировать</button>
-                                                    <div class="commentReviewDisplay" id='commentReviewDisplayId${review.id}'> </div>
-                                                    <div class="commentReviewBoxSpace" id='commentReviewBoxSpace${review.id}'></div>
-                                                </div>
-                                            `))
-                                        $('#reviewForm').find('input:text').val('');
-                                    }
-                                })
-                            } else {
-                                let stopAlert = 'В вашем тексте есть запрещенные слова ' + text + '. \nПожалуйста удалите их!'
-                                toastr.error(stopAlert);
-                            }
-                        })
+                $.ajax({
+                    //Post review
+                    url: '/api/reviews',
+                    method: "POST",
+                    data: JSON.stringify(formDataObject),
+                    dataType: 'json',
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response, textStatus, request) {
+                        if (request.status === 201) {
+                            let stopAlert = 'В вашем комментарии есть запрещенные слова (' + response + '). \nПожалуйста удалите их!'
+                            toastr.error(stopAlert);
+                            return;
+                        }
+                        let review = response.reviews[0];
+                        $('#showReviews').append($(`
+                        <div class="media mb-4">
+                            <div>
+                                <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                height="52" src="/uploads/images/${review.userPhoto}" width="52"></div>
+                                <div class="media-body" id='mediaBody${response.id}'>
+                                <h5 class="mt-0">${review.userEmail} reviewed on ${review.timeStamp}</h5>
+                                <div class="message">${review.content}</div>
+                                <button type='button' id='button${review.id}' class='btn btn-link commentReview'>Комментировать</button>
+                                <div class="commentReviewDisplay" id='commentReviewDisplayId${review.id}'> </div>
+                                <div class="commentReviewBoxSpace" id='commentReviewBoxSpace${review.id}'></div>
+                            </div>
+                        `))
+                        $('#reviewForm').find('input:text').val('');
                     }
-                })//end
+                })
             }
         });
     });
@@ -152,60 +132,43 @@ $(document).ready(function () {
             } else {
                 event.preventDefault();
                 let reviewComment = $('#commentReviewText').val();
+                $.ajax({
+                    //Post comment
+                    url: '/api/comments/' + reviewId,
+                    method: "POST",
+                    data: JSON.stringify(reviewComment),
+                    dataType: 'json',
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response, textStatus, request) {
+                        if (request.status === 201) {
+                            let stopAlert = 'В вашем ответе есть запрещенные слова (' + response + '). \nПожалуйста удалите их!'
+                            toastr.error(stopAlert);
+                            return;
+                        }
+                        let comment = response.comments[0];
+                        $("#commentReviewText").val('')
+                        let commentReviewDisplayId = $('#commentReviewDisplayId' + reviewId);
 
-                fetch('/rest/bad-words/check-comment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8'
+                        $(commentReviewDisplayId).append($(`
+                            <div class="media mt-4">
+                                <div>
+                                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                    height="52" src="/uploads/images/${comment.userPhoto}" width="52">
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                    <div class="message">${comment.content}</div>
+                                    <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                                    <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                                </div>
+                            </div>
+                        `).last());
                     },
-                    body: reviewComment
-                }).then(function (response) {
-                    if (response.status !== 200) {
-                        response.text().then(function (text) {
-                            toastr.error('Ошибка сохранения комментария =' + text);
-                        })
-                    } else {
-                        response.text().then(function (text) {
-                            if (text === 'TextOK') {
-                                // если текст проверен, публикуем
-                                $.ajax({
-                                    //Post comment
-                                    url: '/api/comments/' + reviewId,
-                                    method: "POST",
-                                    data: JSON.stringify(reviewComment),
-                                    dataType: 'json',
-                                    cache: false,
-                                    contentType: "application/json; charset=utf-8",
-                                    success: function (response) {
-                                        let comment = response.comments[0];
-                                        let commentReviewDisplayId = $('#commentReviewDisplayId' + reviewId);
-                                        $("#commentReviewText").val('')
-                                        $(commentReviewDisplayId).append($(`
-                                            <div class="media mt-4">
-                                                <div>
-                                                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
-                                                    height="52" src="/uploads/images/${comment.userPhoto}" width="52">
-                                                </div>
-                                                <div class="media-body">
-                                                    <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                                                    <div class="message">${comment.content}</div>
-                                                    <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
-                                                    <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
-                                                </div>
-                                            </div>
-                                        `).last());
-                                    },
-                                    error: function () {
-                                        toastr.error("Не удалось добавить комментарий.")
-                                    }
-                                });
-                            } else {
-                                let stopAlert = 'В вашем тексте есть запрещенные слова ' + text + '. \nПожалуйста удалите их!'
-                                toastr.error(stopAlert);
-                            }
-                        })
+                    error: function () {
+                        toastr.error("Не удалось добавить комментарий.")
                     }
-                })//end
+                });
             }
         });
     });

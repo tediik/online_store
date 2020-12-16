@@ -47,78 +47,63 @@ $(document).ready(function () {
         });
     }
 
-    $(function() {
+    $(function () {
         let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+
         showComments();
-        $('#commentForm').on('submit', function(event) {
+        $('#commentForm').on('submit', function (event) {
             event.preventDefault();
             if ($("#commentForm").find('input:text').val().trim().length < 1) {
                 alert("Please Enter Text...");
                 return;
             } else {
-                let checkComment = $("#commentForm").find('input:text').val().trim();
+
                 var formData = $(this).serializeArray();
                 var formDataObject = {};
                 $.each(formData,
-                    function(i, v) {
+                    function (i, v) {
                         formDataObject[v.name] = v.value;
                     });
                 formDataObject["productId"] = productId;
-                // отправляем полученные комментарий не проверку
-                fetch('/rest/bad-words/check-comment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8'
-                    },
-                    body: checkComment
-                }).then(function(response) {
-                    if (response.status !== 200) {
-                        response.text().then(function(text) {
-                            toastr.error('Ошибка сохранения комментария =' + text);
-                        })
-                    } else {
-                        response.text().then(function(text) {
-                            if (text === 'TextOK') {
-                                // если текст проверен, публикуем
-                                $.ajax({
-                                    //Post comment
-                                    url: '/api/comments',
-                                    method: "POST",
-                                    data: JSON.stringify(formDataObject),
-                                    dataType: 'json',
-                                    cache: false,
-                                    contentType: "application/json; charset=utf-8",
-                                    success: function(response) {
-                                        var comment = response.comments[0];
-                                        $('#showComments').append($(`
-                                            <div class="media mb-4">
-                                              <div>
-                                                <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2" height="52" src="/uploads/images/${comment.userPhoto}" width="52">
-                                              </div>
-                                              <div class="media-body" id='mediaBody${response.id}'>
-                                                <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                                                <div class="message">${comment.content}</div>
-                                                <button type='button' id='button${comment.id}' class='btn btn-link reply'>Ответить</button>
-                                                <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
-                                                <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
-                                                <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
-                                                <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
-                                            </div>
-                                        `))
-                                        $('#commentForm').find('input:text').val('');
-                                    }
-                                })
-                            } else {
-                                let stopAlert = 'В вашем тексте есть запрещенные слова ' + text + '. \nПожалуйста удалите их!'
-                                toastr.error(stopAlert);
-                            }
-                        })
+                $.ajax({
+                    //Post comment
+                    url: '/api/comments',
+                    method: "POST",
+                    data: JSON.stringify(formDataObject),
+                    dataType: 'json',
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response, textStatus, request) {
+                        if (request.status === 201) {
+                            let stopAlert = 'В вашем комментарии есть запрещенные слова (' + response + '). \nПожалуйста удалите их!'
+                            toastr.error(stopAlert);
+                            return;
+                        }
+                        var comment = response.comments[0];
+                        $('#showComments').append($(`
+                            <div class="media mb-4">
+                                <div>
+                                    <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                    height="52" src="/uploads/images/${comment.userPhoto}" width="52">
+                                </div>
+                                <div class="media-body" id='mediaBody${response.id}'>
+                                <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                <div class="message">${comment.content}</div>
+                                <button type='button' id='button${comment.id}' class='btn btn-link reply'>Ответить</button>
+                                <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                                <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
+                                <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
+                                <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                            </div>
+                        `))
+
+                        $('#commentForm').find('input:text').val('');
                     }
-                })//end
+                })
             }
         });
 
-        $(document).on('click', '.reply', function(e) {
+        $(document).on('click', '.reply', function (e) {
             //Reply to this id
             var commentId = $(this).attr("id");
 
@@ -142,74 +127,55 @@ $(document).ready(function () {
                                 </div>`)
                 $('#commentBoxSpace' + commentId).html(commentNone);
             }
-            $('#submitReplyBtn').on('click', function(event) {
+            $('#submitReplyBtn').on('click', function (event) {
                 let productId = decodeURI(document.URL.substring(document.URL.lastIndexOf('/') + 1));
 
                 if ($("#replyText").val().trim().length < 1) {
                     alert("Please Enter Text...");
                     return;
                 } else {
-                    let checkReply = $("#replyText").val().trim();
+
                     var parentId = commentId;
                     event.preventDefault();
                     var content = $('#replyText').val();
-                    var productComment = {
-                        parentId,
-                        content,
-                        productId
-                    };
-                    fetch('/rest/bad-words/check-comment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json;charset=utf-8'
-                        },
-                        body: checkReply
-                    }).then(function(response) {
-                        if (response.status !== 200) {
-                            response.text().then(function(text) {
-                                toastr.error('Ошибка сохранения ответа на комментарий =' + text);
-                            })
-                        } else {
-                            response.text().then(function(text) {
-                                if (text === 'TextOK') {
-                                    // отправляем полученные ответ на комментарий не проверку
-                                    $.ajax({
-                                        //Post comment
-                                        url: '/api/comments',
-                                        method: "POST",
-                                        data: JSON.stringify(productComment),
-                                        dataType: 'json',
-                                        cache: false,
-                                        contentType: "application/json; charset=utf-8",
-                                        success: function(response) {
-                                            var comment = response.comments[0];
-                                            commentBox.remove();
-                                            var replyDisplayId = $('#replyDisplayId' + commentId);
+                    var productComment = {parentId, content, productId};
+                    $.ajax({
+                        //Post comment
+                        url: '/api/comments',
+                        method: "POST",
+                        data: JSON.stringify(productComment),
+                        dataType: 'json',
+                        cache: false,
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response, textStatus, request) {
+                            if (request.status === 201) {
+                                let stopAlert = 'В вашем ответе есть запрещенные слова (' + response + '). \nПожалуйста удалите их!'
+                                toastr.error(stopAlert);
+                                return;
+                            }
+                            var comment = response.comments[0];
+                            commentBox.remove();
+                            var replyDisplayId = $('#replyDisplayId' + commentId);
 
-                                            $(replyDisplayId).append($(`
-                                            <div class="media mt-4">
-                                              <div>
-                                                <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2" height="52" src="/uploads/images/${comment.userPhoto}" width="52">
-                                              </div>
-                                              <div class="media-body">
-                                                <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
-                                                <div class="message">${comment.content}</div>
-                                                <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
-                                                <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
-                                              </div>
-                                            </div>
-                                            `).last());
-                                        }
-                                    });
-                                } else {
-                                    let stopAlert = 'В вашем ответе есть запрещенные слова ' + text + '. \nПожалуйста удалите их!'
-                                    toastr.error(stopAlert);
-                                }
-                            })
+                            $(replyDisplayId).append($(`
+                                <div class="media mt-4">
+                                    <div>
+                                        <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2"
+                                        height="52" src="/uploads/images/${comment.userPhoto}" width="52">
+                                    </div>
+                                    <div class="media-body">
+                                    <h5 class="mt-0">${comment.userEmail} commented on ${comment.timeStamp}</h5>
+                                    <div class="message">${comment.content}</div>
+                                    <button type='button' id='button${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                                    <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                                </div>
+                            </div>
+                        `).last());
                         }
-                    })
+                    });
                 }
             });
         });
     });
 });
+

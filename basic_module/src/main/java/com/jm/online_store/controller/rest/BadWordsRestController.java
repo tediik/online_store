@@ -36,7 +36,7 @@ public class BadWordsRestController {
      * Метод возвращает все стоп-слов, включая неактивные
      * в формте ResponseEntity<List<BadWords>> {@link ResponseEntity}
      *
-     * @return
+     * @return ResponseEntity<List < BadWords>>
      */
     @GetMapping(value = "/all")
     public ResponseEntity<List<BadWords>> findAll() {
@@ -45,11 +45,11 @@ public class BadWordsRestController {
 
     /**
      * Метод принимает id стоп-слова @PathVariable("id") Long id
-     * И если найдено, возвращает стоп-слово ResponseEntity<BadWords>
+     * И если найдено, возвращает стоп-слово ResponseEntity<BadWords> {@link ResponseEntity}
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
      *
      * @param id
-     * @return
+     * @return ResponseEntity<BadWords>
      */
     @GetMapping("/{id}")
     public ResponseEntity<BadWords> getWordById(@PathVariable("id") Long id) {
@@ -63,7 +63,7 @@ public class BadWordsRestController {
      * Иначе возвращает статуст запроса
      *
      * @param badWords
-     * @return
+     * @return ResponseEntity<BadWords>
      */
     @PostMapping("/add")
     public ResponseEntity<BadWords> addWord(@RequestBody BadWords badWords) {
@@ -87,7 +87,7 @@ public class BadWordsRestController {
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
      *
      * @param badWords
-     * @return
+     * @return ResponseEntity<BadWords>
      */
     @PutMapping("/update")
     public ResponseEntity<BadWords> updateWord(@RequestBody BadWords badWords) {
@@ -102,7 +102,7 @@ public class BadWordsRestController {
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
      *
      * @param id
-     * @return
+     * @return ResponseEntity<Long>
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
@@ -115,7 +115,7 @@ public class BadWordsRestController {
      * Формат возврата ResponseEntity<List<BadWords>>
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
      *
-     * @return
+     * @return ResponseEntity<List < BadWords>>
      */
     @GetMapping(value = "/get-active")
     public ResponseEntity<List<BadWords>> findAllActive() {
@@ -126,7 +126,7 @@ public class BadWordsRestController {
      * Метод для получение текущего статуса фильтра (true, false)
      * Возвращает ResponseEntity<CommonSettings>
      *
-     * @return
+     * @return ResponseEntity<CommonSettings>
      */
     @GetMapping(value = "/status")
     public ResponseEntity<CommonSettings> getSetting() {
@@ -142,7 +142,7 @@ public class BadWordsRestController {
      * @param saveSetting
      */
     @PostMapping(value = "/status")
-    public void Setsetting(@RequestBody Boolean saveSetting) {
+    public void setSetting(@RequestBody Boolean saveSetting) {
         if (saveSetting) {
             CommonSettings setYes = CommonSettings.builder()
                     .settingName("bad_words_enabled")
@@ -167,7 +167,7 @@ public class BadWordsRestController {
      * Если слово уже есть в базе, пропускает.
      *
      * @param text
-     * @return
+     * @return ResponseEntity
      */
     @PostMapping(value = "/import")
     public ResponseEntity importWord(@RequestBody String text) {
@@ -177,31 +177,6 @@ public class BadWordsRestController {
         badWordsService.importWord(text);
 
         return ResponseEntity.ok().build();
-    }
-
-    /**
-     * Метод для проверки комментарев (отзывав) перед публикацией
-     * Принимает текст @RequestBody String checkText
-     * Возвращает статус запроса, или если стоп-слова найдены List<String>
-     *
-     * @param checkText
-     * @return
-     */
-    @PostMapping(value = "/check-comment")
-    public ResponseEntity checkComment(@RequestBody String checkText) {
-        if (checkText.equals("")) {
-            return new ResponseEntity("EmptyRequest", HttpStatus.BAD_REQUEST);
-        }
-        CommonSettings templateBody = commonSettingsService.getSettingByName("bad_words_enabled");
-        if (templateBody.getTextValue().equals("true")) {
-            return new ResponseEntity("TextOK", HttpStatus.OK);
-        }
-
-        if (badWordsService.checkComment(checkText).isEmpty()) {
-            return new ResponseEntity("TextOK", HttpStatus.OK);
-        } else {
-            return ResponseEntity.ok(badWordsService.checkComment(checkText).toString());
-        }
     }
 
     /**

@@ -1,12 +1,15 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForReviewDto;
 import com.jm.online_store.model.dto.ReviewDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommentService;
+import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,12 +36,14 @@ public class ReviewRestController {
     private final ProductRepository productRepository;
     private final CommentService commentService;
     private final ReviewService reviewService;
+    private final CommonSettingsService commonSettingsService;
+    private final BadWordsService badWordsService;
 
     /**
      * Fetches an arrayList of all product Review by productId and returns JSON representation response
      *
      * @param productId
-     * @return ResponseEntity<List <ReviewDto>>
+     * @return ResponseEntity<List < ReviewDto>>
      */
     @GetMapping("/{productId}")
     public ResponseEntity<List<ReviewDto>> findAll(@PathVariable Long productId) {
@@ -52,7 +57,7 @@ public class ReviewRestController {
      * Fetches an arrayList of all review comments by reviewId and returns JSON representation response
      *
      * @param reviewId
-     * @return ResponseEntity<List<CommentDto>>
+     * @return ResponseEntity<List < CommentDto>>
      */
     @GetMapping("/comments/{reviewId}")
     public ResponseEntity<List<CommentDto>> findAllComments(@PathVariable Long reviewId) {
@@ -61,20 +66,35 @@ public class ReviewRestController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(commentDtos);
     }
+
     /**
      * Receives productReview requestBody and passes it to Service layer for processing
+     * previously, searches for forbidden words
      * Returns JSON representation
      *
      * @param review
-     * @return ResponseEntity<productReview>
+     * @return ResponseEntity<productReview> or ResponseEntity<List<String>>
      */
     @PostMapping
-    public ResponseEntity<ProductForReviewDto> addReview(@RequestBody @Valid Review review, BindingResult bindingResult) {
+    public ResponseEntity<?> addReview(@RequestBody @Valid Review review, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(review.getProductId()).get();
         if (!bindingResult.hasErrors()) {
-            Review savedReview = reviewService.addReview(review);
-            productFromDb.setReviews(List.of(savedReview));
-            return ResponseEntity.ok().body(ProductForReviewDto.productToDto(productFromDb));
+            String checkText = review.getContent();
+            CommonSettings templateBody = commonSettingsService.getSettingByName("bad_words_enabled");
+            if (!checkEnabledCheckText()) {
+                Review savedReview = reviewService.addReview(review);
+                productFromDb.setReviews(List.of(savedReview));
+                return ResponseEntity.ok().body(ProductForReviewDto.productToDto(productFromDb));
+            } else {
+                List<String> resultText = checkText(checkText);
+                if (resultText.isEmpty()) {
+                    Review savedReview = reviewService.addReview(review);
+                    productFromDb.setReviews(List.of(savedReview));
+                    return ResponseEntity.ok().body(ProductForReviewDto.productToDto(productFromDb));
+                } else {
+                    return ResponseEntity.status(201).body(resultText);
+                }
+            }
         } else
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format("Запрос содержит неверные данные = [%s]", getErrors(bindingResult)));
@@ -84,5 +104,15 @@ public class ReviewRestController {
         return bindingResult.getAllErrors().stream()
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
+    }
+
+    private boolean checkEnabledCheckText() {
+        CommonSettings templateBody = commonSettingsService.getSettingByName("bad_words_enabled");
+        if (templateBody.getTextValue().equals("false")) return false;
+        return true;
+    }
+
+    private List<String> checkText(String checkText) {
+        return badWordsService.checkComment(checkText);
     }
 }
