@@ -4,6 +4,7 @@ document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 let categorySelect1 = 'default';
 
 fetchCharacteristicsAndRenderTable("default")
+addCharacteristicsOnNewCharacteristicForm("default")
 
 /**
  * Обработка события с выбором категории для фильтрации списка харакетристик по выбранной категории
@@ -12,6 +13,7 @@ $('#filterCategory').on("change", function () {
     let categorySelect = $('#filterCategory').val();
     categorySelect1 = categorySelect;
     fetchCharacteristicsAndRenderTable(categorySelect)
+    addCharacteristicsOnNewCharacteristicForm(categorySelect)
 
 });
 
@@ -218,4 +220,25 @@ function handleAddBtn() {
                 }
             }
         )
+}
+/**
+ * fetch запрос для получения харакетристик, которых нет в выбранной категории
+ *
+ */
+function addCharacteristicsOnNewCharacteristicForm(categorySelect) {
+    if (categorySelect !== 'default') {
+        fetch("/manager/characteristics/otherThenSelected/" + categorySelect, {headers: headers}).then(response => response.json())
+            .then(characteristics => renderCharacteristicsOtherThenSelected(characteristics))
+    }
+}
+
+/**
+ * рендерит <Select> c выбором харакетристик на странице добавления характеристик категории
+ * @param characteristics - принимается список хааркетристик, кроме харакетристик выбранной категории
+ */
+function renderCharacteristicsOtherThenSelected(characteristics) {
+    let selectCharacteristics = $('#addCharacteristics').empty()
+    $.each(characteristics, function (i, characteristic) {
+        selectCharacteristics.append(`<option value=${characteristic.id}>${characteristic.characteristicName}</option>>`)
+    })
 }

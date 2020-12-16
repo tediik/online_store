@@ -36,7 +36,7 @@ public class ManagerCharacteristicsRestController {
     /**
      * Метод выводит список всех характеристик
      *
-     * @return List<Characteristic>> возвращает список товаров
+     * @return List<Characteristic>> возвращает список характеристик
      */
     @GetMapping(value = "/manager/characteristics/allCharacteristics")
     public List<Characteristic> findAll() {
@@ -120,7 +120,7 @@ public class ManagerCharacteristicsRestController {
     /**
      * Метод, который возвращает характеристи для выбранной категории
      *
-     * @param categoryId id нужной категории товаров
+     * @param categoryId id нужной категории
      * @return List<Characteristic> лист харктеристик
      */
     @GetMapping("manager/characteristics/{categoryId}")
@@ -131,7 +131,7 @@ public class ManagerCharacteristicsRestController {
     /**
      * Метод, который возвращает характеристи для выбранной категории
      *
-     * @param category имя нужной категории товаров
+     * @param category имя нужной категории
      * @return List<Characteristic> лист харктеристик
      */
     @GetMapping("manager/characteristicsByCategoryName/{category}")
@@ -143,9 +143,9 @@ public class ManagerCharacteristicsRestController {
     }
 
     /**
-     * Метод добавляет характеристики, только что добавденному, товару
+     * Метод добавляет характеристики, только что добавленному, товару
      *
-     * @param addedProductName название добавденного товара
+     * @param addedProductName название добавленного товара
      * @return ResponseEntity<ProductCharacteristic> Возвращает добавленный товар с кодом ответа
      */
     @PostMapping(value = "/manager/characteristics/addCharacteristics/{addedProductName}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -162,6 +162,19 @@ public class ManagerCharacteristicsRestController {
         }
 
         return ResponseEntity.ok(productCharacteristicIds);
+    }
+
+    /**
+     * Метод возвращает список всех характеристик, кроме характеристик выбранной категории
+     * @param categoryName наименование хаарктеристики
+     * @return List<Characteristic>> возвращает список характеристик
+     */
+    @GetMapping(value = "/manager/characteristics/otherThenSelected/{categoryName}")
+    public List<Characteristic> findAllOtherThenSelected(@PathVariable String categoryName) {
+        List<Characteristic> characteristicsSelectedCategoty = characteristicService.findByCategoryName(categoryName);
+        List<Characteristic> allCharacteristics = characteristicService.findAll();
+        allCharacteristics.removeAll(characteristicsSelectedCategoty);
+        return allCharacteristics;
     }
 
 }

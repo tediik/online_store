@@ -139,7 +139,17 @@
                                 </div>
                                 <div class="col-sm">
                                     <h4>Добавление характеристик к выбранной категории</h4>
-
+                                    <div class="form-group">
+                                        <label>Характеристики, которых нет в выбранной категории:</label>
+                                        <select id="addCharacteristics" name="characteristics" class="form-control"
+                                                multiple="multiple">
+                                        </select>
+                                        <div class="mt-4"></div>
+                                        <button id="addCharacteristicsToCategory" type="button"
+                                                class=" btn btn-outline-success btn-md btn">
+                                            Добавить характеристики
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -148,6 +158,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <script src="../static/js/managerCharacteristics.js"></script>
