@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
     <title>Admin panel</title>
+
 </head>
 <body style="background-color: whitesmoke">
 
@@ -30,6 +31,10 @@
 
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#BadWords">Стоп-Слова</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#Maintenance"> Режим техобслуживания </a>
                     </li>
 
                 </ul>
@@ -69,16 +74,16 @@
                                 <nav>
                                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                         <!-- USER TABLE-->
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
+                                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
                                            href="#nav-home"
                                            role="tab" aria-controls="nav-home" aria-selected="true">User Table</a>
                                         <!-- USER TABLE-->
 
-                        <!-- ADD USER -->
-                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
+                                        <!-- ADD USER -->
+                                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
                                            href="#nav-profile"
                                            role="tab" aria-controls="nav-profile" aria-selected="false">Add User</a>
-                        <!-- ADD USER  -->
+                                        <!-- ADD USER  -->
 
                                         <!--                select                -->
                                         <div class="form-group">
@@ -233,6 +238,43 @@
                     </div>
                     <!--Стоп-Слова-->
 
+                    <!--Режим техобслуживания-->
+                    <div class="tab-pane" id="Maintenance" role="tabpanel">
+                        <div class="form-group" id="maintenance-mode-form">
+                            <form>
+                                <div class="text-center w-25 mx-auto font-weight-bold">
+                                    <label for="maintenance-mode" class="col-form-label">Выбор режима:</label>
+                                    <select size="2"
+                                            class="custom-select" name="maintenance" id="maintenance-mode">
+                                        <option name="false" value="false">Нормальный режим</option>
+                                        <option name="true" value="true">Режим техобслуживания</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group text-center w-25 mx-auto font-weight-bold">
+                                    <label for="maintenance-mode-access" class="col-form-label">Кому открыт
+                                        доступ:</label>
+                                    <select multiple="multiple" class="custom-select" name="maintenance-mode-access"
+                                            id="maintenance-mode-access" disabled>
+                                    </select>
+                                </div>
+
+                                <div class="form-group text-center w-25 mx-auto font-weight-bold">
+                                    <label for="rolesMode" class="col-form-label">Изменить доступ:</label>
+                                    <select id="rolesMode" name="roles" class="custom-select"
+                                            multiple="multiple">
+                                    </select>
+                                </div>
+                                <div class="form-group text-center w-25 mx-auto font-weight-bold">
+                                    <button id="maintenanceBtn" type="submit" class="btn btn-success bt-lg submitBtn">
+                                        Подтвердить
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--Режим техобслуживания-->
+
                 </div>
             </div>
             <!--наполнение справа-->
@@ -327,6 +369,20 @@
         </div>
     </div>
     <!--END Модальное окно Edit Bad Word-->
+
+    <!--toastr с уведомлением о включенном режиме техобслуживания-->
+    <div class="toast" data-autohide="false" style="position: absolute; top: 71px; right: 0;">
+        <div class="toast-header">
+            <img src="..." class="rounded mr-2" alt="...">
+            <strong class="mr-auto" style="color: darkred">Внимание!</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            Включен режим техобслуживания!
+        </div>
+    </div>
 </main>
 
 <!--bootstrap scripts-->
@@ -345,6 +401,7 @@
 <script src="/static/js/profileAdminManagerService.js"></script>
 <script src="/static/js/profilePicture.js"></script>
 <script src="/static/js/badWords.js"></script>
+
 
 </body>
 </html>

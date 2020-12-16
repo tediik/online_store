@@ -31,4 +31,7 @@ public class CommonSettings {
     @Column(name = "text_value")
     @Type(type = "text")
     private String textValue;
+
+    @Column(name = "status")
+    private boolean status;
 }

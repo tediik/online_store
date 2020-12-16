@@ -48,7 +48,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -1163,6 +1162,13 @@ public class DataInitializer {
                 .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings2);
+
+        TaskSettings taskSettings3 = TaskSettings.builder()
+                .taskName("deleteExpiredCustomersProfile")
+                .active(true)
+                .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .build();
+        taskSettingsService.addNewTaskSetting(taskSettings3);
     }
 
     /**
@@ -1185,9 +1191,15 @@ public class DataInitializer {
                 .settingName("bad_words_enabled")
                 .textValue("yes")
                 .build();
+        CommonSettings maintenanceModeTemplate = CommonSettings.builder()
+                .settingName("maintenance_mode")
+                .textValue("ROLE_ADMIN")
+                .status(false)
+                .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
         commonSettingsService.addSetting(badWordsEnabled);
+        commonSettingsService.addSetting(maintenanceModeTemplate);
     }
 
     /**
