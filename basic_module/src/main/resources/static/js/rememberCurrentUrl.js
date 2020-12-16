@@ -4,7 +4,6 @@ function getCurrentUrlJs() {
 
 function returnCurrentUrl() {
     let currentUrlFromJs = getCurrentUrlJs();
-    //console.log("1111111111111111111111111111111")
     fetch("/api/currentUrl", {
         method: "POST",
         body:currentUrlFromJs,
