@@ -21,7 +21,17 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Override
     void deleteAll(Iterable<? extends Customer> iterable);
 
-    Optional<Customer> findByEmail(String username);
+    Optional<Customer> findByEmail(String email);
+
+    /**
+     * Метод "поиска на лету" - постепенно ищет все введенные из формы "Поиск по подписчикам" символы
+     *
+     * @param searchEmail - сюда поступают все введенные символы из формы "Поиск по подписчикам"
+     *                    на странице Подписки (Менеджер/Рассылки/Подписки)
+     * @return List - возвращает список Покупателей, найденный в базе
+     */
+    @Query("select new Customer(t.id, t.email, t.dayOfWeekForStockSend) from User t where t.email like %:searchEmail%")
+    List<Customer> findSubscriberByEmail(@Param("searchEmail") String searchEmail);
 
     List<Customer> findByDayOfWeekForStockSend(DayOfWeekForStockSend dayOfWeekForStockSend);
 }

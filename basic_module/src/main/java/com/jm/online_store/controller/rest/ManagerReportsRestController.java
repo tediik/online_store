@@ -33,12 +33,12 @@ public class ManagerReportsRestController {
      * @return список пользователей
      */
     @GetMapping("/users/{dayOfWeek}")
-    public ResponseEntity<List<Customer>> allUsers(@PathVariable String dayOfWeek) {
+    public ResponseEntity<List<Customer>> allUsersByDayOfWeek(@PathVariable String dayOfWeek) {
         return ResponseEntity.ok(customerService.findByDayOfWeekForStockSend(dayOfWeek));
     }
 
     /**
-     * метод поиска пользователя, подписанного на рассылку по email
+     * метод поиска пользователя, подписанного на рассылку по email "на лету"
      *
      * @param email почта подписчика
      * @return список пользователей

@@ -77,7 +77,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Поиск подписчика по email.
+     * Поиск подписчика по email "на лету".
      *
      * @param email клиента.
      * @return Customer.
@@ -85,13 +85,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public List<Customer> findSubscriberByEmail(String email) {
-        Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        if (customer.getDayOfWeekForStockSend() == null) {
+        List<Customer> customers = customerRepository.findSubscriberByEmail(email);
+        if (customers.isEmpty()) {
             log.debug("Пользователь не подписан на рассылку");
+            throw new UserNotFoundException();
         }
-        return List.of(customer);
+        return customers;
     }
-
 
     /**
      * Метод добавления клиента.
