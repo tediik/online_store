@@ -1,7 +1,7 @@
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
-let categorySelect1;
+let categorySelect1 = 'default';
 
 fetchCharacteristicsAndRenderTable("default")
 
@@ -14,8 +14,10 @@ $('#filterCategory').on("change", function () {
     fetchCharacteristicsAndRenderTable(categorySelect)
 
 });
+
 /**
- * функция делает fetch запрос на рест контроллер,получает все характеристики, преобразует полученный объект в json
+ * функция делает fetch запрос на рест контроллер,получает характеристики выбранной категории,
+ * преобразует полученный объект в json
  * и передает функции рендера таблицы renderCharacteristicsTable
  */
 function fetchCharacteristicsAndRenderTable(categorySelect) {
@@ -80,10 +82,14 @@ function renderCharacteristicsTable(characteristics) {
  */
 function handleEditButton(event) {
     const characteristicId = event.target.dataset["characteristicId"]
-    fetch("/manager/characteristic/" + characteristicId)
-        .then(response => response.json())
-        .then(characteristicToEdit => editModalWindowRender(characteristicToEdit))
-
+    if (categorySelect1 === 'default') {
+        fetch("/manager/characteristic/" + characteristicId)
+            .then(response => response.json())
+            .then(characteristicToEdit => editModalWindowRender(characteristicToEdit))
+    } else {
+        toastr.error('Изменение категории доступно только для всех категорий')
+        return false;
+    }
 }
 
 /**
@@ -141,7 +147,7 @@ function handleAcceptButtonFromModalWindow(event) {
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-characteristic')) {
-        fetch("/manager/characteristics/" + characteristic.id, {
+        fetch("/manager/characteristics/" + characteristic.id + "/" + categorySelect1, {
             method: 'DELETE'
         }).then(response => response.text())
             .then(deletedCharacteristic => console.log('Characteristic: ' + deletedCharacteristic + ' was successfully deleted'))
@@ -155,7 +161,7 @@ function handleAcceptButtonFromModalWindow(event) {
             body: JSON.stringify(characteristic)
         }).then(function (response) {
             if (response.ok) {
-                fetchCharacteristicsAndRenderTable()
+                fetchCharacteristicsAndRenderTable(categorySelect1)
                 $('#characteristicModalWindow').modal('hide')
                 toastr.success("Характеристика успешно изменена")
             }
@@ -213,18 +219,3 @@ function handleAddBtn() {
             }
         )
 }
-
-/**
- *  Функции для отдельной вкладки характеристики по категориям
- */
-
-/**
- * функция делает fetch запрос на рест контроллер, получает список характеристик выбранной категории,
- * преобразует полученный объект в json
- * и передает функции рендера таблицы renderCharacteristicsTable
- */
-/*function fetchCharacteristicsByCategoryAndRenderTable(categorySelect) {
-    fetch("manager/characteristics/" + categorySelect)
-        .then(response => response.json())
-        .then(characteristics => renderCharacteristicsTable(characteristics))
-}*/

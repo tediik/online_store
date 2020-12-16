@@ -99,18 +99,21 @@ public class ManagerCharacteristicsRestController {
     /**
      * Метод для удаления характеристики
      *
-     * @param id - id харакетристики для удаления
+     * @param id       - id харакетристики для удаления
+     * @param category - имя категории
      * @return ResponseEntity<>(HttpStatus)
      */
-    @DeleteMapping(value = "/manager/characteristics/{id}")
-    public ResponseEntity<Characteristic> deleteCharacteristic(@PathVariable Long id) {
-        try {
+    @DeleteMapping(value = "/manager/characteristics/{id}/{category}")
+    public ResponseEntity<Characteristic> deleteCharacteristic(@PathVariable Long id,
+                                                               @PathVariable String category) {
+        if (category.equals("default")) {
             characteristicService.deleteByID(id);
-        } catch (IllegalArgumentException e) {
-            log.debug("There is no characteristic with id: {}", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            log.debug("Characteristic with id: {}, was deleted successfully", id);
+
+        } else {
+            characteristicService.deleteByIDInSelectedCategory(id, category);
+
         }
-        log.debug("Characteristic with id: {}, was deleted successfully", id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

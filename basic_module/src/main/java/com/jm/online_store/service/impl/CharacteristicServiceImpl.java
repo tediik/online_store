@@ -85,6 +85,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
     /**
      * Обновление характеристики.
+     *
      * @param characteristic пользователь, полученный из контроллера.
      */
     @Override
@@ -95,6 +96,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
     /**
      * Удаляет харакетристику по идентификатору
+     *
      * @param id идентификатор.
      */
     @Override
@@ -111,4 +113,19 @@ public class CharacteristicServiceImpl implements CharacteristicService {
         characteristicRepository.deleteById(id);
     }
 
+    /**
+     * Удаляет харакетристику по идентификатору из выбранной категории
+     *
+     * @param id идентификатор.
+     */
+    @Override
+    @Transactional
+    public void deleteByIDInSelectedCategory(Long id, String category) {
+        Categories categories = categoriesService.getCategoryByCategoryName(category).get();
+        Characteristic characteristicToDelete = characteristicRepository.findById(id).get();
+        List<Characteristic> characteristicList = categories.getCharacteristics();
+
+        characteristicList.remove(characteristicToDelete);
+        categoriesService.updateCategory(categories);
+    }
 }

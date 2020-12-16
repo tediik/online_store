@@ -87,26 +87,21 @@
                            href="#nav-addCharacteristics"
                            role="tab" aria-controls="nav-addCharacteristics" aria-selected="false">Добавление
                             харакетеристик</a>
-                        <a class="nav-item nav-link" id="nav-categoryCharacteristics-tab" data-toggle="tab"
-                           href="#nav-categoryCharacteristics"
-                           role="tab" aria-controls="nav-categoryCharacteristics" aria-selected="false">Характеристики
-                            по категориям</a>
-
+                    </div>
+                    <div class="form-group col-3 mr-3 pull-right">
+                        <select class="form-control form-control-sm" id="filterCategory">
+                            <option value="default">Все категории</option>
+                            <option th:each="dropDownItem : ${listCategories}"
+                                    th:value="${dropDownItem}"
+                                    th:text="${dropDownItem}"></option>
+                            <div class="dropdown-divider"></div>
+                        </select>
                     </div>
                 </nav>
 
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-characteristics" role="tabpanel"
                          aria-labelledby="nav-characteristics-tab">
-                        <div class="form-group col-3">
-                            <select class="form-control form-control-sm" id="filterCategory">
-                                <option value="default">Все категории</option>
-                                <option th:each="dropDownItem : ${listCategories}"
-                                        th:value="${dropDownItem}"
-                                        th:text="${dropDownItem}"></option>
-                                <div class="dropdown-divider"></div>
-                            </select>
-                        </div>
                         <!--                main tab -->
                         <table class="table table-active table-striped bg-white" id="characteristic-table">
 
@@ -115,50 +110,39 @@
                     <div class="tab-pane fade" id="nav-addCharacteristics" role="tabpanel"
                          aria-labelledby="nav-addCharacteristics-tab">
                         <!--                Secondary user addition form-->
-                        <h3>Добавить характеристику</h3>
-                        <form id="addForm">
-                            <div class="panel panel-default" id="new-characteristic-form">
-                                <div class="panel-body">
-                                    <div id="add-characteristicName-form-group" class="form-group">
-                                        <label for="addCharacteristicName">Наименование:</label>
-                                        <input type="email" id="addCharacteristicName" name="characteristicName"
-                                               placeholder="Наименование"
-                                               class="form-control">
-                                    </div>
-                                    <div class="mt-4">
-                                        <button id="addBtn" type="button"
-                                                class=" btn btn-outline-success btn-md btn">
-                                            Добавить новую характеристику
-                                        </button>
-                                    </div>
+
+                        <div class="container">
+                            <div class="row mt-5">
+                                <div class="col-sm">
+                                    <h4>Добавление новой харакетристики</h4>
+                                    <form id="addForm">
+                                        <div class="panel panel-default" id="new-characteristic-form">
+                                            <div class="panel-body">
+                                                <div class="form-group col-6">
+                                                    <div id="add-characteristicName-form-group" class="form-group">
+                                                        <label for="addCharacteristicName">Наименование:</label>
+                                                        <input type="email" id="addCharacteristicName"
+                                                               name="characteristicName"
+                                                               placeholder="Наименование"
+                                                               class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="mt-4 ml-3">
+                                                    <button id="addBtn" type="button"
+                                                            class=" btn btn-outline-success btn-md btn">
+                                                        Добавить новую характеристику
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-sm">
+                                    <h4>Добавление характеристик к выбранной категории</h4>
+
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane" id="nav-categoryCharacteristics" role="tabpanel"
-                         aria-labelledby="nav-categoryCharacteristics-tab">
-                        <!--<div class="btn-group">
-                            <button onclick="" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Нажми на меня
-                            </button>
-                            <div class="dropdown-menu" id="dropdownCategories">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Separated link</a>
-                            </div>
-                        </div>-->
-                        <h2>Управление характеристиками категорий</h2>
-                        <!--<div class="form-group col-3">
-                            <select class="form-control form-control-sm" id="filterCategory">
-                                <option value="default">Все категории</option>
-                                <option th:each="dropDownItem : ${listCategories}"
-                                        th:value="${dropDownItem}"
-                                        th:text="${dropDownItem}"></option>
-                                <div class="dropdown-divider"></div>
-                            </select>
-                        </div>-->
+                        </div>
                     </div>
                 </div>
             </div>
