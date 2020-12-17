@@ -25,6 +25,7 @@ public class CommentDto {
    private String timeStamp;
    private Long productId;
    private Long reviewId;
+   private Boolean deletedHasKids;
 
    public static CommentDto commentEntityToDto(Comment commentEntity){
        CommentDto commentDto = new CommentDto();
@@ -35,6 +36,7 @@ public class CommentDto {
        commentDto.setFirstName(commentEntity.getCustomer().getFirstName());
        commentDto.setLastName(commentEntity.getCustomer().getLastName());
        commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
+       commentDto.setDeletedHasKids(commentEntity.isDeletedHasKids());
 
        DateTimeFormatter dTF2 = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
        try {
