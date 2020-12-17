@@ -56,7 +56,7 @@ function checkFields(event) {
         let stockTitle = document.getElementById('stockTitle')
         let stockText = document.getElementById('stockText')
         let startDate = document.getElementById('startDate')
-        let filename = "default.jpg";
+        let filename = $('#fileImgInputHidden').val();
         try {
             let tempfilename = $('#fileImgInput')[0].files[0].name;
             if (tempfilename.indexOf('fakepath') === -1) {
@@ -71,7 +71,7 @@ function checkFields(event) {
 
         if (stockTitle.value === '') {
             invalidModalField("Заполните заголовок акции", stockTitle)
-        } else if (stockText.value === "") {
+        } else if (stockText.value === '') {
             invalidModalField("Заполните описание акции", stockText)
         } else if (startDate.value === '') {
             invalidModalField("Заполните начальную дату", startDate)
@@ -170,6 +170,22 @@ function handleDeleteButtonClick(event) {
 }
 
 /**
+ * по нажатию на Save changes сохраняет картинку в uploads\images\stocks
+ * @returns {Promise<void>}
+ */
+async function submit() {
+    var input = document.querySelector('#fileImgInput')
+
+    var data = new FormData()
+    data.append('file', input.files[0])
+
+    fetch('/uploadFile', {
+        method: 'POST',
+        body: data,
+    })
+}
+
+/**
  * modal window "save changes" button handler
  */
 function handleSaveChangesButton(event, file_name_stockImg) {
@@ -227,8 +243,15 @@ function handleEditButtonClick(event) {
     $('#stockIdDiv').removeClass('d-none')
     $('.modal-title').text("Редактировать акцию")
     let stockId = event.target.dataset.stockId
+    let filename = ""
     stockModalClearFields()
-
+    $.ajax('/rest/' + stockId, {
+        type: 'GET',
+        async: false,
+        success: function (data) {
+                    filename = data.stockImg;
+                }
+    })
     function renderModalWindowEdit(stock) {
         let stockText = stock.stockText
         $("#stockId").val(stock.id)
@@ -237,6 +260,7 @@ function handleEditButtonClick(event) {
         $("#startDate").val(stock.startDate)
         $("#endDate").val(stock.endDate)
         $("#published").prop('checked', stock.published)
+        $("#fileImgInputHidden").val(filename)
     }
 
     fetch(stockApiUrl + `/${stockId}`, {

@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +25,16 @@ import java.util.List;
 @AllArgsConstructor
 public class StockRestController {
     private final StockService stockService;
+
+    /**
+     *  Загружает картинку для акции
+     * @param file
+     * @return
+     */
+    @PostMapping("/uploadFile")
+    public void updateStockImage(@RequestParam("file") MultipartFile file) {
+        stockService.updateStockImage(file);
+    }
 
     /**
      * Метод выводит все акции

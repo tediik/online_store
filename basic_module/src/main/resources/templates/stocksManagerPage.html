@@ -148,6 +148,10 @@
                                                     <label for="fileImgInput">Изображение</label>
                                                     <input id="fileImgInput" type="file" accept="image/*"
                                                            class="form-control">
+<!--                                                    <script>-->
+<!--                                                        const selectedFile = document.getElementById('input').files[0].name;-->
+<!--                                                    </script>-->
+                                                    <input type="hidden" name="fileImgInputHidden" id="fileImgInputHidden" value="">
                                                 </div>
                                             </form>
                                             <br>
@@ -162,19 +166,20 @@
                                     </form>
                                 </div>
                             </div>
+
+                            <div class="modal-footer actions2" id="modalFooter">
+
+                                <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal" data-toggle-id="close">
+                                    Close
+                                </button>
+
+                                <button id="editSaveStock" type="submit"
+                                        class="btn btn-primary" data-toggle-id="submit" onclick="submit()">
+                                    Save changes
+                                </button>
+                            </div>
                         </form>
-                        <div class="modal-footer actions2" id="modalFooter">
-
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal" data-toggle-id="close">
-                                Close
-                            </button>
-
-                            <button id="editSaveStock" type="submit" data-dismiss="modal"
-                                    class="btn btn-primary" data-toggle-id="submit">
-                                Save changes
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
