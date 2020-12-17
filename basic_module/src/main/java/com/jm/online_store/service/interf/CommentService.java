@@ -22,4 +22,8 @@ public interface CommentService {
     void addCommentInit(Comment comment);
 
     Comment findById(Long parentId);
+
+    void removeById(Long commentId);
+
+    void update(Comment comment);
 }
