@@ -43,7 +43,7 @@ public class Categories {
     private List<Product> products;
 
     @ManyToMany(fetch = FetchType.EAGER,
-            cascade = CascadeType.REFRESH)
+            cascade = CascadeType.ALL)
     @JoinTable(
             name = "categories_characteristic",
             joinColumns = @JoinColumn(name = "categories_id"),

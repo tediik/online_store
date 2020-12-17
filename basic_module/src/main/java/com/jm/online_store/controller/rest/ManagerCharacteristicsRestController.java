@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -186,17 +185,16 @@ public class ManagerCharacteristicsRestController {
      * Метод добавляет характеристики выбранной категории
      *
      * @param selectedCategory название выбранной категории
-     * @return ResponseEntity<List < Characteristic>> Возвращает добавленный товар с кодом ответа
+     * @return ResponseEntity<List < Characteristic>> Возвращает добавленные харакетристики с кодом ответа
      */
     @PostMapping(value = "/manager/characteristics/addCharacteristicsToCategory/{selectedCategory}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Characteristic>> addCharacteristicsToCategory(@RequestBody Characteristic[] characteristics,
                                                                              @PathVariable String selectedCategory) {
         Categories category = categoriesService.getCategoryByCategoryName(selectedCategory).get();
         List<Characteristic> characteristicsSelectedCategory = category.getCharacteristics();
-       /* for (CharacteristicDto characteristicDto : characteristicsDto) {
-            characteristicsSelectedCategory.add(characteristicService.findByCharacteristicName(characteristicDto.getCharacteristicName()).get());
-        }*/
-        characteristicsSelectedCategory.addAll(Arrays.asList(characteristics));
+        for (Characteristic characteristic : characteristics) {
+            characteristicsSelectedCategory.add(characteristicService.findByCharacteristicName(characteristic.getCharacteristicName()).get());
+        }
         category.setCharacteristics(characteristicsSelectedCategory);
         categoriesService.saveCategory(category);
 
