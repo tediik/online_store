@@ -97,7 +97,7 @@ function renderCharacteristicsTable(characteristics) {
  */
 function handleEditButton(event) {
     const characteristicId = event.target.dataset["characteristicId"]
-    if (categorySelect1 === 'default') {
+    if (categorySelectAllCharacteristics === 'default') {
         fetch("/manager/characteristic/" + characteristicId)
             .then(response => response.json())
             .then(characteristicToEdit => editModalWindowRender(characteristicToEdit))
@@ -162,7 +162,7 @@ function handleAcceptButtonFromModalWindow(event) {
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-characteristic')) {
-        fetch("/manager/characteristics/" + characteristic.id + "/" + categorySelect1, {
+        fetch("/manager/characteristics/" + characteristic.id + "/" + categorySelectAllCharacteristics, {
             method: 'DELETE'
         }).then(response => response.text())
             .then(deletedCharacteristic => console.log('Characteristic: ' + deletedCharacteristic + ' was successfully deleted'))
@@ -176,7 +176,7 @@ function handleAcceptButtonFromModalWindow(event) {
             body: JSON.stringify(characteristic)
         }).then(function (response) {
             if (response.ok) {
-                fetchCharacteristicsAndRenderTable(categorySelect1)
+                fetchCharacteristicsAndRenderTable(categorySelectAllCharacteristics)
                 $('#characteristicModalWindow').modal('hide')
                 toastr.success("Характеристика успешно изменена")
             }
@@ -227,7 +227,7 @@ function handleAddBtn() {
                 } else {
                     response.text().then(function () {
                         clearFormFields();
-                        showAndRefreshHomeTab(categorySelect1);
+                        showAndRefreshHomeTab(categorySelectAllCharacteristics);
                         toastr.success('Харакетристика успешно добавлена')
                     })
                 }
@@ -286,11 +286,8 @@ function getSelectValues(select) {
  */
 function handleAcceptAddCharacteristicsToCategoryButton() {
     let arr = getSelectValues(document.getElementById("addCharacteristics"));
-    let characteristics = [getSelectValues(document.getElementById("addCharacteristics"))];
     let selectedCategory = $('#filterCategoryToAdd').val();
 
-    //clearFieldsForm('addForm');
-    //addRolesOnNewUserForm();
 
     fetch("/manager/characteristics/addCharacteristicsToCategory/" + selectedCategory, {
         method: 'POST',
@@ -302,7 +299,8 @@ function handleAcceptAddCharacteristicsToCategoryButton() {
                 toastr.error("Характеристики не были добавлены")
             } else {
                 response.text().then(function () {
-                    document.getElementById('#addCharacteristics').reset();
+                    addCharacteristicsOnNewCharacteristicForm(selectedCategory)
+                    toastr.success('Характеристики к категории ' + selectedCategory + ' успешно добавлены')
                 })
             }
         }
