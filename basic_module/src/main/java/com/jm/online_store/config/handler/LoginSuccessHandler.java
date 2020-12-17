@@ -1,5 +1,6 @@
 package com.jm.online_store.config.handler;
 
+import com.jm.online_store.model.CurrentUrl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -20,11 +21,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException, ServletException {
 
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+
         if (roles.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin");
 
         } else if (roles.contains("ROLE_CUSTOMER")) {
-            httpServletResponse.sendRedirect("/");
+            httpServletResponse.sendRedirect(CurrentUrl.getUrl());
         } else if (roles.contains("ROLE_MANAGER")) {
             httpServletResponse.sendRedirect("/manager");
         } else if (roles.contains("ROLE_SERVICE")) {
