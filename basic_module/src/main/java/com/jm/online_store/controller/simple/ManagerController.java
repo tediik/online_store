@@ -44,6 +44,11 @@ public class ManagerController {
         return "stocksManagerPage";
     }
 
+    @GetMapping("/mailing")
+    public String getMailing() {
+        return "managerMailing";
+    }
+
     @GetMapping("/feedback")
     public String getFeedbacks() {
         return "managerFeedback";
