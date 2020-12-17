@@ -2,7 +2,9 @@ package com.jm.online_store.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.CascadeType;
@@ -14,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -59,7 +63,15 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<ReportComment> reportComments;
 
+    @Column(nullable = false)
+    private boolean deletedHasKids = false;
+
     public Comment(String content) {
+        this.content = content;
+    }
+
+    public Comment(Long id, String content) {
+        this.id = id;
         this.content = content;
     }
 }

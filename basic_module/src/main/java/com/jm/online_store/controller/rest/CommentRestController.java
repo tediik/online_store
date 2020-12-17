@@ -3,21 +3,28 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
+import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForCommentDto;
 import com.jm.online_store.model.dto.ReviewForCommentDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReviewService;
+import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +43,8 @@ public class CommentRestController {
     private final CommentService commentService;
     private final ReviewService reviewService;
     private final ProductRepository productRepository;
+    private final UserService userService;
+
 
     /**
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
@@ -95,6 +104,50 @@ public class CommentRestController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format("Request contains incorrect data = [%s]", getErrors(bindingResult)));
         }
+    }
+
+    /**
+     * Удаляет комментарий по его айди
+     * @param commentId
+     * @return ResponseEntity<?>
+     */
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        ResponseEntity<?>[] answer = new ResponseEntity[1];
+        userService.findByEmail(email).ifPresentOrElse(e -> {
+                    if (e.getId().equals(commentService.findById(commentId).getCustomer().getId())) {
+                        commentService.removeById(commentId);
+                        answer[0] = new ResponseEntity<>(HttpStatus.OK);
+                    } else
+                        answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+                },
+                () -> answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED)
+        );
+        return answer[0];
+    }
+
+    /**
+     * Обновляет комментарий
+     * @param comment
+     * @return ResponseEntity<?>
+     */
+    @PutMapping
+    public ResponseEntity<?> updateComment(@RequestBody @Valid Comment comment) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        ResponseEntity<?>[] answer = new ResponseEntity[1];
+        userService.findByEmail(email).ifPresentOrElse(e -> {
+                    if (e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
+                        commentService.update(comment);
+                        answer[0] = new ResponseEntity<>(HttpStatus.OK);
+                    } else
+                        answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+                },
+                () -> answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED)
+        );
+        return answer[0];
     }
 
     private String getErrors(BindingResult bindingResult) {

@@ -7,9 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -27,6 +25,7 @@ public class CommentDto {
    private String timeStamp;
    private Long productId;
    private Long reviewId;
+   private Boolean deletedHasKids;
 
    public static CommentDto commentEntityToDto(Comment commentEntity){
        CommentDto commentDto = new CommentDto();
@@ -37,6 +36,7 @@ public class CommentDto {
        commentDto.setFirstName(commentEntity.getCustomer().getFirstName());
        commentDto.setLastName(commentEntity.getCustomer().getLastName());
        commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
+       commentDto.setDeletedHasKids(commentEntity.isDeletedHasKids());
 
        DateTimeFormatter dTF2 = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
        try {

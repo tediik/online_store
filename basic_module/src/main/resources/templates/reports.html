@@ -28,23 +28,32 @@
                 <a class="btn btn-outline-primary" href="/manager">Главная</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
+                <a class="btn btn-outline-primary" href="/manager/news">Новости</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/stocks"> Акции</a>
+                <a class="btn btn-outline-primary" href="/manager/stocks">Акции</a>
             </div>
             <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
                  aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/authority/profile">Профиль</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/products"> Товары</a>
+                <a class="btn btn-outline-primary" href="/manager/products">Товары</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/rating">Рейтинг товаров</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/manager/reports">Отчеты</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/settings"> Настройки</a>
+                <a class="btn btn-outline-primary" href="/manager/mailing">Рассылки</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/feedback">Обратная связь</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/settings">Настройки</a>
             </div>
         </div>
         <div class="col-sm-8 text-left">
@@ -56,59 +65,11 @@
             </nav>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#description">Рассылки</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#nav-sales-report">Отчет по продажам</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#opinion">3</a>
+                    <a class="nav-link active" data-toggle="tab" href="#nav-sales-report">Отчет по продажам</a>
                 </li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="description">
-                    <div id="chart-div" style="display: none">
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>Не удалось построить график за выбранный период!</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div id="chartcontainer" style="width: 50% ; height: 60%">
-                        <canvas id="myChart"></canvas>
-                    </div>
-                    Выберите период для построения графика:
-                    <br>
-                    <input id="date_range" readonly>
-                    <br>
-                    <label for="date_range2" class="col-xs-2 col-form-label">Выберите дату</label>
-                    <br>
-                    <input id="date_range2" onchange="onChangeDataInput()" readonly>
-                    <div id="success-div" style="display: none">
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Подписка успешно отменена!</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div id="alert-div" style="display: none">
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>Не удалось отменить подписку!</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div style="background-color: white; padding: 20px; border: 1px solid #DDE1E4;">
-
-                        <table class="table table-striped" id="users-table">
-
-                        </table>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="nav-sales-report">
+                <div class="tab-pane fade show active" id="nav-sales-report">
                     <br>
                     <h5>Выбирите промежуток времени для формирования отчета:</h5>
                     <div id="managerSalesReportRange"
@@ -140,9 +101,6 @@
                         Выгрузить в csv
                     </button>
                 </div>
-                <div class="tab-pane fade" id="opinion">
-                    И здесь будут отчёты
-                </div>
             </div>
         </div>
 
@@ -158,11 +116,11 @@
 <!--    Chart JS-->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script type="text/javascript" src="/static/js/jquery.datepicker.extension.range.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<script type="text/javascript" src="/static/js/sentStockReport.js"></script>
+<script src="/static/js/jquery.datepicker.extension.range.min.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="/static/js/sentStockReport.js"></script>
 <script src="/static/js/manager-sales-report.js"></script>
-<script src="../static/js/searchButton.js"></script>
+<script src="/static/js/searchButton.js"></script>
 </body>
 </html>

@@ -3,15 +3,35 @@
  * @param day
  */
 
-$(document).ready(fetchUsersAndRenderTable(currentDay()), dataPickerInitializer());
-
+$(document).ready(fetchUsersAndRenderTable(onChangeDataInput()), dataPickerInitializer());
 
 /**
  * функция запроса пользователей
  * @param day
  */
 function fetchUsersAndRenderTable(day) {
-    fetch("/api/manager/users/" + day, {
+    if (day !== undefined) {
+        fetch("/api/manager/users/" + day, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            }
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(users => renderUsersTable(users))
+            } else {
+                renderUsersTable(new Array)
+            }
+        })
+    }
+}
+
+/**
+ * функция поиска подписчиков по email
+ */
+document.querySelector('#searchForSubscribers').oninput = function () {
+    let email = document.getElementById('searchForSubscribers').value
+    fetch("/api/manager/user/" + email, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
@@ -40,7 +60,7 @@ function renderUsersTable(users) {
         '               <th scope="col">Отменить подписку</th>
         '           </tr>
         '        </thead>`);
-    if (users.length != 0) {
+    if (users.length !== 0) {
         for (let i = 0; i < users.length; i++) {
             const user = users[i];
             let row = `
@@ -69,7 +89,7 @@ function renderUsersTable(users) {
 
 /**
  * функция отмены подписки для пользователя
- * @param o
+ * @param element
  */
 function cancelSubscripption(element) {
     userId = $(element).closest('tr').find('td').eq(0).text();
@@ -95,18 +115,13 @@ function cancelSubscripption(element) {
  * функция изменения даты для отображения
  */
 function onChangeDataInput() {
-    var date = new Date(document.getElementById('date_range2').value);
-    fetchUsersAndRenderTable([7, 1, 2, 3, 4, 5, 6][date.getDay()]);
+    let day = document.getElementById('date_range2').value
+    fetchUsersAndRenderTable(day)
 }
 
 /**
- * функция возвращает сегодняшний день
+ * Функция заполнения графика с отправленными акциями
  */
-function currentDay() {
-    let now = new Date();
-    return [7, 1, 2, 3, 4, 5, 6][now.getDay()];
-}
-
 function fetchSentStocks(begin, end) {
     fetch("/api/manager/report?beginDate=" + begin + "&endDate=" + end, {
         method: 'GET',
@@ -202,11 +217,6 @@ function dataPickerInitializer() {
                     rePrintChart(extensionRange.startDateText, extensionRange.endDateText);
                 }
             }
-        })
-    })
-    $(function () {
-        $('#date_range2').datepicker({
-            showButtonPanel: true,
         })
     })
 }

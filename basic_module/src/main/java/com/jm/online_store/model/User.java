@@ -57,6 +57,8 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
+    private boolean isAccountNonBlockedStatus = true;
+
     @Transient
     @NotBlank
     private String passwordConfirm;
@@ -170,6 +172,16 @@ public class User implements UserDetails {
         this.roles = roleSet;
     }
 
+    /**
+     * Конструктор для поиска подписчиков из CustomerRepository (метод findSubscriberByEmail())
+     *
+     * @param id    - поле id
+     * @param email - поле email
+     */
+    public User(Long id, String email) {
+        this.id = id;
+        this.email = email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -193,7 +205,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isAccountNonBlockedStatus;
     }
 
     @Override

@@ -23,10 +23,12 @@ import java.time.LocalDateTime;
 public class Customer extends User {
 
     /**
-     * Статус удаления клиента.
+     * Отсчет времени удаления клиента(+30 дней).
+     * По уолчанию значение null.Когда клиент , в своем кабинете нажимает кнопку
+     * "удалить профиль " мы присваем этому полю текущую дату .
      */
-    @Column(name = "status")
-    private LocalDateTime status;
+    @Column(name = "anchorForDelete")
+    private LocalDateTime anchorForDelete;
 
     /**
      * День недели для получения рассылок.
@@ -41,6 +43,18 @@ public class Customer extends User {
 
     public Customer(@Email @NotBlank String email, DayOfWeekForStockSend dayOfWeekForStockSend, String password) {
         super(email, password);
+        this.dayOfWeekForStockSend = dayOfWeekForStockSend;
+    }
+
+    /**
+     * Конструктор для поиска подписчиков из CustomerRepository (метод findSubscriberByEmail())
+     *
+     * @param id                    - поле id
+     * @param email                 - поле email
+     * @param dayOfWeekForStockSend - поле dayOfWeekForStockSend
+     */
+    public Customer(Long id, String email, DayOfWeekForStockSend dayOfWeekForStockSend) {
+        super(id, email);
         this.dayOfWeekForStockSend = dayOfWeekForStockSend;
     }
 }

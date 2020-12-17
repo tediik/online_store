@@ -98,7 +98,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct  //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+   // @PostConstruct    //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
@@ -818,6 +818,7 @@ public class DataInitializer {
                 .endDate(LocalDate.now().plusDays(12L))
                 .stockTitle("Команда Online-Store сообщает о начале акции – «Рассрочка или бонусы! HD-" +
                         " и UltraHD-телевизоры Samsung»")
+                .stockImg("default.jpg")
                 .stockText("<b style=\"font-weight: bold; color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;," +
                         " Helvetica, Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">" +
                         "Телевизоры Samsung&nbsp;</b><span style=\"color: rgb(51, 51, 51); font-family: &quot;PT" +
@@ -855,6 +856,7 @@ public class DataInitializer {
                 .startDate(LocalDate.now().minusDays(5L))
                 .endDate(LocalDate.now().plusDays(3L))
                 .stockTitle("Команда Online-Store сообщает о начале акции – «Выгодный онлайн-шопинг с Visa!»")
+                .stockImg("default.jpg")
                 .stockText("<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, " +
                         "Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">С " +
                         "Visa за скидками далеко ходить не надо! Visa и DNS подготовили для вас выгодное " +
@@ -924,6 +926,7 @@ public class DataInitializer {
                 .startDate(LocalDate.now().minusDays(20L))
                 .endDate(LocalDate.now().minusDays(5L))
                 .stockTitle("Команда DNS сообщает о начале акции – «Рассрочка или бонусы! Инверторные холодильники LG»")
+                .stockImg("default.jpg")
                 .stockText("<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, Arial," +
                         " sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">Благодаря " +
                         "инверторным компрессорам</span><b style=\"font-weight: bold; color: rgb(51, 51, 51); " +
@@ -978,6 +981,7 @@ public class DataInitializer {
                 .startDate(LocalDate.now().minusDays(3L))
                 .endDate(LocalDate.now().plusDays(10L))
                 .stockTitle("«Рассрочка или бонусы!")
+                .stockImg("default.jpg")
                 .stockText("Стиральные машины Whirlpool помогут привести в порядок ваши вещи из различных тканей. " +
                         " Эта техника предлагает множество программ для деликатной и эффективной стирки и сушки." +
                         " Оформите беспроцентный кредит на бытовую технику Whirlpool или получите 10% от стоимости" +
@@ -989,6 +993,7 @@ public class DataInitializer {
                 .startDate(LocalDate.now().minusDays(10L))
                 .endDate(LocalDate.now().plusDays(10L))
                 .stockTitle("«3 года защиты за 990")
+                .stockImg("default.jpg")
                 .stockText("Самое время обновить компьютер! Выбери подходящую модель с Windows 10 и добавь" +
                         " надёжную защиту от вирусов Kaspersky Internet Security на три года всего за 990 рублей." +
                         " Закажи компьютер с Windows 10. Забери товар и получи промокод на Kaspersky Internet Security" +
@@ -1001,6 +1006,7 @@ public class DataInitializer {
                 .startDate(LocalDate.now().minusDays(2L))
                 .endDate(LocalDate.now().plusDays(30L))
                 .stockTitle("«Требуй скидку!")
+                .stockImg("default.jpg")
                 .stockText("До 31 декабря требуй и получай скидку на смартфоны, телевизоры" +
                         " и бытовую технику из акционного списка." +
                         " Активируй свою скидку на странице товара." +
@@ -1154,6 +1160,13 @@ public class DataInitializer {
                 .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings2);
+
+        TaskSettings taskSettings3 = TaskSettings.builder()
+                .taskName("deleteExpiredCustomersProfile")
+                .active(true)
+                .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .build();
+        taskSettingsService.addNewTaskSetting(taskSettings3);
     }
 
     /**
@@ -1172,8 +1185,14 @@ public class DataInitializer {
                         "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
                         "<p>С Уважением</p><p>Online-store.ru</p>")
                 .build();
+        CommonSettings maintenanceModeTemplate = CommonSettings.builder()
+                .settingName("maintenance_mode")
+                .textValue("ROLE_ADMIN")
+                .status(false)
+                .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
+        commonSettingsService.addSetting(maintenanceModeTemplate);
     }
 
     /**

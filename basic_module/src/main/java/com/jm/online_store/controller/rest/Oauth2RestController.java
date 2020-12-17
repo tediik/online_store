@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @AllArgsConstructor
-public class LoginRestController {
+public class Oauth2RestController {
 
     private final OAuth2Odnoklassniki oAuth2Odnoklassniki;
     private final VkApiClient vkApiClient;
