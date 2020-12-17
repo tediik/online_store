@@ -12,7 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +29,22 @@ import java.util.Optional;
 public class StockServiceImpl implements StockService {
 
     private final StockRepository stockRepository;
+
+    private static final String uploadDir = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images" +
+            File.separator + "stocks";
+
+    @Override
+    public String updateStockImage(MultipartFile file) {
+        String uniqueFilename = StringUtils.cleanPath(file.getOriginalFilename());
+        try {
+            Path copyLocation = Paths
+                    .get(uploadDir, uniqueFilename);
+            Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  File.separator + "uploads" + File.separator + "images" + File.separator + "stocks" + File.separator + uniqueFilename;
+    }
 
     @Override
     public List<Stock> findAll() {

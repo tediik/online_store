@@ -4,6 +4,7 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.StockFilterDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface StockService {
     List<Stock> findActualStocks();
 
     void updateStock(Stock stock);
+
+    String updateStockImage(MultipartFile file);
 }
