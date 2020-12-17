@@ -13,6 +13,7 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
+import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
@@ -42,6 +43,8 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
     private final CommonSettingsService commonSettingsService;
     private final MailSenderService mailSenderService;
     private final CategoriesService categoriesService;
+    private final ProductCharacteristicService productCharacteristicService;
 
     /**
      * метод получения списка товаров
@@ -305,6 +309,26 @@ public class ProductServiceImpl implements ProductService {
                     String categoryId = eElement.getElementsByTagName("categoryid").item(0).getTextContent();
                     Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
                     categoriesService.addToProduct(product, Long.parseLong(categoryId));
+
+                    String characteristicId;
+                    String characteristicValue;
+                    if (eElement.getElementsByTagName("characteristicid").getLength() != 0
+                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
+                        characteristicId = eElement.getElementsByTagName("characteristicid").item(0).getTextContent();
+                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
+
+                        List<String> listIds = Arrays.asList(characteristicId.split(","));
+                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
+                        Map<Long, String> map = new HashMap<>();
+
+                        for (int i = 0; i < listValues.size(); i++) {
+                            map.put(Long.parseLong(listIds.get(i)), listValues.get(i));
+                        }
+                        for (Map.Entry<Long, String> entry : map.entrySet()) {
+                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).get().getId(),
+                                    entry.getKey(), entry.getValue());
+                        }
+                    }
                 }
             }
 
@@ -350,6 +374,26 @@ public class ProductServiceImpl implements ProductService {
                     String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
                     Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
                     categoriesService.addToProduct(product, categoryId);
+
+                    String characteristicId;
+                    String characteristicValue;
+                    if (eElement.getElementsByTagName("characteristicid").getLength() != 0
+                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
+                        characteristicId = eElement.getElementsByTagName("characteristicid").item(0).getTextContent();
+                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
+
+                        List<String> listIds = Arrays.asList(characteristicId.split(","));
+                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
+                        Map<Long, String> map = new HashMap<>();
+
+                        for (int i = 0; i < listValues.size(); i++) {
+                            map.put(Long.parseLong(listIds.get(i)), listValues.get(i));
+                        }
+                        for (Map.Entry<Long, String> entry : map.entrySet()) {
+                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).get().getId(),
+                                    entry.getKey(), entry.getValue());
+                        }
+                    }
                 }
             }
 

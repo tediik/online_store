@@ -49,4 +49,5 @@ public class Categories {
             joinColumns = @JoinColumn(name = "categories_id"),
             inverseJoinColumns = @JoinColumn(name = "characteristic_id"))
     private List<Characteristic> characteristics;
+
 }

@@ -50,7 +50,7 @@ public class ManagerProductsRestController {
      * Вызывает соответствующий сервисный метод в зависимости от типа файла(CSV или XML)
      *
      * @param file файл с данными
-     * @return
+     * @return ResponseEntity<String> с кодом ответа
      */
     @PostMapping(value = "/rest/products/uploadProductsFile/{id}")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
