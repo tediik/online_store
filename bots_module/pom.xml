@@ -9,16 +9,24 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>bots_module</artifactId>
-<dependencies>
 
-    <dependency>
-        <groupId>com.jm.online_store</groupId>
-        <artifactId>basic_module</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <scope>compile</scope>
-    </dependency>
-</dependencies>
+    <artifactId>bots_module</artifactId>
+
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>basic_module</id>-->
+<!--            <name>basic_module</name>-->
+<!--            <url>file:${project.basedir}\repo</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
+<!--<dependencies>-->
+
+<!--    <dependency>-->
+<!--        <groupId>com.jm.online_store</groupId>-->
+<!--        <artifactId>basic_module</artifactId>-->
+<!--        <version>${project.version}</version>-->
+<!--    </dependency>-->
+<!--</dependencies>-->
     <build>
         <plugins>
             <plugin>
