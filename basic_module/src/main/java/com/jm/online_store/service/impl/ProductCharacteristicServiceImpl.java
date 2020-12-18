@@ -1,5 +1,7 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.CharacteristicNotFoundException;
+import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.ProductCharacteristic;
@@ -24,8 +26,8 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
     @Transactional
     public Long addProductCharacteristic(long productId, long characteristicId, String value) {
 
-        Product product = productRepository.findById(productId).get();
-        Characteristic characteristic = characteristicService.findCharacteristicById(characteristicId).get();
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        Characteristic characteristic = characteristicService.findCharacteristicById(characteristicId).orElseThrow(CharacteristicNotFoundException::new);
 
         return productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, value)).getId();
     }

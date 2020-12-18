@@ -1,5 +1,7 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.CategoriesNotFoundException;
+import com.jm.online_store.exception.CharacteristicNotFoundException;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.repository.CategoriesRepository;
@@ -58,7 +60,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Override
     public List<Characteristic> findByCategoryId(Long categoryId) {
 
-        return categoriesService.getCategoryById(categoryId).get().getCharacteristics();
+        return categoriesService.getCategoryById(categoryId).orElseThrow(CategoriesNotFoundException::new).getCharacteristics();
     }
 
     /**
@@ -70,7 +72,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Override
     public List<Characteristic> findByCategoryName(String category) {
 
-        return categoriesRepository.getCategoriesByCategory(category).get().getCharacteristics();
+        return categoriesRepository.getCategoriesByCategory(category).orElseThrow(CategoriesNotFoundException::new).getCharacteristics();
     }
 
     /**
@@ -103,7 +105,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Transactional
     public void deleteByID(Long id) {
         List<Categories> categoriesList = categoriesService.findAll();
-        Characteristic characteristicToDelete = characteristicRepository.findById(id).get();
+        Characteristic characteristicToDelete = characteristicRepository.findById(id).orElseThrow(CharacteristicNotFoundException::new);
 
         for (Categories categories : categoriesList) {
             List<Characteristic> characteristicList = categories.getCharacteristics();
@@ -121,8 +123,8 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Override
     @Transactional
     public void deleteByIDInSelectedCategory(Long id, String category) {
-        Categories categories = categoriesService.getCategoryByCategoryName(category).get();
-        Characteristic characteristicToDelete = characteristicRepository.findById(id).get();
+        Categories categories = categoriesService.getCategoryByCategoryName(category).orElseThrow(CategoriesNotFoundException::new);
+        Characteristic characteristicToDelete = characteristicRepository.findById(id).orElseThrow(CharacteristicNotFoundException::new);
         List<Characteristic> characteristicList = categories.getCharacteristics();
 
         characteristicList.remove(characteristicToDelete);

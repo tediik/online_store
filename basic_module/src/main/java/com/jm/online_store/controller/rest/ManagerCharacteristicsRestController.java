@@ -1,5 +1,7 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.CharacteristicNotFoundException;
+import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.dto.ProductCharacteristicDto;
@@ -77,7 +79,7 @@ public class ManagerCharacteristicsRestController {
             log.debug("Characteristic with id: {} not found", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        Characteristic characteristic = characteristicService.findCharacteristicById(id).get();
+        Characteristic characteristic = characteristicService.findCharacteristicById(id).orElseThrow(CharacteristicNotFoundException::new);
         return new ResponseEntity<>(characteristic, HttpStatus.OK);
     }
 
@@ -159,7 +161,7 @@ public class ManagerCharacteristicsRestController {
         for (ProductCharacteristicDto productCharacteristicDto : productCharacteristicsDto) {
             if (!productCharacteristicDto.getValue().equals("")) {
                 productCharacteristicIds.add(productCharacteristicService.addProductCharacteristic(
-                        productService.findProductByName(addedProductName).get().getId(),
+                        productService.findProductByName(addedProductName).orElseThrow(ProductNotFoundException::new).getId(),
                         productCharacteristicDto.getCharacteristicId(), productCharacteristicDto.getValue()));
             }
         }
@@ -193,7 +195,8 @@ public class ManagerCharacteristicsRestController {
         Categories category = categoriesService.getCategoryByCategoryName(selectedCategory).get();
         List<Characteristic> characteristicsSelectedCategory = category.getCharacteristics();
         for (Characteristic characteristic : characteristics) {
-            characteristicsSelectedCategory.add(characteristicService.findByCharacteristicName(characteristic.getCharacteristicName()).get());
+            characteristicsSelectedCategory.add(characteristicService.findByCharacteristicName(characteristic.getCharacteristicName())
+                    .orElseThrow(CharacteristicNotFoundException::new));
         }
         category.setCharacteristics(characteristicsSelectedCategory);
         categoriesService.saveCategory(category);

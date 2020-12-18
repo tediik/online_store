@@ -1,6 +1,8 @@
 package com.jm.online_store.config;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
+import com.jm.online_store.exception.CharacteristicNotFoundException;
+import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
@@ -49,7 +51,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -1423,18 +1424,18 @@ public class DataInitializer {
     }
 
     private void productCharacteristicsInit() {
-        long productId = productService.findProductByName("XIAOMI-Mi10").get().getId();
+        long productId = productService.findProductByName("XIAOMI-Mi10").orElseThrow(ProductNotFoundException::new).getId();
 
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(1L).get().getId(), "6.67");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(2L).get().getId(), "2340x1080");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(3L).get().getId(), "Qualcomm Snapdragon 865");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(4L).get().getId(), "2020");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(5L).get().getId(), "8");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(6L).get().getId(), "256");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(7L).get().getId(), "4");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(8L).get().getId(), "Да");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(9L).get().getId(), "Да");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(10L).get().getId(), "4780");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(11L).get().getId(), "208");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new).getId(), "6.67");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2340x1080");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Qualcomm Snapdragon 865");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2020");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new).getId(), "8");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new).getId(), "256");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(7L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4780");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "208");
     }
 }

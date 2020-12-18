@@ -325,7 +325,7 @@ public class ProductServiceImpl implements ProductService {
                             map.put(Long.parseLong(listIds.get(i)), listValues.get(i));
                         }
                         for (Map.Entry<Long, String> entry : map.entrySet()) {
-                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).get().getId(),
+                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
                                     entry.getKey(), entry.getValue());
                         }
                     }
@@ -390,7 +390,7 @@ public class ProductServiceImpl implements ProductService {
                             map.put(Long.parseLong(listIds.get(i)), listValues.get(i));
                         }
                         for (Map.Entry<Long, String> entry : map.entrySet()) {
-                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).get().getId(),
+                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
                                     entry.getKey(), entry.getValue());
                         }
                     }
