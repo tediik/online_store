@@ -5,6 +5,9 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -38,6 +41,7 @@ public class AdminRestController {
      * @return ResponseEntity(authUser, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/authUser")
+    @ApiOperation(value = "receive authenticated user. from admin page", response = ResponseEntity.class)
     public ResponseEntity<User> showAuthUserInfo() {
         User authUser = userService.getCurrentLoggedInUser();
         return new ResponseEntity<>(authUser, HttpStatus.OK);
@@ -49,6 +53,10 @@ public class AdminRestController {
      * @return ResponseEntity(allUsers, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/allUsers")
+    @ApiOperation(value = "receive all users from db. from admin page", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "There are no users in db"),
+    })
     public ResponseEntity<List<User>> getAllUsersList() {
         List<User> allUsers = userService.findAll();
         if (allUsers.size() == 0) {
@@ -65,6 +73,10 @@ public class AdminRestController {
      * @return ResponseEntity(user, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/users/{id}")
+    @ApiOperation(value = "receive user by id from db. from admin page", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "User with this id not found"),
+    })
     public ResponseEntity<User> getUserInfo(@PathVariable Long id) {
         if (userService.findById(id).isEmpty()) {
             log.debug("User with id: {} not found", id);
@@ -82,6 +94,11 @@ public class AdminRestController {
      * @return ResponseEntity<>(HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping(value = "/{id}")
+    @ApiOperation(value = "delete user from db by his id from admin page", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "There is no user with id"),
+            @ApiResponse(code = 200, message = "User was deleted successfully"),
+    })
     public ResponseEntity<User> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteByID(id);
@@ -100,6 +117,12 @@ public class AdminRestController {
      * @return new ResponseEntity<>(HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
+    @ApiOperation(value = "modify user from admin page", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "There is no user with id"),
+            @ApiResponse(code = 200, message = "Changes were successfully added"),
+            @ApiResponse(code = 400, message = "Bad request"),
+    })
     public ResponseEntity editUser(@RequestBody User user) {
         if (userService.findById(user.getId()).isEmpty()) {
             log.debug("There are no user with id: {}", user.getId());
@@ -130,6 +153,11 @@ public class AdminRestController {
      * @return new ResponseEntity<>(String, HttpStatus) {@link ResponseEntity}
      */
     @PostMapping
+    @ApiOperation(value = "add new user from admin page", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 409, message = "User with same email already exists"),
+            @ApiResponse(code = 400, message = "Bad request, empty password or roles not selected"),
+    })
     public ResponseEntity addNewUser(@RequestBody User newUser) {
         if (ValidationUtils.isNotValidEmail(newUser.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
@@ -137,7 +165,7 @@ public class AdminRestController {
         }
         if (userService.isExist(newUser.getEmail())) {
             log.debug("User with same email already exists");
-            return new ResponseEntity("duplicatedEmailError", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("duplicatedEmailError", HttpStatus.CONFLICT);
         }
         if (newUser.getPassword().equals("")) {
             log.debug("Password empty");
@@ -165,6 +193,7 @@ public class AdminRestController {
      * @param role - choosen role
      * @return List<User> filtered user's list
      */
+    @ApiOperation(value = "filter list on users by choosen role", response = List.class)
     @PutMapping(value = "/{role}")
     public List<User> filterByRoles(@PathVariable String role) {
         return userService.findByRole(role);
