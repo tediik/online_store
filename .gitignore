@@ -17,7 +17,7 @@ online_store.iml
 !**/src/main/**/target/
 !**/src/test/**/target/
 *.iml
-
+test/
 # Generated files
 .idea/**/contentModel.xml
 
@@ -74,3 +74,5 @@ out/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /uploads/files/prices/pricedaily.xls
+/basic_module/src/test/java/
+
