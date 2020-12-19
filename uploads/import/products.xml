@@ -3,8 +3,8 @@
         <productname>Iphone X</productname>
         <price>80000</price>
         <amount>10</amount>
-        <categoryid>11</categoryid>
-        <characteristicid>4,5,7</characteristicid>
+        <categoryname>Смартфоны</categoryname>
+        <characteristicname>Год выпуска,Объем оперативной памяти,Вес</characteristicname>
         <characteristicvalue>2020,123,240</characteristicvalue>
     </product>
 
@@ -12,8 +12,8 @@
         <productname>Honor 11</productname>
         <price>12000</price>
         <amount>5</amount>
-        <categoryid>11</categoryid>
-        <characteristicid>4,5,7</characteristicid>
+        <categoryname>Смартфоны</categoryname>
+        <characteristicname>Год выпуска,Объем оперативной памяти,Вес</characteristicname>
         <characteristicvalue>2020,123,240</characteristicvalue>
     </product>
 
@@ -21,8 +21,8 @@
         <productname>Lenovo notebook</productname>
         <price>12000</price>
         <amount>5</amount>
-        <categoryid>29</categoryid>
-        <characteristicid>4,5,7</characteristicid>
+        <categoryname>Ультрабуки</categoryname>
+        <characteristicname>Год выпуска,Объем оперативной памяти,Вес</characteristicname>
         <characteristicvalue>2020,123,240</characteristicvalue>
     </product>
 
@@ -30,8 +30,8 @@
         <productname>Test</productname>
         <price>99999</price>
         <amount>999</amount>
-        <categoryid>23</categoryid>
-        <!--<characteristicid>4,5,7</characteristicid>
+        <categoryname>Техника для уборки</categoryname>
+        <!--<characteristicname>4,5,7</characteristicname>
         <characteristicvalue>2020,123,240</characteristicvalue>-->
     </product>
 </products>

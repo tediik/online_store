@@ -12,6 +12,8 @@ public interface CharacteristicService {
 
     Optional<Characteristic> findCharacteristicById(Long id);
 
+    Optional<Characteristic> findCharacteristicByName(String cahracteristicName);
+
     List<Characteristic> findByCategoryId(Long categoryId);
 
     List<Characteristic> findByCategoryName(String category);

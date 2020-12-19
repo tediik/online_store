@@ -35,5 +35,7 @@ public interface CategoriesService {
 
     void addToProduct(Product product, Long id);
 
+    void addToProduct(Product product, String category);
+
     void removeFromProduct(Product product, Long id);
 }

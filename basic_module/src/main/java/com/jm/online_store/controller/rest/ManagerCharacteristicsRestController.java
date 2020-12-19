@@ -45,7 +45,7 @@ public class ManagerCharacteristicsRestController {
      */
     @GetMapping(value = "/manager/characteristics/allCharacteristics")
     public List<Characteristic> findAll() {
-        List<Characteristic> list = characteristicService.findAll();
+
         return characteristicService.findAll();
     }
 

@@ -22,12 +22,38 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
     CharacteristicService characteristicService;
     ProductRepository productRepository;
 
+    /**
+     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами
+     *
+     * @param productId идентификатор товара, к которому добавляем характеристику
+     * @param characteristicId идентификатор характеристики, значение которой добавляем товару
+     * @param value значение характеристики, которую добавляем товару
+     * @return Long id - идентификатор ProductCharacteristic
+     */
     @Override
     @Transactional
     public Long addProductCharacteristic(long productId, long characteristicId, String value) {
 
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         Characteristic characteristic = characteristicService.findCharacteristicById(characteristicId).orElseThrow(CharacteristicNotFoundException::new);
+
+        return productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, value)).getId();
+    }
+
+    /**
+     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами
+     *
+     * @param productId идентификатор товара, к которому добавляем характеристику
+     * @param characteristicName наименование характеристики, значение которой добавляем товару
+     * @param value значение характеристики, которую добавляем товару
+     * @return Long id - идентификатор ProductCharacteristic
+     */
+    @Override
+    @Transactional
+    public Long addProductCharacteristic(long productId, String characteristicName, String value) {
+
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        Characteristic characteristic = characteristicService.findByCharacteristicName(characteristicName).orElseThrow(CharacteristicNotFoundException::new);
 
         return productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, value)).getId();
     }

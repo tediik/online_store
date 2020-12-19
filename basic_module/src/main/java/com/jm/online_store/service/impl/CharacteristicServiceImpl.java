@@ -52,6 +52,18 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     }
 
     /**
+     * Метод поиска характеристи по наименованию
+     *
+     * @param cahracteristicName наименование искомой характеристики
+     * @return Optional<Characteristic>
+     */
+    @Override
+    public Optional<Characteristic> findCharacteristicByName(String cahracteristicName) {
+
+        return characteristicRepository.findByCharacteristicName(cahracteristicName);
+    }
+
+    /**
      * Метод поиска характеристик по id категории
      *
      * @param categoryId id категории, по которой идет поиск харакетристик
@@ -88,7 +100,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     /**
      * Обновление характеристики.
      *
-     * @param characteristic пользователь, полученный из контроллера.
+     * @param characteristic харакетристика, полученная из контроллера.
      */
     @Override
     @Transactional

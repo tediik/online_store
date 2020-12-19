@@ -113,8 +113,7 @@ function toggle(check) {
     }
 }
 
-//Метод для попробовать, убрать
-function vizovRenderaHarakteristik() {
+function renderCharacteristicsFields() {
     let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
     if (!selectedCat) {
         toastr.error("Категория не выбрана!")

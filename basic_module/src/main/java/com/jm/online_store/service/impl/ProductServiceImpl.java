@@ -306,25 +306,25 @@ public class ProductServiceImpl implements ProductService {
                     String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
                     String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
                     String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
-                    String categoryId = eElement.getElementsByTagName("categoryid").item(0).getTextContent();
+                    String categoryName = eElement.getElementsByTagName("categoryname").item(0).getTextContent();
                     Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
-                    categoriesService.addToProduct(product, Long.parseLong(categoryId));
+                    categoriesService.addToProduct(product, categoryName);
 
-                    String characteristicId;
+                    String characteristicName;
                     String characteristicValue;
-                    if (eElement.getElementsByTagName("characteristicid").getLength() != 0
+                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
                             && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
-                        characteristicId = eElement.getElementsByTagName("characteristicid").item(0).getTextContent();
+                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
                         characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
 
-                        List<String> listIds = Arrays.asList(characteristicId.split(","));
+                        List<String> listNames = Arrays.asList(characteristicName.split(","));
                         List<String> listValues = Arrays.asList(characteristicValue.split(","));
-                        Map<Long, String> map = new HashMap<>();
+                        Map<String, String> map = new HashMap<>();
 
                         for (int i = 0; i < listValues.size(); i++) {
-                            map.put(Long.parseLong(listIds.get(i)), listValues.get(i));
+                            map.put(listNames.get(i), listValues.get(i));
                         }
-                        for (Map.Entry<Long, String> entry : map.entrySet()) {
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
                             productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
                                     entry.getKey(), entry.getValue());
                         }
@@ -375,21 +375,21 @@ public class ProductServiceImpl implements ProductService {
                     Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
                     categoriesService.addToProduct(product, categoryId);
 
-                    String characteristicId;
+                    String characteristicName;
                     String characteristicValue;
-                    if (eElement.getElementsByTagName("characteristicid").getLength() != 0
+                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
                             && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
-                        characteristicId = eElement.getElementsByTagName("characteristicid").item(0).getTextContent();
+                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
                         characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
 
-                        List<String> listIds = Arrays.asList(characteristicId.split(","));
+                        List<String> listNames = Arrays.asList(characteristicName.split(","));
                         List<String> listValues = Arrays.asList(characteristicValue.split(","));
-                        Map<Long, String> map = new HashMap<>();
+                        Map<String, String> map = new HashMap<>();
 
                         for (int i = 0; i < listValues.size(); i++) {
-                            map.put(Long.parseLong(listIds.get(i)), listValues.get(i));
+                            map.put(listNames.get(i), listValues.get(i));
                         }
-                        for (Map.Entry<Long, String> entry : map.entrySet()) {
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
                             productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
                                     entry.getKey(), entry.getValue());
                         }

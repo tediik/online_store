@@ -42,7 +42,7 @@ public class Categories {
     @JoinColumn(name = "category_id")
     private List<Product> products;
 
-    @ManyToMany(fetch = FetchType.EAGER,
+    @ManyToMany(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     @JoinTable(
             name = "categories_characteristic",
