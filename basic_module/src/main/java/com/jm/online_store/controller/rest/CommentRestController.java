@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/comments")
 @AllArgsConstructor
 @Slf4j
+@Api(description = "Rest controller for CRUD operations with comments to the products on products pages")
 public class CommentRestController {
 
     private final CommentService commentService;
@@ -73,7 +74,7 @@ public class CommentRestController {
      * @return ResponseEntity<ProductComment>
      */
     @PostMapping
-    @ApiOperation(value = "Post new comment to the current product", response = ResponseEntity.class)
+    @ApiOperation(value = "Post new comment to the current product")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
             @ApiResponse(code = 200, message = "Comment was successfully added")
@@ -100,7 +101,7 @@ public class CommentRestController {
      * @return ResponseEntity<ReviewForCommentDto>
      */
     @PostMapping("/{reviewId}")
-    @ApiOperation(value = "Post new Review comment to the current product", response = ResponseEntity.class)
+    @ApiOperation(value = "Post new Review comment to the current product")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
             @ApiResponse(code = 200, message = "Review comment has successfully added")
@@ -127,7 +128,7 @@ public class CommentRestController {
      * @return ResponseEntity<?>
      */
     @DeleteMapping("/{commentId}")
-    @ApiOperation(value = "Deletes comment by its Id", response = ResponseEntity.class)
+    @ApiOperation(value = "Deletes comment by its Id")
     @ApiResponses(value = {
             @ApiResponse(code = 304, message = "Request contains incorrect data - only comment author can delete it"),
             @ApiResponse(code = 200, message = "comment was successfully deleted")
@@ -155,7 +156,7 @@ public class CommentRestController {
      * @return ResponseEntity<?>
      */
     @PutMapping
-    @ApiOperation(value = "Updates comment", response = ResponseEntity.class)
+    @ApiOperation(value = "Updates comment")
     @ApiResponses(value = {
             @ApiResponse(code = 304, message = "Request contains incorrect data - only comment author can change it"),
             @ApiResponse(code = 200, message = "comment was successfully updated")

@@ -6,6 +6,8 @@ import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.service.interf.BasketService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @RestController
+@Api(description = "Rest controller for actions with Basket and SubBasket")
 public class BasketRestController {
     private final BasketService basketService;
 
@@ -32,6 +35,7 @@ public class BasketRestController {
      *
      * @return ResponseEntity<> список товаров данного User + статус ответа.
      */
+    @ApiOperation(value = "get all items for authorised User")
     @GetMapping(value = "/customer/basketGoods")
     public ResponseEntity<List<SubBasket>> getBasket() {
         List<SubBasket> subBaskets = basketService.getBasket();
@@ -45,6 +49,7 @@ public class BasketRestController {
      * @return ResponseEntity.ok()
      */
     @PostMapping(value = "/customer/basketGoods")
+    @ApiOperation(value = "builds new order from basket")
     public ResponseEntity<String> buildOrderFromBasket(@RequestBody Long id) {
         basketService.buildOrderFromBasket(id);
         return ResponseEntity.ok().build();
@@ -57,6 +62,7 @@ public class BasketRestController {
      * @return ResponseEntity.ok()
      */
     @DeleteMapping(value = "/customer/basketGoods")
+    @ApiOperation(value = "Deletes entity SubBasket from the SubBaskets list by id")
     public ResponseEntity<String> deleteBasket(@RequestBody Long id) {
         basketService.deleteBasket(basketService.findBasketById(id));
         return ResponseEntity.ok().build();
@@ -69,6 +75,7 @@ public class BasketRestController {
      * @return ResponseEntity.ok()
      */
     @PutMapping(value = "/customer/basketGoods")
+    @ApiOperation(value = "Updates the items quantity in SubBasket")
     public ResponseEntity<String> updateUpBasket(@RequestBody ObjectNode json) {
         Long id = json.get("id").asLong();
         int difference = json.get("count").asInt();
@@ -82,6 +89,7 @@ public class BasketRestController {
     }
 
     @PutMapping("/api/basket/add/{id}")
+    @ApiOperation(value = "Adds product to Basket")
     public ResponseEntity<String> addProductToBasket(@PathVariable Long id) {
         try {
             basketService.addProductToBasket(id);

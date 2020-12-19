@@ -4,6 +4,10 @@ import com.jm.online_store.model.Customer;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,11 +19,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/customer")
 @Slf4j
+@Api(description = "some operations with Customer's profile")
 public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
 
     @PostMapping("/changemail")
+    @ApiOperation(value = "processes Customers request to change email")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "duplicatedEmailError or notValidEmailError"),
+            @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
+    })
     public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
         Customer customer = customerService.getCurrentLoggedInUser();
         if (customerService.isExist(newMail)) {
@@ -43,6 +53,12 @@ public class CustomerRestController {
      * @return страница User
      */
     @PostMapping("/change-password")
+    @ApiOperation(value = "processes Customers request to change email")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "No user with such id"),
+            @ApiResponse(code = 400, message = "Wrong email or user with such email already exists"),
+            @ApiResponse(code = 200, message = "Changes accepted"),
+    })
     public ResponseEntity changePassword(Model model,
                                          @RequestParam String oldPassword,
                                          @RequestParam String newPassword) {
@@ -72,6 +88,7 @@ public class CustomerRestController {
      * @return ResponseEntity.ok()
      */
     @DeleteMapping("/deleteProfile/{id}")
+    @ApiOperation(value = "Changes Users status, when Delete button clicked")
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
         customerService.changeCustomerStatusToLocked(id);
         return ResponseEntity.ok("Delete profile");

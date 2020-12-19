@@ -9,6 +9,8 @@ import com.jm.online_store.service.interf.FavouriteGoodsService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,7 @@ import java.util.Set;
  */
 @AllArgsConstructor
 @RestController
+@Api(value = "Rest Controller for favourite products")
 public class FavouritesGoodsRestController {
     private final FavouriteGoodsService favouriteGoodsService;
     private final UserService userService;
@@ -37,6 +40,7 @@ public class FavouritesGoodsRestController {
      *
      * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
      */
+    @ApiOperation(value = "Rest Controller fetches products from Favourite products for current logged in User")
     @GetMapping(value = "/customer/favouritesGoods")
     public ResponseEntity<Set<Product>> getFavouritesGoods() {
         User user = userService.getCurrentLoggedInUser();
@@ -50,6 +54,7 @@ public class FavouritesGoodsRestController {
      * @return ResponseEntity.ok()
      */
     @PutMapping(value = "/customer/favouritesGoods")
+    @ApiOperation(value = "Rest Controller adds products to favourites. Adds it to the list \"All products\" ")
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.addToFavouriteGoods(id, user);
@@ -65,6 +70,7 @@ public class FavouritesGoodsRestController {
      * @param id идентификатор товара
      * @return ResponseEntity.ok()
      */
+    @ApiOperation(value = "Rest Controller deletes product from favourites. From the list \"All products\" ")
     @DeleteMapping(value = "/customer/favouritesGoods")
     public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
