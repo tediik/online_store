@@ -2,6 +2,10 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.service.interf.TopicService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/manager/topic")
 @RequiredArgsConstructor
+@Api(description = "Rest controller for read/add/update feedback topics")
 public class ManagerTopicRestController {
     private final TopicService topicService;
 
@@ -30,6 +35,8 @@ public class ManagerTopicRestController {
      * если темы с таким id не существует - только статус
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "Get topic by ID")
+    @ApiResponse(code = 404, message = "Topic was not found")
     public ResponseEntity<Topic> readTopic(@PathVariable(name = "id") long id) {
         if (!topicService.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -45,6 +52,8 @@ public class ManagerTopicRestController {
      * если тема с таким именем уже существует - только статус
      */
     @PostMapping
+    @ApiOperation(value = "Create new topic")
+    @ApiResponse(code = 304, message = "Topic was not modified")
     public ResponseEntity<Topic> createTopic(@RequestBody Topic topic){
         if (topicService.existsByTopicName(topic.getTopicName())) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
@@ -61,6 +70,11 @@ public class ManagerTopicRestController {
      * если тема с таким id не существует - только статус
      */
     @PutMapping("/{id}")
+    @ApiOperation(value = "Update topic by ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 304, message = "Topic was not modified"),
+            @ApiResponse(code = 404, message = "Topic was not found")
+    })
     public ResponseEntity<Topic> editTopic(@PathVariable(name = "id") long id, @RequestBody Topic topic) {
         if (topicService.existsByTopicName(topic.getTopicName())) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

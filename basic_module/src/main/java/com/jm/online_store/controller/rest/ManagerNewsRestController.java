@@ -4,6 +4,10 @@ import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsFilterDto;
 import com.jm.online_store.service.interf.NewsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +33,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/api/manager/news")
+@Api(description = "Rest controller for manage news from manager page, also for publishing news")
 public class ManagerNewsRestController {
 
     private final NewsService newsService;
@@ -40,6 +45,11 @@ public class ManagerNewsRestController {
      * @return {@link ResponseEntity<News>} or ResponseEntity.notFound()
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "Get news by ID")
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "News not found"),
+            @ApiResponse(code = 200, message = "News was found")
+    })
     public ResponseEntity<News> getNews(@PathVariable Long id) {
         News news;
         try {
@@ -56,6 +66,11 @@ public class ManagerNewsRestController {
      * @return List<News> возвращает список всех новостей из базы данных
      */
     @GetMapping("/all")
+    @ApiOperation(value = "Method returns all news")
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "News not found"),
+            @ApiResponse(code = 200, message = "News was found")
+    })
     public ResponseEntity<List<News>> allNews() {
         List<News> allNewsList;
         try {
@@ -73,6 +88,8 @@ public class ManagerNewsRestController {
      * @return Page<News> возвращает страницу новостей
      */
     @GetMapping("/page")
+    @ApiOperation(value = "Method returns news page")
+    @ApiResponse(code = 200, message = "News page was found")
     public ResponseEntity<Page<News>> getPage(@PageableDefault Pageable page, NewsFilterDto filterDto) {
         Page<News> response = newsService.findAll(page, filterDto);
         return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
@@ -84,6 +101,11 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/published")
+    @ApiOperation(value = "Method returns published news")
+    @ApiResponses( value = {
+            @ApiResponse(code = 204, message = "Published news not found"),
+            @ApiResponse(code = 200, message = "Published news was found")
+    })
     public ResponseEntity<List<News>> getPublishedNews() {
         try {
             List<News> publishedNews = newsService.getAllPublished();
@@ -99,6 +121,11 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/unpublished")
+    @ApiOperation(value = "Method returns unpublished news")
+    @ApiResponses( value = {
+            @ApiResponse(code = 204, message = "Unpublished news not found"),
+            @ApiResponse(code = 200, message = "Unpublished news was found")
+    })
     public ResponseEntity<List<News>> getUnpublishedNews() {
         try {
             List<News> unpublishedNews = newsService.getAllUnpublished();
@@ -114,6 +141,11 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/archived")
+    @ApiOperation(value = "Method returns archived news")
+    @ApiResponses( value = {
+            @ApiResponse(code = 204, message = "archived news not found"),
+            @ApiResponse(code = 200, message = "archived news was found")
+    })
     public ResponseEntity<List<News>> getArchivedNews() {
         try {
             List<News> archived = newsService.getAllArchivedNews();
@@ -130,6 +162,8 @@ public class ManagerNewsRestController {
      * @return возвращает заполненную сущность клиенту
      */
     @PostMapping
+    @ApiOperation(value = "Method to save news in database")
+    @ApiResponse(code = 200, message = "News  saved in db")
     public ResponseEntity<News> newsPost(@RequestBody News news) {
         newsService.save(news);
         return ResponseEntity.ok(news);
@@ -142,6 +176,8 @@ public class ManagerNewsRestController {
      * @return возвращает обновленную сущность клиенту
      */
     @PutMapping
+    @ApiOperation(value = "Method to update news in database")
+    @ApiResponse(code = 200, message = "News updated in db")
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
         newsService.update(news);
         return ResponseEntity.ok(news);
@@ -154,6 +190,11 @@ public class ManagerNewsRestController {
      * @return возвращает идентификатор удаленной сущности клиенту
      */
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Method to delete news from database")
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "News deleted"),
+            @ApiResponse(code = 404, message = "News was not found")
+    })
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
         try {
             newsService.deleteById(id);

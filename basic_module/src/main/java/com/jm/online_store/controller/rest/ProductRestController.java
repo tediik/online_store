@@ -6,6 +6,9 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,7 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/products")
+@Api(description = "Rest controller for product page")
 public class ProductRestController {
 
     private final ProductService productService;
@@ -40,6 +44,8 @@ public class ProductRestController {
      * @return сущность ProductDto, если продукт с таким id существует
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "Get product by ID")
+    @ApiResponse(code = 404, message = "Product was not found")
     public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
         ResponseEntity<ProductDto>[] answer = new ResponseEntity[1];
         User user = userService.getCurrentLoggedInUser();
@@ -55,6 +61,7 @@ public class ProductRestController {
      * @return map содержащая значения по изменению цены на товар.
      */
     @PostMapping("/productChangeMonitor")
+    @ApiOperation(value = "Get map with key: date of price changing; value: price")
     public ResponseEntity<Map> priceMonitor(@RequestBody Long id) {
         return ResponseEntity.ok(productService.getProductPriceChange(id));
     }
@@ -66,6 +73,7 @@ public class ProductRestController {
      * @param id     id товара
      */
     @PostMapping("/rating")
+    @ApiOperation(value = "Get new rating of product")
     public ResponseEntity getNewRating(@RequestParam(value = "rating", required = false) float rating,
                                        @RequestParam(value = "id", required = false) Long id) {
         User user = userService.getCurrentLoggedInUser();
@@ -80,6 +88,7 @@ public class ProductRestController {
      * if there are no such products returns notFound
      */
     @GetMapping("/searchByName/{searchString}")
+    @ApiOperation(value = "Get product by name")
     public ResponseEntity<List<Product>> findProductsByName(@PathVariable String searchString) {
         return ResponseEntity.ok(productService.findProductsByNameContains(searchString));
     }
@@ -92,6 +101,7 @@ public class ProductRestController {
      * if there are no such products returns notFound
      */
     @GetMapping("/searchByDescription/{searchString}")
+    @ApiOperation(value = "Get product by description")
     public ResponseEntity<List<Product>> findProductsByDescription(@PathVariable String searchString) {
         return ResponseEntity.ok(productService.findProductsByDescriptionContains(searchString));
     }
@@ -103,6 +113,8 @@ public class ProductRestController {
      * @return ResponseEntity<String> со статусом ответа
      */
     @PostMapping("/subscribe")
+    @ApiOperation(value = "Add a new subscriber by email")
+    @ApiResponse(code = 208, message = "Subscriber is already exists")
     public ResponseEntity<String> addNewSubscriber(@RequestBody ObjectNode body) {
         if (productService.addNewSubscriber(body)) {
             return ResponseEntity.ok().build();

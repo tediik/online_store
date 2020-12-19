@@ -4,6 +4,8 @@ import com.jm.online_store.model.ReportComment;
 import com.jm.online_store.model.dto.ReportCommentDto;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReportCommentService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/moderator")
 @AllArgsConstructor
+@Api(description = "Rest controller for moderator")
 public class ModeratorRestController {
     private final CommentService commentService;
     private final ReportCommentService reportCommentService;
@@ -35,6 +38,7 @@ public class ModeratorRestController {
      */
     @MessageMapping("/report")
     @SendTo("/table/report")
+    @ApiOperation(value = "Get list of all reports on comments with WebSocket")
     public List<ReportCommentDto> allReportComments() {
         return reportCommentService.findAllReportComments().stream()
                 .map(ReportCommentDto::entityToDto)
@@ -47,6 +51,7 @@ public class ModeratorRestController {
      * @param reportCommentDto
      */
     @PostMapping
+    @ApiOperation(value = "Add a new report on comment")
     public ResponseEntity<ReportCommentDto> addReportComment(@RequestBody ReportCommentDto reportCommentDto) {
         ReportComment reportComment = ReportCommentDto.DtoToEntity(reportCommentDto);
         reportComment.setComment(commentService.findById(reportCommentDto.getCommentId()));
@@ -60,6 +65,7 @@ public class ModeratorRestController {
      * @param id жалобы.
      */
     @DeleteMapping("/leave/{id}")
+    @ApiOperation(value = "Delete report on comment by report ID")
     public ResponseEntity<ReportComment> deleteReport(@PathVariable("id") Long id) {
         reportCommentService.deleteReport(id);
         return ResponseEntity.ok().build();
@@ -71,6 +77,7 @@ public class ModeratorRestController {
      * @param id комментария.
      */
     @DeleteMapping("/delete/{id}")
+    @ApiOperation(value = "Delete report and comment  by comment ID")
     public ResponseEntity<ReportComment> deleteReportAndComment(@PathVariable("id") Long id) {
         reportCommentService.deleteReportAndComment(id);
         return ResponseEntity.ok().build();

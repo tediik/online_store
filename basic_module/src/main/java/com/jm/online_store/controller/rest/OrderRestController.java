@@ -5,6 +5,8 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,7 @@ import java.util.Set;
 @AllArgsConstructor
 @RequestMapping("/customer")
 @RestController
+@Api(description = "Rest controller for orders")
 public class OrderRestController {
     private final UserService userService;
     private final OrderService orderService;
@@ -31,6 +34,7 @@ public class OrderRestController {
      * @return список заказов.
      */
     @GetMapping("/getAllOrders")
+    @ApiOperation(value = "Get list of all orders")
     public ResponseEntity<Set<Order>> getAllOrders() {
         User autorityUser = userService.getCurrentLoggedInUser();
         Set<Order> orders = autorityUser.getOrders();
@@ -42,6 +46,7 @@ public class OrderRestController {
      * @return список заказов.
      */
     @GetMapping("/getIncartsOrders")
+    @ApiOperation(value = "Get list of all incarts orders")
     public ResponseEntity<List<Order>> getIncartsOrders() {
         User autorityUser = userService.getCurrentLoggedInUser();
         List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.INCARTS);
@@ -53,6 +58,7 @@ public class OrderRestController {
      * @return список заказов.
      */
     @GetMapping("/getCompletedOrders")
+    @ApiOperation(value = "Get list of all complete orders")
     public ResponseEntity<List<Order>> getCompletedOrders() {
         User autorityUser = userService.getCurrentLoggedInUser();
         List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.COMPLETED);
@@ -64,6 +70,7 @@ public class OrderRestController {
      * @return список заказов.
      */
     @GetMapping("/getCanceledOrders")
+    @ApiOperation(value = "Get list of all cancelled orders")
     public ResponseEntity<List<Order>> getCanceledOrders() {
         User autorityUser = userService.getCurrentLoggedInUser();
         List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.CANCELED);
@@ -77,6 +84,7 @@ public class OrderRestController {
      * @return данные заказа по DTO
      */
     @PostMapping("/getOrderById")
+    @ApiOperation(value = "Get data of order by order ID")
     public ResponseEntity<OrderDTO> getOrderById(@RequestBody Long id) {
         OrderDTO order = orderService.findOrderDTOById(id);
         return ResponseEntity.ok(order);
