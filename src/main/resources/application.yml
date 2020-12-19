@@ -5,9 +5,9 @@ spring:
       table-name: SPRING_SESSION
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/online_store?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
-    username: root
-    password: root
+    url: mysql://b311bc0169367b:d7795f19@eu-cdbr-west-03.cleardb.net/heroku_ed1cc853372aece?reconnect=true?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
+    username: b311bc0169367b
+    password: d7795f19
   jpa:
     hibernate:
       ddl-auto: update
