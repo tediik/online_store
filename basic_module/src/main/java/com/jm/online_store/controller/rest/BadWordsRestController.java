@@ -130,11 +130,11 @@ public class BadWordsRestController {
         if (!isEnabled) {
             status = "false";
         }
-        CommonSettings setYes = CommonSettings.builder()
+        CommonSettings setStatus = CommonSettings.builder()
                 .settingName("bad_words_enabled")
                 .textValue(status)
                 .build();
-        commonSettingsService.updateTextValue(setYes);
+        commonSettingsService.updateTextValue(setStatus);
     }
 
     /**
