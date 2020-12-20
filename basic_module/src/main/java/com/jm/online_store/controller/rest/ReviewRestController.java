@@ -41,7 +41,7 @@ public class ReviewRestController {
      * Fetches an arrayList of all product Review by productId and returns JSON representation response
      *
      * @param productId
-     * @return ResponseEntity<List <ReviewDto>>
+     * @return ResponseEntity<List<ReviewDto>>
      */
     @GetMapping("/{productId}")
     public ResponseEntity<List<ReviewDto>> findAll(@PathVariable Long productId) {
@@ -55,7 +55,7 @@ public class ReviewRestController {
      * Fetches an arrayList of all review comments by reviewId and returns JSON representation response
      *
      * @param reviewId
-     * @return ResponseEntity<List < CommentDto>>
+     * @return ResponseEntity<List<CommentDto>>
      */
     @GetMapping("/comments/{reviewId}")
     public ResponseEntity<List<CommentDto>> findAllComments(@PathVariable Long reviewId) {
@@ -66,10 +66,8 @@ public class ReviewRestController {
     }
 
     /**
-     * Receives productReview requestBody and passes it to Service layer for processing
+     * Receives productReview and passes it to Service layer for processing
      * previously, searches for forbidden words
-     * Returns JSON representation
-     *
      * @param review
      * @return ResponseEntity<productReview> or ResponseEntity<List<String>>
      */
