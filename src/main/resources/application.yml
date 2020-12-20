@@ -4,12 +4,13 @@ spring:
       initialize-schema: always
       table-name: SPRING_SESSION
   datasource:
-    url: jdbc:mysql://b5c1bad76ee27f:044a83c3@eu-cdbr-west-03.cleardb.net/heroku_defdf483ba84414?reconnect=true?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
-    username: b5c1bad76ee27f
-    password: 044a83c3
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://z0f80h07xf0512dn:rlrm1b2pvzxnlaw6@n2o93bb1bwmn0zle.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/lzkk1byanx7dpvqi?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
+    username: z0f80h07xf0512dn
+    password: rlrm1b2pvzxnlaw6
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
