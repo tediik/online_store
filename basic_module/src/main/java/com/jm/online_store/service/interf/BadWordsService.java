@@ -22,4 +22,6 @@ public interface BadWordsService {
     void importWord(String words);
 
     List<String> checkComment(String checkText);
+
+    boolean checkEnabledCheckText();
 }

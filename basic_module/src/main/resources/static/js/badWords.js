@@ -42,10 +42,17 @@ function renderBadWordsTable(wordsArray) {
                     <td>${word.badword}</td>
                     <td>${word.enabled}</td>           
                     <td>
-                        <button data-product-id="${word.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#wordModalWindow">Edit</button>
+                        <button data-product-id="${word.id}" type="button"
+                            class="btn btn-success edit-button" data-toggle="modal"
+                            data-target="#wordModalWindow">Edit
+                        </button>
                     </td>
                     <td>
-                        <button data-product-id="${word.id}" type="button" id="action-button-${word.id}" class="btn btn-danger delete-product action" data-target="#wordModalWindow" data-toggle="modal" data-toggle-id="delete">Delete</button>
+                        <button data-product-id="${word.id}" type="button"
+                            id="action-button-${word.id}" class="btn btn-danger delete-product action"
+                            data-target="#wordModalWindow" data-toggle="modal"
+                            data-toggle-id="delete">Delete
+                        </button>
                     </td>
                 </tr>
                 `;

@@ -62,7 +62,7 @@ public class BadWordsRestController {
      * Если слово пустое дает ответ EmptyBadWord. Если слово есть дает ответ duplicatedWordName
      * Иначе возвращает статуст запроса
      *
-     * @param badWords
+     * @param badWords {@link BadWords} принимает сущность BadWords
      * @return ResponseEntity<BadWords>
      */
     @PostMapping("/add")
@@ -86,7 +86,7 @@ public class BadWordsRestController {
      * Возвращает статуст запроса
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
      *
-     * @param badWords
+     * @param badWords {@link BadWords} принимает сущность BadWords
      * @return ResponseEntity<BadWords>
      */
     @PutMapping("/update")
@@ -101,7 +101,7 @@ public class BadWordsRestController {
      * Возвращает статус запроса
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
      *
-     * @param id
+     * @param id {@link Long} принимает id BadWords для удаления
      * @return ResponseEntity<Long>
      */
     @DeleteMapping("/delete/{id}")
@@ -136,14 +136,14 @@ public class BadWordsRestController {
 
     /**
      * Метод сохраняет текущей стаутса фильтра (true, false)
-     * Примает стутс в формате @RequestBody Boolean saveSetting
+     * Примает стутс в формате @RequestBody Boolean isEnabled
      * Сохраняет в CommonSettings парамаетр bad_words_enabled (true, false)
      *
-     * @param saveSetting
+     * @param isEnabled {@link Boolean} включен или нет фильтр
      */
     @PostMapping(value = "/status")
-    public void setSetting(@RequestBody Boolean saveSetting) {
-        if (saveSetting) {
+    public void setSetting(@RequestBody Boolean isEnabled) {
+        if (isEnabled) {
             CommonSettings setYes = CommonSettings.builder()
                     .settingName("bad_words_enabled")
                     .textValue("true")
@@ -166,7 +166,7 @@ public class BadWordsRestController {
      * Формат ввода слов в input через запятую. Слово должно быть длинее 1 символа.
      * Если слово уже есть в базе, пропускает.
      *
-     * @param text
+     * @param text {@link String} принимает текст
      * @return ResponseEntity
      */
     @PostMapping(value = "/import")

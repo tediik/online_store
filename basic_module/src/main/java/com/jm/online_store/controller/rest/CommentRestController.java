@@ -1,7 +1,6 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Comment;
-import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CommentDto;
@@ -10,7 +9,6 @@ import com.jm.online_store.model.dto.ReviewForCommentDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommentService;
-import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.ReviewService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,14 +37,13 @@ public class CommentRestController {
     private final CommentService commentService;
     private final ReviewService reviewService;
     private final ProductRepository productRepository;
-    private final CommonSettingsService commonSettingsService;
     private final BadWordsService badWordsService;
 
     /**
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
      *
      * @param productId
-     * @return ResponseEntity<List < CommentDto>>
+     * @return ResponseEntity<List<CommentDto>>
      */
     @GetMapping("/{productId}")
     public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
@@ -68,12 +65,12 @@ public class CommentRestController {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
         if (!bindingResult.hasErrors()) {
             String checkText = comment.getContent();
-            if (!checkEnabledCheckText()) {
+            if (!badWordsService.checkEnabledCheckText()) {
                 Comment savedComment = commentService.addComment(comment);
                 productFromDb.setComments(List.of(savedComment));
                 return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
             } else {
-                List<String> resultText = checkText(checkText);
+                List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
                     Comment savedComment = commentService.addComment(comment);
                     productFromDb.setComments(List.of(savedComment));
@@ -104,16 +101,15 @@ public class CommentRestController {
         Review reviewFromDb = reviewService.findById(reviewId).get();
         if (!bindingResult.hasErrors()) {
             String checkText = comment.getContent();
-            if (!checkEnabledCheckText()) {
-                comment.setReview(reviewFromDb);
+            comment.setReview(reviewFromDb);
+            if (!badWordsService.checkEnabledCheckText()) {
                 Comment savedComment = commentService.addComment(comment);
                 reviewFromDb.setComments(List.of(savedComment));
                 CommentDto.commentEntityToDto(comment);
                 return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
             } else {
-                List<String> resultText = checkText(checkText);
+                List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
-                    comment.setReview(reviewFromDb);
                     Comment savedComment = commentService.addComment(comment);
                     reviewFromDb.setComments(List.of(savedComment));
                     CommentDto.commentEntityToDto(comment);
@@ -134,15 +130,5 @@ public class CommentRestController {
         return bindingResult.getAllErrors().stream()
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
-    }
-
-    private boolean checkEnabledCheckText() {
-        CommonSettings templateBody = commonSettingsService.getSettingByName("bad_words_enabled");
-        if (templateBody.getTextValue().equals("false")) return false;
-        return true;
-    }
-
-    private List<String> checkText(String checkText) {
-        return badWordsService.checkComment(checkText);
     }
 }

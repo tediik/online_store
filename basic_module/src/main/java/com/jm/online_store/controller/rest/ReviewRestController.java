@@ -9,7 +9,6 @@ import com.jm.online_store.model.dto.ReviewDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommentService;
-import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,14 +35,13 @@ public class ReviewRestController {
     private final ProductRepository productRepository;
     private final CommentService commentService;
     private final ReviewService reviewService;
-    private final CommonSettingsService commonSettingsService;
     private final BadWordsService badWordsService;
 
     /**
      * Fetches an arrayList of all product Review by productId and returns JSON representation response
      *
      * @param productId
-     * @return ResponseEntity<List < ReviewDto>>
+     * @return ResponseEntity<List <ReviewDto>>
      */
     @GetMapping("/{productId}")
     public ResponseEntity<List<ReviewDto>> findAll(@PathVariable Long productId) {
@@ -80,13 +78,12 @@ public class ReviewRestController {
         Product productFromDb = productRepository.findById(review.getProductId()).get();
         if (!bindingResult.hasErrors()) {
             String checkText = review.getContent();
-            CommonSettings templateBody = commonSettingsService.getSettingByName("bad_words_enabled");
-            if (!checkEnabledCheckText()) {
+            if (!badWordsService.checkEnabledCheckText()) {
                 Review savedReview = reviewService.addReview(review);
                 productFromDb.setReviews(List.of(savedReview));
                 return ResponseEntity.ok().body(ProductForReviewDto.productToDto(productFromDb));
             } else {
-                List<String> resultText = checkText(checkText);
+                List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
                     Review savedReview = reviewService.addReview(review);
                     productFromDb.setReviews(List.of(savedReview));
@@ -106,13 +103,4 @@ public class ReviewRestController {
                 .collect(Collectors.joining(", "));
     }
 
-    private boolean checkEnabledCheckText() {
-        CommonSettings templateBody = commonSettingsService.getSettingByName("bad_words_enabled");
-        if (templateBody.getTextValue().equals("false")) return false;
-        return true;
-    }
-
-    private List<String> checkText(String checkText) {
-        return badWordsService.checkComment(checkText);
-    }
 }
