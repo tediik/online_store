@@ -33,10 +33,8 @@ public class BadWordsRestController {
     private final CommonSettingsService commonSettingsService;
 
     /**
-     * Метод возвращает все стоп-слов, включая неактивные
-     * в формте ResponseEntity<List<BadWords>> {@link ResponseEntity}
-     *
-     * @return ResponseEntity<List < BadWords>>
+     * Метод возвращает все стоп-слова, включая неактивные
+     * @return ResponseEntity<List<BadWords>> список стоп-слов
      */
     @GetMapping(value = "/all")
     public ResponseEntity<List<BadWords>> findAll() {
@@ -44,12 +42,11 @@ public class BadWordsRestController {
     }
 
     /**
-     * Метод принимает id стоп-слова @PathVariable("id") Long id
-     * И если найдено, возвращает стоп-слово ResponseEntity<BadWords> {@link ResponseEntity}
-     * Может выбросить исключение BadWordsNotFoundException если слово не найдено
-     *
-     * @param id
-     * @return ResponseEntity<BadWords>
+     * Метод принимает id стоп-слова
+     * Если стоп-слово найдено, возвращает стоп-слово BadWords
+     * Может выбросить исключение BadWordsNotFoundException, если слово не найдено
+     * @param id идентификатор стоп-слова
+     * @return ResponseEntity<BadWords> стоп-слово
      */
     @GetMapping("/{id}")
     public ResponseEntity<BadWords> getWordById(@PathVariable("id") Long id) {
@@ -57,13 +54,11 @@ public class BadWordsRestController {
     }
 
     /**
-     * Метод для добавление нового стоп-слова
-     * Принимает @RequestBody BadWords badWords
-     * Если слово пустое дает ответ EmptyBadWord. Если слово есть дает ответ duplicatedWordName
-     * Иначе возвращает статуст запроса
-     *
-     * @param badWords {@link BadWords} принимает сущность BadWords
-     * @return ResponseEntity<BadWords>
+     * Метод для добавления нового стоп-слова
+     * Если слово пустое дает ответ EmptyBadWord. Если слово есть, возвращает ответ duplicatedWordName, 
+     * иначе возвращает статус запроса
+     * @param badWords {@link BadWords} сущность BadWords стоп-слово
+     * @return ResponseEntity<BadWords> 
      */
     @PostMapping("/add")
     public ResponseEntity<BadWords> addWord(@RequestBody BadWords badWords) {
@@ -82,12 +77,9 @@ public class BadWordsRestController {
 
     /**
      * Метод для изменение стоп слова.
-     * Принимает стоп-слово @RequestBody BadWords badWords
-     * Возвращает статуст запроса
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
-     *
-     * @param badWords {@link BadWords} принимает сущность BadWords
-     * @return ResponseEntity<BadWords>
+     * @param badWords {@link BadWords} BadWords стоп-слово
+     * @return ResponseEntity<BadWords> стоп-слово
      */
     @PutMapping("/update")
     public ResponseEntity<BadWords> updateWord(@RequestBody BadWords badWords) {
@@ -96,12 +88,9 @@ public class BadWordsRestController {
     }
 
     /**
-     * Метод для удаление стоп-слова
-     * Принимает id слова для удаления @PathVariable Long id
-     * Возвращает статус запроса
+     * Метод удаления стоп-слова
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
-     *
-     * @param id {@link Long} принимает id BadWords для удаления
+     * @param id {@link Long} id BadWords стоп-слова для удаления
      * @return ResponseEntity<Long>
      */
     @DeleteMapping("/delete/{id}")
@@ -112,10 +101,8 @@ public class BadWordsRestController {
 
     /**
      * Метод возвращает список только активных стоп-слов для фильтра
-     * Формат возврата ResponseEntity<List<BadWords>>
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
-     *
-     * @return ResponseEntity<List < BadWords>>
+     * @return ResponseEntity<List<BadWords>> список активных стоп-слов для фильтра
      */
     @GetMapping(value = "/get-active")
     public ResponseEntity<List<BadWords>> findAllActive() {
@@ -123,9 +110,7 @@ public class BadWordsRestController {
     }
 
     /**
-     * Метод для получение текущего статуса фильтра (true, false)
-     * Возвращает ResponseEntity<CommonSettings>
-     *
+     * Метод для получения текущего статуса фильтра (true, false)
      * @return ResponseEntity<CommonSettings>
      */
     @GetMapping(value = "/status")
@@ -135,10 +120,8 @@ public class BadWordsRestController {
     }
 
     /**
-     * Метод сохраняет текущей стаутса фильтра (true, false)
-     * Примает стутс в формате @RequestBody Boolean isEnabled
-     * Сохраняет в CommonSettings парамаетр bad_words_enabled (true, false)
-     *
+     * Метод сохраняет текущий статус фильтра (true, false)
+     * Сохраняет в CommonSettings параметр bad_words_enabled (true, false)
      * @param isEnabled {@link Boolean} включен или нет фильтр
      */
     @PostMapping(value = "/status")
@@ -159,15 +142,13 @@ public class BadWordsRestController {
     }
 
     /**
-     * Метод для импорта стоп-слов в кабинете админа.
-     * Принимает @RequestBody String text
-     * Фозвращает статус запроса
-     * Проверка слов в методе importWord
-     * Формат ввода слов в input через запятую. Слово должно быть длинее 1 символа.
+     * Метод для импорта стоп-слов в кабинете админа из переданного текста.
+     * Проверка слов в методе importWord()
+     * Формат ввода слов - через запятую. Слово должно быть длинее 1 символа.
      * Если слово уже есть в базе, пропускает.
      *
-     * @param text {@link String} принимает текст
-     * @return ResponseEntity
+     * @param text {@link String} текст со стоп-словами
+     * @return ResponseEntity статус ответа
      */
     @PostMapping(value = "/import")
     public ResponseEntity importWord(@RequestBody String text) {
@@ -182,7 +163,6 @@ public class BadWordsRestController {
     /**
      * Exception handler method that catches all {@link BadWordsNotFoundException}
      * in current class and return ResponseEntity with not found status
-     *
      * @return - {@link ResponseEntity<String>}
      */
     @ExceptionHandler(BadWordsNotFoundException.class)
