@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>News Management</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--date picker-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Подключаем библиотеку summernote bs-4 -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<header th:insert="blocks/cabinetHeader :: header"></header>
+<div class="container-fluid" style="padding-right: 0px; padding-left: 0px">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/manager">Кабинет менеджера</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Все новости</li>
+        </ol>
+    </nav>
+    <div class="row content">
+        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical"
+                 id="leftNavBar">
+                <button class="btn btn-outline-primary"
+                        data-toggle="modal" data-target="#editNewsModal" data-toggle-id="addNewNews">Добавить новость
+                </button>
+            </div>
+        </div>
+        <div class="col-sm-8 tab-pane">
+            <br>
+            <h1 class="text-center">Управление новостями</h1>
+            <div id="infoMessageMainPage">
+                <!--place where info message appears-->
+            </div>
+            <ul class="nav nav-tabs" id="upperNavTab">
+                <!-- Первая вкладка (активная) -->
+                <li class="nav-item">
+                    <a class="nav-link active" id="nav-link_allNews" data-toggle="tab" data-toggle-id="allNews"
+                       href="#tab_all_news">Все</a>
+                </li>
+                <!-- Вторая вкладка -->
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-link_publishedNews" data-toggle="tab" href="#tab_published_news" data-toggle-id="publishedNews">Опубликованные</a>
+                </li>
+                <!-- Третья вкладка -->
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-link_unpublishedNews" data-toggle="tab" href="#tab_unpublished_news" data-toggle-id="unpublishedNews">Не
+                        опубликованные</a>
+                </li>
+                <!-- Четвертая вкладка -->
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-link_archivedNews" data-toggle="tab" href="#tab_archived_news" data-toggle-id="archivedNews">Архивные</a>
+                </li>
+            </ul>
+            <!-- Блоки с контентом -->
+            <div class="tab-content mb-5" id="newsTabContent">
+                <!-- Первый блок (он отображается по умолчанию, т.к. имеет классы show и active) -->
+                <div class="tab-pane fade show active" id="tab_all_news">
+                    <div id="allNews">
+                    </div>
+                </div>
+                <!-- Второй блок -->
+                <div class="tab-pane fade" id="tab_published_news">
+                    <div id="publishedNews">
+                    </div>
+                </div>
+                <!-- Третий блок -->
+                <div class="tab-pane fade" id="tab_unpublished_news">
+                    <div id="unpublishedNews">
+                    </div>
+                </div>
+                <!--Четвертый блок-->
+                <div class="tab-pane fade" id="tab_archived_news">
+                    <div id="archivedNews">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---------------------- News Modal window ------------------->
+<div class="modal fade" id="editNewsModal" data-backdrop="static" tabindex="-1"
+     role="dialog" aria-labelledby="editNewsFormModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalWindowTitle">Редактировать новость</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modal-alert">
+                <!--alert messages-->
+            </div>
+            <form id="editNewsFormModal">
+                <div class="modal-body">
+                    <div class="container-fluid col-sm-12">
+                        <form enctype="multipart/form-data" id="editModalNews" method="post">
+                            <div class="form-group">
+                                <div class="text-center" id="idModalDiv">
+                                    <label for="idNewsUpdate"
+                                           class="col-form-label col-sm-12 text-center">Id</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="idNewsUpdate" readonly>
+                                </div>
+                                <label for="titleNewsUpdate">Заголовок</label>
+                                <input type="text" id="titleNewsUpdate" name="title" placeholder="Введите название"
+                                       class="form-control" required>
+                                <br>
+                                <label for="anonsNewsUpdate">Анонс</label>
+                                <input type="text" id="anonsNewsUpdate" name="anons"
+                                       placeholder="Введите краткое описание" class="form-control" required>
+                                <br>
+                                <label for="fullTextUpdate">Полный текст</label>
+                                <textarea id="fullTextUpdate" name="fullText" placeholder="Введите полный текст"
+                                          class="form-control" required></textarea>
+                                <br>
+                                <div class="form-check" id="archiveCheckboxDiv">
+                                    <input class="form-check-input" type="checkbox" id="archiveCheckbox">
+                                    <label class="form-check-label" for="archiveCheckbox" id="archiveCheckboxLabel">
+                                        Поместить новость в архив?
+                                    </label>
+                                </div>
+                                <hr>
+                                <div class="col-xs-10" id="datePublishInputDiv">
+                                    <label for="postingDateUpdate">Введите дату публикации:</label>
+                                    <input class="form-control" type="date" id="postingDateUpdate" style="width: 25%">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </form>
+            <div id="modalFooterEditSave" class="modal-footer actions">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal" data-toggle-id="close">
+                    Закрыть
+                </button>
+                <button id="editSave" data-toggle-id="save" class="btn btn-primary">
+                    Обновить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!---------------------- End News Modal window ------------------->
+
+<!--bootstrap scripts-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<!--moment-->
+<script src="/static/js/moment.js"></script>
+<script src="../static/js/searchButton.js"></script>
+<!--summernote-->
+<script src="/static/js/summernote.js"></script>
+<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
+<link href="/static/css/summernote.css" rel="stylesheet">
+<script src="/static/js/textRedactor.js"></script>
+<script src="/static/js/newsManagementRenderAndFunctions.js"></script>
+</body>
+</html>

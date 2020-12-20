@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title>Basket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/css/feedback.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+           crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/css/customer.css">
+    <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.fias.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <!-- CSS fot toaster-->
+    <link rel="stylesheet" href="/static/css/toastr.min.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/static/js/jquery/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="/static/js/toastr/toastr.min.js"></script>
+    <!--    summernote CSS-->
+     <link href="/static/css/summernote.css" rel="stylesheet">
+    <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+    <!-- Optional JavaScript -->
+    <script src="../static/js/orderPlacement.js"></script>
+    <script src="../static/js/profilePicture.js"></script>
+    <script src="../static/js/busket.js"></script>
+
+</head>
+<body>
+<header th:insert="blocks/cabinetHeader :: header"></header>
+
+<div class="container-fluid">
+    <div class="row min-vh-100">
+
+        <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
+        <div class="col-md-2">
+            <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+                <a class="btn btn-outline-primary mt-2 nav-link active" id="basketGoods-tab" data-toggle="pill" href="#basketGoods"
+                   role="tab" aria-controls="basketGoods" aria-selected="true"
+                   onclick="fillBasket()">Корзина</a>
+
+                <a class="btn btn-outline-primary mt-2" id="profile-page" href="/customer"
+                >Кабинет покупателя</a>
+
+            </div>
+        </div>
+        <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
+
+        <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
+        <div class="col-md-10" style="background: #edeef0">
+            <div class="tab-content" id="v-pills-tabContent">
+
+                <!-- ВКЛАДКА КОРЗИНА  -->
+                <div class="tab-pane active" id="basketGoods" role="tabpanel" aria-labelledby="basketGoods-tab">
+                    <div id="order-div"></div>
+                    <h3>Корзина</h3>
+                    <div class="row min-vh-100">
+                        <div class="col-md-9">
+                            <!--                            сама корзина-->
+                            <table class="table table-striped" id="busketTable">
+                                <tbody id="busketList">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-3">
+                            <tr>
+                                <span>Общее количество товара:</span>
+                                <h3 id="countBasketGoods"></h3>
+                            </tr>
+                            <tr>
+                                <span>Стоимость заказа:</span>
+                                <h3 id="sumBasketGoods"></h3>
+                            </tr>
+                            <div id="buttonBuyInBasket">
+                                <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
+                                        data-target="#orderModalWindow" onclick="userAdresses()">Купить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="orderModalWindow" tabindex="-1" role="dialog"
+                         aria-labelledby="EditUserModalWindows"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="orderAdress">Адрес доставки</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="alert-modal-div">
+                                </div>
+                                <div class="modal-body" id="modalBody">
+                                    <div class="raw">
+                                        <label style="font-size: medium; vertical-align: unset">
+                                            <input class="checkbox" type="checkbox" onchange="addressChange()"/>
+                                            Самовывоз
+                                        </label>
+
+                                        <div align="right">
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <div id="shopAddress" hidden="true">
+                                            </div>
+                                            <div id="userAddresses">
+                                            </div>
+                                            <div class="address" id="addressId" hidden="true">
+                                                <div class="h3">Введите адрес доставки</div>
+                                                <h6>
+                                                    Поля помеченные *
+                                                    обязательны к заполнению.
+                                                </h6>
+                                                <form id="addressForm" class="js-form-address">
+                                                    <div class="field">
+                                                        <label>Регион*</label>
+                                                        <input type="text" name="region">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Район</label>
+                                                        <input type="text" name="district">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Город/населённый пункт*</label>
+                                                        <input type="text" name="city">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Улица*</label>
+                                                        <input type="text" name="street">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Дом*</label>
+                                                        <input type="text" name="building">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Квартира(необязательно)</label>
+                                                        <input type="text" name="flat">
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Индекс</label>
+                                                        <input type="text" name="zip">
+                                                    </div>
+                                                    <div class="tooltip" style="display: none;"><b></b><span></span>
+                                                    </div>
+                                                </form>
+                                                <button id="clear-button" type="button" class="btn btn-secondary"
+                                                        onclick="clearFields()">Отчистить поля
+                                                </button>
+                                                <button id="add-adress-button" type="button" class="btn btn-success"
+                                                        onclick="addAddress()">Добавить адрес
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="dismissButton" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">
+                                        Закрыть
+                                    </button>
+                                    <button style="float: right" id="acceptButton" type="button"
+                                            class="btn btn-success edit-button"
+                                            onclick="confirmOrder()">
+                                        Оформить заказ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ВКЛАДКА КОРЗИНА  -->
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:insert="blocks/footer :: footer"></footer>
+<!--summernote-->
+<script src="../static/js/searchButton.js"></script>
+</body>
+</html>
