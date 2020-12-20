@@ -1,6 +1,7 @@
 package com.jm.online_store.config;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
+import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Address;
@@ -104,12 +105,14 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   // @PostConstruct    //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    //@PostConstruct
+    //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
         characteristicsInit();
         productInit();
+        categoryCharacteristicsInit();
         productCharacteristicsInit();
         ordersInit();
         stockInit();
@@ -722,32 +725,6 @@ public class DataInitializer {
         Description description20 = new Description("L856XZ11564632", "LG", 1, "265x756x184", "white", 7.4, "Кондиционер LG P09EP2 используется для установки оптимальной температуры в помещении дома или офиса площадью 20 м²");
         Description description21 = new Description("L014ZZ10018974", "LG", 1, "302x837x189; 483x717x230", "white", 8.7, "Модель LG Mega Plus P12EP1 будет оптимальна для установки в помещении площадью 35 м²");
 
-        List<Characteristic> smartphones = new ArrayList<>();
-        smartphones.add(characteristicService.findCharacteristicById(1L).get());
-        smartphones.add(characteristicService.findCharacteristicById(2L).get());
-        smartphones.add(characteristicService.findCharacteristicById(3L).get());
-        smartphones.add(characteristicService.findCharacteristicById(4L).get());
-        smartphones.add(characteristicService.findCharacteristicById(5L).get());
-        smartphones.add(characteristicService.findCharacteristicById(6L).get());
-        smartphones.add(characteristicService.findCharacteristicById(7L).get());
-        smartphones.add(characteristicService.findCharacteristicById(8L).get());
-        smartphones.add(characteristicService.findCharacteristicById(9L).get());
-        smartphones.add(characteristicService.findCharacteristicById(10L).get());
-        smartphones.add(characteristicService.findCharacteristicById(11L).get());
-
-        List<Characteristic> laptops = new ArrayList<>();
-        laptops.add(characteristicService.findCharacteristicById(1L).get());
-        laptops.add(characteristicService.findCharacteristicById(2L).get());
-        laptops.add(characteristicService.findCharacteristicById(3L).get());
-        laptops.add(characteristicService.findCharacteristicById(4L).get());
-        laptops.add(characteristicService.findCharacteristicById(5L).get());
-        laptops.add(characteristicService.findCharacteristicById(6L).get());
-        laptops.add(characteristicService.findCharacteristicById(10L).get());
-        laptops.add(characteristicService.findCharacteristicById(11L).get());
-        laptops.add(characteristicService.findCharacteristicById(12L).get());
-        laptops.add(characteristicService.findCharacteristicById(13L).get());
-        laptops.add(characteristicService.findCharacteristicById(15L).get());
-
         product1.setDescriptions(description1);
         product2.setDescriptions(description2);
         product3.setDescriptions(description3);
@@ -770,14 +747,6 @@ public class DataInitializer {
         product18.setDescriptions(description20);
         product18.setDescriptions(description21);
 
-        category11.setCharacteristics(smartphones);
-        category14.setCharacteristics(smartphones);
-        category28.setCharacteristics(laptops);
-        category29.setCharacteristics(laptops);
-        category27.setCharacteristics(laptops);
-        category26.setCharacteristics(laptops);
-        category10.setCharacteristics(laptops);
-
         category26.setProducts(Arrays.asList(product1, product2, product3));
         category28.setProducts(Arrays.asList(product4, product5, product6));
         category11.setProducts(Arrays.asList(product7, product8, product9));
@@ -791,6 +760,65 @@ public class DataInitializer {
                 category8, category9, category10, category11, category12, category13, category14, category15, category16,
                 category17, category18, category19, category20, category21, category22, category23, category24, category25,
                 category26, category27, category28, category29));
+    }
+
+    /**
+     * Метод первичного заполнения харакетристик категорий.
+     */
+    private void categoryCharacteristicsInit() {
+        List<Characteristic> smartphones = new ArrayList<>();
+        smartphones.add(characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(7L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+
+        List<Characteristic> laptops = new ArrayList<>();
+        laptops.add(characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(13L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(15L).orElseThrow(CharacteristicNotFoundException::new));
+
+        Categories categories1 = categoriesService.getCategoryById(11L).orElseThrow(CategoriesNotFoundException::new);
+        categories1.setCharacteristics(smartphones);
+        categoriesService.saveCategory(categories1);
+
+        Categories categories2 = categoriesService.getCategoryById(14L).orElseThrow(CategoriesNotFoundException::new);
+        categories2.setCharacteristics(smartphones);
+        categoriesService.saveCategory(categories2);
+
+        Categories categories3 = categoriesService.getCategoryById(28L).orElseThrow(CategoriesNotFoundException::new);
+        categories3.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories3);
+
+        Categories categories4 = categoriesService.getCategoryById(29L).orElseThrow(CategoriesNotFoundException::new);
+        categories4.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories4);
+
+        Categories categories5 = categoriesService.getCategoryById(27L).orElseThrow(CategoriesNotFoundException::new);
+        categories5.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories5);
+
+        Categories categories6 = categoriesService.getCategoryById(26L).orElseThrow(CategoriesNotFoundException::new);
+        categories6.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories6);
+
+        Categories categories7 = categoriesService.getCategoryById(10L).orElseThrow(CategoriesNotFoundException::new);
+        categories7.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories7);
     }
 
     /**
@@ -1419,7 +1447,7 @@ public class DataInitializer {
         characteristicList.add(new Characteristic("Сенсорный экран"));
 
 
-        characteristicList.forEach(characteristicService :: saveCharacteristic);
+        characteristicList.forEach(characteristicService::saveCharacteristic);
 
     }
 
