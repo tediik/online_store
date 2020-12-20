@@ -3,19 +3,20 @@ spring:
     jdbc:
       initialize-schema: always
       table-name: SPRING_SESSION
+      schema: classpath:org/springframework/session/jdbc/schema-mysql.sql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://z0f80h07xf0512dn:rlrm1b2pvzxnlaw6@n2o93bb1bwmn0zle.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/lzkk1byanx7dpvqi?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
-    username: z0f80h07xf0512dn
-    password: rlrm1b2pvzxnlaw6
+    url: jdbc:mysql://ljj5kfijqs1fp4vg:djl78120tj7vx348@n2o93bb1bwmn0zle.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/q9dwfkike78ql3iy?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
+    username: ljj5kfijqs1fp4vg
+    password: djl78120tj7vx348
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL57Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
         storage_engine: innodb
         jdbc:
           timezone: UTC
