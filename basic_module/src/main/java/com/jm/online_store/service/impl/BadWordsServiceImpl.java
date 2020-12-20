@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Сервис класс для работы со стоп-словами, которые нужно блокировать к комментариях.
+ * Класс для работы со стоп-словами, которые нужно блокировать в комментариях.
  */
 @Service
 @AllArgsConstructor
@@ -58,10 +58,9 @@ public class BadWordsServiceImpl implements BadWordsService {
     }
 
     /**
-     * Метод принимает текст, отдает на очистку от всешл лишнего в preparingWordsForImport
+     * Метод принимает текст, отдает на очистку от всего лишнего в preparingWordsForImport
      * Формат ввода слов в input через запятую. Слово должно быть длинее 1 символа.
-     *
-     * @param words {@link String} приенимает текст для сохранения.
+     * @param words {@link String} текст для импорта стоп-слов
      */
     @Override
     public void importWord(String words) {
@@ -77,15 +76,12 @@ public class BadWordsServiceImpl implements BadWordsService {
 
     /**
      * Метод подготовки стоп-слов для импорта.
-     * Удаляет лишние проблемы, запятые
-     * Принимает текст для обработки String text
-     * Возвращает массив результатов обработки String[]
-     *
-     * @param text {@link String} принимает текст для обработки
-     * @return String[] возвращает массив слов разделенных
+     * Удаляет лишние пробелы, запятые
+     * @param text {@link String} текст для обработки
+     * @return String[] массив стоп-слов
      */
     private String[] preparingWordsForImport(String text) {
-        //Очищаем от лишних проблелов
+        //Очищаем от лишних пробелов
         Pattern CLEAR_PATTERN = Pattern.compile("[\\s]+");
         String noSpace = CLEAR_PATTERN.matcher(text).replaceAll(" ").trim();
 
@@ -100,10 +96,8 @@ public class BadWordsServiceImpl implements BadWordsService {
 
     /**
      * Метод принимает текст, и ищет в нем стоп-слова.
-     * Возвращает массив найденых стоп-слов
-     *
-     * @param checkText {@link String} принимает текст
-     * @return List<String> возвращет стоп-слова
+     * @param checkText {@link String} текст со стоп-словами
+     * @return List<String> Список стоп-слов
      */
     @Override
     public List<String> checkComment(String checkText) {
