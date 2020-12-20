@@ -126,19 +126,15 @@ public class BadWordsRestController {
      */
     @PostMapping(value = "/status")
     public void setSetting(@RequestBody Boolean isEnabled) {
-        if (isEnabled) {
-            CommonSettings setYes = CommonSettings.builder()
-                    .settingName("bad_words_enabled")
-                    .textValue("true")
-                    .build();
-            commonSettingsService.updateTextValue(setYes);
-        } else {
-            CommonSettings setNo = CommonSettings.builder()
-                    .settingName("bad_words_enabled")
-                    .textValue("false")
-                    .build();
-            commonSettingsService.updateTextValue(setNo);
+        String status = "true";
+        if (!isEnabled) {
+            status = "false";
         }
+        CommonSettings setYes = CommonSettings.builder()
+                .settingName("bad_words_enabled")
+                .textValue(status)
+                .build();
+        commonSettingsService.updateTextValue(setYes);
     }
 
     /**
