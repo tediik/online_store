@@ -2,6 +2,7 @@ package com.jm.online_store.config;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Address;
+import com.jm.online_store.model.BadWords;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
@@ -23,6 +24,7 @@ import com.jm.online_store.model.Topic;
 import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommentService;
@@ -91,7 +93,7 @@ public class DataInitializer {
     private final TopicsCategoryService topicsCategoryService;
     private final ReviewService reviewService;
     private final SharedNewsService sharedNewsService;
-
+    private final BadWordsService badWordsService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -115,6 +117,7 @@ public class DataInitializer {
         feedbackTopicsInit();
         commentsInit();
         reviewsInit();
+        badWordInit();
     }
 
     /**
@@ -1185,6 +1188,10 @@ public class DataInitializer {
                         "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
                         "<p>С Уважением</p><p>Online-store.ru</p>")
                 .build();
+        CommonSettings badWordsEnabled = CommonSettings.builder()
+                .settingName("bad_words_enabled")
+                .textValue("yes")
+                .build();
         CommonSettings maintenanceModeTemplate = CommonSettings.builder()
                 .settingName("maintenance_mode")
                 .textValue("ROLE_ADMIN")
@@ -1192,6 +1199,7 @@ public class DataInitializer {
                 .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
+        commonSettingsService.addSetting(badWordsEnabled);
         commonSettingsService.addSetting(maintenanceModeTemplate);
     }
 
@@ -1354,5 +1362,20 @@ public class DataInitializer {
         reviewService.addReviewInit(review1);
         reviewService.addReviewInit(review2);
         reviewService.addReviewInit(review3);
+    }
+
+    /**
+     * Инициализация тестовых данных для BadWords
+     */
+    private void badWordInit() {
+        //Стартовый набор Стоп-Слов
+        //Полный набор ипортируйте в Настройках
+        String[] startBadWord = {"хрен","фиг","плохой","говно","ерунда","бляха","екарный","дерьмо"};
+
+        for (String textToSave:startBadWord) {
+            if (badWordsService.existsBadWordByName(textToSave)) continue;
+            BadWords badWordsToSave = new BadWords(textToSave, true);
+            badWordsService.saveWord(badWordsToSave);
+        }
     }
 }

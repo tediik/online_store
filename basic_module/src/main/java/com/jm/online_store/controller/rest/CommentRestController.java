@@ -8,6 +8,7 @@ import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForCommentDto;
 import com.jm.online_store.model.dto.ReviewForCommentDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
@@ -43,6 +44,7 @@ public class CommentRestController {
     private final CommentService commentService;
     private final ReviewService reviewService;
     private final ProductRepository productRepository;
+    private final BadWordsService badWordsService;
     private final UserService userService;
 
 
@@ -50,7 +52,7 @@ public class CommentRestController {
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
      *
      * @param productId
-     * @return ResponseEntity<List < CommentDto>>
+     * @return ResponseEntity<List<CommentDto>>
      */
     @GetMapping("/{productId}")
     public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
@@ -62,18 +64,30 @@ public class CommentRestController {
 
     /**
      * Receives productComment requestBody and passes it to Service layer for processing
-     * Returns JSON representation
+     * Returns JSON representation, previously, searches for forbidden words
      *
      * @param comment
-     * @return ResponseEntity<ProductComment>
+     * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
      */
     @PostMapping
-    public ResponseEntity<ProductForCommentDto> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
+    public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
         if (!bindingResult.hasErrors()) {
-            Comment savedComment = commentService.addComment(comment);
-            productFromDb.setComments(List.of(savedComment));
-            return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
+            String checkText = comment.getContent();
+            if (!badWordsService.checkEnabledCheckText()) {
+                Comment savedComment = commentService.addComment(comment);
+                productFromDb.setComments(List.of(savedComment));
+                return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
+            } else {
+                List<String> resultText = badWordsService.checkComment(checkText);
+                if (resultText.isEmpty()) {
+                    Comment savedComment = commentService.addComment(comment);
+                    productFromDb.setComments(List.of(savedComment));
+                    return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
+                } else {
+                    return ResponseEntity.status(201).body(resultText);
+                }
+            }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -83,22 +97,37 @@ public class CommentRestController {
 
     /**
      * Receives reviewComment requestBody and reviewId, passes it to Service layer for processing
+     * previously, searches for forbidden words
      * Returns JSON representation
      *
      * @param comment
      * @param reviewId
-     * @return ResponseEntity<ReviewForCommentDto>
+     * @return ResponseEntity<ReviewForCommentDto> or ResponseEntity<List<String>>
      */
     @PostMapping("/{reviewId}")
-    public ResponseEntity<ReviewForCommentDto> addReviewComment(@RequestBody @Valid Comment comment,
-                                                                @PathVariable Long reviewId, BindingResult bindingResult) {
+    public ResponseEntity<?> addReviewComment(@RequestBody @Valid Comment comment,
+                                              @PathVariable Long reviewId, BindingResult bindingResult) {
         Review reviewFromDb = reviewService.findById(reviewId).get();
         if (!bindingResult.hasErrors()) {
+            String checkText = comment.getContent();
             comment.setReview(reviewFromDb);
-            Comment savedComment = commentService.addComment(comment);
-            reviewFromDb.setComments(List.of(savedComment));
-            CommentDto.commentEntityToDto(comment);
-            return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
+            if (!badWordsService.checkEnabledCheckText()) {
+                Comment savedComment = commentService.addComment(comment);
+                reviewFromDb.setComments(List.of(savedComment));
+                CommentDto.commentEntityToDto(comment);
+                return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
+            } else {
+                List<String> resultText = badWordsService.checkComment(checkText);
+                if (resultText.isEmpty()) {
+                    Comment savedComment = commentService.addComment(comment);
+                    reviewFromDb.setComments(List.of(savedComment));
+                    CommentDto.commentEntityToDto(comment);
+                    return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
+                } else {
+                    return ResponseEntity.status(201).body(resultText);
+                }
+
+            }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,

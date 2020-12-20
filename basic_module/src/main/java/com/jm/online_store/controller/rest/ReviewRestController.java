@@ -1,11 +1,13 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForReviewDto;
 import com.jm.online_store.model.dto.ReviewDto;
 import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReviewService;
 import lombok.AllArgsConstructor;
@@ -33,12 +35,13 @@ public class ReviewRestController {
     private final ProductRepository productRepository;
     private final CommentService commentService;
     private final ReviewService reviewService;
+    private final BadWordsService badWordsService;
 
     /**
      * Fetches an arrayList of all product Review by productId and returns JSON representation response
      *
      * @param productId
-     * @return ResponseEntity<List <ReviewDto>>
+     * @return ResponseEntity<List<ReviewDto>>
      */
     @GetMapping("/{productId}")
     public ResponseEntity<List<ReviewDto>> findAll(@PathVariable Long productId) {
@@ -61,20 +64,32 @@ public class ReviewRestController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(commentDtos);
     }
+
     /**
-     * Receives productReview requestBody and passes it to Service layer for processing
-     * Returns JSON representation
-     *
+     * Receives productReview and passes it to Service layer for processing
+     * previously, searches for forbidden words
      * @param review
-     * @return ResponseEntity<productReview>
+     * @return ResponseEntity<productReview> or ResponseEntity<List<String>>
      */
     @PostMapping
-    public ResponseEntity<ProductForReviewDto> addReview(@RequestBody @Valid Review review, BindingResult bindingResult) {
+    public ResponseEntity<?> addReview(@RequestBody @Valid Review review, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(review.getProductId()).get();
         if (!bindingResult.hasErrors()) {
-            Review savedReview = reviewService.addReview(review);
-            productFromDb.setReviews(List.of(savedReview));
-            return ResponseEntity.ok().body(ProductForReviewDto.productToDto(productFromDb));
+            String checkText = review.getContent();
+            if (!badWordsService.checkEnabledCheckText()) {
+                Review savedReview = reviewService.addReview(review);
+                productFromDb.setReviews(List.of(savedReview));
+                return ResponseEntity.ok().body(ProductForReviewDto.productToDto(productFromDb));
+            } else {
+                List<String> resultText = badWordsService.checkComment(checkText);
+                if (resultText.isEmpty()) {
+                    Review savedReview = reviewService.addReview(review);
+                    productFromDb.setReviews(List.of(savedReview));
+                    return ResponseEntity.ok().body(ProductForReviewDto.productToDto(productFromDb));
+                } else {
+                    return ResponseEntity.status(201).body(resultText);
+                }
+            }
         } else
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format("Запрос содержит неверные данные = [%s]", getErrors(bindingResult)));
@@ -85,4 +100,5 @@ public class ReviewRestController {
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
     }
+
 }

@@ -77,8 +77,12 @@ $(document).ready(function () {
                     dataType: 'json',
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    success: function (response) {
-
+                    success: function (response, textStatus, request) {
+                        if (request.status === 201) {
+                            let stopAlert = 'В вашем комментарии есть запрещенные слова (' + response + '). \nПожалуйста удалите их!'
+                            toastr.error(stopAlert);
+                            return;
+                        }
                         let review = response.reviews[0];
                         $('#showReviews').append($(`
                         <div class="media mb-4">
@@ -136,9 +140,14 @@ $(document).ready(function () {
                     dataType: 'json',
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    success: function (response) {
+                    success: function (response, textStatus, request) {
+                        if (request.status === 201) {
+                            let stopAlert = 'В вашем ответе есть запрещенные слова (' + response + '). \nПожалуйста удалите их!'
+                            toastr.error(stopAlert);
+                            return;
+                        }
                         let comment = response.comments[0];
-                        commentBox.remove();
+                        $("#commentReviewText").val('')
                         let commentReviewDisplayId = $('#commentReviewDisplayId' + reviewId);
 
                         $(commentReviewDisplayId).append($(`
