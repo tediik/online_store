@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manager Feedback</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!--toastr CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+    <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<header th:insert="blocks/cabinetHeader :: header"></header>
+<main>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!--навигация слева-->
+            <div class="col-md-2">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" th:href="@{/manager}">
+                            Главная
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/news">
+                            Новости
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/stocks">
+                            Акции
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/authority/profile">
+                            Профиль
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/products">
+                            Товары
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/reports">
+                            Отчёты
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/mailings">
+                            Рассылки
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a id="nav-link-feedbackManager" class="nav-link" data-toggle="tab" href="#feedbackManager">
+                            Обратная связь
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="/manager/settings">
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--конец навигации слева-->
+
+            <div class="col-sm-8">
+                <div class="tab-content">
+
+                    <div class="tab-pane fade" id="feedbackManager" role="tabpanel">
+                        <ul class="nav nav-tabs" id="navbarFeedbackManager">
+                            <!-- Первая вкладка обращения в работе -->
+                            <li class="nav-item">
+                                <a class="nav-link active" id="nav-link_in_progress_feedback" data-toggle="tab"
+                                   data-toggle-id="inProgressFeedback" href="#tab_in_progress_feedback">В работе</a>
+                            </li>
+                            <!-- Вторая вкладка отложенные обращения-->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_later_feedback" data-toggle="tab"
+                                   data-toggle-id="laterFeedback" href="#tab_later_feedback">Отложенные</a>
+                            </li>
+                            <!-- Третья вкладка завершенные обращения-->
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-link_resolved_feedback" data-toggle="tab"
+                                   data-toggle-id="resolvedFeedback"
+                                   href="#tab_resolved_feedback">Завершенные</a>
+                            </li>
+                        </ul>
+
+                        <!-- Блоки с контентом -->
+                        <div class="tab-content mb-5" id="feedbackTabContent">
+                            <!-- Первый блок -->
+                            <div class="tab-pane fade show active" id="tab_in_progress_feedback">
+                                <div id="in_progress_feedback">
+                                </div>
+                            </div>
+                            <!-- Второй блок -->
+                            <div class="tab-pane fade" id="tab_later_feedback">
+                                <div id="later_feedback">
+                                </div>
+                            </div>
+                            <!-- Третий блок -->
+                            <div class="tab-pane fade" id="tab_resolved_feedback">
+                                <div id="resolved_feedback">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!--bootstrap scripts-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<!--toastr-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<script src="../static/js/searchButton.js"></script>
+<script src="/static/js/managerFeedback.js"></script>
+</body>
+</html>

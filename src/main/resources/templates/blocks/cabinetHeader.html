@@ -1,0 +1,28 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="header">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 siteHeader border-bottom box-shadow">
+        <h5 class="my-0 mr-md-auto font-weight-normal">Online store</h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <!-- Search -->
+            <form class="form-inline my-2 my-lg-0" id="mainPageSearchForm">
+                <input class="form-control mr-sm-2" type="text" id="mainPageSearchInput" placeholder="Поиск по сайту"
+                       aria-label="Search">
+                <button class="btn btn-outline-info my-2 my-sm-0" id="mainPageSearchButton" type="button"><i
+                        class="fa fa-search"></i></button>
+            </form>
+        </nav>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="/">Главная</a>
+            <a class="p-2 text-dark" href="/news">Новости</a>
+            <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')" id="showBasket" href="/customer/basket">
+                <img src="/static/img/buscket.jpg" width="25" height="25">
+                <ins style="color: #ff8e05">
+                    Корзина
+                    <i id="countInBasket"></i>
+                </ins>
+            </a>
+            <a sec:authorize="isAuthenticated()" class="btn btn-light loginbutton" href="/logout">Выйти</a>
+        </nav>
+    </div>
+</div>
+</html>

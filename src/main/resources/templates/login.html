@@ -1,0 +1,149 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<script src="https://kit.fontawesome.com/8b586a0688.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css">
+<link rel="stylesheet" href="/static/css/loginPage.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+
+<body>
+<header th:insert="blocks/cabinetHeader :: header"></header>
+<!--restore profile modal-->
+<div class="modal" id="askUserForRestore">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Для восстановления профиля введите пожалуйста email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="email" id="emailForRestore" name="restore_username" autofocus="autofocus"
+                       placeholder="Email"
+                       class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Отмена</button>
+                <button id="buttonRestore" type="button" class="btn btn-primary">Восстановить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--restore profile modal-->
+
+<section id="loginform" class="outer-wrapper">
+    <div class="inner-wrapper">
+        <div class="container h-100">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-sm-4 col-sm-offset-6">
+                    <h2 class="form-signin-heading">Please sign in</h2>
+                    <form id="formLogin" method="post" class="form-group">
+                        <input type="email" id="email" name="login_username" autofocus="autofocus" placeholder="Email"
+                               class="form-control">
+
+                        <input type="password" id="password" name="login_password" placeholder="Password"
+                               class="form-control"/>
+                        <div class="form-check">
+                            <input class="form-check-input" name="remember-me" type="checkbox" id="rememberMeCheckbox">
+                            <label class="form-check-label" for="rememberMeCheckbox">
+                                Remember me
+                            </label>
+                        </div>
+                        <!-- alert for login failure Bad credentials-->
+                        <div class="alert alert-danger" th:if="${param.loginBadCredentials}" role="alert">
+                            <strong>Ошибка авторизации!</strong> Проверьте правильность ввода данных.
+                        </div>
+                        <!-- alert for login failure Bad credentials-->
+
+                        <!-- alert for login failure аккаунт заблокирован-->
+                        <div class="alert alert-danger" th:if="${param.accountBlocked}" role="alert">
+                            <strong>Ваш акаунт был удален.</strong>
+                            <a id="linkForOpenRestoreModal" href="#" class="alert-link">Восстановить</a>
+
+                        </div>
+                        <!-- alert for login failure аккаунт заблокирован-->
+
+                        <div>
+                    <button id="signIn" class="btn btn-primary btn-sm btn-block">Sign In</button>
+                    </div>
+                    <div>
+                        <button type="button"
+                                class="btn btn-info btn-sm btn-block loginBtn"
+                                data-toggle="modal"
+                                data-target="#openForgotPasswordModal">Forgot Password?
+                        </button>
+                        <!--a href="/restorePassword" class="btn btn-info btn-sm btn-block loginBtn">Forgot password?</a-->
+                    </div>
+                    </form>
+
+                    <!--facebook-->
+                    <div>
+                        <!--Кнопка блокирована с помощью скрипта "/static/js/login.js"-->
+                        <a id="noLinkFacebook" href="/oauth2/authorization/facebook" title="Facebook"
+                           class="btn btn-block btn-sm  btn-social btn-lg btn-facebook">
+                            <span class="fa fa-facebook"></span> Sign in with Facebook
+                        </a>
+                    </div>
+                    <!--facebook-->
+                    <br>
+                    <!--odnoklassniki-->
+                    <div>
+                        <a id="odnoklassnikiBtn" class="btn btn-block btn-social btn-odnoklassniki">
+                            <span class="fa fa-odnoklassniki"></span>
+                            Sign in
+                            with Odnoklassniki
+                        </a>
+                    </div>
+                    <!--odnoklassniki-->
+                    <br>
+                    <!--twitter-->
+                    <div>
+                        <a id="twitterBtn" class="btn btn-block btn-social btn-twitter">
+                            <span class="fa fa-twitter"></span> Sign in with Twitter
+                        </a>
+                    </div>
+                    <!--twitter-->
+                    <br>
+                    <!--vk-->
+                    <div>
+                        <a id="vkBtn" title="VKontakte" class="btn btn-block btn-social btn-vk">
+                            <i class="fa fa-vk"></i> Sign in with VKontakte
+                        </a>
+                    </div>
+                    <!--vk-->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- restore password modal -->
+<div id="openForgotPasswordModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Изменяем пароль:</h3>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/restorePassword}" method="post" class="form-group">
+                    <input type="email" name="login_username" autofocus="autofocus" placeholder="Enter email"
+                           class="form-control">
+                    <input type="submit" value="Generate new password"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/jquery/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="/static/js/toastr/toastr.min.js"></script>
+<script src="../static/js/searchButton.js"></script>
+<script src="/static/js/login.js"></script>
+</body>

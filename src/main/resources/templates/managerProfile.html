@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/css/customer.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.fias.min.css">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="../static/js/jquery.fias.min.js" type="text/javascript"></script>
+    <!-- Optional JavaScript -->
+    <script src="../static/js/profileAuthoriry.js"></script>
+    <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<header th:insert="blocks/cabinetHeader :: header"></header>
+<div class="container-fluid">
+    <div class="row min-vh-100">
+        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager">Главная</a>
+            </div>
+            <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/profile">Профиль</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/news">Новости</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/stocks">Акции</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/products">Товары</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/rating">Рейтинг товаров</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/reports">Отчёты</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/mailing">Рассылки</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/feedback">Обратная связь</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/settings">Настройки</a>
+            </div>
+        </div>
+        <div class="col-md-10"
+             style="background: #edeef0">
+            <div class="tab-content" id="nav-tabContent-p">
+                <div class="tab-pane fade show active" id="pills-home-profile" role="tabpanel"
+                     aria-labelledby="nav-home-profile">
+                    <div form>
+                        <div class="container-fluid bg-light">
+                            <div class="row p-3">
+                                <div class="col-4">
+
+                                    <!-- Image -->
+                                    <div class="imgContainer">
+                                        <div>
+                                            <img id="profilePic" alt="UserPhoto"
+                                                 class="rounded-circle img-responsive mt-2"
+                                                 height="152"
+                                                 th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}"
+                                                 width="152"></div>
+                                        <div class="imgButton">
+                                            <button type="button" class="btn btn-link" data-toggle="modal"
+                                                    data-target="#myModal"> Edit Profile Picture
+                                            </button>
+                                        </div>
+                                        <!--Profile picture change modal-->
+                                        <div class="modal" id="myModal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Upload your profile picture</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">
+                                                            &times;
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Modal body -->
+                                                    <div class="modal-body">
+                                                        <input type="file" id="fileInput" name="imageFile"
+                                                               alt="Picture">
+                                                        <br>
+                                                        <br>
+                                                        <input type="button" id="deletePicBtn" value="Delete Picture"
+                                                               data-dismiss="modal"
+                                                               class="btn btn-sm btn-outline-danger"/>
+                                                        <img id="blah" src="#" alt="your image"
+                                                             class="rounded-circle img-responsive mt-2 float-right"
+                                                             height="82" width="82"/>
+                                                    </div>
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger"
+                                                                data-dismiss="modal">Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Image -->
+
+                                    <form th:action="@{/authority/profile}" th:object="${user}" th:value="${user.id}"
+                                          method="post" data-role="personal-info-form">
+
+                                        <!-- ID hidden input -->
+                                        <div class="form-group text-center font-weight-bold" hidden>
+                                            <label class="input-row_label" for="id_update">ID</label>
+                                            <input th:field="*{id}" type="text" class="form-control" id="id_update"
+                                                   name="id">
+                                        </div>
+                                        <!-- ID hidden input -->
+
+                                        <!-- pass input -->
+                                        <div class="form-group text-center font-weight-bold" hidden>
+                                            <label class="input-row_label" for="password_update">Пароль</label>
+                                            <input th:field="*{password}" type="text" class="form-control"
+                                                   id="password_update" name="password">
+                                        </div>
+                                        <!-- pass input -->
+
+                                        <!-- Name input -->
+                                        <div class="form-group text-center font-weight-bold">
+                                            <label class="input-row_label" for="first_name_update">Имя</label>
+                                            <input th:field="*{firstName}" type="text" class="form-control"
+                                                   id="first_name_update" name="firstName">
+                                        </div>
+                                        <!-- Name input -->
+
+                                        <!-- lastName input -->
+                                        <div class="form-group text-center font-weight-bold">
+                                            <label for="last_name_input">Фамилия</label>
+                                            <input th:field="*{lastName}" type="text" class="form-control"
+                                                   id="last_name_input" name="lastName">
+                                        </div>
+                                        <!-- lastName input -->
+
+                                        <!-- email input -->
+                                        <div class="form-group text-center font-weight-bold">
+                                            <label for="email_input">Email</label>
+                                            <input th:field="*{email}" type="text" class="form-control" id="email_input"
+                                                   name="email" readonly>
+                                        </div>
+                                        <!--  email input -->
+
+                                        <!-- buttons for change mail & pass  -->
+                                        <div>
+                                            <button type="button" style="background-color: #ff8e05"
+                                                    class="m-2 btn btn-success d-block mx-auto" data-toggle="modal"
+                                                    data-target="#openNewMailModal">Изменить email
+                                            </button>
+
+                                            <button type="button" style="background-color: #ff8e05"
+                                                    class="m-2 btn btn-success d-block mx-auto" data-toggle="modal"
+                                                    data-target="#openChangePassModal">Изменить пароль
+                                            </button>
+                                        </div>
+                                        <!-- buttons for change mail & pass  -->
+
+
+                                        <!--birthday  -->
+                                        <div class="form-group text-center font-weight-bold">
+                                            <label for="date_birthday_input" class="col-xs-2 col-form-label">День
+                                                рождения</label>
+                                            <div class="col-xs-10">
+                                                <input th:field="*{birthdayDate}" class="form-control"
+                                                       th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                                                       type="date" id="date_birthday_input" name="birthdayDate">
+                                            </div>
+                                        </div>
+                                        <!--birthday  -->
+
+                                        <!--GENDER  -->
+                                        <div class="form-group-text-center">
+                                            <label for="gender_radio" class="text-center font-weight-bold">Пол</label>
+                                            <div id="gender_radio">
+                                                <div class="custom-control custom-radio">
+                                                    <input th:field="*{userGender}" value="" type="radio" id="option1"
+                                                           name="genderRadio" class="custom-control-input">
+                                                    <label class="custom-control-label" for="option1">Не выбрано</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input th:field="*{userGender}" value="MAN" type="radio"
+                                                           id="option2" name="genderRadio" class="custom-control-input">
+                                                    <label class="custom-control-label" for="option2">Мужской</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input th:field="*{userGender}" value="WOMAN" type="radio"
+                                                           id="option3" name="genderRadio" class="custom-control-input">
+                                                    <label class="custom-control-label" for="option3">Женский</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--GENDER  -->
+
+                                        <!-- YELLOW BUTTON  сохрнаить -->
+                                        <button type="button" style="background-color: #ff8e05"
+                                                class="m-2 btn btn-success d-block mx-auto">Сохранить
+                                        </button>
+                                        <!-- YELLOW BUTTON  -->
+
+                                        <!-- REGISTRATION DATE -->
+                                        <div class="m-2 text-center personal-info_register-container"
+                                             style="background-color: #f9f9f9">
+                                            Дата регистрации:
+                                            <a th:field="*{registerDate}" th:text="*{registerDate}"
+                                               class="personal-info_register-date font-weight-bold"
+                                               id="register_date"></a>
+                                        </div>
+                                        <!-- REGISTRATION DATE -->
+
+                                    </form>
+
+                                    <!-- Change EMAIL modal -->
+                                    <div id="openNewMailModal" class="modal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title">Название</h3>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">x</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form th:action="@{/authority/changemail}" method="post"
+                                                          class="form-group">
+                                                        <div class="form-group text-center font-weight-bold">
+                                                            <label for="new_mail">Введите новый адрес электронной
+                                                                почты</label>
+                                                            <input type="email"
+                                                                   id="new_mail"
+                                                                   name="newMail"
+                                                                   class="form-control" required/>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary btn-sm btn-block">
+                                                            Подтвердить
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Change EMAIL modal -->
+
+                                    <!-- Change PASS modal -->
+                                    <div id="openChangePassModal" class="modal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title">Название</h3>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">x</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form th:action="@{/authority/change-password}" method="post"
+                                                          class="form-group">
+                                                        <div class="form-group text-center font-weight-bold">
+                                                            <label for="old_password">Старый пароль</label>
+                                                            <input type="password" id="old_password" name="oldPassword"
+                                                                   autofocus="autofocus"
+                                                                   class="form-control" required>
+                                                        </div>
+                                                        <div class="form-group text-center font-weight-bold">
+                                                            <label for="new_password">Новый пароль</label>
+                                                            <input type="password" id="new_password" name="newPassword"
+                                                                   class="form-control" required/>
+                                                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                                                Your password must be 8-20 characters long, contain
+                                                                letters and numbers, and must not contain spaces and
+                                                                emoji.
+                                                            </small>
+                                                        </div>
+                                                        <button type="submit"
+                                                                class="btn btn-primary btn-sm btn-block">Сохранить
+                                                        </button>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Change PASS modal -->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+
+
+<script src="/static/js/profilePicture.js"></script>
+<script src="../static/js/searchButton.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</body>
+</html>
