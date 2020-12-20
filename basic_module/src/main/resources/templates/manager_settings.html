@@ -3,23 +3,21 @@
 <head>
     <title>Manager Settings</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="/static/css/managerPage.css" rel="stylesheet" type="text/css">
-    <link href="/static/css/jqx.base.css" rel="stylesheet" type="text/css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-<!--    summernote-->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/managerPage.css">
+    <link rel="stylesheet" href="/static/css/jqx.base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <!--    summernote-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css">
     <!--    Toastr css-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
-          integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" />
-    <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+    <link rel="stylesheet" href="/static/css/headers.css">
 </head>
 <body>
 <header th:insert="/blocks/cabinetHeader :: header"></header>
-
 <div id="infoDiv">
 </div>
+
 <div class="container-fluid">
     <div class="row content">
         <div class="col-2">
@@ -39,7 +37,16 @@
                 <a class="btn btn-outline-primary" href="/manager/products">Товары</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/rating">Рейтинг товаров</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/manager/reports">Отчёты</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/mailing">Рассылки</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/feedback">Обратная связь</a>
             </div>
             <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/manager/settings">Настройки</a>
@@ -48,75 +55,16 @@
         <div class="col-10">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-distribution"
-                       role="tab" aria-controls="nav-home" aria-selected="true">E-mail рассылка</a>
-                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-priceChange" role="tab"
-                       aria-controls="nav-profile" aria-selected="false">Снижение цен</a>
-                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#priceListCreate" role="tab"
-                       aria-controls="nav-contact" aria-selected="false">Ежедневный прайс</a>
+                    <a class="nav-item nav-link active" id="nav-contact-tab" data-toggle="tab" href="#priceListCreate"
+                       role="tab"
+                       aria-controls="nav-contact" aria-selected="true">Ежедневный прайс</a>
                     <a class="nav-item nav-link" id="nav-categories-and-topics-tab" data-toggle="tab"
                        href="#nav-categories-and-topics" role="tab"
                        aria-controls="nav-categories-and-topics" aria-selected="false">Обратная связь</a>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-distribution" role="tabpanel"
-                     aria-labelledby="nav-home-tab">
-                    <br>
-                    <form id="distributionSettingsForm">
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="emailDistributionCheckbox">
-                            <label class="form-check-label" for="emailDistributionCheckbox">Включить рассылку акций на
-                                почту</label>
-                        </div>
-                        <div class="form-group" id="distributionTimeDiv">
-                            <label for="distributionTimeInput">Выберите время для рассылки</label>
-                            <input class="form-control" type="time" id="distributionTimeInput" style="width: 10%">
-                        </div>
-                        <button class="btn btn-primary" id="saveSettingsChanges">Сохранить</button>
-                    </form>
-                    <hr>
-                    <form id="emailTemplateEditForm">
-                        <div class="form-group">
-                            <div class="form-col">
-                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
-                                    рассылки</label>
-                                <textarea id="editTemplateSummernote"></textarea>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" id="saveTemplateChanges">Сохранить шаблон</button>
-                    </form>
-                    <hr>
-                    <h2>Важная информация!</h2>
-                    <ul>
-                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
-                        <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
-                        <li>@@stockList@@ - вместо этого тега в письме подставляется List действующих и будущих акций
-                        </li>
-                    </ul>
-                </div>
-                <div class="tab-pane fade" id="nav-priceChange" role="tabpanel" aria-labelledby="nav-2-tab">
-                    <form id="priceChangeTemplateEditForm">
-                        <div class="form-group">
-                            <div class="form-col">
-                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
-                                    рассылки при изменнеии цены</label>
-                                <textarea id="editPriceChangeTemplateSummernote"></textarea>
-                            </div>
-                        </div>
-                    </form>
-                    <hr>
-                    <h2>Важная информация!</h2>
-                    <ul>
-                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
-                        <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
-                        <li>@@oldPrice@@ - вместо этого тега в письме подставится старая цена на товар</li>
-                        <li>@@newPrice@@ - вместо этого тега в письме подставится новая цена на товар</li>
-                        <li>@@product@@ - вместо этого тега в письме подставится название товара</li>
-                    </ul>
-                    <button class="btn btn-primary" id="savePriceChangeTemplateChanges">Сохранить шаблон</button>
-                </div>
-                <div class="tab-pane fade" id="priceListCreate" role="tabpanel" aria-labelledby="nav-3-tab">
+                <div class="tab-pane fade show active" id="priceListCreate" role="tabpanel" aria-labelledby="nav-3-tab">
                     <form id="priceListCreateTimeChange">
                         <div class="form-group" id="priceListCreateTimeChangeHere">
                             <label for="priceTimeInput">Выберите время создания прайс-листа</label>
@@ -138,8 +86,6 @@
                             <a class="nav-link" id="nav-archive-categories-tab" data-toggle="tab"
                                href="#nav-archive-categories" role="tab" aria-controls="nav-archive-categories"
                                aria-selected="false">Архив</a>
-
-
                         </div>
                     </nav>
                     <!-- Конец навигация для категорий и тем -->
@@ -302,22 +248,12 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
-        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
-        crossorigin="anonymous"></script>
-<script src="/static/js/summernote.js"></script>
-<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
-<link href="/static/css/summernote.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="/static/js/managerSettingsPage.js"></script>
-<script src="/static/js/managerPriceChangeSetting.js"></script>
 <script src="/static/js/managerPriceListCreate.js"></script>
-<script src="../static/js/searchButton.js"></script>
+<script src="/static/js/searchButton.js"></script>
 <script src="/static/js/managerCategoriesSetting.js"></script>
 <!--<script src="/static/js/is.js"></script>-->
 <script src="/static/js/jqx/jqxcore.js"></script>

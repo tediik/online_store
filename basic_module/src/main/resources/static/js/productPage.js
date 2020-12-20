@@ -275,4 +275,6 @@ function showModalError(message) {
     }, 5000)
 }
 
-document.getElementById('addToCartButton').addEventListener('click', addToProductToCart)
+if (document.getElementById('addToCartButton')) {
+    document.getElementById('addToCartButton').addEventListener('click', addToProductToCart);
+}

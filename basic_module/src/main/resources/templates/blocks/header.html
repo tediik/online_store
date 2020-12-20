@@ -4,6 +4,7 @@
     <!-- Optional JavaScript -->
     <script th:src="@{/static/js/downloadSpecificTab.js}"></script>
     <script th:src="@{/static/js/busket.js}"></script>
+    <script th:src="@{/static/js/rememberCurrentUrl.js}"></script>
 
     <div class="d-flex flex-column  flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom shadow-sm siteHeader">
         <h5 class="my-0 mr-md-auto font-weight-normal">Online store</h5>
@@ -47,7 +48,7 @@
 
         <!-- Login -->
         <a th:unless="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton"
-           href="/login">Войти</a>
+           href="/login" onclick="returnCurrentUrl()">Войти</a>
         <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton" href="/logout">Выйти</a>
     </div>
 </div>

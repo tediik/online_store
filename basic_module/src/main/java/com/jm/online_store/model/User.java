@@ -172,6 +172,16 @@ public class User implements UserDetails {
         this.roles = roleSet;
     }
 
+    /**
+     * Конструктор для поиска подписчиков из CustomerRepository (метод findSubscriberByEmail())
+     *
+     * @param id    - поле id
+     * @param email - поле email
+     */
+    public User(Long id, String email) {
+        this.id = id;
+        this.email = email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

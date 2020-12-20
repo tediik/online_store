@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.CurrentUrl;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Stock;
@@ -22,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +48,7 @@ public class MainPageRestController {
     private final ProductService productService;
     private final StockService stockService;
     private final NewsService newsService;
-
+    
     @PostMapping("/registration")
     @ResponseBody
     public ResponseEntity registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
@@ -124,5 +126,11 @@ public class MainPageRestController {
     public ResponseEntity<List<News>> getPublishedNews() {
         List<News> publishedNews= newsService.getAllPublished();
         return ResponseEntity.ok(publishedNews);
+    }
+
+    @PostMapping("api/currentUrl")
+    public ResponseEntity getCurrentUrl(@RequestBody String currentUrl) {
+        CurrentUrl.setUrl(currentUrl);
+        return ResponseEntity.ok("Current URL was returned");
     }
 }
