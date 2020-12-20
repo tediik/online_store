@@ -5,6 +5,7 @@ import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Address;
+import com.jm.online_store.model.BadWords;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Comment;
@@ -27,6 +28,7 @@ import com.jm.online_store.model.Topic;
 import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
@@ -52,6 +54,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -98,7 +101,7 @@ public class DataInitializer {
     private final SharedNewsService sharedNewsService;
     private final CharacteristicService characteristicService;
     private final ProductCharacteristicService productCharacteristicService;
-
+    private final BadWordsService badWordsService;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -126,6 +129,7 @@ public class DataInitializer {
         feedbackTopicsInit();
         commentsInit();
         reviewsInit();
+        badWordInit();
     }
 
     /**
@@ -755,7 +759,6 @@ public class DataInitializer {
         category24.setProducts(Arrays.asList(product16, product17, product18));
         category25.setProducts(Arrays.asList(product19, product20, product21));
 
-
         categoriesService.saveAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7,
                 category8, category9, category10, category11, category12, category13, category14, category15, category16,
                 category17, category18, category19, category20, category21, category22, category23, category24, category25,
@@ -1256,6 +1259,10 @@ public class DataInitializer {
                         "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
                         "<p>С Уважением</p><p>Online-store.ru</p>")
                 .build();
+        CommonSettings badWordsEnabled = CommonSettings.builder()
+                .settingName("bad_words_enabled")
+                .textValue("yes")
+                .build();
         CommonSettings maintenanceModeTemplate = CommonSettings.builder()
                 .settingName("maintenance_mode")
                 .textValue("ROLE_ADMIN")
@@ -1263,6 +1270,7 @@ public class DataInitializer {
                 .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
+        commonSettingsService.addSetting(badWordsEnabled);
         commonSettingsService.addSetting(maintenanceModeTemplate);
     }
 
@@ -1465,5 +1473,20 @@ public class DataInitializer {
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4780");
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "208");
+    }
+
+    /**
+     * Инициализация тестовых данных для BadWords
+     */
+    private void badWordInit() {
+        //Стартовый набор Стоп-Слов
+        //Полный набор ипортируйте в Настройках
+        String[] startBadWord = {"хрен","фиг","плохой","говно","ерунда","бляха","екарный","дерьмо"};
+
+        for (String textToSave:startBadWord) {
+            if (badWordsService.existsBadWordByName(textToSave)) continue;
+            BadWords badWordsToSave = new BadWords(textToSave, true);
+            badWordsService.saveWord(badWordsToSave);
+        }
     }
 }
