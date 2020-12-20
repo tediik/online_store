@@ -13,6 +13,10 @@ import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.Transliteration;
 import com.jm.online_store.util.ValidationUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,6 +45,7 @@ import java.util.stream.Stream;
 @RequestMapping("/")
 @Slf4j
 @RequiredArgsConstructor
+@Api(description = "Rest controller of the Main page")
 public class MainPageRestController {
 
     private final UserService userService;
@@ -51,6 +56,13 @@ public class MainPageRestController {
     
     @PostMapping("/registration")
     @ResponseBody
+    @ApiOperation(value = "Registration of the new account")
+    @ApiResponse(code = 200, message = "This response can also display error, see the comment inside it. Only \"success\" comment means that account was registered. Other options:" +
+            " BindingResult in registerUserAccount hasErrors: ..., " +
+            " Passwords do not match : passwordConfirmError," +
+            " Passwords do not match : passwordValidError, " +
+            " User with same email already exists," +
+            " Wrong email! Не правильно введен email")
     public ResponseEntity registerUserAccount(@ModelAttribute("userForm") @Validated User userForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             log.debug("BindingResult in registerUserAccount hasErrors: {}", bindingResult);
@@ -88,6 +100,13 @@ public class MainPageRestController {
      * "Смартфоны":"Smartfony"}}
      */
     @GetMapping("api/categories")
+    @ApiOperation(value = "Creates hashmap: key - category name, value - map with subcategories name. In the inner map key is subcategory in kirillic, the value - in latin. example: " +
+            "{\"Компьютеры\":{\"Комплектующие\":\"Komplektuyushchiye\",\n" +
+            "     * \"Компьютеры\":\"Kompʹyutery\",\n" +
+            "     * \"Ноутбуки\":\"Noutbuki\"},\n" +
+            "     * \"Смартфоны и гаджеты\":{\"Планшеты\":\"Planshety\",\n" +
+            "     * \"Смартфоны\":\"Smartfony\"}}")
+
     public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.findAll();
         Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
@@ -105,6 +124,7 @@ public class MainPageRestController {
     /**
      * Возвращает список первых N продуктов - N передаётся в метод сервиса .findNumProducts(N)
      */
+    @ApiOperation(value = "Returns list of first 15 products")
     @GetMapping("api/products")
     public ResponseEntity<List<Product>> getSomeProducts() {
         return ResponseEntity.ok(productService.findNumProducts(15));
@@ -114,6 +134,7 @@ public class MainPageRestController {
      * Возвращает список опубликованных акций  - список передаётся в метод сервиса .findPublishedStocks()
      */
     @GetMapping("api/publishedstocks")
+    @ApiOperation(value = "Returns list of published stocks")
     public ResponseEntity<List<Stock>> getPublishedStocks() {
         List<Stock> publishedStocks= stockService.findPublishedStocks();
         return ResponseEntity.ok(publishedStocks);
@@ -123,12 +144,14 @@ public class MainPageRestController {
      * Возвращает список опубликованных новостей  - список передаётся в метод сервиса .findPublishedNews()
      */
     @GetMapping("api/publishednews")
+    @ApiOperation(value = "Returns list of published news")
     public ResponseEntity<List<News>> getPublishedNews() {
         List<News> publishedNews= newsService.getAllPublished();
         return ResponseEntity.ok(publishedNews);
     }
 
     @PostMapping("api/currentUrl")
+    @ApiOperation(value = "Returns current URL")
     public ResponseEntity getCurrentUrl(@RequestBody String currentUrl) {
         CurrentUrl.setUrl(currentUrl);
         return ResponseEntity.ok("Current URL was returned");
