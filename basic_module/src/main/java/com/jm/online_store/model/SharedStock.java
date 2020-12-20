@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "shared_stocks")
+@ApiModel(description =  "Сущность SharedStock, свяазана с User и Stock")
 public class SharedStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

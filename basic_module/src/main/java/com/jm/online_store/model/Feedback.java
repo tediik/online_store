@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ApiModel(description =  "Сущность Feedback - обратная связь, связана с User")
 public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

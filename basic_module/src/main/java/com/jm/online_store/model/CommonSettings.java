@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Data
 @Builder
+@ApiModel(description =  "Сущность CommonSettings для настройки задач")
 public class CommonSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

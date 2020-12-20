@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "evaluation")
+@ApiModel(description =  "Сущность Evaluation для связи между User и Product")
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -3,6 +3,7 @@ package com.jm.online_store.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "orders")
+@ApiModel(description =  "Сущность Order, связана с User, ProductInOrder и Address")
 public class Order {
 
     @Id

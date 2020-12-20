@@ -1,6 +1,7 @@
 package com.jm.online_store.model.dto;
 
 import com.jm.online_store.model.Comment;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 
 @Data
 @Slf4j
+@ApiModel(description =  "DTO для сущности Comment")
 public class CommentDto {
 
    private Long id;

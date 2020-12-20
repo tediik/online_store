@@ -1,12 +1,14 @@
 package com.jm.online_store.model.dto;
 
 import com.jm.online_store.model.Product;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@ApiModel(description =  "DTO для передачи комментария продукту")
 public class ProductForCommentDto {
 
     private Long id;

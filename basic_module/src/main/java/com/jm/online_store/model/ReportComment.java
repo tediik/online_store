@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import com.jm.online_store.enums.ReportReason;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ import javax.persistence.ManyToOne;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(description =  "Сущность ReportComment  - жалобы на Comment, связана с Comment")
 public class ReportComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

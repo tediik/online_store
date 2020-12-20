@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,10 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ApiModel(description =  "Сущность SubBasket - корзина. Связана с SharedStock и SentStock. Корзина клиента\" состоит из подкорзин \"SubBasket\", сотоящих в свою очередь\n" +
+        " из сущности \"Product\" и количества данного \"Product\" в \"SubBasket\".\n" +
+        " данная схема необходима, чтобы можно было хранить необходимое количество товара\n" +
+        "  для заказа пользователя и сам товар как экземпляр класса \"Product\".")
 public class SubBasket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(description =  "Сущность Topic - тема, связана с Feedback и TopicsCategory")
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

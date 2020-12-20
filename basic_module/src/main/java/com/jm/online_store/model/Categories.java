@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -25,6 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ApiModel(description =  "Сущность - Categories, связана с сущностью Product")
 public class Categories {
 
     @Id

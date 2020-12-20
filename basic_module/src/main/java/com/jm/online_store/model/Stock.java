@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +29,7 @@ import java.util.Set;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "stocks")
+@ApiModel(description =  "Сущность Stock - акция. Связана с SharedStock и SentStock")
 public class Stock {
 
     @Id

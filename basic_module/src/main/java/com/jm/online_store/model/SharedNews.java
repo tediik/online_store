@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,6 +31,9 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "shared_news")
+@ApiModel(description =  "Сущность SharedNews - Новость, которой поделились в социальной сети. Отражает то,\n" +
+        " * какой пользователь User, какой новостью News,\n" +
+        " * в какой социальной сети String поделился. Связана с User и News")
 public class SharedNews {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

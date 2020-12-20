@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(description =  "Сущность Review, связана с User, Product и Comment")
 public class Review {
 
     @Id

@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import com.jm.online_store.enums.RepairOrderType;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "repair_order")
+@ApiModel(description =  "Сущность RepairOrder для заказов на ремонт")
 public class RepairOrder {
 
     @Id

@@ -1,6 +1,8 @@
 package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +30,7 @@ import java.util.Set;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "address")
+@ApiModel(description =  "Сущность Address, связана с сущностью Order и User")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

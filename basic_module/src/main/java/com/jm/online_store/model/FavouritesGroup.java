@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @JsonIgnoreProperties("user")
+@ApiModel(description =  "Сущность FavouritesGroup - список избранных товаров")
 public class FavouritesGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

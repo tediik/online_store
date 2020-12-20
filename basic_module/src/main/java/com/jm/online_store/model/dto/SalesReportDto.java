@@ -3,6 +3,7 @@ package com.jm.online_store.model.dto;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
 import com.opencsv.bean.CsvBindByPosition;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(description =  "DTO для передачи отчета покупки")
 public class SalesReportDto {
     @CsvBindByPosition(position = 0)
     private Long orderNumber;

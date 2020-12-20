@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 @Data
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ApiModel(description =  "Сущность Role, расширяет GrantedAuthority")
 public class Role implements GrantedAuthority {
 
     @Id

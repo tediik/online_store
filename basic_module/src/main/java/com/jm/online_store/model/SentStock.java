@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +32,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "sent_stocks")
+@ApiModel(description =  "Сущность SentStock для связи Stock и User. " +
+        "При отправке письма с акциями на почту, в таблицу добавляется новая строка")
 public class SentStock {
 
     @Id
