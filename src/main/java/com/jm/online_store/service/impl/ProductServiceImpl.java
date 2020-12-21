@@ -13,6 +13,7 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
+import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
@@ -42,6 +43,8 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
     private final CommonSettingsService commonSettingsService;
     private final MailSenderService mailSenderService;
     private final CategoriesService categoriesService;
+    private final ProductCharacteristicService productCharacteristicService;
 
     /**
      * метод получения списка товаров
@@ -302,9 +306,29 @@ public class ProductServiceImpl implements ProductService {
                     String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
                     String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
                     String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
-                    String categoryId = eElement.getElementsByTagName("categoryid").item(0).getTextContent();
+                    String categoryName = eElement.getElementsByTagName("categoryname").item(0).getTextContent();
                     Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
-                    categoriesService.addToProduct(product, Long.parseLong(categoryId));
+                    categoriesService.addToProduct(product, categoryName);
+
+                    String characteristicName;
+                    String characteristicValue;
+                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
+                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
+                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
+                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
+
+                        List<String> listNames = Arrays.asList(characteristicName.split(","));
+                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
+                        Map<String, String> map = new HashMap<>();
+
+                        for (int i = 0; i < listValues.size(); i++) {
+                            map.put(listNames.get(i), listValues.get(i));
+                        }
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
+                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
+                                    entry.getKey(), entry.getValue());
+                        }
+                    }
                 }
             }
 
@@ -350,6 +374,26 @@ public class ProductServiceImpl implements ProductService {
                     String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
                     Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
                     categoriesService.addToProduct(product, categoryId);
+
+                    String characteristicName;
+                    String characteristicValue;
+                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
+                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
+                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
+                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
+
+                        List<String> listNames = Arrays.asList(characteristicName.split(","));
+                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
+                        Map<String, String> map = new HashMap<>();
+
+                        for (int i = 0; i < listValues.size(); i++) {
+                            map.put(listNames.get(i), listValues.get(i));
+                        }
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
+                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
+                                    entry.getKey(), entry.getValue());
+                        }
+                    }
                 }
             }
 

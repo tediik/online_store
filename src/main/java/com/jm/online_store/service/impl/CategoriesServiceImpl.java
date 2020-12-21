@@ -3,12 +3,14 @@ package com.jm.online_store.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.CategoriesRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +47,15 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public List<Categories> findAll() {
         return categoriesRepository.findAll();
+    }
+
+    /**
+     * Метод обновляет категорию
+     */
+    @Override
+    @Transactional
+    public void updateCategory(Categories category) {
+        categoriesRepository.save(category);
     }
 
     /**
@@ -138,6 +149,21 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public void addToProduct(Product product, Long id) {
         Categories thisCat = getCategoryById(id).get();
+
+        List<Product> thisCatProducts = thisCat.getProducts();
+        thisCatProducts.add(product);
+        thisCat.setProducts(thisCatProducts);
+        saveCategory(thisCat);
+    }
+
+    /**
+     * Метод добавляет категорию продукту
+     * @param product продукт
+     * @param category наименование категории
+     */
+    @Override
+    public void addToProduct(Product product, String category) {
+        Categories thisCat = getCategoryByCategoryName(category).orElseThrow(CategoriesNotFoundException::new);
 
         List<Product> thisCatProducts = thisCat.getProducts();
         thisCatProducts.add(product);

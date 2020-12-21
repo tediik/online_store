@@ -9,6 +9,7 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
+import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,9 @@ class ProductServiceImplTest {
     private final MailSenderService mailSenderService = mock(MailSenderService.class);
     private final CommonSettingsService commonSettingsService = mock(CommonSettingsService.class);
     private final CategoriesService categoriesService = mock(CategoriesService.class);
-    private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService, mailSenderService,categoriesService);
+    private final ProductCharacteristicService productCharacteristicService = mock(ProductCharacteristicService.class);
+    private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService,
+            mailSenderService, categoriesService, productCharacteristicService);
     private Product product;
     private Set<String> subscribers;
     private Map<LocalDateTime, Double> prices;

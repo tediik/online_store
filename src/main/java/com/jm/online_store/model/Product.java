@@ -14,10 +14,13 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
@@ -91,6 +94,11 @@ public class Product {
             joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")})
     @Column(name = "email")
     private Set<String> priceChangeSubscribers = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
+    private List<ProductCharacteristic> productCharacteristics;
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating, @NonNull String productType) {
         this.product = product;

@@ -1,9 +1,13 @@
 package com.jm.online_store.config;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
+import com.jm.online_store.exception.CategoriesNotFoundException;
+import com.jm.online_store.exception.CharacteristicNotFoundException;
+import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.BadWords;
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Customer;
@@ -27,11 +31,13 @@ import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.ReviewService;
@@ -93,6 +99,8 @@ public class DataInitializer {
     private final TopicsCategoryService topicsCategoryService;
     private final ReviewService reviewService;
     private final SharedNewsService sharedNewsService;
+    private final CharacteristicService characteristicService;
+    private final ProductCharacteristicService productCharacteristicService;
     private final BadWordsService badWordsService;
 
     /**
@@ -100,11 +108,15 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-   // @PostConstruct    //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
+    //@PostConstruct
+    //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
         newsInit();
+        characteristicsInit();
         productInit();
+        categoryCharacteristicsInit();
+        productCharacteristicsInit();
         ordersInit();
         stockInit();
         sharedStockInit();
@@ -652,20 +664,20 @@ public class DataInitializer {
         Categories category13 = new Categories("Периферия", 1L, 2);
         Categories category14 = new Categories("Планшеты", 3L, 2);
         Categories category15 = new Categories("Электронные книги", 3L, 2);
-        Categories category16 =  new Categories("Аксессуары для гаджетов", 3L, 2);
-        Categories category17 =  new Categories("Телевизоры", 4L, 2);
-        Categories category18 =  new Categories("Игры", 4L, 2);
-        Categories category19 =  new Categories("Аудиотехника", 4L, 2);
-        Categories category20 =  new Categories("Оргтехника", 5L, 2);
-        Categories category21 =  new Categories("Роутеры и сетевое оборудование", 5L, 2);
-        Categories category22 =  new Categories("Техника для кухни", 2L, 2);
-        Categories category23 =  new Categories("Техника для уборки", 2L, 2);
-        Categories category24 =  new Categories("Стиральные и сушильные машины", 2L, 2);
-        Categories category25 =  new Categories("Климатическая техника", 2L, 2);
-        Categories category26 =  new Categories("С сенсорным экраном", 9L, 3);
-        Categories category27 =  new Categories("Игровые", 9L, 3);
-        Categories category28 =  new Categories("Недорогие", 9L, 3);
-        Categories category29 =  new Categories("Ультрабуки", 9L, 3);
+        Categories category16 = new Categories("Аксессуары для гаджетов", 3L, 2);
+        Categories category17 = new Categories("Телевизоры", 4L, 2);
+        Categories category18 = new Categories("Игры", 4L, 2);
+        Categories category19 = new Categories("Аудиотехника", 4L, 2);
+        Categories category20 = new Categories("Оргтехника", 5L, 2);
+        Categories category21 = new Categories("Роутеры и сетевое оборудование", 5L, 2);
+        Categories category22 = new Categories("Техника для кухни", 2L, 2);
+        Categories category23 = new Categories("Техника для уборки", 2L, 2);
+        Categories category24 = new Categories("Стиральные и сушильные машины", 2L, 2);
+        Categories category25 = new Categories("Климатическая техника", 2L, 2);
+        Categories category26 = new Categories("С сенсорным экраном", 9L, 3);
+        Categories category27 = new Categories("Игровые", 9L, 3);
+        Categories category28 = new Categories("Недорогие", 9L, 3);
+        Categories category29 = new Categories("Ультрабуки", 9L, 3);
 
         Product product1 = new Product("Asus-NX4567", 299.9, 15, 4.0, "Computer", false);
         Product product2 = new Product("ACER-543", 399.9, 10, 4.2, "Computer", false);
@@ -751,6 +763,65 @@ public class DataInitializer {
                 category8, category9, category10, category11, category12, category13, category14, category15, category16,
                 category17, category18, category19, category20, category21, category22, category23, category24, category25,
                 category26, category27, category28, category29));
+    }
+
+    /**
+     * Метод первичного заполнения харакетристик категорий.
+     */
+    private void categoryCharacteristicsInit() {
+        List<Characteristic> smartphones = new ArrayList<>();
+        smartphones.add(characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(7L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+
+        List<Characteristic> laptops = new ArrayList<>();
+        laptops.add(characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(13L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(15L).orElseThrow(CharacteristicNotFoundException::new));
+
+        Categories categories1 = categoriesService.getCategoryById(11L).orElseThrow(CategoriesNotFoundException::new);
+        categories1.setCharacteristics(smartphones);
+        categoriesService.saveCategory(categories1);
+
+        Categories categories2 = categoriesService.getCategoryById(14L).orElseThrow(CategoriesNotFoundException::new);
+        categories2.setCharacteristics(smartphones);
+        categoriesService.saveCategory(categories2);
+
+        Categories categories3 = categoriesService.getCategoryById(28L).orElseThrow(CategoriesNotFoundException::new);
+        categories3.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories3);
+
+        Categories categories4 = categoriesService.getCategoryById(29L).orElseThrow(CategoriesNotFoundException::new);
+        categories4.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories4);
+
+        Categories categories5 = categoriesService.getCategoryById(27L).orElseThrow(CategoriesNotFoundException::new);
+        categories5.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories5);
+
+        Categories categories6 = categoriesService.getCategoryById(26L).orElseThrow(CategoriesNotFoundException::new);
+        categories6.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories6);
+
+        Categories categories7 = categoriesService.getCategoryById(10L).orElseThrow(CategoriesNotFoundException::new);
+        categories7.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories7);
     }
 
     /**
@@ -1362,6 +1433,46 @@ public class DataInitializer {
         reviewService.addReviewInit(review1);
         reviewService.addReviewInit(review2);
         reviewService.addReviewInit(review3);
+    }
+
+    public void characteristicsInit() {
+        List<Characteristic> characteristicList = new ArrayList<>();
+
+        characteristicList.add(new Characteristic("Диагональ экрана"));
+        characteristicList.add(new Characteristic("Разрешение экрана"));
+        characteristicList.add(new Characteristic("Модель процессора"));
+        characteristicList.add(new Characteristic("Год выпуска"));
+        characteristicList.add(new Characteristic("Объем оперативной памяти"));
+        characteristicList.add(new Characteristic("Объем встроенной памяти"));
+        characteristicList.add(new Characteristic("Количество камер"));
+        characteristicList.add(new Characteristic("NFC"));
+        characteristicList.add(new Characteristic("GPS"));
+        characteristicList.add(new Characteristic("Емкость аккумулятора"));
+        characteristicList.add(new Characteristic("Вес"));
+        characteristicList.add(new Characteristic("Тип экрана"));
+        characteristicList.add(new Characteristic("Частота обновления дисплея"));
+        characteristicList.add(new Characteristic("Частота оперативной памяти"));
+        characteristicList.add(new Characteristic("Сенсорный экран"));
+
+
+        characteristicList.forEach(characteristicService::saveCharacteristic);
+
+    }
+
+    private void productCharacteristicsInit() {
+        long productId = productService.findProductByName("XIAOMI-Mi10").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new).getId(), "6.67");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2340x1080");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Qualcomm Snapdragon 865");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2020");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new).getId(), "8");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new).getId(), "256");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(7L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4780");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "208");
     }
 
     /**

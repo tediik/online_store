@@ -86,10 +86,10 @@
             <a th:href="@{/manager}" class="btn btn-primary ml-auto">Кабинет менеджера</a>
             <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
         </nav>
-        <div class="card" >
+        <div class="card">
             <h5 class="card-header">Товары</h5>
             <div id="alert-div"></div>
-            <div class="card-body" >
+            <div class="card-body">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Продукты</a>
@@ -117,11 +117,12 @@
                             </div>
                             <div class="modal-body">
                                 <div class="container-fluid col-sm-12">
-                                    <form id="productImportModal" name="productImportModal" enctype="multipart/form-data" method="post">
+                                    <form id="productImportModal" name="productImportModal"
+                                          enctype="multipart/form-data" method="post">
                                         <label for="file">Выберите файл:</label>
                                         <input id="file" type="file" name="file">
-                                        <br />
-                                        <br />
+                                        <br/>
+                                        <br/>
                                     </form>
                                 </div>
                             </div>
@@ -149,7 +150,8 @@
                             <br>
                         </form>
                         <!--                main tab -->
-                        <table class="table table-active table-striped" id="products-table" style="background-color: white">
+                        <table class="table table-active table-striped" id="products-table"
+                               style="background-color: white">
 
                         </table>
                     </div>
@@ -161,57 +163,83 @@
                                 <div class="panel-body">
                                     <div id="add-productName-form-group" class="form-group">
                                         <label for="addProduct">Наименование:</label>
-                                        <input type="email" id="addProduct" name="product" placeholder="Наименование" class="form-control">
+                                        <input type="email" id="addProduct" name="product"
+                                               placeholder="Наименование"
+                                               class="form-control">
                                     </div>
                                     <div class="form-group addPriceDiv">
                                         <label for="addPrice">Цена:</label>
-                                        <input type="number" id="addPrice" name="price" placeholder="Цена" class="form-control">
+                                        <input type="number" id="addPrice" name="price" placeholder="Цена"
+                                               class="form-control">
                                     </div>
                                     <div id="add-email-form-group" class="form-group">
                                         <label for="addAmount">Количество:</label>
-                                        <input type="number" id="addAmount" name="amount" placeholder="Количество" class="form-control">
+                                        <input type="number" id="addAmount" name="amount" placeholder="Количество"
+                                               class="form-control">
                                     </div>
                                     <div class="input-group mb-4">
-                                        <input type="text" class="form-control" placeholder="Поиск по категориям" id="searchForCategories">
+                                        <input type="text" class="form-control" placeholder="Поиск по категориям"
+                                               id="searchForCategories">
                                     </div>
                                     <div id="jqxTreeHere"></div>
+                                    <div class="panel-body" id="addCharacteristicForm">
+
+                                    </div>
                                     <div class="mt-4">
-                                        <button id="addBtn" type="button" class=" btn btn-outline-success btn-md btn">Добавить новый товар</button>
+                                        <button id="addBtn" type="button"
+                                                class=" btn btn-outline-success btn-md btn">
+                                            Добавить новый товар
+                                        </button>
                                         <button type="button" class="btn btn-outline-primary" data-toggle='modal'
-                                                data-target='#newProductImportModal'>Загрузить товары из файла</button>
+                                                data-target='#newProductImportModal'>Загрузить товары из файла
+                                        </button>
+                                        <button onclick="renderCharacteristicsFields()" id="renderCharacteristic"
+                                                type="button"
+                                                class=" btn btn-outline-info btn-md btn">
+                                            Задать характеристики
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </form>
                     </div>
-<!--                    Начала слоя отображения категорий -->
+                    <!--                    Начала слоя отображения категорий -->
                     <div class="tab-pane fade" id="nav-products-categories" role="tabpanel"
                          aria-labelledby="nav-products-categories-tab">
                         <h2>Управление категориями товаров</h2>
                         <button type="button" class="btn btn-outline-primary my-2" data-toggle="modal"
-                                data-target="#addNewMainCategoryModal" data-backdrop="static">Добавить корневую категорию</button>
+                                data-target="#addNewMainCategoryModal" data-backdrop="static">Добавить корневую
+                            категорию
+                        </button>
                         <div id="jqxTree"></div>
                         <button type="button" class="btn btn-outline-success my-2" data-toggle="modal" id="jqxbutton"
-                                data-target="#magicButtonModal" data-backdrop="static">Нажмите для выбора действия</button>
+                                data-target="#magicButtonModal" data-backdrop="static">Нажмите для выбора действия
+                        </button>
                         <div class="modal fade" id="addNewMainCategoryModal" tabindex="-1" role="dialog"
                              aria-labelledby="addNewMainCategoryModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="addNewMainCategoryModalLabel">Название корневой категории:</h5>
+                                        <h5 class="modal-title" id="addNewMainCategoryModalLabel">Название корневой
+                                            категории:</h5>
                                     </div>
                                     <div class="modal-body">
                                         <form id="addProductCategoryForm">
                                             <div class="form-group">
                                                 <label for="addNewMainCategory"></label>
-                                                <input type="text" class="form-control" name="category" id="addNewMainCategory">
+                                                <input type="text" class="form-control" name="category"
+                                                       id="addNewMainCategory">
                                             </div>
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Закрыть</button>
-                                        <button type="button" class="btn btn-primary btn-sm" id="addMainCategoryButton" data-dismiss="modal">
-                                            Добавить</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
+                                            Закрыть
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" id="addMainCategoryButton"
+                                                data-dismiss="modal">
+                                            Добавить
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +253,9 @@
                                     </div>
                                     <div class="modal-body" id="magicButtonModalBody"></div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Отменить</button>
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                            Отменить
+                                        </button>
                                         <div id="deleteSubCategoryButtonDiv"></div>
                                     </div>
                                 </div>
@@ -233,7 +263,8 @@
                         </div>
 
                     </div>
-<!--                    Конец слоя отображения категорий -->
+                    <!--                    Конец слоя отображения категорий -->
+
                 </div>
             </div>
         </div>

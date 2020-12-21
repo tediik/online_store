@@ -2,11 +2,13 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.CharacteristicService;
+import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,13 +42,15 @@ public class ManagerProductsRestController {
 
     private final ProductService productService;
     private final CategoriesService categoriesService;
+    private final CharacteristicService characteristicService;
+    private final ProductCharacteristicService productCharacteristicService;
 
     /**
      * Метод обрабатывает загрузку файла с товарами на сервер
      * Вызывает соответствующий сервисный метод в зависимости от типа файла(CSV или XML)
      *
      * @param file файл с данными
-     * @return
+     * @return ResponseEntity<String> с кодом ответа
      */
     @PostMapping(value = "/rest/products/uploadProductsFile/{id}")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
@@ -62,12 +66,13 @@ public class ManagerProductsRestController {
         }
         log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
         if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
-            productService.importFromXMLFile(file.getOriginalFilename(),id);
-        } else if(getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
-            productService.importFromCSVFile(file.getOriginalFilename(),id);
+            productService.importFromXMLFile(file.getOriginalFilename(), id);
+        } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
+            productService.importFromCSVFile(file.getOriginalFilename(), id);
         }
         return ResponseEntity.ok("success");
     }
+
     @PostMapping(value = "/rest/products/uploadProductsFile")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws FileNotFoundException {
         try {
@@ -83,7 +88,7 @@ public class ManagerProductsRestController {
         log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
         if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
             productService.importFromXMLFile(file.getOriginalFilename());
-        } else if(getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
+        } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
             productService.importFromCSVFile(file.getOriginalFilename());
         }
         return ResponseEntity.ok("success");

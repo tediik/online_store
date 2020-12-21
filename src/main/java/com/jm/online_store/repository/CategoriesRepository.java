@@ -16,4 +16,6 @@ public interface CategoriesRepository extends JpaRepository<Categories, Long> {
     List<Categories> getCategoriesWithoutParentCategory();
 
     List<Categories> findAll();
+
+    Optional<Categories> getCategoriesByCategory(String category);
 }

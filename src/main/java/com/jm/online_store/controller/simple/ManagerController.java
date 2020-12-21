@@ -61,6 +61,13 @@ public class ManagerController {
         return "productsRating";
     }
 
+    @GetMapping("/characteristics")
+    public String getCharacteristics(Model model) {
+        model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
+
+        return "characteristics";
+    }
+
     /*
      добавил маппинг для отображения профиля на странице менеджера
      */
