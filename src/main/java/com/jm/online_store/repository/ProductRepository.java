@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Optional<Product> findByProduct(String productName);
 
-	@Query(value = "SELECT * FROM Product LIMIT :num", nativeQuery = true)
+	@Query(value = "SELECT * FROM product LIMIT :num", nativeQuery = true)
 	List<Product> findNumProducts(@Param("num") Integer num);
 
 	List<Product> findProductByProductContains(String searchString);
