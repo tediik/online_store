@@ -2,6 +2,10 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.service.interf.TopicsCategoryService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/manager/topicsCategory")
 @RequiredArgsConstructor
+@Api(description = "Rest controller for read/add/update categories for feedback topics")
 public class ManagerTopicsCategoryRestController {
     private final TopicsCategoryService topicsCategoryService;
 
@@ -31,6 +36,8 @@ public class ManagerTopicsCategoryRestController {
      * категории тем со статусом ответа, если категорий тем нет - только статус
      */
     @GetMapping
+    @ApiOperation(value = "Get list of all categories")
+    @ApiResponse(code = 204, message = "Category with no content")
     public ResponseEntity<List<TopicsCategory>> readAllTopicsCategories() {
         List<TopicsCategory> topicsCategories = topicsCategoryService.findAll();
         if (topicsCategories.isEmpty()) {
@@ -47,6 +54,8 @@ public class ManagerTopicsCategoryRestController {
      * если категория тем с таким id не существует - только статус
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "Get category by ID")
+    @ApiResponse(code = 404, message = "Category was not found")
     public ResponseEntity<TopicsCategory> readTopicsCategory(@PathVariable(name = "id") long id) {
         if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -62,6 +71,8 @@ public class ManagerTopicsCategoryRestController {
      * если категория тем с таким именем уже существует - только статус
      */
     @PostMapping
+    @ApiOperation(value = "Add a new category")
+    @ApiResponse(code = 304, message = "Category with this name is already exists")
     public ResponseEntity<TopicsCategory> createTopicsCategory(@RequestBody TopicsCategory topicsCategory) {
         if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
@@ -78,6 +89,11 @@ public class ManagerTopicsCategoryRestController {
      * если категория тем с таким id не существует - только статус
      */
     @PutMapping("/{id}")
+    @ApiOperation(value = "Update  category")
+    @ApiResponses(value = {
+            @ApiResponse(code = 304, message = "Category  name is not found"),
+            @ApiResponse(code = 404, message = "Category  ID  is not found")
+    })
     public ResponseEntity<TopicsCategory> updateTopicsCategory(@PathVariable(name = "id") long id, @RequestBody TopicsCategory topicsCategory) {
         if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
@@ -96,6 +112,8 @@ public class ManagerTopicsCategoryRestController {
      * если категория тем с таким id не существует - только статус
      */
     @PutMapping("/archive/{id}")
+    @ApiOperation(value = "Mark category as archived by ID")
+    @ApiResponse(code = 404, message = "Category  ID  is not found")
     public ResponseEntity<TopicsCategory> archiveTopicsCategory(@PathVariable(name = "id") long id) {
         if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -111,6 +129,8 @@ public class ManagerTopicsCategoryRestController {
      * если категория тем с таким id не существует - только статус
      */
     @PutMapping("/unarchive/{id}")
+    @ApiOperation(value = "Mark category as unarchived by ID")
+    @ApiResponse(code = 404, message = "Category  ID  is not found")
     public ResponseEntity<TopicsCategory> unarchiveTopicsCategory(@PathVariable(name = "id") long id) {
         if (!topicsCategoryService.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

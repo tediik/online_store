@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,8 @@ import javax.persistence.Table;
 @Data
 @RequiredArgsConstructor
 @Table(name = "order_product")
+@ApiModel(description =  "Сущность ProductInOrder для связи продукта и заказа и хранения кол-ва конкретного продукта в заказе" +
+        ", связана с Order")
 public class ProductInOrder {
 
     @Id

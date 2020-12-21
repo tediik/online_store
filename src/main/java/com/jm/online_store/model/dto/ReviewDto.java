@@ -1,11 +1,13 @@
 package com.jm.online_store.model.dto;
 
 import com.jm.online_store.model.Review;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Data
+@ApiModel(description =  "Dto для сущности отзыва")
 public class ReviewDto {
 
     private Long id;

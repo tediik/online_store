@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ApiModel(description =  "Сущность Description для описания")
 public class Description {
 
     @Id

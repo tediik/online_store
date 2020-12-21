@@ -1,5 +1,8 @@
 package com.jm.online_store.model;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description =  "CurrentUrl, описывающий текущий url")
 public class CurrentUrl {
 
     private static String url;

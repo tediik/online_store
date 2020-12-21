@@ -4,6 +4,9 @@ import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.service.interf.StockService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,10 +28,13 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/manager/api/stock")
+@Api(description = "Rest controller for manage of stocks from manager page")
 public class ManagerStockRestController {
     private final StockService stockService;
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Get stock by ID")
+    @ApiResponse(code = 404, message = "Stock was not found")
     public ResponseEntity<Stock> getStockById(@PathVariable Long id) {
         Stock requestedStock;
         try {
@@ -40,6 +46,8 @@ public class ManagerStockRestController {
     }
 
     @GetMapping("/allStocks")
+    @ApiOperation(value = "Get list of all stocks")
+    @ApiResponse(code = 404, message = "Stocks was not found")
     public ResponseEntity<List<Stock>> getAllStocks() {
         List<Stock> allStocks;
         try {
@@ -57,6 +65,8 @@ public class ManagerStockRestController {
      * @return Page<Stock> возвращает страницу новостей
      */
     @GetMapping("/page")
+    @ApiOperation(value = "Return stocks page")
+    @ApiResponse(code = 404, message = "Page was not found")
     public ResponseEntity<Page<Stock>> getStockPage(@PageableDefault Pageable page, StockFilterDto filterDto) {
         Page<Stock> stockPage;
         try {
@@ -68,6 +78,8 @@ public class ManagerStockRestController {
     }
 
     @GetMapping("/currentStocks")
+    @ApiOperation(value = "Get current stocks")
+    @ApiResponse(code = 404, message = "Stocks was not found")
     public ResponseEntity<List<Stock>> getCurrentStocks() {
         List<Stock> currentStocks;
         try {
@@ -79,6 +91,8 @@ public class ManagerStockRestController {
     }
 
     @GetMapping("/futureStocks")
+    @ApiOperation(value = "Get future stocks")
+    @ApiResponse(code = 404, message = "Stocks was not found")
     public ResponseEntity<List<Stock>> getFutureStocks() {
         List<Stock> futureStocks;
         try {
@@ -90,6 +104,8 @@ public class ManagerStockRestController {
     }
 
     @GetMapping("/pastStocks")
+    @ApiOperation(value = "Get past stocks")
+    @ApiResponse(code = 404, message = "Stocks was not found")
     public ResponseEntity<List<Stock>> getPastStocks() {
         List<Stock> currentStocks;
         try {
@@ -101,18 +117,22 @@ public class ManagerStockRestController {
     }
 
     @PostMapping
+    @ApiOperation(value = "Add new stock")
     public ResponseEntity<String> addNewStock(@RequestBody Stock stock) {
         stockService.addStock(stock);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Delete stock by ID")
     public ResponseEntity<String> deleteStock(@PathVariable Long id) {
         stockService.deleteStockById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping
+    @ApiOperation(value = "Method for update stock")
+    @ApiResponse(code = 404, message = "Stock was not found")
     public ResponseEntity<String> modifyStock(@RequestBody Stock stock) {
         try {
             stockService.updateStock(stock);

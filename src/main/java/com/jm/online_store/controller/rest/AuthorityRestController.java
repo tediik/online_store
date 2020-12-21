@@ -3,6 +3,10 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +26,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/authority")
 @RequiredArgsConstructor
+@Api(description = "Rest controller for actions with profiles with roles: Admin, Manager, Service")
 public class AuthorityRestController {
     /**
      * REST-контролллер для ролей ADMIN & MANAGER & SERVICE
@@ -44,6 +49,7 @@ public class AuthorityRestController {
      * @return ResponseEntity<String> возвращает статус ответа
      */
     @PostMapping("/changeEmail")
+    @ApiOperation(value = "change email")
     public ResponseEntity<String> changeMail(@RequestBody String newMail) {
         User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
@@ -60,6 +66,7 @@ public class AuthorityRestController {
      * @return ResponseEntity<String> возвращает статус ответа
      */
     @PostMapping("/changePassword")
+    @ApiOperation(value = "change password")
     public ResponseEntity<String> changePassword(@RequestBody Map<String, String> passwords) {
         User user = userService.getCurrentLoggedInUser();
         if (!userService.changePassword(user.getId(), passwords.get("oldPassword"), passwords.get("newPassword"))) {
@@ -72,6 +79,7 @@ public class AuthorityRestController {
      * Метод получения текущего пользователя
      * @return ResponseEntity<User> возвращает текущего пользователя и статус ответа
      */
+    @ApiOperation(value = "get current Logged in User")
     @GetMapping(value = "/currentUser")
     public ResponseEntity<User> getCurrentUser() {
         User currentLoggedInUser = userService.getCurrentLoggedInUser();
@@ -84,6 +92,7 @@ public class AuthorityRestController {
      * @return ResponseEntity<String> статус ответа
      */
     @PutMapping("/updateProfile")
+    @ApiOperation(value = "updates current User's profile")
     public ResponseEntity<String> updateProfile(@RequestBody User user) {
         userService.updateUserProfile(user);
         return ResponseEntity.ok().build();
@@ -94,6 +103,7 @@ public class AuthorityRestController {
      * @return ResponseEntity.ok() код ответа
      */
     @DeleteMapping("/deleteProfile/{id}")
+    @ApiOperation(value = "deletes current User's profile")
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
         userService.deleteByID(id);
         return ResponseEntity.ok().build();

@@ -10,6 +10,10 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -37,6 +41,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/manager")
 @Slf4j
+@Api(description = "Rest controller for manage and publish news from manager page")
 public class ManagerRestController {
 
     private final NewsService newsService;
@@ -48,6 +53,7 @@ public class ManagerRestController {
      * @return List<News> возвращает список всех новстей из базы данных
      */
     @GetMapping("/news")
+    @ApiOperation(value = "Get list of all news")
     public ResponseEntity<List<News>> allNews() {
         return ResponseEntity.ok().body(newsService.findAll());
     }
@@ -59,6 +65,7 @@ public class ManagerRestController {
      * @return возвращает заполненную сущность клиенту
      */
     @PostMapping("/news/post")
+    @ApiOperation(value = "Method for save news in database")
     public ResponseEntity<News> newsPost(@RequestBody News news) {
 
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
@@ -75,6 +82,7 @@ public class ManagerRestController {
      * @return возвращает обновленную сущность клиенту
      */
     @PutMapping("/news/update")
+    @ApiOperation(value = "Method for update news in database")
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
 
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
@@ -91,6 +99,7 @@ public class ManagerRestController {
      * @return возвращает идентификатор удаленной сущности клиенту
      */
     @DeleteMapping("/news/{id}/delete")
+    @ApiOperation(value = "Method for delete news in database by ID")
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
         newsService.deleteById(id);
         return ResponseEntity.ok().body(id);
@@ -104,6 +113,8 @@ public class ManagerRestController {
      * @return - {@link ResponseEntity} with list of Orders with status complete
      */
     @GetMapping("/sales")
+    @ApiOperation(value = "Get mapping for get request to response with sales during the custom date range")
+    @ApiResponse(code = 404, message = "Sales was not found")
     public ResponseEntity<List<SalesReportDto>> getSalesForCustomRange(@RequestParam String stringStartDate, @RequestParam String stringEndDate) {
         LocalDate startDate = LocalDate.parse(stringStartDate);
         LocalDate endDate = LocalDate.parse(stringEndDate);
@@ -123,6 +134,8 @@ public class ManagerRestController {
      * @return - ResponseEntity
      */
     @GetMapping("/sales/exportCSV")
+    @ApiOperation(value = "Mapping for csv export")
+    @ApiResponse(code = 400, message = "Problem with writing csv file")
     public ResponseEntity<FileSystemResource> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate, @RequestParam String stringEndDate, HttpServletResponse response) {
         LocalDate startDate = LocalDate.parse(stringStartDate);
         LocalDate endDate = LocalDate.parse(stringEndDate);

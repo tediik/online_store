@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
+@ApiModel(description =  "Сущность Product, связана с ProductInOrder, Comment и Review")
 public class Product {
 
     @Id

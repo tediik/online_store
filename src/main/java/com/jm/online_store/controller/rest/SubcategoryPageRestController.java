@@ -3,6 +3,8 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.util.Transliteration;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categories")
 @AllArgsConstructor
+@Api(description = "Rest controller for subcategories page")
 public class SubcategoryPageRestController {
 
     private CategoriesService categoriesService;
@@ -31,6 +34,7 @@ public class SubcategoryPageRestController {
      * @author Dmitriy (dshishkaryan)
      */
     @GetMapping("/{name}")
+    @ApiOperation(value = "Get subcategory by name with translation from latin to cyrillic")
     public ResponseEntity<Categories> getCategory(@PathVariable String name) {
         String categoryName = name.replaceAll("\"", "");
         ResponseEntity<Categories>[] answer = new ResponseEntity[1];
@@ -46,6 +50,7 @@ public class SubcategoryPageRestController {
      */
 
     @GetMapping("/categories")
+    @ApiOperation(value = "Get all subcategories")
     public ResponseEntity<List<Categories>> getAllCategories() {
         return ResponseEntity.ok(categoriesService.findAll());
     }

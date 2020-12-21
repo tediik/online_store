@@ -10,6 +10,9 @@ import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReviewService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/reviews")
 @AllArgsConstructor
+@Api(description = "Rest controller for reviews")
 public class ReviewRestController {
 
     private final ProductRepository productRepository;
@@ -44,6 +48,8 @@ public class ReviewRestController {
      * @return ResponseEntity<List<ReviewDto>>
      */
     @GetMapping("/{productId}")
+    @ApiOperation(value = "Fetches an arrayList of all product Review by productId " +
+            "and returns JSON representation response by product ID")
     public ResponseEntity<List<ReviewDto>> findAll(@PathVariable Long productId) {
         List<ReviewDto> reviewDtos = reviewService.findAll(productId).stream()
                 .map(ReviewDto::reviewEntityToDto)
@@ -58,6 +64,8 @@ public class ReviewRestController {
      * @return ResponseEntity<List<CommentDto>>
      */
     @GetMapping("/comments/{reviewId}")
+    @ApiOperation(value = "Fetches an arrayList of all review comments by reviewId" +
+            " and returns JSON representation response by review ID")
     public ResponseEntity<List<CommentDto>> findAllComments(@PathVariable Long reviewId) {
         List<CommentDto> commentDtos = commentService.findAllByReviewId(reviewId).stream()
                 .map(CommentDto::commentEntityToDto)
@@ -72,6 +80,8 @@ public class ReviewRestController {
      * @return ResponseEntity<productReview> or ResponseEntity<List<String>>
      */
     @PostMapping
+    @ApiOperation(value = "Receives productReview requestBody and passes it to Service layer for processing")
+    @ApiResponse(code = 400, message = "Request has an incorrect data")
     public ResponseEntity<?> addReview(@RequestBody @Valid Review review, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(review.getProductId()).get();
         if (!bindingResult.hasErrors()) {
@@ -100,5 +110,4 @@ public class ReviewRestController {
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
     }
-
 }

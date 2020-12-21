@@ -3,6 +3,9 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +21,13 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/manager/api/sharedStock")
+@Api(description = "Rest controller for manage of shared stocks from manager page")
 public class ManagerSharedStockRestController {
     private final SharedStockService sharedStockService;
     private final UserService userService;
 
     @PostMapping
+    @ApiOperation(value = "Add shared stock")
     public ResponseEntity<String> addSharedStock(@RequestBody SharedStock sharedStock) {
         sharedStock.setUser(userService.getCurrentLoggedInUser());
         try {
@@ -34,6 +39,7 @@ public class ManagerSharedStockRestController {
     }
 
     @GetMapping
+    @ApiOperation(value = "Get all shared stocks")
     public ResponseEntity<List<SharedStock>> getQuantity() {
         return ResponseEntity.ok(sharedStockService.findAll());
     }

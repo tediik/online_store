@@ -6,6 +6,10 @@ import com.jm.online_store.model.Address;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,16 +29,19 @@ import java.util.Set;
 @AllArgsConstructor
 @RequestMapping("/customer")
 @RestController
+@Api(description = "Rest controller for addresses")
 public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;
 
     @GetMapping(value = "/customer/rest/allShops")
+    @ApiOperation(value = "get all the shops")
     public ResponseEntity<List<Address>> findAll() {
         return ResponseEntity.ok(addressService.findAllShops());
     }
 
     @GetMapping(value = "/rest/userAddresses")
+    @ApiOperation(value = "get current logged in Users address")
     public ResponseEntity<Set<Address>> userAddresses() {
             if(userService.getCurrentLoggedInUser().getUserAddresses() != null) {
             return ResponseEntity.ok(userService.getCurrentLoggedInUser().getUserAddresses());
@@ -42,6 +49,7 @@ public class AddressRestController {
         return ResponseEntity.notFound().build();
     }
     @PostMapping(value = "/rest/addAddress")
+    @ApiOperation(value = "adds address for current logged in user")
     public ResponseEntity addAddressToUser(@RequestBody Address address) {
         User user = userService.getCurrentLoggedInUser();
         if(userService.addNewAddressForUser(user,address)) {

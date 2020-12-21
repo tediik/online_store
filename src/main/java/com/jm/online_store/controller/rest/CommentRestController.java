@@ -12,6 +12,10 @@ import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -39,6 +43,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/comments")
 @AllArgsConstructor
 @Slf4j
+@Api(description = "Rest controller for CRUD operations with comments to the products on products pages")
 public class CommentRestController {
 
     private final CommentService commentService;
@@ -55,6 +60,7 @@ public class CommentRestController {
      * @return ResponseEntity<List<CommentDto>>
      */
     @GetMapping("/{productId}")
+    @ApiOperation(value = "Fetches all the comments from current product")
     public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
         List<CommentDto> commentDtos = commentService.findAllByProductId(productId).stream()
                 .map(CommentDto::commentEntityToDto)
@@ -70,6 +76,11 @@ public class CommentRestController {
      * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
      */
     @PostMapping
+    @ApiOperation(value = "Post new comment to the current product")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Request contains incorrect data"),
+            @ApiResponse(code = 200, message = "Comment was successfully added")
+    })
     public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
         if (!bindingResult.hasErrors()) {
@@ -105,6 +116,11 @@ public class CommentRestController {
      * @return ResponseEntity<ReviewForCommentDto> or ResponseEntity<List<String>>
      */
     @PostMapping("/{reviewId}")
+    @ApiOperation(value = "Post new Review comment to the current product")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Request contains incorrect data"),
+            @ApiResponse(code = 200, message = "Review comment has successfully added")
+    })
     public ResponseEntity<?> addReviewComment(@RequestBody @Valid Comment comment,
                                               @PathVariable Long reviewId, BindingResult bindingResult) {
         Review reviewFromDb = reviewService.findById(reviewId).get();
@@ -141,6 +157,12 @@ public class CommentRestController {
      * @return ResponseEntity<?>
      */
     @DeleteMapping("/{commentId}")
+    @ApiOperation(value = "Deletes comment by its Id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 304, message = "Request contains incorrect data - only comment author can delete it"),
+            @ApiResponse(code = 200, message = "comment was successfully deleted")
+
+    })
     public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
@@ -163,6 +185,11 @@ public class CommentRestController {
      * @return ResponseEntity<?>
      */
     @PutMapping
+    @ApiOperation(value = "Updates comment")
+    @ApiResponses(value = {
+            @ApiResponse(code = 304, message = "Request contains incorrect data - only comment author can change it"),
+            @ApiResponse(code = 200, message = "comment was successfully updated")
+    })
     public ResponseEntity<?> updateComment(@RequestBody @Valid Comment comment) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();

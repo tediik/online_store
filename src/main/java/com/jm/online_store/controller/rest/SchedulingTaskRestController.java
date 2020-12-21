@@ -6,6 +6,8 @@ import com.jm.online_store.service.interf.PriceListService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
 import com.jm.online_store.service.interf.TaskSettingsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "api/manager/scheduling")
 @AllArgsConstructor
+@Api(description = "Rest controller for scheduling task")
 public class SchedulingTaskRestController {
     private final TaskSchedulingService schedulingService;
     private final TaskSettingsService taskSettingsService;
@@ -36,6 +39,7 @@ public class SchedulingTaskRestController {
     }
 
     @PostMapping("/stockMailDistribution/start")
+    @ApiOperation(value = "Start of mail distribution task")
     public ResponseEntity<TaskSettings> startMailDistributionTask(@RequestBody TaskSettings taskSettings) {
         taskSettingsService.updateTask(taskSettings);
         schedulingService.addTaskToScheduler(taskSettings, stockMailDistributionTask);
@@ -43,6 +47,7 @@ public class SchedulingTaskRestController {
     }
 
     @PostMapping("/stockMailDistribution/stop")
+    @ApiOperation(value = "Stop of mail distribution task")
     public ResponseEntity<TaskSettings> stopMailDistributionTask(@RequestBody TaskSettings taskSettings) {
         taskSettingsService.updateTask(taskSettings);
         schedulingService.removeTaskFromScheduler(taskSettings.getId());
@@ -50,6 +55,7 @@ public class SchedulingTaskRestController {
     }
 
     @PostMapping("/dailyPriceCreate")
+    @ApiOperation(value = "Changing of daily price task")
     public ResponseEntity<TaskSettings> changeDailyPriceTask(@RequestBody TaskSettings taskSettings) {
         taskSettingsService.updateTask(taskSettings);
         schedulingService.addTaskToScheduler(taskSettings, priceListService);
@@ -57,6 +63,7 @@ public class SchedulingTaskRestController {
     }
 
     @GetMapping("/{taskName}")
+    @ApiOperation(value = "Get mail distribution settings by task name")
     public ResponseEntity<TaskSettings> getMailDistributionSettings(@PathVariable String taskName) {
         return ResponseEntity.ok(taskSettingsService.findTaskByName(taskName));
     }

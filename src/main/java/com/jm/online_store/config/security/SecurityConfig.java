@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .access("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SERVICE', 'ROLE_MODERATOR')")
                 .antMatchers("/admin/**", "/api/users/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/moderator/**").access("hasRole('ROLE_MODERATOR')")
-                .antMatchers("/**").permitAll()
+                .antMatchers("/**", "/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied")

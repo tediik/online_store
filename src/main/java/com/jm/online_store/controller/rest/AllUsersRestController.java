@@ -4,6 +4,10 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,6 +27,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping(value = "/users")
 @RequiredArgsConstructor
+@Api(description = "Rest controller for actions with users profiles")
 public class AllUsersRestController {
 
     private final UserService userService;
@@ -36,6 +41,7 @@ public class AllUsersRestController {
      * @return
      */
     @GetMapping("/getCurrent")
+    @ApiOperation(value = "Fetches email and roles of logged in user")
     public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.noContent().build();
@@ -50,12 +56,14 @@ public class AllUsersRestController {
     }
 
     @PostMapping("/uploadImage")
+    @ApiOperation(value = "uploads images")
     public ResponseEntity<String> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         User userDetails = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(userService.updateUserImage(userDetails.getId(), imageFile));
     }
 
     @DeleteMapping("/deleteImage")
+    @ApiOperation(value = "deletes images")
     public ResponseEntity<String> deleteImage() throws IOException {
         User userDetails = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(userService.deleteUserImage(userDetails.getId()));
@@ -68,6 +76,10 @@ public class AllUsersRestController {
      * @return
      */
     @PutMapping("/restore")
+    @ApiOperation(value = "restores deleted users profile")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "User not found"),
+    })
     public ResponseEntity<String> restoreUser(@RequestBody String email) {
         try {
             customerService.restoreCustomer(email);

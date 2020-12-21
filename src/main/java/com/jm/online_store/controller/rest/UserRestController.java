@@ -2,6 +2,8 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,28 +23,33 @@ import java.util.List;
 @RequestMapping(value = "/api/users")
 @RequiredArgsConstructor
 @Slf4j
+@Api(description = "Rest controller for users")
 public class UserRestController {
 
     private final UserService userService;
 
     @GetMapping
+    @ApiOperation(value = "Get all users")
     public List<User> findAll() {
         return userService.findAll();
     }
 
     @PostMapping
+    @ApiOperation(value = "Save user")
     public User saveUser(@RequestBody User user) {
         userService.addUser(user);
         return user;
     }
 
     @PutMapping
+    @ApiOperation(value = "Update users")
     public User updateUser(@RequestBody User user) {
         userService.updateUserAdminPanel(user);
         return user;
     }
 
     @DeleteMapping(value = "/{userId}")
+    @ApiOperation(value = "Delete user by ID")
     public ResponseEntity<Void> deleteUserById(@PathVariable Long userId) {
         userService.deleteByID(userId);
         return new ResponseEntity<Void>(HttpStatus.OK);

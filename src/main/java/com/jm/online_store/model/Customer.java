@@ -1,6 +1,7 @@
 package com.jm.online_store.model;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
+import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@ApiModel(description =  "Сущность Customer расширяющая User")
 public class Customer extends User {
 
     /**

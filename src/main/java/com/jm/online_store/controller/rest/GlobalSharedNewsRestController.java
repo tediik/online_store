@@ -3,6 +3,9 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.SharedNews;
 import com.jm.online_store.service.interf.SharedNewsService;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/global/api/sharedNews")
+@Api(description = "Rest controller for adding news, that users shared in social networks")
 public class GlobalSharedNewsRestController {
     private final SharedNewsService sharedNewsService;
     private final UserService userService;
@@ -32,6 +36,8 @@ public class GlobalSharedNewsRestController {
      * @return ResponseEntity<String> возвращает статус ответа
      */
     @PostMapping
+    @ApiOperation(value = "Adds information about which user shared which news in which social network. " +
+            "SharedNews must include news id, which was shared and the name of social network, where was shared")
     public ResponseEntity<String> addSharedNews(@RequestBody SharedNews sharedNews) {
         sharedNews.setUser(userService.getCurrentLoggedInUser());
         sharedNewsService.addSharedNews(sharedNews);
