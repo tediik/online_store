@@ -4,8 +4,8 @@ spring:
       initialize-schema: always
       table-name: SPRING_SESSION
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/online_store?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/online_store?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
     username: root
     password: root
   jpa:
@@ -15,7 +15,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL57Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         storage_engine: innodb
         jdbc:
           timezone: UTC
