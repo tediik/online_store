@@ -85,6 +85,11 @@ async function fillAboutProduct(data) {
     } else {
         $("#rateNumber").empty().append(`<h5>Товар ещё никто не оценил<h5>`)
     }
+    if (data.price !== null) {
+        $("#price").empty().append(`<h5>${data.price}<h5>`)
+    } else {
+        $("#price").empty().append(`<h5>Цена отсутствует<h5>`)
+    }
     rateInitialize(data.rating)
 
     // заполнение вкладки с описанием продукта
