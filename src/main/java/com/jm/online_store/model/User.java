@@ -25,6 +25,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -46,6 +47,7 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ApiModel(description =  "Сущность User, расширеяет UserDetails, связана с Role, Product," +
         " FavouritesGroup и Address")
+@Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

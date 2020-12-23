@@ -4,10 +4,13 @@ spring:
       initialize-schema: always
       table-name: SPRING_SESSION
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/online_store?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=Europe/Moscow
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/online_store
     username: root
     password: root
+#    url: jdbc:postgresql://ec2-52-208-138-246.eu-west-1.compute.amazonaws.com:5432/datmbr0etpmdhb
+#    username: ivrmvajsnlixth
+#    password: ec3c54e3047872e2eb2075ec1e333e04aedb0ab4604410209771d31fe5042050
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,7 +18,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL57Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         storage_engine: innodb
         jdbc:
           timezone: UTC
