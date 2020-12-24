@@ -534,6 +534,15 @@ public class UserServiceImpl implements UserService {
      * Service method which builds and returns currently logged in User from Authentication
      * @return User
      */
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+    /**
+     * Service method which builds and returns currently logged in User from Authentication
+     * @return User
+     */
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled

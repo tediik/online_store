@@ -2,10 +2,15 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.FeedbackNotFoundException;
 import com.jm.online_store.model.Feedback;
+import com.jm.online_store.model.User;
 import com.jm.online_store.repository.FeedbackRepository;
 import com.jm.online_store.service.interf.FeedbackService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,7 +39,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     /**
-     * Метод добавления ответа на обращения, задает статус RESOLVED
+     * Метод добавления ответа на обращения,плюс еще мы сохраняем юзера-менеджера, задает статус RESOLVED
      * @param feedback - {@link Feedback} обращение
      */
     @Override

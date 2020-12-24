@@ -3,12 +3,18 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.Feedback;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.model.TopicsCategory;
+import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FeedbackService;
 import com.jm.online_store.service.interf.TopicsCategoryService;
+import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +35,7 @@ import java.util.Set;
 public class FeedbackRestController {
     private final FeedbackService feedbackService;
     private final TopicsCategoryService topicsCategoryService;
-
+    private final UserService userService;
     /**
      * Mapping to get categories from {@link TopicsCategory}
      *
@@ -78,6 +84,22 @@ public class FeedbackRestController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Метод который возвращает автора ответа на обращение
+     * @return ResponseEntity
+     */
+    @GetMapping("/getManager")
+    public ResponseEntity<User> getManager() {
+        User user = null;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if ((!(auth instanceof AnonymousAuthenticationToken)) && auth != null)  {
+            UserDetails userDetails = (UserDetails) auth.getPrincipal();
+            String name = userDetails.getUsername();
+            //User user1 = userService.getCurrentLoggedInUser();
+            user = userService.findUserByEmail(name);
+        }
+        return ResponseEntity.ok(user);
+    }
     /**
      * Метод устанавливает дату и время обращения, для поля responseExpected
      * @param feedback - {@link Feedback}

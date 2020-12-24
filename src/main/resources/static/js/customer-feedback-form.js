@@ -213,6 +213,8 @@ function renderMessagesCurrentCustomer(data) {
                                         <p>${messages.answer}</p>
                                     </div>
                                 </div>
+                                <span id="RenderCustomerM">Имя: ${messages.id}</span>
+                                <span id="RenderCustomerM">Фамилия: ${messages.id}</span>
                         </div>
                     </div>`
     });
