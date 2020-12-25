@@ -84,6 +84,8 @@ public class User implements UserDetails {
 
     private String profilePicture = "";
 
+    @Column
+    private boolean confirmReceiveEmails;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)

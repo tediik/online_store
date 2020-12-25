@@ -108,7 +108,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct
+    //@PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -1257,6 +1257,12 @@ public class DataInitializer {
                 .settingName("price_change_distribution_template")
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о снижении цены</p>" +
                         "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
+                        "<p>С Уважением</p><p>Online-store.ru</p>")
+                .build();
+        CommonSettings subscribeConfirmationTemplate = CommonSettings.builder()
+                .settingName("subscribe_confirmation_template")
+                .textValue("<p>Уважаемый @@user@@, для подтверждении подписки о снижении цены</p>" +
+                        "<p>Пожалуйста, ответьте на это письмо с любым текстом</p>" +
                         "<p>С Уважением</p><p>Online-store.ru</p>")
                 .build();
         CommonSettings badWordsEnabled = CommonSettings.builder()

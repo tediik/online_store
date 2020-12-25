@@ -242,6 +242,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * Метод, отправляющий сообщение с просьбой подтвердить подписку пользователю,
+     * который нажал на "Подписаться на изменение цены" впервые
+     * @param email
+     */
+    public void sendConfirmationSubscribeLetter(String email) {
+        String templateBody = commonSettingsService
+                .getSettingByName("subscribe_confirmation_template")
+                .getTextValue();
+        String messageBody;
+        Optional<User> user = userService.findByEmail(email);
+        if (user.isPresent() && user.get().getFirstName() != null) {
+            messageBody = templateBody.replaceAll("@@user@@", user.get().getFirstName());
+        } else {
+            messageBody = templateBody.replaceAll("@@user@@", "Покупатель");
+        }
+        try {
+            mailSenderService.sendHtmlMessage(email, "Подтвердите Вашу подписку", messageBody, "Subscribe confirmation");
+        } catch (MessagingException e) {
+            log.debug("Can not send mail about Subscribe confirmation to {}", email);
+        }
+    }
+
+    /**
      * метод удаления Product.
      *
      * @param idProduct идентификатор Product
