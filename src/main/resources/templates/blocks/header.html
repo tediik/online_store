@@ -22,6 +22,7 @@
         <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')"
            class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/customer">Кабинет покупателя</a>
+
         <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')" id="showBasket" href="/customer/basket">
             <img src="/static/img/buscket.jpg" width="25" height="25">
             <ins style="color: #ff8e05">
@@ -31,6 +32,8 @@
         </a>
         <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/admin">Кабинет администратора</a>
+        <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="p-2 text-dark"
+           href="/">Главная</a>
         <a sec:authorize="hasAnyAuthority('ROLE_MANAGER') and not hasAnyAuthority('ROLE_ADMIN')"
            class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/authority/profile">Кабинет менеджера</a>
