@@ -123,18 +123,6 @@ public class UserServiceImplTest {
         verify(confirmTokenRepository, times(1)).save(any());
     }
 
-    @Test
-    public void changeUsersMailTest() {
-        User newUser = Mockito.spy(userFullParameterAndIdPicture);
-        when(confirmTokenRepository.save(new ConfirmationToken())).thenReturn(null);
-        doNothing().when(mailSenderService).send(userFullParameterAndIdPicture.getEmail(), "Activation code", "message", "emailType");
-
-        userService.changeUsersMail(newUser, "newMail");
-
-        assertEquals("newMail", newUser.getEmail());
-
-        verify(confirmTokenRepository, times(1)).save(any());
-    }
 
     @Test
     public void activateUserTest() {
@@ -159,7 +147,7 @@ public class UserServiceImplTest {
 
         verify(confirmTokenRepository, times(1)).findByConfirmationToken(any());
         verify(userRepository, times(1)).findById(any());
-        verify(userRepository, times(1)).saveAndFlush(any());
+        verify(userRepository, times(1)).save(any());
     }
 
     @Test
