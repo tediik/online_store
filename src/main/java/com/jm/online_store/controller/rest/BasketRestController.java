@@ -6,6 +6,7 @@ import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.service.interf.BasketService;
+import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -29,6 +31,7 @@ import java.util.List;
 @Api(description = "Rest controller for actions with Basket and SubBasket")
 public class BasketRestController {
     private final BasketService basketService;
+    private final UserService userService;
 
     /**
      * контроллер для получения товаров в корзине для авторизованного User.
@@ -41,7 +44,11 @@ public class BasketRestController {
         List<SubBasket> subBaskets = basketService.getBasket();
         return new ResponseEntity<>(subBaskets, HttpStatus.OK);
     }
-
+    @GetMapping(value = "/basketGoods")
+    public ResponseEntity<List<SubBasket>> getAnonymousBasket(HttpServletRequest request) {
+        List<SubBasket> subBaskets= userService.getCurrentAnonymousUser(request.getSession().getId()).getUserBasket();
+        return new ResponseEntity<>(subBaskets, HttpStatus.OK);
+    }
     /**
      * контроллер для формирования заказа из корзины.
      *
@@ -88,16 +95,27 @@ public class BasketRestController {
 
     }
 
-    @PutMapping("/api/basket/add/{id}")
-    @ApiOperation(value = "Adds product to Basket")
-    public ResponseEntity<String> addProductToBasket(@PathVariable Long id) {
-        try {
-            basketService.addProductToBasket(id);
-            return ResponseEntity.ok().build();
-        } catch (UserNotFoundException | ProductNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (ProductsNotFoundException e) {
-            return ResponseEntity.badRequest().build();
-        }
+
+@PutMapping("/api/basket/add/{id}")
+@ApiOperation(value = "Adds product to Basket")
+public ResponseEntity<String> addProductToBasket(@PathVariable Long id, HttpServletRequest request) {
+    if(userService.getCurrentLoggedInUser()==null){
+        try{
+    basketService.addProductToAnonBasket(id,request.getSession().getId());
+        return ResponseEntity.ok().build();
+    } catch (UserNotFoundException | ProductNotFoundException e) {
+        return ResponseEntity.notFound().build();
+    } catch (ProductsNotFoundException e) {
+        return ResponseEntity.badRequest().build();
     }
+    }
+    try {
+        basketService.addProductToBasket(id);
+        return ResponseEntity.ok().build();
+    } catch (UserNotFoundException | ProductNotFoundException e) {
+        return ResponseEntity.notFound().build();
+    } catch (ProductsNotFoundException e) {
+        return ResponseEntity.badRequest().build();
+    }
+}
 }

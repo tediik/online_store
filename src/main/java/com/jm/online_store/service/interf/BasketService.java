@@ -13,4 +13,5 @@ public interface BasketService {
     void deleteBasket(SubBasket subBasket);
 
     void addProductToBasket(Long id);
+    void addProductToAnonBasket(Long id,String sessionID);
 }

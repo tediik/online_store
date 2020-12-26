@@ -28,6 +28,10 @@ public class MainPageController {
         model.addAttribute("userForm", new User());
         return "mainPage";
     }
+    @GetMapping("/basket")
+    public String getUserBasket() {
+        return "anonymousBasketPage";
+    }
 
     /**
      * Method gets confirmation token after registering mail and returns customer page     *

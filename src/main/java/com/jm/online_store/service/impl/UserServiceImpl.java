@@ -140,21 +140,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addUser(@NotNull User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (user.getEmail() != null) {
-            if (ValidationUtils.isNotValidEmail(user.getEmail())) {
-                throw new InvalidEmailException();
-            }
-            if (isExist(user.getEmail())) {
-                throw new EmailAlreadyExistsException();
-            }
-            if (!CollectionUtils.isEmpty(user.getRoles())) {
-                user.setRoles(persistRoles(user.getRoles()));
-            }
-            if (user.getProfilePicture().isEmpty()) {
-                user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
-            }
-        }
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        if (user.getEmail() != null) {
+//            if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+//                throw new InvalidEmailException();
+//            }
+//            if (isExist(user.getEmail())) {
+//                throw new EmailAlreadyExistsException();
+//            }
+//            if (!CollectionUtils.isEmpty(user.getRoles())) {
+//                user.setRoles(persistRoles(user.getRoles()));
+//            }
+//            if (user.getProfilePicture().isEmpty()) {
+//                user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+//            }
+//        }
         userRepository.save(user);
     }
 
@@ -534,13 +534,22 @@ public class UserServiceImpl implements UserService {
      * Service method which builds and returns currently logged in User from Authentication
      * @return User
      */
+    @Override
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
+
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
         return findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+    }
+    @Override
+    public User getCurrentAnonymousUser(String sessionID){
+        if(findByEmail(sessionID).isEmpty()){
+            addUser(new User(sessionID,null));
+        }
+        return findByEmail(sessionID).orElseThrow(UserNotFoundException::new);
     }
 
     /**

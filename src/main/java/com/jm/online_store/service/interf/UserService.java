@@ -76,4 +76,5 @@ public interface UserService {
 
     boolean addNewAddressForUser(User user, Address address);
 
+    User getCurrentAnonymousUser(String sessionID);
 }

@@ -161,6 +161,35 @@ public class BasketServiceImpl implements BasketService {
        }
     }
 
+    @Override
+    @Transactional
+    public void addProductToAnonBasket(Long id,String sessionID) {
+        User userWhoseBasketToModify = userService.getCurrentAnonymousUser(sessionID);
+
+        Product productToAdd = productService
+                .findProductById(id)
+                .orElseThrow(ProductNotFoundException::new);
+        List<SubBasket> userBasket = userWhoseBasketToModify.getUserBasket();
+
+        if(productToAdd.getAmount() <= 0) {
+            throw new ProductsNotFoundException("В БД закончился данный продукт");
+        }else {
+            for (SubBasket basket : userBasket) {
+                if (basket.getProduct().getId() == id) {
+                    basket.setCount(basket.getCount() + 1);
+                    return;
+                }
+            }
+            SubBasket subBasket = SubBasket.builder()
+                    .product(productToAdd)
+                    .count(1)
+                    .build();
+            basketRepository.save(subBasket);
+            userBasket.add(subBasket);
+            userService.updateUser(userWhoseBasketToModify);
+        }
+    }
+
     /**
      * метод для формирования заказа из корзины.
      * @param id идентификатор
