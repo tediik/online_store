@@ -55,6 +55,10 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -66,6 +70,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * класс первичного заполнения таблиц.
@@ -1477,11 +1482,21 @@ public class DataInitializer {
 
     /**
      * Инициализация тестовых данных для BadWords
+     * импортируется из файла в проекте: src/main/resources/uploads/import/badword_for_import.txt
+     * если еще не импортированы, можно поставить аннотацию "@PostConstruct" перед методом
+     * @throws java.io.FileNotFoundException если файл не найден
      */
     private void badWordInit() {
         //Стартовый набор Стоп-Слов
         //Полный набор ипортируйте в Настройках
-        String[] startBadWord = {"хрен","фиг","плохой","говно","ерунда","бляха","екарный","дерьмо"};
+        String separator = File.separator;
+        String path = "src" + separator + "main" + separator + "resources" + separator + "uploads" + separator + "import" + separator + "badword_for_import.txt";
+        String[] startBadWord = {"хрен","фиг","плохой","говно","ерунда","бляха","екарный","дерьмо"}; //если файл отсутствует, пусть хоть эти будут
+        try {
+            startBadWord = (new String(Files.lines(Paths.get(path)).collect(Collectors.joining(", ")))).split(", ");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         for (String textToSave:startBadWord) {
             if (badWordsService.existsBadWordByName(textToSave)) continue;
