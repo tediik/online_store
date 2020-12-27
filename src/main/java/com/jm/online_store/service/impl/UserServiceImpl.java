@@ -539,6 +539,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByEmail(email);
     }
 
+    @Override
+    public User findUserById(Long id) {
+       return userRepository.findUserById(id);
+    }
     /**
      * Service method which builds and returns currently logged in User from Authentication
      * @return User

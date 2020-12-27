@@ -90,16 +90,21 @@ public class FeedbackRestController {
      */
     @GetMapping("/getManager")
     public ResponseEntity<User> getManager() {
-        User user = null;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if ((!(auth instanceof AnonymousAuthenticationToken)) && auth != null)  {
-            UserDetails userDetails = (UserDetails) auth.getPrincipal();
-            String name = userDetails.getUsername();
-            //User user1 = userService.getCurrentLoggedInUser();
-            user = userService.findUserByEmail(name);
-        }
+        User user = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(user);
     }
+
+    /**
+     * Метод который возвращает юзера по его id
+     * @param id юзера
+     * @return ResponseEntity<User>
+     */
+    @GetMapping("/getManagerById/{id}")
+    public ResponseEntity<User> getManagerById(@PathVariable ("id") Long id) {
+        User user = userService.findUserById(id);
+        return ResponseEntity.ok(user);
+    }
+
     /**
      * Метод устанавливает дату и время обращения, для поля responseExpected
      * @param feedback - {@link Feedback}

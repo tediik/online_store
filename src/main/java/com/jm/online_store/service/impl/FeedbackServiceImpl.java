@@ -45,6 +45,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public void addAnswerFeedback(Feedback feedback) {
         Feedback feedbackDB = feedbackRepository.findById(feedback.getId()).orElseThrow(FeedbackNotFoundException::new);
+        feedbackDB.setManagerId(feedback.getManagerId());
         feedbackDB.setAnswer(feedback.getAnswer());
         feedbackDB.setStatus(Feedback.Status.RESOLVED);
         feedbackDB.setResponseExpected(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));

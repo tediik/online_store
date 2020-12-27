@@ -1,5 +1,4 @@
-let userFirstName
-let userLastName
+let managersId
 $(document).ready(function () {
     toastr.options = {
         "positionClass": "toast-top-full-width"
@@ -35,6 +34,7 @@ function checkUpperNavButtonFeedback(event) {
  * и в случае успеха, отправляет их в метод {@link renderMessages()}
  */
 function getInProgressFeedback() {
+    getManager();
     fetch('/api/feedback/inProgress')
         .then(function (response) {
             if (response.ok) {
@@ -147,9 +147,7 @@ function getManager() {
             return response.json();
         })
         .then((data) => {
-            console.log(data);
-            userFirstName = data.firstName;
-            userLastName = data.lastName;
+            managersId = data.id
         })
         .catch((error) => {
             console.log(error)
@@ -162,7 +160,6 @@ function getManager() {
  * @param sendStatus статус обращения
  */
 function sendAnswer(id, sendStatus) {
-    getManager();
     let textAnswer = document.getElementById(`textAnswer-${id}`).value
     if (sendStatus !== 'RESOLVED') {
         if (textAnswer !== 'null' && textAnswer !== '') {
@@ -175,7 +172,7 @@ function sendAnswer(id, sendStatus) {
                 body: JSON.stringify({
                     id: id,
                     answer: textAnswer,
-                    userManagerFirstName: userFirstName
+                    managerId: managersId
                 })
             }).then(function (response) {
                 if (response.ok) {

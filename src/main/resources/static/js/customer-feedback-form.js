@@ -57,7 +57,6 @@ function fetchAndFillTopicSelect() {
             .append(`<option selected="selected" disabled>Выберите тему</option>`)
         topics.forEach(topic => feedBackTopicSelect.append(`<option value="${topic.id}">${topic.topicName}</option>`))
     }
-
     feedBackTopicSelect.removeAttr('disabled')
     document.getElementById('feedbackTopicNameSelect').addEventListener('change', enableFormFields)
 }
@@ -106,12 +105,26 @@ function submitFeedbackForm() {
     }
 }
 
+/**
+ * функция которая вытаскивает юзера-менеджера и его данные
+ */
+async function getInfoManager(id) {
+    try {
+        const response = await fetch("/api/feedback/getManagerById/" + id);
+        const data = await response.json();
+        return {firstName: data.firstName, lastName: data.lastName}
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 function getAllFeedbackCurrentCustomer() {
     fetch('/api/feedback/messages')
         .then(function (response) {
             if (response.ok) {
                 response.json().then((messages) => {
                     renderMessagesCurrentCustomer(messages)
+                    console.log(messages)
                 })
             } else {
                 console.log('Ошибка запроса.')
@@ -167,7 +180,7 @@ function getCategoryNameCustomer(category) {
     }
 }
 
-function renderMessagesCurrentCustomer(data) {
+async function renderMessagesCurrentCustomer(data) {
     let viewMessagesCurrentCustomer = '';
     let options = {
         year: 'numeric',
@@ -179,8 +192,9 @@ function renderMessagesCurrentCustomer(data) {
         minute: 'numeric',
         second: 'numeric'
     };
-    data.forEach(function (messages) {
-        let postDateFeedback = new Date(messages.feedbackPostDate).toLocaleString('ru', options)
+    for (const messages of data) {
+        let postDateFeedback = new Date(messages.feedbackPostDate).toLocaleString('ru', options);
+        const managerInfo = await getInfoManager(messages.managerId);
         viewMessagesCurrentCustomer += `<div id="divCustomer-${messages.id}" class="alert ${colorDivFeedbackCustomer(messages.status)} mt-2">
                         <h5 class="font-weight-bold">№${messages.id} Категория: ${getCategoryNameCustomer(messages.topic.topicsCategory)}</h5>
                         <hr>  
@@ -212,13 +226,19 @@ function renderMessagesCurrentCustomer(data) {
                                     <div class="card-body" readonly>
                                         <p>${messages.answer}</p>
                                     </div>
-                                </div>
-                                <span id="RenderCustomerM">Имя: ${messages.id}</span>
-                                <span id="RenderCustomerM">Фамилия: ${messages.id}</span>
+                                    <div class="text-left align-text-bottom col" id="divSpanManager">
+                                       <span id="RenderManagerFirstName">Имя: ${managerInfo.firstName}</span>
+                                       <br>                                  
+                                       <span id="RenderManagerLastName">Фамилия: ${managerInfo.lastName}</span>
+                                       <br>
+                                       <span id="RenderManagerTimeDate">Дата и время ответа: ${messages.responseExpected}</span>
+                                    </div>
+                                </div>                                               
                         </div>
                     </div>`
-    });
+    }
     document.getElementById('messagesAndAnswersFeedback').innerHTML = viewMessagesCurrentCustomer;
+
 }
 
 function checkButtonOnFeedbackCustomer(event) {
