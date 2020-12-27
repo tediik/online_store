@@ -1493,7 +1493,7 @@ public class DataInitializer {
         String path = "src" + separator + "main" + separator + "resources" + separator + "uploads" + separator + "import" + separator + "badword_for_import.txt";
         String[] startBadWord = {"хрен","фиг","плохой","говно","ерунда","бляха","екарный","дерьмо"}; //если файл отсутствует, пусть хоть эти будут
         try {
-            startBadWord = (new String(Files.lines(Paths.get(path)).collect(Collectors.joining(", ")))).split(", ");
+            startBadWord = Files.lines(Paths.get(path)).collect(Collectors.joining("")).split(", ");
         } catch (IOException e) {
             e.printStackTrace();
         }
