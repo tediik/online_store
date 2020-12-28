@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
         showOrRefreshComments();
     }
 
+
+
     /*Загружает комменты из БД или commentCache.*/
     async function showOrRefreshComments() {
         if (commentsCache == null) {
@@ -75,13 +77,16 @@ document.addEventListener('DOMContentLoaded', () => {
         /* Отображение основных комментариев (не reply) */
         $.each(commentsCache, function (i, comment) {
             if (comment.parentId === null) {
+                if (comment.firstName == null & comment.lastName == null) {
+
                 $('#commentsList').append($(`
                         <div class="media mb-4" id="media${comment.id}"><div>
                         <div id="image${comment.id}">
                         <img id="profilePic${comment.id}" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
                         </div>
                         <div class="media-body" id='mediaBody${comment.id}'>
-                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.firstName} ${comment.lastName}  ${comment.timeStamp}</h5>
+                    
+                        <h5 class="mt-0" id="mt-0${comment.id}">${currentUserEmail} ${comment.timeStamp}</h5>
                         <div class="message" id="commentContent${comment.id}"> ${comment.content}  </div>
                         <button type='button' id='replyButton${comment.id}' class='btn btn-link reply'>Ответить</button>
                         <button type='button' id='editButton${comment.id}' class='btn btn-link edit'>Править</button>
@@ -95,6 +100,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 deleteAndEditButtonsView(comment)
                 replyButtonsView(comment);
                 isDeleted(comment);
+            }else if (comment.lastName == null){
+                    $('#commentsList').append($(`
+                        <div class="media mb-4" id="media${comment.id}"><div>
+                        <div id="image${comment.id}">
+                        <img id="profilePic${comment.id}" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
+                        </div>
+                        <div class="media-body" id='mediaBody${comment.id}'>
+                    
+                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.firstName} ${comment.timeStamp}</h5>
+                        <div class="message" id="commentContent${comment.id}"> ${comment.content}  </div>
+                        <button type='button' id='replyButton${comment.id}' class='btn btn-link reply'>Ответить</button>
+                        <button type='button' id='editButton${comment.id}' class='btn btn-link edit'>Править</button>
+                        <button type='button' id='deleteButton${comment.id}' class='btn btn-link delete'>Удалить</button>
+                        <button type='button' id='reportButton${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                        <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                        <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
+                        <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
+                        </div>
+                `))
+                    deleteAndEditButtonsView(comment)
+                    replyButtonsView(comment);
+                    isDeleted(comment);
+                }else {
+                    $('#commentsList').append($(`
+                        <div class="media mb-4" id="media${comment.id}"><div>
+                        <div id="image${comment.id}">
+                        <img id="profilePic${comment.id}" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
+                        </div>
+                        <div class="media-body" id='mediaBody${comment.id}'>
+                    
+                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.lastName} ${comment.timeStamp}</h5>
+                        <div class="message" id="commentContent${comment.id}"> ${comment.content}  </div>
+                        <button type='button' id='replyButton${comment.id}' class='btn btn-link reply'>Ответить</button>
+                        <button type='button' id='editButton${comment.id}' class='btn btn-link edit'>Править</button>
+                        <button type='button' id='deleteButton${comment.id}' class='btn btn-link delete'>Удалить</button>
+                        <button type='button' id='reportButton${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                        <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                        <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
+                        <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
+                        </div>
+                `))
+                    deleteAndEditButtonsView(comment)
+                    replyButtonsView(comment);
+                    isDeleted(comment);
+                }
             }
         });
 
