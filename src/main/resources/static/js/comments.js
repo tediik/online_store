@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="media-body" id='mediaBody${comment.id}'>
                         <h5 class="mt-0" id="mt-0${comment.id}">${comment.firstName} ${comment.lastName}  ${comment.timeStamp}</h5>
-                        <div class="message" id="commentContent${comment.id}"> ${comment.content}  </div>
+                        <div class="message" id="commentContent${comment.id}" > ${comment.content}  </div>
                         <button type='button' id='replyButton${comment.id}' class='btn btn-link reply'>Ответить</button>
                         <button type='button' id='editButton${comment.id}' class='btn btn-link edit'>Править</button>
                         <button type='button' id='deleteButton${comment.id}' class='btn btn-link delete'>Удалить</button>
