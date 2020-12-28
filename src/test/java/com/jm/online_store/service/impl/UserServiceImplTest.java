@@ -147,7 +147,7 @@ public class UserServiceImplTest {
 
         verify(confirmTokenRepository, times(1)).findByConfirmationToken(any());
         verify(userRepository, times(1)).findById(any());
-        verify(userRepository, times(1)).save(any());//тут
+        verify(userRepository, times(1)).save(any());
     }
 
     @Test
