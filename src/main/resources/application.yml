@@ -69,4 +69,4 @@ spring.profiles.include: 'security'
 telegram-bot:
   name: JM_store_bot
   token: 1432791063:AAH1j664T9RnRPhS7elFAfvFcA5enPunWeE
-  webhook-path: https://ad7f6a7f7482.ngrok.io/telegram-bot
+  webhook-path:  https://jm-online-store.herokuapp.com/telegram-bot
