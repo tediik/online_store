@@ -4,10 +4,6 @@ function prepareNumber(n) {
     return s;
 }
 
-$(document).ready(function (){
-    fillBasket();
-})
-
 async function fillBasket() {
     let response = await fetch("/customer/basketGoods");
     let content = await response.json();

@@ -2,7 +2,6 @@
 <div th:fragment="header">
 
     <!-- Optional JavaScript -->
-    <script th:src="@{/static/js/downloadSpecificTab.js}"></script>
     <script th:src="@{/static/js/busket.js}"></script>
     <script th:src="@{/static/js/rememberCurrentUrl.js}"></script>
 
@@ -22,7 +21,8 @@
         <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')"
            class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/customer">Кабинет покупателя</a>
-        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')" id="showBasket" href="/customer/basket">
+        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')" id="showBasket"
+           href="/customer/basket">
             <img src="/static/img/buscket.jpg" width="25" height="25">
             <ins style="color: #ff8e05">
                 Корзина
