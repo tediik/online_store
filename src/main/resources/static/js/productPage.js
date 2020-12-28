@@ -154,10 +154,11 @@ function addToFavourite() {
  * @param rating текущий рейтинг товара
  */
 function rateInitialize(rating) {
+    let oldRating = rating;
     if (rating !== null) {
         $("#rate").rateYo({
             onSet: function (rating) {
-                newRateForProduct(rating);
+                newRateForProduct(rating, oldRating);
             },
             rating: rating,
             halfStar: true
@@ -165,7 +166,7 @@ function rateInitialize(rating) {
     } else {
         $("#rate").rateYo({
             onSet: function (rating) {
-                newRateForProduct(rating);
+                newRateForProduct(rating, oldRating);
             },
             rating: 0,
             halfStar: true
@@ -177,7 +178,7 @@ function rateInitialize(rating) {
  * Вычисление рейтинга и добавление его в базу к товару
  * @param rating оценка товара текущим пользователем
  */
-function newRateForProduct(rating) {
+function newRateForProduct(rating, oldRating) {
     $("#rate").rateYo("destroy");
     let res;
     fetch(`/api/products/rating?id=${productIdFromPath}&rating=${rating}`, {
@@ -193,8 +194,13 @@ function newRateForProduct(rating) {
                 rateInitialize(value.toFixed(2))
             })
         } else {
+            $("#rate").rateYo({
+                rating: oldRating,
+                readOnly: true
+            })
             toastr.error('Ваш голос не учтён', {timeOut: 5000})
             close();
+
         }
     })
 }
