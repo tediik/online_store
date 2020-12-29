@@ -65,7 +65,7 @@ public class BasketRestController {
      */
     @DeleteMapping(value = "/basketGoods")
     @ApiOperation(value = "Deletes entity SubBasket from the SubBaskets list by id")
-    public ResponseEntity<String> deleteAnonymousBasket(@RequestBody Long id, HttpServletRequest request) {
+    public ResponseEntity<String> deleteBasket(@RequestBody Long id, HttpServletRequest request) {
         basketService.deleteBasket(basketService.findBasketById(id), request.getSession().getId());
         return ResponseEntity.ok().build();
     }

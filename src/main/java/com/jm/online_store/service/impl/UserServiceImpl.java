@@ -200,7 +200,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Удаляет пользователя по идентификатору.
-     *
      * @param id идентификатор.
      */
     @Override
@@ -211,7 +210,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Регистрация нового User.
-     *
      * @param userForm User построенный из данных формы.
      */
     @Override
@@ -230,6 +228,10 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(userForm.getEmail(), "Activation code", message, "Confirmation");
     }
 
+    /**
+     * метод формирует токен и отправляет ссылку подтверждение на email указанный анонимом.
+     * @param email указанный анонимным пользователем при покупке
+     */
     @Override
     @Transactional
     public void regNewAccount(String email) {
@@ -269,8 +271,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Устанавливет переданному пользователю новый пароль.
-     *
-     * @param user        Пользователь
+     * @param user Пользователь
      * @param newPassword новый пароль
      */
     @Override
@@ -290,7 +291,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Генерирует новый пароль и отправляет его пользователю на почту.
-     *
      * @param user - Покупатель, запросивший смену пароля.
      */
     @Transactional
@@ -304,7 +304,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод использует библиотеку Passay для генерации рандомного пароля в соответствии с указанными требованиями к паролю
-     *
      * @return рандомный сгенерированный пароль
      */
     private String generatePassayPassword() {
@@ -366,9 +365,11 @@ public class UserServiceImpl implements UserService {
         customer.setPassword(confirmationToken.getUserPassword());
         customer.setRoles(userRoles);
         addUser(customer);
-        List<SubBasket> subBasketList = getCurrentLoggedInUser(request.getSession().getId()).getUserBasket();
-        userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
-        customer.setUserBasket(subBasketList);
+        if(userRepository.existsByEmail(request.getSession().getId())){
+            List<SubBasket> subBasketList = getCurrentLoggedInUser(request.getSession().getId()).getUserBasket();
+            userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
+            customer.setUserBasket(subBasketList);
+        }
 
         String message = String.format(
                 "Привет, %s! \n Вы зарегистрировались на сайте online_store ! Пароль для входа в вашу учетную запись %s ," +
@@ -463,7 +464,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to add new user from admin page
-     *
      * @param newUser
      */
     @Override
@@ -475,7 +475,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                userRepository.save(newUser);
+                    userRepository.save(newUser);
             } else {
                 Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
                 customer.setRoles(newUser.getRoles());
@@ -489,7 +489,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
-     *
      * @param user
      * @return User
      */
@@ -530,8 +529,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
-     *
-     * @param user    переданный пользователь
+     * @param user переданный пользователь
      * @param address новый адрес для пользователя
      * @throws UserNotFoundException вылетает, если пользователь не найден в БД
      */
@@ -565,7 +563,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which builds and returns currently logged in User from Authentication
-     *
+     * @param sessionID -параметр по которому вычисляется анонимный пользователь,
+     *                  если его нет в бд -создает его используя параметр в качестве email
      * @return User
      */
     @Override
@@ -589,7 +588,6 @@ public class UserServiceImpl implements UserService {
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
-
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
@@ -598,7 +596,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which finds and returns the User by token after email confirmation
-     *
      * @return User
      */
     @Transactional

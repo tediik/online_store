@@ -5,12 +5,9 @@ import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.service.interf.UserService;
-import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +36,11 @@ public class MainPageController {
         return "basketPage";
     }
 
+    /**
+     * Метод отрабатывает при нажатии кнопки Купить в корзине, нажатой анонимом
+     * @param email указанный анонимом
+     * @return возвращает на главную страницу
+     */
     @PostMapping("/regNewCustomer")
     @ApiOperation(value = "Registration of the new account")
     public String registerAnonymousAccount(@RequestParam("login_username") String email) {
