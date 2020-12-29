@@ -102,6 +102,12 @@ public class FeedbackRestController {
     @GetMapping("/getManagerById/{id}")
     public ResponseEntity<User> getManagerById(@PathVariable ("id") Long id) {
         User user = userService.findUserById(id);
+        if (user.getFirstName() == null) {
+            user.setFirstName("");
+        }
+        if (user.getLastName() == null) {
+            user.setLastName("");
+        }
         return ResponseEntity.ok(user);
     }
 

@@ -124,7 +124,6 @@ function getAllFeedbackCurrentCustomer() {
             if (response.ok) {
                 response.json().then((messages) => {
                     renderMessagesCurrentCustomer(messages)
-                    console.log(messages)
                 })
             } else {
                 console.log('Ошибка запроса.')
@@ -194,6 +193,7 @@ async function renderMessagesCurrentCustomer(data) {
     };
     for (const messages of data) {
         let postDateFeedback = new Date(messages.feedbackPostDate).toLocaleString('ru', options);
+        let postDateAnswer = new Date(messages.responseExpected).toLocaleString('ru', options);
         const managerInfo = await getInfoManager(messages.managerId);
         viewMessagesCurrentCustomer += `<div id="divCustomer-${messages.id}" class="alert ${colorDivFeedbackCustomer(messages.status)} mt-2">
                         <h5 class="font-weight-bold">№${messages.id} Категория: ${getCategoryNameCustomer(messages.topic.topicsCategory)}</h5>
@@ -231,7 +231,7 @@ async function renderMessagesCurrentCustomer(data) {
                                        <br>                                  
                                        <span id="RenderManagerLastName">Фамилия: ${managerInfo.lastName}</span>
                                        <br>
-                                       <span id="RenderManagerTimeDate">Дата и время ответа: ${messages.responseExpected}</span>
+                                       <span id="RenderManagerTimeDate">Дата и время ответа: ${postDateAnswer}</span>
                                     </div>
                                 </div>                                               
                         </div>
