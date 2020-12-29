@@ -531,7 +531,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Service method which builds and returns currently logged in User from Authentication
+     * Метод который находит User-а по его логину email
+     * @param email Юзера
      * @return User
      */
     @Override
@@ -539,12 +540,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByEmail(email);
     }
 
+    /**
+     * Метод который находит User-а по его id
+     * @param id Юзера
+     * @return User
+     */
     @Override
     public User findUserById(Long id) {
        return userRepository.findUserById(id);
     }
     /**
-     * Service method which builds and returns currently logged in User from Authentication
+     * Метод возвращает залогиненного активного юзера - User из Authentication
      * @return User
      */
     public User getCurrentLoggedInUser() {
