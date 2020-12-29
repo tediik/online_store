@@ -104,6 +104,11 @@ public class BadWordsServiceImpl implements BadWordsService {
         String textForCheck = checkText.toLowerCase();
 
         List<BadWords> allActiveBW = findAllWordsActive();
+//         if(findAllWordsActive()==null){
+//            allActiveBW = Arrays.asList(new BadWords("lol",true));
+//        }else {
+//            allActiveBW = findAllWordsActive();
+//        }
         List<String> foundWords = new ArrayList<>();
         for (BadWords wordCheck : allActiveBW) {
             String findMe = wordCheck.getBadword().toLowerCase();
