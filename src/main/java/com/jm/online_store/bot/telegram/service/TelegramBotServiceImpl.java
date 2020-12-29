@@ -23,7 +23,8 @@ public class TelegramBotServiceImpl implements TelegramBotService {
 
     private final NewsService newsService;
 
-    @Value("${spring.server.url}")
+    //spring.server.url
+    @Value("https://jm-online-store.herokuapp.com")
     private String url;
 
     @Override
