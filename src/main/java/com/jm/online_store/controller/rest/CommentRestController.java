@@ -57,7 +57,7 @@ public class CommentRestController {
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
      *
      * @param productId
-     * @return ResponseEntity<List<CommentDto>>
+     * @return ResponseEntity<List < CommentDto>>
      */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches all the comments from current product")
@@ -76,23 +76,33 @@ public class CommentRestController {
      * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
      */
     @PostMapping
-    @ApiOperation(value = "Post new comment to the current product")
+    @ApiOperation(value = "Post new savedComment to the current product")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
             @ApiResponse(code = 200, message = "Comment was successfully added")
     })
     public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
+        Comment savedComment = commentService.addComment(comment);
+        if (savedComment.getCustomer().getFirstName() == null & savedComment.getCustomer().getLastName() == null) {
+            savedComment.setViewDataComment(savedComment.getCustomer().getEmail());
+        } else if (savedComment.getCustomer().getFirstName() != null & savedComment.getCustomer().getLastName() != null) {
+            savedComment.setViewDataComment(savedComment.getCustomer().getFirstName() + " " + savedComment.getCustomer().getLastName());
+        } else if (savedComment.getCustomer().getFirstName() != null ) {
+            savedComment.setViewDataComment(savedComment.getCustomer().getFirstName());
+        }else if (savedComment.getCustomer().getLastName() != null) {
+            savedComment.setViewDataComment(savedComment.getCustomer().getLastName());
+        }
+
         if (!bindingResult.hasErrors()) {
-            String checkText = comment.getContent();
+            String checkText = savedComment.getContent();
             if (!badWordsService.checkEnabledCheckText()) {
-                Comment savedComment = commentService.addComment(comment);
+
                 productFromDb.setComments(List.of(savedComment));
                 return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
             } else {
                 List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
-                    Comment savedComment = commentService.addComment(comment);
                     productFromDb.setComments(List.of(savedComment));
                     return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
                 } else {
@@ -153,6 +163,7 @@ public class CommentRestController {
 
     /**
      * Удаляет комментарий по его айди
+     *
      * @param commentId
      * @return ResponseEntity<?>
      */
@@ -181,6 +192,7 @@ public class CommentRestController {
 
     /**
      * Обновляет комментарий
+     *
      * @param comment
      * @return ResponseEntity<?>
      */

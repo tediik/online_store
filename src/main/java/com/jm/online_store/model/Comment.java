@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -75,5 +76,14 @@ public class Comment {
     public Comment(Long id, String content) {
         this.id = id;
         this.content = content;
+    }
+    public   String viewDataComment;
+
+    public void setViewDataComment(String viewDataComment) {
+        this.viewDataComment = viewDataComment;
+    }
+
+    public String getViewDataComment() {
+        return viewDataComment;
     }
 }
