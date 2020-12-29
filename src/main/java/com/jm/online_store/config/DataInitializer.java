@@ -52,6 +52,7 @@ import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -79,6 +80,7 @@ import java.util.stream.Collectors;
  * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
  * в файле "application.yml" с "update" на "create" или "create-drop".
  */
+@Slf4j
 @AllArgsConstructor
 @Component
 @Data
@@ -1495,7 +1497,7 @@ public class DataInitializer {
         try {
             startBadWord = Files.lines(Paths.get(path)).collect(Collectors.joining("")).split(", ");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.debug("файл плохих слов badword_for_import.txt не найден и не загружен в базу");
         }
 
         for (String textToSave:startBadWord) {
