@@ -1497,7 +1497,7 @@ public class DataInitializer {
         try {
             startBadWord = Files.lines(Paths.get(path)).collect(Collectors.joining("")).split(", ");
         } catch (IOException e) {
-            log.debug("файл плохих слов badword_for_import.txt не найден и не загружен в базу");
+            log.error("файл плохих слов badword_for_import.txt не найден и не загружен в базу");
         }
 
         for (String textToSave:startBadWord) {
