@@ -1241,6 +1241,13 @@ public class DataInitializer {
                 .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings3);
+
+        TaskSettings taskSettings4 = TaskSettings.builder()
+                .taskName("receiveEmailSubscribeConfirmation")
+                .active(true)
+                .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .build();
+        taskSettingsService.addNewTaskSetting(taskSettings4);
     }
 
     /**
@@ -1276,6 +1283,7 @@ public class DataInitializer {
                 .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
+        commonSettingsService.addSetting(subscribeConfirmationTemplate);
         commonSettingsService.addSetting(badWordsEnabled);
         commonSettingsService.addSetting(maintenanceModeTemplate);
     }

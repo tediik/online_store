@@ -85,7 +85,8 @@ public class User implements UserDetails {
     private String profilePicture = "";
 
     @Column
-    private boolean confirmReceiveEmails;
+    @Enumerated(EnumType.STRING)
+    private ConfirmReceiveEmail confirmReceiveEmail = ConfirmReceiveEmail.NO_ACTIONS;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
@@ -228,6 +229,12 @@ public class User implements UserDetails {
     public enum Gender {
         MAN,
         WOMAN
+    }
+
+    public enum ConfirmReceiveEmail {
+        NO_ACTIONS,
+        REQUESTED,
+        CONFIRMED
     }
 
     @Override

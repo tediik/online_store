@@ -36,6 +36,9 @@ spring:
     port: 465
     protocol: smtps
     debug: true
+    host-imap: imap.yandex.ru
+    store:
+      protocol: imaps
   server:
     url: http://localhost:9999
   mvc:
@@ -61,6 +64,9 @@ price-list-service:
 
 delete_expired_customer_period:
   cron: '0 0 0 * * *'
+
+check_new_emails_subscribe_confirmations:
+  cron: '30 * * * * *'
 
 spring.profiles.include: 'security'
 

@@ -13,6 +13,7 @@ import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -35,6 +36,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
@@ -67,6 +69,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final AddressService addressService;
+    private final CommonSettingsService commonSettingsService;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -160,6 +163,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Обновление пользователя.
+     *
      * @param user пользователь, полученный из контроллера.
      */
     @Override
@@ -195,9 +199,10 @@ public class UserServiceImpl implements UserService {
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
     }
-    
+
     /**
      * Удаляет пользователя по идентификатору.
+     *
      * @param id идентификатор.
      */
     @Override
@@ -208,6 +213,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Регистрация нового User.
+     *
      * @param userForm User построенный из данных формы.
      */
     @Override
@@ -233,13 +239,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void changeUsersMail(User user, String newMail) {
-    ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
                 "Здравствуйте, %s! \n" +
                         "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке: " +
-                        urlActivate +  "/activatenewmail/%s",
+                        urlActivate + "/activatenewmail/%s",
                 user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
@@ -249,7 +255,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Устанавливет переданному пользователю новый пароль.
-     * @param user Пользователь
+     *
+     * @param user        Пользователь
      * @param newPassword новый пароль
      */
     @Override
@@ -269,6 +276,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Генерирует новый пароль и отправляет его пользователю на почту.
+     *
      * @param user - Покупатель, запросивший смену пароля.
      */
     @Transactional
@@ -282,6 +290,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод использует библиотеку Passay для генерации рандомного пароля в соответствии с указанными требованиями к паролю
+     *
      * @return рандомный сгенерированный пароль
      */
     private String generatePassayPassword() {
@@ -299,17 +308,17 @@ public class UserServiceImpl implements UserService {
         return gen.generatePassword(10, lowerCaseRule,
                 upperCaseRule, digitRule);
     }
-    
+
     /**
      * Генерирует токен для сброса пароля и отправляет на указанную пользователем почту
      */
     @Override
     @Transactional
-    public void sendConfirmationTokenToResetPassword(User user){
+    public void sendConfirmationTokenToResetPassword(User user) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
         String message = String.format(
-                "Привет, %s! \n Вы сделали запрос на сброс пароля, для подтверждения перейдите по ссылке "+ urlActivate + "/restorepassword/%s",
+                "Привет, %s! \n Вы сделали запрос на сброс пароля, для подтверждения перейдите по ссылке " + urlActivate + "/restorepassword/%s",
                 user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
@@ -433,6 +442,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to add new user from admin page
+     *
      * @param newUser
      */
     @Override
@@ -444,7 +454,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                    userRepository.save(newUser);
+                userRepository.save(newUser);
             } else {
                 Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
                 customer.setRoles(newUser.getRoles());
@@ -458,6 +468,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
+     *
      * @param user
      * @return User
      */
@@ -498,7 +509,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
-     * @param user переданный пользователь
+     *
+     * @param user    переданный пользователь
      * @param address новый адрес для пользователя
      * @throws UserNotFoundException вылетает, если пользователь не найден в БД
      */
@@ -532,6 +544,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which builds and returns currently logged in User from Authentication
+     *
      * @return User
      */
     public User getCurrentLoggedInUser() {
@@ -545,6 +558,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which finds and returns the User by token after email confirmation
+     *
      * @return User
      */
     @Transactional
@@ -558,5 +572,36 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException();
         }
         return userRepository.findByEmail(confirmationToken.getUserEmail()).orElseThrow(UserNotFoundException::new);
+    }
+
+
+    /**
+     * Метод, отправляющий сообщение с просьбой подтвердить подписку пользователю,
+     * который нажал на "Подписаться на изменение цены" впервые.
+     *
+     * @param email
+     */
+    public void sendConfirmationSubscribeLetter(String email) {
+        String templateBody = commonSettingsService
+                .getSettingByName("subscribe_confirmation_template")
+                .getTextValue();
+        String messageBody;
+        String usersName = "Покупатель";
+        Optional<User> user = findByEmail(email);
+        if (user.isPresent()) {
+            User userFromDB = user.get();
+            userFromDB.setConfirmReceiveEmail(User.ConfirmReceiveEmail.REQUESTED);
+            System.out.println(userFromDB.getConfirmReceiveEmail());
+            userRepository.save(userFromDB);
+            if (user.get().getFirstName() != null) {
+                usersName = userFromDB.getFirstName();
+            }
+        }
+        messageBody = templateBody.replaceAll("@@user@@", usersName);
+        try {
+            mailSenderService.sendHtmlMessage(email, "Подтвердите Вашу подписку", messageBody, "Subscribe confirmation");
+        } catch (MessagingException e) {
+            log.debug("Can not send mail about Subscribe confirmation to {}", email);
+        }
     }
 }
