@@ -9,7 +9,7 @@ $(document).ready(function (){
 })
 
 async function fillBasket() {
-    let response = await fetch("/customer/basketGoods");
+    let response = await fetch("/basketGoods");
     let content = await response.json();
     let basketGoodsJson = document.getElementById('busketTable');
     let countGoods = 0;
@@ -74,7 +74,7 @@ async function fillBasket() {
     $('#countInBasket').empty();
     $('#countInBasket').append(countGoods);
     //if basket is empty
-    if (countGoods == 0) {
+    if (countGoods === 0) {
         let emptyBasket = `
             <tr align='center'>
                 <td > Корзина сейчас пуста,</br>но вы можете перейти на главную страницу или в каталог товаров</td>
@@ -93,12 +93,17 @@ async function fillBasket() {
             `;
         $(basketGoodsJson).append(emptyBasket);
         $('#buttonBuyInBasket').empty().append(buttonBuy);
+        let buttonAnonBuy = `
+            <button class="btn btn-lg btn-outline-primary btn-block" data-toggle="modal"
+            data-target="#regModalWindow"  hidden></button>
+            `;
+        $('#buttonBuyForAnonInBasket').empty().append(buttonAnonBuy);
     }
 }
 
 
 async function deleteBasket(id) {
-    await fetch("/customer/basketGoods", {
+    await fetch("/basketGoods", {
         method: "DELETE",
         body: id,
         headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -107,7 +112,7 @@ async function deleteBasket(id) {
 }
 
 async function updateCountBasket(id, count) {
-    await fetch("/customer/basketGoods", {
+    await fetch("/basketGoods", {
         method: "PUT",
         body: JSON.stringify({
             id: id,
@@ -123,7 +128,7 @@ async function updateCountBasket(id, count) {
 }
 
 async function buildOrderFromBasket() {
-    await fetch("/customer/basketGoods", {
+    await fetch("/basketGoods", {
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });

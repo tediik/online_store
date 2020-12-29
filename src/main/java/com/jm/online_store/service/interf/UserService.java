@@ -45,7 +45,9 @@ public interface UserService {
     boolean isExist(String email);
 
     void regNewAccount(User user);
- 
+
+    void regNewAccount(String email);
+
     void changeUsersMail(User user, String newMail);
 
     void changeUsersPass(User user, String newMail);
@@ -70,11 +72,11 @@ public interface UserService {
 
    /* void cancelSubscription(Long id);*/
 
+    User getCurrentLoggedInUser(String sessionID);
+
     User getCurrentLoggedInUser();
 
     User getUserByToken(String token);
 
     boolean addNewAddressForUser(User user, Address address);
-
-    User getCurrentAnonymousUser(String sessionID);
 }

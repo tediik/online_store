@@ -37,7 +37,7 @@ spring:
     protocol: smtps
     debug: true
   server:
-    url: http://localhost:9999
+    url: http://localhost:9898
   mvc:
     static-path-pattern: /static/**
 server:

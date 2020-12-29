@@ -7,6 +7,7 @@ import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Role;
+import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
@@ -140,26 +141,27 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addUser(@NotNull User user) {
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        if (user.getEmail() != null) {
-//            if (ValidationUtils.isNotValidEmail(user.getEmail())) {
-//                throw new InvalidEmailException();
-//            }
-//            if (isExist(user.getEmail())) {
-//                throw new EmailAlreadyExistsException();
-//            }
-//            if (!CollectionUtils.isEmpty(user.getRoles())) {
-//                user.setRoles(persistRoles(user.getRoles()));
-//            }
-//            if (user.getProfilePicture().isEmpty()) {
-//                user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
-//            }
-//        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getEmail() != null) {
+            if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+                throw new InvalidEmailException();
+            }
+            if (isExist(user.getEmail())) {
+                throw new EmailAlreadyExistsException();
+            }
+            if (!CollectionUtils.isEmpty(user.getRoles())) {
+                user.setRoles(persistRoles(user.getRoles()));
+            }
+            if (user.getProfilePicture().isEmpty()) {
+                user.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+            }
+        }
         userRepository.save(user);
     }
 
     /**
      * Обновление пользователя.
+     *
      * @param user пользователь, полученный из контроллера.
      */
     @Override
@@ -195,9 +197,10 @@ public class UserServiceImpl implements UserService {
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
     }
-    
+
     /**
      * Удаляет пользователя по идентификатору.
+     *
      * @param id идентификатор.
      */
     @Override
@@ -208,6 +211,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Регистрация нового User.
+     *
      * @param userForm User построенный из данных формы.
      */
     @Override
@@ -226,6 +230,22 @@ public class UserServiceImpl implements UserService {
         mailSenderService.send(userForm.getEmail(), "Activation code", message, "Confirmation");
     }
 
+    @Override
+    @Transactional
+    public void regNewAccount(String email) {
+        ConfirmationToken confirmationToken = new ConfirmationToken(email,generatePassayPassword());
+        confirmTokenRepository.save(confirmationToken);
+
+        String message = String.format(
+                "Hello, %s! \n" +
+                        "Welcome to online-store. Please, visit next link: " +
+                        urlActivate + "/activate/%s",
+                email,
+                confirmationToken.getConfirmationToken()
+        );
+        mailSenderService.send(email, "Activation code", message, "Confirmation");
+    }
+
     /**
      * Method generates confirmation token based on users ID and Email adress
      * Sends generated token to new users email
@@ -233,13 +253,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void changeUsersMail(User user, String newMail) {
-    ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
                 "Здравствуйте, %s! \n" +
                         "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке: " +
-                        urlActivate +  "/activatenewmail/%s",
+                        urlActivate + "/activatenewmail/%s",
                 user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
@@ -249,7 +269,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Устанавливет переданному пользователю новый пароль.
-     * @param user Пользователь
+     *
+     * @param user        Пользователь
      * @param newPassword новый пароль
      */
     @Override
@@ -269,6 +290,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Генерирует новый пароль и отправляет его пользователю на почту.
+     *
      * @param user - Покупатель, запросивший смену пароля.
      */
     @Transactional
@@ -282,6 +304,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод использует библиотеку Passay для генерации рандомного пароля в соответствии с указанными требованиями к паролю
+     *
      * @return рандомный сгенерированный пароль
      */
     private String generatePassayPassword() {
@@ -299,17 +322,17 @@ public class UserServiceImpl implements UserService {
         return gen.generatePassword(10, lowerCaseRule,
                 upperCaseRule, digitRule);
     }
-    
+
     /**
      * Генерирует токен для сброса пароля и отправляет на указанную пользователем почту
      */
     @Override
     @Transactional
-    public void sendConfirmationTokenToResetPassword(User user){
+    public void sendConfirmationTokenToResetPassword(User user) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
         String message = String.format(
-                "Привет, %s! \n Вы сделали запрос на сброс пароля, для подтверждения перейдите по ссылке "+ urlActivate + "/restorepassword/%s",
+                "Привет, %s! \n Вы сделали запрос на сброс пароля, для подтверждения перейдите по ссылке " + urlActivate + "/restorepassword/%s",
                 user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
@@ -342,9 +365,16 @@ public class UserServiceImpl implements UserService {
         customer.setEmail(confirmationToken.getUserEmail());
         customer.setPassword(confirmationToken.getUserPassword());
         customer.setRoles(userRoles);
-
         addUser(customer);
+        List<SubBasket> subBasketList = getCurrentLoggedInUser(request.getSession().getId()).getUserBasket();
+        userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
+        customer.setUserBasket(subBasketList);
 
+        String message = String.format(
+                "Привет, %s! \n Вы зарегистрировались на сайте online_store ! Пароль для входа в вашу учетную запись %s ," +
+                        "можете сменить его в личном кабинете", customer.getEmail(), confirmationToken.getUserPassword()
+        );
+        mailSenderService.send(customer.getEmail(), "Информация о регистрации на сайте online_store", message, "info");
         try {
             request.login(customer.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {
@@ -433,6 +463,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to add new user from admin page
+     *
      * @param newUser
      */
     @Override
@@ -444,7 +475,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                    userRepository.save(newUser);
+                userRepository.save(newUser);
             } else {
                 Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
                 customer.setRoles(newUser.getRoles());
@@ -458,6 +489,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
+     *
      * @param user
      * @return User
      */
@@ -498,7 +530,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
-     * @param user переданный пользователь
+     *
+     * @param user    переданный пользователь
      * @param address новый адрес для пользователя
      * @throws UserNotFoundException вылетает, если пользователь не найден в БД
      */
@@ -532,8 +565,26 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which builds and returns currently logged in User from Authentication
+     *
      * @return User
      */
+    @Override
+    public User getCurrentLoggedInUser(String sessionID) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // AnonymousAuthenticationToken happens when anonymous authentication is enabled
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
+        if (auth instanceof AnonymousAuthenticationToken) {
+            if (findByEmail(sessionID).isEmpty()) {
+                userRepository.save(new User(sessionID, null));
+            }
+            return findByEmail(sessionID).orElseThrow(UserNotFoundException::new);
+        }
+        return findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+    }
+
     @Override
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -544,16 +595,10 @@ public class UserServiceImpl implements UserService {
         }
         return findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
     }
-    @Override
-    public User getCurrentAnonymousUser(String sessionID){
-        if(findByEmail(sessionID).isEmpty()){
-            addUser(new User(sessionID,null));
-        }
-        return findByEmail(sessionID).orElseThrow(UserNotFoundException::new);
-    }
 
     /**
      * Service method which finds and returns the User by token after email confirmation
+     *
      * @return User
      */
     @Transactional

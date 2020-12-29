@@ -53,8 +53,8 @@ public class BasketServiceImpl implements BasketService {
      * @return List<SubBasket> список подкорзин
      */
     @Override
-    public List<SubBasket> getBasket() {
-        User authorityUser = userService.getCurrentLoggedInUser();
+    public List<SubBasket> getBasket(String sessionID) {
+        User authorityUser = userService.getCurrentLoggedInUser(sessionID);
         List<SubBasket> subBaskets = authorityUser.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {
@@ -65,7 +65,7 @@ public class BasketServiceImpl implements BasketService {
                 authorityUser.setUserBasket(subBaskets);
                 userService.updateUser(authorityUser);
                 if (productCount < 1) {
-                    deleteBasket(subBasket);
+                    deleteBasket(subBasket,"");
                 }
             }
         }
@@ -117,8 +117,8 @@ public class BasketServiceImpl implements BasketService {
      * @param subBasket подкорзина
      */
     @Override
-    public void deleteBasket(SubBasket subBasket) {
-        User authorityUser = userService.getCurrentLoggedInUser();
+    public void deleteBasket(SubBasket subBasket,String sessionID) {
+        User authorityUser = userService.getCurrentLoggedInUser(sessionID);
         List<SubBasket> subBasketList = authorityUser.getUserBasket();
         subBasketList.remove(subBasket);
         authorityUser.setUserBasket(subBasketList);
@@ -132,8 +132,8 @@ public class BasketServiceImpl implements BasketService {
      */
     @Override
     @Transactional
-    public void addProductToBasket(Long id) {
-        User userWhoseBasketToModify = userService.getCurrentLoggedInUser();
+    public void addProductToBasket(Long id,String sessionID) {
+        User userWhoseBasketToModify = userService.getCurrentLoggedInUser(sessionID);
         if (userWhoseBasketToModify == null) {
             throw new UserNotFoundException();
         }
@@ -161,34 +161,34 @@ public class BasketServiceImpl implements BasketService {
        }
     }
 
-    @Override
-    @Transactional
-    public void addProductToAnonBasket(Long id,String sessionID) {
-        User userWhoseBasketToModify = userService.getCurrentAnonymousUser(sessionID);
-
-        Product productToAdd = productService
-                .findProductById(id)
-                .orElseThrow(ProductNotFoundException::new);
-        List<SubBasket> userBasket = userWhoseBasketToModify.getUserBasket();
-
-        if(productToAdd.getAmount() <= 0) {
-            throw new ProductsNotFoundException("В БД закончился данный продукт");
-        }else {
-            for (SubBasket basket : userBasket) {
-                if (basket.getProduct().getId() == id) {
-                    basket.setCount(basket.getCount() + 1);
-                    return;
-                }
-            }
-            SubBasket subBasket = SubBasket.builder()
-                    .product(productToAdd)
-                    .count(1)
-                    .build();
-            basketRepository.save(subBasket);
-            userBasket.add(subBasket);
-            userService.updateUser(userWhoseBasketToModify);
-        }
-    }
+//    @Override
+//    @Transactional
+//    public void addProductToAnonBasket(Long id,String sessionID) {
+//        User userWhoseBasketToModify = userService.getCurrentLoggedInUser(sessionID);
+//
+//        Product productToAdd = productService
+//                .findProductById(id)
+//                .orElseThrow(ProductNotFoundException::new);
+//        List<SubBasket> userBasket = userWhoseBasketToModify.getUserBasket();
+//
+//        if(productToAdd.getAmount() <= 0) {
+//            throw new ProductsNotFoundException("В БД закончился данный продукт");
+//        }else {
+//            for (SubBasket basket : userBasket) {
+//                if (basket.getProduct().getId() == id) {
+//                    basket.setCount(basket.getCount() + 1);
+//                    return;
+//                }
+//            }
+//            SubBasket subBasket = SubBasket.builder()
+//                    .product(productToAdd)
+//                    .count(1)
+//                    .build();
+//            basketRepository.save(subBasket);
+//            userBasket.add(subBasket);
+//            userService.updateUser(userWhoseBasketToModify);
+//        }
+//    }
 
     /**
      * метод для формирования заказа из корзины.
