@@ -19,9 +19,6 @@
             </form>
         </nav>
         <!-- Customer service -->
-        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')"
-           class="btn btn-outline-secondary font-weight-bold secondarybtn"
-           href="/customer">Кабинет покупателя</a>
         <a sec:authorize=" not hasAnyAuthority('ROLE_ADMIN')" id="showBasket" href="/basket">
             <img src="/static/img/buscket.jpg" width="25" height="25">
             <ins style="color: #ff8e05">
@@ -29,6 +26,10 @@
                 <i id="countInBasket"></i>
             </ins>
         </a>
+        <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')"
+           class="btn btn-outline-secondary font-weight-bold secondarybtn"
+           href="/customer">Кабинет покупателя</a>
+
 
         <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/admin">Кабинет администратора</a>
