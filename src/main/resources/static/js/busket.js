@@ -117,7 +117,7 @@ async function fillBasket() {
             `;
         let buttonAnonBuy = `
             <button class="btn btn-lg btn-outline-primary btn-block" data-toggle="modal"
-            data-target="#regModalWindow"  hidden></button>
+            data-target="#regModalWindow"  disabled>Корзина пуста</button>
             `;
         $(basketGoodsJson).append(emptyBasket);
         $('#buttonBuyForAnonInBasket').empty().append(buttonAnonBuy)
