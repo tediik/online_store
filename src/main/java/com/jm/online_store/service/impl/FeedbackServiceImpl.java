@@ -2,17 +2,11 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.FeedbackNotFoundException;
 import com.jm.online_store.model.Feedback;
-import com.jm.online_store.model.User;
 import com.jm.online_store.repository.FeedbackRepository;
 import com.jm.online_store.service.interf.FeedbackService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;

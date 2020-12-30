@@ -3,17 +3,12 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.Feedback;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.model.TopicsCategory;
-import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FeedbackService;
 import com.jm.online_store.service.interf.TopicsCategoryService;
-import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +30,7 @@ import java.util.Set;
 public class FeedbackRestController {
     private final FeedbackService feedbackService;
     private final TopicsCategoryService topicsCategoryService;
-    private final UserService userService;
+
     /**
      * Mapping to get categories from {@link TopicsCategory}
      *
@@ -82,43 +77,6 @@ public class FeedbackRestController {
     public ResponseEntity<String> addAnswerFeedback(@RequestBody Feedback feedback) {
         feedbackService.addAnswerFeedback(feedback);
         return ResponseEntity.ok().build();
-    }
-
-    /**
-     * Метод который возвращает автора ответа на обращение
-     * @return ResponseEntity
-     */
-    @GetMapping("/getManager")
-    @ApiOperation(value = "Get current logged user-manager")
-    public ResponseEntity<User> getManager() {
-        User user = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(user);
-    }
-
-    /**
-     * Метод который возвращает юзера по его id
-     * @param id юзера
-     * @return ResponseEntity<User>
-     */
-    @GetMapping("/getManagerById/{id}")
-    @ApiOperation(value = "Find user-manager by id and return user-manager")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "User with this id not found"),
-    })
-    public ResponseEntity<User> getManagerById(@PathVariable ("id") Long id) {
-        if (userService.findById(id).isEmpty()) {
-            log.debug("User with id: {} not found", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        log.debug("User with id: {} found", id);
-        User user = userService.findUserById(id);
-        if (user.getFirstName() == null) {
-            user.setFirstName("");
-        }
-        if (user.getLastName() == null) {
-            user.setLastName("");
-        }
-        return ResponseEntity.ok(user);
     }
 
     /**

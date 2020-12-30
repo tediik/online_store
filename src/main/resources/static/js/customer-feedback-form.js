@@ -106,11 +106,11 @@ function submitFeedbackForm() {
 }
 
 /**
- * функция которая вытаскивает юзера-менеджера и его данные
+ * функция которая вытаскивает юзера и его данные
  */
 async function getInfoManager(id) {
     try {
-        const response = await fetch("/api/feedback/getManagerById/" + id);
+        const response = await fetch("/api/users/getManagerById/" + id);
         const data = await response.json();
         return {firstName: data.firstName, lastName: data.lastName}
     } catch (error) {
