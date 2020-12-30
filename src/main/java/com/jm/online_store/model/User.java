@@ -84,6 +84,9 @@ public class User implements UserDetails {
 
     private String profilePicture = "";
 
+    /**
+     * Согласие пользователя на рассылки (об изменении цен)
+     */
     @Column
     @Enumerated(EnumType.STRING)
     private ConfirmReceiveEmail confirmReceiveEmail = ConfirmReceiveEmail.NO_ACTIONS;
@@ -231,6 +234,10 @@ public class User implements UserDetails {
         WOMAN
     }
 
+    /**
+     * Обозначает статус согласия юзера на получение рассылки (об изменении цены).
+     * NO_ACTIONS - нет согласия, REQUESTED - согласие запрошено (в письме), CONFIRMED - согласие получено.
+     */
     public enum ConfirmReceiveEmail {
         NO_ACTIONS,
         REQUESTED,

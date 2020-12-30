@@ -577,8 +577,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод, отправляющий сообщение с просьбой подтвердить подписку пользователю,
-     * который нажал на "Подписаться на изменение цены" впервые.
-     *
+     * который нажал на "Подписаться на изменение цены".
      * @param email
      */
     public void sendConfirmationSubscribeLetter(String email) {
