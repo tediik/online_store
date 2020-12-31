@@ -96,13 +96,12 @@ public class CustomerRestController {
     }
 
     /**
-     * Метод который возвращает юзера по его id
-     *
-     * @param id юзера
-     * @return ResponseEntity<User>
+     * Возвращает пользователя по его id
+     * @param id идентификатор пользователя
+     * @return ResponseEntity<User> Объект User
      */
     @GetMapping("/getManagerById/{id}")
-    @ApiOperation(value = "Find user-manager by id and return user-manager")
+    @ApiOperation(value = "Возвращает пользователя по id")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "User with this id not found"),
     })
