@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -71,7 +72,7 @@ public class CustomerRestController {
             log.debug("Wrong email! Не правильно введен email");
             return ResponseEntity.badRequest().body("notValidEmailError");
         }
-        if (!customerService.findById(customer.getId()).get().getEmail().equals(customer.getEmail())
+        if (customerService.findById(customer.getId()).get().getEmail().equals(customer.getEmail())
                 && customerService.isExist(customer.getEmail())) {
             log.debug("Пользователь с таким адресом электронной почты уже существует");
             return ResponseEntity.badRequest().body("duplicatedEmailError");
@@ -92,5 +93,32 @@ public class CustomerRestController {
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
         customerService.changeCustomerStatusToLocked(id);
         return ResponseEntity.ok("Delete profile");
+    }
+
+    /**
+     * Метод который возвращает юзера по его id
+     *
+     * @param id юзера
+     * @return ResponseEntity<User>
+     */
+    @GetMapping("/getManagerById/{id}")
+    @ApiOperation(value = "Find user-manager by id and return user-manager")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "User with this id not found"),
+    })
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        if (userService.findById(id).isEmpty()) {
+            log.debug("User with id: {} not found", id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        log.debug("User with id: {} found", id);
+        User user = userService.findUserById(id);
+        if (user.getFirstName() == null) {
+            user.setFirstName("");
+        }
+        if (user.getLastName() == null) {
+            user.setLastName("");
+        }
+        return ResponseEntity.ok(user);
     }
 }

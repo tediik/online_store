@@ -110,7 +110,7 @@ function submitFeedbackForm() {
  */
 async function getInfoManager(id) {
     try {
-        const response = await fetch("/api/users/getManagerById/" + id);
+        const response = await fetch("/customer/getManagerById/" + id);
         const data = await response.json();
         return {firstName: data.firstName, lastName: data.lastName}
     } catch (error) {

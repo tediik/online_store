@@ -4,8 +4,6 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -54,32 +52,5 @@ public class UserRestController {
     public ResponseEntity<Void> deleteUserById(@PathVariable Long userId) {
         userService.deleteByID(userId);
         return new ResponseEntity<Void>(HttpStatus.OK);
-    }
-
-    /**
-     * Метод который возвращает юзера по его id
-     * @param id юзера
-     * @return ResponseEntity<User>
-     */
-    @GetMapping("/getManagerById/{id}")
-    @ApiOperation(value = "Find user-manager by id and return user-manager")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "User with this id not found"),
-    })
-    public ResponseEntity<User> getUserById(@PathVariable ("id") Long id) {
-        if (userService.findById(id).isEmpty()) {
-            log.debug("User with id: {} not found", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        log.debug("User with id: {} found", id);
-        User user = userService.findUserById(id);
-        //User user = userService.findById(id).get();
-        if (user.getFirstName() == null) {
-            user.setFirstName("");
-        }
-        if (user.getLastName() == null) {
-            user.setLastName("");
-        }
-        return ResponseEntity.ok(user);
     }
 }

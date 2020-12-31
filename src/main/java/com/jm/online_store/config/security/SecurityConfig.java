@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/service/**").access("hasAnyRole('ROLE_SERVICE','ROLE_ADMIN')")
                 .antMatchers("/authority/**", "/api/commonSettings/**")
                 .access("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SERVICE', 'ROLE_MODERATOR')")
-                .antMatchers("/admin/**", "/api/users/**").access("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER')")
+                .antMatchers("/admin/**", "/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
                 .antMatchers("/moderator/**").access("hasRole('ROLE_MODERATOR')")
                 .antMatchers("/**", "/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
