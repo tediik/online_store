@@ -19,8 +19,6 @@ import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.security.MD5Encoder;
-import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
@@ -47,7 +45,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -163,7 +160,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Обновление пользователя.
-     *
      * @param user пользователь, полученный из контроллера.
      */
     @Override
@@ -199,10 +195,9 @@ public class UserServiceImpl implements UserService {
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
     }
-
+    
     /**
      * Удаляет пользователя по идентификатору.
-     *
      * @param id идентификатор.
      */
     @Override
@@ -213,7 +208,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Регистрация нового User.
-     *
      * @param userForm User построенный из данных формы.
      */
     @Override
@@ -245,7 +239,7 @@ public class UserServiceImpl implements UserService {
         String message = String.format(
                 "Здравствуйте, %s! \n" +
                         "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке: " +
-                        urlActivate + "/activatenewmail/%s",
+                        urlActivate +  "/activatenewmail/%s",
                 user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
@@ -255,8 +249,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Устанавливет переданному пользователю новый пароль.
-     *
-     * @param user        Пользователь
+     * @param user Пользователь
      * @param newPassword новый пароль
      */
     @Override
@@ -276,7 +269,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Генерирует новый пароль и отправляет его пользователю на почту.
-     *
      * @param user - Покупатель, запросивший смену пароля.
      */
     @Transactional
@@ -290,7 +282,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод использует библиотеку Passay для генерации рандомного пароля в соответствии с указанными требованиями к паролю
-     *
      * @return рандомный сгенерированный пароль
      */
     private String generatePassayPassword() {
@@ -308,7 +299,7 @@ public class UserServiceImpl implements UserService {
         return gen.generatePassword(10, lowerCaseRule,
                 upperCaseRule, digitRule);
     }
-
+    
     /**
      * Генерирует токен для сброса пароля и отправляет на указанную пользователем почту
      */
@@ -318,7 +309,7 @@ public class UserServiceImpl implements UserService {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
         String message = String.format(
-                "Привет, %s! \n Вы сделали запрос на сброс пароля, для подтверждения перейдите по ссылке " + urlActivate + "/restorepassword/%s",
+                "Привет, %s! \n Вы сделали запрос на сброс пароля, для подтверждения перейдите по ссылке "+ urlActivate + "/restorepassword/%s",
                 user.getFirstName(),
                 confirmationToken.getConfirmationToken()
         );
@@ -442,7 +433,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to add new user from admin page
-     *
      * @param newUser
      */
     @Override
@@ -468,7 +458,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
-     *
      * @param user
      * @return User
      */
@@ -509,8 +498,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
-     *
-     * @param user    переданный пользователь
+     * @param user переданный пользователь
      * @param address новый адрес для пользователя
      * @throws UserNotFoundException вылетает, если пользователь не найден в БД
      */
@@ -543,8 +531,26 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Service method which builds and returns currently logged in User from Authentication
-     *
+     * Метод который находит User-а по его логину email
+     * @param email Юзера
+     * @return User
+     */
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+    /**
+     * Метод который находит User-а по его id
+     * @param id Юзера
+     * @return User
+     */
+    @Override
+    public User findUserById(Long id) {
+       return userRepository.findUserById(id);
+    }
+    /**
+     * Метод возвращает залогиненного активного юзера - User из Authentication
      * @return User
      */
     public User getCurrentLoggedInUser() {
@@ -558,7 +564,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which finds and returns the User by token after email confirmation
-     *
      * @return User
      */
     @Transactional

@@ -7,7 +7,6 @@ import com.jm.online_store.service.interf.FeedbackService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -34,12 +33,13 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     /**
-     * Метод добавления ответа на обращения, задает статус RESOLVED
+     * Метод добавления ответа на обращения,плюс еще мы сохраняем юзера-менеджера, задает статус RESOLVED
      * @param feedback - {@link Feedback} обращение
      */
     @Override
     public void addAnswerFeedback(Feedback feedback) {
         Feedback feedbackDB = feedbackRepository.findById(feedback.getId()).orElseThrow(FeedbackNotFoundException::new);
+        feedbackDB.setManagerId(feedback.getManagerId());
         feedbackDB.setAnswer(feedback.getAnswer());
         feedbackDB.setStatus(Feedback.Status.RESOLVED);
         feedbackDB.setResponseExpected(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
