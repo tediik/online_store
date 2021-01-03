@@ -137,10 +137,16 @@
     Client.prototype._transmit = function(command, headers, body) {
       var out;
       out = Frame.marshall(command, headers, body);
+      if (typeof this.debug === "function") {
+        this.debug(">>> " + out);
+      }
       while (true) {
         if (out.length > this.maxWebSocketFrameSize) {
           this.ws.send(out.substring(0, this.maxWebSocketFrameSize));
           out = out.substring(this.maxWebSocketFrameSize);
+          if (typeof this.debug === "function") {
+            this.debug("remaining = " + out.length);
+          }
         } else {
           return this.ws.send(out);
         }
@@ -164,19 +170,29 @@
       })(), serverOutgoing = _ref1[0], serverIncoming = _ref1[1];
       if (!(this.heartbeat.outgoing === 0 || serverIncoming === 0)) {
         ttl = Math.max(this.heartbeat.outgoing, serverIncoming);
+        if (typeof this.debug === "function") {
+          this.debug("send PING every " + ttl + "ms");
+        }
         this.pinger = Stomp.setInterval(ttl, (function(_this) {
           return function() {
             _this.ws.send(Byte.LF);
+            return typeof _this.debug === "function" ? _this.debug(">>> PING") : void 0;
           };
         })(this));
       }
       if (!(this.heartbeat.incoming === 0 || serverOutgoing === 0)) {
         ttl = Math.max(this.heartbeat.incoming, serverOutgoing);
+        if (typeof this.debug === "function") {
+          this.debug("check PONG every " + ttl + "ms");
+        }
         return this.ponger = Stomp.setInterval(ttl, (function(_this) {
           return function() {
             var delta;
             delta = now() - _this.serverActivity;
             if (delta > ttl * 2) {
+              if (typeof _this.debug === "function") {
+                _this.debug("did not receive server activity for the last " + delta + "ms");
+              }
               return _this.ws.close();
             }
           };
@@ -213,10 +229,13 @@
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       out = this._parseConnect.apply(this, args);
       headers = out[0], this.connectCallback = out[1], errorCallback = out[2];
+      if (typeof this.debug === "function") {
+        this.debug("Opening Web Socket...");
+      }
       this.ws.onmessage = (function(_this) {
         return function(evt) {
           var arr, c, client, data, frame, messageID, onreceive, subscription, _i, _len, _ref, _results;
-          data = typeof ArrayBuffer !== 'undefined' && evt.data instanceof ArrayBuffer ? (arr = new Uint8Array(evt.data), ((function() {
+          data = typeof ArrayBuffer !== 'undefined' && evt.data instanceof ArrayBuffer ? (arr = new Uint8Array(evt.data), typeof _this.debug === "function" ? _this.debug("--- got data length: " + arr.length) : void 0, ((function() {
             var _i, _len, _results;
             _results = [];
             for (_i = 0, _len = arr.length; _i < _len; _i++) {
@@ -227,7 +246,13 @@
           })()).join('')) : evt.data;
           _this.serverActivity = now();
           if (data === Byte.LF) {
+            if (typeof _this.debug === "function") {
+              _this.debug("<<< PONG");
+            }
             return;
+          }
+          if (typeof _this.debug === "function") {
+            _this.debug("<<< " + data);
           }
           _ref = Frame.unmarshall(data);
           _results = [];
@@ -235,6 +260,9 @@
             frame = _ref[_i];
             switch (frame.command) {
               case "CONNECTED":
+                if (typeof _this.debug === "function") {
+                  _this.debug("connected to server " + frame.headers.server);
+                }
                 _this.connected = true;
                 _this._setupHeartbeat(frame.headers);
                 _results.push(typeof _this.connectCallback === "function" ? _this.connectCallback(frame) : void 0);
@@ -279,12 +307,18 @@
         return function() {
           var msg;
           msg = "Whoops! Lost connection to " + _this.ws.url;
+          if (typeof _this.debug === "function") {
+            _this.debug(msg);
+          }
           _this._cleanUp();
           return typeof errorCallback === "function" ? errorCallback(msg) : void 0;
         };
       })(this);
       return this.ws.onopen = (function(_this) {
         return function() {
+          if (typeof _this.debug === "function") {
+            _this.debug('Web Socket Opened...');
+          }
           headers["accept-version"] = Stomp.VERSIONS.supportedVersions();
           headers["heart-beat"] = [_this.heartbeat.outgoing, _this.heartbeat.incoming].join(',');
           return _this._transmit("CONNECT", headers);
