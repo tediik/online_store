@@ -25,9 +25,9 @@ public interface UserService {
     void addUser(User user);
 
 
-/*    boolean checkUserStatus(String email, String password);*/
+    /*    boolean checkUserStatus(String email, String password);*/
 
-   /* void restoreUser(String email);*/
+    /* void restoreUser(String email);*/
 
     void deleteByID(Long id);
 
@@ -46,7 +46,7 @@ public interface UserService {
     boolean isExist(String email);
 
     void regNewAccount(User user);
- 
+
     void changeUsersMail(User user, String newMail);
 
     void changeUsersPass(User user, String newMail);
@@ -69,7 +69,7 @@ public interface UserService {
 
     boolean changePassword(Long id, String oldPassword, String newPassword);
 
-   /* void cancelSubscription(Long id);*/
+    /* void cancelSubscription(Long id);*/
 
     User getCurrentLoggedInUser();
 
@@ -77,4 +77,5 @@ public interface UserService {
 
     boolean addNewAddressForUser(User user, Address address);
 
+    public void sendConfirmationSubscribeLetter(String email);
 }
