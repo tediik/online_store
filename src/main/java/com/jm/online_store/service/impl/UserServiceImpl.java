@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
@@ -590,18 +591,15 @@ public class UserServiceImpl implements UserService {
                 .getSettingByName("subscribe_confirmation_template")
                 .getTextValue();
         String messageBody;
-        String usersName = "Покупатель";
-        Optional<User> user = findByEmail(email);
-        if (user.isPresent()) {
-            User userFromDB = user.get();
-            userFromDB.setConfirmReceiveEmail(User.ConfirmReceiveEmail.REQUESTED);
-            System.out.println(userFromDB.getConfirmReceiveEmail());
-            userRepository.save(userFromDB);
-            if (user.get().getFirstName() != null) {
-                usersName = userFromDB.getFirstName();
+        String[] userName = {"Покупатель"};
+        findByEmail(email).ifPresent(user -> {
+            user.setConfirmReceiveEmail(ConfirmReceiveEmail.REQUESTED);
+            userRepository.save(user);
+            if (user.getFirstName() != null) {
+               userName[0] = user.getFirstName();
             }
-        }
-        messageBody = templateBody.replaceAll("@@user@@", usersName);
+        });
+        messageBody = templateBody.replaceAll("@@user@@", userName[0]);
         try {
             mailSenderService.sendHtmlMessage(email, "Подтвердите Вашу подписку", messageBody, "Subscribe confirmation");
         } catch (MessagingException e) {

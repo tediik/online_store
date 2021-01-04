@@ -72,7 +72,8 @@ spring.profiles.include: 'security'
 
 #https://jm-online-store.herokuapp.com
 # Смотри инструкцию https://trello.com/c/8akD9MhL
-production-url: https://jm-online-store.herokuapp.com
+production-url:
+  https://jm-online-store.herokuapp.com
 telegram-bot:
   name: JM_store_bot
   token: 1432791063:AAH1j664T9RnRPhS7elFAfvFcA5enPunWeE

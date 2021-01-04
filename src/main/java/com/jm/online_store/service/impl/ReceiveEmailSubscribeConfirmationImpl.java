@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.ReceiveEmailSubscribeConfirmation;
@@ -65,7 +66,7 @@ public class ReceiveEmailSubscribeConfirmationImpl implements ReceiveEmailSubscr
                 if (userService.findByEmail(email).isPresent() && userService.findByEmail(email).get().
                         getConfirmReceiveEmail().toString().equals("REQUESTED")) {
                     User user = userService.findByEmail(email).get();
-                    user.setConfirmReceiveEmail(User.ConfirmReceiveEmail.CONFIRMED);
+                    user.setConfirmReceiveEmail(ConfirmReceiveEmail.CONFIRMED);
                     userService.updateUser(user);
                 }
             }

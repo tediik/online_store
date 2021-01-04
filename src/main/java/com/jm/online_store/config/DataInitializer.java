@@ -53,6 +53,9 @@ import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -109,6 +112,9 @@ public class DataInitializer {
     private final CharacteristicService characteristicService;
     private final ProductCharacteristicService productCharacteristicService;
     private final BadWordsService badWordsService;
+
+    @Autowired
+    private Environment environment;
 
     /**
      * Основной метод для заполнения базы данных.
@@ -1262,22 +1268,23 @@ public class DataInitializer {
      * creates template for email.
      */
     public void commonSettingsInit() {
+
         CommonSettings emailStockDistributionTemplate = CommonSettings.builder()
                 .settingName("stock_email_distribution_template")
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о новых Акциях!" +
-                        "</p><p>@@stockList@@</p><p>С Уважением</p><p>Online-store.ru</p>")
+                        "</p><p>@@stockList@@</p><p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .build();
         CommonSettings priceChangeDistributionTemplate = CommonSettings.builder()
                 .settingName("price_change_distribution_template")
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о снижении цены</p>" +
                         "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
-                        "<p>С Уважением</p><p>Online-store.ru</p>")
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .build();
         CommonSettings subscribeConfirmationTemplate = CommonSettings.builder()
                 .settingName("subscribe_confirmation_template")
                 .textValue("<p>Уважаемый @@user@@, для подтверждении подписки о снижении цены</p>" +
                         "<p>Пожалуйста, ответьте на это письмо с любым текстом</p>" +
-                        "<p>С Уважением</p><p>Online-store.ru</p>")
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .build();
         CommonSettings badWordsEnabled = CommonSettings.builder()
                 .settingName("bad_words_enabled")

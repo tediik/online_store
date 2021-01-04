@@ -3,6 +3,7 @@ package com.jm.online_store.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.jm.online_store.enums.ConfirmReceiveEmail;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -232,16 +233,6 @@ public class User implements UserDetails {
     public enum Gender {
         MAN,
         WOMAN
-    }
-
-    /**
-     * Обозначает статус согласия юзера на получение рассылки (об изменении цены).
-     * NO_ACTIONS - нет согласия, REQUESTED - согласие запрошено (в письме), CONFIRMED - согласие получено.
-     */
-    public enum ConfirmReceiveEmail {
-        NO_ACTIONS,
-        REQUESTED,
-        CONFIRMED
     }
 
     @Override
