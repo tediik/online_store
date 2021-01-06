@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/comments")
 @AllArgsConstructor
+@ComponentScan({"com.delivery.request"})
 @Slf4j
 @Api(description = "Rest controller for CRUD operations with comments to the products on products pages")
 public class CommentRestController {
@@ -51,14 +53,8 @@ public class CommentRestController {
     private final ProductRepository productRepository;
     private final BadWordsService badWordsService;
     private final UserService userService;
+    private final CommentDto commentDto;
 
-
-    /**
-     * Fetches an arrayList of all product Comments by productId and returns JSON representation response
-     *
-     * @param productId
-     * @return ResponseEntity<List < CommentDto>>
-     */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches all the comments from current product")
     public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
@@ -84,15 +80,7 @@ public class CommentRestController {
     public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
         Comment savedComment = commentService.addComment(comment);
-        if (savedComment.getCustomer().getFirstName() == null & savedComment.getCustomer().getLastName() == null) {
-            savedComment.setViewDataComment(savedComment.getCustomer().getEmail());
-        } else if (savedComment.getCustomer().getFirstName() != null & savedComment.getCustomer().getLastName() != null) {
-            savedComment.setViewDataComment(savedComment.getCustomer().getFirstName() + " " + savedComment.getCustomer().getLastName());
-        } else if (savedComment.getCustomer().getFirstName() != null ) {
-            savedComment.setViewDataComment(savedComment.getCustomer().getFirstName());
-        }else if (savedComment.getCustomer().getLastName() != null) {
-            savedComment.setViewDataComment(savedComment.getCustomer().getLastName());
-        }
+
 
         if (!bindingResult.hasErrors()) {
             String checkText = savedComment.getContent();

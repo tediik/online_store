@@ -14,6 +14,7 @@ public class ProductForCommentDto {
     private Long id;
     private List<CommentDto> comments;
 
+
     public static ProductForCommentDto productToDto(Product product) {
         ProductForCommentDto productForCommentDto = new ProductForCommentDto();
         productForCommentDto.setId(product.getId());

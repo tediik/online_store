@@ -4,6 +4,7 @@ import com.jm.online_store.model.Comment;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Data
 @Slf4j
 @ApiModel(description = "DTO для сущности Comment")
+@Component
 public class CommentDto {
 
     private Long id;
@@ -28,7 +30,8 @@ public class CommentDto {
     private Long productId;
     private Long reviewId;
     private Boolean deletedHasKids;
-    private String viewDataComment;
+    public  String viewDataComment;
+
 
     public static CommentDto commentEntityToDto(Comment commentEntity) {
         CommentDto commentDto = new CommentDto();
@@ -40,11 +43,20 @@ public class CommentDto {
         commentDto.setLastName(commentEntity.getCustomer().getLastName());
         commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
         commentDto.setDeletedHasKids(commentEntity.isDeletedHasKids());
-        commentDto.setViewDataComment(commentEntity.getViewDataComment());
+        if (commentEntity.getCustomer().getFirstName() == null & commentEntity.getCustomer().getLastName() == null) {
+            commentDto.viewDataComment= commentEntity.getCustomer().getEmail();
+        } else if (commentEntity.getCustomer().getFirstName() != null & commentEntity.getCustomer().getLastName() != null) {
+            commentDto.viewDataComment = commentEntity.getCustomer().getFirstName() + " " + commentEntity.getCustomer().getLastName();
+        } else if (commentEntity.getCustomer().getFirstName() != null) {
+            commentDto.viewDataComment = commentEntity.getCustomer().getFirstName();
+        } else if (commentEntity.getCustomer().getLastName() != null) {
+            commentDto.viewDataComment = commentEntity.getCustomer().getLastName();
+
+        }
 
         DateTimeFormatter dTF2 = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
         try {
-            commentDto.setTimeStamp(formatToYesterdayOrToday(commentEntity.getCommentDate().format(dTF2)));  //commentEntity.getCommentDate().truncatedTo(ChronoUnit.MINUTES));
+            commentDto.setTimeStamp(formatToYesterdayOrToday(commentEntity.getCommentDate().format(dTF2)));
         } catch (ParseException e) {
             e.printStackTrace();
             log.debug("Ошибка парсинга даты внутри метода formatToYesterdayOrToday(String date) : {}", e);

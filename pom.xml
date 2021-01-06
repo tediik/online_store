@@ -237,11 +237,6 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.18</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
-        
-
-
-
     </dependencies>
 
     <build>
