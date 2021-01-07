@@ -15,7 +15,7 @@ public class SpringFoxConfig {
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2).groupName("All")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.jm.online_store.controller.rest"))
                 .paths(PathSelectors.any())
@@ -31,6 +31,90 @@ public class SpringFoxConfig {
                             null,
                             Collections.emptyList()
                     )
+                );
+    }
+    @Bean
+    public Docket api2() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Manager")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.jm.online_store.controller.rest.manager"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(
+                        new ApiInfo(
+                                "Online Store",
+                                "Online store - a place to buy all you need",
+                                "apiVersion",
+                                null,
+                                null,
+                                null,
+                                null,
+                                Collections.emptyList()
+                        )
+                );
+    }
+    @Bean
+    public Docket api3() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Admin")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.jm.online_store.controller.rest.admin"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(
+                        new ApiInfo(
+                                "Online Store",
+                                "Online store - a place to buy all you need",
+                                "apiVersion",
+                                null,
+                                null,
+                                null,
+                                null,
+                                Collections.emptyList()
+                        )
+                );
+    }
+    @Bean
+    public Docket api4() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Customer")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.jm.online_store.controller.rest.customer"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(
+                        new ApiInfo(
+                                "Online Store",
+                                "Online store - a place to buy all you need",
+                                "apiVersion",
+                                null,
+                                null,
+                                null,
+                                null,
+                                Collections.emptyList()
+                        )
+                );
+    }
+    @Bean
+    public Docket api5() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Moderator")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.jm.online_store.controller.rest.moderator"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(
+                        new ApiInfo(
+                                "Online Store",
+                                "Online store - a place to buy all you need",
+                                "apiVersion",
+                                null,
+                                null,
+                                null,
+                                null,
+                                Collections.emptyList()
+                        )
                 );
     }
 }
