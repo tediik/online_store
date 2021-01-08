@@ -4,6 +4,7 @@ import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.repository.TaskSettingsRepository;
 import com.jm.online_store.service.interf.DeleteExpiredProfileTask;
 import com.jm.online_store.service.interf.PriceListService;
+import com.jm.online_store.service.interf.ReceiveEmailSubscribeConfirmation;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
     private final StockMailDistributionTask stockMailDistribution;
     private final PriceListService priceListService;
     private final DeleteExpiredProfileTask deleteExpiredProfileTask;
+    private final ReceiveEmailSubscribeConfirmation receiveEmailSubscribeConfirmation;
     private final Map<Long, ScheduledFuture<?>> jobsMap;
 
     /**
@@ -68,6 +70,7 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
         Optional<TaskSettings> stockMailDistributionTask = taskSettingsRepository.findByTaskName("stockMailDistribution");
         Optional<TaskSettings> dailyPriceCreateTask = taskSettingsRepository.findByTaskName("dailyPriceCreate");
         Optional<TaskSettings> deleteExpiredCustomersProfile = taskSettingsRepository.findByTaskName("deleteExpiredCustomersProfile");
+        Optional<TaskSettings> receiveEmailSubscribeConfirmationTask = taskSettingsRepository.findByTaskName("receiveEmailSubscribeConfirmation");
         if (stockMailDistributionTask.isPresent() && stockMailDistributionTask.get().isActive()) {
             addTaskToScheduler(stockMailDistributionTask.get(), stockMailDistribution);
         }
@@ -76,6 +79,9 @@ public class TaskSchedulingServiceImpl implements TaskSchedulingService {
         }
         if (deleteExpiredCustomersProfile.isPresent() && deleteExpiredCustomersProfile.get().isActive()) {
             addTaskToScheduler(deleteExpiredCustomersProfile.get(), deleteExpiredProfileTask);
+        }
+        if (receiveEmailSubscribeConfirmationTask.isPresent() && receiveEmailSubscribeConfirmationTask.get().isActive()) {
+            addTaskToScheduler(receiveEmailSubscribeConfirmationTask.get(), receiveEmailSubscribeConfirmation);
         }
     }
 

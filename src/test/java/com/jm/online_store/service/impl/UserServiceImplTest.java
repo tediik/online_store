@@ -43,7 +43,8 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
     private AddressService addressService = mock(AddressService.class);
     private AddressRepository addressRepository = mock(AddressRepository.class);
-    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService);
+    private CommonSettingsServiceImpl commonSettingsService = mock(CommonSettingsServiceImpl.class);
+    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService);
 
     private User userFullParameter;
     private User userWithIdEmailPassword;

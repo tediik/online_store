@@ -60,8 +60,7 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<ReportComment> reportComments;
 
-    @Column(nullable = false)
-    private boolean deletedHasKids = false;
+     private boolean deletedHasKids = false;
 
     public Comment(String content) {
         this.content = content;
