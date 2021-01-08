@@ -152,6 +152,10 @@ public class User implements UserDetails {
     @JsonIgnore
     private Set<Feedback> feedbacks;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonIgnore
+    private Set<RecentlyViewedProducts> recentlyViewedProducts;
+
     public User() {
         registerDate = LocalDate.now();
     }

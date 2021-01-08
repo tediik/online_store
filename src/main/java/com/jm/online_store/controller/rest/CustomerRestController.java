@@ -15,6 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @AllArgsConstructor
 @RestController
@@ -24,6 +32,10 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
+    //private Integer count = new Integer();
+    private static AtomicInteger count = new AtomicInteger(0);
+    //private String idProduct;
+    //private Integer counter;
 
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email")
@@ -120,4 +132,43 @@ public class CustomerRestController {
         }
         return ResponseEntity.ok(user);
     }
+
+    /**
+     * Метод добавляет id продукта или товара productIdFromPath в хранилище Session
+     * @param productIdFromPath идентификатор товара
+     * @return ResponseEntity<String>
+     */
+    @PostMapping("/addIdProductToSessionAndToBase")
+    @ApiOperation(value = "procces gives and save idProduct into Cooki User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "")
+    })
+    public ResponseEntity<String> saveIdProductToSession(@RequestBody String productIdFromPath, HttpServletResponse response, HttpServletRequest request)  {
+        HttpSession session = request.getSession();
+        int counterValue = count.intValue();
+        session.setAttribute(String.valueOf(counterValue++), productIdFromPath);
+
+        //session.setAttribute("idProduct" + count.getAndIncrement(), productIdFromPath );
+        return ResponseEntity.ok("Session is set");
+    }
+
+    /**
+     * Метод получает из базы в коллекцию List из id продуктов или товаров productIdFromPath которые просматривал юзер
+     * @param request, response - запрос и ответ
+     * @return ResponseEntity<String>
+     */
+    @GetMapping("/getRecentlyViewedProductsFromDb")
+    @ApiOperation(value = "procces gives idProduct from DB")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "")
+    })
+    public ResponseEntity<List<recentlyViewedProducts>> getRecentlyViewedProducts(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException {
+
+        HttpSession session = request.getSession();
+        RecentlyViewedProducts recentlyViewedProducts = (RecentlyViewedProducts) session.getAttribute("idProduct" + count.getAndIncrement());
+
+     return  ResponseEntity.ok(cookieList);
+    }
 }
+
