@@ -52,9 +52,17 @@ import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -66,6 +74,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * класс первичного заполнения таблиц.
@@ -74,6 +83,7 @@ import java.util.Set;
  * "@PostConstruct" и поменять значение  ключа "spring.jpa.hibernate.ddl-auto"
  * в файле "application.yml" с "update" на "create" или "create-drop".
  */
+@Slf4j
 @AllArgsConstructor
 @Component
 @Data
@@ -103,12 +113,15 @@ public class DataInitializer {
     private final ProductCharacteristicService productCharacteristicService;
     private final BadWordsService badWordsService;
 
+    @Autowired
+    private Environment environment;
+
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct
+    //@PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -1241,6 +1254,13 @@ public class DataInitializer {
                 .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         taskSettingsService.addNewTaskSetting(taskSettings3);
+
+        TaskSettings taskSettings4 = TaskSettings.builder()
+                .taskName("receiveEmailSubscribeConfirmation")
+                .active(true)
+                .startTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .build();
+        taskSettingsService.addNewTaskSetting(taskSettings4);
     }
 
     /**
@@ -1248,16 +1268,23 @@ public class DataInitializer {
      * creates template for email.
      */
     public void commonSettingsInit() {
+
         CommonSettings emailStockDistributionTemplate = CommonSettings.builder()
                 .settingName("stock_email_distribution_template")
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о новых Акциях!" +
-                        "</p><p>@@stockList@@</p><p>С Уважением</p><p>Online-store.ru</p>")
+                        "</p><p>@@stockList@@</p><p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .build();
         CommonSettings priceChangeDistributionTemplate = CommonSettings.builder()
                 .settingName("price_change_distribution_template")
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о снижении цены</p>" +
                         "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
-                        "<p>С Уважением</p><p>Online-store.ru</p>")
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .build();
+        CommonSettings subscribeConfirmationTemplate = CommonSettings.builder()
+                .settingName("subscribe_confirmation_template")
+                .textValue("<p>Уважаемый @@user@@, для подтверждении подписки о снижении цены</p>" +
+                        "<p>Пожалуйста, ответьте на это письмо с любым текстом</p>" +
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .build();
         CommonSettings badWordsEnabled = CommonSettings.builder()
                 .settingName("bad_words_enabled")
@@ -1270,6 +1297,7 @@ public class DataInitializer {
                 .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
+        commonSettingsService.addSetting(subscribeConfirmationTemplate);
         commonSettingsService.addSetting(badWordsEnabled);
         commonSettingsService.addSetting(maintenanceModeTemplate);
     }
@@ -1477,11 +1505,21 @@ public class DataInitializer {
 
     /**
      * Инициализация тестовых данных для BadWords
+     * импортируется из файла в проекте: src/main/resources/uploads/import/badword_for_import.txt
+     * если еще не импортированы, можно поставить аннотацию "@PostConstruct" перед методом
+     * @throws java.io.FileNotFoundException если файл не найден
      */
     private void badWordInit() {
         //Стартовый набор Стоп-Слов
         //Полный набор ипортируйте в Настройках
-        String[] startBadWord = {"хрен","фиг","плохой","говно","ерунда","бляха","екарный","дерьмо"};
+        String separator = File.separator;
+        String path = "src" + separator + "main" + separator + "resources" + separator + "uploads" + separator + "import" + separator + "badword_for_import.txt";
+        String[] startBadWord = {"хрен","фиг","плохой","говно","ерунда","бляха","екарный","дерьмо"}; //если файл отсутствует, пусть хоть эти будут
+        try {
+            startBadWord = Files.lines(Paths.get(path)).collect(Collectors.joining("")).split(", ");
+        } catch (IOException e) {
+            log.error("файл плохих слов badword_for_import.txt не найден и не загружен в базу");
+        }
 
         for (String textToSave:startBadWord) {
             if (badWordsService.existsBadWordByName(textToSave)) continue;

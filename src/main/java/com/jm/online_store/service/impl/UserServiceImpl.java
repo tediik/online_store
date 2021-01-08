@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
@@ -13,13 +14,12 @@ import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.security.MD5Encoder;
-import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
@@ -35,6 +35,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
@@ -45,7 +46,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final AddressService addressService;
+    private final CommonSettingsService commonSettingsService;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -233,7 +234,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void changeUsersMail(User user, String newMail) {
-    ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
@@ -305,7 +306,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void sendConfirmationTokenToResetPassword(User user){
+    public void sendConfirmationTokenToResetPassword(User user) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
         String message = String.format(
@@ -444,7 +445,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                    userRepository.save(newUser);
+                userRepository.save(newUser);
             } else {
                 Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
                 customer.setRoles(newUser.getRoles());
@@ -531,7 +532,26 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Service method which builds and returns currently logged in User from Authentication
+     * Метод который находит User-а по его логину email
+     * @param email Юзера
+     * @return User
+     */
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+    /**
+     * Метод который находит User-а по его id
+     * @param id Юзера
+     * @return User
+     */
+    @Override
+    public User findUserById(Long id) {
+       return userRepository.findUserById(id);
+    }
+    /**
+     * Метод возвращает залогиненного активного юзера - User из Authentication
      * @return User
      */
     public User getCurrentLoggedInUser() {
@@ -558,5 +578,32 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException();
         }
         return userRepository.findByEmail(confirmationToken.getUserEmail()).orElseThrow(UserNotFoundException::new);
+    }
+
+
+    /**
+     * Метод, отправляющий сообщение с просьбой подтвердить подписку пользователю,
+     * который нажал на "Подписаться на изменение цены".
+     * @param email
+     */
+    public void sendConfirmationSubscribeLetter(String email) {
+        String templateBody = commonSettingsService
+                .getSettingByName("subscribe_confirmation_template")
+                .getTextValue();
+        String messageBody;
+        String[] userName = {"Покупатель"};
+        findByEmail(email).ifPresent(user -> {
+            user.setConfirmReceiveEmail(ConfirmReceiveEmail.REQUESTED);
+            userRepository.save(user);
+            if (user.getFirstName() != null) {
+               userName[0] = user.getFirstName();
+            }
+        });
+        messageBody = templateBody.replaceAll("@@user@@", userName[0]);
+        try {
+            mailSenderService.sendHtmlMessage(email, "Подтвердите Вашу подписку", messageBody, "Subscribe confirmation");
+        } catch (MessagingException e) {
+            log.debug("Can not send mail about Subscribe confirmation to {}", email);
+        }
     }
 }
