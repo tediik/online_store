@@ -78,3 +78,6 @@ telegram-bot:
   name: JM_store_bot
   token: 1432791063:AAH1j664T9RnRPhS7elFAfvFcA5enPunWeE
   webhook-path: https://jm-online-store.herokuapp.com/telegram-bot
+
+common-data:
+  store-name: Online store
