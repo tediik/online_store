@@ -592,6 +592,7 @@ public class UserServiceImpl implements UserService {
      *                  если его нет в бд -создает его используя параметр в качестве email
      * @return User
      */
+    @Transactional
     @Override
     public User getCurrentLoggedInUser(String sessionID) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
