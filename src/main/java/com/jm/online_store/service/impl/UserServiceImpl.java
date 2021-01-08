@@ -513,6 +513,11 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAndFlush(user);
     }
 
+    /**
+     * Метод который находит User-а по его id
+     * @param id Юзера
+     * @return User
+     */
     @Override
     @Transactional
     public boolean changePassword(Long id, String oldPassword, String newPassword) {
