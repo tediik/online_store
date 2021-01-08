@@ -113,7 +113,8 @@
             <div id="productName">
                 <!-- from productPage.js -->
             </div>
-            <div sec:authorize="isAuthenticated()">
+
+            <div>
                 <div id="rate"></div>
                 <h5>Общий рейтинг</h5>
                 <div id="rateNumber"></div>
@@ -314,9 +315,6 @@
         crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script src="/static/js/websocket/sockjs-0.3.4.js"></script>
-<script src="/static/js/websocket/stomp.js"></script>
-<script src="/static/js/moderatorComments.js"></script>
 <script src="../static/js/productPage.js"></script>
 <script src="../static/js/comments.js"></script>
 <script src="../static/js/reviews.js"></script>

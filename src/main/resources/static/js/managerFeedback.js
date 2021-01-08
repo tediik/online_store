@@ -1,3 +1,4 @@
+let managersId
 $(document).ready(function () {
     toastr.options = {
         "positionClass": "toast-top-full-width"
@@ -33,6 +34,7 @@ function checkUpperNavButtonFeedback(event) {
  * и в случае успеха, отправляет их в метод {@link renderMessages()}
  */
 function getInProgressFeedback() {
+    getManager();
     fetch('/api/feedback/inProgress')
         .then(function (response) {
             if (response.ok) {
@@ -137,6 +139,22 @@ function showAnswer(id, showStatus) {
 }
 
 /**
+ * Функция получает фио менеджера ответившего на обращение
+ */
+function getManager() {
+    fetch("/api/admin/authUser")
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            managersId = data.id
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+}
+
+/**
  * Функция добавляет ответ к обращению
  * @param id идентификатор обращения
  * @param sendStatus статус обращения
@@ -153,7 +171,8 @@ function sendAnswer(id, sendStatus) {
                 },
                 body: JSON.stringify({
                     id: id,
-                    answer: textAnswer
+                    answer: textAnswer,
+                    managerId: managersId
                 })
             }).then(function (response) {
                 if (response.ok) {
@@ -350,6 +369,9 @@ function renderMessages(data, elementId) {
                         <div class="container-fluid row" id="divContainer-${messages.id}">
                             <div class="text-left align-text-bottom col" id="divSpan-${messages.id}">
                                 <span id="postingDateRender">Дата обращения: ${postDateFeedback}</span>
+                                <span id="lastNameRender">Логин:<mark>${messages.user.username}</mark>,</span>
+                                <span id="NameRender"><em>Имя: <mark>${messages.user.firstName}</mark>,</em></span> 
+                                <span id="lastNameRender"><em>Фамилия: <mark>${messages.user.lastName}</mark></em></span>
                             </div>
                             <div class="text-right col" id="divButtons-${messages.id}">
                                 <button type="button" class="btn btn-danger" id="btn_delete_Feedback" 
