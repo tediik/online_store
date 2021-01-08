@@ -70,13 +70,4 @@ public class Comment {
         this.id = id;
         this.content = content;
     }
- //   public   String viewDataComment;
-
-//    public void setViewDataComment(String viewDataComment) {
-//        this.viewDataComment = viewDataComment;
-//    }
-//
-//    public String getViewDataComment() {
-//        return viewDataComment;
-//    }
 }
