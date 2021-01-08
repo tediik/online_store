@@ -78,8 +78,6 @@ public class CommentRestController {
     public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
         Comment savedComment = commentService.addComment(comment);
-
-
         if (!bindingResult.hasErrors()) {
             String checkText = savedComment.getContent();
             if (!badWordsService.checkEnabledCheckText()) {

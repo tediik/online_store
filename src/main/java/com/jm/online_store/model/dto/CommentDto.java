@@ -53,7 +53,6 @@ public class CommentDto {
             commentDto.viewDataComment = commentEntity.getCustomer().getLastName();
 
         }
-
         DateTimeFormatter dTF2 = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
         try {
             commentDto.setTimeStamp(formatToYesterdayOrToday(commentEntity.getCommentDate().format(dTF2)));
