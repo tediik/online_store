@@ -32,7 +32,6 @@ public class CommentDto {
     private Boolean deletedHasKids;
     public  String viewDataComment;
 
-
     public static CommentDto commentEntityToDto(Comment commentEntity) {
         CommentDto commentDto = new CommentDto();
         commentDto.setId(commentEntity.getId());
