@@ -19,9 +19,8 @@ public class CommonRestController {
     private String storeName;
 
     /**
-     * контроллер для получения наименвания магизина из application.yml
-     *
-     * @return ResponseEntity<String> наименвание магазина
+     * Контроллер для получения наименования магазина из application.yml
+     * @return ResponseEntity<String> наименование магазина
      */
 
     @GetMapping("api/storeName")
