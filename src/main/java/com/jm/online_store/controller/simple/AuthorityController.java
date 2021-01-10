@@ -24,26 +24,26 @@ public class AuthorityController {
 
     @GetMapping
     public String homePage() {
-        return "adminPage";
+        return "admin-page";
     }
 
     @GetMapping("/profile")
     public String getPersonalInfo(Model model) {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
-        return "profileAuthority";
+        return "profile-authority";
     }
 
     @PostMapping("/profile")
     public String updateUserProfile(User user, Model model) {
         User updateUser = userService.updateUserProfile(user);
         model.addAttribute("user", updateUser);
-        return "profileAuthority";
+        return "profile-authority";
     }
 
     @GetMapping("/change-password")
     public String changePassword() {
-        return "changePassword";
+        return "change-password";
     }
 
     @PostMapping("/change-password")

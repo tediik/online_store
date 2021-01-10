@@ -12,7 +12,7 @@ const id = splitUrl[splitUrl.length - 1];
  * далее добавляются слушатели событий
  */
 $(document).ready(function () {
-    $('head').append('<link href="/static/css/socialShare.css" rel="stylesheet" type="text/css">');
+    $('head').append('<link href="/static/css/social-share.css" rel="stylesheet" type="text/css">');
     renderShareLinks();
     generateShareLinks();
     document.getElementById('shareVKLink').addEventListener('click', handleShareButton);

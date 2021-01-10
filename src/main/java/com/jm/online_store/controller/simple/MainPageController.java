@@ -26,7 +26,7 @@ public class MainPageController {
     @GetMapping
     public String mainPage(Model model) {
         model.addAttribute("userForm", new User());
-        return "mainPage";
+        return "main-page";
     }
 
     /**

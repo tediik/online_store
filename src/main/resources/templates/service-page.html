@@ -12,7 +12,7 @@
     <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<header th:insert="blocks/cabinetHeader :: header"></header>
+<header th:insert="blocks/cabinet-header :: header"></header>
 <main>
 
     <!---------------------- Edit RepairOrder Modal window ------------------->
@@ -153,7 +153,7 @@
 
                     <!--профиль-->
                     <div class="tab-pane fade show active" id="Profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <div th:insert="blocks/profileAdminManagerService :: profile"></div>
+                        <div th:insert="blocks/profile-admin-manager-service :: profile"></div>
                     </div>
                     <!--конец профиля-->
 
@@ -342,13 +342,13 @@
 <!--toastr-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 <!--main script-->
-<script src="../static/js/searchButton.js"></script>
-<script src="/static/js/repairOrder.js"></script>
-<script src="/static/js/profilePicture.js"></script>
-<script src="/static/js/profileAdminManagerService.js"></script>
+<script src="../static/js/search-button.js"></script>
+<script src="/static/js/repair-order.js"></script>
+<script src="/static/js/profile-picture.js"></script>
+<script src="/static/js/profile-admin-manager-service.js"></script>
 
 <!-- jQuery Mask Plugin -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-<script src="/static/js/telephoneNumberMask.js"></script>
+<script src="/static/js/telephone-number-mask.js"></script>
 </body>
 </html>
