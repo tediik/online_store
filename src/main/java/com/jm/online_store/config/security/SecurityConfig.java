@@ -1,5 +1,6 @@
 package com.jm.online_store.config.security;
 
+import com.jm.online_store.config.filters.CorsFilter;
 import com.jm.online_store.config.handler.LoginFailureHandler;
 import com.jm.online_store.config.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -37,6 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class);
+
         http.oauth2Login()
                 .loginPage("/login")
                 .userInfoEndpoint()
