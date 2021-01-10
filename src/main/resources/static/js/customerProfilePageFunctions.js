@@ -7,8 +7,14 @@ $(document).ready(function () {
     $(document).delegate("#submitNewPassword", "click", changePass);
     /*Слушатель для ввода пароля modal*/
     $(document).delegate("#new_password", "keyup", checkPassword);
+    fetchAndRenderSomeProducts();
+
 });
 
+function fetchAndRenderSomeProducts() {
+    fetch("/customer/getRecentlyViewedProductsFromDb").then(response => response.json()).then(data => fillSomeProducts1(data));
+    $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
+}
 /**
  * Method for customer's pass changing
  * @returns {boolean}
@@ -129,4 +135,52 @@ function deleteProfile(event) {
             toastr.error('Ваш профиль не был удален.', {timeOut: 3000});
         }
     })
+}
+
+/**
+ * function that fills CustomerPage with recentlyViewedProducts
+ * @param data - products list
+ */
+function fillSomeProducts1(data) {
+    let prodsView1 = document.getElementById('recentlyProductsViewDiv');
+    prodsView1.innerHTML = ''
+    if (data !== 'error') {
+        let item = ``;
+        for (let key = 0; key < data.length; key++) {
+            item += `
+            <div class="col-2">
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm productView">
+                    <div class="col-auto d-none d-lg-block productImg">
+                        <img class="bd-placeholder-img" src="/uploads/images/products/0.jpg">
+                    </div>
+                    <div id="rate${data[key].id}"></div>
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <p class="card-text mb-auto productName">${data[key].product}</p>
+                        <a class="btn btn-sm btn-outline-light producthref" href="/products/${data[key].id}" role="button">Подробнее &raquo;</a>
+                    </div>
+                </div>
+            </div>`;
+            if ((key + 1) % 5 == 0) {
+                $(prodsView1).append(`<div class="row">` + item);
+                item = ``;
+            } else if ((key + 1) == data.length) {
+                $(prodsView1).append(`<div class="row">` + item);
+            }
+            $(function () {
+                if (data[key].rating !== null) {
+                    $(`#rate${data[key].id}`).rateYo({
+                        rating: data[key].rating,
+                        readOnly: true
+                    });
+                } else {
+                    $(`#rate${data[key].id}`).rateYo({
+                        rating: 0,
+                        readOnly: true
+                    });
+                }
+            });
+        }
+    } else {
+        prodsView1.innerHTML = 'Ожидайте новые продукты'
+    }
 }

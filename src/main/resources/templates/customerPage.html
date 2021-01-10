@@ -69,6 +69,10 @@
                 <a class="btn btn-outline-primary mt-2" id="feedback-tab" data-toggle="pill" href="#feedback" role="tab"
                    aria-controls="orders" aria-selected="false">Обратная связь</a>
 
+                <a class="btn btn-outline-primary mt-2" id="recentlyViewedProducts-tab" data-toggle="pill"
+                   href="#recentlyProductsView" role="tab"
+                   aria-controls="orders" aria-selected="false">Недавно просмотренные товары</a>
+
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
 
             </div>
@@ -667,10 +671,26 @@
                     </div>
                 </div>
                 <!-- ВКЛАДКА ОБРАТНАЯ СВЯЗЬ  -->
+
+                <!-- ВКЛАДКА НЕДАВНО ПРОСМОТРЕННЫЕ ТОВАРЫ  -->
+                <div class="row">
+                    <div class="col-2">
+                    </div>
+                    <div class="col-10">
+                       <div class="tab-pane fade" id="recentlyProductsView" role="tabpanel" aria-labelledby="recentlyViewedProducts1-tab">
+                           <h4 class="my-1 font-weight-normal products" id="headerForRecentlyProductsView">Недавно просмотренные товары</h4>
+                             <div class="container-fluid">
+                                <div id="recentlyProductsViewDiv">
+                             <!-- Недавно просмотренные товары-->
+                                </div>
+                             </div>
+                       </div>
+                    </div>
+                </div>
+                <!-- ВКЛАДКА НЕДАВНО ПРОСМОТРЕННЫЕ ТОВАРЫ  -->
             </div>
         </div>
         <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
-
     </div>
 </div>
 <!-- Modal for order -->

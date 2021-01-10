@@ -2,6 +2,9 @@ let productIdFromPath = decodeURI(document.URL.substring(document.URL.lastIndexO
 let basketApiAddUrl = "/api/basket/add/"
 let myHeaders = new Headers()
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
+let recentlyViewedProducts = {
+    idProduct: productIdFromPath
+}
 
 /**
  * Get-запрос - если получаем продукт, то вызываем заполняющие страницу функции,
@@ -287,12 +290,11 @@ function showModalError(message) {
 }
 
 /**
- * Функция
- * @param message текст сообщения
+ * запромс который передает в контроллер id продукта
  */
     fetch("/customer/addIdProductToSessionAndToBase", {
         method: "POST",
-        body: productIdFromPath,
+        body: JSON.stringify(recentlyViewedProducts),
         headers: {"Content-Type": "application/json; charset=utf-8"}
     }).then(function (response) {
         if (response.ok) {

@@ -1,8 +1,12 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.Product;
+import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CustomerService;
+import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
@@ -15,14 +19,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 @AllArgsConstructor
 @RestController
@@ -32,10 +36,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
-    //private Integer count = new Integer();
+    private final ProductService productService;
+    private final RecentlyViewedProductsService recentlyViewedProductsService;
     private static AtomicInteger count = new AtomicInteger(0);
-    //private String idProduct;
-    //private Integer counter;
 
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email")
@@ -135,40 +138,44 @@ public class CustomerRestController {
 
     /**
      * Метод добавляет id продукта или товара productIdFromPath в хранилище Session
-     * @param productIdFromPath идентификатор товара
+     * @param recentlyViewedProducts класс сущности с тремя параметрами - время , idProduct, User
      * @return ResponseEntity<String>
      */
     @PostMapping("/addIdProductToSessionAndToBase")
-    @ApiOperation(value = "procces gives and save idProduct into Cooki User")
+    @ApiOperation(value = "procces gives and save idProduct into Session and to DataBase")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<String> saveIdProductToSession(@RequestBody String productIdFromPath, HttpServletResponse response, HttpServletRequest request)  {
+    public ResponseEntity<String> saveIdProductToSession(@RequestBody RecentlyViewedProducts recentlyViewedProducts, HttpServletResponse response, HttpServletRequest request)  {
         HttpSession session = request.getSession();
         int counterValue = count.intValue();
-        session.setAttribute(String.valueOf(counterValue++), productIdFromPath);
-
-        //session.setAttribute("idProduct" + count.getAndIncrement(), productIdFromPath );
+        counterValue++;
+        session.setAttribute(String.valueOf(counterValue), recentlyViewedProducts.getIdProduct());
+        recentlyViewedProductsService.saveRecentlyViewedProducts(recentlyViewedProducts);
         return ResponseEntity.ok("Session is set");
     }
 
     /**
-     * Метод получает из базы в коллекцию List из id продуктов или товаров productIdFromPath которые просматривал юзер
+     * Метод получает из базы коллекцию List из id продуктов или товаров productIdFromPath которые просматривал юзер
      * @param request, response - запрос и ответ
-     * @return ResponseEntity<String>
+     * @return ResponseEntity<List<Product>>
      */
     @GetMapping("/getRecentlyViewedProductsFromDb")
-    @ApiOperation(value = "procces gives idProduct from DB")
+    @ApiOperation(value = "procces return List<Product> from DB")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "")
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 400, message = "Request contains incorrect data")
     })
-    public ResponseEntity<List<recentlyViewedProducts>> getRecentlyViewedProducts(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
-
+    public ResponseEntity<List<Product>> getRecentlyViewedProducts(HttpServletRequest request)
+            throws ServletException, ResponseStatusException {
+        List<Product> listProduct = new ArrayList<>();
         HttpSession session = request.getSession();
         RecentlyViewedProducts recentlyViewedProducts = (RecentlyViewedProducts) session.getAttribute("idProduct" + count.getAndIncrement());
-
-     return  ResponseEntity.ok(cookieList);
+        List<RecentlyViewedProducts> listIdProducts = recentlyViewedProductsService.findAllRecentlyViewedProductsByUserId(userService.getCurrentLoggedInUser().getId());
+        for (RecentlyViewedProducts recViewProd : listIdProducts) {
+            listProduct.add(productService.findProductById(Long.valueOf(recViewProd.getIdProduct())).orElse(new Product()));
+        }
+            return ResponseEntity.ok(listProduct);
     }
 }
 
