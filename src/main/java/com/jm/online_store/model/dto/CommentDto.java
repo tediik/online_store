@@ -47,7 +47,6 @@ public class CommentDto {
         String firstname = commentEntity.getCustomer().getFirstName();
         String lastname = commentEntity.getCustomer().getLastName();
         String email = commentEntity.getCustomer().getEmail();
-
         if (firstname == null) {
             firstname = "";
         }
