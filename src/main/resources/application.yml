@@ -14,7 +14,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -32,12 +32,15 @@ spring:
   mail:
     host: smtp.yandex.ru
     username: jm-online-store@yandex.ru
-    password: jm2020
+    password: jm2020JM2020
     port: 465
     protocol: smtps
     debug: true
+    host-imap: imap.yandex.ru
+    store:
+      protocol: imaps
   server:
-    url: http://localhost:9999
+    url: http://localhost:9898
   mvc:
     static-path-pattern: /static/**
 server:
@@ -62,12 +65,19 @@ price-list-service:
 delete_expired_customer_period:
   cron: '0 0 0 * * *'
 
+check_new_emails_subscribe_confirmations:
+  cron: '30 * * * * *'
+
 spring.profiles.include: 'security'
 
 #https://jm-online-store.herokuapp.com
 # Смотри инструкцию https://trello.com/c/8akD9MhL
-production-url: https://jm-online-store.herokuapp.com
+production-url:
+  https://jm-online-store.herokuapp.com
 telegram-bot:
   name: JM_store_bot
   token: 1432791063:AAH1j664T9RnRPhS7elFAfvFcA5enPunWeE
   webhook-path: https://jm-online-store.herokuapp.com/telegram-bot
+
+common-data:
+  store-name: Online store

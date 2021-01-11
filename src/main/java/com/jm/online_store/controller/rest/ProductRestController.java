@@ -114,7 +114,7 @@ public class ProductRestController {
      */
     @PostMapping("/subscribe")
     @ApiOperation(value = "Add a new subscriber by email")
-    @ApiResponse(code = 208, message = "Subscriber is already exists")
+    @ApiResponse(code = 208, message = "Subscriber already exists")
     public ResponseEntity<String> addNewSubscriber(@RequestBody ObjectNode body) {
         if (productService.addNewSubscriber(body)) {
             return ResponseEntity.ok().build();
