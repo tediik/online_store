@@ -49,7 +49,7 @@ public class BasketServiceImpl implements BasketService {
 
     /**
      * метод для получения списка товаров в корзине для авторизованного User.
-     *
+     * @param sessionID номер id сессии для идентификации анонимного пользователя
      * @return List<SubBasket> список подкорзин
      */
     @Override
@@ -113,7 +113,7 @@ public class BasketServiceImpl implements BasketService {
 
     /**
      * метод для удаления сущности SubBasket(подкорзина) из списка подкорзин User.
-     *
+     * @param sessionID номер id сессии для идентификации анонимного пользователя
      * @param subBasket подкорзина
      */
     @Override
@@ -129,6 +129,7 @@ public class BasketServiceImpl implements BasketService {
     /**
      * Method add product to basket. If product already in subBasket increases by 1
      * @param id - id of product to add
+     * @param sessionID номер id сессии для идентификации анонимного пользователя
      */
     @Override
     @Transactional
