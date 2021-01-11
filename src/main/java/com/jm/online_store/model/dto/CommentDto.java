@@ -48,16 +48,16 @@ public class CommentDto {
         String lastname = commentEntity.getCustomer().getLastName();
         String email = commentEntity.getCustomer().getEmail();
 
-        if (firstname == null){
+        if (firstname == null) {
             firstname = "";
         }
-        if(lastname == null){
+        if (lastname == null) {
             lastname = "";
         }
-        if(firstname=="" & lastname == ""){
+        if (firstname == "" & lastname == "") {
             commentDto.userDescription = email;
-        }else {
-            commentDto.userDescription = firstname+" "+ lastname;
+        } else {
+            commentDto.userDescription = firstname + " " + lastname;
         }
 
         DateTimeFormatter dTF2 = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
