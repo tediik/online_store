@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/comments")
 @AllArgsConstructor
-@ComponentScan({"com.delivery.request"})
 @Slf4j
 @Api(description = "Rest controller for CRUD operations with comments to the products on products pages")
 public class CommentRestController {
@@ -53,6 +52,12 @@ public class CommentRestController {
     private final UserService userService;
     private final CommentDto commentDto;
 
+    /**
+     * Fetches an arrayList of all product Comments by productId and returns JSON representation response
+     *
+     * @param productId
+     * @return ResponseEntity<List<CommentDto>>
+     */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches all the comments from current product")
     public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {

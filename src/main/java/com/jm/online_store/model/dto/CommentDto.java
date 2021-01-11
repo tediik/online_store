@@ -30,7 +30,7 @@ public class CommentDto {
     private Long productId;
     private Long reviewId;
     private Boolean deletedHasKids;
-    public  String viewDataComment;
+    public String userDescription;
 
     public static CommentDto commentEntityToDto(Comment commentEntity) {
         CommentDto commentDto = new CommentDto();
@@ -42,21 +42,28 @@ public class CommentDto {
         commentDto.setLastName(commentEntity.getCustomer().getLastName());
         commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
         commentDto.setDeletedHasKids(commentEntity.isDeletedHasKids());
-        if (commentEntity.getCustomer().getFirstName() == null & commentEntity.getCustomer().getLastName() == null) {
-            commentDto.viewDataComment= commentEntity.getCustomer().getEmail();
-        } else if (commentEntity.getCustomer().getFirstName() != null & commentEntity.getCustomer().getLastName() != null) {
-            commentDto.viewDataComment = commentEntity.getCustomer().getFirstName() + " " + commentEntity.getCustomer().getLastName();
-        } else if (commentEntity.getCustomer().getFirstName() != null) {
-            commentDto.viewDataComment = commentEntity.getCustomer().getFirstName();
-        } else if (commentEntity.getCustomer().getLastName() != null) {
-            commentDto.viewDataComment = commentEntity.getCustomer().getLastName();
 
+//формируем выдачу информации о пользователе оставляющем комментарии к товару
+        String firstname = commentEntity.getCustomer().getFirstName();
+        String lastname = commentEntity.getCustomer().getLastName();
+        String email = commentEntity.getCustomer().getEmail();
+
+        if (firstname == null){
+            firstname = "";
         }
+        if(lastname == null){
+            lastname = "";
+        }
+        if(firstname=="" & lastname == ""){
+            commentDto.userDescription = email;
+        }else {
+            commentDto.userDescription = firstname+" "+ lastname;
+        }
+
         DateTimeFormatter dTF2 = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
         try {
             commentDto.setTimeStamp(formatToYesterdayOrToday(commentEntity.getCommentDate().format(dTF2)));
         } catch (ParseException e) {
-            e.printStackTrace();
             log.debug("Ошибка парсинга даты внутри метода formatToYesterdayOrToday(String date) : {}", e);
         }
         commentDto.setProductId(commentEntity.getProductId());

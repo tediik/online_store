@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <img id="profilePic${comment.id}" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
                         </div>
                         <div class="media-body" id='mediaBody${comment.id}'>
-                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.viewDataComment} ${comment.timeStamp}</h5>
+                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.userDescription } ${comment.timeStamp}</h5>
                         <div class="message" id="commentContent${comment.id}"> ${comment.content}  </div>
                         <button type='button' id='replyButton${comment.id}' class='btn btn-link reply'>Ответить</button>
                         <button type='button' id='editButton${comment.id}' class='btn btn-link edit'>Править</button>
