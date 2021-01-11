@@ -1,6 +1,9 @@
 $(document).ready(function () {
     /* Слушатель для кнопки удалить профиль (в модальном окне)*/
     document.getElementById('deleteProfileCustomer').addEventListener('click', deleteProfile)
+
+    /* Слушатель для кнопки удалить профиль (без возможности восстановить (в модальном окне)*/
+    document.getElementById('deleteProfileCustomer2').addEventListener('click', deleteProfile2)
     /*Слушатель для кнопки смены email modal*/
     $(document).delegate("#buttonChangeMail", "click", changeMail);
     /*Слушатель для кнопки смены пароля modal*/
@@ -117,6 +120,27 @@ function chekboxChanges(o) {
 function deleteProfile(event) {
     let id = event.target.dataset.delId
     fetch(`/customer/deleteProfile/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+        }
+    }).then(function (response) {
+        if (response.ok) {
+            document.location.href = "/logout";
+        } else {
+            toastr.error('Ваш профиль не был удален.', {timeOut: 3000});
+        }
+    })
+}
+
+/**
+ * Функция удаления профиля
+ * @param event
+ */
+function deleteProfile2(event) {
+    let id = event.target.dataset.delId
+    fetch(`/customer/deleteProfile2/${id}`, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json, text/plain, */*',

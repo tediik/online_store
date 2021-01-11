@@ -1,7 +1,9 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -14,7 +16,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -24,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
+    private final CommentService commentService;
 
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email")
@@ -95,8 +106,23 @@ public class CustomerRestController {
         return ResponseEntity.ok("Delete profile");
     }
 
+    @DeleteMapping("/deleteProfile2/{id}")
+    @ApiOperation(value = "Changes Users status, when Delete button clicked")
+    public ResponseEntity<String> deleteProfile2(@PathVariable Long id) {
+        User customer = userService.findUserById(id);
+        List<Comment> customerComments = commentService.findAllByCustomer(customer);
+        User commentUser = userService.findUserByEmail("comment@mail.ru");
+        for (Comment comment : customerComments
+        ) {
+            comment.setCustomer(commentUser);
+        }
+        customerService.deleteByID(id);
+        return ResponseEntity.ok("Delete profile");
+    }
+
     /**
      * Возвращает пользователя по его id
+     *
      * @param id идентификатор пользователя
      * @return ResponseEntity<User> Объект User
      */
