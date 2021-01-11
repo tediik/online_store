@@ -169,8 +169,8 @@ public class DataInitializer {
         User moderator2 = new User("moderator2@mail.ru", "2");
         Customer commentCustomer = new Customer("comment@mail.ru", "1");
         commentCustomer.setProfilePicture(StringUtils.cleanPath("deleted.jpg"));
-        commentCustomer.setFirstName("Иван");
-        commentCustomer.setLastName("Петров");
+        commentCustomer.setFirstName("Deleted");
+        commentCustomer.setLastName("");
 
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
