@@ -1,4 +1,4 @@
-package com.jm.online_store.controller.rest;
+package com.jm.online_store.controller.rest.serviceWorker;
 
 import com.itextpdf.text.DocumentException;
 import com.jm.online_store.enums.RepairOrderType;

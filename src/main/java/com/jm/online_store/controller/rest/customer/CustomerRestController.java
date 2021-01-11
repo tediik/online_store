@@ -1,4 +1,4 @@
-package com.jm.online_store.controller.rest;
+package com.jm.online_store.controller.rest.customer;
 
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.User;

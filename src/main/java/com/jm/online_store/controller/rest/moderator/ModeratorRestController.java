@@ -1,4 +1,4 @@
-package com.jm.online_store.controller.rest;
+package com.jm.online_store.controller.rest.moderator;
 
 import com.jm.online_store.model.ReportComment;
 import com.jm.online_store.model.dto.ReportCommentDto;
