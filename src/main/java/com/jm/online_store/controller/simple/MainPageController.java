@@ -33,7 +33,7 @@ public class MainPageController {
     }
     @GetMapping("/basket")
     public String getUserBasket() {
-        return "basketPage";
+        return "basket-page";
     }
 
     /**
