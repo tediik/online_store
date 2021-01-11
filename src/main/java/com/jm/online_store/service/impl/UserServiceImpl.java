@@ -8,6 +8,7 @@ import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Role;
+import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
@@ -196,7 +197,7 @@ public class UserServiceImpl implements UserService {
         log.debug("editUser: {}", editUser);
         userRepository.save(editUser);
     }
-    
+
     /**
      * Удаляет пользователя по идентификатору.
      * @param id идентификатор.
@@ -228,13 +229,33 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * метод формирует токен и отправляет ссылку подтверждение на email указанный анонимом.
+     * @param email указанный анонимным пользователем при покупке
+     */
+    @Override
+    @Transactional
+    public void regNewAccount(String email) {
+        ConfirmationToken confirmationToken = new ConfirmationToken(email,generatePassayPassword());
+        confirmTokenRepository.save(confirmationToken);
+
+        String message = String.format(
+                "Hello, %s! \n" +
+                        "Welcome to online-store. Please, visit next link: " +
+                        urlActivate + "/activate/%s",
+                email,
+                confirmationToken.getConfirmationToken()
+        );
+        mailSenderService.send(email, "Activation code", message, "Confirmation");
+    }
+
+    /**
      * Method generates confirmation token based on users ID and Email adress
      * Sends generated token to new users email
      */
     @Override
     @Transactional
     public void changeUsersMail(User user, String newMail) {
-        ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
+    ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
         confirmTokenRepository.save(confirmationToken);
 
         String message = String.format(
@@ -300,13 +321,13 @@ public class UserServiceImpl implements UserService {
         return gen.generatePassword(10, lowerCaseRule,
                 upperCaseRule, digitRule);
     }
-    
+
     /**
      * Генерирует токен для сброса пароля и отправляет на указанную пользователем почту
      */
     @Override
     @Transactional
-    public void sendConfirmationTokenToResetPassword(User user) {
+    public void sendConfirmationTokenToResetPassword(User user){
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
         String message = String.format(
@@ -343,9 +364,18 @@ public class UserServiceImpl implements UserService {
         customer.setEmail(confirmationToken.getUserEmail());
         customer.setPassword(confirmationToken.getUserPassword());
         customer.setRoles(userRoles);
-
         addUser(customer);
+        if(userRepository.existsByEmail(request.getSession().getId())){
+            List<SubBasket> subBasketList = getCurrentLoggedInUser(request.getSession().getId()).getUserBasket();
+            userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
+            customer.setUserBasket(subBasketList);
+        }
 
+        String message = String.format(
+                "Привет, %s! \n Вы зарегистрировались на сайте online_store ! Пароль для входа в вашу учетную запись %s ," +
+                        "можете сменить его в личном кабинете", customer.getEmail(), confirmationToken.getUserPassword()
+        );
+        mailSenderService.send(customer.getEmail(), "Информация о регистрации на сайте online_store", message, "info");
         try {
             request.login(customer.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {
@@ -445,7 +475,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                userRepository.save(newUser);
+                    userRepository.save(newUser);
             } else {
                 Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
                 customer.setRoles(newUser.getRoles());
@@ -483,6 +513,11 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAndFlush(user);
     }
 
+    /**
+     * Метод который находит User-а по его id
+     * @param id Юзера
+     * @return User
+     */
     @Override
     @Transactional
     public boolean changePassword(Long id, String oldPassword, String newPassword) {
@@ -552,8 +587,30 @@ public class UserServiceImpl implements UserService {
     }
     /**
      * Метод возвращает залогиненного активного юзера - User из Authentication
+     * Service method which builds and returns currently logged in User from Authentication
+     * @param sessionID -параметр по которому вычисляется анонимный пользователь,
+     *                  если его нет в бд -создает его используя параметр в качестве email
      * @return User
      */
+    @Transactional
+    @Override
+    public User getCurrentLoggedInUser(String sessionID) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // AnonymousAuthenticationToken happens when anonymous authentication is enabled
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
+        if (auth instanceof AnonymousAuthenticationToken) {
+            if (findByEmail(sessionID).isEmpty()) {
+                userRepository.save(new User(sessionID, null));
+            }
+            return findByEmail(sessionID).orElseThrow(UserNotFoundException::new);
+        }
+        return findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled

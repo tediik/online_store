@@ -1,4 +1,4 @@
-package com.jm.online_store.controller.rest;
+package com.jm.online_store.controller.rest.admin;
 
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
@@ -7,8 +7,10 @@ import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.SwaggerDefinition;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@Api(description = "Rest controller for actions from admins page")
+@Api(value = "Rest controller for actions from admins page")
 @RequestMapping(value = "/api/admin")
 public class AdminRestController {
 

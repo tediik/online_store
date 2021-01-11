@@ -12,18 +12,19 @@
             </form>
         </nav>
         <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="/">Главная</a>
-            <a class="p-2 text-dark" href="/news">Новости</a>
-            <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')" id="showBasket" href="/customer/basket">
+            <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')" id="showBasket" href="/basket">
                 <img src="/static/img/buscket.jpg" width="25" height="25">
                 <ins style="color: #ff8e05">
                     Корзина
                     <i id="countInBasket"></i>
                 </ins>
             </a>
+            <a class="p-2 text-dark" href="/">Главная</a>
+            <a class="p-2 text-dark" href="/news">Новости</a>
             <a sec:authorize="isAuthenticated()" class="btn btn-light loginbutton" href="/logout">Выйти</a>
         </nav>
     </div>
     <script src="/static/js/headers.js"></script>
+    <script src="../static/js/busket.js"></script>
 </div>
 </html>

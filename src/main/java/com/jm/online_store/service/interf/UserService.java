@@ -1,8 +1,11 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Address;
+import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
@@ -47,6 +50,8 @@ public interface UserService {
 
     void regNewAccount(User user);
 
+    void regNewAccount(String email);
+
     void changeUsersMail(User user, String newMail);
 
     void changeUsersPass(User user, String newMail);
@@ -70,6 +75,8 @@ public interface UserService {
     boolean changePassword(Long id, String oldPassword, String newPassword);
 
     /* void cancelSubscription(Long id);*/
+
+    User getCurrentLoggedInUser(String sessionID);
 
     User getCurrentLoggedInUser();
 
