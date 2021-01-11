@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
 <head>
     <meta charset="UTF-8">
     <title>Basket</title>
@@ -42,7 +42,7 @@
                    role="tab" aria-controls="basketGoods" aria-selected="true"
                    onclick="fillBasket()">Корзина</a>
 
-                <a class="btn btn-outline-primary mt-2" id="profile-page" href="/customer"
+                <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn btn-outline-primary mt-2" id="profile-page"  href="/customer"
                 >Кабинет покупателя</a>
 
             </div>
@@ -76,8 +76,13 @@
                                 <h3 id="sumBasketGoods"></h3>
                             </tr>
                             <div id="buttonBuyInBasket">
-                                <button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
+                                <button sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" class="btn btn-lg btn-primary btn-block" data-toggle="modal"
                                         data-target="#orderModalWindow" onclick="userAdresses()">Купить
+                                </button>
+                            </div>
+                            <div id="buttonBuyForAnonInBasket">
+                                <button sec:authorize="not hasAnyAuthority('ROLE_CUSTOMER')" class="btn btn-lg btn-primary btn-block" data-toggle="modal"
+                                        data-target="#regModalWindow">Купить
                                 </button>
                             </div>
                         </div>
@@ -177,6 +182,29 @@
                 <!-- ВКЛАДКА КОРЗИНА  -->
 
 
+            </div>
+        </div>
+    </div>
+</div>
+<!--Модальное окно для регистрации анонима перед покупкой-->
+<div id="regModalWindow" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Укажите email:</h3>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/regNewCustomer}" method="post" class="form-group">
+                    <label>
+                        <input type="email" name="login_username" autofocus="autofocus" placeholder="Enter email"
+                               class="form-control">
+                    </label>
+                    <input type="submit" value="send confirmation link to my mail"/>
+                </form>
             </div>
         </div>
     </div>
