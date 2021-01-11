@@ -106,7 +106,7 @@ public class BasketServiceImplTest {
         when(userService.getCurrentLoggedInUser()).thenReturn(user);
         when(productService.findProductById(subBasket_1.getProduct().getId()))
                 .thenReturn(Optional.ofNullable(product_1));
-        List<SubBasket> basketList = basketService.getBasket();
+        List<SubBasket> basketList = basketService.getBasket("");
         assertEquals(3, basketList.size());
         assertEquals(basketList.get(0), subBasket_1);
         assertEquals(basketList.get(1), subBasket_2);
@@ -134,7 +134,7 @@ public class BasketServiceImplTest {
     @Test
     void deleteBasket() {
         when(userService.getCurrentLoggedInUser()).thenReturn(user);
-        basketService.deleteBasket(subBasket_2);
+        basketService.deleteBasket(subBasket_2,"");
         verify(basketRepository, times(1)).delete(subBasket_2);
     }
 
@@ -143,7 +143,7 @@ public class BasketServiceImplTest {
         when(userService.getCurrentLoggedInUser()).thenReturn(user);
         when(productService.findProductById(2L)).thenReturn(Optional.ofNullable(product_2));
         when(basketRepository.save(subBasket_2)).thenReturn(subBasket_2);
-        basketService.addProductToBasket(2L);
+        basketService.addProductToBasket(2L,"");
         verify(basketRepository, times(1)).save(any());
     }
 

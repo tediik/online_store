@@ -49,12 +49,12 @@ public class BasketServiceImpl implements BasketService {
 
     /**
      * метод для получения списка товаров в корзине для авторизованного User.
-     *
+     * @param sessionID номер id сессии для идентификации анонимного пользователя
      * @return List<SubBasket> список подкорзин
      */
     @Override
-    public List<SubBasket> getBasket() {
-        User authorityUser = userService.getCurrentLoggedInUser();
+    public List<SubBasket> getBasket(String sessionID) {
+        User authorityUser = userService.getCurrentLoggedInUser(sessionID);
         List<SubBasket> subBaskets = authorityUser.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {
@@ -65,7 +65,7 @@ public class BasketServiceImpl implements BasketService {
                 authorityUser.setUserBasket(subBaskets);
                 userService.updateUser(authorityUser);
                 if (productCount < 1) {
-                    deleteBasket(subBasket);
+                    deleteBasket(subBasket,"");
                 }
             }
         }
@@ -113,12 +113,12 @@ public class BasketServiceImpl implements BasketService {
 
     /**
      * метод для удаления сущности SubBasket(подкорзина) из списка подкорзин User.
-     *
+     * @param sessionID номер id сессии для идентификации анонимного пользователя
      * @param subBasket подкорзина
      */
     @Override
-    public void deleteBasket(SubBasket subBasket) {
-        User authorityUser = userService.getCurrentLoggedInUser();
+    public void deleteBasket(SubBasket subBasket,String sessionID) {
+        User authorityUser = userService.getCurrentLoggedInUser(sessionID);
         List<SubBasket> subBasketList = authorityUser.getUserBasket();
         subBasketList.remove(subBasket);
         authorityUser.setUserBasket(subBasketList);
@@ -129,11 +129,12 @@ public class BasketServiceImpl implements BasketService {
     /**
      * Method add product to basket. If product already in subBasket increases by 1
      * @param id - id of product to add
+     * @param sessionID номер id сессии для идентификации анонимного пользователя
      */
     @Override
     @Transactional
-    public void addProductToBasket(Long id) {
-        User userWhoseBasketToModify = userService.getCurrentLoggedInUser();
+    public void addProductToBasket(Long id,String sessionID) {
+        User userWhoseBasketToModify = userService.getCurrentLoggedInUser(sessionID);
         if (userWhoseBasketToModify == null) {
             throw new UserNotFoundException();
         }

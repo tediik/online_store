@@ -1,4 +1,4 @@
-package com.jm.online_store.controller.rest;
+package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.service.interf.SharedStockService;

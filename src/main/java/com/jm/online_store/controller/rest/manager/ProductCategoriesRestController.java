@@ -4,6 +4,7 @@ package com.jm.online_store.controller.rest.manager;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import java.util.List;
 @RequestMapping("api/categories")
 @AllArgsConstructor
 @Slf4j
+@Api(value = "Rest controller for actions from prod page")
 public class ProductCategoriesRestController {
     private final CategoriesService categoriesService;
 
