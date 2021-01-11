@@ -34,7 +34,7 @@ public class SpringFoxConfig {
                 );
     }
     @Bean
-    public Docket api2() {
+    public Docket apiManager() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("Manager")
                 .select()
@@ -55,7 +55,7 @@ public class SpringFoxConfig {
                 );
     }
     @Bean
-    public Docket api3() {
+    public Docket apiAdmin() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("Admin")
                 .select()
@@ -76,7 +76,7 @@ public class SpringFoxConfig {
                 );
     }
     @Bean
-    public Docket api4() {
+    public Docket apiCustomer() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("Customer")
                 .select()
@@ -97,11 +97,33 @@ public class SpringFoxConfig {
                 );
     }
     @Bean
-    public Docket api5() {
+    public Docket apiModerator() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("Moderator")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.jm.online_store.controller.rest.moderator"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(
+                        new ApiInfo(
+                                "Online Store",
+                                "Online store - a place to buy all you need",
+                                "apiVersion",
+                                null,
+                                null,
+                                null,
+                                null,
+                                Collections.emptyList()
+                        )
+                );
+    }
+
+    @Bean
+    public Docket apiServiceWorker() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("ServiceWorker")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.jm.online_store.controller.rest.serviceWorker"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(
