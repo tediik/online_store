@@ -4,21 +4,22 @@ function prepareNumber(n) {
     return s;
 }
 
-$(document).ready(function (){
+$(document).ready(function () {
     fillBasket();
 })
 
 async function fillBasket() {
-    let response = await fetch("/customer/basketGoods");
-    let content = await response.json();
+    let response = await fetch("/basketGoods");
     let basketGoodsJson = document.getElementById('busketTable');
-    let countGoods = 0;
-    let sumBasket = 0;
-    let key;
-    $(basketGoodsJson).empty();
-    for (key in content) {
-        countGoods += content[key].count;
-        let product = `
+    if (response.ok) {
+        let content = await response.json();
+        let countGoods = 0;
+        let sumBasket = 0;
+        let key;
+        $(basketGoodsJson).empty();
+        for (key in content) {
+            countGoods += content[key].count;
+            let product = `
         <tr class=${content[key].id} id=${content[key].id}>
             <td>
                 ${content[key].product.product}
@@ -52,29 +53,56 @@ async function fillBasket() {
             </td>
         <tr>
         `;
-        fetch("api/products/" + `${content[key].product.id}`)
-            .then(function (response) {
-                response.json().then(function (data) {
-                    if (data.favourite) {
-                        $('#heart' + `${content[key].id}`).toggleClass("filled");
-                    }
-                })
-            });
-        sumBasket += content[key].product.price * content[key].count;
-        $(basketGoodsJson).append(product);
+            fetch("api/products/" + `${content[key].product.id}`)
+                .then(function (response) {
+                    response.json().then(function (data) {
+                        if (data.favourite) {
+                            $('#heart' + `${content[key].id}`).toggleClass("filled");
+                        }
+                    })
+                });
+            sumBasket += content[key].product.price * content[key].count;
+            $(basketGoodsJson).append(product);
+        }
+        sumBasket = prepareNumber(sumBasket);
+        sumBasket += " &#8381;";
+        $('#countBasketGoods').empty();
+        $('#sumBasketGoods').empty();
+
+        $('#countBasketGoods').append(countGoods + " шт.");
+        $('#sumBasketGoods').append(sumBasket);
+
+        $('#countInBasket').empty();
+        $('#countInBasket').append(countGoods);
+
+        //if basket is empty
+        if (countGoods === 0) {
+            let emptyBasket = `
+            <tr align='center'>
+                <td > Корзина сейчас пуста,</br>но вы можете перейти на главную страницу или в каталог товаров</td>
+            </tr>
+            <tr ><td ></td></tr>
+            <tr align='center'>
+                <td>
+                <a class='btn btn-outline-primary mr-2' role='button' onclick='' href='/'>На главную страницу</a>
+                <a class='btn btn-outline-danger ml-2' role='button' onclick='' href='#'>Перейдите в каталог</a>
+                </td>
+            </tr>
+            `;
+            let buttonBuy = `
+            <button class="btn btn-lg btn-outline-primary btn-block" data-toggle="modal"
+            data-target="#orderModalWindow" onclick="userAdresses()" disabled>Корзина пуста</button>
+            `;
+            $(basketGoodsJson).append(emptyBasket);
+            $('#buttonBuyInBasket').empty().append(buttonBuy);
+            let buttonAnonBuy = `
+            <button class="btn btn-lg btn-outline-primary btn-block" data-toggle="modal"
+            data-target="#regModalWindow"  hidden></button>
+            `;
+            $('#buttonBuyForAnonInBasket').empty().append(buttonAnonBuy);
+        }
     }
-    sumBasket = prepareNumber(sumBasket);
-    sumBasket += " &#8381;";
-    $('#countBasketGoods').empty();
-    $('#sumBasketGoods').empty();
-
-    $('#countBasketGoods').append(countGoods + " шт.");
-    $('#sumBasketGoods').append(sumBasket);
-
-    $('#countInBasket').empty();
-    $('#countInBasket').append(countGoods);
-    //if basket is empty
-    if (countGoods == 0) {
+    else {
         let emptyBasket = `
             <tr align='center'>
                 <td > Корзина сейчас пуста,</br>но вы можете перейти на главную страницу или в каталог товаров</td>
@@ -87,18 +115,18 @@ async function fillBasket() {
                 </td>
             </tr>
             `;
-        let buttonBuy = `
+        let buttonAnonBuy = `
             <button class="btn btn-lg btn-outline-primary btn-block" data-toggle="modal"
-            data-target="#orderModalWindow" onclick="userAdresses()" disabled>Корзина пуста</button>
+            data-target="#regModalWindow"  disabled>Корзина пуста</button>
             `;
         $(basketGoodsJson).append(emptyBasket);
-        $('#buttonBuyInBasket').empty().append(buttonBuy);
+        $('#buttonBuyForAnonInBasket').empty().append(buttonAnonBuy)
     }
 }
 
 
 async function deleteBasket(id) {
-    await fetch("/customer/basketGoods", {
+    await fetch("/basketGoods", {
         method: "DELETE",
         body: id,
         headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -107,7 +135,7 @@ async function deleteBasket(id) {
 }
 
 async function updateCountBasket(id, count) {
-    await fetch("/customer/basketGoods", {
+    await fetch("/basketGoods", {
         method: "PUT",
         body: JSON.stringify({
             id: id,
@@ -115,7 +143,7 @@ async function updateCountBasket(id, count) {
         }),
         headers: {"Content-Type": "application/json; charset=utf-8"}
     }).then(function (response) {
-        if(response.status === 400) {
+        if (response.status === 400) {
             toastr.warning('Данный товар закончился', '', {timeOut: 1000})
         }
     });
@@ -123,7 +151,7 @@ async function updateCountBasket(id, count) {
 }
 
 async function buildOrderFromBasket() {
-    await fetch("/customer/basketGoods", {
+    await fetch("/basketGoods", {
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
