@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
@@ -28,6 +29,7 @@ import java.util.Set;
 @AllArgsConstructor
 @RestController
 @Api(value = "Rest Controller for favourite products")
+@RequestMapping("/api")
 public class FavouritesGoodsRestController {
     private final FavouriteGoodsService favouriteGoodsService;
     private final UserService userService;

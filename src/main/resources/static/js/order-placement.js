@@ -108,7 +108,7 @@ function addressChange() {
  * Функция полчуает адреса магазинов
  */
 function getShopAddress() {
-    fetch("customer/rest/allShops", {
+    fetch("/api/customer/rest/allShops", {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
@@ -208,7 +208,7 @@ function showInformation(success, message) {
  * Функция для получения адресов, на которые пользователь уже оформлял заказ
  */
 function userAdresses() {
-    fetch("/customer/rest/userAddresses", {
+    fetch("/api/customer/rest/userAddresses", {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
@@ -282,7 +282,7 @@ function addAddress() {
                 flat: flat,
                 shop: false
             };
-            fetch("/customer/rest/addAddress", {
+            fetch("/api/customer/rest/addAddress", {
                 method: 'POST',
                 body: JSON.stringify(address),
                 headers: {

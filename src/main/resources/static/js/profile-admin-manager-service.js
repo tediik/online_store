@@ -16,7 +16,7 @@ $(document).ready(function () {
  */
 function deleteProfile(event) {
     let id = event.target.dataset.delId
-    fetch(`/authority/deleteProfile/${id}`, {
+    fetch(`/api/authority/deleteProfile/${id}`, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -36,7 +36,7 @@ function deleteProfile(event) {
  */
 function changeEmail() {
     let newEmail = document.getElementById('new_mail').value
-    fetch('/authority/changeEmail', {
+    fetch('/api/authority/changeEmail', {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -60,7 +60,7 @@ function changeEmail() {
 function changePassword() {
     let oldPassword = document.getElementById('old_password').value
     let newPassword = document.getElementById('new_password').value
-    fetch('/authority/changePassword', {
+    fetch('/api/authority/changePassword', {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -83,7 +83,7 @@ function changePassword() {
  * Функция получения текущего юзера и заполнение полей профиля
  */
 function getCurrentUser() {
-    fetch('/authority/currentUser')
+    fetch('/api/authority/currentUser')
         .then((res) => res.json())
         .then((currentUser) => {
             $('#id_update').val(currentUser.id);
@@ -131,7 +131,7 @@ function updateProfile(event) {
         userGender: isChecked,
         registerDate: date
     }
-    fetch('/authority/updateProfile', {
+    fetch('/api/authority/updateProfile', {
         method: 'PUT',
         headers: {
             'Accept': 'application/json, text/plain, */*',

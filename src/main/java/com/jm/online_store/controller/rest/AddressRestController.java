@@ -27,14 +27,14 @@ import java.util.Set;
  * Рест контроллер для адресов
  */
 @AllArgsConstructor
-@RequestMapping("/customer")
+@RequestMapping("/api/customer")
 @RestController
 @Api(description = "Rest controller for addresses")
 public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;
 
-    @GetMapping(value = "/customer/rest/allShops")
+    @GetMapping(value = "/rest/allShops")
     @ApiOperation(value = "get all the shops")
     public ResponseEntity<List<Address>> findAll() {
         return ResponseEntity.ok(addressService.findAllShops());

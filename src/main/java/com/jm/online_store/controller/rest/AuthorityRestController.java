@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/authority")
+@RequestMapping("/api/authority")
 @RequiredArgsConstructor
 @Api(description = "Rest controller for actions with profiles with roles: Admin, Manager, Service")
 public class AuthorityRestController {

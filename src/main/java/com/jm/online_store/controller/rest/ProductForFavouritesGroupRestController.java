@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.Set;
 @RestController
 @AllArgsConstructor
 @Api(description = "Rest controller for products in favorite group")
+@RequestMapping("/api")
 public class ProductForFavouritesGroupRestController {
 
     private final FavouritesGroupService favouritesGroupService;

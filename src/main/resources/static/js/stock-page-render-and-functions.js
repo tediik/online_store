@@ -2,8 +2,8 @@
  * Declaration of global variables
  */
 let myHeaders = new Headers()
-let sharedStockApiUrl = "/manager/api/sharedStock"
-let stockApiUrl = "/manager/api/stock"
+let sharedStockApiUrl = "/api/manager/sharedStock"
+let stockApiUrl = "/api/manager/stock"
 let stockImgUrl = "../../uploads/images/stocks/"
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), number: 0, last: false};
@@ -179,7 +179,7 @@ async function submit() {
     var data = new FormData()
     data.append('file', input.files[0])
 
-    fetch('/uploadFile', {
+    fetch('/api/uploadFile', {
         method: 'POST',
         body: data,
     })
@@ -245,7 +245,7 @@ function handleEditButtonClick(event) {
     let stockId = event.target.dataset.stockId
     let filename = ""
     stockModalClearFields()
-    $.ajax('/rest/' + stockId, {
+    $.ajax('/api/rest/' + stockId, {
         type: 'GET',
         async: false,
         success: function (data) {

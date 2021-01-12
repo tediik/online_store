@@ -67,7 +67,7 @@ function renderProductsRatingTable(products) {
  * и передает функции рендера таблицы renderProductsRatingTable
  */
 function fetchCategorySelectProductsInAscOrderAndRender(categorySelect, orderSelect) {
-    fetch("/rest/products/sort/" + categorySelect + '/' + orderSelect)
+    fetch("/api/rest/products/sort/" + categorySelect + '/' + orderSelect)
         .then(response => response.json())
         .then(products => renderProductsRatingTable(products))
 }
@@ -79,7 +79,7 @@ function fetchCategorySelectProductsInAscOrderAndRender(categorySelect, orderSel
  * и передает функции рендера таблицы renderProductsRatingTable
  */
 function fetchCategorySelectProductsInDescOrderAndRender(categorySelect, orderSelect) {
-    fetch("/rest/products/sort/" + categorySelect + '/' + orderSelect)
+    fetch("/api/rest/products/sort/" + categorySelect + '/' + orderSelect)
         .then(response => response.json())
         .then(products => renderProductsRatingTable(products))
 }
@@ -97,7 +97,7 @@ function createReport() {
         return false;
     }
     let orderSelect = $('#filterRating').val();
-    fetch('/rest/products/report/' + categorySelect + '/' + number + '/' + orderSelect)
+    fetch('/api/rest/products/report/' + categorySelect + '/' + number + '/' + orderSelect)
         .then(function (response) {
             if (response.status === 200) {
                 response.blob().then(blob => {

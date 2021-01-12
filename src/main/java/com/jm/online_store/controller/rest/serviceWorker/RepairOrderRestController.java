@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @Api(description = "Rest controller for manage repair orders")
+@RequestMapping("/api")
 public class RepairOrderRestController {
 
     private final RepairOrderService repairOrderService;
@@ -64,7 +66,7 @@ public class RepairOrderRestController {
      * @param repairOrder тело содержит номер заказа и телефон
      * @return ResponseEntity<RepairOrder> заказ на ремонт
      */
-    @PostMapping("/api/checkStatus")
+    @PostMapping("/checkStatus")
     @ApiOperation(value = "Get repair order by order ID and telephone number of client")
     @ApiResponse(code = 404, message = "Repair odred was not found")
     public ResponseEntity<RepairOrder> getCurrentRepairOrder(@RequestBody RepairOrder repairOrder) {
@@ -119,7 +121,7 @@ public class RepairOrderRestController {
      * Метод возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ.
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("service/findAllWithoutCanceled")
+    @GetMapping("/service/findAllWithoutCanceled")
     @ApiOperation(value = "Get list of all repair orders without cancelled")
     public ResponseEntity<List<RepairOrder>> getAllWithoutCanceled() {
         List<RepairOrder> repairOrderList = repairOrderService.findAllWithoutCanceled();

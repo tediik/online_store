@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/api/users")
 @RequiredArgsConstructor
 @Api(description = "Rest controller for actions with users profiles")
 public class AllUsersRestController {

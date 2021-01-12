@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping(value = "/rest/bad-words")
+@RequestMapping(value = "/api/rest/bad-words")
 public class BadWordsRestController {
     private final BadWordsService badWordsService;
     private final CommonSettingsService commonSettingsService;

@@ -1,4 +1,4 @@
-let badWordsRestUrl = "/rest/bad-words/"
+let badWordsRestUrl = "/api/rest/bad-words/"
 let headersBW = new Headers()
 headersBW.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtnWord').addEventListener('click', handleAddBtn)
@@ -235,7 +235,7 @@ function handleAddBtn() {
  * в нужное положение
  */
 function renderEnabled() {
-    fetch('/rest/bad-words/status')
+    fetch('/api/rest/bad-words/status')
         .then((response) => {
             response.json().then((data) => {
                 if (data.textValue === 'true') {
@@ -254,13 +254,13 @@ function renderEnabled() {
  */
 function toggle(check) {
     if (check.checked) {
-        fetch('/rest/bad-words/status', {
+        fetch('/api/rest/bad-words/status', {
             method: 'POST',
             headers: {'Content-Type': 'application/json;charset=utf-8'},
             body: true
         })
     } else {
-        fetch('/rest/bad-words/status', {
+        fetch('/api/rest/bad-words/status', {
             method: 'POST',
             headers: {'Content-Type': 'application/json;charset=utf-8'},
             body: false

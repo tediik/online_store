@@ -8,7 +8,7 @@ $(function () {
 })
 
 async function fillStocks() {
-    listOfStocks = await fetch("/rest/allStocks").then(response => response.json())
+    listOfStocks = await fetch("/api/rest/allStocks").then(response => response.json())
     allStocksList = $('#allStocksList')
     allStocksList.empty();
     for (key in listOfStocks) {

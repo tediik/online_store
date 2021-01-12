@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @Api(description = "Rest controller for actions with Basket and SubBasket")
+@RequestMapping("/api")
 public class BasketRestController {
     private final BasketService basketService;
     private final UserService userService;
@@ -90,7 +92,7 @@ public class BasketRestController {
 
     }
 
-    @PutMapping("/api/basket/add/{id}")
+    @PutMapping("/basket/add/{id}")
     @ApiOperation(value = "Adds product to Basket")
     public ResponseEntity<String> addProductToBasket(@PathVariable Long id, HttpServletRequest request) {
         try {

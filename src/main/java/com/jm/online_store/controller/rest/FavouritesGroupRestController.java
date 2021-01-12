@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/customer/favouritesGroup")
+@RequestMapping("/api/customer/favouritesGroup")
 @Api(description = "Rest controller for the \"lists\" of favourites products - CRUD operations")
 public class FavouritesGroupRestController {
     private final FavouritesGroupService favouritesGroupService;
