@@ -210,8 +210,9 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Метод отправляющий сообщения пользователям, которые подписаны на уведомления
-     * о снижении цены
-     *
+     * о снижении цены. Для зарегистрированных пользователей письма отпровляются только при получении
+     * согласия юзера на таковые рассылки (таблица Users, значение confirm_receive_email - CONFIRMED)
+     * рассылка для незарегистрированных юзеров отключена, чтобы не спамить
      * @param product  продукт
      * @param oldPrice старая цена продукта
      * @param newPrice новая цена продукта
@@ -225,21 +226,24 @@ public class ProductServiceImpl implements ProductService {
         String messageBody;
         for (String email : emails) {
             Optional<User> user = userService.findByEmail(email);
-            if (user.isPresent() && user.get().getFirstName() != null) {
-                messageBody = templateBody.replaceAll("@@user@@", user.get().getFirstName());
-            } else {
-                messageBody = templateBody.replaceAll("@@user@@", "Покупатель");
-            }
-            messageBody = messageBody.replaceAll("@@oldPrice@@", String.valueOf(oldPrice));
-            messageBody = messageBody.replaceAll("@@newPrice@@", String.valueOf(newPrice));
-            messageBody = messageBody.replaceAll("@@product@@", product.getProduct());
-            try {
-                mailSenderService.sendHtmlMessage(email, "Снижена цена на товар!", messageBody, "Price change");
-            } catch (MessagingException e) {
-                log.debug("Can not send mail about price changes to product {} to {}", product.getProduct(), email);
+            if (user.isPresent() && user.get().getConfirmReceiveEmail().toString().equals("CONFIRMED")) { //рассылка для незарегистрированных юзеров отключена.
+                if (user.get().getFirstName() != null) {
+                    messageBody = templateBody.replaceAll("@@user@@", user.get().getFirstName());
+                } else {
+                    messageBody = templateBody.replaceAll("@@user@@", "Покупатель");
+                }
+                messageBody = messageBody.replaceAll("@@oldPrice@@", String.valueOf(oldPrice));
+                messageBody = messageBody.replaceAll("@@newPrice@@", String.valueOf(newPrice));
+                messageBody = messageBody.replaceAll("@@product@@", product.getProduct());
+                try {
+                    mailSenderService.sendHtmlMessage(email, "Снижена цена на товар!", messageBody, "Price change");
+                } catch (MessagingException e) {
+                    log.debug("Can not send mail about price changes to product {} to {}", product.getProduct(), email);
+                }
             }
         }
     }
+
 
     /**
      * метод удаления Product.
@@ -602,7 +606,9 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Метод для добавления нового email в рассылку при изменении цены на товар
-     *
+     * Помимо этого направляет юзеру письмо с просьбой подтвердить получение рассылки.
+     * Без этого согласия получать письма об изменении цен он не будет. Письмо отправляется при каждом нажатии
+     * на "Подписаться", пока не будет получено согласие. При этом в базу для рассылки он будет заноситься.
      * @param body тело запроса
      * @return true если удалось добавить email, false если такой email уже есть
      */
@@ -614,7 +620,10 @@ public class ProductServiceImpl implements ProductService {
         } else {
             email = userService.getCurrentLoggedInUser().getEmail();
         }
-
+        if (userService.findByEmail(email).isPresent() && !userService.findByEmail(email).get()
+                .getConfirmReceiveEmail().toString().equals("CONFIRMED")) {
+            userService.sendConfirmationSubscribeLetter(email);
+        }
         Product product = findProductById(body.get("id").asLong()).orElseThrow(ProductNotFoundException::new);
         Set<String> emails = product.getPriceChangeSubscribers();
         if (emails.contains(email)) {

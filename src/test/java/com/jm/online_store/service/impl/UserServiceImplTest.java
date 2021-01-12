@@ -43,7 +43,8 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
     private AddressService addressService = mock(AddressService.class);
     private AddressRepository addressRepository = mock(AddressRepository.class);
-    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService);
+    private CommonSettingsServiceImpl commonSettingsService = mock(CommonSettingsServiceImpl.class);
+    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService);
 
     private User userFullParameter;
     private User userWithIdEmailPassword;
@@ -123,18 +124,6 @@ public class UserServiceImplTest {
         verify(confirmTokenRepository, times(1)).save(any());
     }
 
-    @Test
-    public void changeUsersMailTest() {
-        User newUser = Mockito.spy(userFullParameterAndIdPicture);
-        when(confirmTokenRepository.save(new ConfirmationToken())).thenReturn(null);
-        doNothing().when(mailSenderService).send(userFullParameterAndIdPicture.getEmail(), "Activation code", "message", "emailType");
-
-        userService.changeUsersMail(newUser, "newMail");
-
-        assertEquals("newMail", newUser.getEmail());
-
-        verify(confirmTokenRepository, times(1)).save(any());
-    }
 
     @Test
     public void activateUserTest() {
@@ -159,7 +148,7 @@ public class UserServiceImplTest {
 
         verify(confirmTokenRepository, times(1)).findByConfirmationToken(any());
         verify(userRepository, times(1)).findById(any());
-        verify(userRepository, times(1)).saveAndFlush(any());
+        verify(userRepository, times(1)).save(any());
     }
 
     @Test

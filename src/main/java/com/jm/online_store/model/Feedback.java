@@ -35,7 +35,6 @@ public class Feedback {
     private Topic topic;
 
     @ManyToOne
-    @JsonIgnore
     private User user;
 
     @Enumerated(EnumType.STRING)
@@ -48,6 +47,9 @@ public class Feedback {
     @Column(name = "answer")
     @Type(type = "text")
     private String answer;
+
+    private Long managerId;
+
 
     private LocalDateTime responseExpected;
 

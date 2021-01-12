@@ -50,13 +50,13 @@ public class CustomerController {
         model.addAttribute("listOfComments", commentService.findAllByCustomer(user));
         model.addAttribute("favouritesGroupList", favouritesGroupService.findAllByUser(user));
         model.addAttribute("listOfReviews", reviewService.findAllByCustomer(user));
-        return "customerPage";
+        return "customer-page";
     }
 
 
     @GetMapping("/basket")
     public String getUserBasket() {
-        return "basketPage";
+        return "basket-page";
     }
 
     /**
@@ -77,7 +77,7 @@ public class CustomerController {
     // looks like useless
     @GetMapping("/change-password")
     public String changePassword() {
-        return "changePassword";
+        return "change-password";
     }
 // looks like useless
     @GetMapping("/activatenewmail/{token}")
