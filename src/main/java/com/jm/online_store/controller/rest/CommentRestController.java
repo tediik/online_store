@@ -17,7 +17,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -54,9 +53,8 @@ public class CommentRestController {
 
     /**
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
-     *
-     * @param productId
-     * @return ResponseEntity<List<CommentDto>>
+     * @param productId идентификатор продукта
+     * @return ResponseEntity<List<CommentDto>> список объектов CommentDto
      */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches all the comments from current product")
@@ -70,8 +68,7 @@ public class CommentRestController {
     /**
      * Receives productComment requestBody and passes it to Service layer for processing
      * Returns JSON representation, previously, searches for forbidden words
-     *
-     * @param comment
+     * @param comment комментарий
      * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
      */
     @PostMapping
@@ -109,7 +106,7 @@ public class CommentRestController {
      * previously, searches for forbidden words
      * Returns JSON representation
      *
-     * @param comment
+     * @param comment комментарий
      * @param reviewId
      * @return ResponseEntity<ReviewForCommentDto> or ResponseEntity<List<String>>
      */
@@ -150,9 +147,8 @@ public class CommentRestController {
     }
 
     /**
-     * Удаляет комментарий по его айди
-     *
-     * @param commentId
+     * Удаляет комментарий по его идентификатору
+     * @param commentId идентификатор комментария
      * @return ResponseEntity<?>
      */
     @DeleteMapping("/{commentId}")
@@ -180,8 +176,7 @@ public class CommentRestController {
 
     /**
      * Обновляет комментарий
-     *
-     * @param comment
+     * @param comment комментарий
      * @return ResponseEntity<?>
      */
     @PutMapping
