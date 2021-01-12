@@ -23,7 +23,7 @@ public class AdminController {
     public String homePage(Model model) {
         model.addAttribute("listRoles", roleRepository.findAll());
         model.addAttribute("user", userService.getCurrentLoggedInUser());
-        return "adminPage";
+        return "admin-page";
     }
 
 

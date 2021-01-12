@@ -15,7 +15,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String getProductPage() {
-        return "productPage";
+        return "product-page";
     }
 
 }
