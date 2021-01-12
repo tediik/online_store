@@ -16,11 +16,14 @@
             <div class="nav flex-column nav-pills mt-2" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" aria-selected="true" href="/moderator">Главная</a>
             </div>
-            <div id="user-profile" class="nav flex-column nav-pills mt-2" role="tablist" aria-orientation="vertical">
+            <div class="nav flex-column nav-pills mt-2" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/moderator/profile">Профиль</a>
+            </div>
+            <div class="nav flex-column nav-pills mt-2" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/moderator/comments">Комментарии для проверки</a>
             </div>
         </div>
-        <div class="col-sm-8 text-left">
+        <div class="col-md-10 text-left">
             <h4>Количество комментариев ждущих проверки <label th:text="${numberOfReports}"></label>.</h4>
         </div>
     </div>
