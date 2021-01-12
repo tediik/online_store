@@ -23,6 +23,6 @@ public class GlobalStocksController {
         }
         Stock stock = stockService.findStockById(id);
         model.addAttribute("stock", stock);
-        return "stockGlobalPage";
+        return "stock-global-page";
     }
 }
