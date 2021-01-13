@@ -6,6 +6,7 @@ import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.service.interf.BasketService;
+import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -29,6 +31,7 @@ import java.util.List;
 @Api(description = "Rest controller for actions with Basket and SubBasket")
 public class BasketRestController {
     private final BasketService basketService;
+    private final UserService userService;
 
     /**
      * контроллер для получения товаров в корзине для авторизованного User.
@@ -36,19 +39,18 @@ public class BasketRestController {
      * @return ResponseEntity<> список товаров данного User + статус ответа.
      */
     @ApiOperation(value = "get all items for authorised User")
-    @GetMapping(value = "/customer/basketGoods")
-    public ResponseEntity<List<SubBasket>> getBasket() {
-        List<SubBasket> subBaskets = basketService.getBasket();
+    @GetMapping(value = "/basketGoods")
+    public ResponseEntity<List<SubBasket>> getBasket(HttpServletRequest request) {
+        List<SubBasket> subBaskets = basketService.getBasket(request.getSession().getId());
         return new ResponseEntity<>(subBaskets, HttpStatus.OK);
     }
-
     /**
      * контроллер для формирования заказа из корзины.
      *
      * @param id адрес с формы
      * @return ResponseEntity.ok()
      */
-    @PostMapping(value = "/customer/basketGoods")
+    @PostMapping(value = "/basketGoods")
     @ApiOperation(value = "builds new order from basket")
     public ResponseEntity<String> buildOrderFromBasket(@RequestBody Long id) {
         basketService.buildOrderFromBasket(id);
@@ -61,10 +63,10 @@ public class BasketRestController {
      * @param id идентификатор подкорзины
      * @return ResponseEntity.ok()
      */
-    @DeleteMapping(value = "/customer/basketGoods")
+    @DeleteMapping(value = "/basketGoods")
     @ApiOperation(value = "Deletes entity SubBasket from the SubBaskets list by id")
-    public ResponseEntity<String> deleteBasket(@RequestBody Long id) {
-        basketService.deleteBasket(basketService.findBasketById(id));
+    public ResponseEntity<String> deleteBasket(@RequestBody Long id, HttpServletRequest request) {
+        basketService.deleteBasket(basketService.findBasketById(id), request.getSession().getId());
         return ResponseEntity.ok().build();
     }
 
@@ -74,7 +76,7 @@ public class BasketRestController {
      * @param json json из 2-х параметров
      * @return ResponseEntity.ok()
      */
-    @PutMapping(value = "/customer/basketGoods")
+    @PutMapping(value = "/basketGoods")
     @ApiOperation(value = "Updates the items quantity in SubBasket")
     public ResponseEntity<String> updateUpBasket(@RequestBody ObjectNode json) {
         Long id = json.get("id").asLong();
@@ -82,7 +84,7 @@ public class BasketRestController {
         try {
             basketService.updateBasket(basketService.findBasketById(id), difference);
             return ResponseEntity.ok().build();
-        }catch (ProductsNotFoundException e) {
+        } catch (ProductsNotFoundException e) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -90,9 +92,9 @@ public class BasketRestController {
 
     @PutMapping("/api/basket/add/{id}")
     @ApiOperation(value = "Adds product to Basket")
-    public ResponseEntity<String> addProductToBasket(@PathVariable Long id) {
+    public ResponseEntity<String> addProductToBasket(@PathVariable Long id, HttpServletRequest request) {
         try {
-            basketService.addProductToBasket(id);
+            basketService.addProductToBasket(id, request.getSession().getId());
             return ResponseEntity.ok().build();
         } catch (UserNotFoundException | ProductNotFoundException e) {
             return ResponseEntity.notFound().build();

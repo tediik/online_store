@@ -15,6 +15,6 @@ public class SubcategoryPageController {
 
     @GetMapping("/{categoryName}")
     public String getSubcategoryPage() {
-        return "subcategoryPage";
+        return "subcategory-page";
     }
 }

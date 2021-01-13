@@ -17,6 +17,7 @@ online_store.iml
 !**/src/main/**/target/
 !**/src/test/**/target/
 *.iml
+uploads/images/**
 
 # Generated files
 .idea/**/contentModel.xml

@@ -18,18 +18,18 @@ public class ServiceCenterController {
 
     @GetMapping("/serviceCenter")
     public String getServiceCenter(){
-        return "serviceCenter";
+        return "service-center";
     }
 
     @GetMapping("/serviceCheckStatus")
     public String getServiceCheckStatus(){
-        return "serviceCheckStatus";
+        return "service-check-status";
     }
 
     @GetMapping("/service")
     public String getServiceProfile(Model model) {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
-        return "servicePage";
+        return "service-page";
     }
 }

@@ -8,9 +8,9 @@ public interface BasketService {
     SubBasket addBasket(SubBasket subBasket);
     SubBasket findBasketById(Long idBasket);
     SubBasket updateBasket(SubBasket subBasket, int difference);
-    List<SubBasket> getBasket();
+    List<SubBasket> getBasket(String sessionID);
     void buildOrderFromBasket(Long id);
-    void deleteBasket(SubBasket subBasket);
+    void deleteBasket(SubBasket subBasket,String sessionID);
 
-    void addProductToBasket(Long id);
+    void addProductToBasket(Long id,String sessionID);
 }
