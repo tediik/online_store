@@ -16,11 +16,11 @@ public class ModeratorController {
     @GetMapping
     public String moderatorPage(Model model) {
         model.addAttribute("numberOfReports", reportCommentService.findAllReportComments().size());
-        return "moderatorPage";
+        return "moderator-page";
     }
 
     @GetMapping("/comments")
     public String commentsModeration() {
-        return "moderatorCommentsCheck";
+        return "moderator-comments-check";
     }
 }

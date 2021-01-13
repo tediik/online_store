@@ -17,48 +17,40 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="../static/js/jquery.fias.min.js" type="text/javascript"></script>
     <!-- Optional JavaScript -->
-    <script src="../static/js/profileAuthoriry.js"></script>
+    <script src="../static/js/profile-authoriry.js"></script>
     <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-<header th:insert="blocks/cabinetHeader :: header"></header>
+<header th:insert="blocks/cabinet-header :: header"></header>
 <div class="container-fluid">
     <div class="row min-vh-100">
         <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
+            <div id="profile-main-link-admin" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                 aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/admin">Admin</a>
+            </div>
+            <div id="profile-main-link-manager" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                 aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/manager">Главная</a>
             </div>
-            <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/profile">Профиль</a>
+            <div id="profile-news" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                 aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/news"> Новости</a>
             </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/news">Новости</a>
+            <div id="profile-promotion" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                 aria-orientation="vertical">
+                <a class="btn btn-outline-primary" href="/manager/stocks"> Акции</a>
             </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/stocks">Акции</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/products">Товары</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/rating">Рейтинг товаров</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/reports">Отчёты</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/mailing">Рассылки</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/feedback">Обратная связь</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/settings">Настройки</a>
+            <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                 aria-orientation="vertical">
+                <a class="btn btn-outline-primary active" href="/authority/profile">Профиль</a>
             </div>
         </div>
         <div class="col-md-10"
              style="background: #edeef0">
+            <div id="admin_panel"></div>
+
             <div class="tab-content" id="nav-tabContent-p">
                 <div class="tab-pane fade show active" id="pills-home-profile" role="tabpanel"
                      aria-labelledby="nav-home-profile">
@@ -320,7 +312,7 @@
         crossorigin="anonymous"></script>
 
 
-<script src="/static/js/profilePicture.js"></script>
-<script src="../static/js/searchButton.js"></script>
+<script src="/static/js/profile-picture.js"></script>
+<script src="../static/js/search-button.js"></script>
 </body>
 </html>
