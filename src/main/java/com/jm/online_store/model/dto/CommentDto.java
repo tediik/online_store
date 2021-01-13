@@ -15,7 +15,7 @@ import java.util.Date;
 
 @Data
 @Slf4j
-@ApiModel(description = "DTO для сущности Comment")
+@ApiModel(description = "DTO для сущности комментария Comment")
 @Component
 public class CommentDto {
 
@@ -43,7 +43,8 @@ public class CommentDto {
         commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
         commentDto.setDeletedHasKids(commentEntity.isDeletedHasKids());
 
-//формируем выдачу информации о пользователе оставляющем комментарии к товару
+        // формируем выдачу информации о пользователе, оставляющем комментарии к товару:
+        // имя + фамилия, либо email в случае их отсутствия
         String firstname = commentEntity.getCustomer().getFirstName();
         String lastname = commentEntity.getCustomer().getLastName();
         String email = commentEntity.getCustomer().getEmail();
@@ -73,10 +74,8 @@ public class CommentDto {
     }
 
     /**
-     * The method converts the date
-     * to the word "today" or "yesterday"
+     * The method converts the date to the word "today" or "yesterday"
      * or a date and time
-     *
      * @param date String data
      * @return the found date
      * @throws ParseException SimpleDateFormat("HH:mm yyyy-MM-dd").parse(date)
