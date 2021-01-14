@@ -54,7 +54,7 @@ public class AuthorityController {
         if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
             model.addAttribute("message", "Pls, check your old password!");
         }
-        return "redirect:/authority/profile";
+        return "profile";
     }
 
     @GetMapping("/activatenewmail/{token}")
