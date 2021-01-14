@@ -179,7 +179,7 @@ async function submit() {
     var data = new FormData()
     data.append('file', input.files[0])
 
-    fetch('/api/uploadFile', {
+    fetch('/api/stock/uploadFile', {
         method: 'POST',
         body: data,
     })
@@ -245,7 +245,7 @@ function handleEditButtonClick(event) {
     let stockId = event.target.dataset.stockId
     let filename = ""
     stockModalClearFields()
-    $.ajax('/api/rest/' + stockId, {
+    $.ajax('/api/stock/' + stockId, {
         type: 'GET',
         async: false,
         success: function (data) {

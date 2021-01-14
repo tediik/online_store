@@ -29,7 +29,7 @@ import java.util.Set;
 @AllArgsConstructor
 @RestController
 @Api(value = "Rest Controller for favourite products")
-@RequestMapping("/api")
+@RequestMapping("/api/customer")
 public class FavouritesGoodsRestController {
     private final FavouriteGoodsService favouriteGoodsService;
     private final UserService userService;
@@ -43,7 +43,7 @@ public class FavouritesGoodsRestController {
      * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
      */
     @ApiOperation(value = "Rest Controller fetches products from Favourite products for current logged in User")
-    @GetMapping(value = "/customer/favouritesGoods")
+    @GetMapping(value = "/favouritesGoods")
     public ResponseEntity<Set<Product>> getFavouritesGoods() {
         User user = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(favouriteGoodsService.getFavouriteGoods(user));
@@ -55,7 +55,7 @@ public class FavouritesGoodsRestController {
      * @param id идентификатор товара
      * @return ResponseEntity.ok()
      */
-    @PutMapping(value = "/customer/favouritesGoods")
+    @PutMapping(value = "/favouritesGoods")
     @ApiOperation(value = "Rest Controller adds products to favourites. Adds it to the list \"All products\" ")
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
@@ -73,7 +73,7 @@ public class FavouritesGoodsRestController {
      * @return ResponseEntity.ok()
      */
     @ApiOperation(value = "Rest Controller deletes product from favourites. From the list \"All products\" ")
-    @DeleteMapping(value = "/customer/favouritesGoods")
+    @DeleteMapping(value = "/favouritesGoods")
     public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.deleteFromFavouriteGoods(id, user);

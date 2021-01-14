@@ -44,8 +44,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Slf4j
 @Api(description = "Rest controller for add/edit products")
-@RequestMapping("/api")
-public class ManagerProductsRestController {
+@RequestMapping("/api/product")
+public class ProductsRestController {
 
     private final ProductService productService;
     private final CategoriesService categoriesService;
@@ -59,7 +59,7 @@ public class ManagerProductsRestController {
      * @param file файл с данными
      * @return ResponseEntity<String> с кодом ответа
      */
-    @PostMapping(value = "/rest/products/uploadProductsFile/{id}")
+    @PostMapping(value = "/uploadFile/{id}")
     @ApiOperation(value = "Method handles uploading a file with products to the server. " +
             "Calls the appropriate service method depending on the file type(CSV or XML)")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
@@ -82,7 +82,7 @@ public class ManagerProductsRestController {
         return ResponseEntity.ok("success");
     }
 
-    @PostMapping(value = "/rest/products/uploadProductsFile")
+    @PostMapping(value = "/uploadFile")
     @ApiOperation(value = "Method handles uploading a file with products to the server. " +
             "Calls the appropriate service method depending on the file type(CSV or XML)")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws FileNotFoundException {
@@ -120,7 +120,7 @@ public class ManagerProductsRestController {
      *
      * @return List<Product> возвращает список товаров
      */
-    @GetMapping(value = "/rest/products/allProducts")
+    @GetMapping(value = "/getAll")
     @ApiOperation(value = "get all products")
     public List<Product> findAll() {
         return productService.findAll();
@@ -131,7 +131,7 @@ public class ManagerProductsRestController {
      *
      * @return List<Product> возвращает список товаров
      */
-    @GetMapping(value = "/rest/products/getNotDeleteProducts")
+    @GetMapping(value = "/getNotDeletedProducts")
     @ApiOperation(value = "get list of all undeleted products")
     public List<Product> getNotDeleteProducts() {
         return productService.getNotDeleteProducts();
@@ -143,7 +143,7 @@ public class ManagerProductsRestController {
      * @param productId идентификатор товара
      * @return Optional<Product> возвращает товар
      */
-    @GetMapping(value = "/rest/products/{id}")
+    @GetMapping(value = "/manager/{id}")
     @ApiOperation(value = "Find product by ID")
     public Optional<Product> findProductById(@PathVariable("id") Long productId) {
         return productService.findProductById(productId);
@@ -155,7 +155,7 @@ public class ManagerProductsRestController {
      * @param product товар для добавления
      * @return ResponseEntity<Product> Возвращает добавленный товар с кодом ответа
      */
-    @PostMapping(value = "/rest/products/addProduct/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Add product")
     @ApiResponse(code = 400, message = "Product has empty name or product with this name is already exists ")
     public ResponseEntity<Product> addProduct(@RequestBody Product product, @PathVariable Long id) {
@@ -181,7 +181,7 @@ public class ManagerProductsRestController {
      * @param product товар для редактирования
      * @return ResponseEntity<Product> Возвращает отредактированный товар с кодом ответа
      */
-    @PutMapping("/rest/products/editProduct")
+    @PutMapping("/edit")
     @ApiOperation(value = "Method to edit product")
     public ResponseEntity<Product> editProductM(@RequestBody Product product) {
         productService.editProduct(product);
@@ -193,7 +193,7 @@ public class ManagerProductsRestController {
      *
      * @param product товар для редактирования
      */
-    @PutMapping("/rest/products/editProduct/{idOld}/{idNew}")
+    @PutMapping("/edit/{idOld}/{idNew}")
     @ApiOperation(value = "Method for edit product and his category")
     public ResponseEntity<Product> editProductAndCategory(@RequestBody Product product,
                                                           @PathVariable Long idOld,
@@ -213,7 +213,7 @@ public class ManagerProductsRestController {
      *
      * @param id идентификатор товара
      */
-    @DeleteMapping(value = "/rest/products/{id}")
+    @DeleteMapping(value = "/{id}")
     @ApiOperation(value = "Delete product by ID")
     public ResponseEntity<Long> deleteProductById(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
@@ -225,7 +225,7 @@ public class ManagerProductsRestController {
      *
      * @param id идентификатор товара
      */
-    @PostMapping(value = "/rest/products/restoredeleted/{id}")
+    @PostMapping(value = "/restoredeleted/{id}")
     @ApiOperation(value = "Restore product by ID")
     public ResponseEntity<Long> restoreProductById(@PathVariable("id") Long id) {
         productService.restoreProduct(id);
@@ -239,7 +239,7 @@ public class ManagerProductsRestController {
      * @return List<Product> отредактированный лист продуктов
      */
 
-    @PutMapping(value = "/rest/products/{categoryName}")
+    @PutMapping(value = "/{categoryName}")
     @ApiOperation(value = "Choosing product by ID")
     public List<Product> filterByCategory(@PathVariable String categoryName) {
         return productService.findProductsByCategoryName(categoryName);
@@ -252,7 +252,7 @@ public class ManagerProductsRestController {
      * @return List<Product> отредактированный лист продуктов
      */
 
-    @GetMapping(value = "/rest/products/sort/{categoryName}/{orderSelect}")
+    @GetMapping(value = "/sort/{categoryName}/{orderSelect}")
     @ApiOperation(value = "Choosing product by ID and sorted by ASC")
     public List<Product> filterByCategoryAndSort(@PathVariable String categoryName,
                                                  @PathVariable String orderSelect) {
@@ -282,7 +282,7 @@ public class ManagerProductsRestController {
      * @return List<Product> отредактированный лист продуктов
      */
 
-    @GetMapping(value = "/rest/products/descOrder/{categoryName}")
+    @GetMapping(value = "/descOrder/{categoryName}")
     @ApiOperation(value = "Choosing product by ID and sorted by DESC")
     public List<Product> filterByCategoryInDescOrder(@PathVariable String categoryName) {
         if (categoryName.equals("default")) {
@@ -301,7 +301,7 @@ public class ManagerProductsRestController {
      * @return запрос с файлом xlsx
      */
 
-    @GetMapping("/rest/products/report/{categoryName}/{number}/{orderSelect}")
+    @GetMapping("/report/{categoryName}/{number}/{orderSelect}")
     @ApiOperation(value = "Generate file with products of the category and return it to page")
     @ApiResponse(code = 404, message = "Could not found category and/or order")
     public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@PathVariable String categoryName,

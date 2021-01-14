@@ -69,7 +69,7 @@ public class FavouritesGroupRestController {
      * @param id идентификатор списка
      * @return  статус ответа 200
      */
-    @PutMapping(value = "/customer/favouritesGroup/{id}")
+    @PutMapping(value = "/{id}")
     @ApiOperation(value = "updates list of favorite goods by its id")
     public ResponseEntity updateFavouritesGroups(@RequestBody String name, @PathVariable("id") Long id) {
         User user = userService.getCurrentLoggedInUser();

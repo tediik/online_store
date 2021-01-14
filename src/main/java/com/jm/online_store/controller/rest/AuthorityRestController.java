@@ -1,12 +1,9 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/authority")
+@RequestMapping("/api/profile")
 @RequiredArgsConstructor
 @Api(description = "Rest controller for actions with profiles with roles: Admin, Manager, Service")
 public class AuthorityRestController {
@@ -32,16 +28,6 @@ public class AuthorityRestController {
      * REST-контролллер для ролей ADMIN & MANAGER & SERVICE
      */
     private final UserService userService;
-
-    @PostMapping("/changemail")
-    public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
-        User user = userService.getCurrentLoggedInUser();
-        if (userService.isExist(newMail)) {
-            throw new EmailAlreadyExistsException();
-        }
-        userService.changeUsersMail(user, newMail);
-        return ResponseEntity.ok("success");
-    }
 
     /**
      * Метод изменения email
@@ -91,7 +77,7 @@ public class AuthorityRestController {
      * @param user текущий пользователь
      * @return ResponseEntity<String> статус ответа
      */
-    @PutMapping("/updateProfile")
+    @PutMapping("/update")
     @ApiOperation(value = "updates current User's profile")
     public ResponseEntity<String> updateProfile(@RequestBody User user) {
         userService.updateUserProfile(user);
@@ -102,7 +88,7 @@ public class AuthorityRestController {
      * @param id индентификатор пользователя
      * @return ResponseEntity.ok() код ответа
      */
-    @DeleteMapping("/deleteProfile/{id}")
+    @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "deletes current User's profile")
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
         userService.deleteByID(id);

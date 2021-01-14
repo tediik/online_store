@@ -32,8 +32,8 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping("/api")
-public class ManagerCharacteristicsRestController {
+@RequestMapping("/api/manager/product")
+public class ProductCharacteristicsRestController {
 
     private final ProductService productService;
     private final CharacteristicService characteristicService;
@@ -45,7 +45,7 @@ public class ManagerCharacteristicsRestController {
      *
      * @return List<Characteristic>> возвращает список характеристик
      */
-    @GetMapping(value = "/manager/characteristics/allCharacteristics")
+    @GetMapping(value = "/characteristics/allCharacteristics")
     public List<Characteristic> findAll() {
 
         return characteristicService.findAll();
@@ -57,7 +57,7 @@ public class ManagerCharacteristicsRestController {
      * @param characteristic характеристика для добавления
      * @return ResponseEntity<Characteristic> Возвращает добавленную харакетристику с кодом ответа
      */
-    @PostMapping(value = "/rest/characteristics/addCharacteristic")
+    @PostMapping(value = "/characteristics/addCharacteristic")
     public ResponseEntity<Characteristic> addCharacteristic(@RequestBody Characteristic characteristic) {
 
         if (characteristic.getCharacteristicName().equals("")) {
@@ -75,7 +75,7 @@ public class ManagerCharacteristicsRestController {
      * @param id - characteristic id (Long)
      * @return ResponseEntity(characteristic, HttpStatus) {@link ResponseEntity}
      */
-    @GetMapping(value = "/manager/characteristic/{id}")
+    @GetMapping(value = "/characteristic/{id}")
     public ResponseEntity<Characteristic> getCharacteristic(@PathVariable Long id) {
         if (characteristicService.findCharacteristicById(id).isEmpty()) {
             log.debug("Characteristic with id: {} not found", id);
@@ -91,7 +91,7 @@ public class ManagerCharacteristicsRestController {
      * @param characteristic
      * @return new ResponseEntity<>(HttpStatus)
      */
-    @PutMapping(value = "/manager/characteristics")
+    @PutMapping(value = "/characteristics")
     public ResponseEntity<Characteristic> editCharacteristic(@RequestBody Characteristic characteristic) {
         if (characteristicService.findCharacteristicById(characteristic.getId()).isEmpty()) {
             log.debug("There are no characteristic with id: {}", characteristic.getId());
@@ -110,7 +110,7 @@ public class ManagerCharacteristicsRestController {
      * @param category - имя категории
      * @return ResponseEntity<>(HttpStatus)
      */
-    @DeleteMapping(value = "/manager/characteristics/{id}/{category}")
+    @DeleteMapping(value = "/characteristics/{id}/{category}")
     public ResponseEntity<Characteristic> deleteCharacteristic(@PathVariable Long id,
                                                                @PathVariable String category) {
         if (category.equals("default")) {
@@ -130,7 +130,7 @@ public class ManagerCharacteristicsRestController {
      * @param categoryId id нужной категории
      * @return List<Characteristic> лист харктеристик
      */
-    @GetMapping("manager/characteristics/{categoryId}")
+    @GetMapping("/characteristics/{categoryId}")
     public List<Characteristic> getCharacteristicsByCategory(@PathVariable Long categoryId) {
         return characteristicService.findByCategoryId(categoryId);
     }
@@ -141,7 +141,7 @@ public class ManagerCharacteristicsRestController {
      * @param category имя нужной категории
      * @return List<Characteristic> лист харктеристик
      */
-    @GetMapping("manager/characteristicsByCategoryName/{category}")
+    @GetMapping("/characteristicsByCategoryName/{category}")
     public List<Characteristic> getCharacteristicsByCategoryName(@PathVariable String category) {
         if (category.equals("default")) {
             return characteristicService.findAll();
@@ -155,7 +155,7 @@ public class ManagerCharacteristicsRestController {
      * @param addedProductName название добавленного товара
      * @return ResponseEntity<ProductCharacteristic> Возвращает добавленный товар с кодом ответа
      */
-    @PostMapping(value = "/manager/characteristics/addCharacteristics/{addedProductName}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/characteristics/addCharacteristics/{addedProductName}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Long>> addCharacteristics(@RequestBody ProductCharacteristicDto[] productCharacteristicsDto,
                                                          @PathVariable String addedProductName) {
         List<Long> productCharacteristicIds = new ArrayList<>();
@@ -177,7 +177,7 @@ public class ManagerCharacteristicsRestController {
      * @param categoryName наименование хаарктеристики
      * @return List<Characteristic>> возвращает список характеристик
      */
-    @GetMapping(value = "/manager/characteristics/otherThenSelected/{categoryName}")
+    @GetMapping(value = "/characteristics/otherThenSelected/{categoryName}")
     public List<Characteristic> findAllOtherThenSelected(@PathVariable String categoryName) {
         List<Characteristic> characteristicsSelectedCategoty = characteristicService.findByCategoryName(categoryName);
         List<Characteristic> allCharacteristics = characteristicService.findAll();
@@ -191,7 +191,7 @@ public class ManagerCharacteristicsRestController {
      * @param selectedCategory название выбранной категории
      * @return ResponseEntity<List < Characteristic>> Возвращает добавленные харакетристики с кодом ответа
      */
-    @PostMapping(value = "/manager/characteristics/addCharacteristicsToCategory/{selectedCategory}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/characteristics/addCharacteristicsToCategory/{selectedCategory}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Characteristic>> addCharacteristicsToCategory(@RequestBody Characteristic[] characteristics,
                                                                              @PathVariable String selectedCategory) {
         Categories category = categoriesService.getCategoryByCategoryName(selectedCategory).get();

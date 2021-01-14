@@ -2,7 +2,7 @@
 // https://www.jqwidgets.com/jquery-widgets-documentation/documentation/jqxtree/jquery-tree-getting-started.htm?search=
 const API_CATEGORIES_URL = "/api/categories/"
 let listOfAll
-let productRestUrl = "/api/rest/products/allProducts"
+let productRestUrl = "/api/product/getAll"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
@@ -175,7 +175,7 @@ function deleteModalWindowRender(productToEdit) {
 function handleEditButton(event) {
     const productId = event.target.dataset["productId"]
     Promise.all([
-        fetch("/api/rest/products/" + productId, {headers: headers}),
+        fetch("/api/product/manager/" + productId, {headers: headers}),
     ])
         .then(([response]) => Promise.all([response.json()]))
         .then(([productToEdit]) => {
@@ -195,7 +195,7 @@ function handleEditButton(event) {
  * @param productId
  */
 function handleDeleteButton(productId) {
-    fetch("/api/rest/products/" + productId, {headers: headers})
+    fetch("/api/product/manager/" + productId, {headers: headers})
         .then(response => response.json())
         .then(productToDelete => deleteModalWindowRender(productToDelete))
 }
@@ -205,7 +205,7 @@ function handleDeleteButton(productId) {
  * @param productId
  */
 function handleRestoreButton(productId) {
-    fetch("/api/rest/products/restoredeleted/" + productId, {
+    fetch("/api/product/restoredeleted/" + productId, {
         headers: headers,
         method: 'POST'
     }).then(response => response.text())
@@ -304,7 +304,7 @@ function handleAddBtn() {
         }
     }
 
-    fetch("/api/rest/products/addProduct/" + currentCategoryIdAdd, {
+    fetch("/api/product/add/" + currentCategoryIdAdd, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
         body: JSON.stringify(productToAdd)
@@ -344,7 +344,7 @@ function handleAddBtn() {
  * функция делает fetch запрос на рест контроллер, отправляя заполненные характеристики и имя товара
  */
 function fetchToAddCharacteristics(addedProductName) {
-    fetch("/api/manager/characteristics/addCharacteristics/" + addedProductName, {
+    fetch("/api/manager/product/characteristics/addCharacteristics/" + addedProductName, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
         body: JSON.stringify(createProductCharacteristicArray(characteristicsSelectedCategory))
@@ -366,7 +366,7 @@ function importProductsFromFile() {
         fileData.append('file', $('#file')[0].files[0]);
 
         $.ajax({
-            url: '/api/rest/products/uploadProductsFile/',
+            url: '/api/product/uploadFile/',
             data: fileData,
             processData: false,
             contentType: false,
@@ -392,7 +392,7 @@ function importProductsFromFile() {
         fileData.append('file', $('#file')[0].files[0]);
 
         $.ajax({
-            url: '/api/rest/products/uploadProductsFile/' + currentCategoryIdAdd,
+            url: '/api/product/uploadFile/' + currentCategoryIdAdd,
             data: fileData,
             processData: false,
             contentType: false,
@@ -424,7 +424,7 @@ function handleAcceptButtonFromModalWindow(event) {
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-product')) {
-        fetch("/api/rest/products/" + product.id, {
+        fetch("/api/product/" + product.id, {
             headers: headers,
             method: 'DELETE'
         }).then(response => response.text())
@@ -440,7 +440,7 @@ function handleAcceptButtonFromModalWindow(event) {
     } else {
         let newCategory = $('#jqxTreeModal').jqxTree('getSelectedItem');
         if (!newCategory || currentCategoryNameEdit.localeCompare(newCategory.label) === 0) {
-            fetch("/api/rest/products/editProduct/", {
+            fetch("/api/product/edit/", {
                 method: 'PUT',
                 headers: headers,
                 body: JSON.stringify(product)
@@ -453,7 +453,7 @@ function handleAcceptButtonFromModalWindow(event) {
                 $('#productModalWindow').modal('hide')
             })
         } else {
-            fetch("/api/rest/products/editProduct/" + getCatId(currentCategoryNameEdit)
+            fetch("/api/product/edit/" + getCatId(currentCategoryNameEdit)
                 + "/" + getCatId(newCategory.label), {
                 method: 'PUT',
                 headers: headers,
@@ -595,7 +595,7 @@ function createProductCharacteristicArray(characteristics) {
  * и передает функции рендера полей характеристик renderCharacteristicFields
  */
 function fetchCharacteristicsAndRenderFields(categoryId) {
-    fetch("/api/manager/characteristics/" + categoryId)
+    fetch("/api/manager/product/characteristics/" + categoryId)
         .then(response => response.json())
         .then(characteristics => renderCharacteristicFields(characteristics))
 }
@@ -616,7 +616,7 @@ function fetchProductsAndRenderTable() {
  * и передает функции рендера таблицы renderProductsTable
  */
 function fetchProductsAndRenderNotDeleteTable() {
-    fetch("/api/rest/products/getNotDeleteProducts")
+    fetch("/api/product/getNotDeletedProducts")
         .then(response => response.json())
         .then(products => renderProductsTable(products))
 }

@@ -4,7 +4,7 @@ $(document).ready(function () {
             $.ajax(
                 {
                     type: 'DELETE',
-                    url: '/api/users/deleteImage',
+                    url: '/api/image/delete',
                     contentType: false,
                     processData: false,
                     cache: false,
@@ -36,7 +36,7 @@ $(document).ready(function () {
         $.ajax(
             {
                 type: 'POST',
-                url: '/api/users/uploadImage',
+                url: '/api/image/upload',
                 dataType: 'script',
                 data: form_data,
                 cache: false,
