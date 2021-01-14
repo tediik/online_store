@@ -121,7 +121,7 @@ public class RepairOrderRestController {
      * Метод возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ.
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("//findAllWithoutCanceled")
+    @GetMapping("/findAllWithoutCanceled")
     @ApiOperation(value = "Get list of all repair orders without cancelled")
     public ResponseEntity<List<RepairOrder>> getAllWithoutCanceled() {
         List<RepairOrder> repairOrderList = repairOrderService.findAllWithoutCanceled();
@@ -133,7 +133,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("//getAcceptedRepairOrder")
+    @GetMapping("/getAcceptedRepairOrder")
     @ApiOperation(value = "Get list of accepted repair orders")
     public ResponseEntity<List<RepairOrder>> getAcceptedRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllAccepted();
@@ -145,7 +145,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("//getDiagnosticsRepairOrder")
+    @GetMapping("/getDiagnosticsRepairOrder")
     @ApiOperation(value = "Get list of all repair orders on diagnostic")
     public ResponseEntity<List<RepairOrder>> getDiagnosticsRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllDiagnostics();

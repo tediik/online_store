@@ -23,7 +23,7 @@ import java.util.Map;
 @RequestMapping("/api/profile")
 @RequiredArgsConstructor
 @Api(description = "Rest controller for actions with profiles with roles: Admin, Manager, Service")
-public class AuthorityRestController {
+public class ProfileRestController {
     /**
      * REST-контролллер для ролей ADMIN & MANAGER & SERVICE
      */
