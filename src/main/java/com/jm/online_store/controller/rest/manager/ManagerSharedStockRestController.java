@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/manager/api/sharedStock")
+@RequestMapping("/api/manager/sharedStock")
 @Api(description = "Rest controller for manage of shared stocks from manager page")
 public class ManagerSharedStockRestController {
     private final SharedStockService sharedStockService;

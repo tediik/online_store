@@ -16,7 +16,7 @@ $(document).ready(function () {
 function changePass() {
     var formData = $('#formChangePass').serialize();
     $.ajax({
-        url: '/customer/change-password',
+        url: '/api/customer/change-password',
         type: 'POST',
         data: formData,
         success: function (res) {
@@ -49,7 +49,7 @@ function changeMail() {
 
     var formData = $('#formChangeMail').serialize();
     $.ajax({
-        url: '/customer/changemail',
+        url: '/api/customer/changemail',
         type: 'POST',
         data: formData,
         success: function (res) {
@@ -116,7 +116,7 @@ function chekboxChanges(o) {
  */
 function deleteProfile(event) {
     let id = event.target.dataset.delId
-    fetch(`/customer/deleteProfile/${id}`, {
+    fetch(`/api/customer/deleteProfile/${id}`, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json, text/plain, */*',

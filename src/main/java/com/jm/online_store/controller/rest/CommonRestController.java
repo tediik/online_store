@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @Api(description = "Rest controller for transferring common data")
 public class CommonRestController {
@@ -23,7 +23,7 @@ public class CommonRestController {
      * @return ResponseEntity<String> наименование магазина
      */
 
-    @GetMapping("api/storeName")
+    @GetMapping("/storeName")
     @ApiOperation(value = "Get store name")
     public ResponseEntity<String> getStoreName() {
         return ResponseEntity.ok(storeName);

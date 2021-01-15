@@ -51,7 +51,7 @@ async function addOrders(stringUrlForMapping, stringElentForAdd){
 }
 
 async function fillOrderById(id) {
-    let response = await fetch("/customer/getOrderById", {
+    let response = await fetch("/api/customer/getOrderById", {
         method: "POST",
         body: id,
         headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -98,17 +98,17 @@ async function fillOrderById(id) {
 }
 
 async function fillOrders() {
-    await addOrders("/customer/getAllOrders", "allOrdersSet");
+    await addOrders("/api/customer/getAllOrders", "allOrdersSet");
 }
 
 async function fillIncartsOrders() {
-    await addOrders("/customer/getIncartsOrders", "inCartsOrders");
+    await addOrders("/api/customer/getIncartsOrders", "inCartsOrders");
 }
 
 async function fillCompletedOrders() {
-    await addOrders("/customer/getCompletedOrders", "completedOrders");
+    await addOrders("/api/customer/getCompletedOrders", "completedOrders");
 }
 
 async function fillCanceledOrders() {
-    await addOrders("/customer/getCanceledOrders", "canceledOrders");
+    await addOrders("/api/customer/getCanceledOrders", "canceledOrders");
 }
