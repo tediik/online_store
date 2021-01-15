@@ -94,7 +94,7 @@ function handleShareButton() {
     let socialNetworkName = $(this).attr('data-socialNetworkName');
 
     if (urlToShare.includes('news')) {
-        sharedStockApiUrl = '/global/api/sharedNews/';
+        sharedStockApiUrl = '/api/global/sharedNews/';
         body = {
             news: {
                 id: id
@@ -102,7 +102,7 @@ function handleShareButton() {
             socialNetworkName: socialNetworkName
         }
     } else if (urlToShare.includes('stock')) {
-        sharedStockApiUrl = '/global/api/sharedStock/';
+        sharedStockApiUrl = '/api/global/sharedStock/';
         body = {
             stock: {
                 id: id

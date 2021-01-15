@@ -27,7 +27,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/manager/api/stock")
+@RequestMapping("/api/manager/stock")
 @Api(description = "Rest controller for manage of stocks from manager page")
 public class ManagerStockRestController {
     private final StockService stockService;

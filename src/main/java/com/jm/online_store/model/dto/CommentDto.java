@@ -4,6 +4,7 @@ import com.jm.online_store.model.Comment;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,48 +15,66 @@ import java.util.Date;
 
 @Data
 @Slf4j
-@ApiModel(description =  "DTO для сущности Comment")
+@ApiModel(description = "DTO для сущности комментария Comment")
+@Component
 public class CommentDto {
 
-   private Long id;
-   private Long parentId;
-   private String content;
-   private String userPhoto;
-   private String firstName;
-   private String lastName;
-   private String userEmail;
-   private String timeStamp;
-   private Long productId;
-   private Long reviewId;
-   private Boolean deletedHasKids;
+    private Long id;
+    private Long parentId;
+    private String content;
+    private String userPhoto;
+    private String firstName;
+    private String lastName;
+    private String userEmail;
+    private String timeStamp;
+    private Long productId;
+    private Long reviewId;
+    private Boolean deletedHasKids;
+    public String userDescription;
 
-   public static CommentDto commentEntityToDto(Comment commentEntity){
-       CommentDto commentDto = new CommentDto();
-       commentDto.setId(commentEntity.getId());
-       commentDto.setParentId(commentEntity.getParentId());
-       commentDto.setContent(commentEntity.getContent());
-       commentDto.setUserPhoto(commentEntity.getCustomer().getProfilePicture());
-       commentDto.setFirstName(commentEntity.getCustomer().getFirstName());
-       commentDto.setLastName(commentEntity.getCustomer().getLastName());
-       commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
-       commentDto.setDeletedHasKids(commentEntity.isDeletedHasKids());
+    public static CommentDto commentEntityToDto(Comment commentEntity) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setId(commentEntity.getId());
+        commentDto.setParentId(commentEntity.getParentId());
+        commentDto.setContent(commentEntity.getContent());
+        commentDto.setUserPhoto(commentEntity.getCustomer().getProfilePicture());
+        commentDto.setFirstName(commentEntity.getCustomer().getFirstName());
+        commentDto.setLastName(commentEntity.getCustomer().getLastName());
+        commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
+        commentDto.setDeletedHasKids(commentEntity.isDeletedHasKids());
 
-       DateTimeFormatter dTF2 = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
-       try {
-           commentDto.setTimeStamp(formatToYesterdayOrToday(commentEntity.getCommentDate().format(dTF2)));  //commentEntity.getCommentDate().truncatedTo(ChronoUnit.MINUTES));
-       } catch (ParseException e) {
-           e.printStackTrace();
-           log.debug("Ошибка парсинга даты внутри метода formatToYesterdayOrToday(String date) : {}", e);
-       }
-       commentDto.setProductId(commentEntity.getProductId());
-       if (commentEntity.getReview() != null) {
-           commentDto.setReviewId(commentEntity.getReview().getId());
-       }
-       return commentDto;
-   }
+        // формируем выдачу информации о пользователе, оставляющем комментарии к товару:
+        // имя + фамилия, либо email в случае их отсутствия
+        String firstname = commentEntity.getCustomer().getFirstName();
+        String lastname = commentEntity.getCustomer().getLastName();
+        String email = commentEntity.getCustomer().getEmail();
+        if (firstname == null) {
+            firstname = "";
+        }
+        if (lastname == null) {
+            lastname = "";
+        }
+        if (firstname == "" & lastname == "") {
+            commentDto.userDescription = email;
+        } else {
+            commentDto.userDescription = firstname + " " + lastname;
+        }
+
+        DateTimeFormatter dTF2 = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
+        try {
+            commentDto.setTimeStamp(formatToYesterdayOrToday(commentEntity.getCommentDate().format(dTF2)));
+        } catch (ParseException e) {
+            log.debug("Ошибка парсинга даты внутри метода formatToYesterdayOrToday(String date) : {}", e);
+        }
+        commentDto.setProductId(commentEntity.getProductId());
+        if (commentEntity.getReview() != null) {
+            commentDto.setReviewId(commentEntity.getReview().getId());
+        }
+        return commentDto;
+    }
+
     /**
-     * The method converts the date
-     * to the word "today" or "yesterday"
+     * The method converts the date to the word "today" or "yesterday"
      * or a date and time
      * @param date String data
      * @return the found date

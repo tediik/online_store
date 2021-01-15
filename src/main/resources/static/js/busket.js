@@ -9,7 +9,7 @@ $(document).ready(function () {
 })
 
 async function fillBasket() {
-    let response = await fetch("/basketGoods");
+    let response = await fetch("/api/basketGoods");
     let basketGoodsJson = document.getElementById('busketTable');
     if (response.ok) {
         let content = await response.json();
@@ -53,7 +53,7 @@ async function fillBasket() {
             </td>
         <tr>
         `;
-            fetch("api/products/" + `${content[key].product.id}`)
+            fetch("/api/products/" + `${content[key].product.id}`)
                 .then(function (response) {
                     response.json().then(function (data) {
                         if (data.favourite) {
@@ -126,7 +126,7 @@ async function fillBasket() {
 
 
 async function deleteBasket(id) {
-    await fetch("/basketGoods", {
+    await fetch("/api/basketGoods", {
         method: "DELETE",
         body: id,
         headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -135,7 +135,7 @@ async function deleteBasket(id) {
 }
 
 async function updateCountBasket(id, count) {
-    await fetch("/basketGoods", {
+    await fetch("/api/basketGoods", {
         method: "PUT",
         body: JSON.stringify({
             id: id,
@@ -151,7 +151,7 @@ async function updateCountBasket(id, count) {
 }
 
 async function buildOrderFromBasket() {
-    await fetch("/basketGoods", {
+    await fetch("/api/basketGoods", {
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"}
     });
@@ -160,7 +160,7 @@ async function buildOrderFromBasket() {
 
 async function addToFavouritsGoods(id, heartId) {
     if ($("path").is('[class="filled"]')) {
-        await fetch("/customer/favouritesGoods", {
+        await fetch("/api/customer/favouritesGoods", {
             method: "DELETE",
             body: id,
             headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -173,7 +173,7 @@ async function addToFavouritsGoods(id, heartId) {
             }
         });
     } else {
-        await fetch("/customer/favouritesGoods", {
+        await fetch("/api/customer/favouritesGoods", {
             method: "PUT",
             body: id,
             headers: {"Content-Type": "application/json; charset=utf-8"}

@@ -66,6 +66,7 @@ function renderCommentsTable(allReports) {
         $.ajax({
             url: '/api/moderator/leave/' + reportId,
             method: "DELETE",
+            dataType: 'text',
             success: function () {
                 toastr.info("Комментарий оставлен");
                 sendMessage();
@@ -77,6 +78,7 @@ function renderCommentsTable(allReports) {
         $.ajax({
             url: '/api/moderator/delete/' + commentId,
             method: "DELETE",
+            dataType: 'text',
             success: function () {
                 toastr.info("Комментарий удален");
                 sendMessage();
