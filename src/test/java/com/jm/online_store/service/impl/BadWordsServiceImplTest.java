@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,21 +29,29 @@ public class BadWordsServiceImplTest {
     private String incoming;
     private String incoming2;
 
-////перед тем как раскоментировать сделать метод preparingWordsForImport публичным
-//    @Test
-//    void preparingWordsForImport() {
-//        incoming="Winter,   ,    g, Spring,,      Sum - mer,   Autumn,    765,";
-//        String[] expected= {"Winter", "", "g", "Spring,", "Sum - mer", "Autumn", "765"};
-//        String[] actual = badWordsService.preparingWordsForImport(incoming);
-//        assertArrayEquals(expected, actual);
-//    }
-
     @Test
     void importWord() {
         incoming2 = "Winter, , g, Spring, Summer, Autumn, h";
         badWordsService.importWord(incoming2);
         verify(badWordsRepository, times(4)).existsBadWordsByBadword(any(String.class));
         verify(badWordsRepository, times(4)).save(any(BadWords.class));
+    }
+
+    @Test
+    void preparingWordsForImport() {
+        incoming="Winter,   ,    g, Spring,,      Sum - mer,   Autumn,    765,";
+        String[] expected= {"Winter", "", "g", "Spring,", "Sum - mer", "Autumn", "765"};
+        try {
+            Method method = BadWordsServiceImpl.class.getDeclaredMethod("preparingWordsForImport", String.class);
+            method.setAccessible(true);
+            assertArrayEquals(expected, (Object[]) method.invoke(badWordsService, incoming));
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
