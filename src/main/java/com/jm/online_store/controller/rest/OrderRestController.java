@@ -22,7 +22,7 @@ import java.util.Set;
  * Рест контроллер для заказов.
  */
 @AllArgsConstructor
-@RequestMapping("/customer")
+@RequestMapping("/api/customer")
 @RestController
 @Api(description = "Rest controller for orders")
 public class OrderRestController {

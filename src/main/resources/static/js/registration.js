@@ -9,7 +9,7 @@ function register() {
     $(".alert").html("").hide();
     var formData = $('form').serialize();
     $.ajax({
-        url: '/registration',
+        url: '/api/registration',
         type: 'POST',
         data: formData,
         success: function (data) {

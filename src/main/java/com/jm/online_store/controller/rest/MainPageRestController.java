@@ -42,7 +42,7 @@ import java.util.stream.Stream;
  * Рест контроллер главной страницы.
  */
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api")
 @Slf4j
 @RequiredArgsConstructor
 @Api(description = "Rest controller of the Main page")
@@ -99,7 +99,7 @@ public class MainPageRestController {
      * "Смартфоны и гаджеты":{"Планшеты":"Planshety",
      * "Смартфоны":"Smartfony"}}
      */
-    @GetMapping("api/categories")
+    @GetMapping("/categories")
     @ApiOperation(value = "Creates hashmap: key - category name, value - map with subcategories name. In the inner map key is subcategory in kirillic, the value - in latin. example: " +
             "{\"Компьютеры\":{\"Комплектующие\":\"Komplektuyushchiye\",\n" +
             "     * \"Компьютеры\":\"Kompʹyutery\",\n" +
@@ -125,7 +125,7 @@ public class MainPageRestController {
      * Возвращает список первых N продуктов - N передаётся в метод сервиса .findNumProducts(N)
      */
     @ApiOperation(value = "Returns list of first 15 products")
-    @GetMapping("api/products")
+    @GetMapping("/products")
     public ResponseEntity<List<Product>> getSomeProducts() {
         return ResponseEntity.ok(productService.findNumProducts(15));
     }
@@ -133,7 +133,7 @@ public class MainPageRestController {
     /**
      * Возвращает список опубликованных акций  - список передаётся в метод сервиса .findPublishedStocks()
      */
-    @GetMapping("api/publishedstocks")
+    @GetMapping("/publishedstocks")
     @ApiOperation(value = "Returns list of published stocks")
     public ResponseEntity<List<Stock>> getPublishedStocks() {
         List<Stock> publishedStocks= stockService.findPublishedStocks();
@@ -143,14 +143,14 @@ public class MainPageRestController {
     /**
      * Возвращает список опубликованных новостей  - список передаётся в метод сервиса .findPublishedNews()
      */
-    @GetMapping("api/publishednews")
+    @GetMapping("/publishednews")
     @ApiOperation(value = "Returns list of published news")
     public ResponseEntity<List<News>> getPublishedNews() {
         List<News> publishedNews= newsService.getAllPublished();
         return ResponseEntity.ok(publishedNews);
     }
 
-    @PostMapping("api/currentUrl")
+    @PostMapping("/currentUrl")
     @ApiOperation(value = "Returns current URL")
     public ResponseEntity getCurrentUrl(@RequestBody String currentUrl) {
         CurrentUrl.setUrl(currentUrl);

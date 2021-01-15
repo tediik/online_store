@@ -1,5 +1,5 @@
 async function fillFavouritesGoods() {
-    let response = await fetch("/customer/favouritesGoods");
+    let response = await fetch("/api/customer/favouritesGoods");
     let content = await response.json();
     let favoriteGoodsJson = document.getElementById('favouritesGoodsList');
     let key
@@ -27,13 +27,13 @@ async function fillFavouritesGoods() {
 async function deleteProductFromFavouritGoods(id) {
     let idGroup = $('.get-favourites-group-btn').attr("id");
     if (idGroup == 1) {
-        await fetch("/customer/favouritesGoods", {
+        await fetch("/api/customer/favouritesGoods", {
             method: "DELETE",
             body: id,
             headers: {"Content-Type": "application/json; charset=utf-8"}
         });
     } else {
-        await fetch("/customer/deleteProductFromFavouritesGroup/" + idGroup, {
+        await fetch("/api/customer/deleteProductFromFavouritesGroup/" + idGroup, {
             method: "DELETE",
             body: id,
             headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -144,7 +144,7 @@ function defaultInterface() {
  * @returns {Promise<void>}
  */
 async function fillFavouritesProducts(id) {
-    let response = await fetch("/customer/getProductFromFavouritesGroup/" + id);
+    let response = await fetch("/api/customer/getProductFromFavouritesGroup/" + id);
     let content = await response.json();
     let favoriteGoodsJson = document.getElementById('favouritesGoodsList');
     let key
@@ -270,7 +270,7 @@ async function clearFavouritGroup(idGroup, listIdProducts) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8'
     };
-    await fetch(`/customer/clearFavouritesGroup/` + idGroup, {
+    await fetch(`/api/customer/clearFavouritesGroup/` + idGroup, {
         method: 'DELETE',
         body: JSON.stringify(listIdProducts),
         headers: headers
@@ -377,7 +377,7 @@ async function updateFavouritesGroupInBD(nameGroup, idGroup) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8'
     };
-    await fetch(`/customer/favouritesGroup/` + id, {
+    await fetch(`/api/customer/favouritesGroup/` + id, {
         method: 'PUT',
         body: nameGroup,
         headers: headers
@@ -397,7 +397,7 @@ async function moveProductsFavouritesGroup(idNewGroup, idOldGroup, idProducts) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8'
     };
-    await fetch(`/customer/deleteProductFromFavouritesGroup/` + idNewGroup + `/` + idOldGroup, {
+    await fetch(`/api/customer/deleteProductFromFavouritesGroup/` + idNewGroup + `/` + idOldGroup, {
         method: 'PUT',
         body: JSON.stringify(idProducts),
         headers: headers
@@ -419,7 +419,7 @@ async function addFavouritesGroupInBD(nameGroup) {
     let favouritesGroup = {
         name: nameGroup
     };
-    await fetch(`/customer/favouritesGroup`, {
+    await fetch(`/api/customer/favouritesGroup`, {
         method: 'POST',
         body: JSON.stringify(favouritesGroup),
         headers: headers
@@ -455,7 +455,7 @@ async function addFavouritesGroupInBD(nameGroup) {
  * @returns {Promise<void>}
  */
 async function deleteFavouritesGroupInBD(id) {
-    fetch(`/customer/favouritesGroup/` + id, {
+    fetch(`/api/customer/favouritesGroup/` + id, {
         method: 'DELETE'
     })
 };
