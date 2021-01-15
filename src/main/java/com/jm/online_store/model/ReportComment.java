@@ -15,11 +15,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Сущность жалоб на {@link Comment}.
  */
 @Entity
+@Table(name = "report_comment")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,13 +34,13 @@ public class ReportComment {
     /**
      * Комментарий к причине жалобы.
      */
-    @Column(name = "reasonComment")
+    @Column(name = "reason_comment")
     private String reasonComment;
 
     /**
      * Причина жалобы.
      */
-    @Column(name = "reportReason")
+    @Column(name = "report_reason")
     @Enumerated(EnumType.STRING)
     private ReportReason reportReason;
 
@@ -48,4 +50,12 @@ public class ReportComment {
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private Comment comment;
+
+    /**
+     * Пожаловавшийся пользователь
+     */
+    @ManyToOne
+    @JoinColumn(name = "report_customer_id")
+    private User reportCustomer;
+
 }

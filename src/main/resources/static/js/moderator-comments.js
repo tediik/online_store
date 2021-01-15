@@ -29,6 +29,7 @@ function renderCommentsTable(allReports) {
             .append(`
                     <tr>
                         <th>ID</th>
+                        <th>Имя пользователя</th>
                         <th>Комментарий</th>
                         <th>Причина жалобы</th>
                         <th>Комментарий к жалобе</th>
@@ -40,6 +41,7 @@ function renderCommentsTable(allReports) {
             const report = allReports[i];
             let row = `
                 <tr>
+                    <td>${report.reportId}</td>
                     <td>${report.reportId}</td>
                     <td>${report.reportedComment}</td>
                     <td>${report.reportReason}</td>
