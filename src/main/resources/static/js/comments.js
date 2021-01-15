@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await $.ajax({
                 //Get current logged in user
                 type: "GET",
-                url: '/users/getCurrent',
+                url: '/api/users/getCurrent',
                 dataType: "json",
                 success: function (response) {
                     if (response !== undefined) {
@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     commentsCache = response;
                     if (document.getElementById('CommentsNewFirst').checked) {
                         commentsCache.reverse();
+
                     }
                     console.log(commentsCache)
                 }
@@ -81,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <img id="profilePic${comment.id}" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
                         </div>
                         <div class="media-body" id='mediaBody${comment.id}'>
-                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.firstName} ${comment.lastName}  ${comment.timeStamp}</h5>
+                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.userDescription } ${comment.timeStamp}</h5>
                         <div class="message" id="commentContent${comment.id}"> ${comment.content}  </div>
                         <button type='button' id='replyButton${comment.id}' class='btn btn-link reply'>Ответить</button>
                         <button type='button' id='editButton${comment.id}' class='btn btn-link edit'>Править</button>

@@ -11,10 +11,13 @@ spring:
 #    url: jdbc:postgresql://ec2-52-208-138-246.eu-west-1.compute.amazonaws.com:5432/datmbr0etpmdhb
 #    username: ivrmvajsnlixth
 #    password: ec3c54e3047872e2eb2075ec1e333e04aedb0ab4604410209771d31fe5042050
+    hikari:
+      leak-detection-threshold: 60000
+      maximum-pool-size: 5
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -32,7 +35,7 @@ spring:
   mail:
     host: smtp.yandex.ru
     username: jm-online-store@yandex.ru
-    password: jm2020
+    password: jm2020JM2020
     port: 465
     protocol: smtps
     debug: true
@@ -78,3 +81,6 @@ telegram-bot:
   name: JM_store_bot
   token: 1432791063:AAH1j664T9RnRPhS7elFAfvFcA5enPunWeE
   webhook-path: https://jm-online-store.herokuapp.com/telegram-bot
+
+common-data:
+  store-name: Online store

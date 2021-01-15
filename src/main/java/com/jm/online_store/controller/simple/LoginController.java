@@ -38,13 +38,13 @@ public class LoginController {
         if (twitterAuth.getAccessToken(oauth_verifier)) {
             return "redirect:/";
         } else {
-            return "TwitterRegistrationPage";
+            return "twitter-registration-page";
         }
     }
 
     @GetMapping("/TwitterRegistrationPage")
     public String twitterRegPage() {
-        return "TwitterRegistrationPage";
+        return "twitter-registration-page";
     }
 
     @GetMapping(value = "/login")

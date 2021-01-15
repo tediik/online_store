@@ -16,14 +16,14 @@ public class AdminController {
 
     private final UserService userService;
 
-    @Autowired
-    private RoleRepository roleRepository;
+
+    private final RoleRepository roleRepository;
 
     @GetMapping
     public String homePage(Model model) {
         model.addAttribute("listRoles", roleRepository.findAll());
         model.addAttribute("user", userService.getCurrentLoggedInUser());
-        return "adminPage";
+        return "admin-page";
     }
 
 

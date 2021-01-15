@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/jquery/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+
+    <script src="/static/js/main-page.js"></script>
+    <script src="/static/js/jquery.hoverIntent.minified.js"></script>
+    <title>Регистрация</title>
+</head>
+<body>
+<div style="width: 350px;margin: 5% auto auto">
+    <h1>Регистрация</h1>
+    <form action="/registration" method="POST" enctype="utf8">
+        <div class="form-group text-center font-weight-bold">
+            <label for="email">Email</label>
+            <input name="email"
+                   value=""
+                   id="email"
+                   placeholder="email"
+                   type="email"
+                   autofocus
+                   class="form-control"/>
+        </div>
+        <div class="form-group text-center font-weight-bold">
+            <label for="password">Пароль</label>
+            <input name="password"
+                   value=""
+                   id="password"
+                   placeholder="password"
+                   type="password"
+                   autofocus
+                   class="form-control"/>
+        </div>
+        <div class="form-group text-center font-weight-bold">
+            <label for="passwordConfirm">Повторите пароль</label>
+            <input name="passwordConfirm"
+                   value=""
+                   id="passwordConfirm"
+                   placeholder="password"
+                   type="password"
+                   autofocus
+                   class="form-control"/>
+        </div>
+        <div>
+            <span id="duplicatedEmailError" style="display:none" class="error">Пользователь с таким адресом уже существует</span>
+        </div>
+        <div>
+            <span id="passwordError" style="display:none" class="error">Пароли не совпадают</span>
+        </div>
+        <div>
+            <span id="notValidEmailError" style="display:none" class="error">Неверный формат электронной почты</span>
+        </div>
+        <div>
+            <a onclick="register()" class="btn btn-primary btn-sm btn-block"> submit</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

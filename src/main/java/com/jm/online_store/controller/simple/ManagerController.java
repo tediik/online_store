@@ -21,12 +21,12 @@ public class ManagerController {
 
     @GetMapping
     public String getManagerPage() {
-        return "managerPage";
+        return "manager-page";
     }
 
     @GetMapping("/news")
     public String getNewsManagementPage() {
-        return "newsManagement";
+        return "news-management";
     }
 
     @GetMapping("/reports")
@@ -36,29 +36,29 @@ public class ManagerController {
 
     @GetMapping("/settings")
     public String getSettingsPage (){
-        return "manager_settings";
+        return "manager-settings";
     }
 
     @GetMapping("/stocks")
     public String getStocks() {
-        return "stocksManagerPage";
+        return "stocks-manager-page";
     }
 
     @GetMapping("/mailing")
     public String getMailing() {
-        return "managerMailing";
+        return "manager-mailing";
     }
 
     @GetMapping("/feedback")
     public String getFeedbacks() {
-        return "managerFeedback";
+        return "manager-feedback";
     }
 
     @GetMapping("/rating")
     public String getRating(Model model) {
         model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
 
-        return "productsRating";
+        return "products-rating";
     }
 
     @GetMapping("/characteristics")
@@ -75,6 +75,6 @@ public class ManagerController {
     public String getPersonalInfo(Model model) {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
-        return "managerProfile";
+        return "manager-profile";
     }
 }

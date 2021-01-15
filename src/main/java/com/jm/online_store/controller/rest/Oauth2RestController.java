@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @AllArgsConstructor
 @Api(description = "Rest controller for social network authorization")
+@RequestMapping("/api")
 public class Oauth2RestController {
 
     private final OAuth2Odnoklassniki oAuth2Odnoklassniki;

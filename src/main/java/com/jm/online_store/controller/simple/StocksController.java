@@ -21,7 +21,7 @@ public class StocksController {
     public String stocksPage(Model model) {
         List<Stock> stocksPage = stockService.findAll();
         model.addAttribute("stocks", stocksPage);
-        return "stocksPage";
+        return "stocks-page";
     }
 
 }

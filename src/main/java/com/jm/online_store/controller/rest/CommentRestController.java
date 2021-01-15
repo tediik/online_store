@@ -3,7 +3,6 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
-import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForCommentDto;
 import com.jm.online_store.model.dto.ReviewForCommentDto;
@@ -22,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,13 +49,12 @@ public class CommentRestController {
     private final ProductRepository productRepository;
     private final BadWordsService badWordsService;
     private final UserService userService;
-
+    private final CommentDto commentDto;
 
     /**
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
-     *
-     * @param productId
-     * @return ResponseEntity<List<CommentDto>>
+     * @param productId идентификатор продукта
+     * @return ResponseEntity<List<CommentDto>> список объектов CommentDto
      */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches all the comments from current product")
@@ -71,28 +68,26 @@ public class CommentRestController {
     /**
      * Receives productComment requestBody and passes it to Service layer for processing
      * Returns JSON representation, previously, searches for forbidden words
-     *
-     * @param comment
+     * @param comment комментарий
      * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
      */
     @PostMapping
-    @ApiOperation(value = "Post new comment to the current product")
+    @ApiOperation(value = "Post new savedComment to the current product")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
             @ApiResponse(code = 200, message = "Comment was successfully added")
     })
     public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
+        Comment savedComment = commentService.addComment(comment);
         if (!bindingResult.hasErrors()) {
-            String checkText = comment.getContent();
+            String checkText = savedComment.getContent();
             if (!badWordsService.checkEnabledCheckText()) {
-                Comment savedComment = commentService.addComment(comment);
                 productFromDb.setComments(List.of(savedComment));
                 return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
             } else {
                 List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
-                    Comment savedComment = commentService.addComment(comment);
                     productFromDb.setComments(List.of(savedComment));
                     return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
                 } else {
@@ -111,7 +106,7 @@ public class CommentRestController {
      * previously, searches for forbidden words
      * Returns JSON representation
      *
-     * @param comment
+     * @param comment комментарий
      * @param reviewId
      * @return ResponseEntity<ReviewForCommentDto> or ResponseEntity<List<String>>
      */
@@ -152,8 +147,8 @@ public class CommentRestController {
     }
 
     /**
-     * Удаляет комментарий по его айди
-     * @param commentId
+     * Удаляет комментарий по его идентификатору
+     * @param commentId идентификатор комментария
      * @return ResponseEntity<?>
      */
     @DeleteMapping("/{commentId}")
@@ -181,7 +176,7 @@ public class CommentRestController {
 
     /**
      * Обновляет комментарий
-     * @param comment
+     * @param comment комментарий
      * @return ResponseEntity<?>
      */
     @PutMapping

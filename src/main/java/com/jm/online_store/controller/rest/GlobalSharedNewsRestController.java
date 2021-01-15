@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/global/api/sharedNews")
+@RequestMapping("/api/global/sharedNews")
 @Api(description = "Rest controller for adding news, that users shared in social networks")
 public class GlobalSharedNewsRestController {
     private final SharedNewsService sharedNewsService;
