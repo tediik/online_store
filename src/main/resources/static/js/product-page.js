@@ -289,7 +289,7 @@ function showModalError(message) {
 /**
  * запрос который передает в контроллер сущность recentlyViewedProducts в которой хранится id продукта
  */
-    fetch("/customer/addIdProductToSessionAndToBase", {
+    fetch("/api/customer/addIdProductToSessionAndToBase", {
         method: "POST",
         body: productIdFromPath,
         headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -297,7 +297,7 @@ function showModalError(message) {
         if (response.ok) {
             console.log("Товар успешно добавлен в session");
         } else {
-            toastr.error("Просмотренный товар не сохранился");
+            console.log("Просмотренный товар не сохранился");
         }
     });
 

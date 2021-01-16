@@ -12,7 +12,7 @@ $(document).ready(function () {
 });
 
 function fetchAndRenderSomeProducts() {
-    fetch("/customer/getRecentlyViewedProductsFromDb").then(response => response.json()).then(data => fillSomeProducts1(data));
+    fetch("/customer/getRecentlyViewedProductsFromDb").then(response => response.json()).then(data => fillViewedProducts(data));
     $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
 }
 /**
@@ -141,9 +141,9 @@ function deleteProfile(event) {
  * function that fills CustomerPage with recentlyViewedProducts
  * @param data - products list
  */
-function fillSomeProducts1(data) {
-    let prodsView1 = document.getElementById('recentlyProductsViewDiv');
-    prodsView1.innerHTML = ''
+function fillViewedProducts(data) {
+    let prodsView = document.getElementById('recentlyProductsViewDiv');
+    prodsView.innerHTML = ''
     if (data !== 'error') {
         let item = ``;
         for (let key = 0; key < data.length; key++) {
@@ -161,10 +161,10 @@ function fillSomeProducts1(data) {
                 </div>
             </div>`;
             if ((key + 1) % 5 == 0) {
-                $(prodsView1).append(`<div class="row">` + item);
+                $(prodsView).append(`<div class="row">` + item);
                 item = ``;
             } else if ((key + 1) == data.length) {
-                $(prodsView1).append(`<div class="row">` + item);
+                $(prodsView).append(`<div class="row">` + item);
             }
             $(function () {
                 if (data[key].rating !== null) {
@@ -181,6 +181,6 @@ function fillSomeProducts1(data) {
             });
         }
     } else {
-        prodsView1.innerHTML = 'Ожидайте новые продукты'
+        prodsView.innerHTML = 'Пока тут ничего нет'
     }
 }

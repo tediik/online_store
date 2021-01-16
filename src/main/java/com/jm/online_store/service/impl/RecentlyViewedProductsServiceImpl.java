@@ -7,11 +7,9 @@ import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Slf4j
 @Service
 @AllArgsConstructor
 public class RecentlyViewedProductsServiceImpl implements RecentlyViewedProductsService {
@@ -20,7 +18,8 @@ public class RecentlyViewedProductsServiceImpl implements RecentlyViewedProducts
     private final ProductService productService;
 
     /**
-     * Метод получает из базы коллекцию List сущностей RecentlyViewedProducts в которых есть Product которые просматривал юзер
+     * Метод получает из базы список сущностей RecentlyViewedProducts,
+     * в которых есть Product, который просматривал пользователь
      * @param id юзера которому принадлежат просмотренные товары
      * @return List<RecentlyViewedProducts>
      */
@@ -30,7 +29,7 @@ public class RecentlyViewedProductsServiceImpl implements RecentlyViewedProducts
     }
 
     /**
-     * Метод получает проверяет есть ли данная запись в таблице
+     * Метод проверяет есть ли данная запись в таблице
      * сущности recentlyViewedProducts по productId
      * @param productId просмотренного то вара
      * @return
@@ -45,14 +44,11 @@ public class RecentlyViewedProductsServiceImpl implements RecentlyViewedProducts
      * @param IdProduct
      * @return void
      */
+    @Override
     public void saveRecentlyViewedProducts(Long IdProduct) {
         RecentlyViewedProducts recentlyViewedProductsNew = new RecentlyViewedProducts();
         recentlyViewedProductsNew.setProduct(productService.findProductById(IdProduct).orElse(new Product()));
-        if (recentlyViewedProductsNew.getProduct() != null) {
             recentlyViewedProductsNew.setUser(userService.getCurrentLoggedInUser());
             recentlyViewedProductsRepository.save(recentlyViewedProductsNew);
-        } else {
-            log.debug("Product not found");
-        }
     }
 }

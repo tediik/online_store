@@ -5,7 +5,6 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CustomerService;
-import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -20,12 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -36,7 +32,6 @@ import java.util.stream.Collectors;
 public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
-    private final ProductService productService;
     private final RecentlyViewedProductsService recentlyViewedProductsService;
 
     @PostMapping("/changemail")
@@ -136,8 +131,9 @@ public class CustomerRestController {
     }
 
     /**
-     * Метод добавляет id продукта или товара productIdFromPath в хранилище Session
-     * @param productParam Product, request
+     * Метод добавляет id продукта или товара productIdFromPath в хранилище Session и
+     * в базу данных
+     * @param productId Product, request
      * @return ResponseEntity<String>
      */
     @PostMapping("/addIdProductToSessionAndToBase")
@@ -145,17 +141,17 @@ public class CustomerRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productParam, HttpServletRequest request)  {
+    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request)  {
         HttpSession session = request.getSession();
-        session.setAttribute("Product", productParam);
-        if (!recentlyViewedProductsService.ProductExistsInTable(productParam)) {
-            recentlyViewedProductsService.saveRecentlyViewedProducts(productParam);
+        session.setAttribute("Product", productId);
+        if (!recentlyViewedProductsService.ProductExistsInTable(productId)) {
+            recentlyViewedProductsService.saveRecentlyViewedProducts(productId);
         }
         return ResponseEntity.ok("Session is set");
     }
 
     /**
-     * Метод получает из базы коллекцию List Продуктов  которые просматривал юзер
+     * Метод получает из базы список Продуктов, которые просматривал пользователь
      * @return ResponseEntity<List<Product>>
      */
     @GetMapping("/getRecentlyViewedProductsFromDb")
@@ -166,8 +162,11 @@ public class CustomerRestController {
     })
     public ResponseEntity<List<Product>> getRecentlyViewedProducts()
             throws ResponseStatusException {
-        List<Product> listProduct = recentlyViewedProductsService.findAllRecentlyViewedProductsByUserId(userService.getCurrentLoggedInUser().getId()).stream().map(RecentlyViewedProducts::getProduct).collect(Collectors.toList());
-            return ResponseEntity.ok(listProduct);
+            return ResponseEntity.ok(recentlyViewedProductsService
+                    .findAllRecentlyViewedProductsByUserId(userService
+                            .getCurrentLoggedInUser().getId()).stream()
+                            .map(RecentlyViewedProducts::getProduct)
+                            .collect(Collectors.toList()));
     }
 }
 
