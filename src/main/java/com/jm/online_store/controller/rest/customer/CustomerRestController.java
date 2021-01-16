@@ -2,9 +2,11 @@ package com.jm.online_store.controller.rest.customer;
 
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.Review;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
+import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
@@ -35,6 +37,7 @@ public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
     private final CommentService commentService;
+    private final ReviewService reviewService;
 
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email")
@@ -111,11 +114,10 @@ public class CustomerRestController {
     public ResponseEntity<String> deleteProfile2(@PathVariable Long id) {
         User customer = userService.findUserById(id);
         List<Comment> customerComments = commentService.findAllByCustomer(customer);
-        User commentUser = userService.findUserByEmail("comment@mail.ru");
-        for (Comment comment : customerComments
-        ) {
-            comment.setCustomer(commentUser);
-        }
+        List<Review> customerReview = reviewService.findAllByCustomer(customer);
+        User deletedUser = userService.findUserByEmail("comment@mail.ru");
+        for (Comment comment : customerComments) comment.setCustomer(deletedUser);
+        for (Review review : customerReview) review.setCustomer(deletedUser);
         customerService.deleteByID(id);
         return ResponseEntity.ok("Delete profile");
     }
