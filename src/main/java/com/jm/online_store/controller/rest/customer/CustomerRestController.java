@@ -109,9 +109,16 @@ public class CustomerRestController {
         return ResponseEntity.ok("Delete profile");
     }
 
-    @DeleteMapping("/deleteProfile2/{id}")
-    @ApiOperation(value = "Changes Users status, when Delete button clicked")
-    public ResponseEntity<String> deleteProfile2(@PathVariable Long id) {
+    /**
+     * Метод который безвозратно удаляет пользователя при нажатии на кнопку "удалить профиль" и
+     * сохраняет коммеатрии и отзывы под сущность DeletedCustomer
+     *
+     * @param id идентификатор покупателя
+     * @return ResponseEntity.ok()
+     */
+    @DeleteMapping("/deleteProfileUnrecoverable/{id}")
+    @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked")
+    public ResponseEntity<String> deleteProfileUnrecoverable(@PathVariable Long id) {
         User customer = userService.findUserById(id);
         List<Comment> customerComments = commentService.findAllByCustomer(customer);
         List<Review> customerReview = reviewService.findAllByCustomer(customer);

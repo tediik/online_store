@@ -409,7 +409,7 @@
                                             <button type="button" style="color: #a94442"
                                                     class="m-2 btn btn-link d-block mx-auto"
                                                     data-toggle="modal"
-                                                    data-target="#deleteProfile2"
+                                                    data-target="#deleteProfileUnrecoverable"
                                                     th:data-del-id="${user.id}">Удалить профиль(без возможности
                                                 восстановить)
                                             </button>
@@ -514,12 +514,12 @@
                                     <!-- change PASS modal -->
 
                                     <!---------------------- Delete Profile Modal window Test ------------------->
-                                    <div id="deleteProfile2" class="modal" tabindex="-1" role="dialog"
+                                    <div id="deleteProfileUnrecoverable" class="modal" tabindex="-1" role="dialog"
                                          aria-labelledby="titleDeleteProfile" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="titleDeleteProfile2">Удалить
+                                                    <h5 class="modal-title" id="titleDeleteProfileUnrecoverable">Удалить
                                                         профиль</h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
@@ -534,7 +534,7 @@
                                                             data-dismiss="modal">
                                                         Отмена
                                                     </button>
-                                                    <button id="deleteProfileCustomer2" type="button"
+                                                    <button id="deleteProfileCustomerUnrecoverable" type="button"
                                                             class="btn btn-danger" th:data-del-id="${user.id}"
                                                             data-dismiss="modal">
                                                         Удалить

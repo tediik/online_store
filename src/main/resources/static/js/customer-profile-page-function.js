@@ -1,9 +1,8 @@
 $(document).ready(function () {
     /* Слушатель для кнопки удалить профиль (в модальном окне)*/
     document.getElementById('deleteProfileCustomer').addEventListener('click', deleteProfile)
-
     /* Слушатель для кнопки удалить профиль (без возможности восстановить (в модальном окне)*/
-    document.getElementById('deleteProfileCustomer2').addEventListener('click', deleteProfile2)
+    document.getElementById('deleteProfileCustomerUnrecoverable').addEventListener('click', deleteProfile2)
     /*Слушатель для кнопки смены email modal*/
     $(document).delegate("#buttonChangeMail", "click", changeMail);
     /*Слушатель для кнопки смены пароля modal*/
@@ -135,12 +134,12 @@ function deleteProfile(event) {
 }
 
 /**
- * Функция удаления профиля
+ * Функция удаления профиля безвозратно
  * @param event
  */
 function deleteProfile2(event) {
     let id = event.target.dataset.delId
-    fetch(`/customer/deleteProfile2/${id}`, {
+    fetch(`/api/customer/deleteProfileUnrecoverable/${id}`, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json, text/plain, */*',
