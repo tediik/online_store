@@ -167,10 +167,10 @@ public class DataInitializer {
         User service = new User("service@mail.ru", "1");
         User moderator1 = new User("moderator1@mail.ru", "1");
         User moderator2 = new User("moderator2@mail.ru", "2");
-        Customer commentCustomer = new Customer("comment@mail.ru", "1");
-        commentCustomer.setProfilePicture(StringUtils.cleanPath("deleted.jpg"));
-        commentCustomer.setFirstName("Deleted");
-        commentCustomer.setLastName("");
+        Customer deletedCustomer = new Customer("deleted@mail.ru", "1");
+        deletedCustomer.setProfilePicture(StringUtils.cleanPath("deleted.jpg"));
+        deletedCustomer.setFirstName("Deleted");
+        deletedCustomer.setLastName("");
 
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
@@ -197,7 +197,7 @@ public class DataInitializer {
         manager.setRoles(managerRoles);
         admin.setRoles(adminRoles);
         customer.setRoles(customerRoles);
-        commentCustomer.setRoles(customerRoles);
+        deletedCustomer.setRoles(customerRoles);
         service.setRoles(serviceRoles);
         moderator1.setRoles(moderatorRoles);
         moderator2.setRoles(moderatorRoles);
@@ -208,7 +208,7 @@ public class DataInitializer {
         userService.addUser(service);
         userService.addUser(moderator1);
         userService.addUser(moderator2);
-        userService.addUser(commentCustomer);
+        userService.addUser(deletedCustomer);
 
         Product product_1 = new Product("apple", 100000D, 10, 0.1);
         Product product_2 = new Product("samsung", 80000D, 100, 0.9);

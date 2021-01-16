@@ -115,7 +115,7 @@ public class CustomerRestController {
         User customer = userService.findUserById(id);
         List<Comment> customerComments = commentService.findAllByCustomer(customer);
         List<Review> customerReview = reviewService.findAllByCustomer(customer);
-        User deletedUser = userService.findUserByEmail("comment@mail.ru");
+        User deletedUser = userService.findUserByEmail("deleted@mail.ru");
         for (Comment comment : customerComments) comment.setCustomer(deletedUser);
         for (Review review : customerReview) review.setCustomer(deletedUser);
         customerService.deleteByID(id);
