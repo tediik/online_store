@@ -134,7 +134,7 @@ function deleteProfile(event) {
 }
 
 /**
- * Функция удаления профиля безвозратно
+ * Функция удаления профиля безвозвратно
  * @param event
  */
 function deleteProfile2(event) {
