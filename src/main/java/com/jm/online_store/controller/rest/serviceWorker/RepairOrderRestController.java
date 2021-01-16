@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @Api(description = "Rest controller for manage repair orders")
+@RequestMapping("/api/service")
 public class RepairOrderRestController {
 
     private final RepairOrderService repairOrderService;
@@ -38,7 +40,7 @@ public class RepairOrderRestController {
      * @param id идентификатор RepairOrder
      * @return RepairOrder заказ на ремонт
      */
-    @GetMapping("/service/{id}")
+    @GetMapping("/{id}")
     @ApiOperation(value = "Get order by ID")
     public ResponseEntity<RepairOrder> getRepairOrderById(@PathVariable Long id) {
         RepairOrder repairOrder = repairOrderService.findById(id);
@@ -52,7 +54,7 @@ public class RepairOrderRestController {
      * @return ResponseEntity<RepairOrder> возвращает добавленный заказ на ремонт
      * со статусом ответа
      */
-    @PostMapping("/service/addRepairOrder")
+    @PostMapping("/addRepairOrder")
     @ApiOperation(value = "Add a new repair order")
     public ResponseEntity<RepairOrder> addRepairOrder(@RequestBody RepairOrder repairOrder) {
         return ResponseEntity.ok(repairOrderService.save(repairOrder));
@@ -64,7 +66,7 @@ public class RepairOrderRestController {
      * @param repairOrder тело содержит номер заказа и телефон
      * @return ResponseEntity<RepairOrder> заказ на ремонт
      */
-    @PostMapping("/api/checkStatus")
+    @PostMapping("/checkStatus")
     @ApiOperation(value = "Get repair order by order ID and telephone number of client")
     @ApiResponse(code = 404, message = "Repair odred was not found")
     public ResponseEntity<RepairOrder> getCurrentRepairOrder(@RequestBody RepairOrder repairOrder) {
@@ -83,7 +85,7 @@ public class RepairOrderRestController {
      * @param id идентификатор RepairOrder
      * @return ResponseEntity<String> статус запроса
      */
-    @DeleteMapping("/service/{id}")
+    @DeleteMapping("/{id}")
     @ApiOperation("Delete repair order by ID")
     public ResponseEntity<String> deleteRepairOrderById(@PathVariable Long id) {
         repairOrderService.deleteById(id);
@@ -96,7 +98,7 @@ public class RepairOrderRestController {
      * @param repairOrder принимает заявку на ремонт
      * @return ResponseEntity.ok(repairOrder) возвращает статус запроса и заявку на ремонт
      */
-    @PutMapping("/service/updateRepairOrder")
+    @PutMapping("/updateRepairOrder")
     @ApiOperation(value = "Update repair order")
     public ResponseEntity<RepairOrder> updateRepairOrder(@RequestBody RepairOrder repairOrder) {
         repairOrderService.update(repairOrder);
@@ -108,7 +110,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("/service/getAllRepairOrder")
+    @GetMapping("/getAllRepairOrder")
     @ApiOperation(value = "Get list of all repair orders")
     public ResponseEntity<List<RepairOrder>> getAllRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.findAll();
@@ -119,7 +121,7 @@ public class RepairOrderRestController {
      * Метод возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ.
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("service/findAllWithoutCanceled")
+    @GetMapping("/findAllWithoutCanceled")
     @ApiOperation(value = "Get list of all repair orders without cancelled")
     public ResponseEntity<List<RepairOrder>> getAllWithoutCanceled() {
         List<RepairOrder> repairOrderList = repairOrderService.findAllWithoutCanceled();
@@ -131,7 +133,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("/service/getAcceptedRepairOrder")
+    @GetMapping("/getAcceptedRepairOrder")
     @ApiOperation(value = "Get list of accepted repair orders")
     public ResponseEntity<List<RepairOrder>> getAcceptedRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllAccepted();
@@ -143,7 +145,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("/service/getDiagnosticsRepairOrder")
+    @GetMapping("/getDiagnosticsRepairOrder")
     @ApiOperation(value = "Get list of all repair orders on diagnostic")
     public ResponseEntity<List<RepairOrder>> getDiagnosticsRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllDiagnostics();
@@ -155,7 +157,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("/service/getIn_WorkRepairOrder")
+    @GetMapping("/getIn_WorkRepairOrder")
     @ApiOperation(value = "Get list of all repair orders in repair process")
     public ResponseEntity<List<RepairOrder>> getIn_WorkRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllIn_Work();
@@ -167,7 +169,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("/service/getCompleteRepairOrder")
+    @GetMapping("/getCompleteRepairOrder")
     @ApiOperation(value = "Get list of complete repair orders")
     public ResponseEntity<List<RepairOrder>> getCompleteRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllComplete();
@@ -179,7 +181,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("/service/getArchiveRepairOrder")
+    @GetMapping("/getArchiveRepairOrder")
     @ApiOperation(value = "Get list of archive repair orders")
     public ResponseEntity<List<RepairOrder>> getArchiveRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllArchive();
@@ -191,7 +193,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
      */
-    @GetMapping("/service/getCanceledRepairOrder")
+    @GetMapping("/getCanceledRepairOrder")
     @ApiOperation(value = "Get list of cancelled repair orders")
     public ResponseEntity<List<RepairOrder>> getCanceledRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllCanceled();
@@ -203,7 +205,7 @@ public class RepairOrderRestController {
      *
      * @return ResponseEntity<List < RepairOrderType>> список статусов
      */
-    @GetMapping("/service/getAllRepairOrderType")
+    @GetMapping("/getAllRepairOrderType")
     @ApiOperation(value = "Get list of repair orders status")
     public ResponseEntity<List<RepairOrderType>> getAllRepairOrderType() {
         List<RepairOrderType> orderTypeList = repairOrderService.findAllRepairOrderType();
@@ -217,7 +219,7 @@ public class RepairOrderRestController {
      * @param response    запрос
      * @return файл заказ-наряда
      */
-    @PostMapping("/service/getWorkOrder")
+    @PostMapping("/getWorkOrder")
     @ApiOperation(value = "Generate and get list of work order")
     @ApiResponse(code = 404, message = "Repair order was not found")
     public ResponseEntity<FileSystemResource> getWorkOrder(@RequestBody RepairOrder repairOrder, HttpServletResponse response) {

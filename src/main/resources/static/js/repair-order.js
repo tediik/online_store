@@ -46,7 +46,7 @@ function formOrder() {
 function addRepairOrder() {
     if (checkFieldsAddRepairOrder()) {
         let order = formOrder();
-        fetch('/service/addRepairOrder', {
+        fetch('/api/service/addRepairOrder', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -75,7 +75,7 @@ function addRepairOrder() {
  * @param order заказ на ремонт
  */
 function getWorkOrder(order) {
-    fetch('/service/getWorkOrder', {
+    fetch('/api/service/getWorkOrder', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -144,7 +144,7 @@ function checkButtonEditOrDelete(event) {
  * Функция получает все заказы на ремонт
  */
 function getAllRepairOrders() {
-    fetch('/service/getAllRepairOrder')
+    fetch('/api/service/getAllRepairOrder')
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'all_repairOrders')
@@ -155,7 +155,7 @@ function getAllRepairOrders() {
  * Функция возвращает все заказы на ремонт кроме отменённых.
  */
 function getAllOrdersWithoutCanceled() {
-    fetch('service/findAllWithoutCanceled')
+    fetch('/api/service/findAllWithoutCanceled')
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'all_repairOrders')
@@ -166,7 +166,7 @@ function getAllOrdersWithoutCanceled() {
  * Функция получает все принятые заказы на ремонт
  */
 function getAcceptedRepairOrders() {
-    fetch('/service/getAcceptedRepairOrder')
+    fetch('/api/service/getAcceptedRepairOrder')
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'accepted_repairOrders')
@@ -177,7 +177,7 @@ function getAcceptedRepairOrders() {
  * Функция получает все заказы на ремонт, которые находятся на этапе диагностики
  */
 function getDiagnosticsRepairOrders() {
-    fetch('/service/getDiagnosticsRepairOrder')
+    fetch('/api/service/getDiagnosticsRepairOrder')
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'diagnostics_repairOrders')
@@ -188,7 +188,7 @@ function getDiagnosticsRepairOrders() {
  * Функция получает все заказы на ремонт, которые находятся на этапе ремонта
  */
 function getIn_WorkRepairOrders() {
-    fetch('/service/getIn_WorkRepairOrder')
+    fetch('/api/service/getIn_WorkRepairOrder')
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'inWorkRepairOrders')
@@ -199,7 +199,7 @@ function getIn_WorkRepairOrders() {
  * Функция получает все заказы на ремонт, ремонт которых выполнен
  */
 function getCompleteRepairOrders() {
-    fetch('/service/getCompleteRepairOrder')
+    fetch('/api/service/getCompleteRepairOrder')
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'completeRepairOrders')
@@ -210,7 +210,7 @@ function getCompleteRepairOrders() {
  * Функция получает все архивные заказы на ремонт
  */
 function getArchiveRepairOrders() {
-    fetch('/service/getArchiveRepairOrder')
+    fetch('/api/service/getArchiveRepairOrder')
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'closedRepairOrders')
@@ -221,7 +221,7 @@ function getArchiveRepairOrders() {
  * Функция получает все отмененные заказы на ремонт
  */
 function getCanceledRepairOrders() {
-    fetch('/service/getCanceledRepairOrder')
+    fetch('/api/service/getCanceledRepairOrder')
         .then((res) => res.json())
         .then((data) => {
             renderRepairOrder(data, 'canceledRepairOrders')
@@ -269,7 +269,7 @@ function checkFieldsAddRepairOrder() {
  * @param repairOrderId - идентификатор Long id заказа на ремонт
  */
 function openEditModalWindow(repairOrderId) {
-    fetch(`/service/${repairOrderId}`)
+    fetch(`/api/service/${repairOrderId}`)
         .then(function (response) {
             if (response.status === 200) {
                 response.json().then(repairOrder => {
@@ -305,7 +305,7 @@ function updateRepairOrder() {
         acceptanceDate: document.getElementById('postingDateUpdate').value,
     }
     if (checkFieldsModalRepairOrder()) {
-        fetch('/service/updateRepairOrder', {
+        fetch('/api/service/updateRepairOrder', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -337,7 +337,7 @@ function updateRepairOrder() {
 function deleteRepairOrder(repairOrderId) {
     let doDelete = confirm(`Вы уверены что хотите удалить заказ?`);
     if (doDelete) {
-        fetch(`/service/${repairOrderId}`, {
+        fetch(`/api/service/${repairOrderId}`, {
             method: 'DELETE'
         }).then(function (response) {
             if (response.status === 200) {

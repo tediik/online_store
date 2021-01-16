@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await $.ajax({
                 //Get current logged in user
                 type: "GET",
-                url: '/users/getCurrent',
+                url: '/api/users/getCurrent',
                 dataType: "json",
                 success: function (response) {
                     if (response !== undefined) {

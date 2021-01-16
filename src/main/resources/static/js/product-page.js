@@ -119,7 +119,7 @@ async function fillAboutProduct(data) {
  */
 function addToFavourite() {
     if ($("path").is('[class="filled"]')) {
-        fetch("/customer/favouritesGoods", {
+        fetch("/api/customer/favouritesGoods", {
             method: "DELETE",
             body: productIdFromPath,
             headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -133,7 +133,7 @@ function addToFavourite() {
             }
         })
     } else {
-        fetch("/customer/favouritesGoods", {
+        fetch("/api/customer/favouritesGoods", {
             method: "PUT",
             body: productIdFromPath,
             headers: {"Content-Type": "application/json; charset=utf-8"}

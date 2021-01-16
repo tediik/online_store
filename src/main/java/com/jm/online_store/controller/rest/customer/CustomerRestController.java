@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/api/customer")
 @Slf4j
 @Api(description = "some operations with Customer's profile")
 public class CustomerRestController {
