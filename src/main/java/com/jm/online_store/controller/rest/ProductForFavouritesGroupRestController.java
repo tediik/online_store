@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.Set;
 @RestController
 @AllArgsConstructor
 @Api(description = "Rest controller for products in favorite group")
+@RequestMapping("/api/customer")
 public class ProductForFavouritesGroupRestController {
 
     private final FavouritesGroupService favouritesGroupService;
@@ -36,7 +38,7 @@ public class ProductForFavouritesGroupRestController {
      * @param id идентификатор списка избранных товаров
      * @return
      */
-    @PostMapping(value = "/customer/addProductInFavouritesGroup/{id}")
+    @PostMapping(value = "/addProductInFavouritesGroup/{id}")
     @ApiOperation(value = "Add product in favourite group by group ID")
     public ResponseEntity addProductInFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
@@ -49,7 +51,7 @@ public class ProductForFavouritesGroupRestController {
      * @param id идентификатор списка избранных товаров
      * @return
      */
-    @GetMapping(value = "/customer/getProductFromFavouritesGroup/{id}")
+    @GetMapping(value = "/getProductFromFavouritesGroup/{id}")
     @ApiOperation(value = "Get product from favourite group by group ID")
     public ResponseEntity<Set<Product>> getProductFromFavouritesGroup(@PathVariable Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
@@ -62,7 +64,7 @@ public class ProductForFavouritesGroupRestController {
      * @param id идентификатор списка
      * @return
      */
-    @DeleteMapping(value = "/customer/deleteProductFromFavouritesGroup/{idGroup}")
+    @DeleteMapping(value = "/deleteProductFromFavouritesGroup/{idGroup}")
     @ApiOperation(value = "Delete product from favourite group by group ID")
     public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody Long idProduct, @PathVariable("idGroup") Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
@@ -77,7 +79,7 @@ public class ProductForFavouritesGroupRestController {
      * @param idGroup идентификатор списка
      * @return
      */
-    @DeleteMapping(value = "/customer/clearFavouritesGroup/{idGroup}")
+    @DeleteMapping(value = "/clearFavouritesGroup/{idGroup}")
     @ApiOperation(value = "Delete all products from favourite group by group ID")
     public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody ArrayList<Long> idProducts, @PathVariable("idGroup") Long idGroup) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(idGroup).orElseThrow();
@@ -95,7 +97,7 @@ public class ProductForFavouritesGroupRestController {
      * @param idOldGroup идентификатор старого списка
      * @return
      */
-    @PutMapping(value = "/customer/deleteProductFromFavouritesGroup/{idNewGroup}/{idOldGroup}")
+    @PutMapping(value = "/deleteProductFromFavouritesGroup/{idNewGroup}/{idOldGroup}")
     @ApiOperation(value = "Remove products from favorite group to another favorite group by old group ID and new group ID")
     public ResponseEntity moveProducts(@RequestBody ArrayList<Long> idProducts, @PathVariable("idNewGroup") Long idNewGroup, @PathVariable("idOldGroup") Long idOldGroup) {
         FavouritesGroup newFavouritesGroup = favouritesGroupService.findById(idNewGroup).orElseThrow();

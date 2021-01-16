@@ -12,20 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/api/users")
 @RequiredArgsConstructor
 @Api(description = "Rest controller for actions with users profiles")
 public class AllUsersRestController {
@@ -53,20 +47,6 @@ public class AllUsersRestController {
         return ResponseEntity.ok(new UserDto()
                 .setEmail(currentUser.getEmail())
                 .setRoles(currentUser.getRoles()));
-    }
-
-    @PostMapping("/uploadImage")
-    @ApiOperation(value = "uploads images")
-    public ResponseEntity<String> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        User userDetails = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(userService.updateUserImage(userDetails.getId(), imageFile));
-    }
-
-    @DeleteMapping("/deleteImage")
-    @ApiOperation(value = "deletes images")
-    public ResponseEntity<String> deleteImage() throws IOException {
-        User userDetails = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(userService.deleteUserImage(userDetails.getId()));
     }
 
     /**

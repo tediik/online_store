@@ -8,8 +8,6 @@ import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -27,32 +24,33 @@ import java.util.Set;
  * Рест контроллер для адресов
  */
 @AllArgsConstructor
-@RequestMapping("/customer")
+@RequestMapping("/api/customer")
 @RestController
 @Api(description = "Rest controller for addresses")
 public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;
 
-    @GetMapping(value = "/customer/rest/allShops")
+    @GetMapping(value = "/allShops")
     @ApiOperation(value = "get all the shops")
     public ResponseEntity<List<Address>> findAll() {
         return ResponseEntity.ok(addressService.findAllShops());
     }
 
-    @GetMapping(value = "/rest/userAddresses")
+    @GetMapping(value = "/userAddresses")
     @ApiOperation(value = "get current logged in Users address")
     public ResponseEntity<Set<Address>> userAddresses() {
-            if(userService.getCurrentLoggedInUser().getUserAddresses() != null) {
+        if (userService.getCurrentLoggedInUser().getUserAddresses() != null) {
             return ResponseEntity.ok(userService.getCurrentLoggedInUser().getUserAddresses());
         }
         return ResponseEntity.notFound().build();
     }
-    @PostMapping(value = "/rest/addAddress")
+
+    @PostMapping(value = "/addAddress")
     @ApiOperation(value = "adds address for current logged in user")
     public ResponseEntity addAddressToUser(@RequestBody Address address) {
         User user = userService.getCurrentLoggedInUser();
-        if(userService.addNewAddressForUser(user,address)) {
+        if (userService.addNewAddressForUser(user, address)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body("addressIsExists");

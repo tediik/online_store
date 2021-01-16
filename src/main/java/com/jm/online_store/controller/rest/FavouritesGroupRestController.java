@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/customer/favouritesGroup")
+@RequestMapping("/api/customer/favouritesGroup")
 @Api(description = "Rest controller for the \"lists\" of favourites products - CRUD operations")
 public class FavouritesGroupRestController {
     private final FavouritesGroupService favouritesGroupService;
@@ -69,7 +69,7 @@ public class FavouritesGroupRestController {
      * @param id идентификатор списка
      * @return  статус ответа 200
      */
-    @PutMapping(value = "/customer/favouritesGroup/{id}")
+    @PutMapping(value = "/{id}")
     @ApiOperation(value = "updates list of favorite goods by its id")
     public ResponseEntity updateFavouritesGroups(@RequestBody String name, @PathVariable("id") Long id) {
         User user = userService.getCurrentLoggedInUser();

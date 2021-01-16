@@ -98,7 +98,7 @@ function renderCharacteristicsTable(characteristics) {
 function handleEditButton(event) {
     const characteristicId = event.target.dataset["characteristicId"]
     if (categorySelectAllCharacteristics === 'default') {
-        fetch("/manager/characteristic/" + characteristicId)
+        fetch("/api/manager/product/characteristic/" + characteristicId)
             .then(response => response.json())
             .then(characteristicToEdit => editModalWindowRender(characteristicToEdit))
     } else {
@@ -113,7 +113,7 @@ function handleEditButton(event) {
  */
 function handleDeleteButton(event) {
     const characteristicId = event.target.dataset["characteristicId"]
-    fetch("/manager/characteristic/" + characteristicId)
+    fetch("/api/manager/product/characteristic/" + characteristicId)
         .then(response => response.json())
         .then(characteristicToDelete => deleteModalWindowRender(characteristicToDelete))
 }
@@ -162,7 +162,7 @@ function handleAcceptButtonFromModalWindow(event) {
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-characteristic')) {
-        fetch("/manager/characteristics/" + characteristic.id + "/" + categorySelectAllCharacteristics, {
+        fetch("/api/manager/product/characteristics/" + characteristic.id + "/" + categorySelectAllCharacteristics, {
             method: 'DELETE'
         }).then(response => response.text())
             .then(deletedCharacteristic => console.log('Characteristic: ' + deletedCharacteristic + ' was successfully deleted'))
@@ -170,7 +170,7 @@ function handleAcceptButtonFromModalWindow(event) {
         $('#characteristicModalWindow').modal('hide')
         toastr.success("Характеристика успешно удалена")
     } else {
-        fetch("/manager/characteristics", {
+        fetch("/api/manager/characteristics", {
             method: 'PUT',
             headers: headers,
             body: JSON.stringify(characteristic)
@@ -210,7 +210,7 @@ function handleAddBtn() {
         toastr.error('Заполните поле наименования характеристкии');
     }
 
-    fetch("/rest/characteristics/addCharacteristic", {
+    fetch("/api/manager/product/characteristics/addCharacteristic", {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
         body: JSON.stringify(characteristicToAdd)
@@ -241,7 +241,7 @@ function handleAddBtn() {
  */
 function addCharacteristicsOnNewCharacteristicForm(categorySelect) {
     if (categorySelect !== 'default') {
-        fetch("/manager/characteristics/otherThenSelected/" + categorySelect, {headers: headers}).then(response => response.json())
+        fetch("/api/manager/product/characteristics/otherThenSelected/" + categorySelect, {headers: headers}).then(response => response.json())
             .then(characteristics => renderCharacteristicsOtherThenSelected(characteristics))
     }
 }
@@ -289,7 +289,7 @@ function handleAcceptAddCharacteristicsToCategoryButton() {
     let selectedCategory = $('#filterCategoryToAdd').val();
 
 
-    fetch("/manager/characteristics/addCharacteristicsToCategory/" + selectedCategory, {
+    fetch("/api/manager/product/characteristics/addCharacteristicsToCategory/" + selectedCategory, {
         method: 'POST',
         headers: {'Content-Type': 'application/json;charset=utf-8'},
         body: JSON.stringify(arr)

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/global/api/sharedStock")
+@RequestMapping("/api/global/sharedStock")
 public class GlobalSharedStockRestController {
     private final SharedStockService sharedStockService;
     private final UserService userService;
