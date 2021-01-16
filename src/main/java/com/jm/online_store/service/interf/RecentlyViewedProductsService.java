@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface RecentlyViewedProductsService {
     List<RecentlyViewedProducts> findAllRecentlyViewedProductsByUserId(Long id);
-    void saveRecentlyViewedProducts(RecentlyViewedProducts recentlyViewedProducts);
-    RecentlyViewedProducts findIdProduct(String idProduct);
+    Boolean ProductExistsInTable(Long productId);
+    void saveRecentlyViewedProducts(Long IdProduct);
 }

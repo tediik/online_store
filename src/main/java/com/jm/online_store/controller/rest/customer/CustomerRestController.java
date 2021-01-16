@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -38,7 +38,6 @@ public class CustomerRestController {
     private final UserService userService;
     private final ProductService productService;
     private final RecentlyViewedProductsService recentlyViewedProductsService;
-    private static AtomicInteger count = new AtomicInteger(0);
 
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email")
@@ -138,7 +137,7 @@ public class CustomerRestController {
 
     /**
      * Метод добавляет id продукта или товара productIdFromPath в хранилище Session
-     * @param recentlyViewedProducts класс сущности с тремя параметрами - время , idProduct, User
+     * @param productParam Product, request
      * @return ResponseEntity<String>
      */
     @PostMapping("/addIdProductToSessionAndToBase")
@@ -146,18 +145,17 @@ public class CustomerRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<String> saveIdProductToSession(@RequestBody RecentlyViewedProducts recentlyViewedProducts, HttpServletResponse response, HttpServletRequest request)  {
+    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productParam, HttpServletRequest request)  {
         HttpSession session = request.getSession();
-        int counterValue = count.intValue();
-        counterValue++;
-        session.setAttribute(String.valueOf(counterValue), recentlyViewedProducts.getIdProduct());
-        recentlyViewedProductsService.saveRecentlyViewedProducts(recentlyViewedProducts);
+        session.setAttribute("Product", productParam);
+        if (!recentlyViewedProductsService.ProductExistsInTable(productParam)) {
+            recentlyViewedProductsService.saveRecentlyViewedProducts(productParam);
+        }
         return ResponseEntity.ok("Session is set");
     }
 
     /**
-     * Метод получает из базы коллекцию List из id продуктов или товаров productIdFromPath которые просматривал юзер
-     * @param request, response - запрос и ответ
+     * Метод получает из базы коллекцию List Продуктов  которые просматривал юзер
      * @return ResponseEntity<List<Product>>
      */
     @GetMapping("/getRecentlyViewedProductsFromDb")
@@ -166,15 +164,9 @@ public class CustomerRestController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "Request contains incorrect data")
     })
-    public ResponseEntity<List<Product>> getRecentlyViewedProducts(HttpServletRequest request)
-            throws ServletException, ResponseStatusException {
-        List<Product> listProduct = new ArrayList<>();
-        HttpSession session = request.getSession();
-        RecentlyViewedProducts recentlyViewedProducts = (RecentlyViewedProducts) session.getAttribute("idProduct" + count.getAndIncrement());
-        List<RecentlyViewedProducts> listIdProducts = recentlyViewedProductsService.findAllRecentlyViewedProductsByUserId(userService.getCurrentLoggedInUser().getId());
-        for (RecentlyViewedProducts recViewProd : listIdProducts) {
-            listProduct.add(productService.findProductById(Long.valueOf(recViewProd.getIdProduct())).orElse(new Product()));
-        }
+    public ResponseEntity<List<Product>> getRecentlyViewedProducts()
+            throws ResponseStatusException {
+        List<Product> listProduct = recentlyViewedProductsService.findAllRecentlyViewedProductsByUserId(userService.getCurrentLoggedInUser().getId()).stream().map(RecentlyViewedProducts::getProduct).collect(Collectors.toList());
             return ResponseEntity.ok(listProduct);
     }
 }

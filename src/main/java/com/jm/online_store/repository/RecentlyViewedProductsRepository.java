@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface RecentlyViewedProductsRepository extends JpaRepository<RecentlyViewedProducts, Long> {
     List<RecentlyViewedProducts> findRecentlyViewedProductsByUserId(Long id);
-    RecentlyViewedProducts findByIdProduct(String idProduct);
+    Boolean existsRecentlyViewedProductsByProduct_Id(Long productId);
 }
