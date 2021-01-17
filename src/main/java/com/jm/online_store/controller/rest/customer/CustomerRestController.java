@@ -56,7 +56,6 @@ public class CustomerRestController {
 
     /**
      * метод обработки изменения пароля User.
-     *
      * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
@@ -144,8 +143,9 @@ public class CustomerRestController {
     public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request)  {
         HttpSession session = request.getSession();
         session.setAttribute("Product", productId);
-        if (!recentlyViewedProductsService.ProductExistsInTable(productId)) {
-            recentlyViewedProductsService.saveRecentlyViewedProducts(productId);
+        Long userId = userService.getCurrentLoggedInUser().getId();
+        if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
+            recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId);
         }
         return ResponseEntity.ok("Session is set");
     }

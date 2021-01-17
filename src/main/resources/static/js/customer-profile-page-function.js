@@ -12,7 +12,7 @@ $(document).ready(function () {
 });
 
 function fetchAndRenderSomeProducts() {
-    fetch("/customer/getRecentlyViewedProductsFromDb").then(response => response.json()).then(data => fillViewedProducts(data));
+    fetch("/api/customer/getRecentlyViewedProductsFromDb").then(response => response.json()).then(data => fillViewedProducts(data));
     $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
 }
 /**

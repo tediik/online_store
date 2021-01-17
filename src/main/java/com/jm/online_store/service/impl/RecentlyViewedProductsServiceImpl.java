@@ -30,25 +30,24 @@ public class RecentlyViewedProductsServiceImpl implements RecentlyViewedProducts
 
     /**
      * Метод проверяет есть ли данная запись в таблице
-     * сущности recentlyViewedProducts по productId
+     * сущности recentlyViewedProducts по productId и одновременно по userId
      * @param productId просмотренного то вара
      * @return
      */
     @Override
-    public Boolean ProductExistsInTable(Long productId) {
-      return recentlyViewedProductsRepository.existsRecentlyViewedProductsByProduct_Id(productId);
+    public Boolean ProductExistsInTableOfUserId(Long productId, Long userId) {
+        return recentlyViewedProductsRepository.existsRecentlyViewedProductsByProduct_IdAndUser_Id(productId, userId);
     }
-
     /**
      * Метод сохраняет в базе сущность RecentlyViewedProducts
-     * @param IdProduct
+     * @param IdProduct, userId
      * @return void
      */
     @Override
-    public void saveRecentlyViewedProducts(Long IdProduct) {
+    public void saveRecentlyViewedProducts(Long IdProduct, Long userId) {
         RecentlyViewedProducts recentlyViewedProductsNew = new RecentlyViewedProducts();
         recentlyViewedProductsNew.setProduct(productService.findProductById(IdProduct).orElse(new Product()));
-            recentlyViewedProductsNew.setUser(userService.getCurrentLoggedInUser());
+            recentlyViewedProductsNew.setUser(userService.findUserById(userId));
             recentlyViewedProductsRepository.save(recentlyViewedProductsNew);
     }
 }
