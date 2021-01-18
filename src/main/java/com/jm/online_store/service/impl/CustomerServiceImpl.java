@@ -246,7 +246,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Меняет по идентификатору пользоваетля в коммеанариях и отзывах
+     * Меняет по идентификатору пользователя в комментариях и отзывах
      * на "Deleted пользователя(DeletedCustomer)".
      *
      * @param id идентификатор.
