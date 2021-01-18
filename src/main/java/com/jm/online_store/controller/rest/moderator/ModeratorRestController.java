@@ -4,6 +4,7 @@ import com.jm.online_store.model.ReportComment;
 import com.jm.online_store.model.dto.ReportCommentDto;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReportCommentService;
+import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @Api(description = "Rest controller for moderator")
 public class ModeratorRestController {
     private final CommentService commentService;
+    private final UserService userService;
     private final ReportCommentService reportCommentService;
 
     /**
@@ -55,7 +57,9 @@ public class ModeratorRestController {
     public ResponseEntity<ReportCommentDto> addReportComment(@RequestBody ReportCommentDto reportCommentDto) {
         ReportComment reportComment = ReportCommentDto.DtoToEntity(reportCommentDto);
         reportComment.setComment(commentService.findById(reportCommentDto.getCommentId()));
+        reportComment.setReportCustomerEmail(userService.getCurrentLoggedInUser().getEmail());
         reportCommentService.addReportComment(reportComment);
+//        System.out.println();
         return ResponseEntity.ok(reportCommentDto);
     }
 

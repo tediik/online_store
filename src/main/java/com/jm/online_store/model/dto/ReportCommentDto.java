@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class ReportCommentDto {
     private Long reportId;
     private Long commentId;
-    private User reportCustomer;
+    private String reportCustomerEmail;
     private String reportReason;
     private String reasonComment;
     private String reportedComment;
@@ -33,7 +33,7 @@ public class ReportCommentDto {
         ReportCommentDto reportCommentDto = new ReportCommentDto();
         reportCommentDto.setReportId(reportComment.getId());
         reportCommentDto.setCommentId(reportComment.getComment().getId());
-        reportCommentDto.setReportCustomer(reportComment.getReportCustomer());
+        reportCommentDto.setReportCustomerEmail(reportComment.getReportCustomerEmail());
         reportCommentDto.setReportReason(reportComment.getReportReason().name());
         reportCommentDto.setReasonComment(reportComment.getReasonComment());
         reportCommentDto.setReportedComment(reportComment.getComment().getContent());

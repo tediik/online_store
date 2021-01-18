@@ -45,17 +45,16 @@ public class ReportComment {
     private ReportReason reportReason;
 
     /**
+     * Пожаловавшийся пользователь
+     */
+    @Column(name = "report_customer_email")
+    private String reportCustomerEmail;
+
+    /**
      * Комментарий на который пожаловались.
      */
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private Comment comment;
-
-    /**
-     * Пожаловавшийся пользователь
-     */
-    @ManyToOne
-    @JoinColumn(name = "report_customer_id")
-    private User reportCustomer;
 
 }
