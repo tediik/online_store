@@ -173,13 +173,11 @@ public class DataInitializer {
         deletedCustomer.setFirstName("Deleted");
         deletedCustomer.setLastName("");
 
-
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
         Optional<Role> managRole = roleService.findByName("ROLE_MANAGER");
         Optional<Role> servRole = roleService.findByName("ROLE_SERVICE");
         Optional<Role> modrRole = roleService.findByName("ROLE_MODERATOR");
-
 
         Set<Role> customerRoles = new HashSet<>();
         Set<Role> adminRoles = new HashSet<>();

@@ -111,7 +111,7 @@ public class CustomerRestController {
 
     /**
      * Метод который безвозвратно удаляет пользователя при нажатии на кнопку "удалить профиль" и
-     * сохраняет коммеатрии и отзывы под сущность DeletedCustomer
+     * сохраняет комментарий и отзывы под сущность DeletedCustomer
      *
      * @param id идентификатор покупателя
      * @return ResponseEntity.ok()
