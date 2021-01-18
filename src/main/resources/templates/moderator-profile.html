@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
@@ -34,6 +34,9 @@
             </div>
             <div id="user-comments" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/moderator/comments">Комментарии для проверки</a>
+            </div>
+            <div sec:authorize="hasRole('ROLE_SUPERMODERATOR')" class="nav flex-column nav-pills mt-2" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary"  href="/moderator/statistic">Статистика</a>
             </div>
         </div>
         <div class="col-md-10"
@@ -97,7 +100,7 @@
                                     </div>
                                     <!-- Image -->
 
-                                    <form th:action="@{/authority/profile}" th:object="${user}" th:value="${user.id}"
+                                    <form th:action="@{/moderator/profile}" th:object="${user}" th:value="${user.id}"
                                           th:method="post" data-role="personal-info-form">
 
                                         <!-- ID hidden input -->

@@ -29,7 +29,7 @@ function renderCommentsTable(allReports) {
             .append(`
                     <tr>
                         <th>ID</th>
-                        <th>Имя пользователя</th>
+                        <th>Кто пожаловался</th>
                         <th>Комментарий</th>
                         <th>Причина жалобы</th>
                         <th>Комментарий к жалобе</th>
@@ -42,7 +42,7 @@ function renderCommentsTable(allReports) {
             let row = `
                 <tr>
                     <td>${report.reportId}</td>
-                    <td>${report.reportId}</td>
+                    <td>${report.reportCustomerEmail}</td>
                     <td>${report.reportedComment}</td>
                     <td>${report.reportReason}</td>
                     <td>${report.reasonComment}</td>
