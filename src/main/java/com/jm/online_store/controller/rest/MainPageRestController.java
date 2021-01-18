@@ -49,10 +49,6 @@ import java.util.stream.Stream;
 public class MainPageRestController {
 
     private final UserService userService;
-    private final CategoriesService categoriesService;
-    private final ProductService productService;
-    private final StockService stockService;
-    private final NewsService newsService;
     
     @PostMapping("/registration")
     @ResponseBody
@@ -88,72 +84,4 @@ public class MainPageRestController {
         return new ResponseEntity("success", HttpStatus.OK);
     }
 
-
-    /**
-     * Создаёт мапу - ключ - название категории, значение - мапа с названиями подкатегории.
-     * Во внутренних мапах - ключ - подкатегория кириллицей и значение - латиницей.
-     *
-     * @return Пример: {"Компьютеры":{"Комплектующие":"Komplektuyushchiye",
-     * "Компьютеры":"Kompʹyutery",
-     * "Ноутбуки":"Noutbuki"},
-     * "Смартфоны и гаджеты":{"Планшеты":"Planshety",
-     * "Смартфоны":"Smartfony"}}
-     */
-    @GetMapping("/categories")
-    @ApiOperation(value = "Creates hashmap: key - category name, value - map with subcategories name. In the inner map key is subcategory in kirillic, the value - in latin. example: " +
-            "{\"Компьютеры\":{\"Комплектующие\":\"Komplektuyushchiye\",\n" +
-            "     * \"Компьютеры\":\"Kompʹyutery\",\n" +
-            "     * \"Ноутбуки\":\"Noutbuki\"},\n" +
-            "     * \"Смартфоны и гаджеты\":{\"Планшеты\":\"Planshety\",\n" +
-            "     * \"Смартфоны\":\"Smartfony\"}}")
-
-    public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
-        List<Categories> categoriesFromDB = categoriesService.findAll();
-        Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
-
-        for (Categories category : categoriesFromDB) {
-            Map<String, String> innerMap = new HashMap<>();
-            innerMap.put(category.getCategory(), Transliteration.сyrillicToLatin(category.getCategory()));
-            categoriesBySuperCategories.merge(categoriesService.getCategoryById(category.getParentCategoryId()).orElse(category).getCategory(), innerMap,
-                    (oldV, newV) -> Stream.concat(oldV.entrySet().stream(), newV.entrySet().stream())
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-        }
-        return ResponseEntity.ok(categoriesBySuperCategories);
-    }
-
-    /**
-     * Возвращает список первых N продуктов - N передаётся в метод сервиса .findNumProducts(N)
-     */
-    @ApiOperation(value = "Returns list of first 15 products")
-    @GetMapping("/products")
-    public ResponseEntity<List<Product>> getSomeProducts() {
-        return ResponseEntity.ok(productService.findNumProducts(15));
-    }
-
-    /**
-     * Возвращает список опубликованных акций  - список передаётся в метод сервиса .findPublishedStocks()
-     */
-    @GetMapping("/publishedstocks")
-    @ApiOperation(value = "Returns list of published stocks")
-    public ResponseEntity<List<Stock>> getPublishedStocks() {
-        List<Stock> publishedStocks= stockService.findPublishedStocks();
-        return ResponseEntity.ok(publishedStocks);
-    }
-
-    /**
-     * Возвращает список опубликованных новостей  - список передаётся в метод сервиса .findPublishedNews()
-     */
-    @GetMapping("/publishednews")
-    @ApiOperation(value = "Returns list of published news")
-    public ResponseEntity<List<News>> getPublishedNews() {
-        List<News> publishedNews= newsService.getAllPublished();
-        return ResponseEntity.ok(publishedNews);
-    }
-
-    @PostMapping("/currentUrl")
-    @ApiOperation(value = "Returns current URL")
-    public ResponseEntity getCurrentUrl(@RequestBody String currentUrl) {
-        CurrentUrl.setUrl(currentUrl);
-        return ResponseEntity.ok("Current URL was returned");
-    }
 }

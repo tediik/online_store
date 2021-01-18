@@ -82,6 +82,16 @@ public class ManagerNewsRestController {
     }
 
     /**
+     * Возвращает список опубликованных новостей На главную страницу - список передаётся в метод сервиса .findPublishedNews()
+     */
+    @GetMapping("/publishednews")
+    @ApiOperation(value = "Returns list of published news")
+    public ResponseEntity<List<News>> getPublishedNewsOnMainPage() {
+        List<News> publishedNews= newsService.getAllPublished();
+        return ResponseEntity.ok(publishedNews);
+    }
+
+    /**
      * Метод возвращает страницу новостей
      *
      * @param page параметры страницы

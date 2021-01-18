@@ -32,6 +32,16 @@ public class StockRestController {
     private final StockService stockService;
 
     /**
+     * Возвращает список опубликованных акций  - список передаётся в метод сервиса .findPublishedStocks()
+     */
+    @GetMapping("/publishedstocks")
+    @ApiOperation(value = "Returns list of published stocks")
+    public ResponseEntity<List<Stock>> getPublishedStocks() {
+        List<Stock> publishedStocks= stockService.findPublishedStocks();
+        return ResponseEntity.ok(publishedStocks);
+    }
+
+    /**
      *  Загружает картинку для акции
      * @param file
      * @return

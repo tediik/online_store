@@ -43,15 +43,4 @@ public class SubcategoryPageRestController {
         return answer[0];
     }
 
-    /**
-     * Метод поиска всех категорий в БД
-     *
-     * @return список Categories
-     */
-
-    @GetMapping("/categories")
-    @ApiOperation(value = "Get all subcategories")
-    public ResponseEntity<List<Categories>> getAllCategories() {
-        return ResponseEntity.ok(categoriesService.findAll());
-    }
 }
