@@ -4,12 +4,21 @@ import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.model.*;
+import com.jm.online_store.model.Address;
+import com.jm.online_store.model.ConfirmationToken;
+import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.FavouritesGroup;
+import com.jm.online_store.model.Role;
+import com.jm.online_store.model.SubBasket;
+import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
-import com.jm.online_store.service.interf.*;
+import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.FavouritesGroupService;
+import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -370,7 +379,6 @@ public class UserServiceImpl implements UserService {
         favouritesGroup.setName("Все товары");
         favouritesGroup.setUser(customer);
         favouritesGroupService.save(favouritesGroup);
-
 
         if (userRepository.existsByEmail(request.getSession().getId())) {
             List<SubBasket> subBasketList = getCurrentLoggedInUser(request.getSession().getId()).getUserBasket();
