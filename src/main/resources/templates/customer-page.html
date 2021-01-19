@@ -406,7 +406,8 @@
                                                     data-target="#deleteProfile"
                                                     th:data-del-id="${user.id}">Удалить профиль
                                             </button>
-                                        </div><!--DELETE BUTTON -->
+                                        </div>
+                                        <!--DELETE BUTTON -->
 
                                         <!--ДАТА РЕГИТСРАЦИИ -->
                                         <div class="m-2 text-center personal-info_register-container"
@@ -532,6 +533,11 @@
                                                             class="btn btn-danger" th:data-del-id="${user.id}"
                                                             data-dismiss="modal">
                                                         Удалить
+                                                    </button>
+                                                    <button id="deleteProfileCustomerUnrecoverable" type="button"
+                                                            class="btn btn-danger" th:data-del-id="${user.id}"
+                                                            data-dismiss="modal">
+                                                        Удалить безвозвратно
                                                     </button>
                                                 </div>
                                             </div>

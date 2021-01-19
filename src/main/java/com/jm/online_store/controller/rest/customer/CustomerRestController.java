@@ -1,10 +1,14 @@
 package com.jm.online_store.controller.rest.customer;
 
+import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.Review;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
+import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -17,6 +21,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
@@ -104,7 +117,23 @@ public class CustomerRestController {
     }
 
     /**
+     * Метод который безвозвратно удаляет пользователя при нажатии на кнопку "удалить профиль" и
+     * сохраняет комментарий и отзывы под сущность DeletedCustomer
+     *
+     * @param id идентификатор покупателя
+     * @return ResponseEntity.ok()
+     */
+    @DeleteMapping("/deleteProfileUnrecoverable/{id}")
+    @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked")
+    public ResponseEntity<String> deleteProfileUnrecoverable(@PathVariable Long id) {
+        customerService.changeCustomerProfileToDeletedProfileByID(id);
+        customerService.deleteByID(id);
+        return ResponseEntity.ok("Delete profile");
+    }
+
+    /**
      * Возвращает пользователя по его id
+     *
      * @param id идентификатор пользователя
      * @return ResponseEntity<User> Объект User
      */

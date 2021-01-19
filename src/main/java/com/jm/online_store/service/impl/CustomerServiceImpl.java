@@ -2,9 +2,14 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.Review;
+import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CustomerRepository;
+import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
+import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +34,9 @@ public class CustomerServiceImpl implements CustomerService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final CustomerRepository customerRepository;
+    private final CommentService commentService;
+    private final ReviewService reviewService;
+
 
     /**
      * Все клиенты.
@@ -238,6 +246,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Меняет по идентификатору пользователя в комментариях и отзывах
+     * на "Deleted пользователя(DeletedCustomer)".
+     *
+     * @param id идентификатор.
+     */
+    @Override
+    @Transactional
+    public void changeCustomerProfileToDeletedProfileByID(long id) {
+        User customer = userService.findUserById(id);
+        List<Comment> customerComments = commentService.findAllByCustomer(customer);
+        List<Review> customerReview = reviewService.findAllByCustomer(customer);
+        User deletedUser = userService.findUserByEmail("deleted@mail.ru");
+        for (Comment comment : customerComments) comment.setCustomer(deletedUser);
+        for (Review review : customerReview) review.setCustomer(deletedUser);
+    }
+
+    /**
      * Метод который будет ходить по базе раз в день,
      * и удалять кастомеров которые удалили свой профиль и у которых срок для восстановления истек.
      * Время и таска создается в Datainitializer'e
@@ -254,6 +279,7 @@ public class CustomerServiceImpl implements CustomerService {
             log.debug("Список профилей для удаления пуст, метод для удаления не будет вызван");
         } else {
             log.info("Удалено {} профилей", listForDelete.size());
+            listForDelete.forEach(customer -> changeCustomerProfileToDeletedProfileByID(customer.getId()));
             customerRepository.deleteAll(listForDelete);
         }
     }
