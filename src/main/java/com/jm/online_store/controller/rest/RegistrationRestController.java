@@ -46,7 +46,7 @@ import java.util.stream.Stream;
 @Slf4j
 @RequiredArgsConstructor
 @Api(description = "Rest controller of the Main page")
-public class MainPageRestController {
+public class RegistrationRestController {
 
     private final UserService userService;
     

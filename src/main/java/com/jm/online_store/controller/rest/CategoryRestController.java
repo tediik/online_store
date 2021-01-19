@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,4 +70,21 @@ public class CategoryRestController {
         return ResponseEntity.ok(categoriesService.findAll());
     }
 
+    /**
+     * Ищет категорию в БД по имени из пути, переводя транслит латиницей на слово кириллицей
+     * с помощью метода утильного класса {@link Transliteration}
+     *
+     * @param name имя подкатегории
+     * @return сущность Categories, если категория найдена
+     * @author Dmitriy (dshishkaryan)
+     */
+    @GetMapping("/categories/{name}")
+    @ApiOperation(value = "Get subcategory by name with translation from latin to cyrillic")
+    public ResponseEntity<Categories> getCategory(@PathVariable String name) {
+        String categoryName = name.replaceAll("\"", "");
+        ResponseEntity<Categories>[] answer = new ResponseEntity[1];
+        categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName)).ifPresentOrElse(
+                value -> answer[0] = ResponseEntity.ok(value), () -> answer[0] = ResponseEntity.notFound().build());
+        return answer[0];
+    }
 }
