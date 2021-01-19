@@ -79,16 +79,18 @@ public class CommentRestController {
     })
     public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
-        Comment savedComment = commentService.addComment(comment);
+        Comment savedComment = comment;
         if (!bindingResult.hasErrors()) {
             String checkText = savedComment.getContent();
             if (!badWordsService.checkEnabledCheckText()) {
                 productFromDb.setComments(List.of(savedComment));
+                commentService.addComment(savedComment);
                 return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
             } else {
                 List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
                     productFromDb.setComments(List.of(savedComment));
+                    commentService.addComment(savedComment);
                     return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
                 } else {
                     return ResponseEntity.status(201).body(resultText);
@@ -189,12 +191,15 @@ public class CommentRestController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         ResponseEntity<?>[] answer = new ResponseEntity[1];
+        String checkText = comment.getContent();
+        List<String> resultText = badWordsService.checkComment(checkText);
         userService.findByEmail(email).ifPresentOrElse(e -> {
-                    if (e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
+                    if (resultText.isEmpty() && e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
                         commentService.update(comment);
                         answer[0] = new ResponseEntity<>(HttpStatus.OK);
-                    } else
-                        answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+                    } else {
+                        answer[0] = new ResponseEntity<>(resultText, HttpStatus.valueOf(201)); // ResponseEntity.status(201).body(resultText);
+                    }
                 },
                 () -> answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED)
         );

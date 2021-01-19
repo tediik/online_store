@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editCommentBox.setAttribute("id", `commentEditing${commentId}`);
 
         editCommentBox.innerHTML = `
-                                    <h4>Editing Comment:</h4>
+                                    <h4>Изменение комментария:</h4>
                                         <div class="form-group" id= "editCommentTextBox">
                                             <textarea class="form-control" id="editCommentText${commentId}" rows="3">${commentText}</textarea>
                                         </div>
@@ -307,7 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
             let dataObject = {};
             dataObject["id"] = commentId;
             dataObject["content"] = editContent;
-
             await (async () => {
                 const rawResponse = await fetch('/api/comments', {
                     method: 'PUT',
@@ -318,7 +317,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(dataObject)
                 })
                     .then(function (response) {
-                        if (!response.ok) {
+                        if (response.status === 201) {
+                            let stopAlert = 'В вашем комментарии есть запрещенные слова. \nПожалуйста удалите их!'
+                            toastr.error(stopAlert);
+                            return;
+                        } else if (!response.ok) {
                             toastr.error("Произошла ошибка " + response.status);
                             commentsCache = null;
                             showOrRefreshComments();

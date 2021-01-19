@@ -37,7 +37,6 @@ public class CustomerServiceImpl implements CustomerService {
     private final CommentService commentService;
     private final ReviewService reviewService;
 
-
     /**
      * Все клиенты.
      *
