@@ -79,9 +79,9 @@ public class UserServiceImplTest {
         when(userRepository.findByEmail(userFullParameter.getEmail())).thenReturn(Optional.ofNullable(userFullParameter));
 
         assertThrows(InvalidEmailException.class, () ->
-            userService.addUser(userWithInvalidEmail));
+                userService.addUser(userWithInvalidEmail));
         assertThrows(EmailAlreadyExistsException.class, () ->
-            userService.addUser(userFullParameter));
+                userService.addUser(userFullParameter));
 
         verify(userRepository, times(1)).findByEmail(any(String.class));
         verify(passwordEncoder, times(2)).encode(any());
@@ -91,7 +91,7 @@ public class UserServiceImplTest {
     public void updateUserProfileTest() {
 
         assertThrows(UserNotFoundException.class, () ->
-            userService.updateUserProfile(userFullParameterAndIdPicture));
+                userService.updateUserProfile(userFullParameterAndIdPicture));
 
         verify(userRepository, times(1)).findById(any());
     }
@@ -104,13 +104,13 @@ public class UserServiceImplTest {
         when(userRepository.findByEmail(userWithTheSameEmail.getEmail())).thenReturn(Optional.ofNullable(userWithTheSameEmail));
 
         assertThrows(UserNotFoundException.class, () ->
-            userService.updateUserAdminPanel(userFullParameterAndIdPicture));
+                userService.updateUserAdminPanel(userFullParameterAndIdPicture));
         assertThrows(NullPointerException.class, () ->
-            userService.updateUserAdminPanel(userWithIdEmailPassword));
+                userService.updateUserAdminPanel(userWithIdEmailPassword));
         assertThrows(InvalidEmailException.class, () ->
-            userService.updateUserAdminPanel(userWithInvalidEmail));
+                userService.updateUserAdminPanel(userWithInvalidEmail));
         assertThrows(EmailAlreadyExistsException.class, () ->
-            userService.updateUserAdminPanel(userWithTheSameEmail));
+                userService.updateUserAdminPanel(userWithTheSameEmail));
 
         verify(userRepository, times(4)).findById(any());
         verify(userRepository, times(2)).findByEmail(any());
@@ -160,7 +160,7 @@ public class UserServiceImplTest {
         when(userRepository.findById(userFullParameter.getId())).thenReturn(Optional.ofNullable(userFullParameter));
 
         assertThrows(NullPointerException.class, () ->
-            userService.updateUserImage(userFullParameter.getId(), mock(MockMultipartFile.class)));
+                userService.updateUserImage(userFullParameter.getId(), mock(MockMultipartFile.class)));
         assertNotNull(userService.updateUserImage(userFullParameterAndIdPicture.getId(), file), "check validness of whole updateUserImage() method");
 
         verify(userRepository, times(1)).findById(3L);
@@ -211,7 +211,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.matches("ollllldPassword", userFullParameterAndIdPicture.getPassword())).thenReturn(false);
 
         assertThrows(UserNotFoundException.class, () ->
-            userService.changePassword(7L, "oldPassword", "newPassword"));
+                userService.changePassword(7L, "oldPassword", "newPassword"));
         assertFalse(userService.changePassword(userFullParameterAndIdPicture.getId(), "ollllldPassword", "n1ewPassword9"));
         assertTrue(userService.changePassword(userFullParameter.getId(), "oldPassword", "n1ewPassword9"));
 
