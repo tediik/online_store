@@ -1,14 +1,10 @@
 package com.jm.online_store.controller.rest.customer;
 
-import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.Review;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
-import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -34,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -105,7 +100,6 @@ public class CustomerRestController {
 
     /**
      * Метод который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
-     *
      * @param id идентификатор покупателя
      * @return ResponseEntity.ok()
      */
@@ -119,7 +113,6 @@ public class CustomerRestController {
     /**
      * Метод который безвозвратно удаляет пользователя при нажатии на кнопку "удалить профиль" и
      * сохраняет комментарий и отзывы под сущность DeletedCustomer
-     *
      * @param id идентификатор покупателя
      * @return ResponseEntity.ok()
      */
@@ -133,7 +126,6 @@ public class CustomerRestController {
 
     /**
      * Возвращает пользователя по его id
-     *
      * @param id идентификатор пользователя
      * @return ResponseEntity<User> Объект User
      */
