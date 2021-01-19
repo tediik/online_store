@@ -42,4 +42,9 @@ public class ModeratorController {
         return "moderator-profile";
     }
 
+    @GetMapping("/statistic")
+    public String supermoderatorStatistic() {
+        return "moderator-statistic";
+    }
+
 }
