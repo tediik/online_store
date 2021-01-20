@@ -85,6 +85,28 @@ function renderCommentsTable(allReports) {
             }
         })
     });
+
+    fetch("/api/moderator/statistic").then(
+        res => {
+            res.json().then(
+                data => {
+                    let statistic = "";
+                    data.forEach((s) => {
+                        statistic += `<tr>`;
+                        statistic += `<th>` + s.moderator.firstName + ` ` + s.moderator.lastName + `</th>`;
+                        statistic += `<th>` + s.moderator.email + `</th>`;
+                        statistic += `<th>` + s.approvedCount + `</th>`;
+                        statistic += `<th>` + s.dismissedCount + `</th>`;
+                        statistic += `<th>` + s.approvedCount + s.dismissedCount + `</th>`;
+                        statistic += `<th>` + s.lastActivityDate + `</th></tr>`;
+                        }
+                    )
+                    document.getElementById("listStatistic").innerHTML = statistic;
+                }
+            )
+        }
+    )
+
 }
 
 
