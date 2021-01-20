@@ -13,6 +13,7 @@ import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,8 @@ public class UserServiceImplTest {
     private AddressService addressService = mock(AddressService.class);
     private AddressRepository addressRepository = mock(AddressRepository.class);
     private CommonSettingsServiceImpl commonSettingsService = mock(CommonSettingsServiceImpl.class);
-    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService);
+    private FavouritesGroupService favouritesGroupService = mock(FavouritesGroupService.class);
+    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService, favouritesGroupService);
 
     private User userFullParameter;
     private User userWithIdEmailPassword;
