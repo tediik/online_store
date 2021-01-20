@@ -34,7 +34,7 @@ document.getElementById('buttonRestore').addEventListener('click', functionResto
  */
 function functionRestore() {
     let email = document.getElementById('emailForRestore').value;
-    fetch('/api/users/restore', {
+    fetch('/api/allUsers/restore', {
         method: 'PUT',
         headers: myHeaders,
         body: email
