@@ -1,12 +1,8 @@
 package com.jm.online_store.controller.rest.customer;
 
-import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.Review;
 import com.jm.online_store.model.User;
-import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
-import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
@@ -25,8 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @AllArgsConstructor
 @RestController

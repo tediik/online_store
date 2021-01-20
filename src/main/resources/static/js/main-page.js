@@ -26,7 +26,7 @@ function fetchAndRenderSomeProducts() {
 }
 
 function getCurrent() {
-    fetch('/api/users/getCurrent')
+    fetch('/api/allUsers/getCurrent')
         .then(response => {
             if (response.status == 200) {
                 response.json()
