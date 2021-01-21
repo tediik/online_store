@@ -14,7 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
 @RestController
@@ -96,7 +102,23 @@ public class CustomerRestController {
     }
 
     /**
+     * Метод который безвозвратно удаляет пользователя при нажатии на кнопку "удалить профиль" и
+     * сохраняет комментарий и отзывы под сущность DeletedCustomer
+     *
+     * @param id идентификатор покупателя
+     * @return ResponseEntity.ok()
+     */
+    @DeleteMapping("/deleteProfileUnrecoverable/{id}")
+    @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked")
+    public ResponseEntity<String> deleteProfileUnrecoverable(@PathVariable Long id) {
+        customerService.changeCustomerProfileToDeletedProfileByID(id);
+        customerService.deleteByID(id);
+        return ResponseEntity.ok("Delete profile");
+    }
+
+    /**
      * Возвращает пользователя по его id
+     *
      * @param id идентификатор пользователя
      * @return ResponseEntity<User> Объект User
      */

@@ -54,9 +54,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -121,7 +121,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-//    @PostConstruct
+    //@PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -164,7 +164,6 @@ public class DataInitializer {
         roleService.addRole(moderatorRole);
         roleService.addRole(supermoderatorRole);
 
-
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
         Customer customer = new Customer("customer@mail.ru", "1");
@@ -172,7 +171,10 @@ public class DataInitializer {
         User moderator1 = new User("moderator1@mail.ru", "1");
         User moderator2 = new User("moderator2@mail.ru", "2");
         User supermoderator = new User("supermoderator@mail.ru", "1");
-
+        Customer deletedCustomer = new Customer("deleted@mail.ru", "1");
+        deletedCustomer.setProfilePicture(StringUtils.cleanPath("deleted.jpg"));
+        deletedCustomer.setFirstName("Deleted");
+        deletedCustomer.setLastName("");
 
         Optional<Role> admnRole = roleService.findByName("ROLE_ADMIN");
         Optional<Role> custRole = roleService.findByName("ROLE_CUSTOMER");
@@ -189,7 +191,6 @@ public class DataInitializer {
         Set<Role> moderatorRoles = new HashSet<>();
         Set<Role> supermoderatorRoles = new HashSet<>();
 
-
         customerRoles.add(custRole.get());
         adminRoles.add(admnRole.get());
         adminRoles.add(custRole.get());
@@ -199,15 +200,14 @@ public class DataInitializer {
         moderatorRoles.add(modrRole.get());
         supermoderatorRoles.add(supermodrRole.get());
 
-
         manager.setRoles(managerRoles);
         admin.setRoles(adminRoles);
         customer.setRoles(customerRoles);
+        deletedCustomer.setRoles(customerRoles);
         service.setRoles(serviceRoles);
         moderator1.setRoles(moderatorRoles);
         moderator2.setRoles(moderatorRoles);
         supermoderator.setRoles(supermoderatorRoles);
-
 
         userService.addUser(manager);
         userService.addUser(customer);
@@ -216,7 +216,7 @@ public class DataInitializer {
         userService.addUser(moderator1);
         userService.addUser(moderator2);
         userService.addUser(supermoderator);
-
+        userService.addUser(deletedCustomer);
 
         Product product_1 = new Product("apple", 100000D, 10, 0.1);
         Product product_2 = new Product("samsung", 80000D, 100, 0.9);

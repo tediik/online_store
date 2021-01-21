@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api/users")
+@RequestMapping(value = "/api/allUsers")
 @RequiredArgsConstructor
 @Api(description = "Rest controller for actions with users profiles")
 public class AllUsersRestController {

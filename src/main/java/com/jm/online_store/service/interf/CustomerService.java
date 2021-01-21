@@ -25,6 +25,8 @@ public interface CustomerService {
 
     void changeCustomerStatusToLocked(Long id);
 
+    void changeCustomerProfileToDeletedProfileByID(long id);
+
     void updateCustomerDayOfWeekForStockSend(Customer customer, String dayOfWeekForStockSend);
 
     Customer getCurrentLoggedInUser();
