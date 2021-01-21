@@ -17,11 +17,21 @@ public class ModeratorsStatisticServiceImpl implements ModeratorsStatisticServic
 
     private final ModeratorsStatisticRepository moderatorsStatisticRepository;
 
+    /**
+     * список статистики отклоненных и принятых жалоб
+     *
+     * @return List<ModeratorsStatistic>
+     */
     @Override
     public List<ModeratorsStatistic> findAll() {
         return moderatorsStatisticRepository.findAll();
     }
 
+    /**
+     * увеличение счетчика отклоненных жалоб
+     *
+     * @param moderator - модератор в таблице статистики
+     */
     @Override
     public void incrementDismissedCount(User moderator) {
         ModeratorsStatistic updateStatistic;
@@ -39,6 +49,11 @@ public class ModeratorsStatisticServiceImpl implements ModeratorsStatisticServic
         moderatorsStatisticRepository.save(updateStatistic);
     }
 
+    /**
+     * увеличение счетчика одобренных жалоб
+     *
+     * @param moderator - модератор в таблице статистики
+     */
     @Override
     public void incrementApprovedCount(User moderator) {
         ModeratorsStatistic updateStatistic;

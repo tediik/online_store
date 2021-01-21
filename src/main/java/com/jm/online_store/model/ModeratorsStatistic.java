@@ -27,15 +27,27 @@ public class ModeratorsStatistic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * дата и время последней активности модератора
+     */
     @Column(name = "last_activity_date")
     private String lastActivityDate;
 
+    /**
+     * количество одобренных жалоб
+     */
     @Column(name = "approved_count")
     private Long approvedCount;
 
+    /**
+     * количество отклоненных жалоб
+     */
     @Column(name = "dismissed_count")
     private Long dismissedCount;
 
+    /**
+     * связь с объектом пользователя-модератора в общей таблице пользователей
+     */
     @ManyToOne
     @JoinColumn(name = "moderator_id")
     private User moderator;

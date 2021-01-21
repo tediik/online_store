@@ -93,7 +93,13 @@ public class ModeratorRestController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Вывод статистики работы с жалобами
+     *
+     * @return List<ModeratorsStatistic>
+     */
     @GetMapping("/statistic")
+    @ApiOperation(value = "List moderators activities")
     public ResponseEntity<List<ModeratorsStatistic>> showModeratorsStatistic() {
         List<ModeratorsStatistic> moderatorsStatistics = moderatorsStatisticService.findAll();
         return ResponseEntity.ok(moderatorsStatistics);
