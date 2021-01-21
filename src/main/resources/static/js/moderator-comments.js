@@ -92,12 +92,16 @@ function renderCommentsTable(allReports) {
                 data => {
                     let statistic = "";
                     data.forEach((s) => {
+
+                        let firstName = (s.moderator.firstName == null) ? `` : s.moderator.firstName;
+                        let lastName = (s.moderator.lastName == null) ? `` : s.moderator.lastName;
+
                         statistic += `<tr>`;
-                        statistic += `<th>` + s.moderator.firstName + ` ` + s.moderator.lastName + `</th>`;
+                        statistic += `<th>` + firstName + ` ` + lastName + `</th>`;
                         statistic += `<th>` + s.moderator.email + `</th>`;
                         statistic += `<th>` + s.approvedCount + `</th>`;
                         statistic += `<th>` + s.dismissedCount + `</th>`;
-                        statistic += `<th>` + s.approvedCount + s.dismissedCount + `</th>`;
+                        statistic += `<th>` + (s.approvedCount + s.dismissedCount) + `</th>`;
                         statistic += `<th>` + s.lastActivityDate + `</th></tr>`;
                         }
                     )

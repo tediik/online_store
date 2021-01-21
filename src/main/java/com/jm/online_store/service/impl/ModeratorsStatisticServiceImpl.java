@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -28,11 +29,13 @@ public class ModeratorsStatisticServiceImpl implements ModeratorsStatisticServic
             updateStatistic = new ModeratorsStatistic();
             updateStatistic.setModerator(moderator);
             updateStatistic.setDismissedCount(1L);
+            updateStatistic.setApprovedCount(0L);
         } else  {
             updateStatistic = moderatorsStatisticRepository.getByModeratorEquals(moderator);
             updateStatistic.setDismissedCount(updateStatistic.getDismissedCount() + 1L);
         }
-        updateStatistic.setLastActivityDate(LocalDateTime.now());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        updateStatistic.setLastActivityDate(LocalDateTime.now().format(formatter));
         moderatorsStatisticRepository.save(updateStatistic);
     }
 
@@ -43,11 +46,13 @@ public class ModeratorsStatisticServiceImpl implements ModeratorsStatisticServic
             updateStatistic = new ModeratorsStatistic();
             updateStatistic.setModerator(moderator);
             updateStatistic.setApprovedCount(1L);
+            updateStatistic.setDismissedCount(0L);
         } else  {
             updateStatistic = moderatorsStatisticRepository.getByModeratorEquals(moderator);
             updateStatistic.setApprovedCount(updateStatistic.getApprovedCount() + 1L);
         }
-        updateStatistic.setLastActivityDate(LocalDateTime.now());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        updateStatistic.setLastActivityDate(LocalDateTime.now().format(formatter));
         moderatorsStatisticRepository.save(updateStatistic);
     }
 

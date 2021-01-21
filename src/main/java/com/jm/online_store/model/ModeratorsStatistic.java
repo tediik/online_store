@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,8 +28,7 @@ public class ModeratorsStatistic {
     private Long id;
 
     @Column(name = "last_activity_date")
-    @CreationTimestamp
-    private LocalDateTime lastActivityDate;
+    private String lastActivityDate;
 
     @Column(name = "approved_count")
     private Long approvedCount;

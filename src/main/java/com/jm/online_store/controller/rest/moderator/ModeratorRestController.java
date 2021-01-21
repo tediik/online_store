@@ -95,7 +95,6 @@ public class ModeratorRestController {
 
     @GetMapping("/statistic")
     public ResponseEntity<List<ModeratorsStatistic>> showModeratorsStatistic() {
-        System.out.println("-------------------" + moderatorsStatisticService.findAll());
         List<ModeratorsStatistic> moderatorsStatistics = moderatorsStatisticService.findAll();
         return ResponseEntity.ok(moderatorsStatistics);
     }
