@@ -286,6 +286,21 @@ function showModalError(message) {
     }, 5000)
 }
 
+/**
+ * запрос который передает в контроллер сущность recentlyViewedProducts в которой хранится id продукта
+ */
+    fetch("/api/customer/addIdProductToSessionAndToBase", {
+        method: "POST",
+        body: productIdFromPath,
+        headers: {"Content-Type": "application/json; charset=utf-8"}
+    }).then(function (response) {
+        if (response.ok) {
+            console.log("Товар успешно добавлен в session");
+        } else {
+            console.log("Просмотренный товар не сохранился");
+        }
+    });
+
 if (document.getElementById('addToCartButton')) {
     document.getElementById('addToCartButton').addEventListener('click', addToProductToCart);
 }
