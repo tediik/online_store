@@ -53,8 +53,9 @@ public class CommentRestController {
 
     /**
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
+     *
      * @param productId идентификатор продукта
-     * @return ResponseEntity<List<CommentDto>> список объектов CommentDto
+     * @return ResponseEntity<List < CommentDto>> список объектов CommentDto
      */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches all the comments from current product")
@@ -68,6 +69,7 @@ public class CommentRestController {
     /**
      * Receives productComment requestBody and passes it to Service layer for processing
      * Returns JSON representation, previously, searches for forbidden words
+     *
      * @param comment комментарий
      * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
      */
@@ -82,19 +84,13 @@ public class CommentRestController {
         Comment savedComment = comment;
         if (!bindingResult.hasErrors()) {
             String checkText = savedComment.getContent();
-            if (!badWordsService.checkEnabledCheckText()) {
+            List<String> resultText = badWordsService.checkComment(checkText);
+            if (resultText.isEmpty()) {
                 productFromDb.setComments(List.of(savedComment));
                 commentService.addComment(savedComment);
                 return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
             } else {
-                List<String> resultText = badWordsService.checkComment(checkText);
-                if (resultText.isEmpty()) {
-                    productFromDb.setComments(List.of(savedComment));
-                    commentService.addComment(savedComment);
-                    return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
-                } else {
-                    return ResponseEntity.status(201).body(resultText);
-                }
+                return ResponseEntity.status(201).body(resultText);
             }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
@@ -108,7 +104,7 @@ public class CommentRestController {
      * previously, searches for forbidden words
      * Returns JSON representation
      *
-     * @param comment комментарий
+     * @param comment  комментарий
      * @param reviewId
      * @return ResponseEntity<ReviewForCommentDto> or ResponseEntity<List<String>>
      */
@@ -124,12 +120,6 @@ public class CommentRestController {
         if (!bindingResult.hasErrors()) {
             String checkText = comment.getContent();
             comment.setReview(reviewFromDb);
-            if (!badWordsService.checkEnabledCheckText()) {
-                Comment savedComment = commentService.addComment(comment);
-                reviewFromDb.setComments(List.of(savedComment));
-                CommentDto.commentEntityToDto(comment);
-                return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
-            } else {
                 List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
                     Comment savedComment = commentService.addComment(comment);
@@ -139,8 +129,6 @@ public class CommentRestController {
                 } else {
                     return ResponseEntity.status(201).body(resultText);
                 }
-
-            }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -150,6 +138,7 @@ public class CommentRestController {
 
     /**
      * Удаляет комментарий по его идентификатору
+     *
      * @param commentId идентификатор комментария
      * @return ResponseEntity<?>
      */
@@ -178,6 +167,7 @@ public class CommentRestController {
 
     /**
      * Обновляет комментарий
+     *
      * @param comment комментарий
      * @return ResponseEntity<?>
      */
