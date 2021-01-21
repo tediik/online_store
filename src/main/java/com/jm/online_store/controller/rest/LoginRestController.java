@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LoginRestController {
 
+    @PreAuthorize("permitAll()")
     @PostMapping("/currentUrl")
-    @ApiOperation(value = "Returns current URL")
+    @ApiOperation(value = "Return HttpStatus 200")
     public ResponseEntity getCurrentUrl(@RequestBody String currentUrl) {
         CurrentUrl.setUrl(currentUrl);
-        return ResponseEntity.ok("Current URL was returned");
+        return ResponseEntity.ok().build();
     }
 }

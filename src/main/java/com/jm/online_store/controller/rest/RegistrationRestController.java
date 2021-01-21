@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,19 +22,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Рест контроллер главной страницы.
+ * Рест контроллер для регистрации нового пользователя.
  */
 @RestController
 @RequestMapping("/api")
 @Slf4j
 @RequiredArgsConstructor
-@Api(description = "Rest controller of the Main page")
+@Api(description = "Rest controller of the registration")
 public class RegistrationRestController {
 
     private final UserService userService;
-    
+
+    @PreAuthorize("permitAll()")
     @PostMapping("/registration")
-    @ResponseBody
     @ApiOperation(value = "Registration of the new account")
     @ApiResponse(code = 200, message = "This response can also display error, see the comment inside it. Only \"success\" comment means that account was registered. Other options:" +
             " BindingResult in registerUserAccount hasErrors: ..., " +

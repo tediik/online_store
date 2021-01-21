@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/categories")
 @Slf4j
 @RequiredArgsConstructor
 public class CategoryRestController {
@@ -36,7 +36,7 @@ public class CategoryRestController {
      * "Смартфоны и гаджеты":{"Планшеты":"Planshety",
      * "Смартфоны":"Smartfony"}}
      */
-    @GetMapping("/categories")
+    @GetMapping("")
     @ApiOperation(value = "Creates hashmap: key - category name, value - map with subcategories name. In the inner map key is subcategory in kirillic, the value - in latin. example: " +
             "{\"Компьютеры\":{\"Комплектующие\":\"Komplektuyushchiye\",\n" +
             "     * \"Компьютеры\":\"Kompʹyutery\",\n" +
@@ -64,7 +64,7 @@ public class CategoryRestController {
      * @return список Categories
      */
 
-    @GetMapping("/categories/categories")
+    @GetMapping("/categories")
     @ApiOperation(value = "Get all subcategories")
     public ResponseEntity<List<Categories>> getAllCategories() {
         return ResponseEntity.ok(categoriesService.findAll());
@@ -78,7 +78,7 @@ public class CategoryRestController {
      * @return сущность Categories, если категория найдена
      * @author Dmitriy (dshishkaryan)
      */
-    @GetMapping("/categories/{name}")
+    @GetMapping("/{name}")
     @ApiOperation(value = "Get subcategory by name with translation from latin to cyrillic")
     public ResponseEntity<Categories> getCategory(@PathVariable String name) {
         String categoryName = name.replaceAll("\"", "");
