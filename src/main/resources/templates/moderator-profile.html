@@ -35,7 +35,7 @@
             <div id="user-comments" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary" href="/moderator/comments">Комментарии для проверки</a>
             </div>
-            <div sec:authorize="hasRole('ROLE_SUPERMODERATOR')" class="nav flex-column nav-pills mt-2" role="tablist" aria-orientation="vertical">
+            <div sec:authorize="hasRole('ROLE_SUPERMODERATOR')" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
                 <a class="btn btn-outline-primary"  href="/moderator/statistic">Статистика</a>
             </div>
         </div>
