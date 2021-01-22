@@ -64,7 +64,7 @@ public class CategoryRestController {
      * @return список Categories
      */
 
-    @GetMapping("/categories")
+    @GetMapping("/allCategories")
     @ApiOperation(value = "Get all subcategories")
     public ResponseEntity<List<Categories>> getAllCategories() {
         return ResponseEntity.ok(categoriesService.findAll());
