@@ -63,7 +63,6 @@ public class ModeratorRestController {
         reportComment.setComment(commentService.findById(reportCommentDto.getCommentId()));
         reportComment.setReportCustomerEmail(userService.getCurrentLoggedInUser().getEmail());
         reportCommentService.addReportComment(reportComment);
-//        System.out.println();
         return ResponseEntity.ok(reportCommentDto);
     }
 

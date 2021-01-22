@@ -183,7 +183,6 @@ public class DataInitializer {
         Optional<Role> modrRole = roleService.findByName("ROLE_MODERATOR");
         Optional<Role> supermodrRole = roleService.findByName("ROLE_SUPERMODERATOR");
 
-
         Set<Role> customerRoles = new HashSet<>();
         Set<Role> adminRoles = new HashSet<>();
         Set<Role> managerRoles = new HashSet<>();
