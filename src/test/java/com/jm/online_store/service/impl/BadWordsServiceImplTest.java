@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.BadWords;
+import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.repository.BadWordsRepository;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import org.junit.jupiter.api.Test;
@@ -23,11 +24,14 @@ public class BadWordsServiceImplTest {
     private BadWordsRepository badWordsRepository = mock(BadWordsRepository.class);
     private CommonSettingsService commonSettingsService = mock(CommonSettingsService.class);
     private BadWordsServiceImpl badWordsService = new BadWordsServiceImpl(badWordsRepository, commonSettingsService);
+    private CommonSettings templateBody = new CommonSettings(1L, "bad_words_enabled", "true", false);
+
 
     private List<BadWords> allActiveBW;
     private List<String> expectedBadWords;
     private String incoming;
     private String incoming2;
+
 
     @Test
     void importWord() {
@@ -64,6 +68,7 @@ public class BadWordsServiceImplTest {
         incoming = "lol'Ах ты ПОРШиВка!!!.ббббббр' - Закричал поп:'Мне не нужна евошняя Титановая Глазница...GGH5'";
         expectedBadWords = Arrays.asList("поршивка", "евошняя", "глазница");
         Mockito.when(badWordsService.findAllWordsActive()).thenReturn(allActiveBW);
+        Mockito.when(commonSettingsService.getSettingByName("bad_words_enabled")).thenReturn(templateBody);
         List<String> actual = badWordsService.checkComment(incoming);
         assertEquals(expectedBadWords, actual);
     }
