@@ -243,7 +243,16 @@
             <artifactId>commons-email</artifactId>
             <version>1.5</version>
         </dependency>
-
+        <!-- JSON Web Token lib -->
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+        </dependency>
+        <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>0.9.1</version>
+        </dependency>
     </dependencies>
 
     <build>

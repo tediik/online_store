@@ -184,6 +184,7 @@ public class User implements UserDetails {
         this.roles = roleSet;
     }
 
+
     /**
      * Конструктор для поиска подписчиков из CustomerRepository (метод findSubscriberByEmail())
      *
