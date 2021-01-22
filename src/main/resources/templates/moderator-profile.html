@@ -58,12 +58,12 @@
                                                  th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}"
                                                  width="152"></div>
                                         <div class="imgButton">
-                                            <button type="button" class="btn btn-link" data-toggle="modal"
-                                                    data-target="#myModal"> Edit Profile Picture
+                                            <button type="button" class="btn btn-link d-block" data-toggle="modal"
+                                                    data-target="#profilePicture"> Edit Profile Picture
                                             </button>
                                         </div>
                                         <!--Profile picture change modal-->
-                                        <div class="modal" id="myModal">
+                                        <div class="modal fade" id="profilePicture">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
 
@@ -90,9 +90,6 @@
                                                     </div>
                                                     <!-- Modal footer -->
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-danger"
-                                                                data-dismiss="modal">Cancel
-                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
