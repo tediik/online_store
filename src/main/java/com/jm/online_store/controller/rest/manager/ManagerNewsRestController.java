@@ -15,8 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +31,7 @@ import java.util.List;
  * Рест контроллер для управления новостями из кабинете менеджера, а также публикации новостей
  * на странице новостей
  */
-@Secured("ROLE_MANAGER")
+@PreAuthorize("hasAuthority('ROLE_MANAGER')")
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/api/manager/news")
@@ -87,7 +86,7 @@ public class ManagerNewsRestController {
     /**
      * Возвращает список опубликованных новостей на главную страницу
      */
-    @PostAuthorize("permitAll()")
+    @PreAuthorize("permitAll()")
     @GetMapping("/publishednews")
     @ApiOperation(value = "Returns list of published news")
     public ResponseEntity<List<News>> getPublishedNewsOnMainPage() {
@@ -175,6 +174,7 @@ public class ManagerNewsRestController {
      * @param news сущность для сохранения в базе данных
      * @return возвращает заполненную сущность клиенту
      */
+
     @PostMapping
     @ApiOperation(value = "Method to save news in database")
     @ApiResponse(code = 200, message = "News  saved in db")

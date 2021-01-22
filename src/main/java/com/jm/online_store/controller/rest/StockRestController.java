@@ -24,15 +24,20 @@ import java.util.List;
 /**
  * Рест контроллер для crud операций с акциями
  */
+@PreAuthorize("hasAuthority('ROLE_MANAGER')")
+//@Secured здесь не работает,
+// и при попытке, CRUD операции от другого пользователя, тоже все работает,
+// хотя к этим операциям должен иметь доступ только MANAGER
 @RestController
 @AllArgsConstructor
 @Api(description = "Rest controller for stocks")
 @RequestMapping("/api/stock")
 public class StockRestController {
+
     private final StockService stockService;
 
     /**
-     * Возвращает список опубликованных акций
+     * Возвращает список опубликованных акций на главную страницу
      */
     @PreAuthorize("permitAll()")
     @GetMapping("/publishedstocks")
