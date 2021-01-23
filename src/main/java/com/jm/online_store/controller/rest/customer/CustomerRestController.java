@@ -67,7 +67,8 @@ public class CustomerRestController {
 
     /**
      * метод обработки изменения пароля User.
-     * @param model модель для view
+     *
+     * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
@@ -177,7 +178,7 @@ public class CustomerRestController {
 
     /**
      * Метод получает из базы список Продуктов, которые просматривал пользователь
-     * @return ResponseEntity<List<Product>>
+     * @return ResponseEntity<List < Product>>
      */
     @GetMapping("/getRecentlyViewedProductsFromDb")
     @ApiOperation(value = "procces return List<Product> from DB")
@@ -187,11 +188,11 @@ public class CustomerRestController {
     })
     public ResponseEntity<List<Product>> getRecentlyViewedProducts()
             throws ResponseStatusException {
-            return ResponseEntity.ok(recentlyViewedProductsService
-                    .findAllRecentlyViewedProductsByUserId(userService
-                            .getCurrentLoggedInUser().getId()).stream()
-                            .map(RecentlyViewedProducts::getProduct)
-                            .collect(Collectors.toList()));
+        return ResponseEntity.ok(recentlyViewedProductsService
+                .findAllRecentlyViewedProductsByUserId(userService
+                        .getCurrentLoggedInUser().getId()).stream()
+                .map(RecentlyViewedProducts::getProduct)
+                .collect(Collectors.toList()));
     }
 
     /**
