@@ -122,4 +122,12 @@ public class ProductRestController {
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
         }
     }
+    /**
+     * Возвращает список первых N продуктов - N передаётся в метод сервиса .findNumProducts(N)
+     */
+    @ApiOperation(value = "Returns list of first 15 products")
+    @GetMapping("")
+    public ResponseEntity<List<Product>> getSomeProducts() {
+        return ResponseEntity.ok(productService.findNumProducts(15));
+    }
 }
