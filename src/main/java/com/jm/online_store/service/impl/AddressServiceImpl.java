@@ -24,6 +24,7 @@ public class AddressServiceImpl implements AddressService {
     public Optional<Address> findAddressById(Long idAddress) {
         return addressRepository.findById(idAddress);
     }
+
     /**
      * Метод добавления адреса
      * @param address
@@ -33,6 +34,7 @@ public class AddressServiceImpl implements AddressService {
     public Address addAddress(Address address) {
         return addressRepository.save(address);
     }
+
     /**
      * Метод поиска адресов магазинов
      * @return List<Address>
@@ -46,8 +48,9 @@ public class AddressServiceImpl implements AddressService {
         }
         return shops;
     }
+
     /**
-     * Метод поиска адресa совпадающего по всем полям
+     * Метод поиска адресa, совпадающего по всем полям
      * @return Optional<Address>
      */
     @Override

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class AuthorityController {
     /**
-     * Контролллер для ролей ADMIN MANAGER
+     * Контроллер для ролей ADMIN MANAGER
      */
     private final UserService userService;
 

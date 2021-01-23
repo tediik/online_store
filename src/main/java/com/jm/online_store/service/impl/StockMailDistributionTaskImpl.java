@@ -88,9 +88,8 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
 
     /**
      * Метод создает messageBody для рассылки акций
-     *
-     * @param currentAndFutureStocks - лист актуальных акций
-     * @param user                   - пользователь для которого подготавливается рассылка
+     * @param currentAndFutureStocks лист актуальных акций
+     * @param user пользователь, для которого подготавливается рассылка
      * @return Строка с текстом.
      */
     private String prepareMessageBody(List<Stock> currentAndFutureStocks, User user) {
