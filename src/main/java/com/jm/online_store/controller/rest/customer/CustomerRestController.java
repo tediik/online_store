@@ -25,10 +25,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 import org.springframework.web.server.ResponseStatusException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -161,12 +164,13 @@ public class CustomerRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request)  {
+    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request) {
+        LocalDateTime localDateTime = LocalDateTime.now();
         HttpSession session = request.getSession();
         session.setAttribute("Product", productId);
         Long userId = userService.getCurrentLoggedInUser().getId();
         if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
-            recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId);
+            recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId, localDateTime);
         }
         return ResponseEntity.ok("Product is saved in session");
     }
@@ -188,6 +192,25 @@ public class CustomerRestController {
                             .getCurrentLoggedInUser().getId()).stream()
                             .map(RecentlyViewedProducts::getProduct)
                             .collect(Collectors.toList()));
+    }
+
+    /**
+     * Get mapping for get request to response with RecentlyViewedProducts during the custom date range
+     *
+     * @param stringStartDate - start of custom date range
+     * @param stringEndDate   - end of custom date range
+     * @return - {@link ResponseEntity} with list of RecentlyViewedProducts with status complete
+     */
+    @GetMapping("/recentlyViewedProducts")
+    @ApiOperation(value = "Get mapping for get request to response with RecentlyViewedProducts during the custom date range")
+    @ApiResponse(code = 404, message = "Product was not found")
+    public ResponseEntity<List<Product>> getRecentlyViewedProductsByUserIdAndAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
+        LocalDate startDate = LocalDate.parse(stringStartDate);
+        LocalDate endDate = LocalDate.parse(stringEndDate);
+        return ResponseEntity.ok(recentlyViewedProductsService.findRecentlyViewedProductsByUserIdAndAndDateTimeBetween(userService
+                .getCurrentLoggedInUser().getId(), startDate, endDate).stream()
+                .map(RecentlyViewedProducts::getProduct)
+                .collect(Collectors.toList()));
     }
 }
 
