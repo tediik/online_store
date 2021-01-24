@@ -34,7 +34,6 @@ public class RecentlyViewedProductsServiceImpl implements RecentlyViewedProducts
     /**
      * Метод проверяет есть ли данная запись в таблице
      * сущности recentlyViewedProducts по productId и одновременно по userId
-     *
      * @param productId просмотренного то вара
      * @return
      */
@@ -47,20 +46,18 @@ public class RecentlyViewedProductsServiceImpl implements RecentlyViewedProducts
      * Метод получает из базы отфильтрованный по промежутку времени
      * список сущностей RecentlyViewedProducts,
      * в которых есть Product, который просматривал пользователь
-     *
      * @param id        юзера которому принадлежат просмотренные товары
      * @param startDate - {@link LocalDate} начало промежутка
      * @param endDate   - {@link LocalDate} конец промежутка
      * @return List<RecentlyViewedProducts>
      */
     @Override
-    public List<RecentlyViewedProducts> findRecentlyViewedProductsByUserIdAndAndDateTimeBetween(Long id, LocalDate startDate, LocalDate endDate) {
-        return recentlyViewedProductsRepository.findRecentlyViewedProductsByUserIdAndAndDateTimeBetween(id, startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
+    public List<RecentlyViewedProducts> findRecentlyViewedProductsByUserIdAndDateTimeBetween(Long id, LocalDate startDate, LocalDate endDate) {
+        return recentlyViewedProductsRepository.findRecentlyViewedProductsByUserIdAndDateTimeBetween(id, startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
     }
 
     /**
      * Метод сохраняет в базе сущность RecentlyViewedProducts
-     *
      * @param IdProduct, userId
      * @return void
      */

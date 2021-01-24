@@ -9,7 +9,7 @@ import java.util.List;
 public interface RecentlyViewedProductsService {
     List<RecentlyViewedProducts> findAllRecentlyViewedProductsByUserId(Long id);
 
-    List<RecentlyViewedProducts> findRecentlyViewedProductsByUserIdAndAndDateTimeBetween(Long id, LocalDate startDate, LocalDate endDate);
+    List<RecentlyViewedProducts> findRecentlyViewedProductsByUserIdAndDateTimeBetween(Long id, LocalDate startDate, LocalDate endDate);
 
     void saveRecentlyViewedProducts(Long IdProduct, Long userId, LocalDateTime localDateTime);
 
