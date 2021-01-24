@@ -369,7 +369,7 @@ public class UserServiceImpl implements UserService {
         favouritesGroup.setUser(customer);
         favouritesGroupService.save(favouritesGroup);
 
-        if (userRepository.existsByEmail(request.getSession().getId())) {
+        if (userRepository.existsByEmail(confirmationToken.getUserEmail())) {
             List<SubBasket> subBasketList = getCurrentLoggedInUser(request.getSession().getId()).getUserBasket();
             userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
             customer.setUserBasket(subBasketList);
