@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,18 +19,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Рест контроллер для crud операций с акциями
  */
+@PreAuthorize("hasAuthority('ROLE_MANAGER')")
 @RestController
 @AllArgsConstructor
 @Api(description = "Rest controller for stocks")
 @RequestMapping("/api/stock")
 public class StockRestController {
+
     private final StockService stockService;
+
+    /**
+     * Возвращает список опубликованных акций на главную страницу
+     */
+    @PreAuthorize("permitAll()")
+    @GetMapping("/publishedstocks")
+    @ApiOperation(value = "Returns list of published stocks")
+    public ResponseEntity<List<Stock>> getPublishedStocks() {
+        List<Stock> publishedStocks = stockService.findPublishedStocks();
+        return ResponseEntity.ok(publishedStocks);
+    }
 
     /**
      *  Загружает картинку для акции
