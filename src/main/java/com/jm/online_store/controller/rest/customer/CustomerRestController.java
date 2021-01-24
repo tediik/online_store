@@ -1,8 +1,11 @@
 package com.jm.online_store.controller.rest.customer;
 
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.Product;
+import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CustomerService;
+import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
@@ -14,7 +17,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.stream.Collectors;
+
 
 @AllArgsConstructor
 @RestController
@@ -24,6 +40,7 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
+    private final RecentlyViewedProductsService recentlyViewedProductsService;
 
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email")
@@ -47,8 +64,7 @@ public class CustomerRestController {
 
     /**
      * метод обработки изменения пароля User.
-     *
-     * @param model       модель для view
+     * @param model модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
@@ -84,7 +100,6 @@ public class CustomerRestController {
 
     /**
      * Метод который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
-     *
      * @param id идентификатор покупателя
      * @return ResponseEntity.ok()
      */
@@ -92,6 +107,20 @@ public class CustomerRestController {
     @ApiOperation(value = "Changes Users status, when Delete button clicked")
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
         customerService.changeCustomerStatusToLocked(id);
+        return ResponseEntity.ok("Delete profile");
+    }
+
+    /**
+     * Метод который безвозвратно удаляет пользователя при нажатии на кнопку "удалить профиль" и
+     * сохраняет комментарий и отзывы под сущность DeletedCustomer
+     * @param id идентификатор покупателя
+     * @return ResponseEntity.ok()
+     */
+    @DeleteMapping("/deleteProfileUnrecoverable/{id}")
+    @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked")
+    public ResponseEntity<String> deleteProfileUnrecoverable(@PathVariable Long id) {
+        customerService.changeCustomerProfileToDeletedProfileByID(id);
+        customerService.deleteByID(id);
         return ResponseEntity.ok("Delete profile");
     }
 
@@ -120,4 +149,45 @@ public class CustomerRestController {
         }
         return ResponseEntity.ok(user);
     }
+
+    /**
+     * Метод добавляет id продукта или товара productIdFromPath в хранилище Session и
+     * в базу данных
+     * @param productId Product, request
+     * @return ResponseEntity<String>
+     */
+    @PostMapping("/addIdProductToSessionAndToBase")
+    @ApiOperation(value = "procces gives and save idProduct into Session and to DataBase")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "")
+    })
+    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request)  {
+        HttpSession session = request.getSession();
+        session.setAttribute("Product", productId);
+        Long userId = userService.getCurrentLoggedInUser().getId();
+        if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
+            recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId);
+        }
+        return ResponseEntity.ok("Product is saved in session");
+    }
+
+    /**
+     * Метод получает из базы список Продуктов, которые просматривал пользователь
+     * @return ResponseEntity<List<Product>>
+     */
+    @GetMapping("/getRecentlyViewedProductsFromDb")
+    @ApiOperation(value = "procces return List<Product> from DB")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 400, message = "Request contains incorrect data")
+    })
+    public ResponseEntity<List<Product>> getRecentlyViewedProducts()
+            throws ResponseStatusException {
+            return ResponseEntity.ok(recentlyViewedProductsService
+                    .findAllRecentlyViewedProductsByUserId(userService
+                            .getCurrentLoggedInUser().getId()).stream()
+                            .map(RecentlyViewedProducts::getProduct)
+                            .collect(Collectors.toList()));
+    }
 }
+

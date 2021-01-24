@@ -67,7 +67,7 @@ public class SentStockServiceImpl implements SentStockService {
     }
     /**
      * Метод строит словарь, словарь где ключом является дата,
-     *      а значением частота повторений
+     * а значением частота повторений
      * @param begin начало интервала
      * @param end  конец интервала
      * @return Map<LocalDate,Long>
