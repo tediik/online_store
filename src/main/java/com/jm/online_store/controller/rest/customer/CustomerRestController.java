@@ -177,7 +177,7 @@ public class CustomerRestController {
 
     /**
      * Метод получает из базы список Продуктов, которые просматривал пользователь
-     * @return ResponseEntity<List < Product>>
+     * @return ResponseEntity<List<Product>>
      */
     @GetMapping("/getRecentlyViewedProductsFromDb")
     @ApiOperation(value = "procces return List<Product> from DB")
