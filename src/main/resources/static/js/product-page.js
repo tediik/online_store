@@ -26,7 +26,7 @@ fetch("/api/products" + `/${productIdFromPath}`)
  * @returns {Promise<void>}
  */
 async function fillBreadcrumb(data) {
-    let categories = await fetch("/api/categories/categories").then(response => response.json());
+    let categories = await fetch("/api/categories/allCategories").then(response => response.json());
     let categoriesWithLatin = await fetch("/api/categories").then(response => response.json());
 
     let breadcr = document.getElementById('categoriesBreadcrumb');

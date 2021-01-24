@@ -79,7 +79,8 @@ public class CustomerController {
     public String changePassword() {
         return "change-password";
     }
-// looks like useless
+
+    // looks like useless
     @GetMapping("/activatenewmail/{token}")
     public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateNewUsersMail(token, request);

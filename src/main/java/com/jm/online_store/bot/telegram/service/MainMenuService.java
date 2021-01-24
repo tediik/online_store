@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * service клавиатуры главного меню
+ * Сервис клавиатуры главного меню
  */
 @Service
 public class MainMenuService {
 
     /**
-     * Каракас клавиатуры главного меню
+     * Каркас клавиатуры главного меню
      *
-     * @return Возврашает клавиатру
+     * @return возврашает клавиатуру
      */
     public ReplyKeyboardMarkup getMainMenuKeyboard() {
 
