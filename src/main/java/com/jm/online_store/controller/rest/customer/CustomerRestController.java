@@ -67,7 +67,6 @@ public class CustomerRestController {
 
     /**
      * метод обработки изменения пароля User.
-     *
      * @param model       модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
@@ -197,7 +196,6 @@ public class CustomerRestController {
 
     /**
      * Get mapping for get request to response with RecentlyViewedProducts during the custom date range
-     *
      * @param stringStartDate - start of custom date range
      * @param stringEndDate   - end of custom date range
      * @return - {@link ResponseEntity} with list of RecentlyViewedProducts with status complete
@@ -205,10 +203,10 @@ public class CustomerRestController {
     @GetMapping("/recentlyViewedProducts")
     @ApiOperation(value = "Get mapping for get request to response with RecentlyViewedProducts during the custom date range")
     @ApiResponse(code = 404, message = "Product was not found")
-    public ResponseEntity<List<Product>> getRecentlyViewedProductsByUserIdAndAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
+    public ResponseEntity<List<Product>> getRecentlyViewedProductsByUserIdAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
         LocalDate startDate = LocalDate.parse(stringStartDate);
         LocalDate endDate = LocalDate.parse(stringEndDate);
-        return ResponseEntity.ok(recentlyViewedProductsService.findRecentlyViewedProductsByUserIdAndAndDateTimeBetween(userService
+        return ResponseEntity.ok(recentlyViewedProductsService.findRecentlyViewedProductsByUserIdAndDateTimeBetween(userService
                 .getCurrentLoggedInUser().getId(), startDate, endDate).stream()
                 .map(RecentlyViewedProducts::getProduct)
                 .collect(Collectors.toList()));
