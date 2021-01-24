@@ -198,7 +198,7 @@ public class CustomerRestController {
      * Get mapping for get request to response with RecentlyViewedProducts during the custom date range
      * @param stringStartDate - start of custom date range
      * @param stringEndDate   - end of custom date range
-     * @return - {@link ResponseEntity} with list of RecentlyViewedProducts with status complete
+     * @return - ResponseEntity<List<Product>>
      */
     @GetMapping("/recentlyViewedProducts")
     @ApiOperation(value = "Get mapping for get request to response with RecentlyViewedProducts during the custom date range")
