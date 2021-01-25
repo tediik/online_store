@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -32,4 +34,7 @@ public class RecentlyViewedProducts {
 
     @OneToOne
     private User user;
+
+    @NonNull
+    private LocalDateTime dateTime;
 }
