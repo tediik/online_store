@@ -36,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +59,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+
+    //private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private static final String uploadDirectory = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -437,7 +438,6 @@ public class UserServiceImpl implements UserService {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }
         }
-        log.debug("Failed to store file - file is not present {}", uniqueFilename);
         return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
     }
 
