@@ -1,8 +1,6 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Address;
-import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,8 +15,6 @@ public interface UserService {
 
     List<User> findByRole(String role);
 
-    /*List<User> findByDayOfWeekForStockSend(byte dayNumber);*/
-
     Optional<User> findById(Long id);
 
     User findUserByEmail(String email);
@@ -26,11 +22,6 @@ public interface UserService {
     User findUserById(Long id);
 
     void addUser(User user);
-
-
-    /*    boolean checkUserStatus(String email, String password);*/
-
-    /* void restoreUser(String email);*/
 
     void deleteByID(Long id);
 
@@ -73,8 +64,6 @@ public interface UserService {
     void addNewUserFromAdmin(User newUser);
 
     boolean changePassword(Long id, String oldPassword, String newPassword);
-
-    /* void cancelSubscription(Long id);*/
 
     User getCurrentLoggedInUser(String sessionID);
 

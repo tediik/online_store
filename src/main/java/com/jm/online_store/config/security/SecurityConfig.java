@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 
 @Configuration
+@EnableGlobalMethodSecurity( prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -68,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/feedback/").access("hasAnyRole('ROLE_CUSTOMER', 'ROLE_MANAGER')")
-                .antMatchers("/api/products/productChangeMonitor", "/manager/**").access("hasRole('ROLE_MANAGER')")
+                .antMatchers("/api/products/productChangeMonitor").access("hasRole('ROLE_MANAGER')")
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
                 .antMatchers("/service/**").access("hasAnyRole('ROLE_SERVICE','ROLE_ADMIN')")
                 .antMatchers("/authority/**", "/api/commonSettings/**")
@@ -76,9 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**", "/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
                 .antMatchers("/moderator/**").access("hasRole('ROLE_MODERATOR')")
                 .antMatchers("/api/auth/login").permitAll()
-                .antMatchers("/api/auth/admin/**").access("hasAnyRole('ROLE_ADMIN')")
-                .antMatchers("/api/admin/allUsers").access("hasAnyRole('ROLE_ADMIN')")
-                .antMatchers("/api/auth/user/**").permitAll()
                 .antMatchers("/**", "/api/allUser/**", "/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

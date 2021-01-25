@@ -131,7 +131,7 @@ public class User implements UserDetails {
      * в корзине. При наличии совпадений, необходимо проверить коичество(наличие) данного "Product" в БД
      * и увеличить на "1" в данном "SubBasket".
      */
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_basket",
             joinColumns = @JoinColumn(name = "user_id"),

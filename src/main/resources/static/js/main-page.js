@@ -26,7 +26,7 @@ function fetchAndRenderSomeProducts() {
 }
 
 function getCurrent() {
-    fetch('/api/users/getCurrent')
+    fetch('/api/allUsers/getCurrent')
         .then(response => {
             if (response.status == 200) {
                 response.json()
@@ -127,7 +127,7 @@ function fillSomeProducts(data) {
  * @param data - stocks list
  */
 function fetchAndRenderPublishedStocks() {
-    fetch("/api/publishedstocks")
+    fetch("/api/stock/publishedstocks")
         .then(response => response.json())
         .then(data => fillPublishedStocks(data))
 }
@@ -175,7 +175,7 @@ function fillPublishedStocks(data) {
  * @param data - stocks list
  */
 function fetchAndRenderPublishedNews() {
-    fetch("/api/publishednews")
+    fetch("/api/manager/news/publishednews")
         .then(response => response.json())
         .then(data => fillPublishedNews(data))
 }

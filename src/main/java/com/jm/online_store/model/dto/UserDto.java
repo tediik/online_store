@@ -24,25 +24,18 @@ public class UserDto {
     private String firstName;
     Collection<? extends GrantedAuthority> authorities;
     boolean enabled;
-//    private Long id;
-//    private String lastName;
 
     public User toUser(){
         User user = new User();
-//        user.setId(id);
         user.setEmail(email);
         user.setFirstName(firstName);
-//        user.setLastName(lastName);
         return user;
     }
 
     public static UserDto fromUser(User user) {
         UserDto userDto = new UserDto();
-//        userDto.setId(user.getId());
         userDto.setEmail(user.getUsername());
         userDto.setFirstName(user.getFirstName());
-//        userDto.setLastName(user.getLastName());
-
         return userDto;
     }
 }
