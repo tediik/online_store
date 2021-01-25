@@ -15,5 +15,7 @@ public interface RecentlyViewedProductsRepository extends JpaRepository<Recently
 
     Boolean existsRecentlyViewedProductsByProduct_IdAndUser_Id(Long productId, Long userId);
 
+    RecentlyViewedProducts findRecentlyViewedProductsByProduct_IdAndUser_Id(Long productId, Long userId);
+
     List<RecentlyViewedProducts> findRecentlyViewedProductsByUserIdAndDateTimeBetween(Long id, @NonNull LocalDateTime startDate, @NonNull LocalDateTime endDate);
 }

@@ -171,7 +171,7 @@ public class CustomerRestController {
         Long userId = userService.getCurrentLoggedInUser().getId();
         if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
             recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId, localDateTime);
-        }
+        } else recentlyViewedProductsService.updateRecentlyViewedProducts(productId, userId, localDateTime);
         return ResponseEntity.ok("Product is saved in session");
     }
 

@@ -217,7 +217,7 @@ function showRecentlyProductsView() {
  * fetch GET request to server to receive list of all recently viewed products
  */
 function fillRecentlyProductsView() {
-    fetch("/api/customer/getRecentlyViewedProductsFromDb").then(response => response.json()).then(data => fillViewedProducts(data, 'recentlyProductsViewDiv'));
+    fetch("/api/customer/getRecentlyViewedProductsFromDb").then(response => response.json().then(data => data.reverse())).then(data => fillViewedProducts(data, 'recentlyProductsViewDiv'));
     $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
 }
 
@@ -231,7 +231,7 @@ function fillRecentlyProductsViewThisWeek() {
     fetch(customerRecentlyProductsViewApiUrl + `?stringStartDate=${startDate}&stringEndDate=${endDate}`)
         .then(function (response) {
             if (response.status === 200) {
-                response.json().then(data => fillViewedProducts(data, 'thisWeekRecentlyProductsDiv'));
+                response.json().then(data => data.reverse()).then(data => fillViewedProducts(data, 'thisWeekRecentlyProductsDiv'));
                 showRecentlyProductsView()
                 $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
             }
@@ -248,7 +248,7 @@ function fillRecentlyProductsViewThisMonth() {
     fetch(customerRecentlyProductsViewApiUrl + `?stringStartDate=${startDate}&stringEndDate=${endDate}`)
         .then(function (response) {
             if (response.status === 200) {
-                response.json().then(data => fillViewedProducts(data, 'thisMonthRecentlyProductsDiv'));
+                response.json().then(data => data.reverse()).then(data => fillViewedProducts(data, 'thisMonthRecentlyProductsDiv'));
                 showRecentlyProductsView()
                 $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
             }
@@ -265,7 +265,7 @@ function fillRecentlyProductsViewLastMonth() {
     fetch(customerRecentlyProductsViewApiUrl + `?stringStartDate=${startDate}&stringEndDate=${endDate}`)
         .then(function (response) {
             if (response.status === 200) {
-                response.json().then(data => fillViewedProducts(data, 'lastMonthRecentlyProductsDiv'));
+                response.json().then(data => data.reverse()).then(data => fillViewedProducts(data, 'lastMonthRecentlyProductsDiv'));
                 showRecentlyProductsView()
                 $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
             }

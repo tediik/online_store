@@ -14,4 +14,6 @@ public interface RecentlyViewedProductsService {
     void saveRecentlyViewedProducts(Long IdProduct, Long userId, LocalDateTime localDateTime);
 
     Boolean ProductExistsInTableOfUserId(Long productId, Long userId);
+
+    void updateRecentlyViewedProducts(Long productId, Long userId, LocalDateTime localDateTime);
 }

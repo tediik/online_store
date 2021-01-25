@@ -42,6 +42,13 @@ public class RecentlyViewedProductsServiceImpl implements RecentlyViewedProducts
         return recentlyViewedProductsRepository.existsRecentlyViewedProductsByProduct_IdAndUser_Id(productId, userId);
     }
 
+    @Override
+    public void updateRecentlyViewedProducts(Long productId, Long userId, LocalDateTime localDateTime) {
+        RecentlyViewedProducts products = recentlyViewedProductsRepository.findRecentlyViewedProductsByProduct_IdAndUser_Id(productId, userId);
+        products.setDateTime(localDateTime);
+        recentlyViewedProductsRepository.save(products);
+    }
+
     /**
      * Метод получает из базы отфильтрованный по промежутку времени
      * список сущностей RecentlyViewedProducts,
