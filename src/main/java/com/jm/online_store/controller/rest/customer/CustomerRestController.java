@@ -202,7 +202,7 @@ public class CustomerRestController {
      */
     @GetMapping("/recentlyViewedProducts")
     @ApiOperation(value = "Метод возвращает из базы список продуктов, которые просматривал пользователь" +
-                "в промежутке времени (stringStartDate и stringEndDate), параметры передаются в строковом значении")
+                "в промежутке времени (stringStartDate и stringEndDate), параметры передаются в строковом значении как 2018-10-23")
     @ApiResponse(code = 404, message = "Product was not found")
     public ResponseEntity<List<Product>> getRecentlyViewedProductsByUserIdAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
         LocalDate startDate = LocalDate.parse(stringStartDate);
