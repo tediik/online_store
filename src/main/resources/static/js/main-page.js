@@ -21,7 +21,7 @@ function preventDefaultEventForEnterKeyPress() {
 }
 
 function fetchAndRenderSomeProducts() {
-    fetch("/api/products").then(response => response.json()).then(data => fillSomeProducts(data));
+    fetch("/api/products/10").then(response => response.json()).then(data => fillSomeProducts(data));
     $('#headerForSomeProductsView').text('Актуальные предложения')
 }
 

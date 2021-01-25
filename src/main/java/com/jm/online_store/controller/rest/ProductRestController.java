@@ -125,9 +125,9 @@ public class ProductRestController {
     /**
      * Возвращает список первых N продуктов - N передаётся в метод сервиса .findNumProducts(N)
      */
-    @ApiOperation(value = "Returns list of first 15 products")
-    @GetMapping("")
-    public ResponseEntity<List<Product>> getSomeProducts() {
-        return ResponseEntity.ok(productService.findNumProducts(15));
+    @ApiOperation(value = "Returns list of first N products")
+    @GetMapping("/first/{N}")
+    public ResponseEntity<List<Product>> getSomeProducts(@PathVariable Integer N) {
+        return ResponseEntity.ok(productService.findNumProducts(N));
     }
 }
