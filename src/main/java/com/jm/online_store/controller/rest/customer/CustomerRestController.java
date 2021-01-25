@@ -67,7 +67,7 @@ public class CustomerRestController {
 
     /**
      * метод обработки изменения пароля User.
-     * @param model       модель для view
+     * @param model модель для view
      * @param oldPassword старый пароль
      * @param newPassword новый пароль
      * @return страница User
@@ -195,13 +195,14 @@ public class CustomerRestController {
     }
 
     /**
-     * Get mapping for get request to response with RecentlyViewedProducts during the custom date range
+     * Метод возвращает из базы список продуктов, которые просматривал пользователь в промежутке времени
      * @param stringStartDate - start of custom date range that receives from frontend in as String
      * @param stringEndDate   - end of custom date range that receives from frontend in as String
      * @return - ResponseEntity<List<Product>>
      */
     @GetMapping("/recentlyViewedProducts")
-    @ApiOperation(value = "Get mapping for get request to response with RecentlyViewedProducts during the custom date range")
+    @ApiOperation(value = "Метод возвращает из базы список продуктов, которые просматривал пользователь" +
+                "в промежутке времени (stringStartDate и stringEndDate), параметры передаются в строковом значении")
     @ApiResponse(code = 404, message = "Product was not found")
     public ResponseEntity<List<Product>> getRecentlyViewedProductsByUserIdAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
         LocalDate startDate = LocalDate.parse(stringStartDate);
