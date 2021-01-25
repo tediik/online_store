@@ -22,22 +22,18 @@ import java.util.Map;
 
 /**
  * REST controller for authentication requests (login, logout, register, etc.)
- *
- * @author Eugene Suleimanov
- * @version 1.0
  */
 
 @RestController
 @RequestMapping(value = "/api/auth")
-//@RequestMapping(value = "")
-public class AuthenticationRestControllerV1 {
+public class AuthenticationRestControllerJVT {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
     @Autowired
-    public AuthenticationRestControllerV1(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public AuthenticationRestControllerJVT(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;

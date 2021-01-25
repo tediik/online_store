@@ -29,29 +29,17 @@ import java.util.Set;
 
 /**
  * Util class that provides methods for generation, validation, etc. of JWT token.
- *
- * @author Eugene Suleimanov
- * @version 1.0
  */
 
 @Component
 public class JwtTokenProvider {
 
-//    @Value(value = "45jwt3GH")
     private String secret = "45jwt3GH";
-
-//    @Value(value = "36000000")
-    private long validityInMilliseconds = 36000000;
+    private long validityInMilliseconds = 3600000;
 
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
-    }
 
     @PostConstruct
     protected void init() {
@@ -104,7 +92,6 @@ public class JwtTokenProvider {
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
     }
-
     private Set <String> getRoleNames(Set<Role> userRoles) {
         Set<String> result = new HashSet<>();
 

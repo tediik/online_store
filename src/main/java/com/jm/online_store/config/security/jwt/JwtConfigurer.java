@@ -7,9 +7,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 /**
  * JWT configuration for application that add {@link JwtTokenFilter} for security chain.
- *
- * @author Eugene Suleimanov
- * @version 1.0
  */
 
 public class JwtConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {

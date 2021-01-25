@@ -14,9 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * Implementation of Factory Method for class {@link JwtUser}.
- * создание из user в userJVT
- * @author Eugene Suleimanov
- * @version 1.0
+ * Made user to userJVT
  */
 
 public final class JwtUserFactory {
@@ -36,7 +34,6 @@ public final class JwtUserFactory {
 
         );
     }
-
     private static Set<GrantedAuthority> mapToGrantedAuthorities(Set<Role> userRoles) {
         return userRoles.stream()
                 .map(role ->

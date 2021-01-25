@@ -43,17 +43,10 @@ public class SecurityUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UsernameNotFoundException("User Not Found withg -> username or email: " + email));
 
-//        return new org.springframework.security.core.userdetails.User(user.getUsername(),
-//                user.getPassword(), user.isEnabled(), user.isAccountNonExpired(), user.isCredentialsNonExpired(),
-//                user.isAccountNonLocked(), mapRolesToAuthorities(user.getRoles()));
-
         JwtUser jwtUser = JwtUserFactory.create(user);
 
         log.info("IN loadUserByUsername - user with username: {} successfully loaded", email);
         return jwtUser;
     }
 
-//    public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-//        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getAuthority())).collect(Collectors.toList());
-//    }
 }

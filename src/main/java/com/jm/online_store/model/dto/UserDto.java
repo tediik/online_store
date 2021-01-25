@@ -24,7 +24,6 @@ public class UserDto {
     private String firstName;
     Collection<? extends GrantedAuthority> authorities;
     boolean enabled;
-
 //    private Long id;
 //    private String lastName;
 
