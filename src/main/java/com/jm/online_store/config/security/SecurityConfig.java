@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final LoginFailureHandler loginFailureHandler;
     private final JwtTokenProvider jwtTokenProvider;
 
+
     @Autowired
     @Setter
     private OAuth2UserService OAuth2UserService;
