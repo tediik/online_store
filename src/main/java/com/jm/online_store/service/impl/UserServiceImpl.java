@@ -60,8 +60,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
-//    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
-    private static final String uploadDirectory = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "uploads" + File.separator + "images";
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
+//    private static final String uploadDirectory = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CustomerRepository customerRepository;
@@ -439,8 +439,8 @@ public class UserServiceImpl implements UserService {
             }
         }
         log.debug("Failed to store file - file is not present {}", uniqueFilename);
-//        return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
-        return uploadDirectory + uniqueFilename;
+        return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
+//        return uploadDirectory + uniqueFilename;
     }
 
     /**
@@ -465,8 +465,8 @@ public class UserServiceImpl implements UserService {
         }
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
-//        return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
-        return uploadDirectory + defaultAvatar;
+        return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
+//        return uploadDirectory + defaultAvatar;
 
     }
 
