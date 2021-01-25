@@ -53,11 +53,3 @@ svg {
     text-align: center;
     color: red;
 }
-
-.date-range-picker {
-    background: #ecc597;
-    cursor: pointer;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    width: 20%;
-}
