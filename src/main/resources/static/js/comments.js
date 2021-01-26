@@ -125,8 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
         function deleteAndEditButtonsView(commentData) {
             let btnEdit = document.getElementById("editButton" + commentData.id);
             let btnDelete = document.getElementById("deleteButton" + commentData.id);
-            console.log(currentUserEmail);
-            console.log(commentData.userEmail);
             if (currentUserEmail === commentData.userEmail) {
                 btnEdit.hidden = false;
                 btnDelete.hidden = false;
@@ -300,7 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
     /* При нажатии на "Сохранить изменения" при редактировании комментария*/
     async function submitEdit(commentId) {
         let editBlock = document.getElementById(commentId).parentElement;
-
         commentId = commentId.replace(/\D/g, '');
         let editContent = $("#editCommentText" + commentId).val().trim();
         let responseAfter;
@@ -321,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(dataObject)
                 })
                     .then(function (response) {
-
                         responseAfter = response;
                         return response.json();
                     })
@@ -336,14 +332,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             commentsCache = null;
                             showOrRefreshComments();
                         } else {
-
                             let commentContent = document.getElementById('commentContent' + commentId.replace(/\D/g, ''));
                             let timeEdit = document.getElementById('timeEditComment' + commentId.replace(/\D/g, ''));
-
                             commentContent.textContent = editContent;
                             timeEdit.textContent = comment.commentTimeEdit;
-
-
                             $(commentContent).show();
                             $(timeEdit).show();
                             editBlock.remove();
@@ -355,8 +347,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             $('#reportButton' + commentId.replace(/\D/g, '')).show();
                         }
                     })
-
-
                     .catch(err => console.log(err));
             })();
         }

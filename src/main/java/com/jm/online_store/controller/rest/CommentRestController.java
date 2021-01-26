@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,8 +55,9 @@ public class CommentRestController {
 
     /**
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
+     *
      * @param productId идентификатор продукта
-     * @return ResponseEntity<List<CommentDto>> список объектов CommentDto
+     * @return ResponseEntity<List < CommentDto>> список объектов CommentDto
      */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches all the comments from current product")
@@ -69,6 +71,7 @@ public class CommentRestController {
     /**
      * Receives productComment requestBody and passes it to Service layer for processing
      * Returns JSON representation, previously, searches for forbidden words
+     *
      * @param comment комментарий
      * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
      */
@@ -107,7 +110,7 @@ public class CommentRestController {
      * previously, searches for forbidden words
      * Returns JSON representation
      *
-     * @param comment комментарий
+     * @param comment  комментарий
      * @param reviewId
      * @return ResponseEntity<ReviewForCommentDto> or ResponseEntity<List<String>>
      */
@@ -149,6 +152,7 @@ public class CommentRestController {
 
     /**
      * Удаляет комментарий по его идентификатору
+     *
      * @param commentId идентификатор комментария
      * @return ResponseEntity<?>
      */
@@ -177,6 +181,7 @@ public class CommentRestController {
 
     /**
      * Обновляет комментарий
+     *
      * @param comment комментарий
      * @return ResponseEntity<?>
      */
@@ -189,13 +194,13 @@ public class CommentRestController {
     public ResponseEntity<?> updateComment(@RequestBody @Valid Comment comment) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        String data = new Date().toString();
-        comment.setCommentTimeEdit("[изменено: " +data+"]") ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm yyyy.MM.dd ");
+        comment.setCommentTimeEdit("\"Изменено: " + dateFormat.format(new Date()) + "\"");
         ResponseEntity<?>[] answer = new ResponseEntity[1];
         userService.findByEmail(email).ifPresentOrElse(e -> {
                     if (e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
                         commentService.update(comment);
-                        answer[0] = new ResponseEntity<>(comment,HttpStatus.OK);
+                        answer[0] = new ResponseEntity<>(comment, HttpStatus.OK);
                     } else
                         answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
                 },
