@@ -1,3 +1,5 @@
+let customerRecentlyProductsViewApiUrl = "/api/customer/recentlyViewedProducts"
+
 $(document).ready(function () {
     /* Слушатель для кнопки удалить профиль (в модальном окне)*/
     document.getElementById('deleteProfileCustomer').addEventListener('click', deleteProfile)
@@ -9,14 +11,9 @@ $(document).ready(function () {
     $(document).delegate("#submitNewPassword", "click", changePass);
     /*Слушатель для ввода пароля modal*/
     $(document).delegate("#new_password", "keyup", checkPassword);
-    fetchAndRenderSomeProducts();
-
+    fillRecentlyProductsView()
 });
 
-function fetchAndRenderSomeProducts() {
-    fetch("/api/customer/getRecentlyViewedProductsFromDb").then(response => response.json()).then(data => fillViewedProducts(data));
-    $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
-}
 /**
  * Method for customer's pass changing
  * @returns {boolean}
@@ -161,11 +158,12 @@ function deleteProfile2(event) {
 }
 
 /**
- * function that fills CustomerPage with recentlyViewedProducts
+ * function that fills CustomerPage with recently viewed products
  * @param data - products list
+ * @param elementId
  */
-function fillViewedProducts(data) {
-    let prodsView = document.getElementById('recentlyProductsViewDiv');
+function fillViewedProducts(data, elementId) {
+    let prodsView = document.getElementById(elementId);
     prodsView.innerHTML = ''
     if (data !== 'error') {
         let item = ``;
@@ -206,4 +204,70 @@ function fillViewedProducts(data) {
     } else {
         prodsView.innerHTML = 'Пока тут ничего нет'
     }
+}
+
+/**
+ * function shows elements of report
+ */
+function showRecentlyProductsView() {
+    document.getElementById("recentlyProductsView").style.visibility = "visible";
+}
+
+/**
+ * fetch GET request to server to receive list of all recently viewed products
+ */
+function fillRecentlyProductsView() {
+    fetch("/api/customer/getRecentlyViewedProductsFromDb").then(response => response.json().then(data => data.reverse())).then(data => fillViewedProducts(data, 'recentlyProductsViewDiv'));
+    $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
+}
+
+/**
+ * fetch GET request to server to receive all list of this week recently viewed products
+ */
+function fillRecentlyProductsViewThisWeek() {
+    $('#thisWeekRecentlyProductsDiv').empty()
+    let startDate = moment().subtract(6, 'days').format('YYYY-MM-DD')
+    let endDate = moment().format('YYYY-MM-DD')
+    fetch(customerRecentlyProductsViewApiUrl + `?stringStartDate=${startDate}&stringEndDate=${endDate}`)
+        .then(function (response) {
+            if (response.status === 200) {
+                response.json().then(data => data.reverse()).then(data => fillViewedProducts(data, 'thisWeekRecentlyProductsDiv'));
+                showRecentlyProductsView()
+                $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
+            }
+        })
+}
+
+/**
+ * fetch GET request to server to receive all list of this month recently viewed products
+ */
+function fillRecentlyProductsViewThisMonth() {
+    $('#thisMonthRecentlyProductsDiv').empty()
+    let startDate = moment().subtract(29, 'days').format('YYYY-MM-DD')
+    let endDate = moment().format('YYYY-MM-DD')
+    fetch(customerRecentlyProductsViewApiUrl + `?stringStartDate=${startDate}&stringEndDate=${endDate}`)
+        .then(function (response) {
+            if (response.status === 200) {
+                response.json().then(data => data.reverse()).then(data => fillViewedProducts(data, 'thisMonthRecentlyProductsDiv'));
+                showRecentlyProductsView()
+                $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
+            }
+        })
+}
+
+/**
+ * fetch GET request to server to receive list of last month recently viewed products
+ */
+function fillRecentlyProductsViewLastMonth() {
+    $('#lastMonthRecentlyProductsDiv').empty()
+    let startDate = moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
+    let endDate = moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')
+    fetch(customerRecentlyProductsViewApiUrl + `?stringStartDate=${startDate}&stringEndDate=${endDate}`)
+        .then(function (response) {
+            if (response.status === 200) {
+                response.json().then(data => data.reverse()).then(data => fillViewedProducts(data, 'lastMonthRecentlyProductsDiv'));
+                showRecentlyProductsView()
+                $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
+            }
+        })
 }
