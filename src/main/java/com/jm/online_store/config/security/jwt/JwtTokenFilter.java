@@ -13,9 +13,8 @@ import java.io.IOException;
 
 /**
  * JWT token filter that handles all HTTP requests to application.
-  Фильтровать запрос на наличие токена
+ * Фильтровать запрос на наличие токена
  */
-
 public class JwtTokenFilter extends GenericFilterBean {
 
     private JwtTokenProvider jwtTokenProvider;
@@ -25,18 +24,14 @@ public class JwtTokenFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
-            throws IOException, ServletException {
-
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
-
             if (auth != null) {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
-        filterChain.doFilter(req, res);
+        filterChain.doFilter(request, response);
     }
-
 }

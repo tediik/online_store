@@ -1,30 +1,26 @@
 package com.jm.online_store.config.security.jwt;
 
 import com.jm.online_store.exception.JwtAuthenticationException;
+import com.jm.online_store.model.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import com.jm.online_store.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,10 +30,12 @@ import java.util.Set;
 @Component
 public class JwtTokenProvider {
 
-    private String secret = "45jwt3GH";
-    private long validityInMilliseconds = 3600000;
+    @Value("${spring.auth.jwt.secure_key}")
+    private String secret;
+    @Value("${spring.auth.jwt.validityInMilliseconds}")
+    private long validityInMilliseconds;
 
-
+    @Qualifier("securityUserDetailsService")
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -73,7 +71,7 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7, bearerToken.length());
         }
         return null;
@@ -82,23 +80,15 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-
-            if (claims.getBody().getExpiration().before(new Date())) {
-                return false;
-            }
-
-            return true;
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
     }
-    private Set <String> getRoleNames(Set<Role> userRoles) {
+
+    private Set<String> getRoleNames(Set<Role> userRoles) {
         Set<String> result = new HashSet<>();
-
-        userRoles.forEach(role -> {
-            result.add(role.getName());
-        });
-
+        userRoles.forEach(role -> result.add(role.getName()));
         return result;
     }
 }
