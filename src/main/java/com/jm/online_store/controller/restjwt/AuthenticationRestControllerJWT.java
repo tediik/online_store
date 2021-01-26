@@ -5,6 +5,7 @@ import com.jm.online_store.config.security.jwt.JwtTokenProvider;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.AuthenticationRequestDto;
 import com.jm.online_store.service.interf.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,6 +40,10 @@ public class AuthenticationRestControllerJWT {
     }
 
     @PostMapping("/login")
+    @ApiOperation(value = "Выдает Bearer токен в ответ на запрос; в body указывается JSON {\n" +
+            "    \"email\":\"****@mail.ru\",\n" +
+            "    \"password\":\"*****\"\n" +
+            "}")
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             String email = requestDto.getEmail();
