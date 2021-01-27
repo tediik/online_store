@@ -4,9 +4,8 @@ $(document).ready(function ($) {
     fillMainCategories().then();
     fetchAndRenderPublishedStocks();
     fetchAndRenderPublishedNews();
-    fetchAndRenderSomeProducts();
+    fetchAndRenderSomeProducts(10);
 });
-
 /**
  * function that prevents submit event on Enter keypress in search input
  */
@@ -20,8 +19,8 @@ function preventDefaultEventForEnterKeyPress() {
     })
 }
 
-function fetchAndRenderSomeProducts() {
-    fetch("/api/products/10").then(response => response.json()).then(data => fillSomeProducts(data));
+function fetchAndRenderSomeProducts(number_products) {
+    fetch("/api/products/first/"+ number_products).then(response => response.json()).then(data => fillSomeProducts(data));
     $('#headerForSomeProductsView').text('Актуальные предложения')
 }
 
