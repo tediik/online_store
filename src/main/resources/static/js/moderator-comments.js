@@ -112,16 +112,12 @@ function renderCommentsTable(allReports) {
         }
     )
 
-fetch("/api/moderator/number-of-reports").then(
-    res => {
-        res.json().then(
-            data => {
-                document.getElementById("number").innerHTML = `Количество комментариев ждущих проверки ${data}`;
-            }
-        )
-    }
-)
-
-
-
-
+    fetch("/api/moderator/number-of-reports").then(
+        res => {
+            res.json().then(
+                data => {
+                    document.getElementById("number").innerHTML = `Количество комментариев ждущих проверки ${data}`;
+                }
+            )
+        }
+    )
