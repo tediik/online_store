@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,16 +83,20 @@ public class CommentRestController {
     })
     public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
-        Comment savedComment = comment;
+        Comment savedComment = commentService.addComment(comment);
         if (!bindingResult.hasErrors()) {
             String checkText = savedComment.getContent();
-            List<String> resultText = badWordsService.checkComment(checkText);
-            if (resultText.isEmpty()) {
+            if (!badWordsService.checkEnabledCheckText()) {
                 productFromDb.setComments(List.of(savedComment));
-                commentService.addComment(savedComment);
                 return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
             } else {
-                return ResponseEntity.status(201).body(resultText);
+                List<String> resultText = badWordsService.checkComment(checkText);
+                if (resultText.isEmpty()) {
+                    productFromDb.setComments(List.of(savedComment));
+                    return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
+                } else {
+                    return ResponseEntity.status(201).body(resultText);
+                }
             }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
@@ -120,6 +126,12 @@ public class CommentRestController {
         if (!bindingResult.hasErrors()) {
             String checkText = comment.getContent();
             comment.setReview(reviewFromDb);
+            if (!badWordsService.checkEnabledCheckText()) {
+                Comment savedComment = commentService.addComment(comment);
+                reviewFromDb.setComments(List.of(savedComment));
+                CommentDto.commentEntityToDto(comment);
+                return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
+            } else {
                 List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
                     Comment savedComment = commentService.addComment(comment);
@@ -129,6 +141,8 @@ public class CommentRestController {
                 } else {
                     return ResponseEntity.status(201).body(resultText);
                 }
+
+            }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -180,19 +194,19 @@ public class CommentRestController {
     public ResponseEntity<?> updateComment(@RequestBody @Valid Comment comment) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
+        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm yyyy.MM.dd ");
+        comment.setCommentTimeEdit("\"Изменено: " + dateFormat.format(new Date()) + "\"");
         ResponseEntity<?>[] answer = new ResponseEntity[1];
-        String checkText = comment.getContent();
-        List<String> resultText = badWordsService.checkComment(checkText);
         userService.findByEmail(email).ifPresentOrElse(e -> {
-                    if (resultText.isEmpty() && e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
+                    if (e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
                         commentService.update(comment);
-                        answer[0] = new ResponseEntity<>(HttpStatus.OK);
-                    } else {
-                        answer[0] = new ResponseEntity<>(resultText, HttpStatus.valueOf(201)); // ResponseEntity.status(201).body(resultText);
-                    }
+                        answer[0] = new ResponseEntity<>(comment, HttpStatus.OK);
+                    } else
+                        answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
                 },
                 () -> answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED)
         );
+        System.out.println(answer[0]);
         return answer[0];
     }
 

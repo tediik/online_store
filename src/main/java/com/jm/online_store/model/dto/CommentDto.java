@@ -31,6 +31,8 @@ public class CommentDto {
     private Long reviewId;
     private Boolean deletedHasKids;
     public String userDescription;
+    public String commentTimeEdit;
+
 
     public static CommentDto commentEntityToDto(Comment commentEntity) {
         CommentDto commentDto = new CommentDto();
@@ -42,6 +44,11 @@ public class CommentDto {
         commentDto.setLastName(commentEntity.getCustomer().getLastName());
         commentDto.setUserEmail(commentEntity.getCustomer().getEmail());
         commentDto.setDeletedHasKids(commentEntity.isDeletedHasKids());
+        if (commentEntity.getCommentTimeEdit() ==null) {
+            commentDto.setCommentTimeEdit("");
+        }else {
+            commentDto.setCommentTimeEdit(commentEntity.getCommentTimeEdit());
+        }
 
         // формируем выдачу информации о пользователе, оставляющем комментарии к товару:
         // имя + фамилия, либо email в случае их отсутствия

@@ -82,7 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <img id="profilePic${comment.id}" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
                         </div>
                         <div class="media-body" id='mediaBody${comment.id}'>
-                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.userDescription } ${comment.timeStamp}</h5>
+                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.userDescription} ${comment.timeStamp}</h5>
+                        <div class="commentTimeEdit" id="timeEditComment${comment.id}"> ${comment.commentTimeEdit}  </div>                  
                         <div class="message" id="commentContent${comment.id}"> ${comment.content}  </div>
                         <button type='button' id='replyButton${comment.id}' class='btn btn-link reply'>Ответить</button>
                         <button type='button' id='editButton${comment.id}' class='btn btn-link edit'>Править</button>
@@ -297,9 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
     /* При нажатии на "Сохранить изменения" при редактировании комментария*/
     async function submitEdit(commentId) {
         let editBlock = document.getElementById(commentId).parentElement;
-
         commentId = commentId.replace(/\D/g, '');
         let editContent = $("#editCommentText" + commentId).val().trim();
+        let responseAfter;
 
         if (editContent.length < 1) {
             alert("Please Enter Text...");
@@ -317,18 +318,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(dataObject)
                 })
                     .then(function (response) {
-                        if (response.status === 201) {
+                        responseAfter = response;
+                        return response.json();
+                    })
+                    .then(function (comment) {
+
+                        if (responseAfter === 201) {
                             let stopAlert = 'В вашем комментарии есть запрещенные слова. \nПожалуйста удалите их!'
                             toastr.error(stopAlert);
                             return;
-                        } else if (!response.ok) {
-                            toastr.error("Произошла ошибка " + response.status);
+                        } else if (!responseAfter.ok) {
+                            toastr.error("Произошла ошибка " + responseAfter.status);
                             commentsCache = null;
                             showOrRefreshComments();
                         } else {
                             let commentContent = document.getElementById('commentContent' + commentId.replace(/\D/g, ''));
+                            let timeEdit = document.getElementById('timeEditComment' + commentId.replace(/\D/g, ''));
                             commentContent.textContent = editContent;
+                            timeEdit.textContent = comment.commentTimeEdit;
                             $(commentContent).show();
+                            $(timeEdit).show();
                             editBlock.remove();
                             if (document.getElementById('replyButton' + commentId.replace(/\D/g, ''))) {
                                 $('#replyButton' + commentId.replace(/\D/g, '')).show();
@@ -336,12 +345,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             $('#editButton' + commentId.replace(/\D/g, '')).show();
                             $('#deleteButton' + commentId.replace(/\D/g, '')).show();
                             $('#reportButton' + commentId.replace(/\D/g, '')).show();
-
-                            commentsCache.forEach((item, i) => {
-                                if (item.id == commentId) {
-                                    item.content = editContent;
-                                }
-                            });
                         }
                     })
                     .catch(err => console.log(err));

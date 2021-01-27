@@ -108,6 +108,7 @@ public class CommentServiceImpl implements CommentService {
         Comment commentToUpdate = findById(commentEdited.getId());
         commentToUpdate.setContent(commentEdited.getContent());
         commentToUpdate.setDeletedHasKids(commentEdited.isDeletedHasKids());
+        commentToUpdate.setCommentTimeEdit(commentEdited.getCommentTimeEdit());
         commentRepository.save(commentToUpdate);
     }
 
