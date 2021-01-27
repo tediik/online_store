@@ -1,7 +1,7 @@
 package com.jm.online_store.config.security;
 
-import com.jm.online_store.model.JwtUser;
-import com.jm.online_store.config.security.jwt.JwtUserFactory;
+//import com.jm.online_store.model.JwtUser;
+//import com.jm.online_store.config.security.jwt.JwtUserFactory;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.UserRepository;
@@ -38,15 +38,19 @@ public class SecurityUserDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException
      */
     @Override
+
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException("User Not Found withg -> username or email: " + email));
+                new UsernameNotFoundException("User Not Found with -> username or email: " + email));
 
-        JwtUser jwtUser = JwtUserFactory.create(user);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(), user.isEnabled(), user.isAccountNonExpired(), user.isCredentialsNonExpired(),
+                user.isAccountNonLocked(), mapRolesToAuthorities(user.getRoles()));
+    }
 
-        log.info("IN loadUserByUsername - user with username: {} successfully loaded", email);
-        return jwtUser;
+    public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getAuthority())).collect(Collectors.toList());
     }
 
 }
