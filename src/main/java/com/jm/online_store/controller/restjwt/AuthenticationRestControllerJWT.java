@@ -54,6 +54,7 @@ public class AuthenticationRestControllerJWT {
             }
             String token = jwtTokenProvider.createToken(email, user.getRoles());
             Map<Object, Object> response = new HashMap<>();
+            response.put("authorities", user.getAuthorities());
             response.put("email", email);
             response.put("token", token);
             return ResponseEntity.ok(response);
