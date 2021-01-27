@@ -5,5 +5,5 @@ import com.jm.online_store.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ModeratorsStatisticRepository extends JpaRepository<ModeratorsStatistic, Long> {
-    ModeratorsStatistic getByModeratorEquals(User moderator);
+    ModeratorsStatistic getModeratorsStatisticByModerator(User moderator);
 }

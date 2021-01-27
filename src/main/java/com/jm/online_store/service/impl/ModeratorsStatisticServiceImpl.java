@@ -35,13 +35,13 @@ public class ModeratorsStatisticServiceImpl implements ModeratorsStatisticServic
     @Override
     public void incrementDismissedCount(User moderator) {
         ModeratorsStatistic updateStatistic;
-        if (moderatorsStatisticRepository.getByModeratorEquals(moderator) == null) {
+        if (moderatorsStatisticRepository.getModeratorsStatisticByModerator(moderator) == null) {
             updateStatistic = new ModeratorsStatistic();
             updateStatistic.setModerator(moderator);
             updateStatistic.setDismissedCount(1L);
             updateStatistic.setApprovedCount(0L);
         } else  {
-            updateStatistic = moderatorsStatisticRepository.getByModeratorEquals(moderator);
+            updateStatistic = moderatorsStatisticRepository.getModeratorsStatisticByModerator(moderator);
             updateStatistic.setDismissedCount(updateStatistic.getDismissedCount() + 1L);
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -57,13 +57,13 @@ public class ModeratorsStatisticServiceImpl implements ModeratorsStatisticServic
     @Override
     public void incrementApprovedCount(User moderator) {
         ModeratorsStatistic updateStatistic;
-        if (moderatorsStatisticRepository.getByModeratorEquals(moderator) == null) {
+        if (moderatorsStatisticRepository.getModeratorsStatisticByModerator(moderator) == null) {
             updateStatistic = new ModeratorsStatistic();
             updateStatistic.setModerator(moderator);
             updateStatistic.setApprovedCount(1L);
             updateStatistic.setDismissedCount(0L);
         } else  {
-            updateStatistic = moderatorsStatisticRepository.getByModeratorEquals(moderator);
+            updateStatistic = moderatorsStatisticRepository.getModeratorsStatisticByModerator(moderator);
             updateStatistic.setApprovedCount(updateStatistic.getApprovedCount() + 1L);
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

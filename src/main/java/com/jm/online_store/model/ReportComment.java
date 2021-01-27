@@ -21,7 +21,6 @@ import javax.persistence.Table;
  * Сущность жалоб на {@link Comment}.
  */
 @Entity
-@Table(name = "report_comment")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -19,32 +19,15 @@ public class ModeratorController {
 
     @GetMapping
     public String moderatorPage(Model model) {
-        model.addAttribute("numberOfReports", reportCommentService.findAllReportComments().size());
+        model.addAttribute("user", userService.getCurrentLoggedInUser());
         return "moderator-page";
-    }
-
-    @GetMapping("/comments")
-    public String commentsModeration() {
-        return "moderator-comments-check";
-    }
-
-    @GetMapping("/profile")
-    public String getPersonalInfo(Model model) {
-        User user = userService.getCurrentLoggedInUser();
-        model.addAttribute("user", user);
-        return "moderator-profile";
     }
 
     @PostMapping("/profile")
     public String updateUserProfile(User user, Model model) {
         User updateUser = userService.updateUserProfile(user);
         model.addAttribute("user", updateUser);
-        return "moderator-profile";
-    }
-
-    @GetMapping("/statistic")
-    public String supermoderatorStatistic() {
-        return "moderator-statistic";
+        return "redirect:/moderator";
     }
 
 }

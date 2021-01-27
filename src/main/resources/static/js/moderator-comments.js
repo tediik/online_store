@@ -6,7 +6,7 @@ function connect() {
     let socket = new SockJS('/reportComments');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function () {
-        stompClient.subscribe('/table/report',function (allReports) {
+        stompClient.subscribe('/table/report', function (allReports) {
             renderCommentsTable(JSON.parse(allReports.body));
         });
         sendMessage();
@@ -85,7 +85,7 @@ function renderCommentsTable(allReports) {
             }
         })
     });
-
+}
     fetch("/api/moderator/statistic").then(
         res => {
             res.json().then(
@@ -93,16 +93,17 @@ function renderCommentsTable(allReports) {
                     let statistic = "";
                     data.forEach((s) => {
 
-                        let firstName = (s.moderator.firstName == null) ? `` : s.moderator.firstName;
-                        let lastName = (s.moderator.lastName == null) ? `` : s.moderator.lastName;
+                            let firstName = (s.moderator.firstName == null) ? `` : s.moderator.firstName;
+                            let lastName = (s.moderator.lastName == null) ? `` : s.moderator.lastName;
 
-                        statistic += `<tr>`;
-                        statistic += `<th>` + firstName + ` ` + lastName + `</th>`;
-                        statistic += `<th>` + s.moderator.email + `</th>`;
-                        statistic += `<th>` + s.approvedCount + `</th>`;
-                        statistic += `<th>` + s.dismissedCount + `</th>`;
-                        statistic += `<th>` + (s.approvedCount + s.dismissedCount) + `</th>`;
-                        statistic += `<th>` + s.lastActivityDate + `</th></tr>`;
+                            statistic += `<tr>
+                                          <th>${firstName} ${lastName}</th>
+                                          <th>${s.moderator.email}</th>
+                                          <th>${s.approvedCount}</th>
+                                          <th>${s.dismissedCount}</th>
+                                          <th>${(s.approvedCount + s.dismissedCount)}</th>
+                                          <th>${s.lastActivityDate}</th>
+                                          </tr>`;
                         }
                     )
                     document.getElementById("listStatistic").innerHTML = statistic;
@@ -111,7 +112,16 @@ function renderCommentsTable(allReports) {
         }
     )
 
-}
+fetch("/api/moderator/number-of-reports").then(
+    res => {
+        res.json().then(
+            data => {
+                document.getElementById("number").innerHTML = `Количество комментариев ждущих проверки ${data}`;
+            }
+        )
+    }
+)
+
 
 
 
