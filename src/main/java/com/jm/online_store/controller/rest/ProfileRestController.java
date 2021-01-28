@@ -83,15 +83,4 @@ public class ProfileRestController {
         userService.updateUserProfile(user);
         return ResponseEntity.ok().build();
     }
-    /**
-     * Метод удаления профиля
-     * @param id индентификатор пользователя
-     * @return ResponseEntity.ok() код ответа
-     */
-    @DeleteMapping("/delete/{id}")
-    @ApiOperation(value = "deletes current User's profile")
-    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
-        userService.deleteByID(id);
-        return ResponseEntity.ok().build();
-    }
 }
