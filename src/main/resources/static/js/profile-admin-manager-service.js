@@ -14,9 +14,10 @@ $(document).ready(function () {
  * Функция удаления профиля
  * @param event событие click по ссылке Удалить профиль
  */
+let userId;
 function deleteProfile(event) {
-    let id = event.target.dataset.delId
-    fetch(`/api/profile/delete/${id}`, {
+    // let id = event.target.dataset.delId
+    fetch(`/api/profile/delete/${userId}`, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -86,6 +87,7 @@ function getCurrentUser() {
     fetch('/api/profile/currentUser')
         .then((res) => res.json())
         .then((currentUser) => {
+            userId = currentUser.id;
             $('#id_update').val(currentUser.id);
             $('#password_update').val(currentUser.password);
             $('#first_name_update').val(currentUser.firstName);
