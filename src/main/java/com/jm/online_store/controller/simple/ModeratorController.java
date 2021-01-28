@@ -23,11 +23,4 @@ public class ModeratorController {
         return "moderator-page";
     }
 
-    @PostMapping("/profile")
-    public String updateUserProfile(User user, Model model) {
-        User updateUser = userService.updateUserProfile(user);
-        model.addAttribute("user", updateUser);
-        return "redirect:/moderator";
-    }
-
 }
