@@ -50,7 +50,6 @@ public class Feedback {
 
     private Long managerId;
 
-
     private LocalDateTime responseExpected;
 
     private LocalDateTime feedbackPostDate;

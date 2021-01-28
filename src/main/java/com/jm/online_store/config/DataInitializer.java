@@ -1302,7 +1302,7 @@ public class DataInitializer {
                 .build();
         CommonSettings badWordsEnabled = CommonSettings.builder()
                 .settingName("bad_words_enabled")
-                .textValue("yes")
+                .textValue("true")
                 .build();
         CommonSettings maintenanceModeTemplate = CommonSettings.builder()
                 .settingName("maintenance_mode")
