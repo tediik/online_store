@@ -2,17 +2,13 @@ package com.jm.online_store.controller.rest.moderator;
 
 import com.jm.online_store.model.ModeratorsStatistic;
 import com.jm.online_store.model.ReportComment;
-import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ReportCommentDto;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ModeratorsStatisticService;
 import com.jm.online_store.service.interf.ReportCommentService;
 import com.jm.online_store.service.interf.UserService;
-import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
