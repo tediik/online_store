@@ -345,7 +345,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             $('#editButton' + commentId.replace(/\D/g, '')).show();
                             $('#deleteButton' + commentId.replace(/\D/g, '')).show();
                             $('#reportButton' + commentId.replace(/\D/g, '')).show();
-
                             commentsCache.forEach((item, i) => {
                                 if (item.id == commentId) {
                                     item.content = editContent;

@@ -45,7 +45,7 @@ public class CommentDto {
         commentDto.setDeletedHasKids(commentEntity.isDeletedHasKids());
         if (commentEntity.getCommentTimeEdit() == null) {
             commentDto.setCommentTimeEdit("");
-        }else {
+        } else {
             commentDto.setCommentTimeEdit(commentEntity.getCommentTimeEdit());
         }
         // формируем выдачу информации о пользователе, оставляющем комментарии к товару:

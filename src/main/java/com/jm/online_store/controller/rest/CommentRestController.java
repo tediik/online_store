@@ -182,15 +182,15 @@ public class CommentRestController {
     public ResponseEntity<?> updateComment(@RequestBody @Valid Comment comment) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm yyyy.MM.dd ");
-        comment.setCommentTimeEdit("\"Изменено: " + dateFormat.format(new Date()) + "\"");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm yyyy.MM.dd");
+        comment.setCommentTimeEdit("Изменено: " + dateFormat.format(new Date()));
         ResponseEntity<?>[] answer = new ResponseEntity[1];
         String checkText = comment.getContent();
         List<String> resultText = badWordsService.checkComment(checkText);
         userService.findByEmail(email).ifPresentOrElse(e -> {
                     if (resultText.isEmpty() && e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
                         commentService.update(comment);
-                        answer[0] = new ResponseEntity<>(comment,HttpStatus.OK);
+                        answer[0] = new ResponseEntity<>(comment, HttpStatus.OK);
                     } else {
                         answer[0] = new ResponseEntity<>(resultText, HttpStatus.valueOf(201)); // ResponseEntity.status(201).body(resultText);
                     }

@@ -74,13 +74,4 @@ public class Comment {
         this.id = id;
         this.content = content;
     }
-
-    public String getCommentTimeEdit() {
-        return commentTimeEdit;
-    }
-
-    public String setCommentTimeEdit(String commentTimeEdit) {
-        this.commentTimeEdit = commentTimeEdit;
-        return commentTimeEdit;
-    }
 }
