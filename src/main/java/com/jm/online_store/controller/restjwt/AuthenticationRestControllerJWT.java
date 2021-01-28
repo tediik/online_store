@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.restjwt;
 
-
 import com.jm.online_store.config.security.jwt.JwtTokenProvider;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.UserDto;
@@ -36,7 +35,7 @@ public class AuthenticationRestControllerJWT {
     private final UserService userService;
 
     @PostMapping("/login")
-    @ApiOperation(value = "Выдает user, email и Bearer токен в ответ на запрос; в body указывается JSON {\n" +
+    @ApiOperation(value = "Выдает UserDto, email и Bearer токен в ответ на запрос; в body указывается JSON {\n" +
             "    \"email\":\"****@mail.ru\",\n" +
             "    \"password\":\"*****\"\n" +
             "}")
