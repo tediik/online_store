@@ -12,7 +12,7 @@ import java.io.IOException;
 
 /**
  * JWT token filter that handles all HTTP requests to application.
- * Фильтровать запрос на наличие токена
+ * Фильтрует все запросы на наличие jwt-токена
  */
 public class JwtTokenFilter extends GenericFilterBean {
 
