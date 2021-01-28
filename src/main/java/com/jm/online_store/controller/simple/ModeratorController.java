@@ -19,7 +19,6 @@ public class ModeratorController {
 
     @GetMapping
     public String moderatorPage(Model model) {
-        model.addAttribute("user", userService.getCurrentLoggedInUser());
         return "moderator-page";
     }
 

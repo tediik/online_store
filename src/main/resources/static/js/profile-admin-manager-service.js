@@ -92,7 +92,9 @@ function getCurrentUser() {
             $('#last_name_input').val(currentUser.lastName);
             $('#email_input').val(currentUser.email);
             $("#date_birthday_input").val(moment(currentUser.birthdayDate).format("yyyy-MM-DD"));
-            $("#register_date").val(moment(currentUser.registerDate).format("yyyy-MM-DD"));
+            $("#register_date").html(moment(currentUser.registerDate).format("yyyy-MM-DD"));
+            let picSrc = `/uploads/images/${currentUser.profilePicture}`;
+            $('#profilePic').attr(`src`, picSrc);
             if(currentUser.userGender === null) {
                 $('#userGenderNone').prop('checked', true);
             }

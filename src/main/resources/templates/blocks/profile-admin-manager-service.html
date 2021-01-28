@@ -7,7 +7,7 @@
                 <div class="imgContainer">
                     <div>
                         <img id="profilePic" alt="UserPhoto" class="rounded-circle img-responsive mt-2" height="152"
-                             th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}" width="152">
+                             src="/uploads/images/def.jpg" width="152">
                     </div>
                     <div class="imgButton">
                         <button type="button" class="btn btn-link" data-toggle="modal"
@@ -116,20 +116,18 @@
                 <hr>
                 <div>
                     <button id="updateProfile" style="background-color: #ff8e05"
-                            th:data-post-date="${user.registerDate}"
                             class="m-2 btn btn-success d-block mx-auto">Сохранить
                     </button>
                 </div>
                 <form data-role="personal-info-form">
                     <div>
                         <button type="button" style="color: #a94442" class="m-2 btn btn-link d-block mx-auto"
-                                data-toggle="modal" data-target="#deleteProfileModal"
-                                th:data-del-id="${user.id}">Удалить профиль
+                                data-toggle="modal" data-target="#deleteProfileModal">Удалить профиль
                         </button>
                     </div>
                     <div class="m-2 text-center personal-info_register-container" style="background-color: #f9f9f9">
                         Дата регистрации:
-                        <span class="personal-info_register-date font-weight-bold" id="register_date" th:text="${user.registerDate}"></span>
+                        <span class="personal-info_register-date font-weight-bold" id="register_date"></span>
                     </div>
                 </form>
                 <!---------------------- Change email Profile Modal window ------------------->
@@ -228,7 +226,7 @@
                                     Отмена
                                 </button>
                                 <button id="deleteProfile" type="button"
-                                        class="btn btn-danger" th:data-del-id="${user.id}"
+                                        class="btn btn-danger"
                                         data-dismiss="modal">
                                     Удалить
                                 </button>
