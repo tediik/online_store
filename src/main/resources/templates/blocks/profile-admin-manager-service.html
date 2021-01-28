@@ -120,11 +120,6 @@
                     </button>
                 </div>
                 <form data-role="personal-info-form">
-                    <div>
-                        <button type="button" style="color: #a94442" class="m-2 btn btn-link d-block mx-auto"
-                                data-toggle="modal" data-target="#deleteProfileModal">Удалить профиль
-                        </button>
-                    </div>
                     <div class="m-2 text-center personal-info_register-container" style="background-color: #f9f9f9">
                         Дата регистрации:
                         <span class="personal-info_register-date font-weight-bold" id="register_date"></span>
@@ -204,37 +199,6 @@
                     </div>
                 </div>
                 <!---------------------- End Change password Profile Modal window ------------------->
-
-                <!---------------------- Delete Profile Modal window ------------------->
-                <div id="deleteProfileModal" class="modal" tabindex="-1" role="dialog"
-                     aria-labelledby="titleDeleteProfile" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="titleDeleteProfile">Удалить
-                                    профиль</h5>
-                                <button type="button" class="close" data-dismiss="modal"
-                                        aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                Вы уверены что хотите удалить свой профиль?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                    Отмена
-                                </button>
-                                <button id="deleteProfile" type="button"
-                                        class="btn btn-danger"
-                                        data-dismiss="modal">
-                                    Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!---------------------- End Delete Profile Modal window ------------------->
             </div>
         </div>
     </div>
