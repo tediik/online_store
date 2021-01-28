@@ -7,7 +7,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,6 +81,18 @@ public class ProfileRestController {
     @ApiOperation(value = "updates current User's profile")
     public ResponseEntity<String> updateProfile(@RequestBody User user) {
         userService.updateUserProfile(user);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Метод удаления профиля
+     * @param id индентификатор пользователя
+     * @return ResponseEntity.ok() код ответа
+     */
+    @DeleteMapping("/delete/{id}")
+    @ApiOperation(value = "deletes current User's profile")
+    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
+        userService.deleteByID(id);
         return ResponseEntity.ok().build();
     }
 }
