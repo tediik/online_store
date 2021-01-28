@@ -1,7 +1,5 @@
 $(document).ready(function () {
     getCurrentUser()
-    /*Слушатель для ссылки удаления профиля*/
-    document.getElementById('deleteProfile').addEventListener('click', deleteProfile)
     /*Слушатель для кнопки смены email*/
     document.getElementById('buttonChangeMail').addEventListener('click', changeEmail)
     /*Слушатель для кнопки смены пароля*/
@@ -9,28 +7,6 @@ $(document).ready(function () {
     /*Слушатель для кнопки Сохранить(обновление профиля)*/
     document.getElementById('updateProfile').addEventListener("click", updateProfile)
 });
-
-/**
- * Функция удаления профиля
- * @param event событие click по ссылке Удалить профиль
- */
-let userId;
-function deleteProfile(event) {
-    // let id = event.target.dataset.delId
-    fetch(`/api/profile/delete/${userId}`, {
-        method: 'DELETE',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-type': 'application/json'
-        }
-    }).then(function (response) {
-        if (response.ok) {
-            document.location.href = "/logout";
-        } else {
-            toastr.error('Ваш профиль не был удален.', {timeOut: 3000});
-        }
-    })
-}
 
 /**
  * Функция смены email в профиле
@@ -87,7 +63,6 @@ function getCurrentUser() {
     fetch('/api/profile/currentUser')
         .then((res) => res.json())
         .then((currentUser) => {
-            userId = currentUser.id;
             $('#id_update').val(currentUser.id);
             $('#password_update').val(currentUser.password);
             $('#first_name_update').val(currentUser.firstName);

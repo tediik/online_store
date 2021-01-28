@@ -46,11 +46,4 @@ public class UserRestController {
         userService.updateUserAdminPanel(user);
         return user;
     }
-
-    @DeleteMapping(value = "/{userId}")
-    @ApiOperation(value = "Delete user by ID")
-    public ResponseEntity<Void> deleteUserById(@PathVariable Long userId) {
-        userService.deleteByID(userId);
-        return new ResponseEntity<Void>(HttpStatus.OK);
-    }
 }
