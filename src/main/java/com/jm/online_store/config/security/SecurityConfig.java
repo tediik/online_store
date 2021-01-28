@@ -3,6 +3,8 @@ package com.jm.online_store.config.security;
 import com.jm.online_store.config.filters.CorsFilter;
 import com.jm.online_store.config.handler.LoginFailureHandler;
 import com.jm.online_store.config.handler.LoginSuccessHandler;
+import com.jm.online_store.config.security.jwt.JwtConfigurer;
+import com.jm.online_store.config.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final LoginSuccessHandler successHandler;
     private final SecurityUserDetailsService securityUserDetailsService;
     private final LoginFailureHandler loginFailureHandler;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     @Setter
@@ -71,14 +74,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/service/**").access("hasAnyRole('ROLE_SERVICE','ROLE_ADMIN')")
                 .antMatchers("/authority/**", "/api/commonSettings/**")
                 .access("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SERVICE', 'ROLE_MODERATOR')")
-                .antMatchers("/admin/**", "/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
+                .antMatchers("/admin/**", "/api/users/**", "/api/admin/**").access("hasAnyRole('ROLE_ADMIN')")
                 .antMatchers("/moderator/**").access("hasRole('ROLE_MODERATOR')")
-                .antMatchers("/**", "/api/allUser/**", "/swagger-ui/**").permitAll()
+                .antMatchers("/**", "/api/allUser/**", "/swagger-ui/**", "/api/auth/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied")
                 .and()
-                .rememberMe();
+                .rememberMe()
+                .and()
+                .apply(new JwtConfigurer(jwtTokenProvider));
     }
 
     @Bean
