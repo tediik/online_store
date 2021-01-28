@@ -57,7 +57,6 @@ public class StockServiceImpl implements StockService {
 
     /**
      * Метод извлекает страницу акций
-     *
      * @param page параметры страницы
      * @return Page<Stock> возвращает страницу акций
      */

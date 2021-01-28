@@ -17,7 +17,12 @@ spring:
           facebook:
             client-id: 12345
             client-secret: 12345
+
   auth:
+    jwt:
+      secure_key: 45jwt3GH
+      validityInMilliseconds: 3600000
+
     vk:
       client_id: 7575777
       secure_key: PRLPSCHx4XO7881zgg3b
