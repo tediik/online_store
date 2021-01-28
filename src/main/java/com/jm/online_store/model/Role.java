@@ -17,7 +17,6 @@ import javax.persistence.Id;
 @ApiModel(description =  "Сущность Role, расширяет GrantedAuthority")
 public class Role implements GrantedAuthority {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
