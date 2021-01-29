@@ -26,7 +26,7 @@ fetch("/api/products" + `/${productIdFromPath}`)
  * @returns {Promise<void>}
  */
 async function fillBreadcrumb(data) {
-    let categories = await fetch("/api/categories/categories").then(response => response.json());
+    let categories = await fetch("/api/categories/allCategories").then(response => response.json());
     let categoriesWithLatin = await fetch("/api/categories").then(response => response.json());
 
     let breadcr = document.getElementById('categoriesBreadcrumb');
@@ -119,7 +119,7 @@ async function fillAboutProduct(data) {
  */
 function addToFavourite() {
     if ($("path").is('[class="filled"]')) {
-        fetch("/customer/favouritesGoods", {
+        fetch("/api/customer/favouritesGoods", {
             method: "DELETE",
             body: productIdFromPath,
             headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -133,7 +133,7 @@ function addToFavourite() {
             }
         })
     } else {
-        fetch("/customer/favouritesGoods", {
+        fetch("/api/customer/favouritesGoods", {
             method: "PUT",
             body: productIdFromPath,
             headers: {"Content-Type": "application/json; charset=utf-8"}
@@ -285,6 +285,21 @@ function showModalError(message) {
         $('.alert').alert('close');
     }, 5000)
 }
+
+/**
+ * запрос который передает в контроллер сущность recentlyViewedProducts в которой хранится id продукта
+ */
+    fetch("/api/customer/addIdProductToSessionAndToBase", {
+        method: "POST",
+        body: productIdFromPath,
+        headers: {"Content-Type": "application/json; charset=utf-8"}
+    }).then(function (response) {
+        if (response.ok) {
+            console.log("Товар успешно добавлен в session");
+        } else {
+            console.log("Просмотренный товар не сохранился");
+        }
+    });
 
 if (document.getElementById('addToCartButton')) {
     document.getElementById('addToCartButton').addEventListener('click', addToProductToCart);

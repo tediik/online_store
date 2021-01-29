@@ -49,10 +49,9 @@ public class MainPageController {
     }
 
     /**
-     * Method gets confirmation token after registering mail and returns customer page     *
-     *
-     * @param model   to create view
-     * @param token   to find new registered user by token
+     * Method gets confirmation token after registering mail and returns customer page
+     * @param model to create view
+     * @param token to find new registered user by token
      * @param request parameters to transfer into UserService.activateUser method
      * @return customer page with newly registered user
      */

@@ -34,7 +34,7 @@ document.getElementById('buttonRestore').addEventListener('click', functionResto
  */
 function functionRestore() {
     let email = document.getElementById('emailForRestore').value;
-    fetch('/users/restore', {
+    fetch('/api/allUsers/restore', {
         method: 'PUT',
         headers: myHeaders,
         body: email
@@ -54,7 +54,7 @@ function functionRestore() {
  */
 document.getElementById('odnoklassnikiBtn').addEventListener('click',odnoklassnikiBtn)
 function odnoklassnikiBtn() {
-    fetch("/login/odnoklassniki").then(response => response.text()).
+    fetch("/api/login/odnoklassniki").then(response => response.text()).
     then(url => document.location.href = url)
 }
 
@@ -64,7 +64,7 @@ function odnoklassnikiBtn() {
  */
 document.getElementById('vkBtn').addEventListener('click',vkBtn)
 function vkBtn() {
-    fetch("/login/vkontakte").then(response => response.text()).
+    fetch("/api/login/vkontakte").then(response => response.text()).
     then(url => document.location.href = url)
 }
 
@@ -75,7 +75,7 @@ function vkBtn() {
 document.getElementById('twitterBtn').addEventListener('click',twitterBtn)
 function twitterBtn() {
     //В данный момент не срабатывает, раскоментировать при необходимости!
-    // fetch("/login/twitter").then(response => response.text())
+    // fetch("/api/login/twitter").then(response => response.text())
     // then(url => document.location.href = url)
 }
 

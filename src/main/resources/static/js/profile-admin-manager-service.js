@@ -1,7 +1,5 @@
 $(document).ready(function () {
     getCurrentUser()
-    /*Слушатель для ссылки удаления профиля*/
-    document.getElementById('deleteProfile').addEventListener('click', deleteProfile)
     /*Слушатель для кнопки смены email*/
     document.getElementById('buttonChangeMail').addEventListener('click', changeEmail)
     /*Слушатель для кнопки смены пароля*/
@@ -11,32 +9,11 @@ $(document).ready(function () {
 });
 
 /**
- * Функция удаления профиля
- * @param event событие click по ссылке Удалить профиль
- */
-function deleteProfile(event) {
-    let id = event.target.dataset.delId
-    fetch(`/authority/deleteProfile/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-type': 'application/json'
-        }
-    }).then(function (response) {
-        if (response.ok) {
-            document.location.href = "/logout";
-        } else {
-            toastr.error('Ваш профиль не был удален.', {timeOut: 3000});
-        }
-    })
-}
-
-/**
  * Функция смены email в профиле
  */
 function changeEmail() {
     let newEmail = document.getElementById('new_mail').value
-    fetch('/authority/changeEmail', {
+    fetch('/api/profile/changeEmail', {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -60,7 +37,7 @@ function changeEmail() {
 function changePassword() {
     let oldPassword = document.getElementById('old_password').value
     let newPassword = document.getElementById('new_password').value
-    fetch('/authority/changePassword', {
+    fetch('/api/profile/changePassword', {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -83,7 +60,7 @@ function changePassword() {
  * Функция получения текущего юзера и заполнение полей профиля
  */
 function getCurrentUser() {
-    fetch('/authority/currentUser')
+    fetch('/api/profile/currentUser')
         .then((res) => res.json())
         .then((currentUser) => {
             $('#id_update').val(currentUser.id);
@@ -92,7 +69,9 @@ function getCurrentUser() {
             $('#last_name_input').val(currentUser.lastName);
             $('#email_input').val(currentUser.email);
             $("#date_birthday_input").val(moment(currentUser.birthdayDate).format("yyyy-MM-DD"));
-            $("#register_date").val(moment(currentUser.registerDate).format("yyyy-MM-DD"));
+            $("#register_date").html(moment(currentUser.registerDate).format("yyyy-MM-DD"));
+            let picSrc = `/uploads/images/${currentUser.profilePicture}`;
+            $('#profilePic').attr(`src`, picSrc);
             if(currentUser.userGender === null) {
                 $('#userGenderNone').prop('checked', true);
             }
@@ -131,7 +110,7 @@ function updateProfile(event) {
         userGender: isChecked,
         registerDate: date
     }
-    fetch('/authority/updateProfile', {
+    fetch('/api/profile/update', {
         method: 'PUT',
         headers: {
             'Accept': 'application/json, text/plain, */*',

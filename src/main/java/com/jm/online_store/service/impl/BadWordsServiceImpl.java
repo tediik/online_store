@@ -60,6 +60,7 @@ public class BadWordsServiceImpl implements BadWordsService {
     /**
      * Метод принимает текст, отдает на очистку от всего лишнего в preparingWordsForImport
      * Формат ввода слов в input через запятую. Слово должно быть длинее 1 символа.
+     *
      * @param words {@link String} текст для импорта стоп-слов
      */
     @Override
@@ -77,6 +78,7 @@ public class BadWordsServiceImpl implements BadWordsService {
     /**
      * Метод подготовки стоп-слов для импорта.
      * Удаляет лишние пробелы, запятые
+     *
      * @param text {@link String} текст для обработки
      * @return String[] массив стоп-слов
      */
@@ -96,22 +98,24 @@ public class BadWordsServiceImpl implements BadWordsService {
 
     /**
      * Метод принимает текст, и ищет в нем стоп-слова.
+     *
      * @param checkText {@link String} текст со стоп-словами
      * @return List<String> Список стоп-слов
      */
     @Override
     public List<String> checkComment(String checkText) {
-        String textForCheck = checkText.toLowerCase();
-
-        List<BadWords> allActiveBW = findAllWordsActive();
         List<String> foundWords = new ArrayList<>();
-        for (BadWords wordCheck : allActiveBW) {
-            String findMe = wordCheck.getBadword().toLowerCase();
-            if (textForCheck.matches(".*?\\b" + findMe + "\\b.*?")) {
-                foundWords.add(findMe);
+        if (checkEnabledCheckText()) {
+            String textForCheck = checkText.toLowerCase();
+            List<BadWords> allActiveBW = findAllWordsActive();
+            for (BadWords wordCheck : allActiveBW) {
+                String findMe = wordCheck.getBadword().toLowerCase();
+                if (textForCheck.matches(".*?\\b" + findMe + "\\b.*?")) {
+                    foundWords.add(findMe);
+                }
             }
+            return foundWords;
         }
-
         return foundWords;
     }
 

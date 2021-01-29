@@ -33,8 +33,6 @@
     <script src="../static/js/customer-favorite-group-actions.js"></script>
     <script src="../static/js/profile-picture.js"></script>
     <script src="../static/js/orders.js"></script>
-
-
 </head>
 <body>
 <header th:insert="blocks/cabinet-header :: header"></header>
@@ -53,21 +51,22 @@
                    aria-controls="profile" aria-selected="false">Профиль</a>
 
                 <a class="btn btn-outline-primary mt-2" id="favouritesGoods-tab" data-toggle="pill"
-                   href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false">
-                    Избранное</a>
-              
+                   href="#favouritesGoods" role="tab" aria-controls="favouritesGoods" aria-selected="false">Избранное</a>
+
                 <a class="btn btn-outline-primary mt-2" id="subscribe-to-products-tab" data-toggle="pill"
-                   href="#subscribe-to-products" role="tab" aria-controls="subscribe-to-products" aria-selected="false">
-                    Подписки</a>
-              
-                <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" href="/basket"
-                   >Корзина</a>
+                   href="#subscribe-to-products" role="tab" aria-controls="subscribe-to-products" aria-selected="false">Подписки</a>
+
+                <a class="btn btn-outline-primary mt-2" id="basketGoods-tab" href="/basket">Корзина</a>
 
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
 
                 <a class="btn btn-outline-primary mt-2" id="feedback-tab" data-toggle="pill" href="#feedback" role="tab"
                    aria-controls="orders" aria-selected="false">Обратная связь</a>
+
+                <a class="btn btn-outline-primary mt-2" id="recentlyViewedProducts-tab" data-toggle="pill"
+                   href="#recentlyProductsView" role="tab"
+                   aria-controls="orders1" aria-selected="false">Недавно просмотренные товары</a>
 
                 <a id="quitFromCustomerProfile" class="btn btn-outline-primary mt-2" href="/logout">Выйти</a>
 
@@ -402,7 +401,8 @@
                                                     data-target="#deleteProfile"
                                                     th:data-del-id="${user.id}">Удалить профиль
                                             </button>
-                                        </div><!--DELETE BUTTON -->
+                                        </div>
+                                        <!--DELETE BUTTON -->
 
                                         <!--ДАТА РЕГИТСРАЦИИ -->
                                         <div class="m-2 text-center personal-info_register-container"
@@ -528,6 +528,11 @@
                                                             class="btn btn-danger" th:data-del-id="${user.id}"
                                                             data-dismiss="modal">
                                                         Удалить
+                                                    </button>
+                                                    <button id="deleteProfileCustomerUnrecoverable" type="button"
+                                                            class="btn btn-danger" th:data-del-id="${user.id}"
+                                                            data-dismiss="modal">
+                                                        Удалить безвозвратно
                                                     </button>
                                                 </div>
                                             </div>
@@ -667,10 +672,90 @@
                     </div>
                 </div>
                 <!-- ВКЛАДКА ОБРАТНАЯ СВЯЗЬ  -->
+
+                <!-- ВКЛАДКА НЕДАВНО ПРОСМОТРЕННЫЕ ТОВАРЫ  -->
+
+                <div class="tab-pane fade" id="recentlyProductsView" role="tabpanel"
+                     aria-labelledby="recentlyViewedProducts1-tab">
+                    <div class="container-fluid bg-light">
+                        <div class="tab-content" id="containerViewedProduct">
+                            <h5>Недавно просмотренные товары:</h5>
+                            <ul class="nav nav-tabs">
+                                <!-- вкладка (активная) всех недавно просмотренных товаров-->
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#tab_all_recently_products_view"
+                                       onclick="fillRecentlyProductsView()">За все время</a>
+                                </li>
+                                <!-- вкладка недавно просмотренных товаров на этой неделе-->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_recently_products_view_this_week"
+                                       onclick="fillRecentlyProductsViewThisWeek()">На этой неделе</a>
+                                </li>
+                                <!-- вкладка недавно просмотренных товаров в этом месяце-->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_recently_products_view_this_month"
+                                       onclick="fillRecentlyProductsViewThisMonth()">В этом месяце</a>
+                                </li>
+                                <!-- вкладка недавно просмотренных товаров в прошлом месяце-->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_recently_products_view_last_month"
+                                       onclick="fillRecentlyProductsViewLastMonth()">В прошлом месяце</a>
+                                </li>
+                            </ul>
+                            <!-- Блоки с контентом -->
+                            <div class="tab-content">
+                                <!--                        За все время-->
+                                <div class="tab-pane fade show active" id="tab_all_recently_products_view">
+                                    <div id="allRecentlyProducts">
+                                        <div class="col-10">
+                                            <br>
+                                            <div id="recentlyProductsViewDiv">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--                        На этой неделе-->
+                                <div class="tab-pane fade show" id="tab_recently_products_view_this_week">
+                                    <div id="thisWeekRecentlyProducts">
+                                        <div class="col-10">
+                                            <br>
+                                            <div id="thisWeekRecentlyProductsDiv">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--                        В этом месяце-->
+                                <div class="tab-pane fade show" id="tab_recently_products_view_this_month">
+                                    <div id="thisMonthRecentlyProducts">
+                                        <div class="col-10">
+                                            <br>
+                                            <div id="thisMonthRecentlyProductsDiv">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--                        В прошлом месяце-->
+                                <div class="tab-pane fade show" id="tab_recently_products_view_last_month">
+                                    <div id="lastMonthRecentlyProducts">
+                                        <div class="col-10">
+                                            <br>
+                                            <div id="lastMonthRecentlyProductsDiv">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ВКЛАДКА НЕДАВНО ПРОСМОТРЕННЫЕ ТОВАРЫ  -->
             </div>
         </div>
         <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
-
     </div>
 </div>
 <!-- Modal for order -->

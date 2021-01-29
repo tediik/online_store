@@ -145,7 +145,7 @@ public class BasketServiceImpl implements BasketService {
 
        if(productToAdd.getAmount() <= 0) {
             throw new ProductsNotFoundException("В БД закончился данный продукт");
-       }else {
+       } else {
            for (SubBasket basket : userBasket) {
                if (basket.getProduct().getId() == id) {
                    basket.setCount(basket.getCount() + 1);
