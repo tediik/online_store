@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -23,15 +22,15 @@ public class SecurityUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     /**
-     * Если такго пользователся не существует throws UsernameNotFoundException
-     * Если Юзер - кастомер проверяем :
-     * 1) если заблокмрован но срок данный ему на восстановление не прошел throw new LockedException
-     * выводим сообщение с сылкой на восстановление
-     * 2) если заблокирован и срок данный ему на восстановление прошел throw new CredentialsExpiredException
-     * удаляем его и сообщаем ему об этом
-     * эти экспшены обрабатываются в классе LoginFailureHandler, дальнейшую логику смотри там
+     * Если такого пользователся не существует - бросаем UsernameNotFoundException
+     * Если Юзер - кастомер проверяем:
+     * 1) если заблокирован, но срок, данный ему на восстановление не прошел - бросаем LockedException
+     * и выводим сообщение с ссылкой на восстановление.
+     * 2) если заблокирован и срок данный ему на восстановление прошел - бросаем CredentialsExpiredException,
+     * удаляем и сообщаем ему об этом.
+     * Экспшены обрабатываются в классе {@linkplain LoginFailureHandler}, дальнейшую логику смотри там.
      *
-     * @param email email
+     * @param email - наш логин
      * @return user for security
      * @throws UsernameNotFoundException
      */
@@ -49,4 +48,5 @@ public class SecurityUserDetailsService implements UserDetailsService {
     public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getAuthority())).collect(Collectors.toList());
     }
+
 }

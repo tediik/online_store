@@ -61,7 +61,6 @@ public class CustomerController {
 
     /**
      * метод для формирования данных для обновления User.
-     *
      * @param user  пользователь
      * @param model модель для view
      * @return
@@ -79,7 +78,8 @@ public class CustomerController {
     public String changePassword() {
         return "change-password";
     }
-// looks like useless
+
+    // looks like useless
     @GetMapping("/activatenewmail/{token}")
     public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
         userService.activateNewUsersMail(token, request);

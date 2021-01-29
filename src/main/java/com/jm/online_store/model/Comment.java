@@ -46,6 +46,10 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime commentDate;
 
+    // поле время редактирования
+    @Column(name = "comment_edit")
+    private String commentTimeEdit;
+
     @ManyToOne
     @JoinColumn(name = "product")
     private Product product;

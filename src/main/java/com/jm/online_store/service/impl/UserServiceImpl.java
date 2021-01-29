@@ -36,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +58,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
+
 
     private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
@@ -369,7 +369,7 @@ public class UserServiceImpl implements UserService {
         favouritesGroup.setUser(customer);
         favouritesGroupService.save(favouritesGroup);
 
-        if (userRepository.existsByEmail(request.getSession().getId())) {
+        if (userRepository.existsByEmail(confirmationToken.getUserEmail())) {
             List<SubBasket> subBasketList = getCurrentLoggedInUser(request.getSession().getId()).getUserBasket();
             userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
             customer.setUserBasket(subBasketList);
@@ -437,7 +437,6 @@ public class UserServiceImpl implements UserService {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }
         }
-        log.debug("Failed to store file - file is not present {}", uniqueFilename);
         return File.separator + "uploads" + File.separator + "images" + File.separator + uniqueFilename;
     }
 
