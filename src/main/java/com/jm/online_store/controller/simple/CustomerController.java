@@ -61,7 +61,6 @@ public class CustomerController {
 
     /**
      * метод для формирования данных для обновления User.
-     *
      * @param user  пользователь
      * @param model модель для view
      * @return
