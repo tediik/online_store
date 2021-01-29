@@ -138,6 +138,12 @@ public class CategoriesServiceImpl implements CategoriesService {
      */
     @Override
     public void saveAll(List<Categories> catList) {
+        for(Categories categories : catList)
+            if(!(categories.getProducts() == null)){
+                for(Product product : categories.getProducts()){
+                    product.setProduct_picture("00.jpg");
+                }
+            }
         categoriesRepository.saveAll(catList);
     }
 

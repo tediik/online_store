@@ -60,6 +60,8 @@ public class Product {
     @NonNull
     private boolean deleted;
 
+    private String product_picture = "";
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")

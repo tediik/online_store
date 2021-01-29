@@ -27,6 +27,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,10 +39,12 @@ import javax.mail.MessagingException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -49,12 +53,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images" + File.separator + "products";
     private final ProductRepository productRepository;
     private final EvaluationService evaluationService;
     private final UserService userService;
@@ -199,6 +205,9 @@ public class ProductServiceImpl implements ProductService {
         if (product.getRating() == null) {
             product.setRating(0d);
         }
+        if (product.getProduct_picture().isEmpty()){
+            product.setProduct_picture("00.jpg");
+        }
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
     }
@@ -244,6 +253,11 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public void uploadPictureForProduct(Product product, MultipartFile pictureFile){
+
+
+    }
 
     /**
      * метод удаления Product.
