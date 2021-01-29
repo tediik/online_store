@@ -105,9 +105,18 @@ public class CustomerRestController {
      */
     @DeleteMapping("/deleteProfile/{id}")
     @ApiOperation(value = "Changes Users status, when Delete button clicked")
-    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
-        customerService.changeCustomerStatusToLocked(id);
-        return ResponseEntity.ok("Delete profile");
+    public ResponseEntity<User> deleteProfile(@PathVariable Long id) {
+        User deletedUser = userService.findUserById(id);
+        try {
+            customerService.changeCustomerStatusToLocked(id);
+        }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            log.debug("There is no user with id: {}", id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        log.debug("User with id: {}, was deleted successfully", id);
+        return ResponseEntity.ok(deletedUser);
     }
 
     /**
@@ -161,14 +170,19 @@ public class CustomerRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request)  {
-        HttpSession session = request.getSession();
-        session.setAttribute("Product", productId);
-        Long userId = userService.getCurrentLoggedInUser().getId();
-        if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
-            recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId);
+    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request) {
+        if (userService.getCurrentLoggedInUser() != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("Product", productId);
+            Long userId = userService.getCurrentLoggedInUser().getId();
+            if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
+                recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId);
+            }
+            return ResponseEntity.ok("Product is saved in session");
         }
-        return ResponseEntity.ok("Product is saved in session");
+        else {
+            return  ResponseEntity.ok("User is not authenticated. Product is not saved to session");
+        }
     }
 
     /**

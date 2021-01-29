@@ -104,14 +104,16 @@ public class AdminRestController {
             @ApiResponse(code = 200, message = "User was deleted successfully"),
     })
     public ResponseEntity<User> deleteUser(@PathVariable Long id) {
+        User deletedUserInfo = new User(id, userService.findUserById(id).getUsername());
         try {
             userService.deleteByID(id);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             log.debug("There is no user with id: {}", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         log.debug("User with id: {}, was deleted successfully", id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(deletedUserInfo);
     }
 
     /**

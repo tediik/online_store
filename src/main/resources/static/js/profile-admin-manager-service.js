@@ -91,8 +91,8 @@ function getCurrentUser() {
             $('#first_name_update').val(currentUser.firstName);
             $('#last_name_input').val(currentUser.lastName);
             $('#email_input').val(currentUser.email);
-            $("#date_birthday_input").val(moment(currentUser.birthdayDate).format("yyyy-MM-DD"));
-            $("#register_date").val(moment(currentUser.registerDate).format("yyyy-MM-DD"));
+            $("#date_birthday_input").val(currentUser.birthdayDate);
+            $("#register_date").val(currentUser.registerDate);
             if(currentUser.userGender === null) {
                 $('#userGenderNone').prop('checked', true);
             }
