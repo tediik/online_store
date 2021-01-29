@@ -83,6 +83,7 @@ public class ProfileRestController {
         userService.updateUserProfile(user);
         return ResponseEntity.ok().build();
     }
+
     /**
      * Метод удаления профиля
      * @param id индентификатор пользователя

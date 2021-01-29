@@ -155,12 +155,14 @@ public class DataInitializer {
         Role managerRole = new Role("ROLE_MANAGER");
         Role serviceRole = new Role("ROLE_SERVICE");
         Role moderatorRole = new Role("ROLE_MODERATOR");
+        Role supermoderatorRole = new Role("ROLE_SUPERMODERATOR");
 
         roleService.addRole(adminRole);
         roleService.addRole(customerRole);
         roleService.addRole(managerRole);
         roleService.addRole(serviceRole);
         roleService.addRole(moderatorRole);
+        roleService.addRole(supermoderatorRole);
 
         User admin = new User("admin@mail.ru", "1");
         User manager = new User("manager@mail.ru", "1");
@@ -168,6 +170,7 @@ public class DataInitializer {
         User service = new User("service@mail.ru", "1");
         User moderator1 = new User("moderator1@mail.ru", "1");
         User moderator2 = new User("moderator2@mail.ru", "2");
+        User supermoderator = new User("supermoderator@mail.ru", "1");
         Customer deletedCustomer = new Customer("deleted@mail.ru", "1");
         deletedCustomer.setProfilePicture(StringUtils.cleanPath("deleted.jpg"));
         deletedCustomer.setFirstName("Deleted");
@@ -178,12 +181,14 @@ public class DataInitializer {
         Optional<Role> managRole = roleService.findByName("ROLE_MANAGER");
         Optional<Role> servRole = roleService.findByName("ROLE_SERVICE");
         Optional<Role> modrRole = roleService.findByName("ROLE_MODERATOR");
+        Optional<Role> supermodrRole = roleService.findByName("ROLE_SUPERMODERATOR");
 
         Set<Role> customerRoles = new HashSet<>();
         Set<Role> adminRoles = new HashSet<>();
         Set<Role> managerRoles = new HashSet<>();
         Set<Role> serviceRoles = new HashSet<>();
         Set<Role> moderatorRoles = new HashSet<>();
+        Set<Role> supermoderatorRoles = new HashSet<>();
 
         customerRoles.add(custRole.get());
         adminRoles.add(admnRole.get());
@@ -192,6 +197,7 @@ public class DataInitializer {
         managerRoles.add(managRole.get());
         serviceRoles.add(servRole.get());
         moderatorRoles.add(modrRole.get());
+        supermoderatorRoles.add(supermodrRole.get());
 
         manager.setRoles(managerRoles);
         admin.setRoles(adminRoles);
@@ -200,6 +206,7 @@ public class DataInitializer {
         service.setRoles(serviceRoles);
         moderator1.setRoles(moderatorRoles);
         moderator2.setRoles(moderatorRoles);
+        supermoderator.setRoles(supermoderatorRoles);
 
         userService.addUser(manager);
         userService.addUser(customer);
@@ -207,6 +214,7 @@ public class DataInitializer {
         userService.addUser(service);
         userService.addUser(moderator1);
         userService.addUser(moderator2);
+        userService.addUser(supermoderator);
         userService.addUser(deletedCustomer);
 
         Product product_1 = new Product("apple", 100000D, 10, 0.1);
