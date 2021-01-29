@@ -108,9 +108,18 @@ public class CustomerRestController {
      */
     @DeleteMapping("/deleteProfile/{id}")
     @ApiOperation(value = "Changes Users status, when Delete button clicked")
-    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
-        customerService.changeCustomerStatusToLocked(id);
-        return ResponseEntity.ok("Delete profile");
+    public ResponseEntity<User> deleteProfile(@PathVariable Long id) {
+        User deletedUser = userService.findUserById(id);
+        try {
+            customerService.changeCustomerStatusToLocked(id);
+        }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            log.debug("There is no user with id: {}", id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        log.debug("User with id: {}, was deleted successfully", id);
+        return ResponseEntity.ok(deletedUser);
     }
 
     /**
@@ -191,11 +200,30 @@ public class CustomerRestController {
     })
     public ResponseEntity<List<Product>> getRecentlyViewedProducts()
             throws ResponseStatusException {
-            return ResponseEntity.ok(recentlyViewedProductsService
-                    .findAllRecentlyViewedProductsByUserId(userService
-                            .getCurrentLoggedInUser().getId()).stream()
-                            .map(RecentlyViewedProducts::getProduct)
-                            .collect(Collectors.toList()));
+        return ResponseEntity.ok(recentlyViewedProductsService
+                .findAllRecentlyViewedProductsByUserId(userService
+                        .getCurrentLoggedInUser().getId()).stream()
+                .map(RecentlyViewedProducts::getProduct)
+                .collect(Collectors.toList()));
+    }
+
+    /**
+     * Метод возвращает из базы список продуктов, которые просматривал пользователь в промежутке времени
+     * @param stringStartDate - start of custom date range that receives from frontend in as String
+     * @param stringEndDate   - end of custom date range that receives from frontend in as String
+     * @return - ResponseEntity<List<Product>>
+     */
+    @GetMapping("/recentlyViewedProducts")
+    @ApiOperation(value = "Метод возвращает из базы список продуктов, которые просматривал пользователь" +
+                "в промежутке времени (stringStartDate и stringEndDate), параметры передаются в строковом значении как 2018-10-23")
+    @ApiResponse(code = 404, message = "Product was not found")
+    public ResponseEntity<List<Product>> getRecentlyViewedProductsByUserIdAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
+        LocalDate startDate = LocalDate.parse(stringStartDate);
+        LocalDate endDate = LocalDate.parse(stringEndDate);
+        return ResponseEntity.ok(recentlyViewedProductsService.findRecentlyViewedProductsByUserIdAndDateTimeBetween(userService
+                .getCurrentLoggedInUser().getId(), startDate, endDate).stream()
+                .map(RecentlyViewedProducts::getProduct)
+                .collect(Collectors.toList()));
     }
 }
 

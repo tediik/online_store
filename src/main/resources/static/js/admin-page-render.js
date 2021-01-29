@@ -78,6 +78,7 @@ function compareRolesId(userRoles, roleNameToCheck) {
         if (userRoles[i].name === roleNameToCheck) {
             return true
         }
+        else return false;
     }
 }
 
