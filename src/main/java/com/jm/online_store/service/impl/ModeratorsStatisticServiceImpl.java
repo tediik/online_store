@@ -19,7 +19,6 @@ public class ModeratorsStatisticServiceImpl implements ModeratorsStatisticServic
 
     /**
      * список статистики отклоненных и принятых жалоб
-     *
      * @return List<ModeratorsStatistic>
      */
     @Override
@@ -29,7 +28,6 @@ public class ModeratorsStatisticServiceImpl implements ModeratorsStatisticServic
 
     /**
      * увеличение счетчика отклоненных жалоб
-     *
      * @param moderator - модератор в таблице статистики
      */
     @Override
@@ -51,7 +49,6 @@ public class ModeratorsStatisticServiceImpl implements ModeratorsStatisticServic
 
     /**
      * увеличение счетчика одобренных жалоб
-     *
      * @param moderator - модератор в таблице статистики
      */
     @Override
