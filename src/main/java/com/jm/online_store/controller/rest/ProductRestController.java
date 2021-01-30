@@ -123,11 +123,13 @@ public class ProductRestController {
         }
     }
     /**
-     * Возвращает список первых N продуктов - N передаётся в метод сервиса .findNumProducts(N)
+     * Возвращает список первых count продуктов - count передаётся в метод сервиса .findNumProducts(count)
+     *
+     *  @param count колличество возвращаемых продуктов
      */
-    @ApiOperation(value = "Returns list of first N products")
-    @GetMapping("/first/{N}")
-    public ResponseEntity<List<Product>> getSomeProducts(@PathVariable Integer N) {
-        return ResponseEntity.ok(productService.findNumProducts(N));
+    @ApiOperation(value = "Returns a list with a given number of first products")
+    @GetMapping("/first/{count}")
+    public ResponseEntity<List<Product>> getSomeProducts(@PathVariable Integer count) {
+        return ResponseEntity.ok(productService.findNumProducts(count));
     }
 }
