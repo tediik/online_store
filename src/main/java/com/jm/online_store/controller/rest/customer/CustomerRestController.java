@@ -114,7 +114,6 @@ public class CustomerRestController {
             customerService.changeCustomerStatusToLocked(id);
         }
         catch (IllegalArgumentException e) {
-            e.printStackTrace();
             log.debug("There is no user with id: {}", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

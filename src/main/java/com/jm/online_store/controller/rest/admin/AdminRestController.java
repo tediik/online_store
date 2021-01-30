@@ -105,7 +105,6 @@ public class AdminRestController {
         try {
             userService.deleteByID(id);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             log.debug("There is no user with id: {}", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

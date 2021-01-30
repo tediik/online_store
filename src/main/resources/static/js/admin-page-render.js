@@ -78,7 +78,6 @@ function compareRolesId(userRoles, roleNameToCheck) {
         if (userRoles[i].name === roleNameToCheck) {
             return true
         }
-        else return false;
     }
 }
 
@@ -270,18 +269,27 @@ function handleUserAcceptButtonFromModalWindow(event) {
                         fetch("/api/customer/deleteProfile/" + user.id, {
                             headers: headers,
                             method: 'DELETE'
-                        }).then(response => response.json())
-                            .then(blockedUser => console.log('Customer: ' + blockedUser.email + ' with ID: ' + blockedUser.id + '. Status = Locked'))
-                        fetchUsersAndRenderTable()
-                        $('#userModalWindow').modal('hide')
+                        }).then(function (response) {
+                            if (response.ok) {
+                                fetchUsersAndRenderTable()
+                                $('#userModalWindow').modal('hide')
+                                toastr.success("Пользователь заблокирован");
+                            } else {
+                                modalHandleNotValidFormField("Не удается заблокировать пользователя")
+                            }})
                     } else {
                         fetch(adminRestUrl + "/" + user.id, {
                             headers: headers,
                             method: 'DELETE'
-                        }).then(response => response.json())
-                            .then(deletedUser => console.log('User: ' + deletedUser.email + ' with ID: ' + deletedUser.id + ' was successfully deleted'))
-                            .then($('#tr-' + user.id).remove())
-                        $('#userModalWindow').modal('hide')
+                        }).then(function (response) {
+                            if (response.ok) {
+                                const deletedUser = response.json()
+                                $('#tr-' + user.id).remove()
+                                $('#userModalWindow').modal('hide')
+                                toastr.success("Пользователь удален");
+                            } else {
+                                modalHandleNotValidFormField("Не удается удалить пользователя")
+                            }})
                     }
                 })
     } else {
