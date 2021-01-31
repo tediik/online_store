@@ -38,16 +38,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-/**
- * основная сущность проекта - USER.
- */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-@ApiModel(description =  "Сущность User, расширеяет UserDetails, связана с Role, Product," +
-        " FavouritesGroup и Address")
+@ApiModel(description =  "Сущность User, расширяет UserDetails, связана с Role, Product, " +
+        "FavouritesGroup и Address")
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
@@ -120,18 +117,17 @@ public class User implements UserDetails {
     private Set<Address> userAddresses = new HashSet<>();
 
     /**
-     * поле корзина клиента.
      * "Корзина клиента" состоит из подкорзин "SubBasket", состоящих в свою очередь
      * из сущности "Product" и количества данного "Product" в "SubBasket".
-     * данная схема необходима, чтобы можно было хранить необходимое количество товара
-     * для заказа пользователя и сам товар как экземпляр класса "Product".
-     * для оформления заказа необходимо пройти по всем "SubBasket" и получить из сущности "Product",
+     * Данная схема необходима, чтобы можно было хранить необходимое количество товара
+     * для заказа пользователя и сам товар, как экземпляр класса "Product".
+     * Для оформления заказа, необходимо пройти по всем "SubBasket" и получить из сущности "Product",
      * который находится в "SubBasket" актуальную цену, из объекта "SubBasket" получить количество товара "Product".
-     * Для добавления товара в корзину необходимо пройти по всем "SubBasket" и проверить на наличие данного "Product"
-     * в корзине. При наличии совпадений, необходимо проверить коичество(наличие) данного "Product" в БД
+     * Для добавления товара в корзину, необходимо пройти по всем "SubBasket" и проверить на наличие данного "Product"
+     * в корзине. При наличии совпадений, необходимо проверить количество (наличие) данного "Product" в БД
      * и увеличить на "1" в данном "SubBasket".
      */
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_basket",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -186,8 +182,7 @@ public class User implements UserDetails {
 
     /**
      * Конструктор для поиска подписчиков из CustomerRepository (метод findSubscriberByEmail())
-     *
-     * @param id    - поле id
+     * @param id - поле id
      * @param email - поле email
      */
     public User(Long id, String email) {

@@ -8,9 +8,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/online_store
     username: root
     password: root
-#    url: jdbc:postgresql://ec2-52-208-138-246.eu-west-1.compute.amazonaws.com:5432/datmbr0etpmdhb
-#    username: ivrmvajsnlixth
-#    password: ec3c54e3047872e2eb2075ec1e333e04aedb0ab4604410209771d31fe5042050
+    #    url: jdbc:postgresql://ec2-52-208-138-246.eu-west-1.compute.amazonaws.com:5432/datmbr0etpmdhb
+    #    username: ivrmvajsnlixth
+    #    password: ec3c54e3047872e2eb2075ec1e333e04aedb0ab4604410209771d31fe5042050
+
     hikari:
       leak-detection-threshold: 60000
       maximum-pool-size: 5
@@ -66,7 +67,7 @@ price-list-service:
   path-to-zip-file: uploads/files/prices/pricedaily.zip
 
 delete_expired_customer_period:
-  cron: '0 0 0 * * *'
+  cron: '0 1 1 * * *'
 
 check_new_emails_subscribe_confirmations:
   cron: '30 * * * * *'
@@ -84,3 +85,4 @@ telegram-bot:
 
 common-data:
   store-name: Online store
+

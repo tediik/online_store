@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class AuthorityController {
     /**
-     * Контролллер для ролей ADMIN MANAGER
+     * Контроллер для ролей ADMIN MANAGER
      */
     private final UserService userService;
 
@@ -54,7 +54,7 @@ public class AuthorityController {
         if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
             model.addAttribute("message", "Pls, check your old password!");
         }
-        return "redirect:/authority/profile";
+        return "profile";
     }
 
     @GetMapping("/activatenewmail/{token}")

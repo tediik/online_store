@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await $.ajax({
                 //Get current logged in user
                 type: "GET",
-                url: '/api/users/getCurrent',
+                url: '/api/allUsers/getCurrent',
                 dataType: "json",
                 success: function (response) {
                     if (response !== undefined) {
@@ -77,22 +77,23 @@ document.addEventListener('DOMContentLoaded', () => {
         $.each(commentsCache, function (i, comment) {
             if (comment.parentId === null) {
                 $('#commentsList').append($(`
-                        <div class="media mb-4" id="media${comment.id}"><div>
-                        <div id="image${comment.id}">
-                        <img id="profilePic${comment.id}" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
-                        </div>
-                        <div class="media-body" id='mediaBody${comment.id}'>
-                        <h5 class="mt-0" id="mt-0${comment.id}">${comment.userDescription } ${comment.timeStamp}</h5>
-                        <div class="message" id="commentContent${comment.id}"> ${comment.content}  </div>
-                        <button type='button' id='replyButton${comment.id}' class='btn btn-link reply'>Ответить</button>
-                        <button type='button' id='editButton${comment.id}' class='btn btn-link edit'>Править</button>
-                        <button type='button' id='deleteButton${comment.id}' class='btn btn-link delete'>Удалить</button>
-                        <button type='button' id='reportButton${comment.id}' class='btn btn-link report'>Пожаловаться</button>
-                        <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
-                        <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
-                        <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
-                        </div>
-                `))
+                <div class="media mb-4" id="media${comment.id}"><div>
+                <div id="image${comment.id}">
+                <img id="profilePic${comment.id}" alt="UserPhoto" class="rounded-circle img-responsive mt-2 height=52" src="/uploads/images/${comment.userPhoto}" width="52"></div>
+                </div>
+                <div class="media-body" id='mediaBody${comment.id}'>
+                <h5 class="mt-0" id="mt-0${comment.id}">${comment.userDescription} ${comment.timeStamp}</h5>
+                <div class="commentTimeEdit" id="timeEditComment${comment.id}"> ${comment.commentTimeEdit}  </div>                  
+                <div class="message" id="commentContent${comment.id}"> ${comment.content}  </div>
+                <button type='button' id='replyButton${comment.id}' class='btn btn-link reply'>Ответить</button>
+                <button type='button' id='editButton${comment.id}' class='btn btn-link edit'>Править</button>
+                <button type='button' id='deleteButton${comment.id}' class='btn btn-link delete'>Удалить</button>
+                <button type='button' id='reportButton${comment.id}' class='btn btn-link report'>Пожаловаться</button>
+                <div class="reportCommentBoxSpace" id='reportCommentBoxSpace${comment.id}'></div>
+                <div class="replyDisplay" id='replyDisplayId${comment.id}'> </div>
+                <div class="commentBoxSpace" id='commentBoxSpace${comment.id}'></div>
+                </div>
+        `))
                 deleteAndEditButtonsView(comment)
                 replyButtonsView(comment);
                 isDeleted(comment);
@@ -275,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editCommentBox.setAttribute("id", `commentEditing${commentId}`);
 
         editCommentBox.innerHTML = `
-                                    <h4>Editing Comment:</h4>
+                                    <h4>Изменение комментария:</h4>
                                         <div class="form-group" id= "editCommentTextBox">
                                             <textarea class="form-control" id="editCommentText${commentId}" rows="3">${commentText}</textarea>
                                         </div>
@@ -297,9 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
     /* При нажатии на "Сохранить изменения" при редактировании комментария*/
     async function submitEdit(commentId) {
         let editBlock = document.getElementById(commentId).parentElement;
-
         commentId = commentId.replace(/\D/g, '');
         let editContent = $("#editCommentText" + commentId).val().trim();
+        let responseAfter;
 
         if (editContent.length < 1) {
             alert("Please Enter Text...");
@@ -307,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
             let dataObject = {};
             dataObject["id"] = commentId;
             dataObject["content"] = editContent;
-
             await (async () => {
                 const rawResponse = await fetch('/api/comments', {
                     method: 'PUT',
@@ -318,14 +318,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(dataObject)
                 })
                     .then(function (response) {
-                        if (!response.ok) {
-                            toastr.error("Произошла ошибка " + response.status);
+                        responseAfter = response;
+                        return response.json();
+                    })
+                    .then(function (comment) {
+
+                        if (responseAfter === 201) {
+                            let stopAlert = 'В вашем комментарии есть запрещенные слова. \nПожалуйста удалите их!'
+                            toastr.error(stopAlert);
+                            return;
+                        } else if (!responseAfter.ok) {
+                            toastr.error("Произошла ошибка " + responseAfter.status);
                             commentsCache = null;
                             showOrRefreshComments();
                         } else {
                             let commentContent = document.getElementById('commentContent' + commentId.replace(/\D/g, ''));
+                            let timeEdit = document.getElementById('timeEditComment' + commentId.replace(/\D/g, ''));
                             commentContent.textContent = editContent;
+                            timeEdit.textContent = comment.commentTimeEdit;
                             $(commentContent).show();
+                            $(timeEdit).show();
                             editBlock.remove();
                             if (document.getElementById('replyButton' + commentId.replace(/\D/g, ''))) {
                                 $('#replyButton' + commentId.replace(/\D/g, '')).show();
@@ -333,7 +345,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             $('#editButton' + commentId.replace(/\D/g, '')).show();
                             $('#deleteButton' + commentId.replace(/\D/g, '')).show();
                             $('#reportButton' + commentId.replace(/\D/g, '')).show();
-
                             commentsCache.forEach((item, i) => {
                                 if (item.id == commentId) {
                                     item.content = editContent;

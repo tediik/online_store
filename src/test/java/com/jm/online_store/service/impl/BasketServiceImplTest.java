@@ -103,7 +103,7 @@ public class BasketServiceImplTest {
 
     @Test
     void getBasket() {
-        when(userService.getCurrentLoggedInUser()).thenReturn(user);
+        when(userService.getCurrentLoggedInUser("")).thenReturn(user);
         when(productService.findProductById(subBasket_1.getProduct().getId()))
                 .thenReturn(Optional.ofNullable(product_1));
         List<SubBasket> basketList = basketService.getBasket("");
@@ -123,24 +123,24 @@ public class BasketServiceImplTest {
 
     @Test
     void addBasket() {
-        when(basketRepository.save(subBasket_3)).thenReturn(subBasket_3);
-        SubBasket subBasketAdd = basketService.addBasket(subBasket_3);
+        when(basketRepository.save(subBasket_2)).thenReturn(subBasket_2);
+        SubBasket subBasketAdd = basketService.addBasket(subBasket_2);
         assertNotNull(subBasketAdd);
         assertNotNull(subBasketAdd.getProduct());
-        assertEquals(1, subBasketAdd.getCount());
-        verify(basketRepository, times(1)).save(subBasket_3);
+        assertEquals(2, subBasketAdd.getCount());
+        verify(basketRepository, times(1)).save(subBasket_2);
     }
 
     @Test
     void deleteBasket() {
-        when(userService.getCurrentLoggedInUser()).thenReturn(user);
+        when(userService.getCurrentLoggedInUser("")).thenReturn(user);
         basketService.deleteBasket(subBasket_2,"");
         verify(basketRepository, times(1)).delete(subBasket_2);
     }
 
     @Test
     void addProductToBasket() {
-        when(userService.getCurrentLoggedInUser()).thenReturn(user);
+        when(userService.getCurrentLoggedInUser("")).thenReturn(user);
         when(productService.findProductById(2L)).thenReturn(Optional.ofNullable(product_2));
         when(basketRepository.save(subBasket_2)).thenReturn(subBasket_2);
         basketService.addProductToBasket(2L,"");
