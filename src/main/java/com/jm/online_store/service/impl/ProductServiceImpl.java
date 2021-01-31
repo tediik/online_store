@@ -208,6 +208,9 @@ public class ProductServiceImpl implements ProductService {
         if (product.getProduct_picture().isEmpty()){
             product.setProduct_picture("00.jpg");
         }
+        if(!(product.getProduct_picture().equals("00.jpg"))){
+            product.setProduct_picture(product.getProduct_picture());
+        }
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
     }

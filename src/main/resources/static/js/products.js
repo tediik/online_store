@@ -168,6 +168,35 @@ function deleteModalWindowRender(productToEdit) {
     $('#productAmountInputModal').val(productToEdit.amount).prop('readonly', true)
 }
 
+function editPictureModalWindowRender(product) {
+    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('#idInputModal').val(product.id)
+    $('#acceptButton').text("Применить").removeClass().toggleClass('btn btn-success edit-product')
+    $('.modal-title').text("Изменить картинку")
+}
+
+/**
+ * Функция обработки нажатия на кнопку Добавить картинку
+ * @param event
+ */
+function handleEditPictureButton(event) {
+    const productId = event.target.dataset["productId"]
+    Promise.all([
+        fetch("/api/product/manager/" + productId, {headers: headers}),
+    ])
+        .then(([response]) => Promise.all([response.json()]))
+        .then(([productToEdit]) => {
+            fetch(API_CATEGORIES_URL + 'getOne/' + productId)
+                .then(promiseResult => {
+                    return promiseResult.text()
+                })
+                .then(responseResult => {
+                    currentCategoryNameEdit = "" + responseResult;
+                    editPictureModalWindowRender(productToEdit)
+                });
+        });
+}
+
 /**
  * Функция обработки нажатия кнопки Edit в таблице продукта
  * @param event
@@ -252,7 +281,7 @@ function handleAddBtn() {
         product: $('#addProduct').val(),
         price: $('#addPrice').val(),
         amount: $('#addAmount').val(),
-    }
+    };
 
     /**
      * функция очистки полей формы нового продукта
@@ -351,6 +380,26 @@ function fetchToAddCharacteristics(addedProductName) {
     })
 }
 
+$('#inputPictureFile').click()
+
+// function importPictureFile(){
+//     $.ajax(
+//         {
+//             type: 'POST',
+//             url: '/api/product/upload/picture/' + product.id,
+//             dataType: 'script',
+//             data: form_data,
+//             cache: false,
+//             contentType: false,
+//             processData: false,
+//             success: function (data) {
+//                 $('#profilePic').attr('src', data);
+//             },
+//             error: function (jqXhr, textStatus, errorThrown) {
+//                 console.log(errorThrown);
+//             }
+//         });
+// }
 /**
  * Добавление товара из файла
  *
@@ -413,11 +462,11 @@ function importProductsFromFile() {
  * @param event
  */
 function handleAcceptButtonFromModalWindow(event) {
-    const product = {
+     const  product= {
         id: $('#idInputModal').val(),
         product: $('#productInputModal').val(),
         price: $('#productPriceInputModal').val(),
-        amount: $('#productAmountInputModal').val(),
+        amount: $('#productAmountInputModal').val()
     };
 
     /**
@@ -507,6 +556,7 @@ function renderProductsTable(products) {
         .append(`<tr>
                 <th>ID</th>
                 <th>Наименование товара</th>
+                <th>Картинка</th>
                 <th>Цена</th>
                 <th>Количество</th>
                 <th>Edit</th>
@@ -518,6 +568,11 @@ function renderProductsTable(products) {
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>
                     <td>${product.product}</td>
+                    <td>
+                        <button data-product-id="${product.id}" type="button" class="btn btn-link link-button" data-toggle="modal" data-target="#productModalWindow">
+                                                     Добавить картинку
+                            </button>
+                    </td>
                     <td>${product.price}</td>
                     <td>${product.amount}</td>              
                     
@@ -546,6 +601,7 @@ function renderProductsTable(products) {
         }
     }
     $('.edit-button').click(handleEditButton)
+    $('.link-button').click(handleEditPictureButton)
     $('.action').click(checkActionButton)
 }
 
