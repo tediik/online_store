@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Сущность жалоб на {@link Comment}.
@@ -32,15 +33,21 @@ public class ReportComment {
     /**
      * Комментарий к причине жалобы.
      */
-    @Column(name = "reasonComment")
+    @Column(name = "reason_comment")
     private String reasonComment;
 
     /**
      * Причина жалобы.
      */
-    @Column(name = "reportReason")
+    @Column(name = "report_reason")
     @Enumerated(EnumType.STRING)
     private ReportReason reportReason;
+
+    /**
+     * Пожаловавшийся пользователь
+     */
+    @Column(name = "report_customer_email")
+    private String reportCustomerEmail;
 
     /**
      * Комментарий на который пожаловались.
@@ -48,4 +55,5 @@ public class ReportComment {
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private Comment comment;
+
 }
