@@ -108,8 +108,8 @@ public class CustomerRestController {
      */
     @DeleteMapping("/deleteProfile/{id}")
     @ApiOperation(value = "Changes Users status, when Delete button clicked")
-    public ResponseEntity<User> deleteProfile(@PathVariable Long id) {
-        User deletedUser = userService.findUserById(id);
+    public ResponseEntity<User> blockProfile(@PathVariable Long id) {
+        User blockedUser = userService.findUserById(id);
         try {
             customerService.changeCustomerStatusToLocked(id);
         }
@@ -117,8 +117,8 @@ public class CustomerRestController {
             log.debug("There is no user with id: {}", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        log.debug("User with id: {}, was deleted successfully", id);
-        return ResponseEntity.ok(deletedUser);
+        log.debug("User with id: {}, was blocked", id);
+        return ResponseEntity.ok(blockedUser);
     }
 
     /**
@@ -183,7 +183,7 @@ public class CustomerRestController {
             } else recentlyViewedProductsService.updateRecentlyViewedProducts(productId, userId, localDateTime);
             return ResponseEntity.ok("Product is saved in session");
         } else {
-            return  ResponseEntity.ok("User is not authenticated. Product is not saved to session");
+            return ResponseEntity.ok("User is not authenticated. Product is not saved to session");
         }
     }
 

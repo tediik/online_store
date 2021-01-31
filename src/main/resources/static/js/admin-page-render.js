@@ -283,7 +283,6 @@ function handleUserAcceptButtonFromModalWindow(event) {
                             method: 'DELETE'
                         }).then(function (response) {
                             if (response.ok) {
-                                const deletedUser = response.json()
                                 $('#tr-' + user.id).remove()
                                 $('#userModalWindow').modal('hide')
                                 toastr.success("Пользователь удален");
