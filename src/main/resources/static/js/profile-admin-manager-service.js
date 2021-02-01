@@ -57,24 +57,6 @@ function changePassword() {
 }
 
 /**
- * Функция для смены названия магазина
- */
-$("#buttonNameStore").click(function (){
-    let name = document.getElementById("nameStore").value
-    $.ajax("http://localhost:9898/api/editStoreName", {
-        method: "put",
-        data: {
-            settingName:"store_name",
-            textValue: name,
-            status: false,
-        },
-        dataType: "text",
-        success: function () {
-            $('#changeStoreName').modal('hide')
-        }
-    })
-})
-/**
  * Функция получения текущего юзера и заполнение полей профиля
  */
 function getCurrentUser() {
@@ -126,8 +108,7 @@ function updateProfile(event) {
         email: document.getElementById('email_input').value,
         birthdayDate: document.getElementById('date_birthday_input').value,
         userGender: isChecked,
-        registerDate: date,
-        storeName: document.getElementById("nameStore").value
+        registerDate: date
     }
     fetch('/api/profile/update', {
         method: 'PUT',

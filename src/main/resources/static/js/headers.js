@@ -2,9 +2,7 @@ $(document).ready(function () {
         storeName();
     }
 );
-/**
- * Функция для отображения названия магазина
- */
+
 function storeName() {
     fetch("/api/storeName")
         .then(response => response.text())
