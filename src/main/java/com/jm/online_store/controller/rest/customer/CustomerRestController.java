@@ -109,7 +109,6 @@ public class CustomerRestController {
     @DeleteMapping("/deleteProfile/{id}")
     @ApiOperation(value = "Changes Users status, when Delete button clicked")
     public ResponseEntity<User> blockProfile(@PathVariable Long id) {
-        User blockedUser = userService.findUserById(id);
         try {
             customerService.changeCustomerStatusToLocked(id);
         }
@@ -118,7 +117,7 @@ public class CustomerRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         log.debug("User with id: {}, was blocked", id);
-        return ResponseEntity.ok(blockedUser);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
