@@ -121,7 +121,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct
+//    @PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -1309,11 +1309,17 @@ public class DataInitializer {
                 .textValue("ROLE_ADMIN")
                 .status(false)
                 .build();
+        CommonSettings storeName = CommonSettings.builder()
+                .settingName("store_name")
+                .textValue("Online store")
+                .status(false)
+                .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
         commonSettingsService.addSetting(subscribeConfirmationTemplate);
         commonSettingsService.addSetting(badWordsEnabled);
         commonSettingsService.addSetting(maintenanceModeTemplate);
+        commonSettingsService.addSetting(storeName);
     }
 
     /**

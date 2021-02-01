@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.model.StoreName;
-import com.jm.online_store.repository.StoreNameRepository;
+import com.jm.online_store.model.CommonSettings;
+import com.jm.online_store.service.interf.CommonSettingsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(description = "Rest controller for transferring common data")
 public class CommonRestController {
 
-    private StoreNameRepository storeNameRepository;
+    private CommonSettingsService commonSettingsService;
 
     @Autowired
-    public CommonRestController(StoreNameRepository storeNameRepository){
-        this.storeNameRepository = storeNameRepository;
+    public CommonRestController(CommonSettingsService commonSettingsService){
+        this.commonSettingsService = commonSettingsService;
     }
 
     /**
@@ -32,16 +32,12 @@ public class CommonRestController {
     @GetMapping("/storeName")
     @ApiOperation(value = "Get store name")
     public String getStoreName() {
-        return storeNameRepository.findById(1).toString();
+        return commonSettingsService.getSettingByName("store_name").getTextValue();
     }
 
     @PutMapping("/editStoreName")
     @ApiOperation(value = "edit store name")
-    public void editStoreName(StoreName name){
-        name.setId(1);
-        System.out.println(name.toString());
-        System.out.println(name.getId());
-        storeNameRepository.save(name);
-        storeNameRepository.flush();
+    public void editStoreName(CommonSettings commonSettings){
+        commonSettingsService.updateTextValue(commonSettings);
     }
 }
