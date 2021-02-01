@@ -25,7 +25,7 @@ async function fillFavouritesGoods() {
 }
 
 async function deleteProductFromFavouritGoods(id) {
-    let idGroup = $('.get-favourites-group-btn').attr("id");
+    let idGroup = $('.dropdown-item').attr("id");
     if (idGroup == 1) {
         await fetch("/api/customer/favouritesGoods", {
             method: "DELETE",
