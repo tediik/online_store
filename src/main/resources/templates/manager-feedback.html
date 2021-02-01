@@ -16,27 +16,19 @@
 <body>
 <header th:insert="blocks/cabinet-header :: header"></header>
 <main>
-
     <div class="container-fluid">
         <div class="row">
             <!--навигация слева-->
             <div class="col-md-2">
-                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                    <a class="btn btn-outline-primary" href="#">Обратная связь</a>
-                </div>
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <a id="nav-link-feedbackManager" class="nav-link" data-toggle="tab" href="#feedbackManager">
-                            Обратная связь
-                        </a>
+                    <a id="nav-link-feedbackManager" class="btn btn-outline-primary" data-toggle="tab" aria-orientation="vertical" href="#feedbackManager">Обратная связь</a>
                     </li>
                 </ul>
             </div>
             <!--конец навигации слева-->
-
-            <div class="col-sm-8">
+            <div class="col-sm-8 text-left">
                 <div class="tab-content">
-
                     <div class="tab-pane fade" id="feedbackManager" role="tabpanel">
                         <ul class="nav nav-tabs" id="navbarFeedbackManager">
                             <!-- Первая вкладка обращения в работе -->
