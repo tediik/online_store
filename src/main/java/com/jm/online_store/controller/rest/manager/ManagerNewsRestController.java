@@ -100,6 +100,7 @@ public class ManagerNewsRestController {
      * @param page параметры страницы
      * @return Page<News> возвращает страницу новостей
      */
+    @PreAuthorize("permitAll()")
     @GetMapping("/page")
     @ApiOperation(value = "Method returns news page")
     @ApiResponse(code = 200, message = "News page was found")
