@@ -1309,11 +1309,17 @@ public class DataInitializer {
                 .textValue("ROLE_ADMIN")
                 .status(false)
                 .build();
+        CommonSettings storeName = CommonSettings.builder()
+                .settingName("store_name")
+                .textValue("Online store")
+                .status(false)
+                .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
         commonSettingsService.addSetting(priceChangeDistributionTemplate);
         commonSettingsService.addSetting(subscribeConfirmationTemplate);
         commonSettingsService.addSetting(badWordsEnabled);
         commonSettingsService.addSetting(maintenanceModeTemplate);
+        commonSettingsService.addSetting(storeName);
     }
 
     /**
@@ -1383,6 +1389,7 @@ public class DataInitializer {
                 .topicName("Резюме")
                 .topicsCategory(topicsCategory4)
                 .build();
+
 
         topicService.create(topic1);
         topicService.create(topic2);
