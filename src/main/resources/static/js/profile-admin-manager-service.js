@@ -55,6 +55,43 @@ function changePassword() {
         }
     })
 }
+/**
+ * Функция для смены названия магазина
+ */
+$("#buttonNameStore").click(function (){
+    let name = document.getElementById("nameStore").value
+    $.ajax("http://localhost:9898/api/editStoreName", {
+        method: "put",
+        data: {
+            settingName:"store_name",
+            textValue: name,
+            status: false,
+        },
+        dataType: "text",
+        success: function () {
+            $('#changeStoreName').modal('hide')
+        }
+    })
+})
+
+/**
+ * Функция для смены названия магазина
+ */
+$("#buttonNameStore").click(function (){
+    let name = document.getElementById("nameStore").value
+    $.ajax("http://localhost:9898/api/editStoreName", {
+        method: "put",
+        data: {
+            settingName:"store_name",
+            textValue: name,
+            status: false,
+        },
+        dataType: "text",
+        success: function () {
+            $('#changeStoreName').modal('hide')
+        }
+    })
+})
 
 /**
  * Функция получения текущего юзера и заполнение полей профиля
