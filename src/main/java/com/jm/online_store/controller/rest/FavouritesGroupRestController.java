@@ -29,6 +29,17 @@ public class FavouritesGroupRestController {
     private final UserService userService;
 
     /**
+     * Получение избранной группы по Id
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ApiOperation(value = "gets favourite group by id")
+    public ResponseEntity getFavouritesGroupById(@PathVariable Long id) {
+        return ResponseEntity.ok(favouritesGroupService.findById(id));
+    }
+
+    /**
      * Получение списков избранных товаров залогиневшегося пользователя
      * @return
      */
