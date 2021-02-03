@@ -205,10 +205,9 @@ public class ProductServiceImpl implements ProductService {
         if (product.getRating() == null) {
             product.setRating(0d);
         }
-        if (product.getProduct_picture().isEmpty()){
+        if (product.getProduct_picture().isEmpty()) {
             product.setProduct_picture("00.jpg");
-        }
-        if(!(product.getProduct_picture().equals("00.jpg"))){
+        } else {
             product.setProduct_picture(product.getProduct_picture());
         }
         Product savedProduct = productRepository.save(product);
@@ -225,6 +224,7 @@ public class ProductServiceImpl implements ProductService {
      * о снижении цены. Для зарегистрированных пользователей письма отпровляются только при получении
      * согласия юзера на таковые рассылки (таблица Users, значение confirm_receive_email - CONFIRMED)
      * рассылка для незарегистрированных юзеров отключена, чтобы не спамить
+     *
      * @param product  продукт
      * @param oldPrice старая цена продукта
      * @param newPrice новая цена продукта
@@ -257,7 +257,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void uploadPictureForProduct(Product product, MultipartFile pictureFile){
+    public void uploadPictureForProduct(Product product, MultipartFile pictureFile) {
 
 
     }
@@ -626,6 +626,7 @@ public class ProductServiceImpl implements ProductService {
      * Помимо этого направляет юзеру письмо с просьбой подтвердить получение рассылки.
      * Без этого согласия получать письма об изменении цен он не будет. Письмо отправляется при каждом нажатии
      * на "Подписаться", пока не будет получено согласие. При этом в базу для рассылки он будет заноситься.
+     *
      * @param body тело запроса
      * @return true если удалось добавить email, false если такой email уже есть
      */

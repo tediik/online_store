@@ -143,9 +143,9 @@ function getAllProducts() { // не нашел, где используется 
  * @param product продукта из таблицы
  */
 function editModalWindowRender(product) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindow)
     $('#idInputModal').val(product.id)
-    $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
+    $('#acceptChangeButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
     $('.modal-title').text("Edit product")
     $('#productInputModal').val(product.product).prop('readonly', false)
     $('#productPriceInputModal').val(product.price).prop('readonly', false)
@@ -159,9 +159,9 @@ function editModalWindowRender(product) {
  * @param productToEdit
  */
 function deleteModalWindowRender(productToEdit) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindow)
     $('.modal-title').text("Delete product")
-    $('#acceptButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
+    $('#acceptChangeButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
     $('#idInputModal').val(productToEdit.id)
     $('#productInputModal').val(productToEdit.product).prop('readonly', true)
     $('#productPriceInputModal').val(productToEdit.price).prop('readonly', true)
@@ -169,9 +169,9 @@ function deleteModalWindowRender(productToEdit) {
 }
 
 function editPictureModalWindowRender(product) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
-    $('#idInputModal').val(product.id)
-    $('#acceptButton').text("Применить").removeClass().toggleClass('btn btn-success edit-product')
+    $('.modal-dialog').off("click").on("click", "#acceptEditPictureButton", handleEditPictureButtonFromModalWindow)
+    $('#idInputPictureModal').val(product.id)
+    $('#acceptEditPictureButton').text("Применить").removeClass().toggleClass('btn btn-success edit-product')
     $('.modal-title').text("Изменить картинку")
 }
 
@@ -195,6 +195,34 @@ function handleEditPictureButton(event) {
                     editPictureModalWindowRender(productToEdit)
                 });
         });
+}
+
+/**
+ * Функция обработки нажатия Применить в модалке добавления картинки
+ */
+function handleEditPictureButtonFromModalWindow() {
+    const product = {
+        id: $('#idInputPictureModal').val(),
+        product: $('#productInputModal').val(),
+        price: $('#productPriceInputModal').val(),
+        amount: $('#productAmountInputModal').val()
+    };
+    $('#acceptEditPictureButton').click(function () {
+        $.ajax({
+            type: 'PUT',
+            url: '/api/product/upload/picture/' + product.id,
+            dataType: 'script',
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function () {},
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    });
+    $('#productPictureModalWindow').modal('hide')
 }
 
 /**
@@ -382,24 +410,6 @@ function fetchToAddCharacteristics(addedProductName) {
 
 $('#inputPictureFile').click()
 
-// function importPictureFile(){
-//     $.ajax(
-//         {
-//             type: 'POST',
-//             url: '/api/product/upload/picture/' + product.id,
-//             dataType: 'script',
-//             data: form_data,
-//             cache: false,
-//             contentType: false,
-//             processData: false,
-//             success: function (data) {
-//                 $('#profilePic').attr('src', data);
-//             },
-//             error: function (jqXhr, textStatus, errorThrown) {
-//                 console.log(errorThrown);
-//             }
-//         });
-// }
 /**
  * Добавление товара из файла
  *
@@ -462,7 +472,7 @@ function importProductsFromFile() {
  * @param event
  */
 function handleAcceptButtonFromModalWindow(event) {
-     const  product= {
+    const product = {
         id: $('#idInputModal').val(),
         product: $('#productInputModal').val(),
         price: $('#productPriceInputModal').val(),
@@ -472,7 +482,7 @@ function handleAcceptButtonFromModalWindow(event) {
     /**
      * Проверка кнопки delete или edit
      */
-    if ($('#acceptButton').hasClass('delete-product')) {
+    if ($('#acceptChangeButton').hasClass('delete-product')) {
         fetch("/api/product/" + product.id, {
             headers: headers,
             method: 'DELETE'
@@ -569,8 +579,8 @@ function renderProductsTable(products) {
                     <td>${product.id}</td>
                     <td>${product.product}</td>
                     <td>
-                        <button data-product-id="${product.id}" type="button" class="btn btn-link link-button" data-toggle="modal" data-target="#productModalWindow">
-                                                     Добавить картинку
+                        <button data-product-id="${product.id}" type="button" class="btn btn-link link-button" data-toggle="modal" data-target="#productPictureModalWindow">
+                                                     Изменить картинку
                             </button>
                     </td>
                     <td>${product.price}</td>

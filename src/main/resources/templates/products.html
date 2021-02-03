@@ -32,7 +32,7 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header th:insert="blocks/header :: header"></header>
-
+<!--Модалка для изменения продукта-->
 <div class="modal fade" id="productModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditProductModalWindows"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -58,12 +58,6 @@
                             <input type="number" class="form-control" id="productAmountInputModal">
                             <label for="productCategoryValueModal"><strong>Категория текущая</strong></label>
                             <input type="text" class="form-control mb-4" id="productCategoryValueModal" readonly>
-                            <label for="productPictureFile"><strong>Добавить картинку</strong>
-                            <img id="prodPict" src="#" alt="your image"
-                                 class="rounded-circle img-responsive mt-2 float-right"
-                                 height="82" width="82"/>
-                            </label>
-                            <input type="file" class="form-control mb-4" id="productPictureFile" readonly>
                             <div id="jqxTreeModal"></div>
                         </div>
                     </div>
@@ -71,11 +65,52 @@
             </div>
             <div class="modal-footer">
                 <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save changes</button>
+                <button id="acceptChangeButton" type="button" class="btn" data-th-accept="modal">Save changes</button>
+<!--                <button id="acceptEditPictureButton" type="button" class="btn" data-th-accept="modal">Применить</button>-->
             </div>
         </div>
     </div>
 </div>
+<!--Модалка для изменения продукта-->
+<!--Модалка для изменения картинки продукта-->
+<div class="modal fade" id="productPictureModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditProductModalWindows"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Edit product Picture">Edit product Picture</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="alert-modal-div-Picture"></div>
+            <div class="modal-body" id="modalBodyPicture">
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <div class="form-group" id="editPictureFormContainer">
+                            <label for="idInputPictureModal"><strong>Id</strong></label>
+                            <input type="text" class="form-control" id="idInputPictureModal" readonly>
+                            <label for="productPictureFile"><strong>Добавить картинку</strong>
+                                <img id="prodPict" src="#" alt="your image"
+                                     class="rounded-circle img-responsive mt-2 float-right"
+                                     height="82" width="82"/>
+                            </label>
+                            <input type="file" class="form-control mb-4" id="productPictureFile" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="dismissPictureModalButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="acceptEditPictureButton" type="button" class="btn" data-th-accept="modal">Применить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Модалка для изменения картинки продукта-->
+<!--Модалка для удаления продукта-->
+<!--Модалка для удаления продукта-->
+
 <div class="wrapper flex-grow-1 row">
     <div class="container col-11">
         <!--Display logged in user's name-->
@@ -181,18 +216,16 @@
                                     </div>
                                     <div id="jqxTreeHere"></div>
                                     <div class="panel-body" id="addCharacteristicForm">
-
                                     </div>
                                     <div class="mt-4">
                                         <button id="addBtn" type="button"
-                                                class=" btn btn-outline-success btn-md btn">
+                                                class=" btn btn-outline-success btn-md btn"
+                                                data-toggle="modal"
+                                                data-target="#addPictureForNewProductModal">
                                             Добавить новый товар
                                         </button>
                                         <button type="button" class="btn btn-outline-primary" data-toggle='modal'
                                                 data-target='#newProductImportModal'>Загрузить товары из файла
-                                        </button>
-                                        <button type="button" class="btn btn-outline-primary" data-toggle='modal'
-                                                data-target='#newProductPictureModal'>Загрузить картинку
                                         </button>
                                         <button onclick="renderCharacteristicsFields()" id="renderCharacteristic"
                                                 type="button"
@@ -237,7 +270,7 @@
                                         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
                                             Закрыть
                                         </button>
-                                        <button type="button" class="btn btn-primary btn-sm" id="addMainCategoryButton"
+                                        <button type="button" class="btn btn-success edit-button" data-toggle="modal" id="addMainCategoryButton"
                                                 data-dismiss="modal">
                                             Добавить
                                         </button>
@@ -265,12 +298,52 @@
 
                     </div>
                     <!--                    Конец слоя отображения категорий -->
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!--Profile picture change modal-->
+<!--<div class="modal" id="addPictureForNewProductModalWindow">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+
+<!--            &lt;!&ndash; Modal Header &ndash;&gt;-->
+<!--            <div class="modal-header">-->
+<!--                <h4 class="modal-title">Добавить картинку?</h4>-->
+<!--                <button type="button" class="close" data-dismiss="modal">-->
+<!--                    &times;-->
+<!--                </button>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Modal body &ndash;&gt;-->
+<!--            <div class="modal-body">-->
+<!--                <label for="idPictureEditModal"><strong>Id</strong></label>-->
+<!--                <input type="text" class="form-control" id="idPictureEditModal" readonly>-->
+<!--                <input type="file" id="productPictureFile" name="PictureFile"-->
+<!--                       alt="Picture">-->
+<!--                <br>-->
+<!--                <br>-->
+<!--                <img id="prodPict" src="#" alt="your image"-->
+<!--                     class="rounded-circle img-responsive mt-2 float-right"-->
+<!--                     height="82" width="82"/>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; Modal footer &ndash;&gt;-->
+<!--            <div class="modal-footer">-->
+<!--                <p>Примечание:картинку можно добавить потом, на вкладке "Продукты</p>-->
+<!--                <button type="button" class="btn btn-danger"-->
+<!--                        data-dismiss="modal">Отмена-->
+<!--                </button>-->
+<!--                <button type="button" class="btn btn-success edit-button"-->
+<!--                        id = "successAddPictureForNewProduct" data-toggle="modal"-->
+<!--                        data-th-accept="modal">Добавить-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--Profile picture change modal-->
+
 <script type="text/javascript" src="/static/js/products.js"></script>
 <!--MomentJs (work with dates)-->
 <script type="text/JavaScript" src="../static/js/moment.js"></script>

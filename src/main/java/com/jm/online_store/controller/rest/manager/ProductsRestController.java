@@ -170,6 +170,7 @@ public class ProductsRestController {
         }
 
         productService.saveProduct(product);
+        System.out.println(id);
         categoriesService.addToProduct(product, id);
         return ResponseEntity.ok(product);
     }
