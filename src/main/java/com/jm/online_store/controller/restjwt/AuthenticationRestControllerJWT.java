@@ -7,7 +7,6 @@ import com.jm.online_store.model.dto.AuthenticationRequestDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,8 +34,8 @@ public class AuthenticationRestControllerJWT {
     private final UserService userService;
 
     @PostMapping("/login")
-    @ApiOperation(value = "Выдает UserDto, email и Bearer токен в ответ на запрос; в body указывается JSON {\n" +
-            "    \"email\":\"****@mail.ru\",\n" +
+    @ApiOperation(value = "Выдает UserDto и Bearer токен в ответ на запрос; в body указывается JSON {\n" +
+            "    \"email\":\"*****@gmail.ru\"\n" +
             "    \"password\":\"*****\"\n" +
             "}")
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
@@ -44,15 +43,16 @@ public class AuthenticationRestControllerJWT {
             String email = requestDto.getEmail();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
             User user = userService.findUserByEmail(email);
-            UserDto userDto = new UserDto();
+
             if (user == null) {
                 throw new UsernameNotFoundException("User with email: " + email + " not found");
             }
             String token = jwtTokenProvider.createToken(email, user.getRoles());
+
             Map<Object, Object> response = new HashMap<>();
-            response.put("user", userDto.fromUser(user));
-            response.put("email", email);
+            response.put("user", UserDto.fromUser(user));
             response.put("token", token);
+
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid email or password");
