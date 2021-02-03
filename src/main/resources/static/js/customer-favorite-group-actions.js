@@ -25,7 +25,7 @@ async function fillFavouritesGoods() {
 }
 
 async function deleteProductFromFavouritGoods(id) {
-    let idGroup = $('.get-favourites-group-btn').attr("id");
+    let idGroup = $('.dropdown-item').attr("id");
     if (idGroup == 1) {
         await fetch("/api/customer/favouritesGoods", {
             method: "DELETE",
@@ -144,7 +144,13 @@ function defaultInterface() {
  * @returns {Promise<void>}
  */
 async function fillFavouritesProducts(id) {
-    let response = await fetch("/api/customer/getProductFromFavouritesGroup/" + id);
+    let response = await fetch("/api/customer/favouritesGroup/" + id)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            return data.name === "Все товары" ? fetch("/api/customer/favouritesGoods") : fetch("/api/customer/getProductFromFavouritesGroup/" + id);
+        });
     let content = await response.json();
     let favoriteGoodsJson = document.getElementById('favouritesGoodsList');
     let key

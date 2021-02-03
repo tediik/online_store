@@ -10,7 +10,7 @@ $(document).ready(function () {
 
 async function fillBasket() {
     let response = await fetch("/api/basketGoods");
-    let basketGoodsJson = document.getElementById('busketTable');
+    let basketGoodsJson = document.getElementById('basketTable');
     if (response.ok) {
         let content = await response.json();
         let countGoods = 0;
@@ -39,13 +39,13 @@ async function fillBasket() {
             </td>
             <td>
                  <svg width="640" height="480" viewbox="0 0 640 480">
-                   <path id="heart${content[key].id}" 
+                   <path id="heart${content[key].product.id}" 
                    d="m219.28949,21.827393c-66.240005,0 -119.999954,53.76001 -119.999954,
                    120c0,134.755524 135.933151,170.08728 228.562454,303.308044c87.574219,
                    -132.403381 228.5625,-172.854584 228.5625,-303.308044c0,-66.23999
                     -53.759888,-120 -120,-120c-48.047913,0 -89.401611,28.370422 -108.5625,
                     69.1875c-19.160797,-40.817078 -60.514496,-69.1875 -108.5625,-69.1875z" 
-                    onclick="addToFavouritsGoods(${content[key].product.id}, ${content[key].id})"/>
+                    onclick="addToFavouritesGoods(${content[key].product.id})"/>
                 </svg>  
             </td>
             <td>
@@ -57,7 +57,7 @@ async function fillBasket() {
                 .then(function (response) {
                     response.json().then(function (data) {
                         if (data.favourite) {
-                            $('#heart' + `${content[key].id}`).toggleClass("filled");
+                            $('#heart' + data.id).toggleClass("filled");
                         }
                     })
                 });
@@ -101,8 +101,7 @@ async function fillBasket() {
             `;
             $('#buttonBuyForAnonInBasket').empty().append(buttonAnonBuy);
         }
-    }
-    else {
+    } else {
         let emptyBasket = `
             <tr align='center'>
                 <td > Корзина сейчас пуста,</br>но вы можете перейти на главную страницу или в каталог товаров</td>
@@ -158,32 +157,37 @@ async function buildOrderFromBasket() {
     await fillBasket();
 }
 
-async function addToFavouritsGoods(id, heartId) {
-    if ($("path").is('[class="filled"]')) {
-        await fetch("/api/customer/favouritesGoods", {
-            method: "DELETE",
-            body: id,
-            headers: {"Content-Type": "application/json; charset=utf-8"}
-        }).then(function (response) {
-            if (response.ok) {
-                $('#heart' + heartId).toggleClass("filled");
-                toastr.success("Товар успешно удалён из избранного");
-            } else {
-                toastr.error("Авторизуйтесь/зарегистрируйтесь");
-            }
+async function addToFavouritesGoods(id) {
+    fetch("/api/products/" + id)
+        .then(function (response) {
+            response.json().then(function (data) {
+                if (data.favourite) {
+                    fetch("/api/customer/favouritesGoods", {
+                        method: "DELETE",
+                        body: id,
+                        headers: {"Content-Type": "application/json; charset=utf-8"}
+                    }).then(function (response) {
+                        if (response.ok) {
+                            $('#heart' + id).toggleClass("filled");
+                            toastr.success("Товар успешно удалён из избранного");
+                        } else {
+                            toastr.error("Авторизуйтесь/зарегистрируйтесь");
+                        }
+                    });
+                } else {
+                    fetch("/api/customer/favouritesGoods", {
+                        method: "PUT",
+                        body: id,
+                        headers: {"Content-Type": "application/json; charset=utf-8"}
+                    }).then(function (response) {
+                        if (response.ok) {
+                            $('#heart' + id).toggleClass("filled");
+                            toastr.success("Товар успешно добавлен в избранное");
+                        } else {
+                            toastr.error("Авторизуйтесь/зарегистрируйтесь");
+                        }
+                    });
+                }
+            })
         });
-    } else {
-        await fetch("/api/customer/favouritesGoods", {
-            method: "PUT",
-            body: id,
-            headers: {"Content-Type": "application/json; charset=utf-8"}
-        }).then(function (response) {
-            if (response.ok) {
-                $('#heart' + heartId).toggleClass("filled");
-                toastr.success("Товар успешно добавлен в избранное");
-            } else {
-                toastr.error("Авторизуйтесь/зарегистрируйтесь");
-            }
-        });
-    }
 }
