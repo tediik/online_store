@@ -5,12 +5,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -56,7 +51,8 @@ public class AdminRestController {
      * @return ResponseEntity(allUsers, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/allUsers")
-    @ApiOperation(value = "receive all users from db. from admin page")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+//    @ApiOperation(value = "receive all users from db. from admin page")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "There are no users in db"),
     })
