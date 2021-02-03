@@ -66,8 +66,6 @@ public interface ProductService {
 
     boolean existsProductByProduct(String productName);
 
-    void uploadPictureForProduct(Product product, MultipartFile pictureFile);
-
     List<Product> findTrackableProductsByLoggedInUser();
 
     void deleteProductFromTrackedForLoggedInUser(long productId);

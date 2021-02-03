@@ -171,6 +171,8 @@ public class ProductsRestController {
 
         productService.saveProduct(product);
         System.out.println(id);
+        System.out.println(product.getId());
+        System.out.println(product.getProduct_picture());
         categoriesService.addToProduct(product, id);
         return ResponseEntity.ok(product);
     }

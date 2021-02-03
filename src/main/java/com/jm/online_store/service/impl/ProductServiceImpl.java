@@ -256,12 +256,6 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    @Override
-    public void uploadPictureForProduct(Product product, MultipartFile pictureFile) {
-
-
-    }
-
     /**
      * метод удаления Product.
      *
@@ -284,7 +278,6 @@ public class ProductServiceImpl implements ProductService {
     public int findProductAmount(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
         return product.getAmount();
-
     }
 
     /**
@@ -662,6 +655,13 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long editProduct(Product product) {
+
+        if (product.getProduct_picture().isEmpty()) {
+            product.setProduct_picture("00.jpg");
+        } else {
+            product.setProduct_picture(product.getProduct_picture());
+        }
+
         Map<LocalDateTime, Double> map = findProductById(product.getId())
                 .orElseThrow(ProductNotFoundException::new)
                 .getChangePriceHistory();

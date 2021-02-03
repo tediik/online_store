@@ -5,7 +5,7 @@ let listOfAll
 let productRestUrl = "/api/product/getAll"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
-document.getElementById('addBtn').addEventListener('click', handleAddBtn)
+document.getElementById('addBtn').addEventListener('click', handleAddBtn )
 /**
  * Переменные для отдельной вкладки "Категории товаров
  */
@@ -168,11 +168,43 @@ function deleteModalWindowRender(productToEdit) {
     $('#productAmountInputModal').val(productToEdit.amount).prop('readonly', true)
 }
 
+/**
+ * Функция рендера модального окна Изменить картинку
+ * @param product
+ */
 function editPictureModalWindowRender(product) {
     $('.modal-dialog').off("click").on("click", "#acceptEditPictureButton", handleEditPictureButtonFromModalWindow)
     $('#idInputPictureModal').val(product.id)
     $('#acceptEditPictureButton').text("Применить").removeClass().toggleClass('btn btn-success edit-product')
     $('.modal-title').text("Изменить картинку")
+}
+
+/**
+ * Функция рендера модального окна Добавить картинку?
+ * @param product
+ */
+function addPictureModalWindowRender(product) {
+    $('.modal-dialog').off("click").on("click", "#acceptAddPictureButton", handleAddPictureButton)
+    $('#idAddPictureModal').val(product.id)
+    $('.modal-title').text("Добавить картинку?")
+}
+
+function handleAddPictureButton(event) {
+    const productId = event.target.dataset["productId"]
+    Promise.all([
+        fetch("/api/product/manager/" + productId, {headers: headers}),
+    ])
+        .then(([response]) => Promise.all([response.json()]))
+        .then(([productToEdit]) => {
+            fetch(API_CATEGORIES_URL + 'getOne/' + productId)
+                .then(promiseResult => {
+                    return promiseResult.text()
+                })
+                .then(responseResult => {
+                    currentCategoryNameEdit = "" + responseResult;
+                    addPictureModalWindowRender(productToEdit)
+                });
+        });
 }
 
 /**
@@ -300,7 +332,6 @@ function showAndRefreshNotDeleteHomeTab() {
 function clearCharacteristicForm() {
     $('#addCharacteristicForm')[0].remove();
 }
-
 /**
  * функция обработки кнопки add на форме нового продукта
  */
@@ -317,13 +348,13 @@ function handleAddBtn() {
     function clearFormFields() {
         $('#addForm')[0].reset();
     }
-
     /**
      * проверяем, что выбранная категория продукта != null
      */
     let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
     if (!selectedCat) {
         alert('Категория не выбрана!');
+        $('#addPictureForNewProductModalWindow').modal('hide')
         return false;
     } else {
         for (let z = 0; z < listOfAll.length; z++) {
@@ -372,11 +403,9 @@ function handleAddBtn() {
                     response.text()
                         .then(
                             function (text) {
-
                                 if (text === "duplicatedNameProductError") {
                                     toastr.error('Такое наименование уже существует');
                                 }
-
                                 console.log(text)
                             })
                 } else {
@@ -407,8 +436,6 @@ function fetchToAddCharacteristics(addedProductName) {
         body: JSON.stringify(createProductCharacteristicArray(characteristicsSelectedCategory))
     })
 }
-
-$('#inputPictureFile').click()
 
 /**
  * Добавление товара из файла

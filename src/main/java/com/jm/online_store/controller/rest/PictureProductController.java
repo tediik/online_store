@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -51,7 +52,12 @@ public class PictureProductController {
             }
         }
         productService.editProduct(product);
-        System.out.println(pictureFile.getOriginalFilename());
-        System.out.println(uniqueFilename);
+    }
+    @DeleteMapping("/picture/delete/{id}")
+    public void deletePicture(@PathVariable("id") Long id){
+
+        Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
+        product.setProduct_picture("00.jpg");
+        productService.editProduct(product);
     }
 }
