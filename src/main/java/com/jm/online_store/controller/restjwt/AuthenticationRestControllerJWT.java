@@ -43,13 +43,16 @@ public class AuthenticationRestControllerJWT {
             String email = requestDto.getEmail();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
             User user = userService.findUserByEmail(email);
+
             if (user == null) {
                 throw new UsernameNotFoundException("User with email: " + email + " not found");
             }
             String token = jwtTokenProvider.createToken(email, user.getRoles());
+
             Map<Object, Object> response = new HashMap<>();
             response.put("user", UserDto.fromUser(user));
             response.put("token", token);
+
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid email or password");
