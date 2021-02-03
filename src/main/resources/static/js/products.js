@@ -354,7 +354,6 @@ function handleAddBtn() {
     let selectedCat = $('#jqxTreeHere').jqxTree('getSelectedItem');
     if (!selectedCat) {
         alert('Категория не выбрана!');
-        $('#addPictureForNewProductModalWindow').modal('hide')
         return false;
     } else {
         for (let z = 0; z < listOfAll.length; z++) {
@@ -409,7 +408,8 @@ function handleAddBtn() {
                                 console.log(text)
                             })
                 } else {
-                    response.text().then(function () {
+                    response.json().then(function (productID) {
+                        $('#idAddPictureModal').val(productID);
                         $("#jqxTreeHere").jqxTree('selectItem', null);
                         fetchToAddCharacteristics($('#addProduct').val());
                         clearCharacteristicForm();

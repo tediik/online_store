@@ -33,6 +33,12 @@ public class PictureProductController {
     private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "src"
             + File.separator + "main" + File.separator + "resources"+ File.separator + "uploads"
             + File.separator + "images" + File.separator + "products";
+
+    /**
+     * Метод для изменения картинки
+     * @param id
+     * @param pictureFile
+     */
     @PutMapping("/upload/picture/{id}")
     public void editPicture(@PathVariable("id")Long id, @RequestParam("pictureFile") MultipartFile pictureFile){
 
@@ -53,9 +59,13 @@ public class PictureProductController {
         }
         productService.editProduct(product);
     }
+
+    /**
+     * Метод для удаления картинки
+     * @param id
+     */
     @DeleteMapping("/picture/delete/{id}")
     public void deletePicture(@PathVariable("id") Long id){
-
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         product.setProduct_picture("00.jpg");
         productService.editProduct(product);

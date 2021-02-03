@@ -1,5 +1,8 @@
 $(document).ready(function () {
-
+    /**
+     * Функция для динамического отображения выбранного файла
+     * @param input
+     */
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -10,6 +13,9 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Функция для изменения картинки выбранного продукта
+     */
     $('#productPictureFile').change(function () {
         const product = {id: $('#idInputPictureModal').val()}
         readURL(this);
@@ -34,6 +40,10 @@ $(document).ready(function () {
         });
     });
 
+    /**
+     * Функция для динамического отображения выбранного файла
+     * @param input
+     */
     function readURLForNewProduct(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -45,7 +55,7 @@ $(document).ready(function () {
     }
 
     $('#addedPictureFile').change(function() {
-        const product = {id: $('#idInputPictureModal').val()}
+        const product = {id: $('#idAddPictureModal').val()}
         readURLForNewProduct(this);
         var file_data = $('#addedPictureFile').prop('files')[0];
         var form_data = new FormData();
@@ -64,9 +74,12 @@ $(document).ready(function () {
                     console.log(errorThrown);
                 }
             });
+            $('#addPictureForNewProductModalWindow').modal('hide')
         });
     });
-
+    /**
+     * Функция для удаления картинки выбранного продукта
+     */
     $('#DeletePictureButton').click(function (){
             const product = {id: $('#idInputPictureModal').val()}
         $.ajax({

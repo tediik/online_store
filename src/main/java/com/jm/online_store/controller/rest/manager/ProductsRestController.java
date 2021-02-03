@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.model.Product;
+import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
@@ -46,6 +47,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/product")
 public class ProductsRestController {
 
+    private final ProductRepository productRepository;
     private final ProductService productService;
     private final CategoriesService categoriesService;
     private final CharacteristicService characteristicService;
@@ -170,11 +172,8 @@ public class ProductsRestController {
         }
 
         productService.saveProduct(product);
-        System.out.println(id);
-        System.out.println(product.getId());
-        System.out.println(product.getProduct_picture());
         categoriesService.addToProduct(product, id);
-        return ResponseEntity.ok(product);
+        return new ResponseEntity(product.getId(), HttpStatus.OK);
     }
 
     /**

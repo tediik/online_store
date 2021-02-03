@@ -2,6 +2,7 @@ package com.jm.online_store.controller.simple;
 
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
