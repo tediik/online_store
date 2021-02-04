@@ -4,10 +4,7 @@ import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsFilterDto;
 import com.jm.online_store.service.interf.NewsService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +44,8 @@ public class ManagerNewsRestController {
      * @return {@link ResponseEntity<News>} or ResponseEntity.notFound()
      */
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get news by ID")
+    @ApiOperation(value = "Get news by ID",
+            authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses( value = {
             @ApiResponse(code = 404, message = "News not found"),
             @ApiResponse(code = 200, message = "News was found")
@@ -68,7 +66,8 @@ public class ManagerNewsRestController {
      * @return List<News> возвращает список всех новостей из базы данных
      */
     @GetMapping("/all")
-    @ApiOperation(value = "Method returns all news")
+    @ApiOperation(value = "Method returns all news",
+            authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses( value = {
             @ApiResponse(code = 404, message = "News not found"),
             @ApiResponse(code = 200, message = "News was found")
@@ -88,7 +87,8 @@ public class ManagerNewsRestController {
      */
     @PreAuthorize("permitAll()")
     @GetMapping("/publishednews")
-    @ApiOperation(value = "Returns list of published news")
+    @ApiOperation(value = "Returns list of published news",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<List<News>> getPublishedNewsOnMainPage() {
         List<News> publishedNews= newsService.getAllPublished();
         return ResponseEntity.ok(publishedNews);
@@ -102,7 +102,8 @@ public class ManagerNewsRestController {
      */
     @PreAuthorize("permitAll()")
     @GetMapping("/page")
-    @ApiOperation(value = "Method returns news page")
+    @ApiOperation(value = "Method returns news page",
+            authorizations = { @Authorization(value="jwtToken") })
     @ApiResponse(code = 200, message = "News page was found")
     public ResponseEntity<Page<News>> getPage(@PageableDefault Pageable page, NewsFilterDto filterDto) {
         Page<News> response = newsService.findAll(page, filterDto);
@@ -115,7 +116,8 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/published")
-    @ApiOperation(value = "Method returns published news")
+    @ApiOperation(value = "Method returns published news",
+            authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses( value = {
             @ApiResponse(code = 204, message = "Published news not found"),
             @ApiResponse(code = 200, message = "Published news was found")
@@ -135,7 +137,8 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/unpublished")
-    @ApiOperation(value = "Method returns unpublished news")
+    @ApiOperation(value = "Method returns unpublished news",
+            authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses( value = {
             @ApiResponse(code = 204, message = "Unpublished news not found"),
             @ApiResponse(code = 200, message = "Unpublished news was found")
@@ -155,7 +158,8 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/archived")
-    @ApiOperation(value = "Method returns archived news")
+    @ApiOperation(value = "Method returns archived news",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
             @ApiResponse(code = 204, message = "archived news not found"),
             @ApiResponse(code = 200, message = "archived news was found")
@@ -177,7 +181,8 @@ public class ManagerNewsRestController {
      */
 
     @PostMapping
-    @ApiOperation(value = "Method to save news in database")
+    @ApiOperation(value = "Method to save news in database",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 200, message = "News  saved in db")
     public ResponseEntity<News> newsPost(@RequestBody News news) {
         newsService.save(news);
@@ -191,7 +196,8 @@ public class ManagerNewsRestController {
      * @return возвращает обновленную сущность клиенту
      */
     @PutMapping
-    @ApiOperation(value = "Method to update news in database")
+    @ApiOperation(value = "Method to update news in database",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 200, message = "News updated in db")
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
         newsService.update(news);
@@ -205,7 +211,8 @@ public class ManagerNewsRestController {
      * @return возвращает идентификатор удаленной сущности клиенту
      */
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Method to delete news from database")
+    @ApiOperation(value = "Method to delete news from database",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
             @ApiResponse(code = 200, message = "News deleted"),
             @ApiResponse(code = 404, message = "News was not found")

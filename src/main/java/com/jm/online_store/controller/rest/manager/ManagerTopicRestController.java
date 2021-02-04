@@ -2,10 +2,7 @@ package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.service.interf.TopicService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +32,8 @@ public class ManagerTopicRestController {
      * если темы с таким id не существует - только статус
      */
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get topic by ID")
+    @ApiOperation(value = "Get topic by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Topic was not found")
     public ResponseEntity<Topic> readTopic(@PathVariable(name = "id") long id) {
         if (!topicService.existsById(id)) {
@@ -52,7 +50,8 @@ public class ManagerTopicRestController {
      * если тема с таким именем уже существует - только статус
      */
     @PostMapping
-    @ApiOperation(value = "Create new topic")
+    @ApiOperation(value = "Create new topic",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 304, message = "Topic was not modified")
     public ResponseEntity<Topic> createTopic(@RequestBody Topic topic){
         if (topicService.existsByTopicName(topic.getTopicName())) {
@@ -70,7 +69,8 @@ public class ManagerTopicRestController {
      * если тема с таким id не существует - только статус
      */
     @PutMapping("/{id}")
-    @ApiOperation(value = "Update topic by ID")
+    @ApiOperation(value = "Update topic by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 304, message = "Topic was not modified"),
             @ApiResponse(code = 404, message = "Topic was not found")

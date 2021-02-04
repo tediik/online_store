@@ -91,6 +91,7 @@ public class SpringFoxConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
+
                 .securitySchemes(Arrays.asList(apiKey()));
     }
 
