@@ -13,6 +13,7 @@ import com.jm.online_store.service.interf.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,8 @@ public class ReviewRestController {
      */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches an arrayList of all product Review by productId " +
-            "and returns JSON representation response by product ID")
+            "and returns JSON representation response by product ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<ReviewDto>> findAll(@PathVariable Long productId) {
         List<ReviewDto> reviewDtos = reviewService.findAll(productId).stream()
                 .map(ReviewDto::reviewEntityToDto)
@@ -65,7 +67,8 @@ public class ReviewRestController {
      */
     @GetMapping("/comments/{reviewId}")
     @ApiOperation(value = "Fetches an arrayList of all review comments by reviewId" +
-            " and returns JSON representation response by review ID")
+            " and returns JSON representation response by review ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<CommentDto>> findAllComments(@PathVariable Long reviewId) {
         List<CommentDto> commentDtos = commentService.findAllByReviewId(reviewId).stream()
                 .map(CommentDto::commentEntityToDto)
@@ -80,7 +83,8 @@ public class ReviewRestController {
      * @return ResponseEntity<productReview> or ResponseEntity<List<String>>
      */
     @PostMapping
-    @ApiOperation(value = "Receives productReview requestBody and passes it to Service layer for processing")
+    @ApiOperation(value = "Receives productReview requestBody and passes it to Service layer for processing",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 400, message = "Request has an incorrect data")
     public ResponseEntity<?> addReview(@RequestBody @Valid Review review, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(review.getProductId()).get();

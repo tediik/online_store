@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,8 @@ public class CommonRestController {
      */
 
     @GetMapping("/storeName")
-    @ApiOperation(value = "Get store name")
+    @ApiOperation(value = "Get store name",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> getStoreName() {
         return ResponseEntity.ok(storeName);
     }

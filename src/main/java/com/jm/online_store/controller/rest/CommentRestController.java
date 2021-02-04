@@ -11,10 +11,7 @@ import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -60,7 +57,8 @@ public class CommentRestController {
      * @return ResponseEntity<List < CommentDto>> список объектов CommentDto
      */
     @GetMapping("/{productId}")
-    @ApiOperation(value = "Fetches all the comments from current product")
+    @ApiOperation(value = "Fetches all the comments from current product",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
         List<CommentDto> commentDtos = commentService.findAllByProductId(productId).stream()
                 .map(CommentDto::commentEntityToDto)
@@ -76,7 +74,8 @@ public class CommentRestController {
      * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
      */
     @PostMapping
-    @ApiOperation(value = "Post new savedComment to the current product")
+    @ApiOperation(value = "Post new savedComment to the current product",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
             @ApiResponse(code = 200, message = "Comment was successfully added")
@@ -111,7 +110,8 @@ public class CommentRestController {
      * @return ResponseEntity<ReviewForCommentDto> or ResponseEntity<List<String>>
      */
     @PostMapping("/{reviewId}")
-    @ApiOperation(value = "Post new Review comment to the current product")
+    @ApiOperation(value = "Post new Review comment to the current product",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
             @ApiResponse(code = 200, message = "Review comment has successfully added")
@@ -145,7 +145,8 @@ public class CommentRestController {
      * @return ResponseEntity<?>
      */
     @DeleteMapping("/{commentId}")
-    @ApiOperation(value = "Deletes comment by its Id")
+    @ApiOperation(value = "Deletes comment by its Id",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 304, message = "Request contains incorrect data - only comment author can delete it"),
             @ApiResponse(code = 200, message = "comment was successfully deleted")
@@ -174,7 +175,8 @@ public class CommentRestController {
      * @return ResponseEntity<?>
      */
     @PutMapping
-    @ApiOperation(value = "Updates comment")
+    @ApiOperation(value = "Updates comment",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 304, message = "Request contains incorrect data - only comment author can change it"),
             @ApiResponse(code = 200, message = "comment was successfully updated")

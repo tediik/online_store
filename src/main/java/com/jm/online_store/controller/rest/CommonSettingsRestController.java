@@ -5,6 +5,7 @@ import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,14 +36,16 @@ public class CommonSettingsRestController {
     }
 
     @PostMapping
-    @ApiOperation(value = "adds new common setting")
+    @ApiOperation(value = "adds new common setting",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> addNewSetting(@RequestBody CommonSettings commonSetting) {
         commonSettingsService.addSetting(commonSetting);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping
-    @ApiOperation(value = "updates common settings")
+    @ApiOperation(value = "updates common settings",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<CommonSettings> updateSetting(@RequestBody CommonSettings commonSettings) {
         if (commonSettings.getSettingName().equals("maintenance_mode")) {
             commonSettingsService.updateMaintenanceMode(commonSettings);
@@ -53,7 +56,8 @@ public class CommonSettingsRestController {
     }
 
     @GetMapping("/{settingName}")
-    @ApiOperation(value = "get Common Setting by name")
+    @ApiOperation(value = "get Common Setting by name",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<CommonSettings> getCommonSettingByName(@PathVariable String settingName) {
         return ResponseEntity.ok(commonSettingsService.getSettingByName(settingName));
     }
