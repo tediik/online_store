@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping("/api/customer/trackableProduct")
 @AllArgsConstructor
 @Api(description = "Rest Controller for fetching or deleting products which prices are tracked by User")
-public class CustomerTrackableProductRestController {
+public clasCustomerTrackableProductRestController {
     private final ProductService productService;
 
     /**
