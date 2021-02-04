@@ -46,7 +46,6 @@ function functionRestore() {
             document.location.href = "/login";
         } else {
             alert("Ваш аккаунт не восстановлен. Проверьте введеннные учетные данные")
-            document.location.href = "/login";
         }
     })
 }

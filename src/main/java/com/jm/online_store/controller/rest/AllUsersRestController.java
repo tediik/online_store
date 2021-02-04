@@ -65,16 +65,16 @@ public class AllUsersRestController {
     public ResponseEntity<String> restoreUser(@RequestBody UserDto userDto) {
         String msgAlert = "Пользователь не найден!";
         String email = userDto.getEmail();
+        User getUserByEmail = userService.findUserByEmail(email);
+        String passwordOfBase = getUserByEmail.getPassword();
+        String passwordOfClient = userDto.getPassword();
         try {
-            User getUserByPassword = userService.findUserByEmail(email);
-            String passwordOfBase = getUserByPassword.getPassword();
-            String passwordOfClient = userDto.getPassword();
             if (passwordEncoder.matches(passwordOfClient, passwordOfBase)) {
                 customerService.restoreCustomer(email);
                 msgAlert = "Профиль успешно восстановлен!";
                 return ResponseEntity.ok(msgAlert);
             } else {
-                throw new UsernameNotFoundException("msgAlert");
+                throw new UsernameNotFoundException(msgAlert);
             }
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.badRequest().body(msgAlert);
