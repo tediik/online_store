@@ -20,6 +20,7 @@ import java.util.Set;
 public class UserDto {
     private Long id;
     private String email;
+    private String password;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -28,17 +29,20 @@ public class UserDto {
     private LocalDate registerDate;
     private String profilePicture;
     private Set<Role> roles;
+    Collection<? extends GrantedAuthority> authorities;
 
     public static UserDto fromUser(User user) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setEmail(user.getUsername());
+        userDto.setPassword(user.getPassword());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setPhoneNumber(user.getPhoneNumber());
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
+        userDto.setAuthorities(user.getAuthorities());
         return userDto;
     }
 }
