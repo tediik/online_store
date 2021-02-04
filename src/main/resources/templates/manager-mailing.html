@@ -76,7 +76,7 @@
                        aria-controls="nav-profile" aria-selected="false">Снижение цен</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav-new1-tab" data-toggle="tab" href="#nav-distribution"
+                    <a class="nav-link" id="nav-new1-tab" data-toggle="tab" href="#nav-sendConfirmationTokenToResetPassword"
                        role="tab" aria-controls="nav-profile" aria-selected="true">рассылка1</a>
                 </li>
                 <li class="nav-item">
@@ -160,6 +160,29 @@
                     </ul>
                     <button class="btn btn-primary" id="savePriceChangeTemplateChanges">Сохранить шаблон</button>
                 </div>
+                <div class="tab-pane fade" id="nav-sendConfirmationTokenToResetPassword" role="tabpanel" aria-labelledby="nav-new3-tab">
+                    <form id="sendConfirmationTokenToResetPasswordTemplateEditForm">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при запросе на изменение пароля</label>
+                                <textarea id="sendConfirmationTokenToResetPasswordTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация! Метод sendConfirmationTokenToResetPassword(User user)</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
+                        <li>@@url@@ - вместо этого тэга в письме подставится urlActivate </li>
+                        <li>@@confirmationToken@@ - вместо этого тэга в письме подставится confirmationToken.getConfirmationToken() </li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveSendConfirmationTokenToResetPasswordTemplateChanges">Сохранить шаблон</button>
+                </div>
+
+
+
                 <div class="tab-pane fade" id="description">
                     <div id="chart-div" style="display: none">
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -230,8 +253,6 @@
 <script src="/static/js/jquery.datepicker.extension.range.min.js"></script>
 <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<script src="/static/js/summernote.js"></script>
-<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <script src="/static/js/search-button.js"></script>

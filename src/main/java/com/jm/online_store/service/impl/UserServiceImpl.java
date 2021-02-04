@@ -340,12 +340,12 @@ public class UserServiceImpl implements UserService {
         } else {
             messageBody = templateBody.replace("@@user@@", "Подписчик");
         }
-        String message = String.format(
+       /* String message = String.format(
                 "Привет, %s! \n Вы сделали запрос на сброс пароля, для подтверждения перейдите по ссылке: " + urlActivate + "/restorepassword/%s",
                 user.getFirstName(),
                 confirmationToken.getConfirmationToken()
-        );
-        mailSenderService.send(user.getEmail(), "Ссылка-подтверждение для генерации нового пароля", message, "pass change");
+        );*/
+        mailSenderService.send(user.getEmail(), "Ссылка-подтверждение для генерации нового пароля", messageBody, "pass change");
         log.info("На почту: {} отправлена ссылка-подтверждение для генерации нового пароля.", user.getEmail());
     }
 
