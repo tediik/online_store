@@ -8,6 +8,7 @@ $(document).ready(function () {
     document.getElementById('updateProfile').addEventListener("click", updateProfile)
 });
 
+
 /**
  * Функция смены email в профиле
  */

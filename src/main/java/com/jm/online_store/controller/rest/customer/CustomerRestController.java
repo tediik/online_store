@@ -43,7 +43,8 @@ public class CustomerRestController {
     private final RecentlyViewedProductsService recentlyViewedProductsService;
 
     @PostMapping("/changemail")
-    @ApiOperation(value = "processes Customers request to change email", authorizations = { @Authorization(value="jwtToken") })
+    @ApiOperation(value = "processes Customers request to change email",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "duplicatedEmailError or notValidEmailError"),
             @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
@@ -70,7 +71,8 @@ public class CustomerRestController {
      * @return страница User
      */
     @PostMapping("/change-password")
-    @ApiOperation(value = "processes Customers request to change email", authorizations = { @Authorization(value="jwtToken") })
+    @ApiOperation(value = "processes Customers request to change password",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No user with such id"),
             @ApiResponse(code = 400, message = "Wrong email or user with such email already exists"),
@@ -104,10 +106,18 @@ public class CustomerRestController {
      * @return ResponseEntity.ok()
      */
     @DeleteMapping("/deleteProfile/{id}")
-    @ApiOperation(value = "Changes Users status, when Delete button clicked", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
-        customerService.changeCustomerStatusToLocked(id);
-        return ResponseEntity.ok("Delete profile");
+    @ApiOperation(value = "Changes Users status, when Delete button clicked",
+            authorizations = { @Authorization(value = "jwtToken") })
+    public ResponseEntity<User> blockProfile(@PathVariable Long id) {
+        try {
+            customerService.changeCustomerStatusToLocked(id);
+        }
+        catch (IllegalArgumentException e) {
+            log.debug("There is no user with id: {}", id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        log.debug("User with id: {}, was blocked", id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -117,7 +127,8 @@ public class CustomerRestController {
      * @return ResponseEntity.ok()
      */
     @DeleteMapping("/deleteProfileUnrecoverable/{id}")
-    @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked", authorizations = { @Authorization(value="jwtToken") })
+    @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> deleteProfileUnrecoverable(@PathVariable Long id) {
         customerService.changeCustomerProfileToDeletedProfileByID(id);
         customerService.deleteByID(id);
@@ -130,7 +141,8 @@ public class CustomerRestController {
      * @return ResponseEntity<User> Объект User
      */
     @GetMapping("/getManagerById/{id}")
-    @ApiOperation(value = "Возвращает пользователя по id", authorizations = { @Authorization(value="jwtToken") })
+    @ApiOperation(value = "Возвращает пользователя по id",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "User with this id not found"),
     })
@@ -157,19 +169,24 @@ public class CustomerRestController {
      * @return ResponseEntity<String>
      */
     @PostMapping("/addIdProductToSessionAndToBase")
-    @ApiOperation(value = "procces gives and save idProduct into Session and to DataBase", authorizations = { @Authorization(value="jwtToken") })
+    @ApiOperation(value = "procces gives and save idProduct into Session and to DataBase",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "")
     })
     public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request) {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        HttpSession session = request.getSession();
-        session.setAttribute("Product", productId);
-        Long userId = userService.getCurrentLoggedInUser().getId();
-        if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
-            recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId, localDateTime);
-        } else recentlyViewedProductsService.updateRecentlyViewedProducts(productId, userId, localDateTime);
-        return ResponseEntity.ok("Product is saved in session");
+        if (userService.getCurrentLoggedInUser() != null) {
+            LocalDateTime localDateTime = LocalDateTime.now();
+            HttpSession session = request.getSession();
+            session.setAttribute("Product", productId);
+            Long userId = userService.getCurrentLoggedInUser().getId();
+            if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
+                recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId, localDateTime);
+            } else recentlyViewedProductsService.updateRecentlyViewedProducts(productId, userId, localDateTime);
+            return ResponseEntity.ok("Product is saved in session");
+        } else {
+            return ResponseEntity.ok("User is not authenticated. Product is not saved to session");
+        }
     }
 
     /**
@@ -177,7 +194,8 @@ public class CustomerRestController {
      * @return ResponseEntity<List<Product>>
      */
     @GetMapping("/getRecentlyViewedProductsFromDb")
-    @ApiOperation(value = "procces return List<Product> from DB", authorizations = { @Authorization(value="jwtToken") })
+    @ApiOperation(value = "procces return List<Product> from DB",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "Request contains incorrect data")
@@ -198,9 +216,10 @@ public class CustomerRestController {
      * @return - ResponseEntity<List<Product>>
      */
     @GetMapping("/recentlyViewedProducts")
+
     @ApiOperation(value = "Метод возвращает из базы список продуктов, которые просматривал пользователь" +
             "в промежутке времени (stringStartDate и stringEndDate), параметры передаются в строковом значении как 2018-10-23",
-            authorizations = { @Authorization(value="jwtToken") })
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Product was not found")
     public ResponseEntity<List<Product>> getRecentlyViewedProductsByUserIdAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
         LocalDate startDate = LocalDate.parse(stringStartDate);

@@ -56,8 +56,8 @@ public class CommonSettingsRestController {
     }
 
     @GetMapping("/{settingName}")
-    @ApiOperation(value = "get Common Setting by name",
-            authorizations = { @Authorization(value = "jwtToken") })
+        @ApiOperation(value = "get Common Setting by name",
+                authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<CommonSettings> getCommonSettingByName(@PathVariable String settingName) {
         return ResponseEntity.ok(commonSettingsService.getSettingByName(settingName));
     }

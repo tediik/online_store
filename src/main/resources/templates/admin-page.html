@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
     <script src="/static/js/jquery/jquery-3.5.1.min.js"></script>
+    <!-- CSS fot toaster -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+          integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+          crossorigin="anonymous"/>
     <title>Admin panel</title>
 
 </head>
@@ -288,7 +292,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="Edit user">Edit user</h5>
+                    <h5 class="modal-title" id="userModalWindowTitle"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -320,9 +324,7 @@
                 <div class="modal-footer">
                     <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close
                     </button>
-                    <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save
-                        changes
-                    </button>
+                    <button id="acceptButton" type="button" class="btn" data-th-accept="modal"></button>
                 </div>
             </div>
         </div>
@@ -401,8 +403,10 @@
 <script src="/static/js/profile-admin-manager-service.js"></script>
 <script src="/static/js/profile-picture.js"></script>
 <script src="/static/js/bad-words.js"></script>
-
-
+<!-- Toaster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous"></script>
 </body>
 </html>
 
