@@ -73,7 +73,7 @@ public class CustomerRestController {
      * @return страница User
      */
     @PostMapping("/change-password")
-    @ApiOperation(value = "processes Customers request to change email")
+    @ApiOperation(value = "processes Customers request to change password")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No user with such id"),
             @ApiResponse(code = 400, message = "Wrong email or user with such email already exists"),

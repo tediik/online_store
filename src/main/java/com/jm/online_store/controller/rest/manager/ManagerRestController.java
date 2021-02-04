@@ -51,6 +51,10 @@ public class ManagerRestController {
     private final OrderService orderService;
     private final UserService userService;
 
+    /**
+     * Метод возвращающий залогиненного юзера
+     * @return authUser возвращает юзера из базы данных
+     */
     @GetMapping(value = "/authUser")
     @ApiOperation(value = "receive authenticated user from manager page")
     public ResponseEntity<User> showAuthUserInfo() {

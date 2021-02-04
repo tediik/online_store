@@ -18,6 +18,7 @@ import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
+import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
     private final AddressService addressService;
     private final CommonSettingsService commonSettingsService;
     private final FavouritesGroupService favouritesGroupService;
+    private final TemplatesMailingSettingsService templatesMailingSettingsService;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -329,6 +331,15 @@ public class UserServiceImpl implements UserService {
     public void sendConfirmationTokenToResetPassword(User user) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
+        String templateBody = templatesMailingSettingsService.getSettingByName("send_Confirmation_Token_To_Reset_Password").getTextValue();
+        String messageBody;
+        if (user.getFirstName() != null) {
+            messageBody = templateBody.replace("@@user@@", user.getFirstName())
+                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
+                    .replace("@@url@@", urlActivate);
+        } else {
+            messageBody = templateBody.replace("@@user@@", "Подписчик");
+        }
         String message = String.format(
                 "Привет, %s! \n Вы сделали запрос на сброс пароля, для подтверждения перейдите по ссылке: " + urlActivate + "/restorepassword/%s",
                 user.getFirstName(),
