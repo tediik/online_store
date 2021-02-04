@@ -40,7 +40,7 @@ public class AdminRestController {
      * @return ResponseEntity(authUser, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/authUser")
-    @ApiOperation(value = "receive authenticated user. from admin page")
+    @ApiOperation(value = "receive authenticated user. from admin page", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<User> showAuthUserInfo() {
         User authUser = userService.getCurrentLoggedInUser();
         return new ResponseEntity<>(authUser, HttpStatus.OK);
@@ -51,8 +51,7 @@ public class AdminRestController {
      * @return ResponseEntity(allUsers, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/allUsers")
-    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-//    @ApiOperation(value = "receive all users from db. from admin page")
+    @ApiOperation(value = "return list of users", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "There are no users in db"),
     })
@@ -71,7 +70,7 @@ public class AdminRestController {
      * @return ResponseEntity(user, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/users/{id}")
-    @ApiOperation(value = "receive user by id from db. from admin page")
+    @ApiOperation(value = "receive user by id from db. from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "User with this id not found"),
     })
@@ -91,7 +90,7 @@ public class AdminRestController {
      * @return ResponseEntity<>(HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "delete user from db by his id from admin page")
+    @ApiOperation(value = "delete user from db by his id from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "There is no user with id"),
             @ApiResponse(code = 200, message = "User was deleted successfully"),
@@ -113,7 +112,7 @@ public class AdminRestController {
      * @return new ResponseEntity<>(HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
-    @ApiOperation(value = "modify user from admin page")
+    @ApiOperation(value = "modify user from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "There is no user with id"),
             @ApiResponse(code = 200, message = "Changes were successfully added"),
@@ -148,7 +147,7 @@ public class AdminRestController {
      * @return new ResponseEntity<>(String, HttpStatus) {@link ResponseEntity}
      */
     @PostMapping
-    @ApiOperation(value = "add new user from admin page")
+    @ApiOperation(value = "add new user from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 409, message = "User with same email already exists"),
             @ApiResponse(code = 400, message = "Bad request, empty password or roles not selected"),
@@ -185,7 +184,7 @@ public class AdminRestController {
      * @param role - choosen role
      * @return List<User> filtered user's list
      */
-    @ApiOperation(value = "filter list on users by chosen role")
+    @ApiOperation(value = "filter list on users by chosen role", authorizations = { @Authorization(value="jwtToken") })
     @PutMapping(value = "/{role}")
     public List<User> filterByRoles(@PathVariable String role) {
         return userService.findByRole(role);

@@ -8,10 +8,7 @@ import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,7 +43,7 @@ public class CustomerRestController {
     private final RecentlyViewedProductsService recentlyViewedProductsService;
 
     @PostMapping("/changemail")
-    @ApiOperation(value = "processes Customers request to change email")
+    @ApiOperation(value = "processes Customers request to change email", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "duplicatedEmailError or notValidEmailError"),
             @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
