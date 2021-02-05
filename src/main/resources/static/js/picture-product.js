@@ -22,7 +22,7 @@ $(document).ready(function () {
         var file_data = $('#productPictureFile').prop('files')[0];
         var form_data = new FormData();
         form_data.append("pictureFile", file_data);
-        $('#acceptEditPictureButton').click(function () {
+        // $('#acceptEditPictureButton').click(function () {
             $.ajax({
                 type: 'PUT',
                 url: '/api/product/upload/picture/' + product.id,
@@ -32,16 +32,15 @@ $(document).ready(function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                },
-                error: function (jqXhr, textStatus, errorThrown) {
-                    console.log(errorThrown);
+                    $('#showPictureFirstSlide').attr("src", data);
                 }
             });
-        });
+        // });
     });
 
     /**
-     * Функция для динамического отображения выбранного файла
+     * Функция для динамического отображения выбранного
+     * файла в модалке добавления картинки для нового продукта
      * @param input
      */
     function readURLForNewProduct(input) {
@@ -54,6 +53,9 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Функция добавления картинки для нового продукта
+     */
     $('#addedPictureFile').change(function() {
         const product = {id: $('#idAddPictureModal').val()}
         readURLForNewProduct(this);
@@ -69,7 +71,9 @@ $(document).ready(function () {
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function (data) {},
+                success: function (data) {
+                    $('#showPictureFirstSlide').attr("src", data);
+                },
                 error: function (jqXhr, textStatus, errorThrown) {
                     console.log(errorThrown);
                 }

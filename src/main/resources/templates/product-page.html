@@ -82,7 +82,7 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img class="first-slide"
+                            <img id="showPictureFirstSlide"
                                  th:src="@{/uploads/images/products/{name}(name = ${product.getProduct_picture()})}"
                                  alt="First slide">
                         </div>
@@ -315,6 +315,7 @@
 <script src="../static/js/product-page.js"></script>
 <script src="../static/js/comments.js"></script>
 <script src="../static/js/reviews.js"></script>
+<script src="/static/js/picture-product.js"></script>
 <script src="../static/js/search-button.js"></script>
 <script src="../static/js/registration.js"></script>
 <script src="../static/js/product-price-change.js"></script>

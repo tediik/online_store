@@ -2,10 +2,13 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,24 +33,24 @@ import java.util.UUID;
 public class PictureProductController {
 
     private final ProductService productService;
-    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "src"
-            + File.separator + "main" + File.separator + "resources"+ File.separator + "uploads"
+    private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads"
             + File.separator + "images" + File.separator + "products";
 
     /**
      * Метод для изменения картинки
+     *
      * @param id
      * @param pictureFile
      */
     @PutMapping("/upload/picture/{id}")
-    public void editPicture(@PathVariable("id")Long id, @RequestParam("pictureFile") MultipartFile pictureFile){
+    public ResponseEntity<String> editPicture(@PathVariable("id") Long id, @RequestParam("pictureFile") MultipartFile pictureFile) {
 
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         String uniqueFilename = StringUtils.cleanPath(UUID.randomUUID() + "." + pictureFile.getOriginalFilename());
-        if(!(pictureFile.isEmpty())){
+        if (!(pictureFile.isEmpty())) {
             Path fileNameAndPath = Paths.get(uploadDirectory, uniqueFilename);
             try {
-                if(!Files.exists(fileNameAndPath)){
+                if (!Files.exists(fileNameAndPath)) {
                     Files.createDirectories(fileNameAndPath.getParent());
                 }
                 byte[] bytes = pictureFile.getBytes();
@@ -58,15 +61,26 @@ public class PictureProductController {
             }
         }
         productService.editProduct(product);
+        return ResponseEntity.ok("uploads" + File.separator + "images"
+                + File.separator + "products" + uniqueFilename);
     }
 
     /**
      * Метод для удаления картинки
+     *
      * @param id
      */
     @DeleteMapping("/picture/delete/{id}")
-    public void deletePicture(@PathVariable("id") Long id){
+    public void deletePicture(@PathVariable("id") Long id) {
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
+        Path fileNameAndPath = Paths.get(uploadDirectory, product.getProduct_picture());
+        try {
+            if (!fileNameAndPath.getFileName().toString().equals("00.jpg")) {
+                Files.delete(fileNameAndPath);
+            }
+        } catch (IOException e) {
+            log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
+        }
         product.setProduct_picture("00.jpg");
         productService.editProduct(product);
     }
