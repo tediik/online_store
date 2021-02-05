@@ -4,7 +4,6 @@ import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.util.Transliteration;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +42,7 @@ public class CategoryRestController {
             "     * \"Компьютеры\":\"Kompʹyutery\",\n" +
             "     * \"Ноутбуки\":\"Noutbuki\"},\n" +
             "     * \"Смартфоны и гаджеты\":{\"Планшеты\":\"Planshety\",\n" +
-            "     * \"Смартфоны\":\"Smartfony\"}}", authorizations = { @Authorization(value = "jwtToken") })
+            "     * \"Смартфоны\":\"Smartfony\"}}")
     public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.findAll();
         Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
@@ -63,10 +62,8 @@ public class CategoryRestController {
      *
      * @return список Categories
      */
-
     @GetMapping("/allCategories")
-    @ApiOperation(value = "Get all subcategories",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Get all subcategories")
     public ResponseEntity<List<Categories>> getAllCategories() {
         return ResponseEntity.ok(categoriesService.findAll());
     }
@@ -80,8 +77,7 @@ public class CategoryRestController {
      * @author Dmitriy (dshishkaryan)
      */
     @GetMapping("/{name}")
-    @ApiOperation(value = "Get subcategory by name with translation from latin to cyrillic",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Get subcategory by name with translation from latin to cyrillic")
     public ResponseEntity<Categories> getCategory(@PathVariable String name) {
         String categoryName = name.replaceAll("\"", "");
         ResponseEntity<Categories>[] answer = new ResponseEntity[1];
