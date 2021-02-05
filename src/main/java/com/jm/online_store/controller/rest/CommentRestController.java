@@ -62,9 +62,8 @@ public class CommentRestController {
      * @return ResponseEntity<List < CommentDto>> список объектов CommentDto
      */
     @GetMapping("/{productId}")
-    @ApiOperation(value = "Fetches all the comments from current product",
-            authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
+    @ApiOperation(value = "Fetches all the comments from current product")
+        public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
         List<CommentDto> commentDtos = commentService.findAllByProductId(productId).stream()
                 .map(CommentDto::commentEntityToDto)
                 .collect(Collectors.toList());
