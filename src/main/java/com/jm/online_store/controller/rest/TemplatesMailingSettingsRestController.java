@@ -36,14 +36,14 @@ public class TemplatesMailingSettingsRestController {
     }
 
     @PutMapping
-    @ApiOperation(value = "updates common settings")
+    @ApiOperation(value = "updates TemplatesMailing settings")
     public ResponseEntity<TemplatesMailingSettings> updateSetting(@RequestBody TemplatesMailingSettings templatesMailingSettings) {
         templatesMailingSettingsService.updateTextValue(templatesMailingSettings);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{settingName}")
-    @ApiOperation(value = "get Common Setting by name")
+    @ApiOperation(value = "get TemplatesMailingSetting by name")
     public ResponseEntity<TemplatesMailingSettings> getTemplatesMailingSettings(@PathVariable String settingName) {
         return ResponseEntity.ok(templatesMailingSettingsService.getSettingByName(settingName));
     }

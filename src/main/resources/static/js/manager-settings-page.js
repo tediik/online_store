@@ -2,7 +2,7 @@
  * Global variables declaration
  * @type {string}
  */
-let apiResetPasswordTemplate = "/api/templatesMailingSettings"
+let apiTemplatesMailingSettingsUrl = "/api/templatesMailingSettings"
 let apiManagerSchedulingUrl = "/api/manager/scheduling"
 let apiCommonSettingsUrl = "/api/commonSettings"
 let myHeaders = new Headers()
