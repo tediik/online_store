@@ -85,9 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
     }
 
     @Bean
