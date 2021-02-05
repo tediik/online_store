@@ -10,7 +10,10 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -51,7 +54,7 @@ public class ManagerRestController {
      */
     @GetMapping("/news")
     @ApiOperation(value = "Get list of all news",
-            authorizations = { @Authorization(value="jwtToken") })
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<News>> allNews() {
         return ResponseEntity.ok().body(newsService.findAll());
     }

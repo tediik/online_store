@@ -4,7 +4,11 @@ import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsFilterDto;
 import com.jm.online_store.service.interf.NewsService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +49,7 @@ public class ManagerNewsRestController {
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "Get news by ID",
-            authorizations = { @Authorization(value="jwtToken") })
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
             @ApiResponse(code = 404, message = "News not found"),
             @ApiResponse(code = 200, message = "News was found")
