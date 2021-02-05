@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
     private final CustomerRepository customerRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager; // Это поле используется где-либо?
     private final PasswordEncoder passwordEncoder;
     private final AddressService addressService;
     private final CommonSettingsService commonSettingsService;
@@ -100,6 +101,7 @@ public class UserServiceImpl implements UserService {
         return filteredUsers;
     }
 
+
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
@@ -127,10 +129,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean isExist(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isEmpty()) {
-            return false;
-        }
-        return true;
+//        if (user.isEmpty()){
+//            return false;
+//        }
+//        return true;
+        // Немного упростил
+        return user.isPresent();
     }
 
     /**
@@ -161,7 +165,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Обновление пользователя.
-     * @param user пользователь, полученный из контроллера.
+     * @param user объект, полученный из контроллера.
      */
     @Override
     @Transactional
@@ -169,17 +173,37 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Метод обновляет профиль пользователя в личном кабинете.
+     * @param user сущность, полученный из контроллера.
+     * @return измененного пользователя.
+     * @throws UserNotFoundException если пользователь не найден.
+     */
     @Override
     @Transactional
     public User updateUserProfile(User user) {
-        User updateUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
-        updateUser.setFirstName(user.getFirstName());
-        updateUser.setLastName(user.getLastName());
-        updateUser.setBirthdayDate(user.getBirthdayDate());
-        updateUser.setUserGender(user.getUserGender());
-        return userRepository.save(updateUser);
+        User updatedUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+        updatedUser.setFirstName(user.getFirstName());
+        updatedUser.setLastName(user.getLastName());
+        updatedUser.setBirthdayDate(user.getBirthdayDate());
+        updatedUser.setUserGender(user.getUserGender());
+
+//        userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+
+//        user.setId(user.getId());
+//        user.setFirstName(user.getFirstName());
+//        user.setLastName(user.getLastName());
+//        user.setBirthdayDate(user.getBirthdayDate());
+//        user.setUserGender(user.getUserGender());
+
+        return userRepository.save(updatedUser);
     }
 
+    /**
+     * Обновляет данные польователя в панели для админа
+     * @param user сущность, полученный из контроллера.
+     * @throws UserNotFoundException если пользователя не существует.
+     */
     @Override
     @Transactional
     public void updateUserAdminPanel(@NotNull User user) {
@@ -193,7 +217,7 @@ public class UserServiceImpl implements UserService {
             editUser.setEmail(user.getEmail());
         }
         editUser.setRoles(persistRoles(user.getRoles()));
-        log.debug("editUser: {}", editUser);
+        log.debug("Пользователь с ID=: {} изменен", editUser.getId());
         userRepository.save(editUser);
     }
 
@@ -208,8 +232,10 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Регистрация нового User.
-     * @param userForm User построенный из данных формы.
+     * Регистрация нового пользователя.
+     * Метод генерирует токен на основе email и пароля, затем отправляет письмо
+     * с ссылкой для подтверждения регистрации на указанный email.
+     * @param userForm User полученный из данных формы.
      */
     @Override
     @Transactional
@@ -228,7 +254,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод формирует токен и отправляет ссылку подтверждение на email указанный анонимом.
+     * Метод формирует токен и отправляет ссылку подтверждение на email указанный анонимом.
      * @param email указанный анонимным пользователем при покупке
      */
     @Override
@@ -248,7 +274,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Method generates confirmation token based on users ID and Email adress
+     * Method generates confirmation token based on users ID and Email address
      * Sends generated token to new users email
      */
     @Override
@@ -270,6 +296,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Устанавливет переданному пользователю новый пароль.
+     * Генерирует токен на основе id и email, затем отправляет для подтверждения на email пользователя.
      * @param user Пользователь
      * @param newPassword новый пароль
      */
@@ -302,7 +329,10 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод использует библиотеку Passay для генерации рандомного пароля в соответствии с указанными требованиями к паролю
+     * Метод использует библиотеку Passay для генерации рандомного пароля
+     * в соответствии с указанными требованиями к паролю.
+     * Пароль должен состоять из 8-20 символов, содержать буквы и цифры и
+     * не должен содержать пробелов и эмодзи.
      * @return рандомный сгенерированный пароль
      */
     private String generatePassayPassword() {
@@ -339,7 +369,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод проверки активации пользователя.
+     * Метод проверки активации пользователя.
      * @param token модель, построенная на основе пользователя, после подтверждения
      * @param request параметры запроса.
      * @return булево значение "true or false"
@@ -467,9 +497,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Service method to add new user from admin page
-     *
-     * @param newUser
+     * Метод позволяет добавлять нового пользователя со страницы для админа
+     * @param newUser получаем с контроллера
      */
     @Override
     @Transactional
@@ -519,9 +548,12 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод который находит User-а по его id
-     * @param id Юзера
-     * @return User
+     * Изменение пароля пользователя.
+     * @param id идентификатор пользователя.
+     * @param oldPassword старый пароль.
+     * @param newPassword новый пароль.
+     * @return false если новый пароль не соответствует требованиям.
+     * Также возвращает false если
      */
     @Override
     @Transactional
@@ -546,26 +578,26 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public boolean addNewAddressForUser(User user, Address address) {
-        User usertoUpdate = findById(user.getId()).orElseThrow(UserNotFoundException::new);
+        User userToUpdate = findById(user.getId()).orElseThrow(UserNotFoundException::new);
         Optional<Address> addressFromDB = addressService.findSameAddress(address);
-        if (addressFromDB.isPresent() && !usertoUpdate.getUserAddresses().contains(addressFromDB.get())) {
+        if (addressFromDB.isPresent() && !userToUpdate.getUserAddresses().contains(addressFromDB.get())) {
             Address addressToAdd = addressFromDB.get();
-            if (usertoUpdate.getUserAddresses() != null) {
-                usertoUpdate.getUserAddresses().add(addressToAdd);
+            if (userToUpdate.getUserAddresses() != null) {
+                userToUpdate.getUserAddresses().add(addressToAdd);
             } else {
-                usertoUpdate.setUserAddresses(Collections.singleton(address));
+                userToUpdate.setUserAddresses(Collections.singleton(address));
             }
-            updateUser(usertoUpdate);
+            updateUser(userToUpdate);
             return true;
         }
         if (!addressFromDB.isPresent()) {
             Address addressToAdd = addressService.addAddress(address);
-            if (usertoUpdate.getUserAddresses() != null) {
-                usertoUpdate.getUserAddresses().add(addressToAdd);
+            if (userToUpdate.getUserAddresses() != null) {
+                userToUpdate.getUserAddresses().add(addressToAdd);
             } else {
-                usertoUpdate.setUserAddresses(Collections.singleton(address));
+                userToUpdate.setUserAddresses(Collections.singleton(address));
             }
-            updateUser(usertoUpdate);
+            updateUser(userToUpdate);
             return true;
         }
         return false;
