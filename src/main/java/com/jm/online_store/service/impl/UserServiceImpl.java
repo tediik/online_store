@@ -182,6 +182,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUserProfile(User user) {
+
         User updatedUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
         updatedUser.setFirstName(user.getFirstName());
         updatedUser.setLastName(user.getLastName());
@@ -217,7 +218,7 @@ public class UserServiceImpl implements UserService {
             editUser.setEmail(user.getEmail());
         }
         editUser.setRoles(persistRoles(user.getRoles()));
-        log.debug("Пользователь с ID=: {} изменен", editUser.getId());
+        log.debug("editUser: {}", editUser.getId());
         userRepository.save(editUser);
     }
 
@@ -436,6 +437,11 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    /**
+     * Что за метод?
+     * @param roles
+     * @return
+     */
     private Set<Role> persistRoles(Set<Role> roles) {
         return roles.stream()
                 .map(Role::getName)
@@ -530,14 +536,18 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateUserFromAdminPage(User user) {
         User editedUser = userRepository.findById(user.getId()).get();
+
         Set<Role> newRoles = persistRoles(user.getRoles());
+
         editedUser.setRoles(newRoles);
         editedUser.setEmail(user.getEmail());
         editedUser.setFirstName(user.getFirstName());
         editedUser.setLastName(user.getLastName());
+
         if (!user.getPassword().equals("")) {
             editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
+
         return userRepository.save(editedUser);
     }
 
@@ -552,8 +562,9 @@ public class UserServiceImpl implements UserService {
      * @param id идентификатор пользователя.
      * @param oldPassword старый пароль.
      * @param newPassword новый пароль.
-     * @return false если новый пароль не соответствует требованиям.
-     * Также возвращает false если
+     * @return false если ввести неправильно текущий пароль,
+     * возвращает false если новый пароль не соответствует требованиям,
+     * true при успешном изменении.
      */
     @Override
     @Transactional
