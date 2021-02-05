@@ -46,6 +46,7 @@ public class BasketRestController {
         List<SubBasket> subBaskets = basketService.getBasket(request.getSession().getId());
         return new ResponseEntity<>(subBaskets, HttpStatus.OK);
     }
+
     /**
      * контроллер для формирования заказа из корзины.
      *

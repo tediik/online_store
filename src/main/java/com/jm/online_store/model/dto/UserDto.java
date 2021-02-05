@@ -36,6 +36,8 @@ public class UserDto {
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setUserGender(user.getUserGender());
+        userDto.setBirthdayDate(user.getBirthdayDate());
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
