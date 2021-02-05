@@ -2,9 +2,11 @@ package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.UserService;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
@@ -17,6 +19,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +49,18 @@ public class ManagerRestController {
 
     private final NewsService newsService;
     private final OrderService orderService;
+    private final UserService userService;
+
+    /**
+     * Метод возвращающий залогиненного юзера
+     * @return authUser возвращает юзера из базы данных
+     */
+    @GetMapping(value = "/authUser")
+    @ApiOperation(value = "receive authenticated user from manager page")
+    public ResponseEntity<User> showAuthUserInfo() {
+        User authUser = userService.getCurrentLoggedInUser();
+        return new ResponseEntity<>(authUser, HttpStatus.OK);
+    }
 
     /**
      * Метод возвращающий всписок всех новостей
