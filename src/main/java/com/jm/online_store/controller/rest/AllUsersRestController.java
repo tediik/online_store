@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.RestoreAccountDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
@@ -54,7 +55,7 @@ public class AllUsersRestController {
     /**
      * Метод восстановления пользователя
      *
-     * @param userDto
+     * @param restoreAccountDto
      * @return
      */
     @PutMapping("/restore")
@@ -62,11 +63,13 @@ public class AllUsersRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "User not found"),
     })
-    public ResponseEntity<String> restoreUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> restoreUser(@RequestBody RestoreAccountDto restoreAccountDto) {
         String msgAlert = "Пользователь не найден!";
-        String email = userDto.getEmail();
+        String email = restoreAccountDto.getEmail();
+        String passwordOfClient = restoreAccountDto.getPassword();
+        String passwordOfBase = userService.passwordByMail(email);
         try {
-            if (passwordEncoder.matches(userDto.getPassword(), userService.findUserByEmail(email).getPassword())) {
+            if (passwordEncoder.matches(passwordOfClient, passwordOfBase)) {
                 customerService.restoreCustomer(email);
                 msgAlert = "Профиль успешно восстановлен!";
                 return ResponseEntity.ok(msgAlert);

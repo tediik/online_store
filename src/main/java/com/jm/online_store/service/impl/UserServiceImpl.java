@@ -288,6 +288,12 @@ public class UserServiceImpl implements UserService {
         log.info("для юзера с логином {} установлен новый пароль: {}", user.getEmail(), newPassword);
     }
 
+    @Override
+    @Transactional
+    public String passwordByMail(String email){
+        return findUserByEmail(email).getPassword();
+    }
+
     /**
      * Генерирует новый пароль и отправляет его пользователю на почту.
      * @param user - Покупатель, запросивший смену пароля.
