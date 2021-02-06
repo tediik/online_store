@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CommentDto;
