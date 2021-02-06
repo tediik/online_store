@@ -376,20 +376,15 @@ public class UserServiceImpl implements UserService {
             userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
             customer.setUserBasket(subBasketList);
         }
-        String templateBody = templatesMailingSettingsService.getSettingByName("send_confirmation_token_to_reset_password").getTextValue();
+        String templateBody = templatesMailingSettingsService.getSettingByName("activate_user").getTextValue();
         String messageBody;
-        if (customer.getFirstName() != null) {
-            messageBody = templateBody.replace("@@user@@", customer.getFirstName())
-                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                    .replace("@@url@@", urlActivate);
+        if (customer.getEmail() != null) {
+            messageBody = templateBody.replace("@@user@@", customer.getEmail())
+                    .replace("@@password@@", confirmationToken.getUserPassword());
         } else {
             messageBody = templateBody.replace("@@user@@", "Подписчик");
         }
-        String message = String.format(
-                "Привет, %s! \n Вы зарегистрировались на сайте online_store ! Пароль для входа в вашу учетную запись %s ," +
-                        "можете сменить его в личном кабинете", customer.getEmail(), confirmationToken.getUserPassword()
-        );
-        mailSenderService.send(customer.getEmail(), "Информация о регистрации на сайте online_store", message, "info");
+        mailSenderService.send(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
         try {
             request.login(customer.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {

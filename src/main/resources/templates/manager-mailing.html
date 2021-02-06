@@ -96,12 +96,8 @@
                        role="tab" aria-controls="nav-profile" aria-selected="true">рассылка5</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav-new6-tab" data-toggle="tab" href="#nav-distribution"
+                    <a class="nav-link" id="nav-new6-tab" data-toggle="tab" href="#nav-subscribeConfirmTemplate"
                        role="tab" aria-controls="nav-profile" aria-selected="true">рассылка6</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="nav-new7-tab" data-toggle="tab" href="#nav-distribution"
-                       role="tab" aria-controls="nav-profile" aria-selected="true">рассылка7</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#description" aria-selected="false">Подписки</a>
@@ -260,12 +256,30 @@
                     <h2>Важная информация! Метод activateUser()</h2>
                     <ul>
                         <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
-                        <li>@@user@@ - вместо этого тега в письме подставляется customer.getFirstName()</li>
+                        <li>@@user@@ - вместо этого тега в письме подставляется customer.getEmail()</li>
                         <li>@@password@@ - вместо этого тега в письме подставляется confirmationToken.getUserPassword()</li>
                     </ul>
                     <button class="btn btn-primary" id="saveChangeActivateUserTemplateChanges">Сохранить шаблон</button>
                 </div>
-
+                <!--Таба для subscribeConfirmationTemplate-->
+                <div class="tab-pane fade" id="nav-subscribeConfirmTemplate" role="tabpanel" aria-labelledby="nav-8-tab">
+                    <form id="subscribeConfirmTemplate">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при подписке</label>
+                                <textarea id="subscribeConfirmTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация! Метод sendConfirmationSubscribeLetter()</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@user@@ - вместо этого тега в письме подставляется userName</li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveSubscribeConfirmTemplateChanges">Сохранить шаблон</button>
+                </div>
 
 
 

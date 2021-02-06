@@ -13,6 +13,7 @@ myHeaders.append('Content-type', 'application/json; charset=UTF-8')
  */
 document.getElementById('saveSettingsChanges').addEventListener('click', handleAcceptButton)
 document.getElementById('saveTemplateChanges').addEventListener('click', handleSaveTemplateButton)
+document.getElementById('saveSubscribeConfirmTemplateChanges').addEventListener('click', handleSaveSubscribeTemplateButton)
 
 $(document).ready(function () {
     $('#editTemplateSummernote').summernote({
@@ -21,6 +22,50 @@ $(document).ready(function () {
     fetchStockMailDistributionSettings()
     fetchEmailTemplate()
 })
+
+$(document).ready(function () {
+    $('#subscribeConfirmTemplateSummernote').summernote({
+        height: 500
+    });
+    fetchSubscribeConfirmationTemplate()
+})
+
+/**
+ * function send fetch request to get template for subscribe_confirmation_template
+ */
+function fetchSubscribeConfirmationTemplate() {
+    fetch(apiCommonSettingsUrl + '/subscribe_confirmation_template').then(function (response) {
+        if (response.status === 200) {
+            response.json()
+                .then(emailTemplate => $('#subscribeConfirmTemplateSummernote').summernote('code', emailTemplate.textValue))
+        }
+    })
+}
+
+/**
+ * function handled, save subscribe_confirmation_template
+ */
+function handleSaveSubscribeTemplateButton(event) {
+    event.preventDefault()
+    if (document.getElementById('subscribeConfirmTemplateSummernote').value !== '') {
+        let commonSetting = {
+            settingName: "subscribe_confirmation_template",
+            textValue: document.getElementById('subscribeConfirmTemplateSummernote').value
+        }
+        fetch(apiCommonSettingsUrl, {
+            headers: myHeaders,
+            method: 'PUT',
+            body: JSON.stringify(commonSetting)
+
+        }).then(function (response) {
+            if (response.status === 200) {
+                toastr.success("Шаблон успешно сохранён")
+            }
+        })
+    } else {
+        toastr.error("Заполните все поля шаблона")
+    }
+}
 
 /**
  * function handled

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface TemplatesMailingSettingsRepository extends JpaRepository<TemplatesMailingSettings, Long> {
+
     Optional<TemplatesMailingSettings> findBySettingName(String settingName);
 
     @Modifying

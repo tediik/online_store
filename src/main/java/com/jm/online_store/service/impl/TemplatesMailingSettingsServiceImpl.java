@@ -1,8 +1,6 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.CommonSettingsNotFoundException;
 import com.jm.online_store.exception.TemplatesMailingSettingsNotFoundException;
-import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.TemplatesMailingSettings;
 import com.jm.online_store.repository.TemplatesMailingSettingsRepository;
 import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
@@ -16,6 +14,16 @@ import javax.transaction.Transactional;
 public class TemplatesMailingSettingsServiceImpl implements TemplatesMailingSettingsService {
 
     private final TemplatesMailingSettingsRepository templatesMailingSettingsRepository;
+
+    /**
+     * Метод добавляет сущность TemplatesMailingSettings в базу данных
+     * @param setting - сущность TemplatesMailingSettings
+     * @return TemplatesMailingSettings
+     */
+    @Override
+    public TemplatesMailingSettings addSetting(TemplatesMailingSettings setting) {
+        return templatesMailingSettingsRepository.save(setting);
+    }
 
     /**
      * method gets row in TemplatesMailingSettings table.
