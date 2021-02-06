@@ -43,7 +43,6 @@ public class CategoryRestController {
             "     * \"Ноутбуки\":\"Noutbuki\"},\n" +
             "     * \"Смартфоны и гаджеты\":{\"Планшеты\":\"Planshety\",\n" +
             "     * \"Смартфоны\":\"Smartfony\"}}")
-
     public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.findAll();
         Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
@@ -63,7 +62,6 @@ public class CategoryRestController {
      *
      * @return список Categories
      */
-
     @GetMapping("/allCategories")
     @ApiOperation(value = "Get all subcategories")
     public ResponseEntity<List<Categories>> getAllCategories() {

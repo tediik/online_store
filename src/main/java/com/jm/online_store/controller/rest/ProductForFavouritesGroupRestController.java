@@ -6,6 +6,7 @@ import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +40,8 @@ public class ProductForFavouritesGroupRestController {
      * @return
      */
     @PostMapping(value = "/addProductInFavouritesGroup/{id}")
-    @ApiOperation(value = "Add product in favourite group by group ID")
+    @ApiOperation(value = "Add product in favourite group by group ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity addProductInFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         favouritesGroupService.addProductToFavouritesGroup(product, favouritesGroup);
@@ -52,7 +54,8 @@ public class ProductForFavouritesGroupRestController {
      * @return
      */
     @GetMapping(value = "/getProductFromFavouritesGroup/{id}")
-    @ApiOperation(value = "Get product from favourite group by group ID")
+    @ApiOperation(value = "Get product from favourite group by group ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Set<Product>> getProductFromFavouritesGroup(@PathVariable Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         return ResponseEntity.ok(favouritesGroupService.getProductSet(favouritesGroup));
@@ -65,7 +68,8 @@ public class ProductForFavouritesGroupRestController {
      * @return
      */
     @DeleteMapping(value = "/deleteProductFromFavouritesGroup/{idGroup}")
-    @ApiOperation(value = "Delete product from favourite group by group ID")
+    @ApiOperation(value = "Delete product from favourite group by group ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody Long idProduct, @PathVariable("idGroup") Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         Product product = productService.findProductById(idProduct).orElseThrow();

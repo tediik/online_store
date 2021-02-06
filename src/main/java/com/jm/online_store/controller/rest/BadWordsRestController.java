@@ -5,6 +5,8 @@ import com.jm.online_store.model.BadWords;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,8 @@ public class BadWordsRestController {
      * @return ResponseEntity<List<BadWords>> список стоп-слов
      */
     @GetMapping(value = "/all")
+    @ApiOperation(value = "return a list of stop words including inactive",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<BadWords>> findAll() {
         return ResponseEntity.ok(badWordsService.findAllWords());
     }
@@ -49,6 +53,8 @@ public class BadWordsRestController {
      * @return ResponseEntity<BadWords> стоп-слово
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "return a stop word by id",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<BadWords> getWordById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(badWordsService.findWordById(id));
     }
@@ -61,6 +67,8 @@ public class BadWordsRestController {
      * @return ResponseEntity<BadWords> 
      */
     @PostMapping("/add")
+    @ApiOperation(value = "add new stop word",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<BadWords> addWord(@RequestBody BadWords badWords) {
         String newWord = badWords.getBadword().toLowerCase();
         if (newWord.equals("")) {
@@ -82,6 +90,8 @@ public class BadWordsRestController {
      * @return ResponseEntity<BadWords> стоп-слово
      */
     @PutMapping("/update")
+    @ApiOperation(value = "update stop word",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<BadWords> updateWord(@RequestBody BadWords badWords) {
         badWordsService.saveWord(badWords);
         return ResponseEntity.ok().build();
@@ -94,6 +104,8 @@ public class BadWordsRestController {
      * @return ResponseEntity<Long>
      */
     @DeleteMapping("/delete/{id}")
+    @ApiOperation(value = "delete stop word by id",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
         badWordsService.deleteWord(badWordsService.findWordById(id));
         return ResponseEntity.ok().build();
@@ -105,6 +117,8 @@ public class BadWordsRestController {
      * @return ResponseEntity<List<BadWords>> список активных стоп-слов для фильтра
      */
     @GetMapping(value = "/get-active")
+    @ApiOperation(value = "return list of all active stop words",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<BadWords>> findAllActive() {
         return ResponseEntity.ok(badWordsService.findAllWordsActive());
     }
@@ -114,6 +128,8 @@ public class BadWordsRestController {
      * @return ResponseEntity<CommonSettings>
      */
     @GetMapping(value = "/status")
+    @ApiOperation(value = "return current status of filter (true , false)",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<CommonSettings> getSetting() {
         CommonSettings templateBody = commonSettingsService.getSettingByName("bad_words_enabled");
         return ResponseEntity.ok(templateBody);
@@ -125,6 +141,8 @@ public class BadWordsRestController {
      * @param isEnabled {@link Boolean} включен или нет фильтр
      */
     @PostMapping(value = "/status")
+    @ApiOperation(value = "save current status of filter (true, false)",
+            authorizations = { @Authorization(value = "jwtToken") })
     public void setSetting(@RequestBody Boolean isEnabled) {
         String status = "true";
         if (!isEnabled) {
@@ -147,6 +165,8 @@ public class BadWordsRestController {
      * @return ResponseEntity статус ответа
      */
     @PostMapping(value = "/import")
+    @ApiOperation(value = "method for import stop words",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity importWord(@RequestBody String text) {
         if (text.equals("")) {
             return new ResponseEntity("EmptyBadWord", HttpStatus.BAD_REQUEST);

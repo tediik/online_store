@@ -4,6 +4,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,8 @@ public class ProfileRestController {
      * @return ResponseEntity<String> возвращает статус ответа
      */
     @PostMapping("/changeEmail")
-    @ApiOperation(value = "change email")
+    @ApiOperation(value = "change email",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> changeMail(@RequestBody String newMail) {
         User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
@@ -52,7 +54,8 @@ public class ProfileRestController {
      * @return ResponseEntity<String> возвращает статус ответа
      */
     @PostMapping("/changePassword")
-    @ApiOperation(value = "change password")
+    @ApiOperation(value = "change password",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> changePassword(@RequestBody Map<String, String> passwords) {
         User user = userService.getCurrentLoggedInUser();
         if (!userService.changePassword(user.getId(), passwords.get("oldPassword"), passwords.get("newPassword"))) {
@@ -65,8 +68,9 @@ public class ProfileRestController {
      * Метод получения текущего пользователя
      * @return ResponseEntity<User> возвращает текущего пользователя и статус ответа
      */
-    @ApiOperation(value = "get current Logged in User")
     @GetMapping(value = "/currentUser")
+    @ApiOperation(value = "get current Logged in User",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<User> getCurrentUser() {
         User currentLoggedInUser = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(currentLoggedInUser);
@@ -78,7 +82,8 @@ public class ProfileRestController {
      * @return ResponseEntity<String> статус ответа
      */
     @PutMapping("/update")
-    @ApiOperation(value = "updates current User's profile")
+    @ApiOperation(value = "updates current User's profile",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> updateProfile(@RequestBody User user) {
         userService.updateUserProfile(user);
         return ResponseEntity.ok().build();
@@ -90,7 +95,8 @@ public class ProfileRestController {
      * @return ResponseEntity.ok() код ответа
      */
     @DeleteMapping("/delete/{id}")
-    @ApiOperation(value = "deletes current User's profile")
+    @ApiOperation(value = "deletes current User's profile",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
         userService.deleteByID(id);
         return ResponseEntity.ok().build();
