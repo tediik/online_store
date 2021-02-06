@@ -1,7 +1,5 @@
 $(document).ready(function () {
     getCurrentUser()
-    /*Слушатель для ссылки удаления профиля*/
-    document.getElementById('deleteProfile').addEventListener('click', deleteProfile)
     /*Слушатель для кнопки смены email*/
     document.getElementById('buttonChangeMail').addEventListener('click', changeEmail)
     /*Слушатель для кнопки смены пароля*/
@@ -10,26 +8,6 @@ $(document).ready(function () {
     document.getElementById('updateProfile').addEventListener("click", updateProfile)
 });
 
-/**
- * Функция удаления профиля
- * @param event событие click по ссылке Удалить профиль
- */
-function deleteProfile(event) {
-    let id = event.target.dataset.delId
-    fetch(`/api/profile/delete/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-type': 'application/json'
-        }
-    }).then(function (response) {
-        if (response.ok) {
-            document.location.href = "/logout";
-        } else {
-            toastr.error('Ваш профиль не был удален.', {timeOut: 3000});
-        }
-    })
-}
 
 /**
  * Функция смены email в профиле
@@ -92,7 +70,9 @@ function getCurrentUser() {
             $('#last_name_input').val(currentUser.lastName);
             $('#email_input').val(currentUser.email);
             $("#date_birthday_input").val(moment(currentUser.birthdayDate).format("yyyy-MM-DD"));
-            $("#register_date").val(moment(currentUser.registerDate).format("yyyy-MM-DD"));
+            $("#register_date").html(moment(currentUser.registerDate).format("yyyy-MM-DD"));
+            let picSrc = `/uploads/images/${currentUser.profilePicture}`;
+            $('#profilePic').attr(`src`, picSrc);
             if(currentUser.userGender === null) {
                 $('#userGenderNone').prop('checked', true);
             }

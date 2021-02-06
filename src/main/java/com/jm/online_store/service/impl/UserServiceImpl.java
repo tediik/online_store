@@ -468,6 +468,7 @@ public class UserServiceImpl implements UserService {
         //Set a default avatar as a user profilePicture
         user.setProfilePicture(defaultAvatar);
         return File.separator + "uploads" + File.separator + "images" + File.separator + defaultAvatar;
+
     }
 
     /**
