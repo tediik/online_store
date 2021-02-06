@@ -25,8 +25,7 @@ public class CommonRestController {
      */
 
     @GetMapping("/storeName")
-    @ApiOperation(value = "Get store name",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Get store name")
     public ResponseEntity<String> getStoreName() {
         return ResponseEntity.ok(storeName);
     }
