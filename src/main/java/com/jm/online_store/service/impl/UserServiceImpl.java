@@ -129,11 +129,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean isExist(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-//        if (user.isEmpty()){
-//            return false;
-//        }
-//        return true;
-        // Немного упростил
         return user.isPresent();
     }
 
@@ -165,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Обновление пользователя.
-     * @param user объект, полученный из контроллера.
+     * @param user пользователь, полученный из контроллера.
      */
     @Override
     @Transactional
@@ -177,7 +172,7 @@ public class UserServiceImpl implements UserService {
      * Метод обновляет профиль пользователя в личном кабинете.
      * @param user сущность, полученный из контроллера.
      * @return измененного пользователя.
-     * @throws UserNotFoundException если пользователь не найден.
+     * @throws UserNotFoundException если пользователь не найден в БД.
      */
     @Override
     @Transactional
@@ -201,9 +196,11 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Обновляет данные польователя в панели для админа
+     * Обновляет данные польователя в Rest-api UserRestController.
      * @param user сущность, полученный из контроллера.
-     * @throws UserNotFoundException если пользователя не существует.
+     * @throws UserNotFoundException если пользователя не существует в БД.
+     * @throws EmailAlreadyExistsException если такая почта уже существует.
+     * @throws InvalidEmailException если почта не соответствует формату.
      */
     @Override
     @Transactional
@@ -224,7 +221,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Удаляет пользователя по идентификатору.
-     * @param id идентификатор.
+     * @param id идентификатор пользователя.
      */
     @Override
     @Transactional
@@ -354,6 +351,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Генерирует токен для сброса пароля и отправляет на указанную пользователем почту
+     * @param user пользователь, запросивший сброс пароля.
      */
     @Override
     @Transactional
@@ -437,11 +435,7 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    /**
-     * Что за метод?
-     * @param roles
-     * @return
-     */
+
     private Set<Role> persistRoles(Set<Role> roles) {
         return roles.stream()
                 .map(Role::getName)
