@@ -8,7 +8,6 @@ import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -124,8 +123,7 @@ public class ProductsRestController {
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/getAll")
-    @ApiOperation(value = "get all products",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "get all products")
     public List<Product> findAll() {
         return productService.findAll();
     }
@@ -136,8 +134,7 @@ public class ProductsRestController {
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/getNotDeletedProducts")
-    @ApiOperation(value = "get list of all undeleted products",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "get list of all undeleted products")
     public List<Product> getNotDeleteProducts() {
         return productService.getNotDeleteProducts();
     }
@@ -149,8 +146,7 @@ public class ProductsRestController {
      * @return Optional<Product> возвращает товар
      */
     @GetMapping(value = "/manager/{id}")
-    @ApiOperation(value = "Find product by ID",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Find product by ID")
     public Optional<Product> findProductById(@PathVariable("id") Long productId) {
         return productService.findProductById(productId);
     }
@@ -223,8 +219,7 @@ public class ProductsRestController {
      * @param id идентификатор товара
      */
     @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "Delete product by ID",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Delete product by ID" , authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Long> deleteProductById(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(id);
@@ -236,8 +231,7 @@ public class ProductsRestController {
      * @param id идентификатор товара
      */
     @PostMapping(value = "/restoredeleted/{id}")
-    @ApiOperation(value = "Restore product by ID",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Restore product by ID")
     public ResponseEntity<Long> restoreProductById(@PathVariable("id") Long id) {
         productService.restoreProduct(id);
         return ResponseEntity.ok(id);
@@ -251,8 +245,7 @@ public class ProductsRestController {
      */
 
     @PutMapping(value = "/{categoryName}")
-    @ApiOperation(value = "Choosing product by ID",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Choosing product by ID")
     public List<Product> filterByCategory(@PathVariable String categoryName) {
         return productService.findProductsByCategoryName(categoryName);
     }
@@ -265,8 +258,7 @@ public class ProductsRestController {
      */
 
     @GetMapping(value = "/sort/{categoryName}/{orderSelect}")
-    @ApiOperation(value = "Choosing product by ID and sorted by ASC",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Choosing product by ID and sorted by ASC")
     public List<Product> filterByCategoryAndSort(@PathVariable String categoryName,
                                                  @PathVariable String orderSelect) {
         if (categoryName.equals("default")) {
@@ -296,8 +288,7 @@ public class ProductsRestController {
      */
 
     @GetMapping(value = "/descOrder/{categoryName}")
-    @ApiOperation(value = "Choosing product by ID and sorted by DESC",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Choosing product by ID and sorted by DESC")
     public List<Product> filterByCategoryInDescOrder(@PathVariable String categoryName) {
         if (categoryName.equals("default")) {
             return productService.findAllOrderByRatingDesc();
@@ -317,8 +308,7 @@ public class ProductsRestController {
 
     @GetMapping("/report/{categoryName}/{number}/{orderSelect}")
     @ApiResponse(code = 404, message = "Could not found category and/or order")
-    @ApiOperation(value = "Generate file with products of the category and return it to page",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Generate file with products of the category and return it to page")
     public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@PathVariable String categoryName,
                                                                                @PathVariable Long number,
                                                                                @PathVariable String orderSelect,
