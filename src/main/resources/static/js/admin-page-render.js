@@ -26,7 +26,7 @@ $('#filterRole').on("change", function () {
             }
         });
     } else {
-        showAndRefreshHomeTab()
+        fetchUsersAndRenderTable()
     }
 });
 
@@ -55,8 +55,8 @@ function renderRolesSelectOnNewUserForm(allRoles) {
  * @param user пользователь из таблицы
  * @param allRoles все роли из бд
  */
-function editModalWindowRender(user, allRoles) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+function editUserModalWindowRender(user, allRoles) {
+    $('.modal-dialog').off("click").on("click", "#acceptButton", handleUserAcceptButtonFromModalWindow)
     $('#rolesSelectModal').empty()
     $('#idInputModal').val(user.id)
     $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-user')
@@ -72,12 +72,11 @@ function editModalWindowRender(user, allRoles) {
             $('#rolesSelectModal').append(`<option value=${role.id}>${role.name}</option>>`)
         }
     })
-
-    function compareRolesId(userRoles, roleNameToCheck) {
-        for (let i = 0; i < userRoles.length; i++) {
-            if (userRoles[i].name === roleNameToCheck) {
-                return true
-            }
+}
+function compareRolesId(userRoles, roleNameToCheck) {
+    for (let i = 0; i < userRoles.length; i++) {
+        if (userRoles[i].name === roleNameToCheck) {
+            return true
         }
     }
 }
@@ -86,8 +85,8 @@ function editModalWindowRender(user, allRoles) {
  * Функция рендера модального окна Delete user
  * @param userToDelete
  */
-function deleteModalWindowRender(userToDelete) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+function deleteUserModalWindowRender(userToDelete) {
+    $('.modal-dialog').off("click").on("click", "#acceptButton", handleUserAcceptButtonFromModalWindow)
     $('#rolesSelectModal').empty()
     $('.modal-title').text("Delete user")
     $('#acceptButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-user')
@@ -97,7 +96,7 @@ function deleteModalWindowRender(userToDelete) {
     $('#lastNameInputModal').val(userToDelete.lastName).prop('readonly', true)
     $('#passwordInputModal').val("").prop('readonly', true)
     $.each(userToDelete.roles, function (i, role) {
-        $('#rolesSelectModal').append(`<option disabled>${role.name}</option>>`)
+        $('#rolesSelectModal').append(`<option value=${role.id} selected="true" disabled>${role.name}</option>>`)
     })
 }
 
@@ -105,28 +104,26 @@ function deleteModalWindowRender(userToDelete) {
  * Функция обраотки нажатия кнопки Edit в таблице пользователей
  * @param event
  */
-function handleEditButton(event) {
+function handleEditUserButton(event) {
     const userId = event.target.dataset["userId"]
     Promise.all([
         fetch(adminRestUrl + "/users/" + userId, {headers: headers}),
         fetch(roleRestUrl, {headers: headers})
     ])
         .then(([response1, response2]) => Promise.all([response1.json(), response2.json()]))
-        .then(([userToEdit, allRoles]) => editModalWindowRender(userToEdit, allRoles))
-
+        .then(([userToEdit, allRoles]) => editUserModalWindowRender(userToEdit, allRoles))
 }
 
 /**
  * Функция обработки нажатия кнопки Delete в таблице пользователей
  * @param event
  */
-function handleDeleteButton(event) {
+function handleDeleteUserButton(event) {
     const userId = event.target.dataset["userId"]
     fetch(adminRestUrl + "/users/" + userId, {headers: headers})
         .then(response => response.json())
-        .then(userToDelete => deleteModalWindowRender(userToDelete))
+        .then(userToDelete => deleteUserModalWindowRender(userToDelete))
 }
-
 
 /**
  * функция делает активным таблицу с пользователями
@@ -227,7 +224,7 @@ function handleAddBtn() {
  * функция обработки нажатия кнопки accept в модальном окне
  * @param event
  */
-function handleAcceptButtonFromModalWindow(event) {
+function handleUserAcceptButtonFromModalWindow(event) {
     const user = {
         id: $('#idInputModal').val(),
         email: $('#emailInputModal').val(),
@@ -264,13 +261,36 @@ function handleAcceptButtonFromModalWindow(event) {
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-user')) {
-        fetch(adminRestUrl + "/" + user.id, {
-            headers: headers,
-            method: 'DELETE'
-        }).then(response => response.text())
-            .then(deletedUser => console.log('User: ' + deletedUser + ' was successfully deleted'))
-            .then($('#tr-' + user.id).remove())
-        $('#userModalWindow').modal('hide')
+            fetch(adminRestUrl + "/users/" + user.id, {headers: headers})
+                .then(response => response.json())
+                .then(userToDelete => {
+                    let hasCustomerRole = compareRolesId(userToDelete.roles, 'ROLE_CUSTOMER');
+                    if (hasCustomerRole === true) {
+                        fetch("/api/customer/deleteProfile/" + user.id, {
+                            headers: headers,
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            if (response.ok) {
+                                fetchUsersAndRenderTable()
+                                $('#userModalWindow').modal('hide')
+                                toastr.success("Пользователь заблокирован");
+                            } else {
+                                modalHandleNotValidFormField("Не удается заблокировать пользователя")
+                            }})
+                    } else {
+                        fetch(adminRestUrl + "/" + user.id, {
+                            headers: headers,
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            if (response.ok) {
+                                $('#tr-' + user.id).remove()
+                                $('#userModalWindow').modal('hide')
+                                toastr.success("Пользователь удален");
+                            } else {
+                                modalHandleNotValidFormField("Не удается удалить пользователя")
+                            }})
+                    }
+                })
     } else {
         fetch(adminRestUrl, {
             method: 'PUT',
@@ -367,12 +387,12 @@ function renderUsersTable(users) {
                     
                     <td>
             <!-- Buttons of the right column of main table-->
-                        <button data-user-id="${user.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#userModalWindow">
+                        <button data-user-id="${user.id}" type="button" class="btn btn-success edit-button-user" data-toggle="modal" data-target="#userModalWindow">
                         Edit
                         </button>
                     </td>
                     <td>
-                        <button data-user-id="${user.id}" type="button" class="btn btn-danger delete-button" data-toggle="modal" data-target="#userModalWindow">
+                        <button data-user-id="${user.id}" type="button" class="btn btn-danger delete-button-user" data-toggle="modal" data-target="#userModalWindow">
                         Delete
                         </button>
                     </td>
@@ -380,8 +400,8 @@ function renderUsersTable(users) {
                 `;
         table.append(row)
     }
-    $('.edit-button').click(handleEditButton)
-    $('.delete-button').click(handleDeleteButton)
+    $('.edit-button-user').click(handleEditUserButton)
+    $('.delete-button-user').click(handleDeleteUserButton)
 }
 
 /**
@@ -479,5 +499,4 @@ function renderAcceptedRolesInMaintenance() {
             selectMode.namedItem('true').selected = true
         }
     }
-
 }
