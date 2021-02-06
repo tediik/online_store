@@ -67,8 +67,7 @@ public class ReviewRestController {
      */
     @GetMapping("/comments/{reviewId}")
     @ApiOperation(value = "Fetches an arrayList of all review comments by reviewId" +
-            " and returns JSON representation response by review ID",
-            authorizations = { @Authorization(value = "jwtToken") })
+            " and returns JSON representation response by review ID")
     public ResponseEntity<List<CommentDto>> findAllComments(@PathVariable Long reviewId) {
         List<CommentDto> commentDtos = commentService.findAllByReviewId(reviewId).stream()
                 .map(CommentDto::commentEntityToDto)
