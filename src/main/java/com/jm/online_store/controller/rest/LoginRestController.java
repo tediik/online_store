@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginRestController {
 
     @PostMapping("/currentUrl")
-    @ApiOperation(value = "deletes images",
+    @ApiOperation(value = "Записывает Url залогинившемуся пользователю",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity getCurrentUrl(@RequestBody String currentUrl) {
         CurrentUrl.setUrl(currentUrl);
