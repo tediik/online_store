@@ -61,7 +61,7 @@ function changePassword() {
  */
 $("#buttonNameStore").click(function (){
     let name = document.getElementById("nameStore").value
-    $.ajax("http://localhost:9898/api/editStoreName", {
+    $.ajax("/api/editStoreName", {
         method: "put",
         data: {
             settingName:"store_name",
