@@ -64,8 +64,7 @@ public class StockRestController {
      * @return List<Stock> список всех акций
      */
     @GetMapping(value = "/allStocks")
-    @ApiOperation(value = "Get of all stocks",
-            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Get of all stocks")
     public List<Stock> findAll() {
         return stockService.findAll();
     }
