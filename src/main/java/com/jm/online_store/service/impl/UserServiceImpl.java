@@ -289,7 +289,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * С помощью email находим пользователя,затем получаем его пароль .
+     * С помощью email находим пользователя,затем получаем его пароль.
      * @param email - Почта пользователя.
      */
     @Override
