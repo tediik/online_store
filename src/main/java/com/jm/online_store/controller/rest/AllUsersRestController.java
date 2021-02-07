@@ -67,7 +67,7 @@ public class AllUsersRestController {
         String msgAlert = "Пользователь не найден!";
         String email = restoreAccountDto.getEmail();
         String passwordOfClient = restoreAccountDto.getPassword();
-        String passwordOfBase = userService.passwordByMail(email);
+        String passwordOfBase = userService.getPasswordByMail(email);
         try {
             if (passwordEncoder.matches(passwordOfClient, passwordOfBase)) {
                 customerService.restoreCustomer(email);

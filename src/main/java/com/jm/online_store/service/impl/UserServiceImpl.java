@@ -288,9 +288,13 @@ public class UserServiceImpl implements UserService {
         log.info("для юзера с логином {} установлен новый пароль: {}", user.getEmail(), newPassword);
     }
 
+    /**
+     * С помощью email находим пользователя,затем получаем его пароль .
+     * @param email - Почта пользователя.
+     */
     @Override
     @Transactional
-    public String passwordByMail(String email){
+    public String getPasswordByMail(String email){
         return findUserByEmail(email).getPassword();
     }
 
