@@ -7,9 +7,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.security.core.GrantedAuthority;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Set;
 
 @Data
