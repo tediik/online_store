@@ -1,6 +1,7 @@
 package com.jm.online_store.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import io.swagger.annotations.ApiModel;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ApiModel(description =  "DTO для данных юзера")
 public class UserDto {
     private Long id;
