@@ -7,6 +7,7 @@ import com.jm.online_store.service.interf.StockService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,7 +34,8 @@ public class ManagerStockRestController {
     private final StockService stockService;
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get stock by ID")
+    @ApiOperation(value = "Get stock by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Stock was not found")
     public ResponseEntity<Stock> getStockById(@PathVariable Long id) {
         Stock requestedStock;
@@ -46,7 +48,8 @@ public class ManagerStockRestController {
     }
 
     @GetMapping("/allStocks")
-    @ApiOperation(value = "Get list of all stocks")
+    @ApiOperation(value = "Get list of all stocks",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Stocks was not found")
     public ResponseEntity<List<Stock>> getAllStocks() {
         List<Stock> allStocks;
@@ -65,7 +68,8 @@ public class ManagerStockRestController {
      * @return Page<Stock> возвращает страницу новостей
      */
     @GetMapping("/page")
-    @ApiOperation(value = "Return stocks page")
+    @ApiOperation(value = "Return stocks page",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Page was not found")
     public ResponseEntity<Page<Stock>> getStockPage(@PageableDefault Pageable page, StockFilterDto filterDto) {
         Page<Stock> stockPage;
@@ -78,7 +82,8 @@ public class ManagerStockRestController {
     }
 
     @GetMapping("/currentStocks")
-    @ApiOperation(value = "Get current stocks")
+    @ApiOperation(value = "Get current stocks",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Stocks was not found")
     public ResponseEntity<List<Stock>> getCurrentStocks() {
         List<Stock> currentStocks;
@@ -91,7 +96,8 @@ public class ManagerStockRestController {
     }
 
     @GetMapping("/futureStocks")
-    @ApiOperation(value = "Get future stocks")
+    @ApiOperation(value = "Get future stocks",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Stocks was not found")
     public ResponseEntity<List<Stock>> getFutureStocks() {
         List<Stock> futureStocks;
@@ -104,7 +110,8 @@ public class ManagerStockRestController {
     }
 
     @GetMapping("/pastStocks")
-    @ApiOperation(value = "Get past stocks")
+    @ApiOperation(value = "Get past stocks",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Stocks was not found")
     public ResponseEntity<List<Stock>> getPastStocks() {
         List<Stock> currentStocks;
@@ -117,21 +124,24 @@ public class ManagerStockRestController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Add new stock")
+    @ApiOperation(value = "Add new stock",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> addNewStock(@RequestBody Stock stock) {
         stockService.addStock(stock);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete stock by ID")
+    @ApiOperation(value = "Delete stock by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> deleteStock(@PathVariable Long id) {
         stockService.deleteStockById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping
-    @ApiOperation(value = "Method for update stock")
+    @ApiOperation(value = "Method for update stock",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Stock was not found")
     public ResponseEntity<String> modifyStock(@RequestBody Stock stock) {
         try {

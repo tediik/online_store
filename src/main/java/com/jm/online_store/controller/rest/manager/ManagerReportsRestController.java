@@ -7,6 +7,7 @@ import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SentStockService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,7 +37,8 @@ public class ManagerReportsRestController {
      * @return список пользователей
      */
     @GetMapping("/users/{dayOfWeek}")
-    @ApiOperation(value = "Get list of users subscribing on the report by day number")
+    @ApiOperation(value = "Get list of users subscribing on the report by day number",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<List<Customer>> allUsersByDayOfWeek(@PathVariable String dayOfWeek) {
         return ResponseEntity.ok(customerService.findByDayOfWeekForStockSend(dayOfWeek));
     }
@@ -48,7 +50,8 @@ public class ManagerReportsRestController {
      * @return список пользователей
      */
     @GetMapping("/user/{email}")
-    @ApiOperation(value = "Find user subscribing on the report by email")
+    @ApiOperation(value = "Find user subscribing on the report by email",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<List<Customer>> findSubscriberByEmail(@PathVariable String email) {
         return ResponseEntity.ok(customerService.findSubscriberByEmail(email));
     }
@@ -60,7 +63,8 @@ public class ManagerReportsRestController {
      * @return Статус ответа зависящий от успешности отмены подписки для пользователя
      */
     @PutMapping("/cancel/{id}")
-    @ApiOperation(value = "Method for cancel subscribe  from manager page")
+    @ApiOperation(value = "Method for cancel subscribe  from manager page",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<Long> cancelSubscription(@PathVariable Long id) {
         customerService.cancelSubscription(id);
         return ResponseEntity.ok().build();
@@ -74,7 +78,8 @@ public class ManagerReportsRestController {
      * @return Словарь, где ключом является объект LocalDate, а значением его частота
      */
     @GetMapping("/report")
-    @ApiOperation(value = "Method for searching for sent stocks in day interval")
+    @ApiOperation(value = "Method for searching for sent stocks in day interval",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<Map<LocalDate, Long>> allSentStocks(
             @RequestParam(value = "beginDate", required = false) String beginDate,
             @RequestParam(value = "endDate", required = false) String endDate) {

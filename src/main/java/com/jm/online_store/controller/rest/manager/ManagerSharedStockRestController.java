@@ -6,6 +6,7 @@ import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,8 @@ public class ManagerSharedStockRestController {
     private final UserService userService;
 
     @PostMapping
-    @ApiOperation(value = "Add shared stock")
+    @ApiOperation(value = "Add shared stock",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<String> addSharedStock(@RequestBody SharedStock sharedStock) {
         sharedStock.setUser(userService.getCurrentLoggedInUser());
         try {
@@ -39,7 +41,8 @@ public class ManagerSharedStockRestController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Get all shared stocks")
+    @ApiOperation(value = "Get all shared stocks",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<List<SharedStock>> getQuantity() {
         return ResponseEntity.ok(sharedStockService.findAll());
     }
