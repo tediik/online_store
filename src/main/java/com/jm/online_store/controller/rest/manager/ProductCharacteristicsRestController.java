@@ -9,6 +9,8 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -45,7 +47,10 @@ public class ProductCharacteristicsRestController {
      *
      * @return List<Characteristic>> возвращает список характеристик
      */
+
     @GetMapping(value = "/characteristics/allCharacteristics")
+    @ApiOperation(value = "return list of characteristics",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Characteristic> findAll() {
 
         return characteristicService.findAll();
@@ -58,6 +63,8 @@ public class ProductCharacteristicsRestController {
      * @return ResponseEntity<Characteristic> Возвращает добавленную харакетристику с кодом ответа
      */
     @PostMapping(value = "/characteristics/addCharacteristic")
+    @ApiOperation(value = "add new characteristic",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Characteristic> addCharacteristic(@RequestBody Characteristic characteristic) {
 
         if (characteristic.getCharacteristicName().equals("")) {
@@ -76,6 +83,8 @@ public class ProductCharacteristicsRestController {
      * @return ResponseEntity(characteristic, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/characteristic/{id}")
+    @ApiOperation(value = "return characteristic by id",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Characteristic> getCharacteristic(@PathVariable Long id) {
         if (characteristicService.findCharacteristicById(id).isEmpty()) {
             log.debug("Characteristic with id: {} not found", id);
@@ -92,6 +101,8 @@ public class ProductCharacteristicsRestController {
      * @return new ResponseEntity<>(HttpStatus)
      */
     @PutMapping(value = "/characteristics")
+    @ApiOperation(value = "update characteristic",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Characteristic> editCharacteristic(@RequestBody Characteristic characteristic) {
         if (characteristicService.findCharacteristicById(characteristic.getId()).isEmpty()) {
             log.debug("There are no characteristic with id: {}", characteristic.getId());
@@ -111,6 +122,8 @@ public class ProductCharacteristicsRestController {
      * @return ResponseEntity<>(HttpStatus)
      */
     @DeleteMapping(value = "/characteristics/{id}/{category}")
+    @ApiOperation(value = "delete characteristic by id",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Characteristic> deleteCharacteristic(@PathVariable Long id,
                                                                @PathVariable String category) {
         if (category.equals("default")) {
@@ -131,6 +144,8 @@ public class ProductCharacteristicsRestController {
      * @return List<Characteristic> лист харктеристик
      */
     @GetMapping("/characteristics/{categoryId}")
+    @ApiOperation(value = "return list of characteristics by id of category",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Characteristic> getCharacteristicsByCategory(@PathVariable Long categoryId) {
         return characteristicService.findByCategoryId(categoryId);
     }
@@ -142,6 +157,8 @@ public class ProductCharacteristicsRestController {
      * @return List<Characteristic> лист харктеристик
      */
     @GetMapping("/characteristicsByCategoryName/{category}")
+    @ApiOperation(value = "return list of characteristics by name of category",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Characteristic> getCharacteristicsByCategoryName(@PathVariable String category) {
         if (category.equals("default")) {
             return characteristicService.findAll();
@@ -156,6 +173,8 @@ public class ProductCharacteristicsRestController {
      * @return ResponseEntity<ProductCharacteristic> Возвращает добавленный товар с кодом ответа
      */
     @PostMapping(value = "/characteristics/addCharacteristics/{addedProductName}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "return added product with response code",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Long>> addCharacteristics(@RequestBody ProductCharacteristicDto[] productCharacteristicsDto,
                                                          @PathVariable String addedProductName) {
         List<Long> productCharacteristicIds = new ArrayList<>();
@@ -178,6 +197,8 @@ public class ProductCharacteristicsRestController {
      * @return List<Characteristic>> возвращает список характеристик
      */
     @GetMapping(value = "/characteristics/otherThenSelected/{categoryName}")
+    @ApiOperation(value = "return list of characteristics except the selected category",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Characteristic> findAllOtherThenSelected(@PathVariable String categoryName) {
         List<Characteristic> characteristicsSelectedCategoty = characteristicService.findByCategoryName(categoryName);
         List<Characteristic> allCharacteristics = characteristicService.findAll();
@@ -192,6 +213,8 @@ public class ProductCharacteristicsRestController {
      * @return ResponseEntity<List < Characteristic>> Возвращает добавленные харакетристики с кодом ответа
      */
     @PostMapping(value = "/characteristics/addCharacteristicsToCategory/{selectedCategory}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "add new characteristics to selected category",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Characteristic>> addCharacteristicsToCategory(@RequestBody Characteristic[] characteristics,
                                                                              @PathVariable String selectedCategory) {
         Categories category = categoriesService.getCategoryByCategoryName(selectedCategory).get();

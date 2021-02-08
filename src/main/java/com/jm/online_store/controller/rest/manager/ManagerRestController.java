@@ -2,9 +2,11 @@ package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
+import com.jm.online_store.service.interf.UserService;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
@@ -13,10 +15,11 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +49,18 @@ public class ManagerRestController {
 
     private final NewsService newsService;
     private final OrderService orderService;
+    private final UserService userService;
+
+    /**
+     * Метод возвращающий залогиненного юзера
+     * @return authUser возвращает юзера из базы данных
+     */
+    @GetMapping(value = "/authUser")
+    @ApiOperation(value = "receive authenticated user from manager page")
+    public ResponseEntity<User> showAuthUserInfo() {
+        User authUser = userService.getCurrentLoggedInUser();
+        return new ResponseEntity<>(authUser, HttpStatus.OK);
+    }
 
     /**
      * Метод возвращающий всписок всех новостей
@@ -53,7 +68,8 @@ public class ManagerRestController {
      * @return List<News> возвращает список всех новстей из базы данных
      */
     @GetMapping("/news")
-    @ApiOperation(value = "Get list of all news")
+    @ApiOperation(value = "Get list of all news",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<News>> allNews() {
         return ResponseEntity.ok().body(newsService.findAll());
     }
@@ -65,7 +81,8 @@ public class ManagerRestController {
      * @return возвращает заполненную сущность клиенту
      */
     @PostMapping("/news/post")
-    @ApiOperation(value = "Method for save news in database")
+    @ApiOperation(value = "Method for save news in database",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<News> newsPost(@RequestBody News news) {
 
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
@@ -82,7 +99,8 @@ public class ManagerRestController {
      * @return возвращает обновленную сущность клиенту
      */
     @PutMapping("/news/update")
-    @ApiOperation(value = "Method for update news in database")
+    @ApiOperation(value = "Method for update news in database",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<News> newsUpdate(@RequestBody News news) {
 
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
@@ -99,7 +117,8 @@ public class ManagerRestController {
      * @return возвращает идентификатор удаленной сущности клиенту
      */
     @DeleteMapping("/news/{id}/delete")
-    @ApiOperation(value = "Method for delete news in database by ID")
+    @ApiOperation(value = "Method for delete news in database by ID",
+            authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
         newsService.deleteById(id);
         return ResponseEntity.ok().body(id);
@@ -113,7 +132,8 @@ public class ManagerRestController {
      * @return - {@link ResponseEntity} with list of Orders with status complete
      */
     @GetMapping("/sales")
-    @ApiOperation(value = "Get mapping for get request to response with sales during the custom date range")
+    @ApiOperation(value = "Get mapping for get request to response with sales during the custom date range",
+            authorizations = { @Authorization(value="jwtToken") })
     @ApiResponse(code = 404, message = "Sales was not found")
     public ResponseEntity<List<SalesReportDto>> getSalesForCustomRange(@RequestParam String stringStartDate, @RequestParam String stringEndDate) {
         LocalDate startDate = LocalDate.parse(stringStartDate);
@@ -134,7 +154,8 @@ public class ManagerRestController {
      * @return - ResponseEntity
      */
     @GetMapping("/sales/exportCSV")
-    @ApiOperation(value = "Mapping for csv export")
+    @ApiOperation(value = "Mapping for csv export",
+            authorizations = { @Authorization(value="jwtToken") })
     @ApiResponse(code = 400, message = "Problem with writing csv file")
     public ResponseEntity<FileSystemResource> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate, @RequestParam String stringEndDate, HttpServletResponse response) {
         LocalDate startDate = LocalDate.parse(stringStartDate);

@@ -65,6 +65,8 @@ public interface UserService {
 
     boolean changePassword(Long id, String oldPassword, String newPassword);
 
+    String getPasswordByMail(String email);
+
     User getCurrentLoggedInUser(String sessionID);
 
     User getCurrentLoggedInUser();

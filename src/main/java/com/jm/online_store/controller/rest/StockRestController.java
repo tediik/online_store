@@ -5,6 +5,7 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.StockService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +39,8 @@ public class StockRestController {
      */
     @PreAuthorize("permitAll()")
     @GetMapping("/publishedstocks")
-    @ApiOperation(value = "Returns list of published stocks")
+    @ApiOperation(value = "Returns list of published stocks",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Stock>> getPublishedStocks() {
         List<Stock> publishedStocks = stockService.findPublishedStocks();
         return ResponseEntity.ok(publishedStocks);
@@ -50,7 +52,8 @@ public class StockRestController {
      * @return
      */
     @PostMapping("/uploadFile")
-    @ApiOperation(value = "Method for upload and set image of stock")
+    @ApiOperation(value = "Method for upload and set image of stock",
+            authorizations = { @Authorization(value = "jwtToken") })
     public void updateStockImage(@RequestParam("file") MultipartFile file) {
         stockService.updateStockImage(file);
     }
@@ -73,7 +76,8 @@ public class StockRestController {
      * @return Optiona<Stock> возвращает акцию
      */
     @GetMapping(value = "/{id}")
-    @ApiOperation(value = "Get stock by ID")
+    @ApiOperation(value = "Get stock by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public Stock findStockById(@PathVariable("id") Long id) {
         return stockService.findStockById(id);
     }
@@ -85,7 +89,8 @@ public class StockRestController {
      * @return ResponseEntity<Stock> Возвращает добавленную акцию с кодом ответа
      */
     @PostMapping(value = "/addStock", consumes = "application/json")
-    @ApiOperation(value = "Add a new stock")
+    @ApiOperation(value = "Add a new stock",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Stock> addStockM(@RequestBody Stock stock) {
         stockService.addStock(stock);
         return ResponseEntity.ok().body(stock);
@@ -98,7 +103,8 @@ public class StockRestController {
      * @return ResponseEntity<Stock> Возвращает отредактированную акцию с кодом овтета
      */
     @PutMapping("/editStock")
-    @ApiOperation(value = "Edit stock")
+    @ApiOperation(value = "Edit stock",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Stock> editStockM(String stock) {
         Stock newStock = new Gson().fromJson(stock, Stock.class);
         stockService.addStock(newStock);
@@ -111,7 +117,8 @@ public class StockRestController {
      * @param id идентификатор акции
      */
     @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "Delete stock by ID")
+    @ApiOperation(value = "Delete stock by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public void deleteStockById(@PathVariable("id") Long id) {
         stockService.deleteStockById(id);
     }

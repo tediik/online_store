@@ -6,6 +6,7 @@ import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,7 +45,8 @@ public class FavouritesGroupRestController {
      * @return
      */
     @GetMapping
-    @ApiOperation(value = "gets favourites products for the current logged in user")
+    @ApiOperation(value = "gets favourites products for the current logged in user",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity getFavouritesGroups() {
         User user = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(favouritesGroupService.findAllByUser(user));
@@ -56,7 +58,8 @@ public class FavouritesGroupRestController {
      * @return возвращаем в точку вызова данные нового списка
      */
     @PostMapping
-    @ApiOperation(value = "saves new list of favourite products")
+    @ApiOperation(value = "saves new list of favourite products",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
         User user = userService.getCurrentLoggedInUser();
         favouritesGroup.setUser(user);
@@ -69,7 +72,8 @@ public class FavouritesGroupRestController {
      * @param id идентификатор списка
      */
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "deletes list of favorite goods by its id")
+    @ApiOperation(value = "deletes list of favorite goods by its id",
+            authorizations = { @Authorization(value = "jwtToken") })
     public void deleteFavouritesGroups(@PathVariable("id") Long id) {
         favouritesGroupService.deleteById(id);
     }
@@ -81,7 +85,8 @@ public class FavouritesGroupRestController {
      * @return  статус ответа 200
      */
     @PutMapping(value = "/{id}")
-    @ApiOperation(value = "updates list of favorite goods by its id")
+    @ApiOperation(value = "updates list of favorite goods by its id",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity updateFavouritesGroups(@RequestBody String name, @PathVariable("id") Long id) {
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
