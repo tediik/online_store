@@ -150,7 +150,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void changeCustomerStatusToLocked(Long id) {
-        Customer customerStatusChange = getCurrentLoggedInUser();
+        Customer customerStatusChange = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
         customerStatusChange.setAccountNonBlockedStatus(false);
         customerStatusChange.setAnchorForDelete(LocalDateTime.now());
         updateCustomer(customerStatusChange);

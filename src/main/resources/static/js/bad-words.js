@@ -43,7 +43,7 @@ function renderBadWordsTable(wordsArray) {
                     <td>${word.enabled}</td>           
                     <td>
                         <button data-product-id="${word.id}" type="button"
-                            class="btn btn-success edit-button" data-toggle="modal"
+                            class="btn btn-success edit-button-bw" data-toggle="modal"
                             data-target="#wordModalWindow">Edit
                         </button>
                     </td>
@@ -58,7 +58,7 @@ function renderBadWordsTable(wordsArray) {
                 `;
         table.append(row)
     }
-    $('.edit-button').click(handleEditButton)
+    $('.edit-button-bw').click(handleEditButton)
     $('.action').click(checkActionButton)
 }
 
@@ -102,14 +102,14 @@ function editModalWindowRender(word) {
 function handleDeleteButton(wordId) {
     fetch(badWordsRestUrl + wordId)
         .then(response => response.json())
-        .then(productToDelete => deleteModalWindowRender(productToDelete))
+        .then(productToDelete => deleteWordModalWindowRender(productToDelete))
 }
 
 /**
  * Изменяем кнопку Delete
  * @param word
  */
-function deleteModalWindowRender(wordId) {
+function deleteWordModalWindowRender(wordId) {
     $('.modal-dialog').off("click").on("click", "#acceptButton-bw", handleAcceptButtonFromModalWindow)
     $('.modal-title').text("Delete product")
     $('#acceptButton-bw').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
