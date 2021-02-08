@@ -5,6 +5,7 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +69,8 @@ public class PictureProductController {
      * Метод для удаления картинки при этом картинка меняется на дефолтную
      * @param id товара чью картинку удаляем
      */
-    @ApiOperation(value = "Delete picture product by id from db and Directory")
+    @ApiOperation(value = "Delete picture product by id from db and Directory",
+            authorizations = { @Authorization(value = "jwtToken") })
     @DeleteMapping("/picture/delete/{id}")
     public void deletePicture(@PathVariable("id") Long id) {
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
