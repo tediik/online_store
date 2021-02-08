@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,8 @@ public class CustomerRestController {
     private final RecentlyViewedProductsService recentlyViewedProductsService;
 
     @PostMapping("/changemail")
-    @ApiOperation(value = "processes Customers request to change email")
+    @ApiOperation(value = "processes Customers request to change email",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "duplicatedEmailError or notValidEmailError"),
             @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
@@ -73,7 +75,8 @@ public class CustomerRestController {
      * @return страница User
      */
     @PostMapping("/change-password")
-    @ApiOperation(value = "processes Customers request to change password")
+    @ApiOperation(value = "processes Customers request to change password",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No user with such id"),
             @ApiResponse(code = 400, message = "Wrong email or user with such email already exists"),
@@ -107,7 +110,8 @@ public class CustomerRestController {
      * @return ResponseEntity.ok()
      */
     @DeleteMapping("/deleteProfile/{id}")
-    @ApiOperation(value = "Changes Users status, when Delete button clicked")
+    @ApiOperation(value = "Changes Users status, when Delete button clicked",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<User> blockProfile(@PathVariable Long id) {
         try {
             customerService.changeCustomerStatusToLocked(id);
@@ -127,7 +131,8 @@ public class CustomerRestController {
      * @return ResponseEntity.ok()
      */
     @DeleteMapping("/deleteProfileUnrecoverable/{id}")
-    @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked")
+    @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> deleteProfileUnrecoverable(@PathVariable Long id) {
         customerService.changeCustomerProfileToDeletedProfileByID(id);
         customerService.deleteByID(id);
@@ -140,7 +145,8 @@ public class CustomerRestController {
      * @return ResponseEntity<User> Объект User
      */
     @GetMapping("/getManagerById/{id}")
-    @ApiOperation(value = "Возвращает пользователя по id")
+    @ApiOperation(value = "Возвращает пользователя по id",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "User with this id not found"),
     })
@@ -167,7 +173,8 @@ public class CustomerRestController {
      * @return ResponseEntity<String>
      */
     @PostMapping("/addIdProductToSessionAndToBase")
-    @ApiOperation(value = "procces gives and save idProduct into Session and to DataBase")
+    @ApiOperation(value = "procces gives and save idProduct into Session and to DataBase",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "")
     })
@@ -191,7 +198,8 @@ public class CustomerRestController {
      * @return ResponseEntity<List<Product>>
      */
     @GetMapping("/getRecentlyViewedProductsFromDb")
-    @ApiOperation(value = "procces return List<Product> from DB")
+    @ApiOperation(value = "procces return List<Product> from DB",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "Request contains incorrect data")
@@ -212,8 +220,10 @@ public class CustomerRestController {
      * @return - ResponseEntity<List<Product>>
      */
     @GetMapping("/recentlyViewedProducts")
+
     @ApiOperation(value = "Метод возвращает из базы список продуктов, которые просматривал пользователь" +
-                "в промежутке времени (stringStartDate и stringEndDate), параметры передаются в строковом значении как 2018-10-23")
+            "в промежутке времени (stringStartDate и stringEndDate), параметры передаются в строковом значении как 2018-10-23",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Product was not found")
     public ResponseEntity<List<Product>> getRecentlyViewedProductsByUserIdAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
         LocalDate startDate = LocalDate.parse(stringStartDate);

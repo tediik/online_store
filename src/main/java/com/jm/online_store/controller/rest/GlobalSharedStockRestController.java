@@ -4,6 +4,7 @@ import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,8 @@ public class GlobalSharedStockRestController {
     private final UserService userService;
 
     @PostMapping
-    @ApiOperation(value = "Adds new sharedStock")
+    @ApiOperation(value = "Adds new sharedStock",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> addSharedStock(@RequestBody SharedStock sharedStock) {
         sharedStock.setUser(userService.getCurrentLoggedInUser());
         sharedStockService.addSharedStock(sharedStock);

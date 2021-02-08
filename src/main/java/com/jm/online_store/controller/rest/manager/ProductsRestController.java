@@ -8,7 +8,7 @@ import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -61,7 +61,8 @@ public class ProductsRestController {
      */
     @PostMapping(value = "/uploadFile/{id}")
     @ApiOperation(value = "Method handles uploading a file with products to the server. " +
-            "Calls the appropriate service method depending on the file type(CSV or XML)")
+            "Calls the appropriate service method depending on the file type(CSV or XML)",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
         try {
             byte[] bytes = file.getBytes();
@@ -84,7 +85,8 @@ public class ProductsRestController {
 
     @PostMapping(value = "/uploadFile")
     @ApiOperation(value = "Method handles uploading a file with products to the server. " +
-            "Calls the appropriate service method depending on the file type(CSV or XML)")
+            "Calls the appropriate service method depending on the file type(CSV or XML)",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws FileNotFoundException {
         try {
             byte[] bytes = file.getBytes();
@@ -156,7 +158,8 @@ public class ProductsRestController {
      * @return ResponseEntity<Product> Возвращает добавленный товар с кодом ответа
      */
     @PostMapping(value = "/add/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Add product")
+    @ApiOperation(value = "add product",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 400, message = "Product has empty name or product with this name is already exists ")
     public ResponseEntity<Product> addProduct(@RequestBody Product product, @PathVariable Long id) {
 
@@ -182,7 +185,8 @@ public class ProductsRestController {
      * @return ResponseEntity<Product> Возвращает отредактированный товар с кодом ответа
      */
     @PutMapping("/edit")
-    @ApiOperation(value = "Method to edit product")
+    @ApiOperation(value = "edit product",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Product> editProductM(@RequestBody Product product) {
         productService.editProduct(product);
         return ResponseEntity.ok(product);
@@ -194,7 +198,8 @@ public class ProductsRestController {
      * @param product товар для редактирования
      */
     @PutMapping("/edit/{idOld}/{idNew}")
-    @ApiOperation(value = "Method for edit product and his category")
+    @ApiOperation(value = "Method for edit product and his category",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Product> editProductAndCategory(@RequestBody Product product,
                                                           @PathVariable Long idOld,
                                                           @PathVariable Long idNew) {
@@ -214,7 +219,7 @@ public class ProductsRestController {
      * @param id идентификатор товара
      */
     @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "Delete product by ID")
+    @ApiOperation(value = "Delete product by ID" , authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Long> deleteProductById(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(id);
@@ -302,8 +307,8 @@ public class ProductsRestController {
      */
 
     @GetMapping("/report/{categoryName}/{number}/{orderSelect}")
-    @ApiOperation(value = "Generate file with products of the category and return it to page")
     @ApiResponse(code = 404, message = "Could not found category and/or order")
+    @ApiOperation(value = "Generate file with products of the category and return it to page")
     public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@PathVariable String categoryName,
                                                                                @PathVariable Long number,
                                                                                @PathVariable String orderSelect,

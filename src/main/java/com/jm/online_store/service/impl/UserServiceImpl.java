@@ -210,8 +210,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Регистрация нового User.
-     * @param userForm User построенный из данных формы.
+     * Регистрация нового Пользователя.
+     * @param userForm - Пользователь, построенный из данных формы.
      */
     @Override
     @Transactional
@@ -227,8 +227,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод формирует токен и отправляет ссылку подтверждение на email указанный анонимом.
-     * @param email указанный анонимным пользователем при покупке
+     * Формирует токен и отправляет ссылку-подтверждение на email, указанный анонимом.
+     * @param email - почта, указанная анонимным пользователем при покупке
      */
     @Override
     @Transactional
@@ -287,6 +287,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * С помощью email находим пользователя, затем получаем его пароль.
+     * @param email - почта пользователя.
+     * @return String - пароль пользователя.
+     */
+    @Override
+    @Transactional
+    public String getPasswordByMail(String email) {
+        return findUserByEmail(email).getPassword();
+    }
+
+    /**
      * Генерирует новый пароль и отправляет его пользователю на почту.
      * @param user - Покупатель, запросивший смену пароля.
      */
@@ -341,10 +352,10 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод проверки активации пользователя.
-     * @param token модель, построенная на основе пользователя, после подтверждения
-     * @param request параметры запроса.
-     * @return булево значение "true or false"
+     * Проверяет активацию пользователя.
+     * @param token токен подтверждения.
+     * @param request - http-запрос.
+     * @return булево значение true/false
      */
     @Override
     @Transactional
@@ -472,9 +483,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Service method to add new user from admin page
-     *
-     * @param newUser
+     * Добавление нового пользователя со страницы администратора
+     * @param newUser - новый пользователь
      */
     @Override
     @Transactional
@@ -524,8 +534,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод который находит User-а по его id
-     * @param id Юзера
+     * Метод ищет Пользователя по его id
+     * @param id - идентификатор Пользователя
      * @return User
      */
     @Override
@@ -577,9 +587,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод находит User-а по его логину email
-     * @param email Юзера
-     * @return User
+     * Ищет Пользователя по его логину (email)
+     * @param email - почта Пользователя
+     * @return User - объект Пользователя
      */
     @Override
     public User findUserByEmail(String email) {
@@ -587,9 +597,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод находит User-а по его id
-     * @param id Юзера
-     * @return User
+     * Ищет Пользователя его id
+     * @param id - идентификатор Пользователя
+     * @return User - объект Пользователя
      */
     @Override
     public User findUserById(Long id) {
@@ -650,9 +660,9 @@ public class UserServiceImpl implements UserService {
 
 
     /**
-     * Метод, отправляющий сообщение с просьбой подтвердить подписку пользователю,
+     * Отправляет сообщение с просьбой подтвердить подписку пользователю,
      * который нажал на "Подписаться на изменение цены".
-     * @param email
+     * @param email - почта Пользователя
      */
     public void sendConfirmationSubscribeLetter(String email) {
         String templateBody = commonSettingsService
