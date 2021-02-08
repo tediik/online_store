@@ -200,10 +200,10 @@ public class ProductServiceImpl implements ProductService {
         if (product.getRating() == null) {
             product.setRating(0d);
         }
-        if (product.getProduct_picture().isEmpty()) {
-            product.setProduct_picture("00.jpg");
+        if (product.getProductPictureName().isEmpty()) {
+            product.setProductPictureName("00.jpg");
         } else {
-            product.setProduct_picture(product.getProduct_picture());
+            product.setProductPictureName(product.getProductPictureName());
         }
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
@@ -651,10 +651,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Long editProduct(Product product) {
 
-        if (product.getProduct_picture().isEmpty()) {
-            product.setProduct_picture("00.jpg");
+        if (product.getProductPictureName().isEmpty()) {
+            product.setProductPictureName("00.jpg");
         } else {
-            product.setProduct_picture(product.getProduct_picture());
+            product.setProductPictureName(product.getProductPictureName());
         }
 
         Map<LocalDateTime, Double> map = findProductById(product.getId())

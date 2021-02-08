@@ -59,8 +59,8 @@ public class Product {
     private String productType; //Что это за поле?
     @NonNull
     private boolean deleted;
-
-    private String product_picture = "";
+    @Column(name = "productPictureName", nullable = false)
+    private String productPictureName = "";
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,

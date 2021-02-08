@@ -54,7 +54,7 @@ public class PictureProductController {
                 }
                 byte[] bytes = pictureFile.getBytes();
                 Files.write(fileNameAndPath, bytes);
-                product.setProduct_picture(uniqueFilename);
+                product.setProductPictureName(uniqueFilename);
             } catch (IOException e) {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }
@@ -72,7 +72,7 @@ public class PictureProductController {
     @DeleteMapping("/picture/delete/{id}")
     public void deletePicture(@PathVariable("id") Long id) {
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
-        Path fileNameAndPath = Paths.get(uploadDirectory, product.getProduct_picture());
+        Path fileNameAndPath = Paths.get(uploadDirectory, product.getProductPictureName());
         try {
             if (!fileNameAndPath.getFileName().toString().equals("00.jpg")) {
                 Files.delete(fileNameAndPath);
@@ -80,7 +80,7 @@ public class PictureProductController {
         } catch (IOException e) {
             log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
-        product.setProduct_picture("00.jpg");
+        product.setProductPictureName("00.jpg");
         productService.editProduct(product);
     }
 }
