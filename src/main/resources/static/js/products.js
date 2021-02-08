@@ -5,7 +5,7 @@ let listOfAll
 let productRestUrl = "/api/product/getAll"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
-document.getElementById('addBtn').addEventListener('click', handleAddBtn )
+document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 /**
  * Переменные для отдельной вкладки "Категории товаров
  */
@@ -180,7 +180,7 @@ function editPictureModalWindowRender(product) {
 }
 
 /**
- * Функция рендера модального окна Добавить картинку?
+ * Функция рендера модального окна Добавить картинку
  * @param product
  */
 function addPictureModalWindowRender(product) {

@@ -2,17 +2,15 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +27,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @Slf4j
+@Api(description = "Rest controller for product picture")
 @RequestMapping("/api/product")
 public class PictureProductController {
 
@@ -38,10 +37,10 @@ public class PictureProductController {
 
     /**
      * Метод для изменения картинки
-     *
-     * @param id
-     * @param pictureFile
+     * @param id товара чью картинку меняем
+     * @param pictureFile добавляемая картинка
      */
+    @ApiOperation(value = "Upload picture for product by id and save path of picture in db")
     @PutMapping("/upload/picture/{id}")
     public ResponseEntity<String> editPicture(@PathVariable("id") Long id, @RequestParam("pictureFile") MultipartFile pictureFile) {
 
@@ -66,10 +65,10 @@ public class PictureProductController {
     }
 
     /**
-     * Метод для удаления картинки
-     *
-     * @param id
+     * Метод для удаления картинки при этом картинка меняется на дефолтную
+     * @param id товара чью картинку удаляем
      */
+    @ApiOperation(value = "Delete picture product by id from db and Directory")
     @DeleteMapping("/picture/delete/{id}")
     public void deletePicture(@PathVariable("id") Long id) {
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);

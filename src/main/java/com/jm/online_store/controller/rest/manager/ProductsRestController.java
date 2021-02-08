@@ -159,7 +159,7 @@ public class ProductsRestController {
     @PostMapping(value = "/add/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Add product")
     @ApiResponse(code = 400, message = "Product has empty name or product with this name is already exists ")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product, @PathVariable Long id) {
+    public ResponseEntity<Long> addProduct(@RequestBody Product product, @PathVariable Long id) {
 
         if (product.getProduct().equals("")) {
             log.debug("EmptyProductName");
@@ -173,7 +173,7 @@ public class ProductsRestController {
 
         productService.saveProduct(product);
         categoriesService.addToProduct(product, id);
-        return new ResponseEntity(product.getId(), HttpStatus.OK);
+        return ResponseEntity.ok(product.getId());
     }
 
     /**
