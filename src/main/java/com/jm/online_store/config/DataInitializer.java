@@ -1390,7 +1390,6 @@ public class DataInitializer {
                 .topicsCategory(topicsCategory4)
                 .build();
 
-
         topicService.create(topic1);
         topicService.create(topic2);
         topicService.create(topic3);
