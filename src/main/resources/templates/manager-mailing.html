@@ -77,27 +77,27 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav-new1-tab" data-toggle="tab" href="#nav-sendConfirmationTokenToResetPassword"
-                       role="tab" aria-controls="nav-profile" aria-selected="true">рассылка1</a>
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Сброс пароля</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav-new2-tab" data-toggle="tab" href="#nav-regNewAccount"
-                       role="tab" aria-controls="nav-profile" aria-selected="true">рассылка2</a>
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Регистрация нового акаунта</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav-new3-tab" data-toggle="tab" href="#nav-changeUsersMail"
-                       role="tab" aria-controls="nav-profile" aria-selected="true">рассылка3</a>
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Изменение eMail</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav-new4-tab" data-toggle="tab" href="#nav-changeUsersPass"
-                       role="tab" aria-controls="nav-profile" aria-selected="true">рассылка4</a>
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Изменение пароля</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav-new5-tab" data-toggle="tab" href="#nav-activateUser"
-                       role="tab" aria-controls="nav-profile" aria-selected="true">рассылка5</a>
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Активация пользователя</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav-new6-tab" data-toggle="tab" href="#nav-subscribeConfirmTemplate"
-                       role="tab" aria-controls="nav-profile" aria-selected="true">рассылка6</a>
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Подтверждение подписки</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#description" aria-selected="false">Подписки</a>
@@ -172,7 +172,7 @@
                         </div>
                     </form>
                     <hr>
-                    <h2>Важная информация! Метод sendConfirmationTokenToResetPassword(User user)</h2>
+                    <h2>Важная информация!</h2>
                     <ul>
                         <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
                         <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
@@ -193,7 +193,7 @@
                         </div>
                     </form>
                     <hr>
-                    <h2>Важная информация! Метод regNewAccount()</h2>
+                    <h2>Важная информация!</h2>
                     <ul>
                         <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
                         <li>@@userEmail@@ - вместо этого тега в письме подставляется user.getEmail() либо String email</li>
@@ -214,7 +214,7 @@
                         </div>
                     </form>
                     <hr>
-                    <h2>Важная информация! Метод changeUsersMail()</h2>
+                    <h2>Важная информация!</h2>
                     <ul>
                         <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
                         <li>@@user@@ - вместо этого тега в письме подставляется user.getFirstName()</li>
@@ -235,7 +235,7 @@
                         </div>
                     </form>
                     <hr>
-                    <h2>Важная информация! Метод changeUsersPass()</h2>
+                    <h2>Важная информация!</h2>
                     <ul>
                         <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
                         <li>@@user@@ - вместо этого тега в письме подставляется user.getFirstName()</li>
@@ -253,7 +253,7 @@
                         </div>
                     </form>
                     <hr>
-                    <h2>Важная информация! Метод activateUser()</h2>
+                    <h2>Важная информация!</h2>
                     <ul>
                         <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
                         <li>@@user@@ - вместо этого тега в письме подставляется customer.getEmail()</li>
@@ -273,16 +273,13 @@
                         </div>
                     </form>
                     <hr>
-                    <h2>Важная информация! Метод sendConfirmationSubscribeLetter()</h2>
+                    <h2>Важная информация!</h2>
                     <ul>
                         <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
                         <li>@@user@@ - вместо этого тега в письме подставляется userName</li>
                     </ul>
                     <button class="btn btn-primary" id="saveSubscribeConfirmTemplateChanges">Сохранить шаблон</button>
                 </div>
-
-
-
                 <div class="tab-pane fade" id="description">
                     <div id="chart-div" style="display: none">
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
