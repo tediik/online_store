@@ -1,4 +1,4 @@
-package com.jm.online_store.controller.rest;
+package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
