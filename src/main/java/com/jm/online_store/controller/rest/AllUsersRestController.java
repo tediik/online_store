@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.RestoreAccountDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +29,7 @@ public class AllUsersRestController {
 
     private final UserService userService;
     private final CustomerService customerService;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Метод для получения имейла и ролей залогиненного пользователя,
@@ -54,7 +57,7 @@ public class AllUsersRestController {
     /**
      * Метод восстановления пользователя
      *
-     * @param email
+     * @param restoreAccountDto
      * @return
      */
     @PutMapping("/restore")
@@ -63,12 +66,21 @@ public class AllUsersRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "User not found"),
     })
-    public ResponseEntity<String> restoreUser(@RequestBody String email) {
+    public ResponseEntity<String> restoreUser(@RequestBody RestoreAccountDto restoreAccountDto) {
+        String msgAlert = "Пользователь не найден!";
+        String email = restoreAccountDto.getEmail();
+        String passwordOfClient = restoreAccountDto.getPassword();
+        String passwordOfBase = userService.getPasswordByMail(email);
         try {
-            customerService.restoreCustomer(email);
-            return ResponseEntity.ok("Профиль успешно восстановлен!");
+            if (passwordEncoder.matches(passwordOfClient, passwordOfBase)) {
+                customerService.restoreCustomer(email);
+                msgAlert = "Профиль успешно восстановлен!";
+                return ResponseEntity.ok(msgAlert);
+            } else {
+                throw new UsernameNotFoundException(msgAlert);
+            }
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.badRequest().body("Пользователь не найден!");
+            return ResponseEntity.badRequest().body(msgAlert);
         }
     }
 }
