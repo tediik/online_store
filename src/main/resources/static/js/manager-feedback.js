@@ -142,7 +142,7 @@ function showAnswer(id, showStatus) {
  * Функция получает фио менеджера ответившего на обращение
  */
 function getManager() {
-    fetch("/api/admin/authUser")
+    fetch("/api/manager/authUser")
         .then((response) => {
             return response.json();
         })

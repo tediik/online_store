@@ -11,6 +11,7 @@ import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,8 +43,9 @@ public class FavouritesGoodsRestController {
      *
      * @return ResponseEntity<> список избранных товаров данного User + статус ответа.
      */
-    @ApiOperation(value = "Rest Controller fetches products from Favourite products for current logged in User")
     @GetMapping(value = "/favouritesGoods")
+    @ApiOperation(value = "Rest Controller fetches products from Favourite products for current logged in User",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Set<Product>> getFavouritesGoods() {
         User user = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(favouriteGoodsService.getFavouriteGoods(user));
@@ -56,7 +58,8 @@ public class FavouritesGoodsRestController {
      * @return ResponseEntity.ok()
      */
     @PutMapping(value = "/favouritesGoods")
-    @ApiOperation(value = "Rest Controller adds products to favourites. Adds it to the list \"All products\" ")
+    @ApiOperation(value = "Rest Controller adds products to favourites. Adds it to the list \"All products\" ",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.addToFavouriteGoods(id, user);
@@ -72,8 +75,9 @@ public class FavouritesGoodsRestController {
      * @param id идентификатор товара
      * @return ResponseEntity.ok()
      */
-    @ApiOperation(value = "Rest Controller deletes product from favourites. From the list \"All products\" ")
     @DeleteMapping(value = "/favouritesGoods")
+    @ApiOperation(value = "Rest Controller deletes product from favourites. From the list \"All products\" ",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id) {
         User user = userService.getCurrentLoggedInUser();
         favouriteGoodsService.deleteFromFavouriteGoods(id, user);

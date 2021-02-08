@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.service.interf.CategoriesService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,8 @@ public class ProductCategoriesRestController {
      * Возвращает список всех категорий
      */
     @GetMapping("/all")
+    @ApiOperation(value = "return all categories",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ArrayNode> getAllCategories() {
         return ResponseEntity.ok(categoriesService.getAllCategories());
     }
@@ -44,6 +48,8 @@ public class ProductCategoriesRestController {
      * @param id
      */
     @GetMapping("/getOne/{id}")
+    @ApiOperation(value = "return name of category by product's id",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> getCategoryNameByProductId(@PathVariable Long id) {
         return ResponseEntity.ok(categoriesService.getCategoryNameByProductId(id));
     }
@@ -52,6 +58,8 @@ public class ProductCategoriesRestController {
      * Возвращает список подкатегорий для корневой категории
      */
     @GetMapping("/sub/{id}")
+    @ApiOperation(value = "return list of sub categories",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Categories>> getSubCategoriesById(@PathVariable Long id) {
         return ResponseEntity.ok(categoriesService.getCategoriesByParentCategoryId(id));
     }
@@ -60,6 +68,8 @@ public class ProductCategoriesRestController {
      * Сохраняет категорию
      */
     @PostMapping
+    @ApiOperation(value = "save category",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Categories> newCategory(@RequestBody Categories categories) {
         categoriesService.saveCategory(categories);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -69,6 +79,8 @@ public class ProductCategoriesRestController {
      * Обновление категории
      */
     @PutMapping
+    @ApiOperation(value = "update category",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Categories> updateCategory(@RequestBody Categories categories) {
         categoriesService.saveCategory(categories);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -78,6 +90,8 @@ public class ProductCategoriesRestController {
      * Удаление категории
      */
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "delete category",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Categories> deleteCategory(@PathVariable Long id) {
         categoriesService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.OK);
