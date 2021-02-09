@@ -4,6 +4,8 @@ import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.CustomerDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
@@ -15,6 +17,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -53,18 +56,11 @@ public class CustomerRestController {
             @ApiResponse(code = 400, message = "duplicatedEmailError or notValidEmailError"),
             @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
     })
-    public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
-        Customer customer = customerService.getCurrentLoggedInUser();
-        if (customerService.isExist(newMail)) {
-            log.debug("Попытка ввести дублирующийся email: " + newMail);
-            return new ResponseEntity("duplicatedEmailError", HttpStatus.BAD_REQUEST);
-        }
-        if (ValidationUtils.isNotValidEmail(newMail)) {
-            return new ResponseEntity("notValidEmailError", HttpStatus.BAD_REQUEST);
-        } else {
-            userService.changeUsersMail(customer, newMail);
-            return ResponseEntity.ok("Email будет изменен после подтверждения.");
-        }
+    public ResponseEntity<ResponseDto<CustomerDto>> changeMailReq(@RequestParam String newMail) {
+        Customer customer = customerService.changeMail(newMail);
+        ModelMapper modelMapper = new ModelMapper();
+        CustomerDto returnValue = modelMapper.map(customer, CustomerDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
