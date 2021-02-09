@@ -2,7 +2,9 @@ package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.NewsFilterDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.NewsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +12,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
+import org.bouncycastle.math.raw.Mod;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,8 +29,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,15 +62,15 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 404, message = "News not found"),
             @ApiResponse(code = 200, message = "News was found")
     })
-    public ResponseEntity<News> getNews(@PathVariable Long id) {
-        News news;
-        try {
-            news = newsService.findById(id);
-        } catch (NewsNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(news);
+    public ResponseEntity<ResponseDto<NewsDto>> getNewsById(@PathVariable Long id) {
+        News newsFromService = newsService.findById(id);
+        ModelMapper modelMapper = new ModelMapper();
+        NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
+
+
+
 
     /**
      * Method returns all news
@@ -76,27 +84,14 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 404, message = "News not found"),
             @ApiResponse(code = 200, message = "News was found")
     })
-    public ResponseEntity<List<News>> allNews() {
-        List<News> allNewsList;
-        try {
-            allNewsList = newsService.findAll();
-            return ResponseEntity.ok(allNewsList);
-        } catch (NewsNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ResponseDto<List<NewsDto>>> getAllNews() {
+        ModelMapper modelMapper = new ModelMapper();
+        List<News> listNewsFromService = newsService.findAll();
+        Type listType = new TypeToken<List<NewsDto>>() {}.getType();
+        List<NewsDto> returnValue = modelMapper.map(listNewsFromService, listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-    /**
-     * Возвращает список опубликованных новостей на главную страницу
-     */
-    @PreAuthorize("permitAll()")
-    @GetMapping("/publishednews")
-    @ApiOperation(value = "Returns list of published news",
-            authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<List<News>> getPublishedNewsOnMainPage() {
-        List<News> publishedNews= newsService.getAllPublished();
-        return ResponseEntity.ok(publishedNews);
-    }
 
     /**
      * Метод возвращает страницу новостей
@@ -109,9 +104,11 @@ public class ManagerNewsRestController {
     @ApiOperation(value = "Method returns news page",
             authorizations = { @Authorization(value="jwtToken") })
     @ApiResponse(code = 200, message = "News page was found")
-    public ResponseEntity<Page<News>> getPage(@PageableDefault Pageable page, NewsFilterDto filterDto) {
-        Page<News> response = newsService.findAll(page, filterDto);
-        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<Page<NewsDto>>> getPage(@PageableDefault Pageable page, NewsFilterDto filterDto) {
+        ModelMapper modelMapper = new ModelMapper();
+        Page<News> newsPageFromService = newsService.findAll(page, filterDto);
+        Page<NewsDto> returnValue = modelMapper.map(newsPageFromService, Page.class); // пока не думал что сделать с сырым типом
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -126,13 +123,12 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 204, message = "Published news not found"),
             @ApiResponse(code = 200, message = "Published news was found")
     })
-    public ResponseEntity<List<News>> getPublishedNews() {
-        try {
-            List<News> publishedNews = newsService.getAllPublished();
-            return ResponseEntity.ok(publishedNews);
-        } catch (NewsNotFoundException e) {
-            return ResponseEntity.noContent().build();
-        }
+    public ResponseEntity<ResponseDto<List<NewsDto>>> getAllPublishedNews() {
+        ModelMapper modelMapper = new ModelMapper();
+        List<News> listPubNewsFromService = newsService.getAllPublished();
+        Type listType = new TypeToken<List<NewsDto>>() {}.getType();
+        List<NewsDto> returnValue = modelMapper.map(listPubNewsFromService, listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -147,13 +143,12 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 204, message = "Unpublished news not found"),
             @ApiResponse(code = 200, message = "Unpublished news was found")
     })
-    public ResponseEntity<List<News>> getUnpublishedNews() {
-        try {
-            List<News> unpublishedNews = newsService.getAllUnpublished();
-            return ResponseEntity.ok(unpublishedNews);
-        } catch (NewsNotFoundException e) {
-            return ResponseEntity.noContent().build();
-        }
+    public ResponseEntity<ResponseDto<List<NewsDto>>> getAllUnpublishedNews() {
+        List<News> listUnpubNewsFromService = newsService.getAllUnpublished();
+        ModelMapper modelMapper = new ModelMapper();
+        Type listType = new TypeToken<List<NewsDto>>() {}.getType();
+        List<NewsDto> returnValue = modelMapper.map(listUnpubNewsFromService, listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -168,13 +163,12 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 204, message = "archived news not found"),
             @ApiResponse(code = 200, message = "archived news was found")
     })
-    public ResponseEntity<List<News>> getArchivedNews() {
-        try {
-            List<News> archived = newsService.getAllArchivedNews();
-            return ResponseEntity.ok(archived);
-        } catch (NewsNotFoundException e) {
-            return ResponseEntity.noContent().build();
-        }
+    public ResponseEntity<ResponseDto<List<NewsDto>>> getAllArchivedNews() {
+        ModelMapper modelMapper = new ModelMapper();
+        List<News> listArchNewsFromService = newsService.getAllArchivedNews();
+        Type listType = new TypeToken<List<NewsDto>>() {}.getType();
+        List<NewsDto> returnValue = modelMapper.map(listArchNewsFromService, listType);
+            return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -188,9 +182,11 @@ public class ManagerNewsRestController {
     @ApiOperation(value = "Method to save news in database",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 200, message = "News  saved in db")
-    public ResponseEntity<News> newsPost(@RequestBody News news) {
+    public ResponseEntity<ResponseDto<NewsDto>> createNewsPost(@RequestBody News news) {
         newsService.save(news);
-        return ResponseEntity.ok(news);
+        ModelMapper modelMapper = new ModelMapper();
+        NewsDto returnValue = modelMapper.map(news, NewsDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -203,9 +199,11 @@ public class ManagerNewsRestController {
     @ApiOperation(value = "Method to update news in database",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 200, message = "News updated in db")
-    public ResponseEntity<News> newsUpdate(@RequestBody News news) {
-        newsService.update(news);
-        return ResponseEntity.ok(news);
+    public ResponseEntity<ResponseDto<NewsDto>> updateNews(@RequestBody News news) {
+        News newsFromService = newsService.update(news);
+        ModelMapper modelMapper = new ModelMapper();
+        NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -221,12 +219,7 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 200, message = "News deleted"),
             @ApiResponse(code = 404, message = "News was not found")
     })
-    public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
-        try {
-            newsService.deleteById(id);
-            return ResponseEntity.ok().build();
-        } catch (NewsNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ResponseDto<Boolean>> deleteNewsById(@PathVariable Long id) {
+        return ResponseEntity.ok(new ResponseDto<>(true, newsService.deleteById(id)));
     }
 }
