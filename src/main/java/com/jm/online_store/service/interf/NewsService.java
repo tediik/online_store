@@ -22,7 +22,7 @@ public interface NewsService {
 
     News update(News news);
 
-    void deleteById(Long id);
+    boolean deleteById(Long id);
 
     List<News> getAllPublished();
 
