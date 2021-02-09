@@ -83,7 +83,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Получение списка пользователей, отсортированных в соответствии с выбранной ролью
-     *
      * @param roleString роль, по которой фильтруется список пользователей
      * @return List<User> отфильтрованный список пользователей
      */
@@ -101,7 +100,6 @@ public class UserServiceImpl implements UserService {
         }
         return filteredUsers;
     }
-
 
     @Override
     public Optional<User> findById(Long id) {
@@ -211,7 +209,7 @@ public class UserServiceImpl implements UserService {
             editUser.setEmail(user.getEmail());
         }
         editUser.setRoles(persistRoles(user.getRoles()));
-        log.debug("editUser: {}", editUser.getId());
+        log.debug("editUser: {}", editUser.getEmail());
         userRepository.save(editUser);
 
     }
@@ -439,7 +437,6 @@ public class UserServiceImpl implements UserService {
         log.info("Для пользователя с логином: {} установлен новый логин: {}", user.getEmail(), confirmationToken.getUserEmail());
         return true;
     }
-
 
     private Set<Role> persistRoles(Set<Role> roles) {
         return roles.stream()
