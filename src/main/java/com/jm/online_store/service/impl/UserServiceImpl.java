@@ -83,6 +83,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Получение списка пользователей, отсортированных в соответствии с выбранной ролью
+     *
      * @param roleString роль, по которой фильтруется список пользователей
      * @return List<User> отфильтрованный список пользователей
      */
@@ -119,6 +120,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Проверяет существование пользователя в БД.
+     *
      * @param email - поле по которому проверяем пользователя
      * @return false -  Если такой пользователь не был найден.
      * Если же все-таки он был найден, и статус удаления у него есть, и 30 дней истекли.
@@ -135,6 +137,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Добавление нового пользователя.
      * Проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение).
+     *
      * @param user полученный объект User
      */
     @Override
@@ -160,6 +163,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Обновление пользователя.
+     *
      * @param user пользователь, полученный из контроллера.
      */
     @Override
@@ -170,6 +174,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод обновляет профиль пользователя в личном кабинете.
+     *
      * @param user сущность, полученный из контроллера.
      * @return измененного пользователя.
      * @throws UserNotFoundException если пользователь не найден в БД.
@@ -177,30 +182,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUserProfile(User user) {
-
         User updatedUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
         updatedUser.setFirstName(user.getFirstName());
         updatedUser.setLastName(user.getLastName());
         updatedUser.setBirthdayDate(user.getBirthdayDate());
         updatedUser.setUserGender(user.getUserGender());
-
-//        userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
-
-//        user.setId(user.getId());
-//        user.setFirstName(user.getFirstName());
-//        user.setLastName(user.getLastName());
-//        user.setBirthdayDate(user.getBirthdayDate());
-//        user.setUserGender(user.getUserGender());
-
         return userRepository.save(updatedUser);
     }
 
     /**
      * Обновляет данные польователя в Rest-api UserRestController.
+     *
      * @param user сущность, полученный из контроллера.
-     * @throws UserNotFoundException если пользователя не существует в БД.
+     * @throws UserNotFoundException       если пользователя не существует в БД.
      * @throws EmailAlreadyExistsException если такая почта уже существует.
-     * @throws InvalidEmailException если почта не соответствует формату.
+     * @throws InvalidEmailException       если почта не соответствует формату.
      */
     @Override
     @Transactional
@@ -217,10 +213,12 @@ public class UserServiceImpl implements UserService {
         editUser.setRoles(persistRoles(user.getRoles()));
         log.debug("editUser: {}", editUser.getId());
         userRepository.save(editUser);
+
     }
 
     /**
      * Удаляет пользователя по идентификатору.
+     *
      * @param id идентификатор пользователя.
      */
     @Override
@@ -233,6 +231,7 @@ public class UserServiceImpl implements UserService {
      * Регистрация нового пользователя.
      * Метод генерирует токен на основе email и пароля, затем отправляет письмо
      * с ссылкой для подтверждения регистрации на указанный email.
+     *
      * @param userForm User полученный из данных формы.
      */
     @Override
@@ -253,6 +252,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод формирует токен и отправляет ссылку подтверждение на email указанный анонимом.
+     *
      * @param email указанный анонимным пользователем при покупке
      */
     @Override
@@ -295,7 +295,8 @@ public class UserServiceImpl implements UserService {
     /**
      * Устанавливет переданному пользователю новый пароль.
      * Генерирует токен на основе id и email, затем отправляет для подтверждения на email пользователя.
-     * @param user Пользователь
+     *
+     * @param user        Пользователь
      * @param newPassword новый пароль
      */
     @Override
@@ -315,6 +316,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Генерирует новый пароль и отправляет его пользователю на почту.
+     *
      * @param user - Покупатель, запросивший смену пароля.
      */
     @Transactional
@@ -331,6 +333,7 @@ public class UserServiceImpl implements UserService {
      * в соответствии с указанными требованиями к паролю.
      * Пароль должен состоять из 8-20 символов, содержать буквы и цифры и
      * не должен содержать пробелов и эмодзи.
+     *
      * @return рандомный сгенерированный пароль
      */
     private String generatePassayPassword() {
@@ -351,6 +354,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Генерирует токен для сброса пароля и отправляет на указанную пользователем почту
+     *
      * @param user пользователь, запросивший сброс пароля.
      */
     @Override
@@ -369,7 +373,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод проверки активации пользователя.
-     * @param token модель, построенная на основе пользователя, после подтверждения
+     *
+     * @param token   модель, построенная на основе пользователя, после подтверждения
      * @param request параметры запроса.
      * @return булево значение "true or false"
      */
@@ -498,6 +503,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод позволяет добавлять нового пользователя со страницы для админа
+     *
      * @param newUser получаем с контроллера
      */
     @Override
@@ -523,6 +529,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
+     *
      * @param user
      * @return User
      */
@@ -553,7 +560,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Изменение пароля пользователя.
-     * @param id идентификатор пользователя.
+     *
+     * @param id          идентификатор пользователя.
      * @param oldPassword старый пароль.
      * @param newPassword новый пароль.
      * @return false если ввести неправильно текущий пароль,
@@ -576,7 +584,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
-     * @param user переданный пользователь
+     *
+     * @param user    переданный пользователь
      * @param address новый адрес для пользователя
      * @throws UserNotFoundException вылетает, если пользователь не найден в БД
      */
@@ -610,6 +619,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод находит User-а по его логину email
+     *
      * @param email Юзера
      * @return User
      */
@@ -620,6 +630,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод находит User-а по его id
+     *
      * @param id Юзера
      * @return User
      */
@@ -631,8 +642,9 @@ public class UserServiceImpl implements UserService {
     /**
      * Метод возвращает залогиненного активного юзера - User из Authentication
      * Service method which builds and returns currently logged in User from Authentication
+     *
      * @param sessionID -параметр по которому вычисляется анонимный пользователь,
-     * если его нет в бд -создает его используя параметр в качестве email
+     *                  если его нет в бд -создает его используя параметр в качестве email
      * @return User
      */
     @Transactional
@@ -665,6 +677,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which finds and returns the User by token after email confirmation
+     *
      * @return User
      */
     @Transactional
@@ -684,6 +697,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Метод, отправляющий сообщение с просьбой подтвердить подписку пользователю,
      * который нажал на "Подписаться на изменение цены".
+     *
      * @param email
      */
     public void sendConfirmationSubscribeLetter(String email) {
