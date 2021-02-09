@@ -2,6 +2,8 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.customer.CustomerServiceException;
+import com.jm.online_store.exception.customer.ExceptionCustomerConstants;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
@@ -281,5 +283,24 @@ public class CustomerServiceImpl implements CustomerService {
             listForDelete.forEach(customer -> changeCustomerProfileToDeletedProfileByID(customer.getId()));
             customerRepository.deleteAll(listForDelete);
         }
+    }
+
+
+    @Override
+    public Customer changeMail(String newMail) {
+        Customer customer = getCurrentLoggedInUser();
+
+        if (customer == null) {
+            throw new CustomerServiceException(ExceptionCustomerConstants.CUSTOMER_ARE_NOT_AUTHENTICATED);
+        }
+        if (isExist(newMail)) {
+            throw new CustomerServiceException(ExceptionCustomerConstants.CUSTOMER_EMAIL_ALREADY_EXISTS);
+        }
+        if (ValidationUtils.isNotValidEmail(newMail)) {
+            throw new CustomerServiceException(ExceptionCustomerConstants.CUSTOMER_EMAIL_NOT_VALID);
+        }
+
+        userService.changeUsersMail(customer, newMail);
+        return customer;
     }
 }
