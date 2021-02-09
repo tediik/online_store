@@ -1,6 +1,8 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.NewsNotFoundException;
+import com.jm.online_store.exception.news.ExceptionNewsConstants;
+import com.jm.online_store.exception.news.NewsServiceException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsFilterDto;
 import com.jm.online_store.repository.NewsRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Сервис класс, имплементация интерфейса {@link NewsService}
@@ -34,7 +37,7 @@ public class NewsServiceImpl implements NewsService {
     public List<News> findAll() {
         List<News> allNews = newsRepository.findAll();
         if (allNews.isEmpty()) {
-            throw new NewsNotFoundException("findAll returns empty List<News>");
+            throw new NewsServiceException(ExceptionNewsConstants.NO_NEWS_YET);
         }
         return allNews;
     }
@@ -69,8 +72,14 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public News findById(long id) {
-        return newsRepository.findById(id).orElseThrow(() -> new NewsNotFoundException("There are no news with such id"));
+        if (newsRepository.findById(id).isEmpty()) {
+             throw new NewsServiceException(String.format(ExceptionNewsConstants.NO_NEWS_WITH_SUCH_ID, id));
+        }
+        return newsRepository.findById(id).get();
     }
+
+
+
 
     /**
      * Метод выполняет проверку существует ли сущность в базе.
@@ -99,8 +108,13 @@ public class NewsServiceImpl implements NewsService {
      * @param id уникальный идентификатор сущности News
      */
     @Override
-    public void deleteById(Long id) {
+    public boolean deleteById(Long id) {
+        Optional<News> optionalNews = newsRepository.findById(id);
+        if (optionalNews.isEmpty()) {
+            throw new NewsServiceException(String.format(ExceptionNewsConstants.NO_NEWS_WITH_SUCH_ID, id));
+        }
         newsRepository.deleteById(id);
+        return true;
     }
 
     /**
@@ -113,7 +127,7 @@ public class NewsServiceImpl implements NewsService {
     public List<News> getAllPublished() {
         List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now().plusDays(1), false);
         if (publishedNews.isEmpty()) {
-            throw new NewsNotFoundException("There are no published news");
+            throw new NewsServiceException(ExceptionNewsConstants.NO_PUBLISHED_NEWS);
         }
         return publishedNews;
     }
@@ -127,8 +141,8 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> getAllUnpublished() {
         List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
-        if (unpublishedNews.isEmpty()) {
-            throw new NewsNotFoundException("There are no unpublished news");
+        if (!unpublishedNews.isEmpty()) {
+            throw new NewsServiceException(ExceptionNewsConstants.NO_UNPUBLISHED_NEWS);
         }
         return unpublishedNews;
     }
@@ -141,7 +155,7 @@ public class NewsServiceImpl implements NewsService {
     public List<News> getAllArchivedNews() {
         List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
         if (archivedNews.isEmpty()) {
-            throw new NewsNotFoundException("There are no archived news");
+            throw new NewsServiceException(ExceptionNewsConstants.NO_ARCHIVED_NEWS);
         }
         return archivedNews;
     }
