@@ -37,6 +37,7 @@ import javax.mail.MessagingException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
@@ -55,6 +56,9 @@ import java.util.Set;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
+    private static final String loadPictureFrom = ".." + File.separator + "uploads" +
+            File.separator + "images" + File.separator + "products" + File.separator;
+
     private final ProductRepository productRepository;
     private final EvaluationService evaluationService;
     private final UserService userService;
@@ -64,9 +68,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductCharacteristicService productCharacteristicService;
 
     /**
-     * метод получения списка товаров
-     *
-     * @return List<Product>
+     * Получение списка товаров
+     * @return List<Product> - список товаров
      */
     @Transactional
     @Override
@@ -75,7 +78,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для получения списка неудаленных товаров
+     * Получение списка неудаленных товаров
+     * @return List<Product> - список неудаленных товаров
      */
     @Override
     public List<Product> getNotDeleteProducts() {
@@ -83,10 +87,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод для получения списка Product по имени категории.
-     *
-     * @param categoryName идентификатор Product
-     * @return List<Product>
+     * Получение списка товаров по имени категории.
+     * @param categoryName - название категории товара
+     * @return List<Product> - список товаров
      */
     @Override
     public List<Product> findProductsByCategoryName(String categoryName) {
@@ -96,10 +99,9 @@ public class ProductServiceImpl implements ProductService {
 
 
     /**
-     * Метод для создания XLSX файла из списка товаров по категории
-     *
-     * @param products товары
-     * @param category нужная категория
+     * Создание XLSX-файла из списка товаров по категории
+     * @param products - список товаров
+     * @param category - нужная категория
      * @return Excel-документ
      */
     @Override
@@ -147,10 +149,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод поиска Product по идентификатору.
-     *
-     * @param productId идентификатор Product
-     * @return Optional<Product>
+     * Поиск товара по его идентификатору.
+     * @param productId идентификатор товара.
+     * @return Optional<Product> - товар
      */
     @Override
     public Optional<Product> findProductById(Long productId) {
@@ -158,10 +159,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод поиска Product по наименованию.
-     *
-     * @param productName наименование Product
-     * @return Optional<Product>
+     * Поиск товара по его наименованию.
+     * @param productName наименование товара.
+     * @return Optional<Product> - товар
      */
     @Override
     public Optional<Product> findProductByName(String productName) {
@@ -169,9 +169,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод получения списка всех продуктов по возрастанию рейтинга
-     *
-     * @return List<Product>
+     * Получение списка всех товаров по возрастанию рейтинга.
+     * @return List<Product> - список товаров, отсортированный по возрастанию рейтинга.
      */
     @Override
     public List<Product> findAllOrderByRatingAsc() {
@@ -179,9 +178,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод получения списка всех продуктов по убыванию рейтинга
-     *
-     * @return List<Product>
+     * Получение списка всех товаров по убыванию рейтинга.
+     * @return List<Product> - список товаров, отсортированный по убыванию рейтинга.
      */
     @Override
     public List<Product> findAllOrderByRatingDesc() {
@@ -189,15 +187,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод обновления Product.
-     *
-     * @param product экземпляр класса Product
-     * @return идентификатор обновленного Product
+     * Обновление товара.
+     * @param product экземпляр класса {@link Product}
+     * @return идентификатор обновленного товара.
      */
     @Override
     public Long saveProduct(Product product) {
+
         if (product.getRating() == null) {
             product.setRating(0d);
+        }
+        if (product.getProductPictureName().isEmpty()) {
+            product.setProductPictureName(loadPictureFrom + "00.jpg");
+        } else {
+            product.setProductPictureName(product.getProductPictureName());
         }
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
@@ -210,12 +213,13 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Метод отправляющий сообщения пользователям, которые подписаны на уведомления
-     * о снижении цены. Для зарегистрированных пользователей письма отпровляются только при получении
-     * согласия юзера на таковые рассылки (таблица Users, значение confirm_receive_email - CONFIRMED)
-     * рассылка для незарегистрированных юзеров отключена, чтобы не спамить
-     * @param product  продукт
-     * @param oldPrice старая цена продукта
-     * @param newPrice новая цена продукта
+     * о снижении цены. Для зарегистрированных пользователей письма отправляются только при получении
+     * согласия пользователя на такие рассылки (таблица Users, значение confirm_receive_email - CONFIRMED)
+     * рассылка для незарегистрированных пользователей отключена (чтобы не спамить).
+     *
+     * @param product товар
+     * @param oldPrice старая цена товара.
+     * @param newPrice новая цена товара.
      */
     public void sendNewPrice(Product product, double oldPrice, double newPrice) {
         Product productToSend = findProductById(product.getId()).get();
@@ -244,11 +248,9 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-
     /**
-     * метод удаления Product.
-     *
-     * @param idProduct идентификатор Product
+     * Удаление товара.
+     * @param idProduct идентификатор товара.
      */
     @Override
     public void deleteProduct(Long idProduct) {
@@ -258,22 +260,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод находит кол-во определенного продукта в БД Product
-     *
-     * @param idProduct идентификатор Product
-     * @return количество данного продукта в БД Product
+     * Возвращает кол-во определенного товара в БД.
+     * @param idProduct идентификатор товара.
+     * @return количество данного товара в БД.
      */
     @Override
     public int findProductAmount(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
         return product.getAmount();
-
     }
 
     /**
-     * метод восстановления удаленного Product.
-     *
-     * @param idProduct идентификатор Product
+     * Восстановление удаленного товара.
+     * @param idProduct идентификатор товара.
      */
     @Override
     public void restoreProduct(Long idProduct) {
@@ -283,13 +282,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод импортирует список товаров из сохраненного XML файла
-     * Записывает товары в БД
-     * парсит категории из файла
+     * Импорт списка товаров из XML-файла.
+     * Записывает товары в БД.
+     * Парсит категории из файла.
+     * @param fileName имя файла.
      */
     @Override
     public void importFromXMLFile(String fileName) {
-
         try {
             // Создается построитель документа
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -349,13 +348,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод импортирует список товаров из сохраненного XML файла
-     * Записывает товары в БД
-     * категорию получает из окна загрузки файла в кабинете менеджера
+     * Импорт списка товаров из XML-файла.
+     * Записывает товары в БД.
+     * Категорию получает из окна загрузки файла в кабинете менеджера.
+     * @param fileName имя файла.
+     * @param categoryId идентификатор категории товара.
      */
     @Override
     public void importFromXMLFile(String fileName, Long categoryId) {
-
         try {
             // Создается построитель документа
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -415,15 +415,14 @@ public class ProductServiceImpl implements ProductService {
 
 
     /**
-     * Метод импортирует список товаров из сохраненного CSV файла
-     * Записывает товары в БД
-     * Для правильного считывания используется кастомная MappingStrategy
-     * чтобы не перегружать Products лишними аннотациями
+     * Импорт списка товаров из CSV-файла.
+     * Записывает товары в БД.
+     * Для правильного считывания используется кастомная MappingStrategy, 
+     * чтобы не перегружать Products лишними аннотациями.
      *
-     * @param fileName имя скачанного файла
+     * @param fileName имя файла
      */
     public void importFromCSVFile(String fileName) throws FileNotFoundException {
-
         try (
                 Reader reader = Files.newBufferedReader(Paths.get("uploads/import/" + fileName));
         ) {
@@ -448,16 +447,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод импортирует список товаров из сохраненного CSV файла
-     * Записывает товары в БД
-     * Для правильного считывания используется кастомная MappingStrategy
-     * чтобы не перегружать Products лишними аннотациями
+     * Импорт списка товаров из CSV-файла.
+     * Записывает товары в БД.
+     * Для правильного считывания используется кастомная MappingStrategy, 
+     * чтобы не перегружать Products лишними аннотациями.
      *
-     * @param fileName   имя скачанного файла
-     * @param categoryId категория , полученная из окна загрузки файла в кабинете менеджера
+     * @param fileName имя файла.
+     * @param categoryId категория, полученная из окна загрузки файла в кабинете менеджера.
      */
     public void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException {
-
         try (
                 Reader reader = Files.newBufferedReader(Paths.get("uploads/import/" + fileName));
         ) {
@@ -483,19 +481,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод выбора из БД num первых продуктов
-     *
-     * @param num необходимое количество продуктов
-     * @return список из num продуктов
+     * Выбирает из БД num первых товаров.
+     * @param num необходимое количество товаров.
+     * @return список из запрошенного кол-ва товаров.
      */
     public List<Product> findNumProducts(Integer num) {
         return productRepository.findNumProducts(num);
     }
 
     /**
-     * метод получения коллекции по мониторингу изменения цены на Product.
-     *
-     * @param idProduct идентификатор Product
+     * Получение коллекции по мониторингу изменения цены на товар.
+     * @param idProduct идентификатор товара.
      * @return Map<LocalDateTime, Double> changePriceHistory
      */
     @Override
@@ -505,13 +501,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод изменения рейтинга товара
-     *
-     * @param productId id товара
-     * @param rating    оценка польователем товара
-     * @param user      пользователь оценивший товар
-     * @return double новый рейтинг
-     * @throws UserNotFoundException,ProductNotFoundException
+     * Изменение рейтинга товара.
+     * @param productId идентификатор товара.
+     * @param rating оценка пользователем товара.
+     * @param user пользователь, оценивший товар.
+     * @return double новый рейтинг.
+     * @throws UserNotFoundException, ProductNotFoundException
      */
     @Transactional
     @Override
@@ -538,11 +533,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод формирующий DTO для передачи на страницу товара
-     *
-     * @param productId
-     * @param currentUser
-     * @return Optional<ProductDto> для передачи на страницу товара
+     * метод формирующий DTO для передачи на страницу товара.
+     * @param productId идентификатор товара.
+     * @param currentUser текущий пользователь.
+     * @return Optional<ProductDto> - DTO для передачи на страницу товара.
      * @throws {@link UserNotFoundException}
      */
     @Override
@@ -560,6 +554,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
+                        presentProduct.getProductPictureName(),
                         productSet.contains(presentProduct)
                 );
                 return Optional.of(productDto);
@@ -574,6 +569,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
+                        presentProduct.getProductPictureName(),
                         false
                 );
                 return Optional.of(productDto);
@@ -584,7 +580,6 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Method that finds search string in Product name.
-     *
      * @param searchString - {@link String} search string
      * @return - list of {@link Product} with search result
      */
@@ -595,7 +590,6 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Method that finds search string in Product description.
-     *
      * @param searchString - {@link String} search string
      * @return - list of {@link Product} with search result
      */
@@ -605,12 +599,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для добавления нового email в рассылку при изменении цены на товар
-     * Помимо этого направляет юзеру письмо с просьбой подтвердить получение рассылки.
+     * Добавление нового email в рассылку при изменении цены на товар.
+     * Помимо этого направляет пользователю письмо с просьбой подтвердить получение рассылки.
      * Без этого согласия получать письма об изменении цен он не будет. Письмо отправляется при каждом нажатии
      * на "Подписаться", пока не будет получено согласие. При этом в базу для рассылки он будет заноситься.
+     *
      * @param body тело запроса
-     * @return true если удалось добавить email, false если такой email уже есть
+     * @return true если удалось добавить email, false если такой email уже есть.
      */
     @Override
     public boolean addNewSubscriber(ObjectNode body) {
@@ -637,13 +632,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для редактирования информации о товаре
-     *
-     * @param product изменённый товар
-     * @return id изменённого товара
+     * Редактирование информации о товаре.
+     * @param product изменённый товар.
+     * @return идентификатор изменённого товара.
      */
     @Override
     public Long editProduct(Product product) {
+
+        if (product.getProductPictureName().isEmpty()) {
+            product.setProductPictureName("00.jpg");
+        } else {
+            product.setProductPictureName(product.getProductPictureName());
+        }
+
         Map<LocalDateTime, Double> map = findProductById(product.getId())
                 .orElseThrow(ProductNotFoundException::new)
                 .getChangePriceHistory();
@@ -661,11 +662,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод проверяет существование товара в БД.
-     *
-     * @param productName - поле по которому проверяем товар
-     * @return false -  Если такой товар не был найден.
-     * true -   Если такой товар существует.
+     * Проверяет существование товара в БД.
+     * @param productName - название товара.
+     * @return false - если такой товар не был найден, 
+     * true - если такой товар существует.
      */
     @Override
     @Transactional
@@ -674,10 +674,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для поиска товаров, на изменения цен которых
-     * подписан авторизованный пользователь по email
-     *
-     * @return List<Product> список товаров
+     * Поиск товаров, на изменения цен которых
+     * подписан авторизованный пользователь по email.
+     * @return List<Product> список товаров.
      */
     @Override
     public List<Product> findTrackableProductsByLoggedInUser() {
@@ -685,9 +684,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для удаления подписки залогиненного пользователя на изменение цены товара
-     *
-     * @param productId уникальный идентификатор товара
+     * Удаление подписки залогиненного пользователя на изменение цены товара.
+     * @param productId уникальный идентификатор товара.
      */
     @Transactional
     @Override
