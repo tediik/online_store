@@ -48,6 +48,7 @@ import java.util.List;
 public class ManagerNewsRestController {
 
     private final NewsService newsService;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     /**
      * Mapping accepts @PathVariable {@link Long} id
@@ -64,7 +65,6 @@ public class ManagerNewsRestController {
     })
     public ResponseEntity<ResponseDto<NewsDto>> getNewsById(@PathVariable Long id) {
         News newsFromService = newsService.findById(id);
-        ModelMapper modelMapper = new ModelMapper();
         NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
@@ -85,7 +85,6 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 200, message = "News was found")
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> getAllNews() {
-        ModelMapper modelMapper = new ModelMapper();
         List<News> listNewsFromService = newsService.findAll();
         Type listType = new TypeToken<List<NewsDto>>() {}.getType();
         List<NewsDto> returnValue = modelMapper.map(listNewsFromService, listType);
@@ -105,7 +104,6 @@ public class ManagerNewsRestController {
             authorizations = { @Authorization(value="jwtToken") })
     @ApiResponse(code = 200, message = "News page was found")
     public ResponseEntity<ResponseDto<Page<NewsDto>>> getPage(@PageableDefault Pageable page, NewsFilterDto filterDto) {
-        ModelMapper modelMapper = new ModelMapper();
         Page<News> newsPageFromService = newsService.findAll(page, filterDto);
         Page<NewsDto> returnValue = modelMapper.map(newsPageFromService, Page.class); // пока не думал что сделать с сырым типом
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
@@ -124,7 +122,6 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 200, message = "Published news was found")
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> getAllPublishedNews() {
-        ModelMapper modelMapper = new ModelMapper();
         List<News> listPubNewsFromService = newsService.getAllPublished();
         Type listType = new TypeToken<List<NewsDto>>() {}.getType();
         List<NewsDto> returnValue = modelMapper.map(listPubNewsFromService, listType);
@@ -145,7 +142,6 @@ public class ManagerNewsRestController {
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> getAllUnpublishedNews() {
         List<News> listUnpubNewsFromService = newsService.getAllUnpublished();
-        ModelMapper modelMapper = new ModelMapper();
         Type listType = new TypeToken<List<NewsDto>>() {}.getType();
         List<NewsDto> returnValue = modelMapper.map(listUnpubNewsFromService, listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
@@ -164,7 +160,6 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 200, message = "archived news was found")
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> getAllArchivedNews() {
-        ModelMapper modelMapper = new ModelMapper();
         List<News> listArchNewsFromService = newsService.getAllArchivedNews();
         Type listType = new TypeToken<List<NewsDto>>() {}.getType();
         List<NewsDto> returnValue = modelMapper.map(listArchNewsFromService, listType);
@@ -184,7 +179,6 @@ public class ManagerNewsRestController {
     @ApiResponse(code = 200, message = "News  saved in db")
     public ResponseEntity<ResponseDto<NewsDto>> createNewsPost(@RequestBody News news) {
         newsService.save(news);
-        ModelMapper modelMapper = new ModelMapper();
         NewsDto returnValue = modelMapper.map(news, NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
@@ -199,9 +193,8 @@ public class ManagerNewsRestController {
     @ApiOperation(value = "Method to update news in database",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 200, message = "News updated in db")
-    public ResponseEntity<ResponseDto<NewsDto>> updateNews(@RequestBody News news) {
+    public ResponseEntity<ResponseDto<NewsDto>> updateNewsPost(@RequestBody News news) {
         News newsFromService = newsService.update(news);
-        ModelMapper modelMapper = new ModelMapper();
         NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
