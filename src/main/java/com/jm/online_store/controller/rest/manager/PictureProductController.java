@@ -44,7 +44,8 @@ public class PictureProductController {
      * @param id товара чью картинку меняем
      * @param pictureFile добавляемая картинка
      */
-    @ApiOperation(value = "Upload picture for product by id and save path of picture in db")
+    @ApiOperation(value = "Upload picture for product by id and save path of picture in db",
+            authorizations = { @Authorization(value = "jwtToken") })
     @PutMapping("/upload/picture/{id}")
     public ResponseEntity<String> editPicture(@PathVariable("id") Long id, @RequestParam("pictureFile") MultipartFile pictureFile) {
 

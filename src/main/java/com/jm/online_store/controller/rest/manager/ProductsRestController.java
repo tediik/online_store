@@ -9,6 +9,7 @@ import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -62,7 +63,8 @@ public class ProductsRestController {
      */
     @PostMapping(value = "/uploadFile/{id}")
     @ApiOperation(value = "Method handles uploading a file with products to the server. " +
-            "Calls the appropriate service method depending on the file type(CSV or XML)")
+            "Calls the appropriate service method depending on the file type(CSV or XML)",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
         try {
             byte[] bytes = file.getBytes();
@@ -85,7 +87,8 @@ public class ProductsRestController {
 
     @PostMapping(value = "/uploadFile")
     @ApiOperation(value = "Method handles uploading a file with products to the server. " +
-            "Calls the appropriate service method depending on the file type(CSV or XML)")
+            "Calls the appropriate service method depending on the file type(CSV or XML)",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws FileNotFoundException {
         try {
             byte[] bytes = file.getBytes();
@@ -122,7 +125,8 @@ public class ProductsRestController {
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/getAll")
-    @ApiOperation(value = "get all products")
+    @ApiOperation(value = "get all products",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> findAll() {
         return productService.findAll();
     }
@@ -133,7 +137,8 @@ public class ProductsRestController {
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/getNotDeletedProducts")
-    @ApiOperation(value = "get list of all undeleted products")
+    @ApiOperation(value = "get list of all undeleted products",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> getNotDeleteProducts() {
         return productService.getNotDeleteProducts();
     }
@@ -145,7 +150,8 @@ public class ProductsRestController {
      * @return Optional<Product> возвращает товар
      */
     @GetMapping(value = "/manager/{id}")
-    @ApiOperation(value = "Find product by ID")
+    @ApiOperation(value = "Find product by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public Optional<Product> findProductById(@PathVariable("id") Long productId) {
         return productService.findProductById(productId);
     }
@@ -157,7 +163,8 @@ public class ProductsRestController {
      * @return ResponseEntity<Product> Возвращает добавленный товар с кодом ответа
      */
     @PostMapping(value = "/add/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Add product")
+    @ApiOperation(value = "Add product",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 400, message = "Product has empty name or product with this name is already exists ")
     public ResponseEntity<Long> addProduct(@RequestBody Product product, @PathVariable Long id) {
 
@@ -183,7 +190,8 @@ public class ProductsRestController {
      * @return ResponseEntity<Product> Возвращает отредактированный товар с кодом ответа
      */
     @PutMapping("/edit")
-    @ApiOperation(value = "Method to edit product")
+    @ApiOperation(value = "Method to edit product",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Product> editProductM(@RequestBody Product product) {
         productService.editProduct(product);
         return ResponseEntity.ok(product);
@@ -195,7 +203,8 @@ public class ProductsRestController {
      * @param product товар для редактирования
      */
     @PutMapping("/edit/{idOld}/{idNew}")
-    @ApiOperation(value = "Method for edit product and his category")
+    @ApiOperation(value = "Method for edit product and his category",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Product> editProductAndCategory(@RequestBody Product product,
                                                           @PathVariable Long idOld,
                                                           @PathVariable Long idNew) {
@@ -215,7 +224,8 @@ public class ProductsRestController {
      * @param id идентификатор товара
      */
     @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "Delete product by ID")
+    @ApiOperation(value = "Delete product by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Long> deleteProductById(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(id);
@@ -227,7 +237,8 @@ public class ProductsRestController {
      * @param id идентификатор товара
      */
     @PostMapping(value = "/restoredeleted/{id}")
-    @ApiOperation(value = "Restore product by ID")
+    @ApiOperation(value = "Restore product by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Long> restoreProductById(@PathVariable("id") Long id) {
         productService.restoreProduct(id);
         return ResponseEntity.ok(id);
@@ -241,7 +252,8 @@ public class ProductsRestController {
      */
 
     @PutMapping(value = "/{categoryName}")
-    @ApiOperation(value = "Choosing product by ID")
+    @ApiOperation(value = "Choosing product by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> filterByCategory(@PathVariable String categoryName) {
         return productService.findProductsByCategoryName(categoryName);
     }
@@ -254,7 +266,8 @@ public class ProductsRestController {
      */
 
     @GetMapping(value = "/sort/{categoryName}/{orderSelect}")
-    @ApiOperation(value = "Choosing product by ID and sorted by ASC")
+    @ApiOperation(value = "Choosing product by ID and sorted by ASC",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> filterByCategoryAndSort(@PathVariable String categoryName,
                                                  @PathVariable String orderSelect) {
         if (categoryName.equals("default")) {
@@ -284,7 +297,8 @@ public class ProductsRestController {
      */
 
     @GetMapping(value = "/descOrder/{categoryName}")
-    @ApiOperation(value = "Choosing product by ID and sorted by DESC")
+    @ApiOperation(value = "Choosing product by ID and sorted by DESC",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> filterByCategoryInDescOrder(@PathVariable String categoryName) {
         if (categoryName.equals("default")) {
             return productService.findAllOrderByRatingDesc();
@@ -303,7 +317,8 @@ public class ProductsRestController {
      */
 
     @GetMapping("/report/{categoryName}/{number}/{orderSelect}")
-    @ApiOperation(value = "Generate file with products of the category and return it to page")
+    @ApiOperation(value = "Generate file with products of the category and return it to page",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Could not found category and/or order")
     public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@PathVariable String categoryName,
                                                                                @PathVariable Long number,
