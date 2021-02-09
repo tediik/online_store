@@ -59,7 +59,7 @@ public class Product {
     private String productType; //Что это за поле?
     @NonNull
     private boolean deleted;
-    @Column(name = "productPictureName", nullable = false)
+    @Column(name = "product_picture_name", nullable = false)
     private String productPictureName = "";
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
