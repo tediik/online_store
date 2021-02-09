@@ -4,6 +4,7 @@ import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
@@ -68,10 +69,8 @@ public class CustomerRestController {
     }
 
     /**
-     * метод обработки изменения пароля User.
-     * @param model модель для view
-     * @param oldPassword старый пароль
-     * @param newPassword новый пароль
+     * Метод обработки изменения пароля User.
+     * @param passwords старый и новый пароль из PasswordDto
      * @return страница User
      */
     @PostMapping("/change-password")
@@ -82,25 +81,14 @@ public class CustomerRestController {
             @ApiResponse(code = 400, message = "Wrong email or user with such email already exists"),
             @ApiResponse(code = 200, message = "Changes accepted"),
     })
-    public ResponseEntity changePassword(Model model,
-                                         @RequestParam String oldPassword,
-                                         @RequestParam String newPassword) {
+    public ResponseEntity<PasswordDto> changePassword(@RequestBody PasswordDto passwords) {
         Customer customer = customerService.getCurrentLoggedInUser();
-        if (customerService.findById(customer.getId()).isEmpty()) {
-            log.debug("Нет пользователя с идентификатором: {}", customer.getId());
-            return ResponseEntity.noContent().build();
+
+        if(!customerService.changePassword(customer.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
+            log.debug("Возникла ошибка при смене пароля!");
+            return ResponseEntity.badRequest().build();
         }
-        if (ValidationUtils.isNotValidEmail(customer.getEmail())) {
-            log.debug("Wrong email! Не правильно введен email");
-            return ResponseEntity.badRequest().body("notValidEmailError");
-        }
-        if (customerService.findById(customer.getId()).get().getEmail().equals(customer.getEmail())
-                && customerService.isExist(customer.getEmail())) {
-            log.debug("Пользователь с таким адресом электронной почты уже существует");
-            return ResponseEntity.badRequest().body("duplicatedEmailError");
-        }
-        if (customerService.changePassword(customer.getId(), oldPassword, newPassword))
-            log.debug("Изменения для пользователя с идентификатором: {} был успешно добавлен", customer.getId());
+        log.info("Пароль успешно изменён!");
         return ResponseEntity.ok().build();
     }
 

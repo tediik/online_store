@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,18 +51,19 @@ public class ProfileRestController {
 
     /**
      * Метод изменения пароля
-     * @param passwords принимает старый и новый пароли в виде карты
+     * @param passwords старый и новый пароль из PasswordDto
      * @return ResponseEntity<String> возвращает статус ответа
      */
     @PostMapping("/changePassword")
     @ApiOperation(value = "change password",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> passwords) {
+    public ResponseEntity<PasswordDto> changePassword(@RequestBody PasswordDto passwords) {
         User user = userService.getCurrentLoggedInUser();
-        if (!userService.changePassword(user.getId(), passwords.get("oldPassword"), passwords.get("newPassword"))) {
+        if (!userService.changePassword(user.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok().build();
+        log.debug("Пароль успешно изменён.");
+        return ResponseEntity.ok(passwords);
     }
 
     /**
