@@ -12,12 +12,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CategoriesServiceImpl implements CategoriesService {
+
+    private static final String loadPictureFrom = ".." + File.separator + "uploads" +
+            File.separator + "images" + File.separator + "products" + File.separator;
 
     private final CategoriesRepository categoriesRepository;
 
@@ -140,7 +144,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     public void saveAll(List<Categories> catList) {
         catList.stream().filter(categories -> categories.getProducts() != null)
                 .forEach(categories -> categories.getProducts().
-                        forEach(product -> product.setProductPictureName("00.jpg")));
+                        forEach(product -> product.setProductPictureName(loadPictureFrom + "00.jpg")));
         categoriesRepository.saveAll(catList);
     }
 

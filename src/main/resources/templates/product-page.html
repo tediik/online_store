@@ -83,17 +83,20 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <img id="showPictureFirstSlide"
-                                 th:src="@{/uploads/images/products/{name}(name = ${product.getProduct_picture()})}"
+                                 class="first-slide"
+                                 src="#"
                                  alt="First slide">
                         </div>
                         <div class="carousel-item">
-                            <img class="second-slide"
-                                 th:src="@{/uploads/images/products/{name}(name = ${product.getProduct_picture()})}"
+                            <img id="showPictureSecondSlide"
+                                 class="second-slide"
+                                 src="#"
                                  alt="Second slide">
                         </div>
                         <div class="carousel-item">
-                            <img class="third-slide"
-                                 th:src="@{/uploads/images/products/{name}(name = ${product.getProduct_picture()})}"
+                            <img id="showPictureThirdSlide"
+                                 class="third-slide"
+                                 src="#"
                                  alt="Third slide">
                         </div>
                     </div>

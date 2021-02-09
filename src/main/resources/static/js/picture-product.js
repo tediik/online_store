@@ -53,6 +53,9 @@ $(document).ready(function () {
         }
     }
 
+    function showPictureOnPicturePage(pictureFile){
+        $('#showPictureFirstSlide')
+    }
     /**
      * Функция добавления картинки для нового продукта
      */
@@ -72,7 +75,7 @@ $(document).ready(function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    $('#showPictureFirstSlide').attr("src", data);
+                    $('#showPictureFirstSlide').attr("src",data)
                 },
                 error: function (jqXhr, textStatus, errorThrown) {
                     console.log(errorThrown);

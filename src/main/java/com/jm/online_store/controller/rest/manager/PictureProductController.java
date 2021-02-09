@@ -34,7 +34,10 @@ public class PictureProductController {
 
     private final ProductService productService;
     private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads"
-            + File.separator + "images" + File.separator + "products";
+            + File.separator + "images" + File.separator + "products" + File.separator;
+    // Переменная для хранения пути загрузки картинки
+    // путь загрузки картинки выглядит так: ../uploads/images/products/{Имя файла картинки}
+    private static final String loadPictureFrom = ".." + File.separator + "uploads" + File.separator + "images" + File.separator + "products" + File.separator;
 
     /**
      * Метод для изменения картинки
@@ -55,7 +58,7 @@ public class PictureProductController {
                 }
                 byte[] bytes = pictureFile.getBytes();
                 Files.write(fileNameAndPath, bytes);
-                product.setProductPictureName(uniqueFilename);
+                product.setProductPictureName(loadPictureFrom + uniqueFilename);
             } catch (IOException e) {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }

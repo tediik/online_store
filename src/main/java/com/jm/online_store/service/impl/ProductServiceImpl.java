@@ -37,6 +37,7 @@ import javax.mail.MessagingException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
@@ -54,6 +55,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
+
+    private static final String loadPictureFrom = ".." + File.separator + "uploads" +
+            File.separator + "images" + File.separator + "products" + File.separator;
 
     private final ProductRepository productRepository;
     private final EvaluationService evaluationService;
@@ -196,11 +200,12 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Long saveProduct(Product product) {
+
         if (product.getRating() == null) {
             product.setRating(0d);
         }
         if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName("00.jpg");
+            product.setProductPictureName(loadPictureFrom + "00.jpg");
         } else {
             product.setProductPictureName(product.getProductPictureName());
         }
@@ -564,6 +569,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
+                        presentProduct.getProductPictureName(),
                         productSet.contains(presentProduct)
                 );
                 return Optional.of(productDto);
@@ -578,6 +584,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
+                        presentProduct.getProductPictureName(),
                         false
                 );
                 return Optional.of(productDto);
