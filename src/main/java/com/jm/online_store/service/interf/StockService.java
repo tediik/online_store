@@ -12,9 +12,9 @@ public interface StockService {
 
     Stock findStockById(Long id);
 
-    void addStock(Stock stock);
+    Stock addStock(Stock stock);
 
-    void deleteStockById(Long id);
+    boolean deleteStockById(Long id);
 
     List<Stock> findAll();
 
@@ -30,7 +30,7 @@ public interface StockService {
 
     List<Stock> findActualStocks();
 
-    void updateStock(Stock stock);
+    Stock updateStock(Stock stock);
 
     String updateStockImage(MultipartFile file);
 }

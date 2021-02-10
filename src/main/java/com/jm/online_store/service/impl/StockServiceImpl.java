@@ -67,7 +67,7 @@ public class StockServiceImpl implements StockService {
         Specification<Stock> spec = StockSpec.get(filterDto);
         Page<Stock> stockPage = stockRepository.findAll(spec, page);
         if (stockPage.isEmpty()) {
-            throw new StockNotFoundException();
+            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS_PAGE);
         }
         return stockPage;
     }
@@ -82,30 +82,35 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void addStock(Stock stock) {
-        stockRepository.save(stock);
+    public Stock addStock(Stock stock) {
+        return stockRepository.save(stock);
     }
 
     @Override
     public List<Stock> findCurrentStocks() {
         List<Stock> currentStocks = stockRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrEndDateEquals(LocalDate.now(), LocalDate.now(), null);
         if (currentStocks.isEmpty()) {
-            throw new StockNotFoundException();
+            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS);
         }
         return currentStocks;
     }
 
     @Override
     @Transactional
-    public void deleteStockById(Long id) {
+    public boolean deleteStockById(Long id) {
+        Optional<Stock> optStock = stockRepository.findById(id);
+        if (optStock.isEmpty()) {
+            return false;
+        }
         stockRepository.deleteStockById(id);
+        return true;
     }
 
     @Override
     public List<Stock> findFutureStocks() {
         List<Stock> currentStocks = stockRepository.findByStartDateAfter(LocalDate.now());
         if (currentStocks.isEmpty()) {
-            throw new StockNotFoundException();
+            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS);
         }
         return currentStocks;
     }
@@ -114,7 +119,7 @@ public class StockServiceImpl implements StockService {
     public List<Stock> findPastStocks() {
         List<Stock> currentStocks = stockRepository.findByEndDateBefore(LocalDate.now());
         if (currentStocks.isEmpty()) {
-            throw new StockNotFoundException();
+            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS);
         }
         return currentStocks;
     }
@@ -138,7 +143,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void updateStock(Stock stock) {
+    public Stock updateStock(Stock stock) {
         Stock modifiedStock = stockRepository.findById(stock.getId()).orElseThrow(StockNotFoundException::new);
         modifiedStock.setStartDate(stock.getStartDate());
         modifiedStock.setEndDate(stock.getEndDate());
@@ -146,6 +151,6 @@ public class StockServiceImpl implements StockService {
         modifiedStock.setStockText(stock.getStockText());
         modifiedStock.setStockImg(stock.getStockImg());
         modifiedStock.setPublished(stock.isPublished());
-        stockRepository.save(modifiedStock);
+        return stockRepository.save(modifiedStock);
     }
 }

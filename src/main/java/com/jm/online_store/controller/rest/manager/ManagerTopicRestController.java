@@ -1,9 +1,12 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.model.Topic;
+import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.TopicDto;
 import com.jm.online_store.service.interf.TopicService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(description = "Rest controller for read/add/update feedback topics")
 public class ManagerTopicRestController {
     private final TopicService topicService;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     /**
      * Метод для получения единственной темы
@@ -35,11 +39,10 @@ public class ManagerTopicRestController {
     @ApiOperation(value = "Get topic by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Topic was not found")
-    public ResponseEntity<Topic> readTopic(@PathVariable(name = "id") long id) {
-        if (!topicService.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(topicService.findById(id));
+    public ResponseEntity<ResponseDto<TopicDto>> readTopicById(@PathVariable(name = "id") long id) {
+        Topic topicFromService = topicService.findById(id);
+        TopicDto returnValue = modelMapper.map(topicFromService, TopicDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -53,11 +56,9 @@ public class ManagerTopicRestController {
     @ApiOperation(value = "Create new topic",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 304, message = "Topic was not modified")
-    public ResponseEntity<Topic> createTopic(@RequestBody Topic topic){
-        if (topicService.existsByTopicName(topic.getTopicName())) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-        }
-        return ResponseEntity.ok(topicService.create(topic));
+    public ResponseEntity<ResponseDto<TopicDto>> createTopic(@RequestBody Topic topic){
+        TopicDto returnValue = modelMapper.map(topicService.create(topic), TopicDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -75,13 +76,8 @@ public class ManagerTopicRestController {
             @ApiResponse(code = 304, message = "Topic was not modified"),
             @ApiResponse(code = 404, message = "Topic was not found")
     })
-    public ResponseEntity<Topic> editTopic(@PathVariable(name = "id") long id, @RequestBody Topic topic) {
-        if (topicService.existsByTopicName(topic.getTopicName())) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-        }
-        if(!topicService.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(topicService.update(topic));
+    public ResponseEntity<ResponseDto<TopicDto>> editTopic( @RequestBody Topic topic) {
+        TopicDto returnValue = modelMapper.map(topicService.update(topic), TopicDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 }

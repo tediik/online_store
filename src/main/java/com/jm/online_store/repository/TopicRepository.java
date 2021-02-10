@@ -4,6 +4,7 @@ import com.jm.online_store.model.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TopicRepository extends JpaRepository<Topic, Long> {
 
@@ -13,5 +14,5 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
     Topic findByTopicName(String topicName);
 
-    Topic findById(long id);
+    Optional<Topic> findById(long id);
 }

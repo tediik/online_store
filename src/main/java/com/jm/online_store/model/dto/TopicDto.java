@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(description =  "DTO для Stock")
-public class StockDto {
+@ApiModel(description =  "DTO для Topic")
+public class TopicDto {
     private Long id;
-    private String stockImg;
-    private String stockTitle;
-    private String stockText;
+    private String topicName;
 }
