@@ -65,7 +65,6 @@ public interface ProductService {
 
     boolean existsProductByProduct(String productName);
 
-
     List<Product> findTrackableProductsByLoggedInUser();
 
     void deleteProductFromTrackedForLoggedInUser(long productId);

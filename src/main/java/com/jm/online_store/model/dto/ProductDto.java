@@ -18,5 +18,6 @@ public class ProductDto {
     private Double rating;
     private Description descriptions;
     private String productType;
+    private String ProductPictureName;
     private boolean isFavourite;
 }

@@ -7,9 +7,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.security.core.GrantedAuthority;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Set;
 
 @Data
@@ -36,6 +34,8 @@ public class UserDto {
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setUserGender(user.getUserGender());
+        userDto.setBirthdayDate(user.getBirthdayDate());
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
