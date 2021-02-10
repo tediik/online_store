@@ -32,7 +32,7 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header th:insert="blocks/header :: header"></header>
-
+<!--Модалка для изменения и удаления продукта-->
 <div class="modal fade" id="productModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditProductModalWindows"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -65,11 +65,91 @@
             </div>
             <div class="modal-footer">
                 <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="acceptButton" type="button" class="btn" data-th-accept="modal">Save changes</button>
+                <button id="acceptChangeButton" type="button" class="btn" data-th-accept="modal">Save changes</button>
+<!--                <button id="acceptEditPictureButton" type="button" class="btn" data-th-accept="modal">Применить</button>-->
             </div>
         </div>
     </div>
 </div>
+<!--Модалка для изменения и удаления продукта-->
+<!--Модалка для изменения картинки продукта-->
+<div class="modal fade" id="productPictureModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditProductPictureModalWindows"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Edit product Picture">Edit product Picture</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="alert-modal-div-Picture"></div>
+            <div class="modal-body" id="modalBodyPicture">
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <div class="form-group" id="editPictureFormContainer">
+                            <label for="idInputPictureModal"><strong>Id</strong></label>
+                            <input type="text" class="form-control" id="idInputPictureModal" readonly>
+                            <label for="productPictureFile"><strong>Добавить картинку</strong>
+                                <img id="prodPict" src="#" alt="your image"
+                                     class="rounded-circle img-responsive mt-2 float-right"
+                                     height="82" width="82"/>
+                            </label>
+                            <input type="file" class="form-control mb-4" id="productPictureFile" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button id="DeletePictureButton" type="button" class="btn btn-danger" data-th-accept="modal">Удалить картинку</button>
+                </div>
+                <div class="acceptButtons">
+                    <button id="dismissPictureModalButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="acceptEditPictureButton" type="button" class="btn" data-th-accept="modal">Применить</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Модалка для изменения картинки продукта-->
+<!--Модалка для добавления картинки нового продукта-->
+<div class="modal fade" id="addPictureForNewProductModalWindow" tabindex="-1" role="dialog" aria-labelledby="AddProductPictureModalWindows"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Add product Picture">Add Picture</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="alert-modal-div-NewPicture"></div>
+            <div class="modal-body" id="modalBodyForNewPicture">
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <div class="form-group" id="addPictureFormContainer">
+                            <label for="idAddPictureModal"><strong>Id</strong></label>
+                            <input type="text" class="form-control" id="idAddPictureModal" readonly>
+                            <label for="addedPictureFile"><strong>Добавить картинку</strong>
+                                <img id="pictForNewProduct" src="#" alt="your image"
+                                     class="rounded-circle img-responsive mt-2 float-right"
+                                     height="82" width="82"/>
+                            </label>
+                            <input type="file" class="form-control mb-4" id="addedPictureFile" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="dismissAddPictureModalButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="acceptAddPictureButton" type="button" class="btn btn-success edit-product" data-th-accept="modal">Применить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Модалка для добавления картинки нового продукта-->
 <div class="wrapper flex-grow-1 row">
     <div class="container col-11">
         <!--Display logged in user's name-->
@@ -90,8 +170,6 @@
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Продукты</a>
                         <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add product</a>
                         <a class="nav-item nav-link" id="nav-products-categories-tab" data-toggle="tab" href="#nav-products-categories" role="tab" aria-controls="nav-products-categories" aria-selected="false">Категории товаров</a>
-
-
                     </div>
                 </nav>
                 <!-- Модалка добавления из файла -->
@@ -135,7 +213,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <form class="checkbox mt-2 mb-2 ">
@@ -178,11 +255,12 @@
                                     </div>
                                     <div id="jqxTreeHere"></div>
                                     <div class="panel-body" id="addCharacteristicForm">
-
                                     </div>
                                     <div class="mt-4">
                                         <button id="addBtn" type="button"
-                                                class=" btn btn-outline-success btn-md btn">
+                                                class=" btn btn-outline-success btn-md btn"
+                                                data-toggle="modal"
+                                                data-target="#addPictureForNewProductModalWindow">
                                             Добавить новый товар
                                         </button>
                                         <button type="button" class="btn btn-outline-primary" data-toggle='modal'
@@ -231,7 +309,7 @@
                                         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
                                             Закрыть
                                         </button>
-                                        <button type="button" class="btn btn-primary btn-sm" id="addMainCategoryButton"
+                                        <button type="button" class="btn btn-success edit-button" data-toggle="modal" id="addMainCategoryButton"
                                                 data-dismiss="modal">
                                             Добавить
                                         </button>
@@ -259,12 +337,12 @@
 
                     </div>
                     <!--                    Конец слоя отображения категорий -->
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="/static/js/products.js"></script>
 <!--MomentJs (work with dates)-->
 <script type="text/JavaScript" src="../static/js/moment.js"></script>
@@ -274,6 +352,7 @@
 <link href="/static/css/summernote.css" rel="stylesheet">
 <link href="/static/css/products.css" rel="stylesheet">
 <script src="../static/js/search-button.js"></script>
+<script src="/static/js/picture-product.js"></script>
 <script src="/static/js/date-range.js"></script>
 <script src="/static/js/jqx/jqxcore.js"></script>
 <script src="/static/js/jqx/jqxbuttons.js"></script>

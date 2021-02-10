@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.model.Product;
+import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/product")
 public class ProductsRestController {
 
+    private final ProductRepository productRepository;
     private final ProductService productService;
     private final CategoriesService categoriesService;
     private final CharacteristicService characteristicService;
@@ -123,7 +125,8 @@ public class ProductsRestController {
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/getAll")
-    @ApiOperation(value = "get all products")
+    @ApiOperation(value = "get all products",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> findAll() {
         return productService.findAll();
     }
@@ -134,7 +137,8 @@ public class ProductsRestController {
      * @return List<Product> возвращает список товаров
      */
     @GetMapping(value = "/getNotDeletedProducts")
-    @ApiOperation(value = "get list of all undeleted products")
+    @ApiOperation(value = "get list of all undeleted products",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> getNotDeleteProducts() {
         return productService.getNotDeleteProducts();
     }
@@ -146,7 +150,8 @@ public class ProductsRestController {
      * @return Optional<Product> возвращает товар
      */
     @GetMapping(value = "/manager/{id}")
-    @ApiOperation(value = "Find product by ID")
+    @ApiOperation(value = "Find product by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public Optional<Product> findProductById(@PathVariable("id") Long productId) {
         return productService.findProductById(productId);
     }
@@ -158,10 +163,10 @@ public class ProductsRestController {
      * @return ResponseEntity<Product> Возвращает добавленный товар с кодом ответа
      */
     @PostMapping(value = "/add/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "add product",
+    @ApiOperation(value = "Add product",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 400, message = "Product has empty name or product with this name is already exists ")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product, @PathVariable Long id) {
+    public ResponseEntity<Long> addProduct(@RequestBody Product product, @PathVariable Long id) {
 
         if (product.getProduct().equals("")) {
             log.debug("EmptyProductName");
@@ -175,7 +180,7 @@ public class ProductsRestController {
 
         productService.saveProduct(product);
         categoriesService.addToProduct(product, id);
-        return ResponseEntity.ok(product);
+        return ResponseEntity.ok(product.getId());
     }
 
     /**
@@ -185,7 +190,7 @@ public class ProductsRestController {
      * @return ResponseEntity<Product> Возвращает отредактированный товар с кодом ответа
      */
     @PutMapping("/edit")
-    @ApiOperation(value = "edit product",
+    @ApiOperation(value = "Method to edit product",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Product> editProductM(@RequestBody Product product) {
         productService.editProduct(product);
@@ -219,7 +224,8 @@ public class ProductsRestController {
      * @param id идентификатор товара
      */
     @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "Delete product by ID" , authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "Delete product by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Long> deleteProductById(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(id);
@@ -231,7 +237,8 @@ public class ProductsRestController {
      * @param id идентификатор товара
      */
     @PostMapping(value = "/restoredeleted/{id}")
-    @ApiOperation(value = "Restore product by ID")
+    @ApiOperation(value = "Restore product by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Long> restoreProductById(@PathVariable("id") Long id) {
         productService.restoreProduct(id);
         return ResponseEntity.ok(id);
@@ -245,7 +252,8 @@ public class ProductsRestController {
      */
 
     @PutMapping(value = "/{categoryName}")
-    @ApiOperation(value = "Choosing product by ID")
+    @ApiOperation(value = "Choosing product by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> filterByCategory(@PathVariable String categoryName) {
         return productService.findProductsByCategoryName(categoryName);
     }
@@ -258,7 +266,8 @@ public class ProductsRestController {
      */
 
     @GetMapping(value = "/sort/{categoryName}/{orderSelect}")
-    @ApiOperation(value = "Choosing product by ID and sorted by ASC")
+    @ApiOperation(value = "Choosing product by ID and sorted by ASC",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> filterByCategoryAndSort(@PathVariable String categoryName,
                                                  @PathVariable String orderSelect) {
         if (categoryName.equals("default")) {
@@ -288,7 +297,8 @@ public class ProductsRestController {
      */
 
     @GetMapping(value = "/descOrder/{categoryName}")
-    @ApiOperation(value = "Choosing product by ID and sorted by DESC")
+    @ApiOperation(value = "Choosing product by ID and sorted by DESC",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<Product> filterByCategoryInDescOrder(@PathVariable String categoryName) {
         if (categoryName.equals("default")) {
             return productService.findAllOrderByRatingDesc();
@@ -307,8 +317,9 @@ public class ProductsRestController {
      */
 
     @GetMapping("/report/{categoryName}/{number}/{orderSelect}")
+    @ApiOperation(value = "Generate file with products of the category and return it to page",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Could not found category and/or order")
-    @ApiOperation(value = "Generate file with products of the category and return it to page")
     public ResponseEntity<FileSystemResource> getProductsReportAndExportToXlsx(@PathVariable String categoryName,
                                                                                @PathVariable Long number,
                                                                                @PathVariable String orderSelect,
