@@ -4,6 +4,7 @@ import com.jm.online_store.exception.customer.CustomerServiceException;
 import com.jm.online_store.exception.newsService.NewsServiceException;
 import com.jm.online_store.exception.orderSerivce.OrderServiceException;
 import com.jm.online_store.exception.sentStockService.SentStockServiceException;
+import com.jm.online_store.exception.stockService.StockServiceException;
 import com.jm.online_store.model.dto.ResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,11 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(value = { OrderServiceException.class })
     public ResponseEntity<Object> handlerOrderServiceException(OrderServiceException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(value = { StockServiceException.class })
+    public ResponseEntity<Object> handlerStockServiceException(StockServiceException ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }

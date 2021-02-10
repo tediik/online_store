@@ -46,7 +46,7 @@ public class ManagerReportsRestController {
      */
     @GetMapping("/users/{dayOfWeek}")
     @ApiOperation(value = "Get list of users subscribing on the report by day number",
-            authorizations = { @Authorization(value="jwtToken") })
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<List<CustomerDto>>> allUsersByDayOfWeek(@PathVariable String dayOfWeek) {
         Type listType = new TypeToken<List<CustomerDto>>() {}.getType();
         List<CustomerDto> returnValue = modelMapper.map(customerService.findByDayOfWeekForStockSend(dayOfWeek), listType);

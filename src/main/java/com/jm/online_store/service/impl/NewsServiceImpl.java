@@ -59,8 +59,8 @@ public class NewsServiceImpl implements NewsService {
      * @param news Сущность News c с заполненными полями
      */
     @Override
-    public void save(News news) {
-        newsRepository.save(news);
+    public News save(News news) {
+        return newsRepository.save(news);
     }
 
     /**

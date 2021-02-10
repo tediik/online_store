@@ -102,21 +102,23 @@ public class ManagerRestController {
             news.setPostingDate(LocalDate.now());
         }
         newsService.save(news);
-        return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.NEWS_HAS_BEEN_UPDATED.name(), null));
+        return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.HAS_BEEN_UPDATED.name(), null));
     }
 
     /**
      * Метод удаляет сушность из базы данных по уникальному идентификатору
      *
      * @param id уникальный идентификатор
-     * @return возвращает идентификатор удаленной сущности клиенту
+     * @return возвращает ответ в виде строки с описанием результата
      */
     @DeleteMapping("/news/{id}/delete")
     @ApiOperation(value = "Method for delete news in database by ID",
             authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<String>> newsDelete(@PathVariable Long id) {
         newsService.deleteById(id);
-        return ResponseEntity.ok(new ResponseDto<>(true , ResponseOperation.NEWS_HAS_BEEN_DELETED.name(), null));
+        return ResponseEntity.ok(new ResponseDto<>(true ,
+                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id),
+                ResponseOperation.NO_ERROR.getMessage()));
     }
 
     /**

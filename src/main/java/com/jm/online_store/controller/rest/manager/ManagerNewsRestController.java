@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.jm.online_store.exception.NewsNotFoundException;
+import com.jm.online_store.controller.ResponseOperation;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.NewsFilterDto;
@@ -12,14 +12,11 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
-import org.bouncycastle.math.raw.Mod;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,11 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -178,8 +173,8 @@ public class ManagerNewsRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 200, message = "News  saved in db")
     public ResponseEntity<ResponseDto<NewsDto>> createNewsPost(@RequestBody News news) {
-        newsService.save(news);
-        NewsDto returnValue = modelMapper.map(news, NewsDto.class);
+        News newsFromService = newsService.save(news);
+        NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -203,7 +198,7 @@ public class ManagerNewsRestController {
      * Метод удаляет сушность из базы данных по уникальному идентификатору
      *
      * @param id уникальный идентификатор
-     * @return возвращает идентификатор удаленной сущности клиенту
+     * @return возвращает ответ в виде строки с описанием результата
      */
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Method to delete news from database",
@@ -212,7 +207,9 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 200, message = "News deleted"),
             @ApiResponse(code = 404, message = "News was not found")
     })
-    public ResponseEntity<ResponseDto<Boolean>> deleteNewsById(@PathVariable Long id) {
-        return ResponseEntity.ok(new ResponseDto<>(true, newsService.deleteById(id)));
+    public ResponseEntity<ResponseDto<String>> deleteNewsById(@PathVariable Long id) {
+        return ResponseEntity.ok(new ResponseDto<>(true,
+                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id),
+                ResponseOperation.NO_ERROR.getMessage()));
     }
 }

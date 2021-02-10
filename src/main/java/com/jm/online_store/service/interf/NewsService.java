@@ -14,7 +14,7 @@ public interface NewsService {
 
     Page<News> findAll(Pageable page, NewsFilterDto filterDto);
 
-    void save(News news);
+    News save(News news);
 
     News findById(long id);
 

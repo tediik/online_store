@@ -2,10 +2,10 @@ package com.jm.online_store.controller;
 
 public enum ResponseOperation {
 
-    NEWS_HAS_BEEN_DELETED("the news has been successfully deleted"),
-    NEWS_HAS_BEEN_SAVED("the news has been successfully saved"),
-    NEWS_HAS_BEEN_UPDATED("the news has been successfully updated");
-
+    HAS_BEEN_DELETED("%s - has been successfully deleted"),
+    HAS_BEEN_SAVED("%s - has been successfully saved"),
+    HAS_BEEN_UPDATED("%s - has been successfully updated"),
+    NO_ERROR("");
 
     private String message;
 

@@ -2,6 +2,9 @@ package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.model.Stock;
+import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.SharedStockDto;
+import com.jm.online_store.model.dto.StockDto;
 import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.service.interf.StockService;
 import io.swagger.annotations.Api;
@@ -10,6 +13,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Slf4j
@@ -32,33 +38,27 @@ import java.util.List;
 @Api(description = "Rest controller for manage of stocks from manager page")
 public class ManagerStockRestController {
     private final StockService stockService;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get stock by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Stock was not found")
-    public ResponseEntity<Stock> getStockById(@PathVariable Long id) {
-        Stock requestedStock;
-        try {
-            requestedStock = stockService.findStockById(id);
-        } catch (StockNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(requestedStock);
+    public ResponseEntity<ResponseDto<StockDto>> getStockById(@PathVariable Long id) {
+        Stock requestedStock = stockService.findStockById(id);
+        StockDto returnValue = modelMapper.map(requestedStock, StockDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
 
     @GetMapping("/allStocks")
     @ApiOperation(value = "Get list of all stocks",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Stocks was not found")
-    public ResponseEntity<List<Stock>> getAllStocks() {
-        List<Stock> allStocks;
-        try {
-            allStocks = stockService.findAll();
-        } catch (StockNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(allStocks);
+    public ResponseEntity<ResponseDto<List<StockDto>>> getAllStocks() {
+        List<Stock> listStocksFromService = stockService.findAll();
+        Type listType = new TypeToken<List<StockDto>>() {}.getType();
+        List<StockDto> returnValue = modelMapper.map(listStocksFromService, listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
