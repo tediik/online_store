@@ -289,7 +289,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-
+    @Transactional
     @Override
     public Customer changeMail(String newMail) {
         Customer customer = getCurrentLoggedInUser();
