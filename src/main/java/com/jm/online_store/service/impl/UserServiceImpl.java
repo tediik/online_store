@@ -127,10 +127,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean isExist(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isEmpty()) {
-            return false;
-        }
-        return true;
+        return user.isPresent();
     }
 
     /**
@@ -169,6 +166,12 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Метод обновляет профиль пользователя в личном кабинете.
+     * @param user сущность, полученный из контроллера.
+     * @return измененного пользователя.
+     * @throws UserNotFoundException если пользователь не найден в БД.
+     */
     @Override
     @Transactional
     public User updateUserProfile(User user) {
@@ -180,6 +183,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(updateUser);
     }
 
+    /**
+     * Обновляет данные польователя в Rest-api UserRestController.
+     * @param user сущность, полученный из контроллера.
+     * @throws UserNotFoundException       если пользователя не существует в БД.
+     * @throws EmailAlreadyExistsException если такая почта уже существует.
+     * @throws InvalidEmailException       если почта не соответствует формату.
+     */
     @Override
     @Transactional
     public void updateUserAdminPanel(@NotNull User user) {
@@ -193,7 +203,7 @@ public class UserServiceImpl implements UserService {
             editUser.setEmail(user.getEmail());
         }
         editUser.setRoles(persistRoles(user.getRoles()));
-        log.debug("editUser: {}", editUser);
+        log.debug("editUser: {}", editUser.getEmail());
         userRepository.save(editUser);
     }
 
@@ -208,8 +218,10 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Регистрация нового User.
-     * @param userForm User построенный из данных формы.
+     * Регистрация нового пользователя.
+     * Метод генерирует токен на основе email и пароля, затем отправляет письмо
+     * с ссылкой для подтверждения регистрации на указанный email.
+     * @param userForm User полученный из данных формы.
      */
     @Override
     @Transactional
@@ -228,7 +240,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод формирует токен и отправляет ссылку подтверждение на email указанный анонимом.
+     * Метод формирует токен и отправляет ссылку подтверждение на email указанный анонимом.
      * @param email указанный анонимным пользователем при покупке
      */
     @Override
@@ -248,7 +260,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Method generates confirmation token based on users ID and Email adress
+     * Method generates confirmation token based on users ID and Email address
      * Sends generated token to new users email
      */
     @Override
@@ -270,7 +282,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Устанавливет переданному пользователю новый пароль.
-     * @param user Пользователь
+     * Генерирует токен на основе id и email, затем отправляет для подтверждения на email пользователя.
+     * @param user пользователь
      * @param newPassword новый пароль
      */
     @Override
@@ -323,6 +336,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Генерирует токен для сброса пароля и отправляет на указанную пользователем почту
+     * @param user пользователь, запросивший сброс пароля.
      */
     @Override
     @Transactional
@@ -339,7 +353,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * метод проверки активации пользователя.
+     * Метод проверки активации пользователя.
      * @param token модель, построенная на основе пользователя, после подтверждения
      * @param request параметры запроса.
      * @return булево значение "true or false"
@@ -467,9 +481,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Service method to add new user from admin page
-     *
-     * @param newUser
+     * Метод позволяет добавлять нового пользователя со страницы для админа
+     * @param newUser получаем с контроллера
      */
     @Override
     @Transactional
@@ -519,9 +532,13 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод который находит User-а по его id
-     * @param id Юзера
-     * @return User
+     * Изменение пароля пользователя.
+     * @param id идентификатор пользователя.
+     * @param oldPassword старый пароль.
+     * @param newPassword новый пароль.
+     * @return false если ввести неправильно текущий пароль,
+     * возвращает false если новый пароль не соответствует требованиям,
+     * true при успешном изменении.
      */
     @Override
     @Transactional
@@ -535,6 +552,17 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         return true;
+    }
+
+    /**
+     * С помощью email находим пользователя, затем получаем его пароль.
+     * @param email - почта пользователя.
+     * @return String - пароль пользователя.
+     */
+    @Override
+    @Transactional
+    public String getPasswordByMail(String email) {
+        return findUserByEmail(email).getPassword();
     }
 
     /**
@@ -642,7 +670,6 @@ public class UserServiceImpl implements UserService {
         }
         return userRepository.findByEmail(confirmationToken.getUserEmail()).orElseThrow(UserNotFoundException::new);
     }
-
 
     /**
      * Метод, отправляющий сообщение с просьбой подтвердить подписку пользователю,
