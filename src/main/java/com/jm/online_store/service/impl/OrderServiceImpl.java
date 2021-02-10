@@ -1,6 +1,8 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.OrdersNotFoundException;
+import com.jm.online_store.exception.orderSerivce.OrderExceptionConstants;
+import com.jm.online_store.exception.orderSerivce.OrderServiceException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.SalesReportDto;
@@ -95,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
     public List<SalesReportDto> findAllSalesBetween(LocalDate startDate, LocalDate endDate) {
         List<Order> completedOrders = orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, startDate.atStartOfDay(), endDate.atTime(23,59,59));
         if (completedOrders.isEmpty()) {
-            throw new OrdersNotFoundException("There are no completed orders in custom date range");
+            throw new OrderServiceException(OrderExceptionConstants.NO_ORDERS_IN_CUSTOM_DATE_RANGE);
         }
         List<SalesReportDto> salesList = new ArrayList<>();
         completedOrders.forEach(order -> salesList.add(SalesReportDto.orderToSalesReportDto(order)));

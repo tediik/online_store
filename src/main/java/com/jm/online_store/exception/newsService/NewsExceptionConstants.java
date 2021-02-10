@@ -1,6 +1,6 @@
-package com.jm.online_store.exception.news;
+package com.jm.online_store.exception.newsService;
 
-public class ExceptionNewsConstants {
+public class NewsExceptionConstants {
 
     public final static String NO_NEWS_WITH_SUCH_ID = "There are no news with such id : %s ";
     public final static String NO_NEWS_YET = "There are no news yet";

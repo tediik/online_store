@@ -1,7 +1,9 @@
 package com.jm.online_store.controller;
 
 import com.jm.online_store.exception.customer.CustomerServiceException;
-import com.jm.online_store.exception.news.NewsServiceException;
+import com.jm.online_store.exception.newsService.NewsServiceException;
+import com.jm.online_store.exception.orderSerivce.OrderServiceException;
+import com.jm.online_store.exception.sentStockService.SentStockServiceException;
 import com.jm.online_store.model.dto.ResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,11 +18,24 @@ public class ExceptionsHandler {
     @ExceptionHandler(value = { NewsServiceException.class })
     public ResponseEntity<Object> handlerUserServiceException(NewsServiceException ex) {
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = { CustomerServiceException.class })
-    public ResponseEntity<Object> handlerCustomerServiceException(CustomerServiceException ex) {
+    public ResponseEntity<Object> handlerCustomerServiceException(CustomerServiceException ex, HttpStatus httpStatus) {
+
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), httpStatus);
+    }
+
+    @ExceptionHandler(value = { SentStockServiceException.class })
+    public ResponseEntity<Object> handlerSentStockServiceException(SentStockServiceException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = { OrderServiceException.class })
+    public ResponseEntity<Object> handlerOrderServiceException(OrderServiceException ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }

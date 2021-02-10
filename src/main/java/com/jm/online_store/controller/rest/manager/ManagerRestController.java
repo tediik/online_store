@@ -1,7 +1,10 @@
 package com.jm.online_store.controller.rest.manager;
 
+import com.jm.online_store.controller.ResponseOperation;
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.dto.NewsDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -16,6 +19,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -44,9 +50,10 @@ import java.util.List;
 @Api(description = "Rest controller for manage and publish news from manager page")
 public class ManagerRestController {
 
+
     private final NewsService newsService;
     private final OrderService orderService;
-
+    private final ModelMapper modelMapper = new ModelMapper();
     /**
      * Метод возвращающий всписок всех новостей
      *
@@ -55,8 +62,10 @@ public class ManagerRestController {
     @GetMapping("/news")
     @ApiOperation(value = "Get list of all news",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<News>> allNews() {
-        return ResponseEntity.ok().body(newsService.findAll());
+    public ResponseEntity<ResponseDto<List<NewsDto>>> getAllNews() {
+        Type listType = new TypeToken<List<NewsDto>>() {}.getType();
+        List<NewsDto> returnValue = modelMapper.map(newsService.findAll(), listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -68,13 +77,14 @@ public class ManagerRestController {
     @PostMapping("/news/post")
     @ApiOperation(value = "Method for save news in database",
             authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<News> newsPost(@RequestBody News news) {
+    public ResponseEntity<ResponseDto<NewsDto>> newsPost(@RequestBody News news) { //changed
 
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
             news.setPostingDate(LocalDate.now());
         }
         newsService.save(news);
-        return ResponseEntity.ok().body(news);
+        NewsDto returnValue = modelMapper.map(news, NewsDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue, null));
     }
 
     /**
@@ -86,13 +96,13 @@ public class ManagerRestController {
     @PutMapping("/news/update")
     @ApiOperation(value = "Method for update news in database",
             authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<News> newsUpdate(@RequestBody News news) {
+    public ResponseEntity<ResponseDto<String>> newsUpdate(@RequestBody News news) {
 
         if (news.getPostingDate() == null || news.getPostingDate().isBefore(LocalDate.now())) {
             news.setPostingDate(LocalDate.now());
         }
         newsService.save(news);
-        return ResponseEntity.ok().body(news);
+        return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.NEWS_HAS_BEEN_UPDATED.name(), null));
     }
 
     /**
@@ -104,9 +114,9 @@ public class ManagerRestController {
     @DeleteMapping("/news/{id}/delete")
     @ApiOperation(value = "Method for delete news in database by ID",
             authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<Long> newsDelete(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<String>> newsDelete(@PathVariable Long id) {
         newsService.deleteById(id);
-        return ResponseEntity.ok().body(id);
+        return ResponseEntity.ok(new ResponseDto<>(true , ResponseOperation.NEWS_HAS_BEEN_DELETED.name(), null));
     }
 
     /**
@@ -120,14 +130,11 @@ public class ManagerRestController {
     @ApiOperation(value = "Get mapping for get request to response with sales during the custom date range",
             authorizations = { @Authorization(value="jwtToken") })
     @ApiResponse(code = 404, message = "Sales was not found")
-    public ResponseEntity<List<SalesReportDto>> getSalesForCustomRange(@RequestParam String stringStartDate, @RequestParam String stringEndDate) {
+    public ResponseEntity<ResponseDto<List<SalesReportDto>>> getSalesForCustomRange(@RequestParam String stringStartDate, @RequestParam String stringEndDate) {
         LocalDate startDate = LocalDate.parse(stringStartDate);
         LocalDate endDate = LocalDate.parse(stringEndDate);
-        try {
-            return ResponseEntity.ok(orderService.findAllSalesBetween(startDate, endDate));
-        } catch (OrdersNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+
+        return ResponseEntity.ok(new ResponseDto<>(true, orderService.findAllSalesBetween(startDate, endDate)));
     }
 
     /**
