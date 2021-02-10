@@ -4,6 +4,8 @@ import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
@@ -53,17 +55,17 @@ public class CustomerRestController {
             @ApiResponse(code = 400, message = "duplicatedEmailError or notValidEmailError"),
             @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
     })
-    public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
+    public ResponseEntity<ResponseDto<String>> changeMailReq(@RequestParam String newMail) {
         Customer customer = customerService.getCurrentLoggedInUser();
         if (customerService.isExist(newMail)) {
             log.debug("Попытка ввести дублирующийся email: " + newMail);
-            return new ResponseEntity("duplicatedEmailError", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDto<>(false, null, "Duplicated email error"), HttpStatus.BAD_REQUEST);
         }
         if (ValidationUtils.isNotValidEmail(newMail)) {
-            return new ResponseEntity("notValidEmailError", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDto<>(false, null, "Not valid email error"), HttpStatus.BAD_REQUEST);
         } else {
             userService.changeUsersMail(customer, newMail);
-            return ResponseEntity.ok("Email будет изменен после подтверждения.");
+            return new ResponseEntity<>(new ResponseDto<>(true, "Email будет изменен после подтверждения.", null), HttpStatus.OK);
         }
     }
 
@@ -82,26 +84,26 @@ public class CustomerRestController {
             @ApiResponse(code = 400, message = "Wrong email or user with such email already exists"),
             @ApiResponse(code = 200, message = "Changes accepted"),
     })
-    public ResponseEntity changePassword(Model model,
+    public ResponseEntity<ResponseDto<String>> changePassword(Model model,
                                          @RequestParam String oldPassword,
                                          @RequestParam String newPassword) {
         Customer customer = customerService.getCurrentLoggedInUser();
         if (customerService.findById(customer.getId()).isEmpty()) {
             log.debug("Нет пользователя с идентификатором: {}", customer.getId());
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(new ResponseDto<>(false, null, "User with id " + customer.getId() + " not found"), HttpStatus.NOT_FOUND);
         }
         if (ValidationUtils.isNotValidEmail(customer.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
-            return ResponseEntity.badRequest().body("notValidEmailError");
+            return new ResponseEntity<>(new ResponseDto<>(false, null, "Not valid email error"), HttpStatus.BAD_REQUEST);
         }
         if (customerService.findById(customer.getId()).get().getEmail().equals(customer.getEmail())
                 && customerService.isExist(customer.getEmail())) {
             log.debug("Пользователь с таким адресом электронной почты уже существует");
-            return ResponseEntity.badRequest().body("duplicatedEmailError");
+            return new ResponseEntity<>(new ResponseDto<>(false, null, "Duplicated email error"), HttpStatus.BAD_REQUEST);
         }
         if (customerService.changePassword(customer.getId(), oldPassword, newPassword))
-            log.debug("Изменения для пользователя с идентификатором: {} был успешно добавлен", customer.getId());
-        return ResponseEntity.ok().build();
+            log.debug("Изменения для пользователя с идентификатором: {} были успешно добавлены", customer.getId());
+        return new ResponseEntity<>(new ResponseDto<>(true, "Изменения для пользователя с идентификатором: " + customer.getId() + " были успешно добавлены. "), HttpStatus.OK);
     }
 
     /**
@@ -112,16 +114,17 @@ public class CustomerRestController {
     @DeleteMapping("/deleteProfile/{id}")
     @ApiOperation(value = "Changes Users status, when Delete button clicked",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<User> blockProfile(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> blockProfile(@PathVariable Long id) {
         try {
             customerService.changeCustomerStatusToLocked(id);
         }
         catch (IllegalArgumentException e) {
             log.debug("There is no user with id: {}", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new ResponseDto<>(false, "User with id " + id + " not found"), HttpStatus.NOT_FOUND);
         }
+        User user = userService.findById(id).get();
         log.debug("User with id: {}, was blocked", id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, UserDto.fromUser(user)), HttpStatus.OK);
     }
 
     /**
@@ -133,10 +136,11 @@ public class CustomerRestController {
     @DeleteMapping("/deleteProfileUnrecoverable/{id}")
     @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> deleteProfileUnrecoverable(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> deleteProfileUnrecoverable(@PathVariable Long id) {
+        User userToDelete = userService.findUserById(id);
         customerService.changeCustomerProfileToDeletedProfileByID(id);
         customerService.deleteByID(id);
-        return ResponseEntity.ok("Delete profile");
+        return new ResponseEntity<>(new ResponseDto<>(true, UserDto.fromUser(userToDelete)), HttpStatus.OK);
     }
 
     /**
@@ -150,20 +154,14 @@ public class CustomerRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "User with this id not found"),
     })
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> getUserById(@PathVariable("id") Long id) {
         if (userService.findById(id).isEmpty()) {
             log.debug("User with id: {} not found", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new ResponseDto<>(false, "User with id " + id + " not found"), HttpStatus.NOT_FOUND);
         }
         log.debug("User with id: {} found", id);
         User user = userService.findUserById(id);
-        if (user.getFirstName() == null) {
-            user.setFirstName("");
-        }
-        if (user.getLastName() == null) {
-            user.setLastName("");
-        }
-        return ResponseEntity.ok(user);
+        return new ResponseEntity<>(new ResponseDto<>(true, UserDto.fromUser(user)), HttpStatus.OK);
     }
 
     /**
@@ -178,7 +176,7 @@ public class CustomerRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<String>> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request) {
         if (userService.getCurrentLoggedInUser() != null) {
             LocalDateTime localDateTime = LocalDateTime.now();
             HttpSession session = request.getSession();
@@ -187,9 +185,9 @@ public class CustomerRestController {
             if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
                 recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId, localDateTime);
             } else recentlyViewedProductsService.updateRecentlyViewedProducts(productId, userId, localDateTime);
-            return ResponseEntity.ok("Product is saved in session");
+            return new ResponseEntity<>(new ResponseDto<>(true, "Product is saved in session"), HttpStatus.OK);
         } else {
-            return ResponseEntity.ok("User is not authenticated. Product is not saved to session");
+            return new ResponseEntity<>(new ResponseDto<>(true, "User is not authenticated. Product is not saved to session"), HttpStatus.OK);
         }
     }
 

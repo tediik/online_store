@@ -115,7 +115,7 @@ public class AdminRestController {
             userService.deleteByID(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
             log.debug("There is no user with id: {}", id);
-            return new ResponseEntity<>(new ResponseDto<>(false, "User with id" + id + "not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponseDto<>(false, "User with id " + id + " not found"), HttpStatus.NOT_FOUND);
         }
         log.debug("User with id: {}, was deleted successfully", id);
         return new ResponseEntity<>(new ResponseDto<>(true, UserDto.fromUser(userToDelete)), HttpStatus.OK);
