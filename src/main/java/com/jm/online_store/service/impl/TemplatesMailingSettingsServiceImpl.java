@@ -16,8 +16,8 @@ public class TemplatesMailingSettingsServiceImpl implements TemplatesMailingSett
     private final TemplatesMailingSettingsRepository templatesMailingSettingsRepository;
 
     /**
-     * Метод добавляет сущность TemplatesMailingSettings в базу данных
-     * @param setting - сущность TemplatesMailingSettings
+     * The method adds the TemplatesMailingSettings entity to the database
+     * @param setting - entity TemplatesMailingSettings
      * @return TemplatesMailingSettings
      */
     @Override
@@ -27,13 +27,15 @@ public class TemplatesMailingSettingsServiceImpl implements TemplatesMailingSett
 
     /**
      * method gets row in TemplatesMailingSettings table.
-     * если такая строка отсутствует то кидает TemplatesMailingSettingsNotFoundException}
-     * @param name - settings to be updated
+     * if there is no such line, it throws
+     * TemplatesMailingSettingsNotFoundException
+     * @param name - setting name
      * @return TemplatesMailingSettings
      */
     @Override
     public TemplatesMailingSettings getSettingByName(String name) {
-        return templatesMailingSettingsRepository.findBySettingName(name).orElseThrow(TemplatesMailingSettingsNotFoundException::new);
+        return templatesMailingSettingsRepository.findBySettingName(name)
+                .orElseThrow(() -> new TemplatesMailingSettingsNotFoundException(name));
     }
 
     /**
@@ -41,15 +43,13 @@ public class TemplatesMailingSettingsServiceImpl implements TemplatesMailingSett
      * if repository returns int 1, that means that 1 row was updated.
      * if it will be 0 that means that there is no row with such name
      * and method throws {@link TemplatesMailingSettingsNotFoundException}
-     *
      * @param settings - settings to be updated
      */
     @Transactional
     @Override
     public void updateTextValue(TemplatesMailingSettings settings) {
-        if (templatesMailingSettingsRepository.updateTextValue(settings.getTextValue(), settings.getSettingName()) != 1) {
-            throw new TemplatesMailingSettingsNotFoundException();
+        if (templatesMailingSettingsRepository.updateTextValue(settings.getTextValue(), settings.getSettingName()) != true) {
+            throw new TemplatesMailingSettingsNotFoundException("Template" + settings.getSettingName() + "not found");
         }
     }
-
 }

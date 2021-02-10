@@ -7,6 +7,9 @@ import com.jm.online_store.model.TemplatesMailingSettings;
 import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,7 +30,6 @@ public class TemplatesMailingSettingsRestController {
     /**
      * Exception handler method that catches all {@link TemplatesMailingSettingsNotFoundException}
      * in current class and return ResponseEntity with not found status
-     *
      * @return - {@link ResponseEntity <String>}
      */
     @ExceptionHandler(TemplatesMailingSettingsNotFoundException.class)
@@ -35,15 +37,35 @@ public class TemplatesMailingSettingsRestController {
         return ResponseEntity.notFound().build();
     }
 
+    /**
+     * updates TemplatesMailingSettings
+     * @param templatesMailingSettings
+     * @return ResponseEntity<TemplatesMailingSettings>
+     */
     @PutMapping
-    @ApiOperation(value = "updates TemplatesMailing settings")
+    @ApiOperation(value = "updates TemplatesMailing settings",
+            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 204, message = "TemplatesMailingSetting not update"),
+            @ApiResponse(code = 200, message = "TemplatesMailingSetting was update")
+    })
     public ResponseEntity<TemplatesMailingSettings> updateSetting(@RequestBody TemplatesMailingSettings templatesMailingSettings) {
         templatesMailingSettingsService.updateTextValue(templatesMailingSettings);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(templatesMailingSettings);
     }
 
+    /**
+     * Get TemplatesMailingSetting by name
+     * @param settingName
+     * @return ResponseEntity<TemplatesMailingSettings>
+     */
     @GetMapping("/{settingName}")
-    @ApiOperation(value = "get TemplatesMailingSetting by name")
+    @ApiOperation(value = "get TemplatesMailingSetting by name",
+            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 204, message = "TemplatesMailingSetting not found"),
+            @ApiResponse(code = 200, message = "TemplatesMailingSetting was found")
+    })
     public ResponseEntity<TemplatesMailingSettings> getTemplatesMailingSettings(@PathVariable String settingName) {
         return ResponseEntity.ok(templatesMailingSettingsService.getSettingByName(settingName));
     }

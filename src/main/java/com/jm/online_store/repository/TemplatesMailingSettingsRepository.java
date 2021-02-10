@@ -12,7 +12,7 @@ public interface TemplatesMailingSettingsRepository extends JpaRepository<Templa
 
     Optional<TemplatesMailingSettings> findBySettingName(String settingName);
 
-    @Modifying
+    //@Modifying
     @Query("UPDATE TemplatesMailingSettings set textValue = :textValue WHERE settingName = :settingName")
-    int updateTextValue(@Param("textValue") String textValue, @Param("settingName") String settingName);
+    boolean updateTextValue(@Param("textValue") String textValue, @Param("settingName") String settingName);
 }

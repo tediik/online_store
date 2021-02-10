@@ -21,7 +21,8 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Data
 @Builder
-@ApiModel(description =  "Сущность TemplatesMailingSettings для настройки задач")
+@ApiModel(description =  "Сущность TemplatesMailingSettings, " +
+        "где хранятся название шаблона рассылки и сам текст шаблона рассылки")
 public class TemplatesMailingSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
