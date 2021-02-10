@@ -20,14 +20,12 @@
         </div>
         <div class="col-sm-8 text-left">
             <h1 class="text-center">Новости</h1>
-            <div th:each="news : ${news}" class="alert alert-info mt-2">
-                <h3 th:text="${news.title}"></h3>
-                <p th:text="${news.anons}"></p>
-                <a th:href="'news/' + ${news.id}" class="btn btn-warning">Детальнее</a>
+            <div id="allNewsList">
             </div>
         </div>
     </div>
 </div>
+<script src="../static/js/news.js"></script>
 <script src="../static/js/search-button.js"></script>
 <script src="../static/js/registration.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
