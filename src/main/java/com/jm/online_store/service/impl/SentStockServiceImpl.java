@@ -2,10 +2,10 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.SentStockNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.sentStockService.SentStockServiceException;
+import com.jm.online_store.exception.sentStockService.SentStocksExceptionConstants;
 import com.jm.online_store.model.SentStock;
-import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.repository.SentStockRepository;
-import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
@@ -46,7 +46,7 @@ public class SentStockServiceImpl implements SentStockService {
                 begin.minusDays(1L),
                 end.plusDays(1L));
         if(sentStocks.isEmpty()) {
-            throw new SentStockNotFoundException();
+            throw new SentStockServiceException(SentStocksExceptionConstants.SENT_STOCK_NOT_FOUND);
         }
         return sentStocks;
     }
