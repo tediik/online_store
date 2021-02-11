@@ -1,7 +1,9 @@
 package com.jm.online_store.controller.rest.manager;
 
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +49,7 @@ public class PictureProductController {
     @ApiOperation(value = "Upload picture for product by id and save path of picture in db",
             authorizations = { @Authorization(value = "jwtToken") })
     @PutMapping("/upload/picture/{id}")
-    public ResponseEntity<String> editPicture(@PathVariable("id") Long id, @RequestParam("pictureFile") MultipartFile pictureFile) {
+    public ResponseEntity<ResponseDto<String>> editPicture(@PathVariable("id") Long id, @RequestParam("pictureFile") MultipartFile pictureFile) {
 
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         String uniqueFilename = StringUtils.cleanPath(UUID.randomUUID() + "." + pictureFile.getOriginalFilename());
@@ -65,8 +67,8 @@ public class PictureProductController {
             }
         }
         productService.editProduct(product);
-        return ResponseEntity.ok("uploads" + File.separator + "images"
-                + File.separator + "products" + uniqueFilename);
+        return ResponseEntity.ok(new ResponseDto<>(true, "uploads" + File.separator + "images"
+                + File.separator + "products" + uniqueFilename));
     }
 
     /**
@@ -76,7 +78,7 @@ public class PictureProductController {
     @ApiOperation(value = "Delete picture product by id from db and Directory",
             authorizations = { @Authorization(value = "jwtToken") })
     @DeleteMapping("/picture/delete/{id}")
-    public void deletePicture(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseDto<String>> deletePicture(@PathVariable("id") Long id) {
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         Path fileNameAndPath = Paths.get(uploadDirectory, product.getProductPictureName());
         try {
@@ -88,5 +90,7 @@ public class PictureProductController {
         }
         product.setProductPictureName("00.jpg");
         productService.editProduct(product);
+        return ResponseEntity.ok(new ResponseDto<>(true,
+                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id)));
     }
 }

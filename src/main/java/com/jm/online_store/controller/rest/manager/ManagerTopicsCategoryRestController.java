@@ -1,5 +1,7 @@
 package com.jm.online_store.controller.rest.manager;
 
+import com.jm.online_store.exception.topicsCategoryService.TopicsCategoryExceptionConstants;
+import com.jm.online_store.exception.topicsCategoryService.TopicsCategoryServiceException;
 import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.StockDto;
@@ -76,11 +78,9 @@ public class ManagerTopicsCategoryRestController {
     @ApiOperation(value = "Add a new category",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 304, message = "Category with this name is already exists")
-    public ResponseEntity<TopicsCategory> createTopicsCategory(@RequestBody TopicsCategory topicsCategory) {
-        if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-        }
-        return ResponseEntity.ok(topicsCategoryService.create(topicsCategory));
+    public ResponseEntity<ResponseDto<TopicsCategoryDto>> createTopicsCategory(@RequestBody TopicsCategory topicsCategory) {
+        TopicsCategoryDto returnValue = modelMapper.map(topicsCategoryService.create(topicsCategory), TopicsCategoryDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -98,14 +98,16 @@ public class ManagerTopicsCategoryRestController {
             @ApiResponse(code = 304, message = "Category  name is not found"),
             @ApiResponse(code = 404, message = "Category  ID  is not found")
     })
-    public ResponseEntity<TopicsCategory> updateTopicsCategory(@PathVariable(name = "id") long id, @RequestBody TopicsCategory topicsCategory) {
-        if (topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName())) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-        }
+    public ResponseEntity<ResponseDto<TopicsCategoryDto>> updateTopicsCategory(@PathVariable(name = "id") long id,
+                                                               @RequestBody TopicsCategory topicsCategory) {
+        if (!topicsCategoryService.existsByCategoryName(topicsCategory.getCategoryName()))
+            throw new TopicsCategoryServiceException(TopicsCategoryExceptionConstants.TOPIC_CATEGORY_NOT_FOUND);
+
         if (!topicsCategoryService.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            throw new TopicsCategoryServiceException(TopicsCategoryExceptionConstants.TOPIC_CATEGORY_NOT_FOUND);
         }
-        return ResponseEntity.ok(topicsCategoryService.update(topicsCategory));
+        TopicsCategoryDto returnValue = modelMapper.map(topicsCategoryService.update(topicsCategory), TopicsCategoryDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
 
     /**
@@ -119,11 +121,13 @@ public class ManagerTopicsCategoryRestController {
     @ApiOperation(value = "Mark category as archived by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Category  ID  is not found")
-    public ResponseEntity<TopicsCategory> archiveTopicsCategory(@PathVariable(name = "id") long id) {
+    public ResponseEntity<ResponseDto<TopicsCategoryDto>> archiveTopicsCategory(@PathVariable(name = "id") long id) {
         if (!topicsCategoryService.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new TopicsCategoryServiceException(TopicsCategoryExceptionConstants.TOPIC_CATEGORY_NOT_FOUND);
         }
-        return ResponseEntity.ok(topicsCategoryService.archive(topicsCategoryService.findById(id)));
+        TopicsCategoryDto returnValue = modelMapper
+                .map(topicsCategoryService.archive(topicsCategoryService.findById(id)), TopicsCategoryDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -137,10 +141,10 @@ public class ManagerTopicsCategoryRestController {
     @ApiOperation(value = "Mark category as unarchived by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Category  ID  is not found")
-    public ResponseEntity<TopicsCategory> unarchiveTopicsCategory(@PathVariable(name = "id") long id) {
+    public ResponseEntity<ResponseDto<TopicsCategory>> unarchiveTopicsCategory(@PathVariable(name = "id") long id) {
         if (!topicsCategoryService.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new TopicsCategoryServiceException(TopicsCategoryExceptionConstants.TOPIC_CATEGORY_NOT_FOUND);
         }
-        return ResponseEntity.ok(topicsCategoryService.unarchive(topicsCategoryService.findById(id)));
+        return ResponseEntity.ok(new ResponseDto<>(true , topicsCategoryService.unarchive(topicsCategoryService.findById(id))));
     }
 }

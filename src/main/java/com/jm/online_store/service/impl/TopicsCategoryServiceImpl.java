@@ -22,6 +22,8 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
     @Override
     @Transactional
     public TopicsCategory create(TopicsCategory topicsCategory) {
+        if (topicsCategoryRepository.existsByCategoryName(topicsCategory.getCategoryName()))
+            throw new TopicsCategoryServiceException(TopicsCategoryExceptionConstants.TOPIC_CATEGORY_ALREADY_EXIST);
         return topicsCategoryRepository.saveAndFlush(topicsCategory);
     }
 
@@ -60,6 +62,7 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
 
     @Override
     public boolean existsByCategoryName(String categoryName) {
+
         return topicsCategoryRepository.existsByCategoryName(categoryName);
     }
 
