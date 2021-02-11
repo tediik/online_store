@@ -80,13 +80,13 @@ public class PictureProductController {
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         Path fileNameAndPath = Paths.get(uploadDirectory, product.getProductPictureName());
         try {
-            if (!fileNameAndPath.getFileName().toString().equals("00.jpg")) {
+            if (!fileNameAndPath.getFileName().toString().equals(loadPictureFrom + "defaultPictureProduct.jpg")) {
                 Files.delete(fileNameAndPath);
             }
         } catch (IOException e) {
             log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
-        product.setProductPictureName("00.jpg");
+        product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg");
         productService.editProduct(product);
     }
 }

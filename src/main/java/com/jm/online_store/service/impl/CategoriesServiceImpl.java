@@ -144,7 +144,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     public void saveAll(List<Categories> catList) {
         catList.stream().filter(categories -> categories.getProducts() != null)
                 .forEach(categories -> categories.getProducts().
-                        forEach(product -> product.setProductPictureName(loadPictureFrom + "00.jpg")));
+                        forEach(product -> product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg")));
         categoriesRepository.saveAll(catList);
     }
 
