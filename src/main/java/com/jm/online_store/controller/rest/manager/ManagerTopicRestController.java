@@ -69,7 +69,7 @@ public class ManagerTopicRestController {
      * @return ResponseEntity<Topic> возвращает измененную тему со статусом ответа,
      * если тема с таким id не существует - только статус
      */
-    @PutMapping("/{id}")
+    @PutMapping
     @ApiOperation(value = "Update topic by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {

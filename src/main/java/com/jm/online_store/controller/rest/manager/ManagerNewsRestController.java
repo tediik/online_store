@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.jm.online_store.controller.ResponseOperation;
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.NewsFilterDto;

@@ -1,10 +1,8 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.jm.online_store.controller.ResponseOperation;
-import com.jm.online_store.exception.StockNotFoundException;
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.ResponseDto;
-import com.jm.online_store.model.dto.SharedStockDto;
 import com.jm.online_store.model.dto.StockDto;
 import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.service.interf.StockService;

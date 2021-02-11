@@ -11,15 +11,37 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
 
 @ControllerAdvice
 public class ExceptionsHandler {
 
+    private static HttpStatus detectCodeStatus(String message) {
+        String code = message.replaceAll("[^0-9]", "");
+        HttpStatus httpStatus;
+        switch (code) {
+            case ("404"):
+                httpStatus = HttpStatus.NOT_FOUND;
+                break;
+            case ("400"):
+                httpStatus = HttpStatus.FORBIDDEN;
+                break;
+            case ("406") :
+                httpStatus = HttpStatus.NOT_ACCEPTABLE;
+                break;
+            default:
+                httpStatus = HttpStatus.BAD_REQUEST;
+        }
+        return httpStatus;
+    }
+
     @ExceptionHandler(value = { NewsServiceException.class })
-    public ResponseEntity<Object> handlerUserServiceException(NewsServiceException ex) {
+    public ResponseEntity<Object> handlerUserServiceException(NewsServiceException ex ) {
+
+
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), detectCodeStatus(ex.getMessage()));
     }
 
     @ExceptionHandler(value = { CustomerServiceException.class })
@@ -45,4 +67,7 @@ public class ExceptionsHandler {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
+
+
+
 }

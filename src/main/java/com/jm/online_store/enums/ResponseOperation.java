@@ -1,4 +1,4 @@
-package com.jm.online_store.controller;
+package com.jm.online_store.enums;
 
 public enum ResponseOperation {
 

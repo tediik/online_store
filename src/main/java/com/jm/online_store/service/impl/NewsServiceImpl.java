@@ -35,7 +35,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> findAll() {
         List<News> allNews = newsRepository.findAll();
-        if (allNews.isEmpty()) {
+        if (!allNews.isEmpty()) {
             throw new NewsServiceException(NewsExceptionConstants.NO_NEWS_YET);
         }
         return allNews;
