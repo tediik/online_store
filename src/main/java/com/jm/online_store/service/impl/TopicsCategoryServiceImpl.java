@@ -1,5 +1,7 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.topicsCategoryService.TopicsCategoryExceptionConstants;
+import com.jm.online_store.exception.topicsCategoryService.TopicsCategoryServiceException;
 import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.repository.TopicsCategoryRepository;
 import com.jm.online_store.service.interf.TopicsCategoryService;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +27,10 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
 
     @Override
     public List<TopicsCategory> findAll() {
+        List<TopicsCategory> optTopicsCategory = topicsCategoryRepository.findAll();
+        if (optTopicsCategory.isEmpty()) {
+            throw new TopicsCategoryServiceException(TopicsCategoryExceptionConstants.NOT_FOUND_TOPIC_CATEGORIES);
+        }
         return topicsCategoryRepository.findAll();
     }
 
@@ -34,7 +41,11 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
 
     @Override
     public TopicsCategory findById(Long id) {
-        return topicsCategoryRepository.findById(id).get();
+        Optional <TopicsCategory> optional = topicsCategoryRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new TopicsCategoryServiceException(TopicsCategoryExceptionConstants.NOT_FOUND_TOPIC_CATEGORY);
+        }
+        return optional.get();
     }
 
     @Override

@@ -1,9 +1,14 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.model.TopicsCategory;
+import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.StockDto;
+import com.jm.online_store.model.dto.TopicsCategoryDto;
 import com.jm.online_store.service.interf.TopicsCategoryService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -25,7 +31,8 @@ import java.util.List;
 @Api(description = "Rest controller for read/add/update categories for feedback topics")
 public class ManagerTopicsCategoryRestController {
     private final TopicsCategoryService topicsCategoryService;
-
+    private final ModelMapper modelMapper = new ModelMapper();
+    private final Type listType = new TypeToken<List<TopicsCategoryDto>>() {}.getType();
     /**
      * Метод для получения всех категорий тем
      *
@@ -36,12 +43,10 @@ public class ManagerTopicsCategoryRestController {
     @ApiOperation(value = "Get list of all categories",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 204, message = "Category with no content")
-    public ResponseEntity<List<TopicsCategory>> readAllTopicsCategories() {
+    public ResponseEntity<ResponseDto<List<TopicsCategoryDto>>> readAllTopicsCategories() {
         List<TopicsCategory> topicsCategories = topicsCategoryService.findAll();
-        if (topicsCategories.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(topicsCategories);
+        List<TopicsCategoryDto> returnValue = modelMapper.map(topicsCategories, listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -55,11 +60,9 @@ public class ManagerTopicsCategoryRestController {
     @ApiOperation(value = "Get category by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Category was not found")
-    public ResponseEntity<TopicsCategory> readTopicsCategory(@PathVariable(name = "id") long id) {
-        if (!topicsCategoryService.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(topicsCategoryService.findById(id));
+    public ResponseEntity<ResponseDto<TopicsCategoryDto>> readTopicsCategory(@PathVariable(name = "id") long id) {
+        TopicsCategoryDto returnValue = modelMapper.map(topicsCategoryService.findById(id), TopicsCategoryDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
