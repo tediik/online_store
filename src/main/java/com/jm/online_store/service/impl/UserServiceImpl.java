@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +60,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
-
 
     private static final String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "images";
     private final UserRepository userRepository;
@@ -84,6 +84,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Получение списка пользователей, отсортированных в соответствии с выбранной ролью
+     *
      * @param roleString роль, по которой фильтруется список пользователей
      * @return List<User> отфильтрованный список пользователей
      */
@@ -119,6 +120,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Проверяет существование пользователя в БД.
+     *
      * @param email - поле по которому проверяем пользователя
      * @return false -  Если такой пользователь не был найден.
      * Если же все-таки он был найден, и статус удаления у него есть, и 30 дней истекли.
@@ -138,6 +140,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Добавление нового пользователя.
      * Проверяется пароль на валидность, отсутствие пользователя с данным email (уникальное значение).
+     *
      * @param user полученный объект User
      */
     @Override
@@ -163,6 +166,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Обновление пользователя.
+     *
      * @param user пользователь, полученный из контроллера.
      */
     @Override
@@ -201,6 +205,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Удаляет пользователя по идентификатору.
+     *
      * @param id идентификатор.
      */
     @Override
@@ -211,23 +216,33 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Регистрация нового Пользователя.
+     *
      * @param userForm - Пользователь, построенный из данных формы.
      */
     @Override
     @Transactional
     public void regNewAccount(User userForm) {
-        ConfirmationToken confirmationToken = new ConfirmationToken(userForm.getEmail(), userForm.getPassword());
-        confirmTokenRepository.save(confirmationToken);
-        String templateBody = templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue();
-        String messageBody;
-            messageBody = templateBody.replace("@@userEmail@@", userForm.getEmail())
-                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                    .replace("@@url@@", urlActivate);
-        mailSenderService.send(userForm.getEmail(), "Activation code", messageBody, "Confirmation");
+        if (userForm.getEmail() != null) {
+            ConfirmationToken confirmationToken = new ConfirmationToken(userForm.getEmail(), userForm.getPassword());
+            confirmTokenRepository.save(confirmationToken);
+            String messageBody;
+            if (templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue() != null) {
+                String templateBody = templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue();
+                messageBody = templateBody.replace("@@userEmail@@", userForm.getEmail())
+                        .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
+                        .replace("@@url@@", urlActivate);
+                mailSenderService.send(userForm.getEmail(), "Activation code", messageBody, "Confirmation");
+            } else {
+                log.debug("Шаблон рассылки при регистрации нового пользователя в базе пустой ");
+            }
+        } else {
+            log.debug("Email пустой");
+        }
     }
 
     /**
      * Формирует токен и отправляет ссылку-подтверждение на email, указанный анонимом.
+     *
      * @param email - почта, указанная анонимным пользователем при покупке
      */
     @Override
@@ -235,38 +250,47 @@ public class UserServiceImpl implements UserService {
     public void regNewAccount(String email) {
         ConfirmationToken confirmationToken = new ConfirmationToken(email, generatePassayPassword());
         confirmTokenRepository.save(confirmationToken);
-        String templateBody = templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue();
         String messageBody;
-        messageBody = templateBody.replace("@@userEmail@@", email)
-                .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                .replace("@@url@@", urlActivate);
-        mailSenderService.send(email, "Activation code", messageBody, "Confirmation");
+        if (templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue() != null) {
+            String templateBody = templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue();
+            messageBody = templateBody.replace("@@userEmail@@", email)
+                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
+                    .replace("@@url@@", urlActivate);
+            mailSenderService.send(email, "Activation code", messageBody, "Confirmation");
+        } else {
+            log.debug("Шаблон рассылки при регистрации нового пользователя в базе пустой ");
+        }
     }
 
     /**
      * Method generates confirmation token based on users ID and Email adress
      * Sends generated token to new users email
+     * @param user, newMail
      */
     @Override
     @Transactional
     public void changeUsersMail(User user, String newMail) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), newMail);
         confirmTokenRepository.save(confirmationToken);
-        String templateBody = templatesMailingSettingsService.getSettingByName("change_users_mail").getTextValue();
         String messageBody;
-        if (user.getFirstName() != null) {
-            messageBody = templateBody.replace("@@user@@", user.getFirstName())
-                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                    .replace("@@url@@", urlActivate);
+        if (templatesMailingSettingsService.getSettingByName("change_users_mail").getTextValue() != null) {
+            String templateBody = templatesMailingSettingsService.getSettingByName("change_users_mail").getTextValue();
+            if (user.getFirstName() != null) {
+                messageBody = templateBody.replace("@@user@@", user.getFirstName())
+                        .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
+                        .replace("@@url@@", urlActivate);
+            } else {
+                messageBody = templateBody.replace("@@user@@", "Подписчик");
+            }
+            mailSenderService.send(newMail, "Activation code", messageBody, "email address validation");
         } else {
-            messageBody = templateBody.replace("@@user@@", "Подписчик");
+            log.debug("Шаблон рассылки при изменении eMail в базе пустой ");
         }
-        mailSenderService.send(newMail, "Activation code", messageBody, "email address validation");
     }
 
     /**
      * Устанавливет переданному пользователю новый пароль.
-     * @param user Пользователь
+     * @param user        Пользователь
      * @param newPassword новый пароль
      */
     @Override
@@ -274,14 +298,20 @@ public class UserServiceImpl implements UserService {
     public void changeUsersPass(User user, String newPassword) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
-        String templateBody = templatesMailingSettingsService.getSettingByName("change_users_pass").getTextValue();
         String messageBody;
-        if (user.getFirstName() != null) {
-            messageBody = templateBody.replace("@@user@@", user.getFirstName());
+        if (templatesMailingSettingsService.getSettingByName("change_users_pass").getTextValue() != null) {
+            String templateBody = templatesMailingSettingsService
+                    .getSettingByName("change_users_pass")
+                    .getTextValue();
+            if (user.getFirstName() != null) {
+                messageBody = templateBody.replace("@@user@@", user.getFirstName());
+            } else {
+                messageBody = templateBody.replace("@@user@@", "Подписчик");
+            }
+            mailSenderService.send(user.getEmail(), "Пароль успешно изменен", messageBody, "pass change");
         } else {
-            messageBody = templateBody.replace("@@user@@", "Подписчик");
+            log.debug("Шаблон рассылки при изменении пароля в базе пустой ");
         }
-        mailSenderService.send(user.getEmail(), "Пароль успешно изменен", messageBody, "pass change");
         user.setPassword(passwordEncoder.encode(newPassword));
         log.info("для юзера с логином {} установлен новый пароль: {}", user.getEmail(), newPassword);
     }
@@ -299,6 +329,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Генерирует новый пароль и отправляет его пользователю на почту.
+     *
      * @param user - Покупатель, запросивший смену пароля.
      */
     @Transactional
@@ -312,6 +343,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод использует библиотеку Passay для генерации рандомного пароля в соответствии с указанными требованиями к паролю
+     *
      * @return рандомный сгенерированный пароль
      */
     private String generatePassayPassword() {
@@ -338,35 +370,39 @@ public class UserServiceImpl implements UserService {
     public void sendConfirmationTokenToResetPassword(User user) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getId(), user.getEmail());
         confirmTokenRepository.save(confirmationToken);
-        String templateBody = templatesMailingSettingsService.getSettingByName("send_confirmation_token_to_reset_password").getTextValue();
         String messageBody;
-        if (user.getFirstName() != null) {
-            messageBody = templateBody.replace("@@user@@", user.getFirstName())
-                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                    .replace("@@url@@", urlActivate);
+        if (templatesMailingSettingsService.getSettingByName("send_confirmation_token_to_reset_password").getTextValue() != null) {
+            String templateBody = templatesMailingSettingsService.getSettingByName("send_confirmation_token_to_reset_password").getTextValue();
+            if (user.getFirstName() != null) {
+                messageBody = templateBody.replace("@@user@@", user.getFirstName())
+                        .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
+                        .replace("@@url@@", urlActivate);
+            } else {
+                messageBody = templateBody.replace("@@user@@", "Подписчик");
+            }
+            mailSenderService.send(user.getEmail(), "Ссылка-подтверждение для генерации нового пароля", messageBody, "pass change");
         } else {
-            messageBody = templateBody.replace("@@user@@", "Подписчик");
+            log.debug("Шаблон рассылки при регистрации нового пароля в базе пустой ");
         }
-        mailSenderService.send(user.getEmail(), "Ссылка-подтверждение для генерации нового пароля", messageBody, "pass change");
         log.info("На почту: {} отправлена ссылка-подтверждение для генерации нового пароля.", user.getEmail());
     }
 
     /**
      * Проверяет активацию пользователя.
-     * @param token токен подтверждения.
+     *
+     * @param token   токен подтверждения.
      * @param request - http-запрос.
      * @return булево значение true/false
      */
     @Override
     @Transactional
     public boolean activateUser(String token, HttpServletRequest request) {
-
+        String messageBody;
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
             log.debug("ConfirmationToken is null");
             return false;
         }
-
         Set<Role> userRoles = roleRepository.findByName("ROLE_CUSTOMER")
                 .map(Collections::singleton)
                 .orElse(Collections.emptySet());
@@ -387,15 +423,18 @@ public class UserServiceImpl implements UserService {
             userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
             customer.setUserBasket(subBasketList);
         }
-        String templateBody = templatesMailingSettingsService.getSettingByName("activate_user").getTextValue();
-        String messageBody;
-        if (customer.getEmail() != null) {
-            messageBody = templateBody.replace("@@user@@", customer.getEmail())
-                    .replace("@@password@@", confirmationToken.getUserPassword());
+        if (templatesMailingSettingsService.getSettingByName("activate_user").getTextValue() != null) {
+            String templateBody = templatesMailingSettingsService.getSettingByName("activate_user").getTextValue();
+            if (customer.getEmail() != null) {
+                messageBody = templateBody.replace("@@user@@", customer.getEmail())
+                        .replace("@@password@@", confirmationToken.getUserPassword());
+            } else {
+                messageBody = templateBody.replace("@@user@@", "Подписчик");
+            }
+            mailSenderService.send(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
         } else {
-            messageBody = templateBody.replace("@@user@@", "Подписчик");
+            log.debug("Шаблон рассылки при активации пользователя в базе пустой ");
         }
-        mailSenderService.send(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
         try {
             request.login(customer.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {
@@ -484,6 +523,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Добавление нового пользователя со страницы администратора
+     *
      * @param newUser - новый пользователь
      */
     @Override
@@ -509,6 +549,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method to update user from admin page
+     *
      * @param user
      * @return User
      */
@@ -535,6 +576,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод ищет Пользователя по его id
+     *
      * @param id - идентификатор Пользователя
      * @return User
      */
@@ -554,7 +596,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
-     * @param user переданный пользователь
+     *
+     * @param user    переданный пользователь
      * @param address новый адрес для пользователя
      * @throws UserNotFoundException вылетает, если пользователь не найден в БД
      */
@@ -588,6 +631,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Ищет Пользователя по его логину (email)
+     *
      * @param email - почта Пользователя
      * @return User - объект Пользователя
      */
@@ -598,6 +642,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Ищет Пользователя его id
+     *
      * @param id - идентификатор Пользователя
      * @return User - объект Пользователя
      */
@@ -609,8 +654,9 @@ public class UserServiceImpl implements UserService {
     /**
      * Метод возвращает залогиненного активного юзера - User из Authentication
      * Service method which builds and returns currently logged in User from Authentication
+     *
      * @param sessionID -параметр по которому вычисляется анонимный пользователь,
-     * если его нет в бд -создает его используя параметр в качестве email
+     *                  если его нет в бд -создает его используя параметр в качестве email
      * @return User
      */
     @Transactional
@@ -643,6 +689,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Service method which finds and returns the User by token after email confirmation
+     *
      * @return User
      */
     @Transactional
@@ -662,26 +709,33 @@ public class UserServiceImpl implements UserService {
     /**
      * Отправляет сообщение с просьбой подтвердить подписку пользователю,
      * который нажал на "Подписаться на изменение цены".
+     *
      * @param email - почта Пользователя
      */
     public void sendConfirmationSubscribeLetter(String email) {
-        String templateBody = commonSettingsService
-                .getSettingByName("subscribe_confirmation_template")
-                .getTextValue();
         String messageBody;
-        String[] userName = {"Покупатель"};
-        findByEmail(email).ifPresent(user -> {
-            user.setConfirmReceiveEmail(ConfirmReceiveEmail.REQUESTED);
-            userRepository.save(user);
-            if (user.getFirstName() != null) {
-                userName[0] = user.getFirstName();
+        if (commonSettingsService
+                .getSettingByName("subscribe_confirmation_template")
+                .getTextValue() != null) {
+            String templateBody = commonSettingsService
+                    .getSettingByName("subscribe_confirmation_template")
+                    .getTextValue();
+            String[] userName = {"Покупатель"};
+            findByEmail(email).ifPresent(user -> {
+                user.setConfirmReceiveEmail(ConfirmReceiveEmail.REQUESTED);
+                userRepository.save(user);
+                if (user.getFirstName() != null) {
+                    userName[0] = user.getFirstName();
+                }
+            });
+            messageBody = templateBody.replaceAll("@@user@@", userName[0]);
+            try {
+                mailSenderService.sendHtmlMessage(email, "Подтвердите Вашу подписку", messageBody, "Subscribe confirmation");
+            } catch (MessagingException e) {
+                log.debug("Can not send mail about Subscribe confirmation to {}", email);
             }
-        });
-        messageBody = templateBody.replaceAll("@@user@@", userName[0]);
-        try {
-            mailSenderService.sendHtmlMessage(email, "Подтвердите Вашу подписку", messageBody, "Subscribe confirmation");
-        } catch (MessagingException e) {
-            log.debug("Can not send mail about Subscribe confirmation to {}", email);
+        } else {
+            log.debug("Шаблон рассылки при подтверждении рассылки в базе пустой ");
         }
     }
 }

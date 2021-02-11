@@ -146,7 +146,7 @@ public class DataInitializer {
         commentsInit();
         reviewsInit();
         badWordInit();
-        templatesMailingSettingsInit();
+        //templatesMailingSettingsInit();
     }
 
     /**
@@ -1324,7 +1324,7 @@ public class DataInitializer {
      * init method for distribution TemplatesMailingSettings templates
      * creates template for email.
      */
-    public void templatesMailingSettingsInit() {
+    /*public void templatesMailingSettingsInit() {
 
         TemplatesMailingSettings confirmationTokenToResetPasswordTemplate = TemplatesMailingSettings.builder()
                 .settingName("send_confirmation_token_to_reset_password")
@@ -1364,7 +1364,7 @@ public class DataInitializer {
         templatesMailingSettingsService.addSetting(changeUsersMailTemplate);
         templatesMailingSettingsService.addSetting(activateUserTemplate);
     }
-
+*/
     /**
      * Init method for topics
      */

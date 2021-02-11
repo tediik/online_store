@@ -1,8 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.exception.CommonSettingsNotFoundException;
 import com.jm.online_store.exception.TemplatesMailingSettingsNotFoundException;
-import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.TemplatesMailingSettings;
 import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
 import io.swagger.annotations.Api;
