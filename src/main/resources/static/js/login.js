@@ -34,16 +34,18 @@ document.getElementById('buttonRestore').addEventListener('click', functionResto
  */
 function functionRestore() {
     let email = document.getElementById('emailForRestore').value;
+    let password = document.getElementById('passwordForRestore').value;
+    let data = {email:email,password:password}
     fetch('/api/allUsers/restore', {
         method: 'PUT',
         headers: myHeaders,
-        body: email
+        body: JSON.stringify(data)
     }).then(function (res) {
         if (res.status === 200) {
             alert("Ваш аккаунт был успешно восстановлен")
             document.location.href = "/login";
         } else {
-            toastr.error(res, {timeOut: 5000});
+            alert("Ваш аккаунт не восстановлен. Проверьте введеннные учетные данные")
         }
     })
 }

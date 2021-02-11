@@ -1,9 +1,14 @@
 package com.jm.online_store.controller.rest.admin;
 
+import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
+<<<<<<< HEAD
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
+=======
+import com.jm.online_store.service.interf.CommonSettingsService;
+>>>>>>> dev
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -43,6 +48,8 @@ public class AdminRestController {
     private final UserService userService;
 
     private final FavouritesGroupService favouritesGroupService;
+
+    private final CommonSettingsService commonSettingsService;
 
     /**
      * Rest mapping to  receive authenticated user. from admin page
@@ -215,5 +222,17 @@ public class AdminRestController {
             return new ResponseEntity<>(new ResponseDto<>(false, "No users with chosen role in db"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(new ResponseDto<>(true, allUsersWithRoleDto), HttpStatus.OK);
+    }
+
+    /**
+     * Метод для изменения наименования магазина
+     * @param commonSettings настройки, содержащие название магазина
+     * @return ResponseEntity
+     */
+    @ApiOperation(value = "edit store name", authorizations = { @Authorization(value="jwtToken") })
+    @PutMapping(value = "/editStoreName")
+    public ResponseEntity<Integer> editStoreName(CommonSettings commonSettings){
+        commonSettingsService.updateTextValue(commonSettings);
+        return ResponseEntity.ok().build();
     }
 }
