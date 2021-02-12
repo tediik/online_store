@@ -275,7 +275,7 @@
                                         <!--Profile picture change modal-->
                                     </div>
 
-                                    <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}"
+                                    <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.getId()}"
                                           method="post" data-role="personal-info-form">
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="id_update">ID</label>
