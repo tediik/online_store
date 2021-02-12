@@ -3,12 +3,9 @@ package com.jm.online_store.controller.rest.manager;
 import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.News;
-<<<<<<< HEAD
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.ResponseDto;
-=======
 import com.jm.online_store.model.User;
->>>>>>> dev
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -59,9 +56,7 @@ public class ManagerRestController {
 
     private final NewsService newsService;
     private final OrderService orderService;
-<<<<<<< HEAD
     private final ModelMapper modelMapper = new ModelMapper();
-=======
     private final UserService userService;
 
     /**
@@ -75,7 +70,6 @@ public class ManagerRestController {
         return new ResponseEntity<>(authUser, HttpStatus.OK);
     }
 
->>>>>>> dev
     /**
      * Метод возвращающий всписок всех новостей
      *

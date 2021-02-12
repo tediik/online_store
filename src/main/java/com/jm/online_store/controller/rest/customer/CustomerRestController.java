@@ -56,11 +56,11 @@ public class CustomerRestController {
             @ApiResponse(code = 400, message = "duplicatedEmailError or notValidEmailError"),
             @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
     })
-    public ResponseEntity<ResponseDto<CustomerDto>> changeMailReq(@RequestParam String newMail) {
+    public ResponseEntity<ResponseDto<String>> changeMailReq(@RequestParam String newMail) {
         Customer customer = customerService.changeMail(newMail);
         ModelMapper modelMapper = new ModelMapper();
         CustomerDto returnValue = modelMapper.map(customer, CustomerDto.class);
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
+        return ResponseEntity.ok(new ResponseDto<>(true, "success"));
     }
 
     /**

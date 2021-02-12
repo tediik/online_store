@@ -1,6 +1,6 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.NewsNotFoundException;
+import com.jm.online_store.exception.newsService.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

@@ -2,7 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
-import com.jm.online_store.exception.NewsNotFoundException;
+import com.jm.online_store.exception.newsService.NewsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

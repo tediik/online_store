@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.newsService.NewsExceptionConstants;
+import com.jm.online_store.exception.newsService.NewsNotFoundException;
 import com.jm.online_store.exception.newsService.NewsServiceException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsFilterDto;
@@ -34,11 +35,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public List<News> findAll() {
-        List<News> allNews = newsRepository.findAll();
-        if (!allNews.isEmpty()) {
-            throw new NewsServiceException(NewsExceptionConstants.NO_NEWS_YET);
-        }
-        return allNews;
+        return newsRepository.findAll();
     }
 
     /**
@@ -67,7 +64,7 @@ public class NewsServiceImpl implements NewsService {
      * Method accept Long id as parameter and returns {@link News} entity
      *
      * @param id - {@link Long}
-     * @return returns News entity or throws {@link com.jm.online_store.exception.NewsNotFoundException}
+     * @return returns News entity or throws {@link NewsNotFoundException}
      */
     @Override
     public News findById(long id) {
@@ -97,6 +94,9 @@ public class NewsServiceImpl implements NewsService {
      * @param news сушность для обновления в базе данных
      */
     public News update(News news) {
+        if (null == findById(news.getId())) {
+            throw new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, news.getId()));
+        }
         news.setModifiedDate(LocalDate.now());
         return newsRepository.save(news);
     }
@@ -110,7 +110,7 @@ public class NewsServiceImpl implements NewsService {
     public boolean deleteById(Long id) {
         Optional<News> optionalNews = newsRepository.findById(id);
         if (optionalNews.isEmpty()) {
-            throw new NewsServiceException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id));
+            throw new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id));
         }
         newsRepository.deleteById(id);
         return true;
@@ -124,11 +124,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public List<News> getAllPublished() {
-        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now().plusDays(1), false);
-        if (publishedNews.isEmpty()) {
-            throw new NewsServiceException(NewsExceptionConstants.NO_PUBLISHED_NEWS);
-        }
-        return publishedNews;
+        return newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now().plusDays(1), false);
     }
 
     /**
@@ -139,23 +135,15 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public List<News> getAllUnpublished() {
-        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
-        if (!unpublishedNews.isEmpty()) {
-            throw new NewsServiceException(NewsExceptionConstants.NO_UNPUBLISHED_NEWS);
-        }
-        return unpublishedNews;
+        return newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
     }
 
     /**
-     * Method returns list of all archived news ot throw {@link com.jm.online_store.exception.NewsNotFoundException}
+     * Method returns list of all archived news ot throw {@link NewsNotFoundException}
      * @return - List<News>
      */
     @Override
     public List<News> getAllArchivedNews() {
-        List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
-        if (archivedNews.isEmpty()) {
-            throw new NewsServiceException(NewsExceptionConstants.NO_ARCHIVED_NEWS);
-        }
-        return archivedNews;
+        return newsRepository.findAllByArchivedEquals(true);
     }
 }

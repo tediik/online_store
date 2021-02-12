@@ -44,45 +44,41 @@ public class ManagerNewsRestController {
 
     private final NewsService newsService;
     private final ModelMapper modelMapper = new ModelMapper();
+    private final Type listType = new TypeToken<List<NewsDto>>() {}.getType();
 
     /**
      * Mapping accepts @PathVariable {@link Long} id
      *
      * @param id - {@link Long} id of news entity
-     * @return {@link ResponseEntity<News>} or ResponseEntity.notFound()
+     * @return {@link ResponseEntity<NewsDto>} or ResponseEntity.notFound()
      */
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get news by ID",
+    @ApiOperation(value = "Get news by id",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
-            @ApiResponse(code = 404, message = "News not found"),
-            @ApiResponse(code = 200, message = "News was found")
+            @ApiResponse(code = 200, message = "News has been found"),
+            @ApiResponse(code = 404, message = "News hasn't been found")
     })
     public ResponseEntity<ResponseDto<NewsDto>> getNewsById(@PathVariable Long id) {
-        News newsFromService = newsService.findById(id);
-        NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
+        NewsDto returnValue = modelMapper.map(newsService.findById(id), NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
-
-
 
 
     /**
      * Method returns all news
      *
-     * @return List<News> возвращает список всех новостей из базы данных
+     * @return List<NewsDto> возвращает список всех новостей из базы данных
      */
     @GetMapping("/all")
     @ApiOperation(value = "Method returns all news",
             authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses( value = {
-            @ApiResponse(code = 404, message = "News not found"),
-            @ApiResponse(code = 200, message = "News was found")
+            @ApiResponse(code = 200, message = "News has been found"),
+            @ApiResponse(code = 404, message = "News has not been found")
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> getAllNews() {
-        List<News> listNewsFromService = newsService.findAll();
-        Type listType = new TypeToken<List<NewsDto>>() {}.getType();
-        List<NewsDto> returnValue = modelMapper.map(listNewsFromService, listType);
+        List<NewsDto> returnValue = modelMapper.map(newsService.findAll(), listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -96,12 +92,11 @@ public class ManagerNewsRestController {
     @PreAuthorize("permitAll()")
     @GetMapping("/page")
     @ApiOperation(value = "Method returns news page",
-            authorizations = { @Authorization(value="jwtToken") })
-    @ApiResponse(code = 200, message = "News page was found")
+            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponse(code = 200, message = "News page has found")
     public ResponseEntity<ResponseDto<Page<NewsDto>>> getPage(@PageableDefault Pageable page, NewsFilterDto filterDto) {
-        Page<News> newsPageFromService = newsService.findAll(page, filterDto);
-        Page<NewsDto> returnValue = modelMapper.map(newsPageFromService, Page.class); // пока не думал что сделать с сырым типом
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
+        return ResponseEntity.ok(new ResponseDto<>(true,
+                modelMapper.map(newsService.findAll(page, filterDto), Page.class)));
     }
 
     /**
@@ -111,14 +106,13 @@ public class ManagerNewsRestController {
      */
     @GetMapping("/published")
     @ApiOperation(value = "Method returns published news",
-            authorizations = { @Authorization(value="jwtToken") })
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
-            @ApiResponse(code = 204, message = "Published news not found"),
-            @ApiResponse(code = 200, message = "Published news was found")
+            @ApiResponse(code = 200, message = "Published news has been found"),
+            @ApiResponse(code = 200, message = "Published news hasn't been found. Returns an empty list")
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> getAllPublishedNews() {
         List<News> listPubNewsFromService = newsService.getAllPublished();
-        Type listType = new TypeToken<List<NewsDto>>() {}.getType();
         List<NewsDto> returnValue = modelMapper.map(listPubNewsFromService, listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
@@ -130,14 +124,13 @@ public class ManagerNewsRestController {
      */
     @GetMapping("/unpublished")
     @ApiOperation(value = "Method returns unpublished news",
-            authorizations = { @Authorization(value="jwtToken") })
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
-            @ApiResponse(code = 204, message = "Unpublished news not found"),
-            @ApiResponse(code = 200, message = "Unpublished news was found")
+            @ApiResponse(code = 200, message = "Unpublished news has been found"),
+            @ApiResponse(code = 200, message = "Unpublished news hasn't been found. Returns an empty list")
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> getAllUnpublishedNews() {
         List<News> listUnpubNewsFromService = newsService.getAllUnpublished();
-        Type listType = new TypeToken<List<NewsDto>>() {}.getType();
         List<NewsDto> returnValue = modelMapper.map(listUnpubNewsFromService, listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
@@ -148,16 +141,14 @@ public class ManagerNewsRestController {
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/archived")
-    @ApiOperation(value = "Method returns archived news",
+    @ApiOperation(value = "Method returns list of archived news",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
-            @ApiResponse(code = 204, message = "archived news not found"),
-            @ApiResponse(code = 200, message = "archived news was found")
+            @ApiResponse(code = 200, message = "archived news has been found"),
+            @ApiResponse(code = 204, message = "archived news hasn't been found")
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> getAllArchivedNews() {
-        List<News> listArchNewsFromService = newsService.getAllArchivedNews();
-        Type listType = new TypeToken<List<NewsDto>>() {}.getType();
-        List<NewsDto> returnValue = modelMapper.map(listArchNewsFromService, listType);
+        List<NewsDto> returnValue = modelMapper.map(newsService.getAllArchivedNews(), listType);
             return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -167,14 +158,12 @@ public class ManagerNewsRestController {
      * @param news сущность для сохранения в базе данных
      * @return возвращает заполненную сущность клиенту
      */
-
     @PostMapping
     @ApiOperation(value = "Method to save news in database",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 200, message = "News  saved in db")
-    public ResponseEntity<ResponseDto<NewsDto>> createNewsPost(@RequestBody News news) {
-        News newsFromService = newsService.save(news);
-        NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
+    @ApiResponse(code = 201, message = "News has been successfully saved")
+    public ResponseEntity<ResponseDto<NewsDto>> createNewsPost(@RequestBody NewsDto newsReq) {
+        NewsDto returnValue = modelMapper.map(newsService.save(modelMapper.map(newsReq, News.class)), NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -187,9 +176,12 @@ public class ManagerNewsRestController {
     @PutMapping
     @ApiOperation(value = "Method to update news in database",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 200, message = "News updated in db")
-    public ResponseEntity<ResponseDto<NewsDto>> updateNewsPost(@RequestBody News news) {
-        News newsFromService = newsService.update(news);
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "news has been successfully updated"),
+            @ApiResponse(code = 400, message = "news hasn't been updated")
+    })
+    public ResponseEntity<ResponseDto<NewsDto>> updateNewsPost(@RequestBody NewsDto newsReq) {
+        News newsFromService = newsService.update(modelMapper.map(newsReq, News.class));
         NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
@@ -204,12 +196,12 @@ public class ManagerNewsRestController {
     @ApiOperation(value = "Method to delete news from database",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
-            @ApiResponse(code = 200, message = "News deleted"),
-            @ApiResponse(code = 404, message = "News was not found")
+            @ApiResponse(code = 200, message = "News has been successfully deleted"),
+            @ApiResponse(code = 404, message = "News hasn't been found")
     })
     public ResponseEntity<ResponseDto<String>> deleteNewsById(@PathVariable Long id) {
+        newsService.deleteById(id);
         return ResponseEntity.ok(new ResponseDto<>(true,
-                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id),
-                ResponseOperation.NO_ERROR.getMessage()));
+                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id)));
     }
 }

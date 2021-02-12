@@ -3,12 +3,10 @@ package com.jm.online_store.controller.rest.admin;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
-<<<<<<< HEAD
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
-=======
 import com.jm.online_store.service.interf.CommonSettingsService;
->>>>>>> dev
+
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;

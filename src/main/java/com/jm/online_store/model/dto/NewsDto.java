@@ -14,13 +14,10 @@ import java.util.Set;
 @ApiModel(description = "DTO для сущности комментария News")
 @Component
 public class NewsDto {
-
     private Long id;
     private String title;
     private String anons;
     private String fullText;
     private LocalDate postingDate;
-    private LocalDate modifiedDate;
-    private boolean archived;
-    private Set<SharedNews> sharedNews;
+
 }
