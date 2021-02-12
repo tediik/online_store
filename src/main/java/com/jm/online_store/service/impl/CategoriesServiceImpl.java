@@ -9,6 +9,7 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.CategoriesRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.nullness.Opt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,8 +124,8 @@ public class CategoriesServiceImpl implements CategoriesService {
      * @param categories категория товара
      */
     @Override
-    public void saveCategory(Categories categories) {
-        categoriesRepository.save(categories);
+    public Categories saveCategory(Categories categories) {
+        return categoriesRepository.save(categories);
     }
 
     /**
@@ -132,8 +133,13 @@ public class CategoriesServiceImpl implements CategoriesService {
      * @param idCategory идентификатор категории
      */
     @Override
-    public void deleteCategory(Long idCategory) {
+    public boolean deleteCategory(Long idCategory) {
+        Optional<Categories> optCategories = getCategoryById(idCategory);
+        if (optCategories.isEmpty()) {
+            return false;
+        }
         categoriesRepository.deleteById(idCategory);
+        return true;
     }
 
     /**
