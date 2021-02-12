@@ -100,6 +100,10 @@
                        role="tab" aria-controls="nav-profile" aria-selected="true">Подтверждение подписки</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" id="nav-new7-tab" data-toggle="tab" href="#nav-restorePassword"
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Генерация нового временного пароля</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#description" aria-selected="false">Подписки</a>
                 </li>
             </ul>
@@ -280,6 +284,27 @@
                     </ul>
                     <button class="btn btn-primary" id="saveSubscribeConfirmTemplateChanges">Сохранить шаблон</button>
                 </div>
+                <!--Таба для шаблона рассылки restore_password-->
+                <div class="tab-pane fade" id="nav-restorePassword" role="tabpanel" aria-labelledby="nav-9-tab">
+                    <form id="restorePassword">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при генерации нового временного пароля</label>
+                                <textarea id="restorePasswordTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация!</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@user@@ - вместо этого тега в письме подставляется user.getFirstName</li>
+                        <li>@@newPassword@@ - вместо этого тэга в письме подставится newPass</li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveRestorePasswordTemplateChanges">Сохранить шаблон</button>
+                </div>
+                <!--Таба для просмотра подписчиков и построения графика-->
                 <div class="tab-pane fade" id="description">
                     <div id="chart-div" style="display: none">
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">

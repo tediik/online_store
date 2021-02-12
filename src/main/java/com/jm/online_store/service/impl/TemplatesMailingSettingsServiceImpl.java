@@ -48,7 +48,7 @@ public class TemplatesMailingSettingsServiceImpl implements TemplatesMailingSett
     @Transactional
     @Override
     public void updateTextValue(TemplatesMailingSettings settings) {
-        if (templatesMailingSettingsRepository.updateTextValue(settings.getTextValue(), settings.getSettingName()) != true) {
+        if (templatesMailingSettingsRepository.updateTextValue(settings.getTextValue(), settings.getSettingName()) != 1) {
             throw new TemplatesMailingSettingsNotFoundException("Template" + settings.getSettingName() + "not found");
         }
     }

@@ -340,7 +340,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public void restorePassword(User user) {
         String newPass = generatePassayPassword();
-        mailSenderService.send(user.getEmail(), "Сгенерирован временный новый пароль: ", newPass, "pass change");
+        String messageBody;
+        if (templatesMailingSettingsService.getSettingByName("restore_password").getTextValue() != null) {
+            String templateBody = templatesMailingSettingsService
+                    .getSettingByName("restore_password")
+                    .getTextValue();
+            if (user.getFirstName() != null) {
+                messageBody = templateBody.replace("@@user@@", user.getFirstName())
+                .replace("@@newPassword@@", newPass);
+            } else {
+                messageBody = templateBody.replace("@@user@@", "Подписчик");
+            }
+            mailSenderService.send(user.getEmail(), "Сгенерирован временный новый пароль: ", messageBody, "pass change");
+        } else {
+            log.debug("Шаблон рассылки для генерации нового временного пароля в базе пустой ");
+        }
         user.setPassword(passwordEncoder.encode(newPass));
         log.info("Для пользователя с логином: {} сгенерирован новый пароль: {}", user.getEmail(), newPass);
     }

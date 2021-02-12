@@ -4,6 +4,7 @@ document.getElementById('saveRegNewAccountTemplateChanges').addEventListener('cl
 document.getElementById('saveChangeUsersMailTemplateChanges').addEventListener('click', handleSaveTemplateChangeUsersMailButton)
 document.getElementById('saveChangeUsersPassTemplateChanges').addEventListener('click', handleSaveTemplateChangeUsersPassButton)
 document.getElementById('saveChangeActivateUserTemplateChanges').addEventListener('click', handleSaveTemplateActivateUserButton)
+document.getElementById('saveRestorePasswordTemplateChanges').addEventListener('click', handleRestorePasswordSaveTemplateButton)
 
 $(document).ready(function () {
     $('#editPriceChangeTemplateSummernote').summernote({
@@ -45,6 +46,13 @@ $(document).ready(function () {
         height: 500
     });
     fetchChangeActivateUserTemplate();
+})
+
+$(document).ready(function () {
+    $('#restorePasswordTemplateSummernote').summernote({
+        height: 500
+    });
+    fetchRestorePassTemplate();
 })
 
 /**
@@ -118,6 +126,19 @@ function fetchChangeActivateUserTemplate() {
         }
     })
 }
+
+/**
+ * Функция отправляет запрос и получает шаблон письма при генерации нового временного пароля
+ */
+function fetchRestorePassTemplate() {
+    fetch(apiTemplatesMailingSettingsUrl + '/restore_password').then(function (response) {
+        if (response.ok) {
+            response.json()
+                .then(emailTemplate => $('#restorePasswordTemplateSummernote').summernote('code', emailTemplate.textValue))
+        }
+    })
+}
+
 /**
  * функция сохранения изменённого шаблона
  */
@@ -151,16 +172,7 @@ function handleSaveTemplateResetPasswordButton() {
             settingName: "send_confirmation_token_to_reset_password",
             textValue: document.getElementById('sendConfirmationTokenToResetPasswordTemplateSummernote').value
         }
-        fetch(apiTemplatesMailingSettingsUrl, {
-            headers: myHeaders,
-            method: 'PUT',
-            body: JSON.stringify(templatesMailingSettings)
-
-        }).then(function (response) {
-            if (response.ok) {
-                toastr.success("Шаблон успешно сохранён")
-            }
-        })
+        fetchToPutTemplates(templatesMailingSettings);
     } else {
         toastr.error("Заполните все поля шаблона")
     }
@@ -175,16 +187,7 @@ function handleSaveTemplateRegNewAccountButton() {
             settingName: "reg_new_account",
             textValue: document.getElementById('regNewAccountTemplateSummernote').value
         }
-        fetch(apiTemplatesMailingSettingsUrl, {
-            headers: myHeaders,
-            method: 'PUT',
-            body: JSON.stringify(templatesMailingSettings)
-
-        }).then(function (response) {
-            if (response.ok) {
-                toastr.success("Шаблон успешно сохранён")
-            }
-        })
+        fetchToPutTemplates(templatesMailingSettings);
     } else {
         toastr.error("Заполните все поля шаблона")
     }
@@ -199,16 +202,7 @@ function handleSaveTemplateChangeUsersMailButton() {
             settingName: "change_users_mail",
             textValue: document.getElementById('changeUsersMailTemplateSummernote').value
         }
-        fetch(apiTemplatesMailingSettingsUrl, {
-            headers: myHeaders,
-            method: 'PUT',
-            body: JSON.stringify(templatesMailingSettings)
-
-        }).then(function (response) {
-            if (response.ok) {
-                toastr.success("Шаблон успешно сохранён")
-            }
-        })
+        fetchToPutTemplates(templatesMailingSettings);
     } else {
         toastr.error("Заполните все поля шаблона")
     }
@@ -223,16 +217,7 @@ function handleSaveTemplateChangeUsersPassButton() {
             settingName: "change_users_pass",
             textValue: document.getElementById('changeUsersPassTemplateSummernote').value
         }
-        fetch(apiTemplatesMailingSettingsUrl, {
-            headers: myHeaders,
-            method: 'PUT',
-            body: JSON.stringify(templatesMailingSettings)
-
-        }).then(function (response) {
-            if (response.ok) {
-                toastr.success("Шаблон успешно сохранён")
-            }
-        })
+        fetchToPutTemplates(templatesMailingSettings);
     } else {
         toastr.error("Заполните все поля шаблона")
     }
@@ -247,17 +232,39 @@ function handleSaveTemplateActivateUserButton() {
             settingName: "activate_user",
             textValue: document.getElementById('activateUserTemplateSummernote').value
         }
-        fetch(apiTemplatesMailingSettingsUrl, {
-            headers: myHeaders,
-            method: 'PUT',
-            body: JSON.stringify(templatesMailingSettings)
-
-        }).then(function (response) {
-            if (response.ok) {
-                toastr.success("Шаблон успешно сохранён")
-            }
-        })
+        fetchToPutTemplates(templatesMailingSettings);
     } else {
         toastr.error("Заполните все поля шаблона")
     }
+}
+
+/**
+ * функция сохранения изменённого шаблона activateUserTemplateSummernote
+ */
+function handleRestorePasswordSaveTemplateButton() {
+    if (document.getElementById('restorePasswordTemplateSummernote').value !== '') {
+        let templatesMailingSettings = {
+            settingName: "restore_password",
+            textValue: document.getElementById('restorePasswordTemplateSummernote').value
+        }
+        fetchToPutTemplates(templatesMailingSettings);
+    } else {
+        toastr.error("Заполните все поля шаблона")
+    }
+}
+
+/**
+ * функция фетч запрос сохранения изменённого шаблона в базе
+ */
+function fetchToPutTemplates(templatesMailingSettings) {
+    fetch(apiTemplatesMailingSettingsUrl, {
+        headers: myHeaders,
+        method: 'PUT',
+        body: JSON.stringify(templatesMailingSettings)
+
+    }).then(function (response) {
+        if (response.ok) {
+            toastr.success("Шаблон успешно сохранён")
+        }
+    })
 }

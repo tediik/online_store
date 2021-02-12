@@ -1358,11 +1358,18 @@ public class DataInitializer {
                         "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .status(false)
                 .build();
+        TemplatesMailingSettings restorePasswordTemplate = TemplatesMailingSettings.builder()
+                .settingName("restore_password")
+                .textValue("<p>Привет, @@user@@ Вам Сгенерирован временный новый пароль @@newPassword@@</p>" +
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .status(false)
+                .build();
         templatesMailingSettingsService.addSetting(confirmationTokenToResetPasswordTemplate);
         templatesMailingSettingsService.addSetting(regNewAccountTemplate);
         templatesMailingSettingsService.addSetting(changeUsersPassTemplate);
         templatesMailingSettingsService.addSetting(changeUsersMailTemplate);
         templatesMailingSettingsService.addSetting(activateUserTemplate);
+        templatesMailingSettingsService.addSetting(restorePasswordTemplate);
     }
 
     /**
