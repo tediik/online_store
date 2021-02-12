@@ -181,8 +181,7 @@ public class ManagerNewsRestController {
             @ApiResponse(code = 400, message = "news hasn't been updated")
     })
     public ResponseEntity<ResponseDto<NewsDto>> updateNewsPost(@RequestBody NewsDto newsReq) {
-        News newsFromService = newsService.update(modelMapper.map(newsReq, News.class));
-        NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
+        NewsDto returnValue = modelMapper.map(newsService.update(modelMapper.map(newsReq, News.class)), NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 

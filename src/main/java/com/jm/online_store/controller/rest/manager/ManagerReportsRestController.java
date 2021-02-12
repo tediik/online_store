@@ -1,11 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.jm.online_store.exception.SentStockNotFoundException;
-import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.CustomerDto;
-import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SentStockService;
@@ -16,7 +11,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
