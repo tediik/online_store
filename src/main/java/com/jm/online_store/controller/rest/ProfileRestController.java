@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -50,20 +49,23 @@ public class ProfileRestController {
     }
 
     /**
-     * Метод изменения пароля
+     * Метод изменения пароля пользователя.
      * @param passwords старый и новый пароль из PasswordDto
-     * @return ResponseEntity<String> возвращает статус ответа
+     * @return ResponseEntity<>(body, HttpStatus)
      */
     @PostMapping("/changePassword")
     @ApiOperation(value = "change password",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<PasswordDto> changePassword(@RequestBody PasswordDto passwords) {
+    public ResponseEntity changePassword(@RequestBody PasswordDto passwords) {
         User user = userService.getCurrentLoggedInUser();
-        if (!userService.changePassword(user.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
-            return ResponseEntity.badRequest().build();
+        if (passwords.getNewPassword().equals(passwords.getOldPassword())) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
-        log.debug("Пароль успешно изменён.");
-        return ResponseEntity.ok(passwords);
+        if (!userService.changePassword(user.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+        log.info("Пароль для пользователя: {} успешно изменён.", user.getEmail());
+        return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
 
     /**

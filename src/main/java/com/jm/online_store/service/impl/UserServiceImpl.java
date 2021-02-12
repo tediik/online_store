@@ -298,7 +298,7 @@ public class UserServiceImpl implements UserService {
         );
         mailSenderService.send(user.getEmail(), "Пароль успешно изменен", message, "pass change");
         user.setPassword(passwordEncoder.encode(newPassword));
-        log.info("для юзера с логином {} установлен новый пароль: {}", user.getEmail(), newPassword);
+        log.info("Для пользователя с логином {} установлен новый пароль: {}", user.getEmail(), newPassword);
     }
 
     /**

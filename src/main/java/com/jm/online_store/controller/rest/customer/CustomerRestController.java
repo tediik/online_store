@@ -18,7 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,9 +68,9 @@ public class CustomerRestController {
     }
 
     /**
-     * Метод обработки изменения пароля User.
+     * Метод изменения пароля пользователя
      * @param passwords старый и новый пароль из PasswordDto
-     * @return страница User
+     * @return ResponseEntity<>(body, HttpStatus)
      */
     @PostMapping("/change-password")
     @ApiOperation(value = "processes Customers request to change password",
@@ -81,15 +80,16 @@ public class CustomerRestController {
             @ApiResponse(code = 400, message = "Wrong email or user with such email already exists"),
             @ApiResponse(code = 200, message = "Changes accepted"),
     })
-    public ResponseEntity<PasswordDto> changePassword(@RequestBody PasswordDto passwords) {
+    public ResponseEntity changePassword(@RequestBody PasswordDto passwords) {
         Customer customer = customerService.getCurrentLoggedInUser();
-
-        if(!customerService.changePassword(customer.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
-            log.debug("Возникла ошибка при смене пароля!");
-            return ResponseEntity.badRequest().build();
+        if(passwords.getOldPassword().equals(passwords.getNewPassword())) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
-        log.info("Пароль успешно изменён!");
-        return ResponseEntity.ok().build();
+        if(!customerService.changePassword(customer.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+        log.info("Пароль для пользователя: {} успешно изменён.", customer.getEmail());
+        return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
 
     /**
