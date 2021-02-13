@@ -42,13 +42,10 @@ public class SentStockServiceImpl implements SentStockService {
      */
     @Override
     public List<SentStock> findAllByInterval(LocalDate begin, LocalDate end) {
-        List<SentStock> sentStocks = sentStockRepository.findAllBySentDateAfterAndSentDateBefore(
+
+        return sentStockRepository.findAllBySentDateAfterAndSentDateBefore(
                 begin.minusDays(1L),
                 end.plusDays(1L));
-        if(sentStocks.isEmpty()) {
-            throw new SentStockServiceException(SentStocksExceptionConstants.SENT_STOCK_NOT_FOUND);
-        }
-        return sentStocks;
     }
     /**
      * Метод добавления отправленной акции

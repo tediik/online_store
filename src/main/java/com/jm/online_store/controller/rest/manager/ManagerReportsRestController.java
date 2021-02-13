@@ -100,7 +100,11 @@ public class ManagerReportsRestController {
      */
     @GetMapping("/report")
     @ApiOperation(value = "Method for searching for sent stocks in day interval",
-            authorizations = { @Authorization(value="jwtToken") })
+            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "Stocks have been found"),
+            @ApiResponse(code = 200, message = "Stocks haven't been found")
+    })
     public ResponseEntity<ResponseDto<Map<LocalDate, Long>>> allSentStocks(
             @RequestParam(value = "beginDate", required = false) String beginDate,
             @RequestParam(value = "endDate", required = false) String endDate) {

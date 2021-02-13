@@ -139,8 +139,6 @@ public class AdminRestController {
             @ApiResponse(code = 200, message = "")
     })
     public ResponseEntity<ResponseDto<UserDto>> editUser(@RequestBody User user) {
-
-
         if (userService.findById(user.getId()).isEmpty()) {
             log.debug("There are no user with id: {}", user.getId());
             return new ResponseEntity<>(new ResponseDto<>(false, "User not found"), HttpStatus.NOT_FOUND);
