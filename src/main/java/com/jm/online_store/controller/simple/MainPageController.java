@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ConfirmationTokenRepository;

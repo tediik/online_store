@@ -94,7 +94,7 @@ public class NewsServiceImpl implements NewsService {
      * @param news сушность для обновления в базе данных
      */
     public News update(News news) {
-        if (null == findById(news.getId())) {
+        if (newsRepository.findById(news.getId()).isEmpty()) {
             throw new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, news.getId()));
         }
         news.setModifiedDate(LocalDate.now());

@@ -28,6 +28,7 @@ public class UserDto {
     private LocalDate registerDate;
     private String profilePicture;
     private Set<Role> roles;
+    private String active;
 
     public static UserDto fromUser(User user) {
         UserDto userDto = new UserDto();

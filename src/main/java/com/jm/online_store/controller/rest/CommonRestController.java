@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,7 @@ public class CommonRestController {
     @GetMapping("/storeName")
     @ApiOperation(value = "Get store name")
     public ResponseEntity<String> getStoreName() {
+
         return ResponseEntity.ok(commonSettingsService.getSettingByName("store_name").getTextValue());
     }
 }

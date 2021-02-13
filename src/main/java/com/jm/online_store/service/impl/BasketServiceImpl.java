@@ -4,7 +4,7 @@ import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.SubBasketNotFoundException;
-import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;

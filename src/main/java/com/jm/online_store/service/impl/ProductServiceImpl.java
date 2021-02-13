@@ -2,7 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
-import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;

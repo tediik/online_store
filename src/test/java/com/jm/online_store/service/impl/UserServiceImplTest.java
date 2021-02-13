@@ -2,7 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
-import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Role;

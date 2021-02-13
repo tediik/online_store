@@ -1,16 +1,14 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
-import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.StockRepository;
-import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.CommonSettingsService;
-import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.SentStockService;

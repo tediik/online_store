@@ -1,7 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.SentStockNotFoundException;
-import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.exception.sentStockService.SentStockServiceException;
 import com.jm.online_store.exception.sentStockService.SentStocksExceptionConstants;
 import com.jm.online_store.model.SentStock;

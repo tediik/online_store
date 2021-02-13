@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.AddressNotFoundException;
-import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;

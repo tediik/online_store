@@ -7,6 +7,7 @@ public enum ResponseOperation {
     HAS_BEEN_UPDATED("%s - has been successfully updated"),
     NO_ERROR(""),
     HAS_NOT_BEEN_DELETED("%s - has not been deleted");
+
     private String message;
 
 
