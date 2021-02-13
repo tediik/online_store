@@ -8,6 +8,7 @@ import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.repository.OrderRepository;
 import com.jm.online_store.service.interf.OrderService;
+import com.opencsv.bean.StatefulBeanToCsv;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -96,11 +97,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<SalesReportDto> findAllSalesBetween(LocalDate startDate, LocalDate endDate) {
         List<Order> completedOrders = orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, startDate.atStartOfDay(), endDate.atTime(23,59,59));
-        if (completedOrders.isEmpty()) {
-            throw new OrderServiceException(OrderExceptionConstants.NO_ORDERS_IN_CUSTOM_DATE_RANGE);
-        }
         List<SalesReportDto> salesList = new ArrayList<>();
         completedOrders.forEach(order -> salesList.add(SalesReportDto.orderToSalesReportDto(order)));
         return salesList;
+    }
+
+    @Override
+    public StatefulBeanToCsv<SalesReportDto> exportOrdersByCSV(LocalDate startDate, LocalDate endDate) {
+
+        return null;
     }
 }
