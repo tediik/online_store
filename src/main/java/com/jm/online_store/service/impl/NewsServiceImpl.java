@@ -1,8 +1,9 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.newsService.NewsExceptionConstants;
 import com.jm.online_store.exception.newsService.NewsNotFoundException;
-import com.jm.online_store.exception.newsService.NewsServiceException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsFilterDto;
 import com.jm.online_store.repository.NewsRepository;
@@ -110,7 +111,8 @@ public class NewsServiceImpl implements NewsService {
     public boolean deleteById(Long id) {
         Optional<News> optionalNews = newsRepository.findById(id);
         if (optionalNews.isEmpty()) {
-            throw new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id));
+            throw new NewsNotFoundException(String.format(ExceptionEnums.NEWS.name()+
+                    ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         newsRepository.deleteById(id);
         return true;

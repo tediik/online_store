@@ -1,8 +1,10 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.StockNotFoundException;
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.stockService.StockExceptionConstants;
-import com.jm.online_store.exception.stockService.StockServiceException;
+import com.jm.online_store.exception.stockService.StockNotFoundException;
+import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.repository.StockRepository;
@@ -50,11 +52,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> findAll() {
-        List<Stock> stockList = stockRepository.findAll();
-        if (stockList.isEmpty()) {
-            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS);
-        }
-        return stockList;
+        return stockRepository.findAll();
     }
 
     /**
@@ -67,7 +65,7 @@ public class StockServiceImpl implements StockService {
         Specification<Stock> spec = StockSpec.get(filterDto);
         Page<Stock> stockPage = stockRepository.findAll(spec, page);
         if (stockPage.isEmpty()) {
-            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS_PAGE);
+            throw new StockNotFoundException(ExceptionEnums.STOCK_PAGE.getDescription() + ExceptionConstants.NOT_FOUND);
         }
         return stockPage;
     }
@@ -76,7 +74,7 @@ public class StockServiceImpl implements StockService {
     public Stock findStockById(Long id) {
         Optional<Stock> stock = stockRepository.findById(id);
         if (stock.isEmpty()) {
-            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCK);
+            throw new StockNotFoundException(StockExceptionConstants.NOT_FOUND_STOCK);
         }
         return stock.get();
     }
@@ -88,40 +86,28 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> findCurrentStocks() {
-        List<Stock> currentStocks = stockRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrEndDateEquals(LocalDate.now(), LocalDate.now(), null);
-        if (currentStocks.isEmpty()) {
-            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS);
-        }
-        return currentStocks;
+        return stockRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrEndDateEquals(LocalDate.now(),
+                LocalDate.now(), null);
     }
 
     @Override
     @Transactional
-    public boolean deleteStockById(Long id) {
-        Optional<Stock> optStock = stockRepository.findById(id);
-        if (optStock.isEmpty()) {
-            return false;
+    public void deleteStockById(Long id) {
+        if (stockRepository.findById(id).isEmpty()) {
+            throw new StockNotFoundException(String.format(ExceptionEnums.STOCK.getDescription() +
+                      ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         stockRepository.deleteStockById(id);
-        return true;
     }
 
     @Override
     public List<Stock> findFutureStocks() {
-        List<Stock> currentStocks = stockRepository.findByStartDateAfter(LocalDate.now());
-        if (currentStocks.isEmpty()) {
-            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS);
-        }
-        return currentStocks;
+        return stockRepository.findByStartDateAfter(LocalDate.now());
     }
 
     @Override
     public List<Stock> findPastStocks() {
-        List<Stock> currentStocks = stockRepository.findByEndDateBefore(LocalDate.now());
-        if (currentStocks.isEmpty()) {
-            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS);
-        }
-        return currentStocks;
+        return stockRepository.findByEndDateBefore(LocalDate.now());
     }
 
     /**
@@ -132,7 +118,7 @@ public class StockServiceImpl implements StockService {
     public List<Stock> findPublishedStocks() {
         List<Stock> publishedStocks = stockRepository.findPublishedStocks();
         if (publishedStocks.isEmpty()) {
-            throw new StockNotFoundException();
+            throw new com.jm.online_store.exception.StockNotFoundException();
         }
         return publishedStocks;
     }
@@ -144,7 +130,8 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Stock updateStock(Stock stock) {
-        Stock modifiedStock = stockRepository.findById(stock.getId()).orElseThrow(StockNotFoundException::new);
+        Stock modifiedStock = stockRepository.findById(stock.getId()).orElseThrow(() ->
+                        new StockNotFoundException(ExceptionEnums.STOCK.getDescription() + ExceptionConstants.NOT_FOUND));
         modifiedStock.setStartDate(stock.getStartDate());
         modifiedStock.setEndDate(stock.getEndDate());
         modifiedStock.setStockTitle(stock.getStockTitle());
@@ -154,3 +141,7 @@ public class StockServiceImpl implements StockService {
         return stockRepository.save(modifiedStock);
     }
 }
+
+
+
+

@@ -1,6 +1,8 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.StockDto;
@@ -9,6 +11,7 @@ import com.jm.online_store.service.interf.StockService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +20,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -42,20 +47,36 @@ public class ManagerStockRestController {
     private final Type listType = new TypeToken<List<StockDto>>() {}.getType();
 
 
+    /**
+     * Метод возвращает конкретный Stock по id
+     *
+     * @return StockDto
+     */
     @GetMapping("/{id}")
     @ApiOperation(value = "Get stock by ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Stock was not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Stock is found"),
+            @ApiResponse(code = 404, message = "Stock was not found")
+    })
     public ResponseEntity<ResponseDto<StockDto>> getStockById(@PathVariable Long id) {
         Stock requestedStock = stockService.findStockById(id);
         StockDto returnValue = modelMapper.map(requestedStock, StockDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
 
+    /**
+     * Метод возвращает список всех Stocks
+     *
+     * @return List<StockDto>
+     */
     @GetMapping("/allStocks")
     @ApiOperation(value = "Get list of all stocks",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Stocks was not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "All stocks found"),
+            @ApiResponse(code = 200, message = "All stocks not found")
+    })
     public ResponseEntity<ResponseDto<List<StockDto>>> getAllStocks() {
         List<Stock> listStocksFromService = stockService.findAll();
         List<StockDto> returnValue = modelMapper.map(listStocksFromService, listType);
@@ -71,70 +92,120 @@ public class ManagerStockRestController {
     @GetMapping("/page")
     @ApiOperation(value = "Return stocks page",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Page was not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Page are found"),
+            @ApiResponse(code = 404, message = "Page was not found")
+    })
     public ResponseEntity<ResponseDto<Page<StockDto>>> getStockPage(@PageableDefault Pageable page, StockFilterDto filterDto) {
         Page<Stock> stockPageFromService = stockService.findPage(page, filterDto);
         Page<StockDto> returnValue = modelMapper.map(stockPageFromService, Page.class);
         return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
 
+
+    /**
+     * Метод возвращает список текущих Stocks
+     * или пустой список
+     *
+     * @return List<StockDto> возвращает список StocksDto
+     */
     @GetMapping("/currentStocks")
     @ApiOperation(value = "Get current stocks",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Stocks was not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Current stocks found"),
+            @ApiResponse(code = 200, message = "Current stocks not found")
+    })
     public ResponseEntity<ResponseDto<List<StockDto>>> getCurrentStocks() {
         List<Stock> currentStocks = stockService.findCurrentStocks();
         List<StockDto> returnValue = modelMapper.map(currentStocks, listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
+
+    /**
+     * Метод возвращает список будущих Stocks
+     * или пустой список
+     *
+     * @return List<StockDto> возвращает список StocksDto
+     */
     @GetMapping("/futureStocks")
     @ApiOperation(value = "Get future stocks",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Stocks was not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Future stocks found"),
+            @ApiResponse(code = 200, message = "Future stocks not found")
+    })
     public ResponseEntity<ResponseDto<List<StockDto>>> getFutureStocks() {
         List<Stock> futureStocksFromService = stockService.findFutureStocks();
         List<StockDto> returnValue = modelMapper.map(futureStocksFromService, listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
+
+    /**
+     * Метод возвращает список прошлых Stocks
+     * или пустой список
+     *
+     * @return List<StockDto> возвращает список StocksDto
+     */
     @GetMapping("/pastStocks")
     @ApiOperation(value = "Get past stocks",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Stocks was not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Past stocks found"),
+            @ApiResponse(code = 200, message = "Past stocks not found")
+    })
     public ResponseEntity<ResponseDto<List<StockDto>>> getPastStocks() {
         List<Stock> currentStocks = stockService.findPastStocks();
         List<StockDto> returnValue = modelMapper.map(currentStocks, listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
+
+    /**
+     * Метод сохраняет сущность Stock в базу данных
+     *
+     * @param stockReq
+     * @return StockDto
+     */
     @PostMapping
     @ApiOperation(value = "Add new stock",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<StockDto>> addNewStock(@RequestBody Stock stock) {
-        Stock stockFromService = stockService.addStock(stock);
-        StockDto returnValue = modelMapper.map(stockFromService, StockDto.class);
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
+    @ApiResponse(code = 201, message = "Stock created")
+    public ResponseEntity<ResponseDto<StockDto>> addNewStock(@RequestBody StockDto stockReq) {
+        Stock gotBack = stockService.addStock(modelMapper.map(stockReq, Stock.class));
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(gotBack, StockDto.class)), HttpStatus.CREATED);
     }
 
+
+    /**
+     * Метод удаляет сущность Stock из базы данных по id
+     * может выбросить StockNotFoundException если не найдет по id
+     *
+     * @param id Long
+     * @return String - описание резльтата операции
+     */
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete stock by ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<String>> deleteStock(@PathVariable Long id) {
-        return stockService.deleteStockById(id) ?
-                ResponseEntity.ok(new ResponseDto<>(true,
-                        String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id)))
-                : ResponseEntity.badRequest().build();
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Stock was deleted"),
+            @ApiResponse(code = 404, message = "Stock not found")
+    })
+    public ResponseEntity<ResponseDto<String>> deleteStockById(@PathVariable Long id) {
+        stockService.deleteStockById(id);
+        return ResponseEntity.ok(new ResponseDto<>(true,
+                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id),ResponseOperation.NO_ERROR.getMessage()));
     }
 
     @PutMapping
     @ApiOperation(value = "Method for update stock",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Stock was not found")
-    public ResponseEntity<ResponseDto<StockDto>> modifyStock(@RequestBody Stock stock) {
-        Stock stockFromService = stockService.updateStock(stock);
-        StockDto returnValue = modelMapper.map(stockFromService, StockDto.class);
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
+    public ResponseEntity<ResponseDto<StockDto>> modifyStock(@RequestBody StockDto stockReq) {
+        Stock gotBack = stockService.updateStock(modelMapper.map(stockReq, Stock.class));
+        return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(gotBack, StockDto.class)));
     }
 
 

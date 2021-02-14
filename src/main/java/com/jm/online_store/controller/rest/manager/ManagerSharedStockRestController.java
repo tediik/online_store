@@ -76,7 +76,7 @@ public class ManagerSharedStockRestController {
     public ResponseEntity<ResponseDto<List<SharedStockDto>>> getQuantity() {
         Type listType1 = new TypeToken<List<SharedStockDto>>() {}.getType();
         Type listType2 = new TypeToken<List<StockDto>>() {}.getType();
-        //вытаскиваем список типа SharedStock
+        //вытаскиваем список типа SharedStock из базы
         List<SharedStock> gotBack = sharedStockService.findAll();
         //получаем из списка типа SharedStock  список типа Stock
         List<Stock> stocksFromGotBack = gotBack.stream().map(SharedStock::getStock).collect(Collectors.toList());

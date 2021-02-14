@@ -14,7 +14,7 @@ public interface StockService {
 
     Stock addStock(Stock stock);
 
-    boolean deleteStockById(Long id);
+    void deleteStockById(Long id);
 
     List<Stock> findAll();
 
