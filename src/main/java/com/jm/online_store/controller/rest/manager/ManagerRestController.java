@@ -1,7 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.enums.ResponseOperation;
-import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -11,11 +10,7 @@ import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.UserService;
-import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -39,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
@@ -86,7 +80,7 @@ public class ManagerRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "News has been found"),
-            @ApiResponse(code = 200, message = "News has been found. Returns empty list")
+            @ApiResponse(code = 200, message = "News has not been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> getAllNews() {
         List<NewsDto> returnValue = modelMapper.map(newsService.findAll(), listType);
@@ -162,8 +156,8 @@ public class ManagerRestController {
     @ApiOperation(value = "Get mapping for get request to response with sales during the custom date range",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "sales has been found"),
-            @ApiResponse(code = 200, message = "sales hasn't been found. Returns empty list")
+            @ApiResponse(code = 200, message = "sales are found"),
+            @ApiResponse(code = 200, message = "sales  found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<SalesReportDto>>> getSalesForCustomRange(@RequestParam String stringStartDate,
                                                                                     @RequestParam String stringEndDate) {
@@ -183,28 +177,15 @@ public class ManagerRestController {
     @GetMapping("/sales/exportCSV")
     @ApiOperation(value = "Mapping for csv export",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 400, message = "Problem with writing csv file")
-    public ResponseEntity<StatefulBeanToCsv<SalesReportDto>> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate, @RequestParam String stringEndDate, HttpServletResponse response) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "orders have been sent"),
+            @ApiResponse(code = 404, message = "orders haven't been found"),
+            @ApiResponse(code = 500, message = "problem with writing CSV")
+    })
+    public ResponseEntity<ResponseDto<FileSystemResource>> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate, @RequestParam String stringEndDate, HttpServletResponse response) {
         LocalDate startDate = LocalDate.parse(stringStartDate);
         LocalDate endDate = LocalDate.parse(stringEndDate);
-        StatefulBeanToCsv<SalesReportDto> returnValue = orderService.exportOrdersByCSV(startDate, endDate);
-        try {
-            response.setContentType("text/html; charset=UTF-8");
-            response.setCharacterEncoding("UTF-8");
-            StatefulBeanToCsv<SalesReportDto> writer = new StatefulBeanToCsvBuilder<SalesReportDto>(response.getWriter())
-                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-                    .withSeparator(';')
-                    .withOrderedResults(true)
-                    .build();
-            writer.write(orderService.findAllSalesBetween(startDate, endDate));
-
-            return ResponseEntity.ok().build();
-        } catch (OrdersNotFoundException e) {
-            log.debug("csv file was successfully sent");
-            return ResponseEntity.notFound().build();
-        } catch (CsvRequiredFieldEmptyException | IOException | CsvDataTypeMismatchException e) {
-            log.debug("Problem with writing csv file");
-            return ResponseEntity.badRequest().build();
-        }
+        orderService.exportOrdersByCSV(startDate, endDate, response);
+        return ResponseEntity.ok().build();
     }
 }

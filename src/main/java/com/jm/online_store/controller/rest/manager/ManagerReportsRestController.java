@@ -35,6 +35,7 @@ public class ManagerReportsRestController {
     private final SentStockService sentStockService;
     private final ModelMapper modelMapper = new ModelMapper();
     private final Type listType = new TypeToken<List<CustomerDto>>() {}.getType();
+
     /**
      * метод получения списка пользователей, подписанных на рассылку по номеру дня
      *

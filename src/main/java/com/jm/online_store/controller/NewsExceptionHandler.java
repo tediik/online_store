@@ -1,6 +1,7 @@
 package com.jm.online_store.controller;
 
 import com.jm.online_store.exception.newsService.NewsNotFoundException;
+import com.jm.online_store.exception.orderSerivce.OrdersNotFoundException;
 import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.dto.ResponseDto;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,12 @@ public class NewsExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handlerUserNotFoundException(UserNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(OrdersNotFoundException.class)
+    public ResponseEntity<Object> handlerOrdersNotFoundException(OrdersNotFoundException ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }

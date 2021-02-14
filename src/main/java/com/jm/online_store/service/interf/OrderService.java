@@ -5,6 +5,7 @@ import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.opencsv.bean.StatefulBeanToCsv;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,6 @@ public interface OrderService {
 
     List<SalesReportDto> findAllSalesBetween(LocalDate startDate, LocalDate endDate);
 
-    StatefulBeanToCsv<SalesReportDto> exportOrdersByCSV(LocalDate startDate, LocalDate endDate);
+    StatefulBeanToCsv<SalesReportDto> exportOrdersByCSV(LocalDate startDate, LocalDate endDate, HttpServletResponse response);
 
 }
