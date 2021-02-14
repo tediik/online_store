@@ -1,9 +1,11 @@
 package com.jm.online_store.controller.rest.customer;
 
+import com.jm.online_store.controller.ResponseOperation;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CustomerService;
@@ -17,6 +19,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -56,16 +59,9 @@ public class CustomerRestController {
             @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
     })
     public ResponseEntity<ResponseDto<String>> changeMailReq(@RequestParam String newMail) {
-        Customer customer = customerService.getCurrentLoggedInUser();
-        if (customerService.isExist(newMail)) {
-            log.debug("Попытка ввести дублирующийся email: " + newMail);
-            return new ResponseEntity<>(new ResponseDto<>(false, null, "Duplicated email error"), HttpStatus.BAD_REQUEST);
-        }
-        if (ValidationUtils.isNotValidEmail(newMail)) {
-            return new ResponseEntity<>(new ResponseDto<>(false, null, "Not valid email error"), HttpStatus.BAD_REQUEST);
-        } else {
-            userService.changeUsersMail(customer, newMail);
-            return new ResponseEntity<>(new ResponseDto<>(true, "Email будет изменен после подтверждения.", null), HttpStatus.OK);
+        public ResponseEntity<ResponseDto<CustomerDto>> changeMailReq(@RequestParam String newMail) {
+            Customer customer = customerService.changeMail(newMail);
+            return new ResponseEntity<>(new ResponseDto<>(true, "Email будет изменен после подтверждения.", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
         }
     }
 

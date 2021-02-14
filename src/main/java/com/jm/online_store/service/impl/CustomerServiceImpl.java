@@ -294,7 +294,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer changeMail(String newMail) {
         Customer customer = getCurrentLoggedInUser();
 
-        if (customer != null) {
+        if (customer == null) {
             throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_ARE_NOT_AUTHENTICATED);
         }
         if (isExist(newMail)) {
