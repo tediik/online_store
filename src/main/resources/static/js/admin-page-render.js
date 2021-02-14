@@ -73,6 +73,7 @@ function editUserModalWindowRender(user, allRoles) {
         }
     })
 }
+
 function compareRolesId(userRoles, roleNameToCheck) {
     for (let i = 0; i < userRoles.length; i++) {
         if (userRoles[i].name === roleNameToCheck) {
@@ -98,10 +99,11 @@ function deleteUserModalWindowRender(userToDelete) {
     $.each(userToDelete.roles, function (i, role) {
         $('#rolesSelectModal').append(`<option value=${role.id} selected="true" disabled>${role.name}</option>>`)
     })
+
 }
 
 /**
- * Функция обраотки нажатия кнопки Edit в таблице пользователей
+ * Функция обработки нажатия кнопки Edit в таблице пользователей
  * @param event
  */
 function handleEditUserButton(event) {
@@ -126,7 +128,7 @@ function handleDeleteUserButton(event) {
 }
 
 /**
- * функция делает активным таблицу с пользователями
+ * Функция делает активным таблицу с пользователями
  * и обновляет в ней данные
  */
 function showAndRefreshHomeTab() {
@@ -232,6 +234,7 @@ function handleUserAcceptButtonFromModalWindow(event) {
         lastName: $('#lastNameInputModal').val(),
         password: $('#passwordInputModal').val(),
         roles: getSelectValues(document.getElementById("rolesSelectModal")),
+        expiredStatus: $('#flexSwitchCheckDefault').checked ? "false" : "true"
     };
 
     /**
@@ -261,36 +264,38 @@ function handleUserAcceptButtonFromModalWindow(event) {
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-user')) {
-            fetch(adminRestUrl + "/users/" + user.id, {headers: headers})
-                .then(response => response.json())
-                .then(userToDelete => {
-                    let hasCustomerRole = compareRolesId(userToDelete.roles, 'ROLE_CUSTOMER');
-                    if (hasCustomerRole === true) {
-                        fetch("/api/customer/deleteProfile/" + user.id, {
-                            headers: headers,
-                            method: 'DELETE'
-                        }).then(function (response) {
-                            if (response.ok) {
-                                fetchUsersAndRenderTable()
-                                $('#userModalWindow').modal('hide')
-                                toastr.success("Пользователь заблокирован");
-                            } else {
-                                modalHandleNotValidFormField("Не удается заблокировать пользователя")
-                            }})
-                    } else {
-                        fetch(adminRestUrl + "/" + user.id, {
-                            headers: headers,
-                            method: 'DELETE'
-                        }).then(function (response) {
-                            if (response.ok) {
-                                $('#tr-' + user.id).remove()
-                                $('#userModalWindow').modal('hide')
-                                toastr.success("Пользователь удален");
-                            } else {
-                                modalHandleNotValidFormField("Не удается удалить пользователя")
-                            }})
-                    }
-                })
+        fetch(adminRestUrl + "/users/" + user.id, {headers: headers})
+            .then(response => response.json())
+            .then(userToDelete => {
+                let hasCustomerRole = compareRolesId(userToDelete.roles, 'ROLE_CUSTOMER');
+                if (hasCustomerRole === true) {
+                    fetch("/api/customer/deleteProfile/" + user.id, {
+                        headers: headers,
+                        method: 'DELETE'
+                    }).then(function (response) {
+                        if (response.ok) {
+                            fetchUsersAndRenderTable()
+                            $('#userModalWindow').modal('hide')
+                            toastr.success("Пользователь заблокирован");
+                        } else {
+                            modalHandleNotValidFormField("Не удается заблокировать пользователя")
+                        }
+                    })
+                } else {
+                    fetch(adminRestUrl + "/" + user.id, {
+                        headers: headers,
+                        method: 'DELETE'
+                    }).then(function (response) {
+                        if (response.ok) {
+                            $('#tr-' + user.id).remove()
+                            $('#userModalWindow').modal('hide')
+                            toastr.success("Пользователь удален");
+                        } else {
+                            modalHandleNotValidFormField("Не удается удалить пользователя")
+                        }
+                    })
+                }
+            })
     } else {
         fetch(adminRestUrl, {
             method: 'PUT',
@@ -342,6 +347,28 @@ function getSelectValues(select) {
     }
     return result;
 }
+
+// /**
+//  * Функция возвращает значение чекбокса "Заблокиировать пользователя"
+//  * @param checkbox
+//  * @constructor
+//  */
+// function CheckBox(checkbox) {
+//     let checkbox2 = checkbox
+//     const check = document.querySelector('.form-check-input');
+//     check.addEventListener('change', function () {
+//             if (checkbox2.checked) {
+//                 checkbox2 = false;
+//                 console.log('checked');
+//                 return false;
+//             } else {
+//                 checkbox2 = true;
+//                 console.log('');
+//                 return true
+//             }
+//         }
+//     )
+// }
 
 /**
  * функция рендера таблицы пользователей

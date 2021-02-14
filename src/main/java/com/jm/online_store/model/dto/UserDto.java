@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -14,18 +15,20 @@ import java.util.Set;
 @Accessors(chain = true)
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@ApiModel(description =  "DTO для данных юзера")
+@ApiModel(description = "DTO для данных юзера")
 public class UserDto {
     private Long id;
     private String email;
     private String firstName;
     private String lastName;
+    private String password;
     private String phoneNumber;
     private User.Gender userGender;
     private LocalDate birthdayDate;
     private LocalDate registerDate;
     private String profilePicture;
     private Set<Role> roles;
+    private String expiredStatus;
 
     public static UserDto fromUser(User user) {
         UserDto userDto = new UserDto();
@@ -39,6 +42,14 @@ public class UserDto {
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
+
+        userDto.setPassword(user.getPassword());
+
+        if (!user.isAccountNonExpiredStatus()) {
+            userDto.setExpiredStatus("false");
+        } else {
+            userDto.setExpiredStatus("true");
+        }
         return userDto;
     }
 }

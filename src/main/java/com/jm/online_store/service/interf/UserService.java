@@ -2,6 +2,7 @@ package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.UserDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ public interface UserService {
 
     void deleteByID(Long id);
 
-    void updateUser(User user);
+    User updateUser(User user);
 
     User updateUserProfile(User user);
 

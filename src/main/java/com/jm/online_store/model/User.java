@@ -62,6 +62,8 @@ public class User implements UserDetails {
 
     private boolean isAccountNonBlockedStatus = true;
 
+    private boolean isAccountNonExpiredStatus = true;
+
     @Transient
     @NotBlank
     private String passwordConfirm;
@@ -207,7 +209,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return isAccountNonExpiredStatus;
     }
 
     @Override

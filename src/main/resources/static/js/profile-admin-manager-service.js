@@ -87,7 +87,7 @@ function getCurrentUser() {
 
 /**
  * Функция обновления профиля
- * @param event событие click по кнопке Соохранить
+ * @param event событие click по кнопке Сохранить
  */
 function updateProfile(event) {
     let date = event.target.dataset.postDate

@@ -1,7 +1,9 @@
 package com.jm.online_store.controller.rest.admin;
 
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -13,6 +15,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -113,7 +116,7 @@ public class AdminRestController {
 
     /**
      * rest mapping to modify user from admin page
-     * @param user {@link User}
+     * @param userDto {@link User}
      * @return new ResponseEntity<>(HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
@@ -123,26 +126,37 @@ public class AdminRestController {
             @ApiResponse(code = 200, message = "Changes were successfully added"),
             @ApiResponse(code = 400, message = "Bad request"),
     })
-    public ResponseEntity editUser(@RequestBody User user) {
-        if (userService.findById(user.getId()).isEmpty()) {
-            log.debug("There are no user with id: {}", user.getId());
+    public ResponseEntity editUser(@RequestBody UserDto userDto) {
+        User deSerializedUser = new User();
+        BeanUtils.copyProperties(userDto, deSerializedUser);
+
+        if (userDto.getExpiredStatus().equals("false")){
+            deSerializedUser.setAccountNonExpiredStatus(false);
+            log.debug("Пользователь {} успешно заблокирован", deSerializedUser.getEmail());
+        } else if (userDto.getExpiredStatus().equals("true")) {
+            deSerializedUser.setAccountNonBlockedStatus(true);
+            log.debug("Пользователь {} успешно разблокирован", deSerializedUser.getEmail());
+        }
+
+        if (userService.findById(userDto.getId()).isEmpty()) {
+            log.debug("There are no user with id: {}", userDto.getId());
             return ResponseEntity.noContent().build();
         }
-        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+        if (ValidationUtils.isNotValidEmail(userDto.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
             return ResponseEntity.badRequest().body("notValidEmailError");
         }
-        if (user.getRoles().size() == 0) {
+        if (userDto.getRoles().size() == 0) {
             log.debug("Roles not selected");
             return ResponseEntity.badRequest().body("emptyRolesError");
         }
-        if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
-                && userService.isExist(user.getEmail())) {
+        if (!userService.findById(userDto.getId()).get().getEmail().equals(userDto.getEmail())
+                && userService.isExist(userDto.getEmail())) {
             log.debug("User with same email already exists");
             return ResponseEntity.badRequest().body("duplicatedEmailError");
         }
-        userService.updateUserFromAdminPage(user);
-        log.debug("Changes to user with id: {} was successfully added", user.getId());
+        userService.updateUserFromAdminPage(deSerializedUser);
+        log.debug("Changes to user with id: {} was successfully added", userDto.getId());
         return ResponseEntity.ok().build();
     }
 
@@ -194,4 +208,12 @@ public class AdminRestController {
     public List<User> filterByRoles(@PathVariable String role) {
         return userService.findByRole(role);
     }
+
+//    @PutMapping(value = "/block")
+//    public ResponseEntity<User> blockUserAccount(User user) {
+//        User blockUser = userService.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+//        blockUser.setAccountNonBlockedStatus(false);
+//        userService.updateUser(blockUser);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

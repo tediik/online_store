@@ -107,13 +107,13 @@ function checkPassword() {
  * и удаляется значение
  */
 function chekboxChanges(o) {
-    if (o.checked != true) {
+    if (o.checked !== true) {
         $(".day-of-the-week-drop-list").addClass("d-none")
         $("#dayOfWeekDropList").val('')
     } else {
         $(".day-of-the-week-drop-list").removeClass("d-none")
     }
-};
+}
 
 /**
  * Функция удаления профиля

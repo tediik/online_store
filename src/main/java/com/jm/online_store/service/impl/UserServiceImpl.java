@@ -162,8 +162,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void updateUser(User user) {
-        userRepository.save(user);
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     /**
@@ -519,6 +519,14 @@ public class UserServiceImpl implements UserService {
         editedUser.setEmail(user.getEmail());
         editedUser.setFirstName(user.getFirstName());
         editedUser.setLastName(user.getLastName());
+
+        editedUser.setAccountNonExpiredStatus(user.isAccountNonExpired());
+        if(!editedUser.isAccountNonExpiredStatus()){
+            log.debug("Пользователь {} заблокирован", user.getEmail());
+        } else if (editedUser.isAccountNonExpiredStatus()){
+            log.debug("Пользователь {} разблокирован", user.getEmail());
+        }
+
         if (!user.getPassword().equals("")) {
             editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
@@ -586,7 +594,7 @@ public class UserServiceImpl implements UserService {
             updateUser(usertoUpdate);
             return true;
         }
-        if (!addressFromDB.isPresent()) {
+        if (addressFromDB.isEmpty()) {
             Address addressToAdd = addressService.addAddress(address);
             if (usertoUpdate.getUserAddresses() != null) {
                 usertoUpdate.getUserAddresses().add(addressToAdd);
