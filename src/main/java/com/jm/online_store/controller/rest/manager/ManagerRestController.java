@@ -57,6 +57,7 @@ public class ManagerRestController {
 
     /**
      * Метод возвращающий залогиненного юзера. Работает при включенной сессии.
+     *
      * @return authUser возвращает юзера из базы данных
      */
     @GetMapping(value = "/authUser")
@@ -182,7 +183,9 @@ public class ManagerRestController {
             @ApiResponse(code = 404, message = "orders haven't been found"),
             @ApiResponse(code = 500, message = "problem with writing CSV")
     })
-    public ResponseEntity<ResponseDto<FileSystemResource>> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate, @RequestParam String stringEndDate, HttpServletResponse response) {
+    public ResponseEntity<ResponseDto<FileSystemResource>> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate,
+                                                                                                @RequestParam String stringEndDate,
+                                                                                                HttpServletResponse response) {
         LocalDate startDate = LocalDate.parse(stringStartDate);
         LocalDate endDate = LocalDate.parse(stringEndDate);
         orderService.exportOrdersByCSV(startDate, endDate, response);

@@ -69,7 +69,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public News findById(long id) {
         if (newsRepository.findById(id).isEmpty()) {
-             throw new NewsServiceException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id));
+             throw new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id));
         }
         return newsRepository.findById(id).get();
     }
