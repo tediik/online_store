@@ -198,7 +198,7 @@ public class ProductServiceImpl implements ProductService {
             product.setRating(0d);
         }
         if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName(loadPictureFrom + "00.jpg");
+            product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg");
         } else {
             product.setProductPictureName(product.getProductPictureName());
         }
@@ -640,7 +640,7 @@ public class ProductServiceImpl implements ProductService {
     public Long editProduct(Product product) {
 
         if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName("00.jpg");
+            product.setProductPictureName("defaultProductImage.jpg");
         } else {
             product.setProductPictureName(product.getProductPictureName());
         }
