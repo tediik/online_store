@@ -22,7 +22,13 @@ public interface TopicsCategoryService {
 
     TopicsCategory update(TopicsCategory topicsCategory);
 
+    TopicsCategory updateById(Long id , TopicsCategory topicsCategory);
+
+    TopicsCategory archive(Long id);
+
     TopicsCategory archive(TopicsCategory topicsCategory);
+
+    TopicsCategory unarchive(Long id);
 
     TopicsCategory unarchive(TopicsCategory topicsCategory);
 }

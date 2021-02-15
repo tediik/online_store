@@ -30,18 +30,21 @@ public class ManagerTopicRestController {
 
     /**
      * Метод для получения единственной темы
+     * может выбросить исключение TopicNotFoundException
      *
      * @param id идентификатор темы
      * @return ResponseEntity<Topic> возвращает единственную тему со статусом ответа,
-     * если темы с таким id не существует - только статус
+     * если темы с таким id не существует - выбросит исключенине TopicNotFoundException
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "Get topic by ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Topic was not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Topic was found"),
+            @ApiResponse(code = 404, message = "Topic was not found")
+    })
     public ResponseEntity<ResponseDto<TopicDto>> readTopicById(@PathVariable(name = "id") long id) {
-        Topic topicFromService = topicService.findById(id);
-        TopicDto returnValue = modelMapper.map(topicFromService, TopicDto.class);
+        TopicDto returnValue = modelMapper.map(topicService.findById(id), TopicDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -50,15 +53,19 @@ public class ManagerTopicRestController {
      *
      * @param topic тема, которая будет создана
      * @return ResponseEntity<Topic> возвращает созданную тему со статусом ответа,
-     * если тема с таким именем уже существует - только статус
+     * если тема с таким именем уже существует - выбросит исключение TopicAlreadyExists
      */
     @PostMapping
     @ApiOperation(value = "Create new topic",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 304, message = "Topic was not modified")
-    public ResponseEntity<ResponseDto<TopicDto>> createTopic(@RequestBody Topic topic){
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Topic was created"),
+            @ApiResponse(code = 400, message = "Topic was not created")
+    })
+    public ResponseEntity<ResponseDto<TopicDto>> createTopic(@RequestBody TopicDto topicReq){
+        Topic topic = modelMapper.map(topicReq, Topic.class);
         TopicDto returnValue = modelMapper.map(topicService.create(topic), TopicDto.class);
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
+        return new ResponseEntity<>(new ResponseDto<>(true ,returnValue ), HttpStatus.CREATED);
     }
 
     /**
@@ -70,10 +77,10 @@ public class ManagerTopicRestController {
      * если тема с таким id не существует - только статус
      */
     @PutMapping
-    @ApiOperation(value = "Update topic by ID",
+    @ApiOperation(value = "Update topic",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 304, message = "Topic was not modified"),
+            @ApiResponse(code = 200, message = "Topic was modified"),
             @ApiResponse(code = 404, message = "Topic was not found")
     })
     public ResponseEntity<ResponseDto<TopicDto>> editTopic( @RequestBody Topic topic) {

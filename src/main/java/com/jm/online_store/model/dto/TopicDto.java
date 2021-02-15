@@ -1,5 +1,6 @@
 package com.jm.online_store.model.dto;
 
+import com.jm.online_store.model.TopicsCategory;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,4 +15,5 @@ import lombok.NoArgsConstructor;
 public class TopicDto {
     private Long id;
     private String topicName;
+    private TopicsCategoryDto topicsCategory;
 }

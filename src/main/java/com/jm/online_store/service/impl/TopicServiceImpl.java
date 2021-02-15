@@ -1,7 +1,10 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
+import com.jm.online_store.exception.topicService.TopicAlreadyExists;
 import com.jm.online_store.exception.topicService.TopicExceptionConstants;
-import com.jm.online_store.exception.topicService.TopicServiceException;
+import com.jm.online_store.exception.topicService.TopicNotFoundException;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.repository.TopicRepository;
 import com.jm.online_store.service.interf.TopicService;
@@ -22,7 +25,7 @@ public class TopicServiceImpl implements TopicService {
     @Transactional
     public Topic create(Topic topic) {
         if (existsByTopicName(topic.getTopicName())) {
-            throw new TopicServiceException(TopicExceptionConstants.ALREADY_EXISTS_TOPIC);
+            throw new TopicAlreadyExists(ExceptionEnums.TOPIC.getDescription() + ExceptionConstants.ALREADY_EXISTS);
         }
         return topicRepository.saveAndFlush(topic);
     }
@@ -51,7 +54,8 @@ public class TopicServiceImpl implements TopicService {
     public Topic findById(long id) {
         Optional<Topic> optTopic = topicRepository.findById(id);
         if (optTopic.isEmpty()) {
-            throw new TopicServiceException(TopicExceptionConstants.NOT_FOUND_TOPIC);
+            throw new TopicNotFoundException(ExceptionEnums.TOPIC.getDescription() +
+                    String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         return optTopic.get();
     }
@@ -60,7 +64,7 @@ public class TopicServiceImpl implements TopicService {
     @Transactional
     public Topic update(Topic topic) {
         if (!existsById(topic.getId())) {
-            throw new TopicServiceException(TopicExceptionConstants.NOT_FOUND_TOPIC);
+            throw new TopicNotFoundException(ExceptionEnums.TOPIC.getDescription() + ExceptionConstants.NOT_FOUND);
         }
         return topicRepository.saveAndFlush(topic);
     }

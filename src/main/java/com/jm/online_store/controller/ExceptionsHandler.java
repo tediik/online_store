@@ -3,6 +3,10 @@ package com.jm.online_store.controller;
 import com.jm.online_store.exception.newsService.NewsNotFoundException;
 import com.jm.online_store.exception.orderSerivce.OrdersNotFoundException;
 import com.jm.online_store.exception.stockService.StockNotFoundException;
+import com.jm.online_store.exception.topicService.TopicAlreadyExists;
+import com.jm.online_store.exception.topicService.TopicNotFoundException;
+import com.jm.online_store.exception.topicsCategoryService.TopicCategoryAlreadyExists;
+import com.jm.online_store.exception.topicsCategoryService.TopicCategoryNotFoundException;
 import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.dto.ResponseDto;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +17,35 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionsHandler {
+
+
+
+
+    @ExceptionHandler(TopicCategoryAlreadyExists.class)
+    public ResponseEntity<Object> handlerTopicCategoryAlreadyExistsException(TopicCategoryAlreadyExists ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TopicCategoryNotFoundException.class)
+    public ResponseEntity<Object> handlerTopicCategoryNotFoundException(TopicCategoryNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(TopicAlreadyExists.class)
+    public ResponseEntity<Object> handlerTopicAlreadyExistsException(TopicAlreadyExists ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(TopicNotFoundException.class)
+    public ResponseEntity<Object> handlerTopicNotFoundException(TopicNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(NewsNotFoundException.class)
     public ResponseEntity<Object> handlerNewsNotFoundException(NewsNotFoundException ex ) {
@@ -36,5 +69,6 @@ public class ExceptionsHandler {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
+
 
 }

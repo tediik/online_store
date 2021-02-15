@@ -66,7 +66,7 @@ public class ManagerStockRestController {
     }
 
     /**
-     * Метод возвращает список всех Stocks
+     * Метод возвращает список всех Stock
      *
      * @return List<StockDto>
      */
@@ -183,7 +183,7 @@ public class ManagerStockRestController {
      * Метод удаляет сущность Stock из базы данных по id
      * может выбросить StockNotFoundException если не найдет по id
      *
-     * @param id Long
+     * @param id - Long
      * @return String - описание резльтата операции
      */
     @DeleteMapping("/{id}")
@@ -199,6 +199,12 @@ public class ManagerStockRestController {
                 String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id),ResponseOperation.NO_ERROR.getMessage()));
     }
 
+    /**
+     * Метод обновляет сущность Stock в базе данных
+     *
+     * @param stockReq
+     * @return StockDto - обновленную сущность из базы данных
+     */
     @PutMapping
     @ApiOperation(value = "Method for update stock",
             authorizations = { @Authorization(value = "jwtToken") })
