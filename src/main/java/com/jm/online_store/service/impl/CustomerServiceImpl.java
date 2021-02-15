@@ -62,7 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public boolean changePassword(Long id, String oldPassword, String newPassword) {
-        Customer customer = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        Customer customer = findById(id).orElseThrow(CustomerServiceException::new);
         if (!passwordEncoder.matches(oldPassword, customer.getPassword())) {
             return false;
         }
@@ -289,18 +289,21 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-
     @Override
+    @Transactional
     public Customer changeMail(String newMail) {
         Customer customer = getCurrentLoggedInUser();
 
         if (customer == null) {
+            log.debug("CUSTOMER ARE NOT AUTHENTICATED: " + newMail);
             throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_ARE_NOT_AUTHENTICATED);
         }
         if (isExist(newMail)) {
+            log.debug("THIS EMAIL ALREADY EXISTS: " + newMail);
             throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_EMAIL_ALREADY_EXISTS);
         }
         if (ValidationUtils.isNotValidEmail(newMail)) {
+            log.debug("EMAIL ADDRESS IS NOT VALID" + newMail);
             throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_EMAIL_NOT_VALID);
         }
 

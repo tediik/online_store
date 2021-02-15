@@ -1,5 +1,6 @@
 package com.jm.online_store.controller;
 
+import com.jm.online_store.exception.admin.UserServiceException;
 import com.jm.online_store.exception.customer.CustomerServiceException;
 import com.jm.online_store.exception.newsService.NewsServiceException;
 import com.jm.online_store.exception.orderSerivce.OrderServiceException;
@@ -23,10 +24,17 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler(value = { CustomerServiceException.class })
-    public ResponseEntity<Object> handlerCustomerServiceException(CustomerServiceException ex, HttpStatus httpStatus) {
+    public ResponseEntity<Object> handlerCustomerServiceException(CustomerServiceException ex) {
 
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), httpStatus);
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = { UserServiceException.class })
+    public ResponseEntity<Object> handlerUserServiceException(UserServiceException ex) {
+
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = { SentStockServiceException.class })

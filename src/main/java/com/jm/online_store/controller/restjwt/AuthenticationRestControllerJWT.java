@@ -57,7 +57,7 @@ public class AuthenticationRestControllerJWT {
 
             return new ResponseEntity<>(new ResponseDto<>(true, response), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid email or password");
+            return new ResponseEntity<>(new ResponseDto<>(false, "Invalid email or password"), HttpStatus.BAD_REQUEST);
         }
     }
 }
