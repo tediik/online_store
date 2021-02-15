@@ -67,18 +67,12 @@ public class NewsServiceImpl implements NewsService {
      * Method accept Long id as parameter and returns {@link News} entity
      *
      * @param id - {@link Long}
-     * @return returns News entity or throws {@link com.jm.online_store.exception.NewsNotFoundException}
+     * @return returns News entity or throws {@link com.jm.online_store.exception.newsService;}
      */
     @Override
     public News findById(long id) {
-        if (newsRepository.findById(id).isEmpty()) {
-             throw new NewsServiceException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id));
-        }
-        return newsRepository.findById(id).get();
+        return newsRepository.findById(id).orElseThrow(() -> new NewsServiceException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id)));
     }
-
-
-
 
     /**
      * Метод выполняет проверку существует ли сущность в базе.
@@ -108,10 +102,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public boolean deleteById(Long id) {
-        Optional<News> optionalNews = newsRepository.findById(id);
-        if (optionalNews.isEmpty()) {
-            throw new NewsServiceException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id));
-        }
+        newsRepository.findById(id).orElseThrow(() -> new NewsServiceException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id)));
         newsRepository.deleteById(id);
         return true;
     }

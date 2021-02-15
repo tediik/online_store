@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 @Api(description = "Rest Controller for fetching or deleting products which prices are tracked by User")
 public class CustomerTrackableProductRestController {
     private final ProductService productService;
+    private final ModelMapper modelMapper;
 
     /**
      * Метод для получения всех товаров, на изменение цены которых подписан
@@ -41,7 +42,6 @@ public class CustomerTrackableProductRestController {
     @ApiOperation(value = "Gets all the products which price current logged in User is tracking",
             authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<List<ProductModelDto>>> getAllTrackableProducts() {
-        ModelMapper modelMapper = new ModelMapper();
         List<ProductModelDto> trackableProducts = productService.findTrackableProductsByLoggedInUser()
                 .stream()
                 .map(product -> modelMapper.map(product, ProductModelDto.class))

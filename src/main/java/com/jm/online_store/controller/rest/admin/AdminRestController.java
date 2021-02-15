@@ -45,15 +45,10 @@ import java.util.List;
 @Api(value = "Rest controller for actions from admins page")
 @RequestMapping(value = "/api/admin")
 public class AdminRestController {
-
     private final UserService userService;
-
     private final FavouritesGroupService favouritesGroupService;
-
     private final CommonSettingsService commonSettingsService;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     /**
      * Rest mapping to  receive authenticated user. from admin page

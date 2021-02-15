@@ -21,7 +21,6 @@ import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +52,7 @@ public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
     private final RecentlyViewedProductsService recentlyViewedProductsService;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email",

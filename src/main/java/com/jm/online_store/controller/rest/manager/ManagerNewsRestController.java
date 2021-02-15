@@ -43,7 +43,7 @@ import java.util.List;
 public class ManagerNewsRestController {
 
     private final NewsService newsService;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     /**
      * Mapping accepts @PathVariable {@link Long} id

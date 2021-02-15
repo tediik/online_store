@@ -117,12 +117,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void cancelSubscription(Long id) {
-        Optional<Customer> optCustomer = customerRepository.findById(id);
-        if (optCustomer.isEmpty()) {
-            throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_NOT_FOUND);
-        }
-        optCustomer.get().setDayOfWeekForStockSend(null);
-        updateCustomer(optCustomer.get());
+        Customer customer = customerRepository.findById(id).orElseThrow(()-> new CustomerServiceException("CUSTOMER_NOT_FOUND"));
+        customer.setDayOfWeekForStockSend(null);
+        updateCustomer(customer);
     }
 
     /**

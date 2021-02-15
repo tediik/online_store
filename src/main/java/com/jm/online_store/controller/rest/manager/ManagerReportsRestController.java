@@ -36,7 +36,7 @@ import java.util.Map;
 public class ManagerReportsRestController {
     private final CustomerService customerService;
     private final SentStockService sentStockService;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     /**
      * метод получения списка пользователей, подписанных на рассылку по номеру дня
