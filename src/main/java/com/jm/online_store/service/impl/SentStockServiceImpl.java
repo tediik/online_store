@@ -1,6 +1,8 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.SentStockNotFoundException;
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.userService.UserExceptionConstants;
 import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.exception.sentStockService.SentStockServiceException;
@@ -58,7 +60,8 @@ public class SentStockServiceImpl implements SentStockService {
     public SentStock addSentStock(SentStock sentStock) {
         SentStock sentStockToAdd = SentStock.builder()
                 .stock(stockService.findStockById(sentStock.getStock().getId()))
-                .user(userService.findById(sentStock.getUser().getId()).orElseThrow(() -> new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND)))
+                .user(userService.findById(sentStock.getUser().getId()).orElseThrow(()
+                        -> new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND)))
                 .sentDate(sentStock.getSentDate())
                 .build();
         return sentStockRepository.save(sentStockToAdd);

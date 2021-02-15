@@ -4,7 +4,6 @@ import com.jm.online_store.exception.aatest.ExceptionConstants;
 import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.stockService.StockExceptionConstants;
 import com.jm.online_store.exception.stockService.StockNotFoundException;
-import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.repository.StockRepository;
@@ -65,18 +64,15 @@ public class StockServiceImpl implements StockService {
         Specification<Stock> spec = StockSpec.get(filterDto);
         Page<Stock> stockPage = stockRepository.findAll(spec, page);
         if (stockPage.isEmpty()) {
-            throw new StockNotFoundException(ExceptionEnums.STOCK_PAGE.getDescription() + ExceptionConstants.NOT_FOUND);
+            throw new StockNotFoundException(ExceptionEnums.STOCK_PAGE.getText() + ExceptionConstants.NOT_FOUND);
         }
         return stockPage;
     }
 
     @Override
     public Stock findStockById(Long id) {
-        Optional<Stock> stock = stockRepository.findById(id);
-        if (stock.isEmpty()) {
-            throw new StockNotFoundException(StockExceptionConstants.NOT_FOUND_STOCK);
-        }
-        return stock.get();
+        return  stockRepository.findById(id).orElseThrow(() -> new StockNotFoundException(ExceptionEnums.STOCK.getText() +
+                String.format( ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
     }
 
     @Override
@@ -93,10 +89,8 @@ public class StockServiceImpl implements StockService {
     @Override
     @Transactional
     public void deleteStockById(Long id) {
-        if (stockRepository.findById(id).isEmpty()) {
-            throw new StockNotFoundException(String.format(ExceptionEnums.STOCK.getDescription() +
-                      ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
-        }
+        stockRepository.findById(id).orElseThrow(() -> new StockNotFoundException(String.format(ExceptionEnums.STOCK.getText() +
+                        ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
         stockRepository.deleteStockById(id);
     }
 
@@ -116,11 +110,7 @@ public class StockServiceImpl implements StockService {
      */
     @Override
     public List<Stock> findPublishedStocks() {
-        List<Stock> publishedStocks = stockRepository.findPublishedStocks();
-        if (publishedStocks.isEmpty()) {
-            throw new com.jm.online_store.exception.StockNotFoundException();
-        }
-        return publishedStocks;
+        return stockRepository.findPublishedStocks();
     }
 
     @Override
@@ -131,7 +121,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public Stock updateStock(Stock stock) {
         Stock modifiedStock = stockRepository.findById(stock.getId()).orElseThrow(() ->
-                        new StockNotFoundException(ExceptionEnums.STOCK.getDescription() + ExceptionConstants.NOT_FOUND));
+                        new StockNotFoundException(ExceptionEnums.STOCK.getText() + ExceptionConstants.NOT_FOUND));
         modifiedStock.setStartDate(stock.getStartDate());
         modifiedStock.setEndDate(stock.getEndDate());
         modifiedStock.setStockTitle(stock.getStockTitle());

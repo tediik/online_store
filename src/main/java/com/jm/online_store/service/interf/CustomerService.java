@@ -40,4 +40,6 @@ public interface CustomerService {
     void deleteByID(Long id);
 
     Customer changeMail(String newMail);
+
+    Customer getById(Long id);
 }

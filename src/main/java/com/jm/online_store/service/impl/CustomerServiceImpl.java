@@ -1,10 +1,12 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
+import com.jm.online_store.exception.customer.CustomerNotFoundException;
 import com.jm.online_store.exception.userService.UserExceptionConstants;
 import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.exception.customer.CustomerServiceException;
-import com.jm.online_store.exception.customer.CustomerExceptionConstants;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
@@ -74,6 +76,11 @@ public class CustomerServiceImpl implements CustomerService {
         return true;
     }
 
+    @Override
+    public Optional<Customer> findById(Long id) {
+        return customerRepository.findById(id);
+    }
+
     /**
      * Поиск клиента по id.
      *
@@ -82,9 +89,14 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     @Transactional
-    public Optional<Customer> findById(Long id) {
-        return customerRepository.findById(id);
+    public Customer getById(Long id) {
+        return customerRepository.findById(id).orElseThrow(()
+                -> new CustomerServiceException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
     }
+
+
+
+
 
     /**
      * Поиск подписчика по email "на лету".
@@ -117,12 +129,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void cancelSubscription(Long id) {
-        Optional<Customer> optCustomer = customerRepository.findById(id);
-        if (optCustomer.isEmpty()) {
-            throw new UserNotFoundException(UserExceptionConstants.CUSTOMER_NOT_FOUND);
-        }
-        optCustomer.get().setDayOfWeekForStockSend(null);
-        updateCustomer(optCustomer.get());
+        Customer customer = customerRepository.findById(id).orElseThrow(() ->
+                new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() +
+                        String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
+        customer.setDayOfWeekForStockSend(null);
     }
 
     /**
@@ -134,11 +144,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public List<Customer> findByDayOfWeekForStockSend(String dayOfWeek) {
-        List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(dayOfWeek));
-        if (customers.isEmpty()) {
-            throw new UserNotFoundException(UserExceptionConstants.EMPTY_CUSTOMERS_LIST);
-        }
-        return customers;
+        return customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(dayOfWeek));
     }
 
     /**
@@ -192,7 +198,8 @@ public class CustomerServiceImpl implements CustomerService {
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
-        return customerRepository.findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+        return customerRepository.findByEmail(auth.getName()).orElseThrow(()
+                -> new UserNotFoundException(ExceptionEnums.CUSTOMERS.getText() + ExceptionConstants.NOT_FOUND));
     }
 
     /**
@@ -214,7 +221,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void restoreCustomer(String email) {
-        Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Customer customer = customerRepository.findByEmail(email).orElseThrow(()
+                -> new UserNotFoundException(ExceptionEnums.CUSTOMERS.getText() + ExceptionConstants.NOT_FOUND));
         customer.setAccountNonBlockedStatus(true);
         customer.setAnchorForDelete(null);
         updateCustomer(customer);
@@ -307,4 +315,6 @@ public class CustomerServiceImpl implements CustomerService {
         userService.changeUsersMail(customer, newMail);
         return customer;
     }
+
+
 }

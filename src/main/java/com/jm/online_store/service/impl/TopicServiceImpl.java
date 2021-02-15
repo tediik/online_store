@@ -3,7 +3,6 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.aatest.ExceptionConstants;
 import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.topicService.TopicAlreadyExists;
-import com.jm.online_store.exception.topicService.TopicExceptionConstants;
 import com.jm.online_store.exception.topicService.TopicNotFoundException;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.repository.TopicRepository;
@@ -25,7 +24,7 @@ public class TopicServiceImpl implements TopicService {
     @Transactional
     public Topic create(Topic topic) {
         if (existsByTopicName(topic.getTopicName())) {
-            throw new TopicAlreadyExists(ExceptionEnums.TOPIC.getDescription() + ExceptionConstants.ALREADY_EXISTS);
+            throw new TopicAlreadyExists(ExceptionEnums.TOPIC.getText() + ExceptionConstants.ALREADY_EXISTS);
         }
         return topicRepository.saveAndFlush(topic);
     }
@@ -52,19 +51,15 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Topic findById(long id) {
-        Optional<Topic> optTopic = topicRepository.findById(id);
-        if (optTopic.isEmpty()) {
-            throw new TopicNotFoundException(ExceptionEnums.TOPIC.getDescription() +
-                    String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
-        }
-        return optTopic.get();
+        return topicRepository.findById(id).orElseThrow(() -> new TopicNotFoundException(ExceptionEnums.TOPIC.getText() +
+                String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
     }
 
     @Override
     @Transactional
     public Topic update(Topic topic) {
         if (!existsById(topic.getId())) {
-            throw new TopicNotFoundException(ExceptionEnums.TOPIC.getDescription() + ExceptionConstants.NOT_FOUND);
+            throw new TopicNotFoundException(ExceptionEnums.TOPIC.getText() + ExceptionConstants.NOT_FOUND);
         }
         return topicRepository.saveAndFlush(topic);
     }

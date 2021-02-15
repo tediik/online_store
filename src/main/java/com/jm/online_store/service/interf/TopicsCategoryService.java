@@ -26,9 +26,7 @@ public interface TopicsCategoryService {
 
     TopicsCategory archive(Long id);
 
-    TopicsCategory archive(TopicsCategory topicsCategory);
-
     TopicsCategory unarchive(Long id);
 
-    TopicsCategory unarchive(TopicsCategory topicsCategory);
+
 }

@@ -47,12 +47,11 @@ public class ProductCharacteristicsRestController {
      *
      * @return List<Characteristic>> возвращает список характеристик
      */
-
     @GetMapping(value = "/characteristics/allCharacteristics")
     @ApiOperation(value = "return list of characteristics",
-            authorizations = { @Authorization(value = "jwtToken") })
+            authorizations = { @Authorization(value = "jwtToken")
+    })
     public List<Characteristic> findAll() {
-
         return characteristicService.findAll();
     }
 

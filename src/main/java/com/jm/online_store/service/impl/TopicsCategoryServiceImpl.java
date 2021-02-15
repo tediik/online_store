@@ -5,14 +5,10 @@ import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.topicService.TopicNotFoundException;
 import com.jm.online_store.exception.topicsCategoryService.TopicCategoryAlreadyExists;
 import com.jm.online_store.exception.topicsCategoryService.TopicCategoryNotFoundException;
-import com.jm.online_store.exception.topicsCategoryService.TopicsCategoryExceptionConstants;
-import com.jm.online_store.exception.topicsCategoryService.TopicsCategoryServiceException;
 import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.repository.TopicsCategoryRepository;
 import com.jm.online_store.service.interf.TopicsCategoryService;
 import lombok.AllArgsConstructor;
-import org.checkerframework.checker.nullness.Opt;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +26,7 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
     @Transactional
     public TopicsCategory create(TopicsCategory topicsCategory) {
         if (topicsCategoryRepository.existsByCategoryName(topicsCategory.getCategoryName()))
-            throw new TopicCategoryAlreadyExists(ExceptionEnums.TOPIC_CATEGORY.getDescription() +
-                    ExceptionConstants.ALREADY_EXISTS);
+            throw new TopicCategoryAlreadyExists(ExceptionEnums.TOPIC_CATEGORY.getText() + ExceptionConstants.ALREADY_EXISTS);
         return topicsCategoryRepository.saveAndFlush(topicsCategory);
     }
 
@@ -47,12 +42,9 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
 
     @Override
     public TopicsCategory findById(Long id) {
-        Optional <TopicsCategory> optional = topicsCategoryRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new TopicNotFoundException(ExceptionEnums.TOPIC_CATEGORY.getDescription()
-                    + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
-        }
-        return optional.get();
+        return topicsCategoryRepository.findById(id).orElseThrow(() ->
+                new TopicNotFoundException(ExceptionEnums.TOPIC_CATEGORY.getText()
+                + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
     }
 
     @Override
@@ -80,24 +72,14 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
     @Override
     @Transactional
     public TopicsCategory updateById(Long id, TopicsCategory topicsCategory) {
-        //ищем в базе данных по id
-        Optional<TopicsCategory> optional = topicsCategoryRepository.findById(id);
-        // если найден по id
-        if (optional.isPresent()) {
-            //сравниваем по имени
-           if (optional.get().getCategoryName().equals(topicsCategory.getCategoryName())) {
-               //сохраняем если по имени равны
-               return topicsCategoryRepository.saveAndFlush(topicsCategory);
-           } else {
-               //бросаем исключение если по имени не равны
-               throw new TopicCategoryNotFoundException(ExceptionEnums.TOPIC_CATEGORY.getDescription()
-                       + ExceptionConstants.NOT_FOUND);
-           }
-        } else {
-            // бросаем исключение если по id не найдено
-            throw new TopicCategoryNotFoundException(ExceptionEnums.TOPIC_CATEGORY.getDescription() +
-                    String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
-        }
+        TopicsCategory topicCat = topicsCategoryRepository.findById(id).orElseThrow(()
+                -> new TopicCategoryNotFoundException(ExceptionEnums.TOPIC_CATEGORY.getText() +
+                String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
+       if (topicCat.getCategoryName().equals(topicsCategory.getCategoryName())) {
+           return topicsCategoryRepository.saveAndFlush(topicsCategory);
+       } else {
+           throw new TopicCategoryNotFoundException(ExceptionEnums.TOPIC_CATEGORY.getText() + ExceptionConstants.NOT_FOUND);
+       }
     }
 
     @Override
@@ -115,7 +97,7 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
                 topicsCategoryRepository.saveAndFlush(toSave);
             } else {
                 //бросаем исключение если пытаются изменить actual без необходимости
-                throw new TopicCategoryAlreadyExists(ExceptionEnums.TOPIC_CATEGORY.getDescription()  +
+                throw new TopicCategoryAlreadyExists(ExceptionEnums.TOPIC_CATEGORY.getText()  +
                         ExceptionConstants.ALREADY_ARCHIVED);
             }
 
@@ -140,7 +122,7 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
                 topicsCategoryRepository.saveAndFlush(toSave);
             } else {
                 //бросаем исключение если пытаются изменить actual без необходимости
-                throw new TopicCategoryAlreadyExists(ExceptionEnums.TOPIC_CATEGORY.getDescription() +
+                throw new TopicCategoryAlreadyExists(ExceptionEnums.TOPIC_CATEGORY.getText() +
                         ExceptionConstants.ALREADY_UNARCHIVED);
             }
 
@@ -148,14 +130,4 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
         return toSave;
     }
 
-
-    @Override
-    public TopicsCategory archive(TopicsCategory topicsCategory) {
-        return null;
-    }
-
-    @Override
-    public TopicsCategory unarchive(TopicsCategory topicsCategory) {
-        return null;
-    }
 }

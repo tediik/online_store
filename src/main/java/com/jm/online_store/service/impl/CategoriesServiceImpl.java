@@ -4,16 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.CategoriesNotFoundException;
+import com.jm.online_store.exception.ProductNotFoundException;
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.CategoriesRepository;
 import com.jm.online_store.service.interf.CategoriesService;
+import com.jm.online_store.service.interf.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.nullness.Opt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,9 +62,8 @@ public class CategoriesServiceImpl implements CategoriesService {
      * Метод обновляет категорию
      */
     @Override
-    @Transactional
-    public void updateCategory(Categories category) {
-        categoriesRepository.save(category);
+    public Categories updateCategory(Categories category) {
+        return categoriesRepository.save(category);
     }
 
     /**
@@ -70,8 +73,9 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public String getCategoryNameByProductId(Long productId) {
         List<Categories> categoriesList = categoriesRepository.findAll();
+
         for (Categories categories : categoriesList) {
-            List<Product> listOfProducts = categories.getProducts();
+            List<Product> listOfProducts  = categories.getProducts();
             if (!listOfProducts.isEmpty()) {
                 for (Product product : listOfProducts) {
                     if (product.getId() == productId) {
@@ -80,7 +84,7 @@ public class CategoriesServiceImpl implements CategoriesService {
                 }
             }
         }
-        return "";
+        return "Product list is empty";
     }
 
     /**
@@ -130,15 +134,13 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     /**
      * Метод удаляет категорию по её id
-     * @param idCategory идентификатор категории
+     * @param id идентификатор категории
      */
     @Override
-    public boolean deleteCategory(Long idCategory) {
-        Optional<Categories> optCategories = getCategoryById(idCategory);
-        if (optCategories.isEmpty()) {
-            return false;
-        }
-        categoriesRepository.deleteById(idCategory);
+    public boolean deleteCategory(Long id) {
+        getCategoryById(id).orElseThrow(() -> new CategoriesNotFoundException(ExceptionEnums.CATEGORY.getText() +
+                String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
+        categoriesRepository.deleteById(id);
         return true;
     }
 

@@ -14,15 +14,15 @@ public enum ExceptionEnums {
     UNPUBLISHED_NEWS("UNPUBLISHED NEWS "),
     ARCHIVED_NEWS("ARCHIVED NEWS "),
     TOPIC("TOPIC "), TOPICS("TOPICS "),
-    TOPIC_CATEGORY("TOPIC CATEGORY "), TOPIC_CATEGORIES("TOPIC CATEGORIES ");
-
+    TOPIC_CATEGORY("TOPIC CATEGORY "), TOPIC_CATEGORIES("TOPIC CATEGORIES "),
+    CATEGORY("CATEGORY "), CATEGORIES("CATEGORIES ");
     private final String description;
 
     ExceptionEnums(String description) {
         this.description = description;
     }
 
-    public String getDescription() {
+    public String getText() {
         return description;
     }
 

@@ -69,10 +69,8 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public News findById(long id) {
-        if (newsRepository.findById(id).isEmpty()) {
-             throw new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id));
-        }
-        return newsRepository.findById(id).get();
+        return newsRepository.findById(id).orElseThrow(() ->
+                        new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id)));
     }
 
 
@@ -95,9 +93,9 @@ public class NewsServiceImpl implements NewsService {
      * @param news сушность для обновления в базе данных
      */
     public News update(News news) {
-        if (newsRepository.findById(news.getId()).isEmpty()) {
-            throw new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, news.getId()));
-        }
+        newsRepository.findById(news.getId()).orElseThrow(() ->
+                new NewsNotFoundException(String.format(ExceptionEnums.NEWS +
+                        ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, news.getId())));
         news.setModifiedDate(LocalDate.now());
         return newsRepository.save(news);
     }
@@ -109,11 +107,8 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public boolean deleteById(Long id) {
-        Optional<News> optionalNews = newsRepository.findById(id);
-        if (optionalNews.isEmpty()) {
-            throw new NewsNotFoundException(String.format(ExceptionEnums.NEWS.name()+
-                    ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
-        }
+        newsRepository.findById(id).orElseThrow(() ->
+                new NewsNotFoundException(String.format(ExceptionEnums.NEWS.name() + ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
         newsRepository.deleteById(id);
         return true;
     }

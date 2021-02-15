@@ -1,5 +1,7 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.sharedStockService.SharedStockExceptionConstants;
 import com.jm.online_store.exception.sharedStockService.SharedStockNotFoundException;
 import com.jm.online_store.exception.userService.UserExceptionConstants;
@@ -42,10 +44,10 @@ public class SharedStockServiceImpl implements SharedStockService {
                             .build();
                 return  sharedStockRepository.save(returnValue);
             } else {
-                throw new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND);
+                throw new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND);
             }
         } else {
-            throw new SharedStockNotFoundException(SharedStockExceptionConstants.SHARED_STOCKS_NOT_FOUND);
+            throw new SharedStockNotFoundException(ExceptionEnums.SHARER_STOCK.getText() + ExceptionConstants.NOT_FOUND);
         }
 
     }

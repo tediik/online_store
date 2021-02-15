@@ -2,11 +2,11 @@ package com.jm.online_store.enums;
 
 public enum ResponseOperation {
 
-    HAS_BEEN_DELETED("%s - has been successfully deleted"),
-    HAS_BEEN_SAVED("%s - has been successfully saved"),
-    HAS_BEEN_UPDATED("%s - has been successfully updated"),
+    HAS_BEEN_DELETED("%s - was successfully deleted"),
+    HAS_BEEN_SAVED("%s - was successfully saved"),
+    HAS_BEEN_UPDATED("%s - was successfully updated"),
     NO_ERROR(""),
-    HAS_NOT_BEEN_DELETED("%s - has not been deleted");
+    HAS_NOT_BEEN_DELETED("%s - was not deleted");
 
     private String message;
 

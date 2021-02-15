@@ -1,5 +1,7 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.orderSerivce.OrdersNotFoundException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.dto.OrderDTO;
@@ -110,7 +112,7 @@ public class OrderServiceImpl implements OrderService {
     public StatefulBeanToCsv<SalesReportDto> exportOrdersByCSV(LocalDate startDate, LocalDate endDate, HttpServletResponse response) {
         List<SalesReportDto> ordersList = findAllSalesBetween(startDate, endDate);
         if (ordersList.isEmpty()) {
-            throw new OrdersNotFoundException("Orders not found");
+            throw new OrdersNotFoundException(ExceptionEnums.ORDER.getText() + ExceptionConstants.NOT_FOUND);
         }
         StatefulBeanToCsv<SalesReportDto> writer = null;
         try {

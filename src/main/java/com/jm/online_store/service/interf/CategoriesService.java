@@ -14,8 +14,8 @@ public interface CategoriesService {
 
     List<Categories> findAll();
 
-    @Transactional
-    void updateCategory(Categories category);
+
+    Categories updateCategory(Categories category);
 
     String getCategoryNameByProductId(Long productId);
 
