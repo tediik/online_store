@@ -1,10 +1,14 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.controller.ResponseOperation;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.PasswordDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,18 +58,22 @@ public class ProfileRestController {
      * @return ResponseEntity<>(body, HttpStatus)
      */
     @PostMapping("/changePassword")
-    @ApiOperation(value = "change password",
+    @ApiOperation(value = "processes request to change password",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity changePassword(@RequestBody PasswordDto passwords) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "No user with such id"),
+            @ApiResponse(code = 200, message = "Изменения для пользователя с идентификатором: \"id\" были успешно добавлены."),
+    })
+    public ResponseEntity<ResponseDto<String>> changePassword(@RequestBody PasswordDto passwords) {
         User user = userService.getCurrentLoggedInUser();
         if (passwords.getNewPassword().equals(passwords.getOldPassword())) {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDto<>(false, "Старый и новый пароли совпадают."), HttpStatus.BAD_REQUEST);
         }
         if (!userService.changePassword(user.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDto<>(false, "Ошибка при изменении пароля."), HttpStatus.BAD_REQUEST);
         }
         log.info("Пароль для пользователя: {} успешно изменён.", user.getEmail());
-        return new ResponseEntity<>("Ok", HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Изменения для пользователя с идентификатором: " + user.getId() + " были успешно добавлены. ", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 
     /**
