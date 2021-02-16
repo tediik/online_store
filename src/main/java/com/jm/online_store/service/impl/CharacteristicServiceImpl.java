@@ -72,8 +72,9 @@ public class CharacteristicServiceImpl implements CharacteristicService {
      */
     @Override
     public List<Characteristic> findByCategoryId(Long categoryId) {
-
-        return categoriesService.getCategoryById(categoryId).orElseThrow(CategoriesNotFoundException::new).getCharacteristics();
+        return categoriesService.getCategoryById(categoryId).orElseThrow(() ->
+                new CategoriesNotFoundException(ExceptionEnums.CATEGORY.getText()
+                        + ExceptionConstants.NOT_FOUND)).getCharacteristics();
     }
 
     /**
@@ -85,7 +86,9 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Override
     public List<Characteristic> findByCategoryName(String category) {
 
-        return categoriesRepository.getCategoriesByCategory(category).orElseThrow(CategoriesNotFoundException::new).getCharacteristics();
+        return categoriesRepository.getCategoriesByCategory(category).orElseThrow(() ->
+                new CategoriesNotFoundException(ExceptionEnums.CATEGORY.getText() +
+                        ExceptionConstants.NOT_FOUND)).getCharacteristics();
     }
 
     /**

@@ -84,7 +84,7 @@ public class ProductCharacteristicsRestController {
     @ApiOperation(value = "add new characteristic",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Characteristic was created"),
+            @ApiResponse(code = 201, message = "Characteristic was created"),
             @ApiResponse(code = 400, message = "Characteristics was not created")
     })
     public ResponseEntity<ResponseDto<CharacteristicDto>> addCharacteristic(@RequestBody CharacteristicDto characteristicReq) {
@@ -169,34 +169,53 @@ public class ProductCharacteristicsRestController {
                 ResponseOperation.NO_ERROR.getMessage()));
     }
 
+
     /**
-     * Метод, который возвращает характеристи для выбранной категории
+     * Метод, который возвращает характеристи для выбранной категории или
+     * бросает исключение CategoriesNotFoundException
      *
      * @param categoryId id нужной категории
-     * @return List<Characteristic> лист харктеристик
+     * @return List<CharacteristicDto> лист харктеристик
      */
     @GetMapping("/characteristics/{categoryId}")
     @ApiOperation(value = "return list of characteristics by id of category",
             authorizations = { @Authorization(value = "jwtToken") })
-    public List<Characteristic> getCharacteristicsByCategory(@PathVariable Long categoryId) {
-        return characteristicService.findByCategoryId(categoryId);
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Characteristics were found"),
+            @ApiResponse(code = 200, message = "Characteristics were not found. Returns empty list"),
+            @ApiResponse(code = 404, message = "Category was not found")
+    })
+    public ResponseEntity<ResponseDto<List<CharacteristicDto>>> getCharacteristicsByCategory(@PathVariable Long categoryId) {
+        List<CharacteristicDto> returnValue = modelMapper.map(characteristicService.findByCategoryId(categoryId), listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
-     * Метод, который возвращает характеристи для выбранной категории
+     * Метод, который возвращает характеристи для выбранной категории или
+     * бросает исключение CategoriesNotFoundException
      *
      * @param category имя нужной категории
-     * @return List<Characteristic> лист харктеристик
+     * @return List<CharacteristicDto> лист харктеристик
      */
     @GetMapping("/characteristicsByCategoryName/{category}")
     @ApiOperation(value = "return list of characteristics by name of category",
             authorizations = { @Authorization(value = "jwtToken") })
-    public List<Characteristic> getCharacteristicsByCategoryName(@PathVariable String category) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Characteristics were found"),
+            @ApiResponse(code = 200, message = "Characteristics were not found. Returns empty list"),
+            @ApiResponse(code = 404, message = "Category was not found")
+    })
+    public ResponseEntity<ResponseDto<List<CharacteristicDto>>> getCharacteristicsByCategoryName(@PathVariable String category) {
+        List<CharacteristicDto> returnValue ;
         if (category.equals("default")) {
-            return characteristicService.findAll();
+            returnValue = modelMapper.map(characteristicService.findAll(), listType);
+            return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
         }
-        return characteristicService.findByCategoryName(category);
+        returnValue = modelMapper.map(characteristicService.findByCategoryName(category), listType);
+        return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
+
+
 
     /**
      * Метод добавляет характеристики, только что добавленному, товару
@@ -207,15 +226,18 @@ public class ProductCharacteristicsRestController {
     @PostMapping(value = "/characteristics/addCharacteristics/{addedProductName}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "return added product with response code",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Characteristics were found"),
+            @ApiResponse(code = 200, message = "Characteristics were not found. Returns empty list"),
+            @ApiResponse(code = 404, message = "Category was not found")
+    })
     public ResponseEntity<List<Long>> addCharacteristics(@RequestBody ProductCharacteristicDto[] productCharacteristicsDto,
                                                          @PathVariable String addedProductName) {
         List<Long> productCharacteristicIds = new ArrayList<>();
 
         for (ProductCharacteristicDto productCharacteristicDto : productCharacteristicsDto) {
             if (!productCharacteristicDto.getValue().equals("")) {
-                productCharacteristicIds.add(productCharacteristicService.addProductCharacteristic(
-                        productService.findProductByName(addedProductName).orElseThrow(ProductNotFoundException::new).getId(),
-                        productCharacteristicDto.getCharacteristicId(), productCharacteristicDto.getValue()));
+                productCharacteristicIds.add(productCharacteristicService.addProductCharacteristic(productService.findProductByName(addedProductName).orElseThrow(ProductNotFoundException::new).getId(), productCharacteristicDto.getCharacteristicId(), productCharacteristicDto.getValue()));
             }
         }
 
