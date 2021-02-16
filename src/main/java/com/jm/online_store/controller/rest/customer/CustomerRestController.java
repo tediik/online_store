@@ -8,6 +8,7 @@ import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.model.dto.ProductModelDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
@@ -25,7 +26,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,9 +69,7 @@ public class CustomerRestController {
 
     /**
      * метод обработки изменения пароля User.
-     * @param model модель для view
-     * @param oldPassword старый пароль
-     * @param newPassword новый пароль
+     * @param passwords старый и новый пароли из PasswordDto
      * @return ResponseEntity<ResponseDto<String>>, HttpStatus.OK
      */
     @PostMapping("/change-password")
@@ -81,12 +79,15 @@ public class CustomerRestController {
             @ApiResponse(code = 400, message = "No user with such id"),
             @ApiResponse(code = 200, message = "Изменения для пользователя с идентификатором: \"id\" были успешно добавлены."),
     })
-    public ResponseEntity<ResponseDto<String>> changePassword(Model model,
-                                         @RequestParam String oldPassword,
-                                         @RequestParam String newPassword) {
+    public ResponseEntity<ResponseDto<String>> changePassword(@RequestBody PasswordDto passwords) {
         Customer customer = customerService.getCurrentLoggedInUser();
-        customerService.changePassword(customer.getId(), oldPassword, newPassword);
-        log.debug("Changes for user with ID: {} added successfully", customer.getId());
+        if(passwords.getOldPassword().equals(passwords.getNewPassword())) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Старый и новый пароли совпадают."), HttpStatus.BAD_REQUEST);
+        }
+        if(!customerService.changePassword(customer.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Ошибка при изменении пароля."), HttpStatus.BAD_REQUEST);
+        }
+        log.info("Пароль для пользователя: {} успешно изменён.", customer.getEmail());
         return new ResponseEntity<>(new ResponseDto<>(true, "Изменения для пользователя с идентификатором: " + customer.getId() + " были успешно добавлены. ", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 
