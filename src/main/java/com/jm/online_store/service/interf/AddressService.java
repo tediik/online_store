@@ -10,4 +10,5 @@ public interface AddressService {
     Address addAddress(Address address);
     List<Address> findAllShops();
     Optional<Address> findSameAddress(Address address);
+    void deleteById(Long id);
 }

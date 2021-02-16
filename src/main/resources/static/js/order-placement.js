@@ -132,7 +132,7 @@ function showShops(shops1) {
                 <input type="radio" id="shop${address.id}"
                     name="shops" value="${address.id}">
                 <label for="shop${address.id}">
-                    ${address.region},${address.city},${address.street},${address.building}
+                    ${address.region}, г. ${address.city }, улица ${address.street}, дом ${address.building}
                 </label>
             </div>
         `);

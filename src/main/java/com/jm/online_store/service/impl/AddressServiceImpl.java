@@ -50,6 +50,14 @@ public class AddressServiceImpl implements AddressService {
     }
 
     /**
+     * Метод для удаления адреса по id
+     */
+    @Override
+    public void deleteById(Long id) {
+        addressRepository.deleteById(id);
+    }
+
+    /**
      * Метод поиска адресa, совпадающего по всем полям
      * @return Optional<Address>
      */
