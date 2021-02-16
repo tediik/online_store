@@ -9,7 +9,6 @@ public enum ResponseOperation {
 
     private String message;
 
-
     ResponseOperation(String message) {
         this.message = message;
     }
