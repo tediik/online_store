@@ -1,6 +1,7 @@
 package com.jm.online_store.controller;
 
 import com.jm.online_store.exception.CategoriesNotFoundException;
+import com.jm.online_store.exception.CharacteristicNotFoundException;
 import com.jm.online_store.exception.customer.CustomerNotFoundException;
 import com.jm.online_store.exception.newsService.NewsNotFoundException;
 import com.jm.online_store.exception.orderSerivce.OrdersNotFoundException;
@@ -20,6 +21,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionsHandler {
 
+
+    @ExceptionHandler(CharacteristicNotFoundException.class)
+    public ResponseEntity<Object> handlerCharacteristicNotFoundException(CharacteristicNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<Object> handlerCategoriesNotFoundException(CustomerNotFoundException ex ) {

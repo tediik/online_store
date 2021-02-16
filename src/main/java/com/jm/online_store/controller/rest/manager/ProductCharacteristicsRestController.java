@@ -1,18 +1,29 @@
 package com.jm.online_store.controller.rest.manager;
 
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
+import com.jm.online_store.model.dto.CategoriesDto;
+import com.jm.online_store.model.dto.CharacteristicDto;
 import com.jm.online_store.model.dto.ProductCharacteristicDto;
+import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.TopicsCategoryDto;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,42 +53,53 @@ public class ProductCharacteristicsRestController {
     private final CharacteristicService characteristicService;
     private final ProductCharacteristicService productCharacteristicService;
     private final CategoriesService categoriesService;
+    private final ModelMapper modelMapper = new ModelMapper();
+    private final Type listType = new TypeToken<List<CharacteristicDto>>() {}.getType();
 
     /**
-     * Метод выводит список всех характеристик
+     * Метод выводит список всех характеристик c описанием
      *
-     * @return List<Characteristic>> возвращает список характеристик
+     * @return List<CharacteristicDto>> возвращает список характеристик
      */
     @GetMapping(value = "/characteristics/allCharacteristics")
     @ApiOperation(value = "return list of characteristics",
             authorizations = { @Authorization(value = "jwtToken")
     })
-    public List<Characteristic> findAll() {
-        return characteristicService.findAll();
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Characteristics were found"),
+            @ApiResponse(code = 200, message = "Characteristics were not found")
+    })
+    public ResponseEntity<ResponseDto<List<CharacteristicDto>>> findAll() {
+        List<CharacteristicDto> returnValue = modelMapper.map(characteristicService.findAll(), listType);
+        return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
 
     /**
      * Метод добавляет характеристику
      *
-     * @param characteristic характеристика для добавления
-     * @return ResponseEntity<Characteristic> Возвращает добавленную харакетристику с кодом ответа
+     * @param characteristicReq характеристика для добавления
+     * @return ResponseEntity<CharacteristicDto> Возвращает добавленную харакетристику с кодом ответа
      */
     @PostMapping(value = "/characteristics/addCharacteristic")
     @ApiOperation(value = "add new characteristic",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<Characteristic> addCharacteristic(@RequestBody Characteristic characteristic) {
-
-        if (characteristic.getCharacteristicName().equals("")) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Characteristic was created"),
+            @ApiResponse(code = 400, message = "Characteristics was not created")
+    })
+    public ResponseEntity<ResponseDto<CharacteristicDto>> addCharacteristic(@RequestBody CharacteristicDto characteristicReq) {
+        if (!StringUtils.isNoneBlank(characteristicReq.getCharacteristicName())) {
             log.debug("EmptyCharacteristicName");
-            return new ResponseEntity("EmptyCharacteristicName", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
         }
-
-        characteristicService.saveCharacteristic(characteristic);
-        return ResponseEntity.ok(characteristic);
+        Characteristic characteristic = modelMapper.map(characteristicReq, Characteristic.class);
+        CharacteristicDto returnValue = modelMapper.map(characteristicService.saveCharacteristic(characteristic), CharacteristicDto.class);
+        return new ResponseEntity<>(new ResponseDto<>(true , returnValue), HttpStatus.CREATED);
     }
 
     /**
-     * Метод возвращает характеристику по id
+     * Метод возвращает характеристику по id или
+     * бросает исключение CharacteristicNotFoundException
      *
      * @param id - characteristic id (Long)
      * @return ResponseEntity(characteristic, HttpStatus) {@link ResponseEntity}
@@ -84,46 +107,54 @@ public class ProductCharacteristicsRestController {
     @GetMapping(value = "/characteristic/{id}")
     @ApiOperation(value = "return characteristic by id",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<Characteristic> getCharacteristic(@PathVariable Long id) {
-        if (characteristicService.findCharacteristicById(id).isEmpty()) {
-            log.debug("Characteristic with id: {} not found", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        Characteristic characteristic = characteristicService.findCharacteristicById(id).orElseThrow(CharacteristicNotFoundException::new);
-        return new ResponseEntity<>(characteristic, HttpStatus.OK);
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Characteristic was found"),
+            @ApiResponse(code = 404, message = "Characteristic was not found")
+    })
+    public ResponseEntity<ResponseDto<CharacteristicDto>> getCharacteristic(@PathVariable Long id) {
+        Characteristic characteristic = characteristicService.getCharacteristicById(id);
+        CharacteristicDto returnValue = modelMapper.map(characteristic, CharacteristicDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
-     * Метод для Изменения характеристики
+     * Метод обновляет сущность  или
+     * бросает бросает исключение CharacteristicNotFoundException
      *
-     * @param characteristic
-     * @return new ResponseEntity<>(HttpStatus)
+     * @param characteristicReq
+     * @return ResponseEntity<ResponseDto<CharacteristicDto>> обновленная сущность
      */
     @PutMapping(value = "/characteristics")
     @ApiOperation(value = "update characteristic",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<Characteristic> editCharacteristic(@RequestBody Characteristic characteristic) {
-        if (characteristicService.findCharacteristicById(characteristic.getId()).isEmpty()) {
-            log.debug("There are no characteristic with id: {}", characteristic.getId());
-            return ResponseEntity.noContent().build();
-        }
-
-        characteristicService.updateCharacteristic(characteristic);
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Characteristic was updated"),
+            @ApiResponse(code = 404, message = "Characteristic was not found")
+    })
+    public ResponseEntity<ResponseDto<CharacteristicDto>> editCharacteristic(@RequestBody CharacteristicDto characteristicReq) {
+        Characteristic characteristic = modelMapper.map(characteristicReq, Characteristic.class);
+        Characteristic gotBack = characteristicService.updateCharacteristic(characteristic);
+        CharacteristicDto returnValue = modelMapper.map(gotBack, CharacteristicDto.class);
         log.debug("Changes to characteristic with id: {} was successfully added", characteristic.getId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
      * Метод для удаления характеристики
+     * бросает бросает исключение CharacteristicNotFoundException
      *
      * @param id       - id харакетристики для удаления
      * @param category - имя категории
-     * @return ResponseEntity<>(HttpStatus)
+     * @return String - описание результата операции
      */
     @DeleteMapping(value = "/characteristics/{id}/{category}")
     @ApiOperation(value = "delete characteristic by id",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<Characteristic> deleteCharacteristic(@PathVariable Long id,
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Characteristic was deleted"),
+            @ApiResponse(code = 404, message = "Characteristic was not found")
+    })
+    public ResponseEntity<ResponseDto<String>> deleteCharacteristic(@PathVariable Long id,
                                                                @PathVariable String category) {
         if (category.equals("default")) {
             characteristicService.deleteByID(id);
@@ -133,7 +164,9 @@ public class ProductCharacteristicsRestController {
             characteristicService.deleteByIDInSelectedCategory(id, category);
 
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(new ResponseDto<>(true,
+                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id),
+                ResponseOperation.NO_ERROR.getMessage()));
     }
 
     /**

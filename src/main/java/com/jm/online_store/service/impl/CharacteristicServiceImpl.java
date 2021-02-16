@@ -2,6 +2,8 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
+import com.jm.online_store.exception.aatest.ExceptionConstants;
+import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.repository.CategoriesRepository;
@@ -34,9 +36,8 @@ public class CharacteristicServiceImpl implements CharacteristicService {
      */
     @Override
     @Transactional
-    public Long saveCharacteristic(Characteristic characteristic) {
-
-        return characteristicRepository.save(characteristic).getId();
+    public Characteristic saveCharacteristic(Characteristic characteristic) {
+        return characteristicRepository.save(characteristic);
     }
 
     /**
@@ -104,8 +105,9 @@ public class CharacteristicServiceImpl implements CharacteristicService {
      */
     @Override
     @Transactional
-    public void updateCharacteristic(Characteristic characteristic) {
-        characteristicRepository.save(characteristic);
+    public Characteristic updateCharacteristic(Characteristic characteristic) {
+        getCharacteristicById(characteristic.getId());
+        return characteristicRepository.save(characteristic);
     }
 
     /**
@@ -151,5 +153,17 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Override
     public Optional<Characteristic> findByCharacteristicName(String characteristicName) {
         return characteristicRepository.findByCharacteristicName(characteristicName);
+    }
+
+
+    /**
+     * Ищет харакетристику по id характеристики
+     * аналог метод findCharacteristicById только возвращает не Optional
+     * @param id - идентификатор хар-ки
+     */
+    @Override
+    public Characteristic getCharacteristicById(Long id) {
+        return characteristicRepository.findById(id).orElseThrow(()
+                -> new CharacteristicNotFoundException(ExceptionEnums.CHARACTERISTIC.getText() + ExceptionConstants.NOT_FOUND));
     }
 }
