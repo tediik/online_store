@@ -2,6 +2,7 @@ package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.online_store.enums.ConfirmReceiveEmail;
 import io.swagger.annotations.ApiModel;
@@ -43,6 +44,7 @@ import java.util.Set;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ApiModel(description =  "Сущность User, расширяет UserDetails, связана с Role, Product, " +
         "FavouritesGroup и Address")
 @Table(name = "users")

@@ -1,6 +1,8 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.StockNotFoundException;
+import com.jm.online_store.exception.stockService.StockExceptionConstants;
+import com.jm.online_store.exception.stockService.StockServiceException;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.repository.StockRepository;
@@ -50,7 +52,7 @@ public class StockServiceImpl implements StockService {
     public List<Stock> findAll() {
         List<Stock> stockList = stockRepository.findAll();
         if (stockList.isEmpty()) {
-            throw new StockNotFoundException();
+            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCKS);
         }
         return stockList;
     }
@@ -74,7 +76,7 @@ public class StockServiceImpl implements StockService {
     public Stock findStockById(Long id) {
         Optional<Stock> stock = stockRepository.findById(id);
         if (stock.isEmpty()) {
-            throw new StockNotFoundException();
+            throw new StockServiceException(StockExceptionConstants.NOT_FOUND_STOCK);
         }
         return stock.get();
     }
