@@ -50,7 +50,6 @@ import java.util.List;
 @Api(description = "Rest controller for manage and publish news from manager page")
 public class ManagerRestController {
 
-
     private final NewsService newsService;
     private final OrderService orderService;
     private final ModelMapper modelMapper = new ModelMapper();
@@ -70,7 +69,6 @@ public class ManagerRestController {
 
     /**
      * Метод сохраняет новости в базу данных
-     *
      * @param news сущность для сохранения в базе данных
      * @return возвращает заполненную сущность клиенту
      */
@@ -89,7 +87,6 @@ public class ManagerRestController {
 
     /**
      * Метод обновляет сущность в базе данных
-     *
      * @param news сущность для сохранения в базе данных
      * @return возвращает обновленную сущность клиенту
      */
@@ -107,7 +104,6 @@ public class ManagerRestController {
 
     /**
      * Метод удаляет сушность из базы данных по уникальному идентификатору
-     *
      * @param id уникальный идентификатор
      * @return возвращает ответ в виде строки с описанием результата
      */
@@ -123,7 +119,6 @@ public class ManagerRestController {
 
     /**
      * Get mapping for get request to response with sales during the custom date range
-     *
      * @param stringStartDate - start of custom date range
      * @param stringEndDate   - end of custom date range
      * @return - {@link ResponseEntity} with list of Orders with status complete
@@ -141,7 +136,6 @@ public class ManagerRestController {
 
     /**
      * Mapping for csv export.
-     *
      * @param stringStartDate - beginning of the period that receives from frontend in as String
      * @param stringEndDate   - end of the period that receives from frontend in as String
      * @param response        - response to write back stream with csv
