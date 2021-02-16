@@ -38,7 +38,7 @@ import java.util.List;
 @Api(description = "Rest controller for manage of stocks from manager page")
 public class ManagerStockRestController {
     private final StockService stockService;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get stock by ID",
@@ -63,7 +63,6 @@ public class ManagerStockRestController {
 
     /**
      * Метод возвращает страницу акций
-     *
      * @param page параметры страницы
      * @return Page<Stock> возвращает страницу новостей
      */
@@ -151,6 +150,5 @@ public class ManagerStockRestController {
         }
         return ResponseEntity.ok().build();
     }
-
 
 }
