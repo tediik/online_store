@@ -23,20 +23,16 @@ public class NewsController {
     private final NewsService newsService;
 
     @GetMapping
-    public String newsPage(Model model) {
-        List<News> newsPage = newsService.getAllPublished();
-        model.addAttribute("news", newsPage);
+    public String newsPage() {
         return "news-page";
     }
 
     @GetMapping("/{id}")
-    public String newsDetails(@PathVariable(value = "id") Long id, Model model) {
+    public String newsDetails(@PathVariable(value = "id") Long id) {
 
         if (!newsService.existsById(id)) {
             return "redirect:/news";
         }
-        News news = newsService.findById(id);
-        model.addAttribute("news", news);
         return "news-details";
     }
 }

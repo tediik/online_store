@@ -27,9 +27,7 @@ public class ServiceCenterController {
     }
 
     @GetMapping("/service")
-    public String getServiceProfile(Model model) {
-        User user = userService.getCurrentLoggedInUser();
-        model.addAttribute("user", user);
+    public String getServiceProfile() {
         return "service-page";
     }
 }

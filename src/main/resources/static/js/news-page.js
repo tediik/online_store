@@ -2,6 +2,7 @@ let listOfNews;
 let key;
 let content;
 let allNewsList;
+let newsText;
 
 $(function () {
     showNews().then();
@@ -17,13 +18,13 @@ async function showNews() {
             <div class="alert alert-info mt-2">
                 <div>${listOfNews[key].title}</div>
                 <div>${listOfNews[key].anons}</div>
-                <div class="mt-2"><a href="/news/${listOfNews[key].id}" class="btn btn-warning">Подробнее</a></div>
+                <div class="mt-2"><a onclick="showNewsDetails()" class="btn btn-warning" >Детальнее</a>
+                </div>
             </div>
             `;
         allNewsList.append(content);
         console.log(listOfNews[key].title);
     }
 }
-
 
 

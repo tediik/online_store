@@ -18,9 +18,7 @@ public class StocksController {
     private final StockServiceImpl stockService;
 
     @GetMapping
-    public String stocksPage(Model model) {
-        List<Stock> stocksPage = stockService.findAll();
-        model.addAttribute("stocks", stocksPage);
+    public String stocksPage() {
         return "stocks-page";
     }
 
