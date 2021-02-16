@@ -1,9 +1,10 @@
 package com.jm.online_store.controller.rest.customer;
 
 import com.jm.online_store.controller.ResponseOperation;
+import com.jm.online_store.exception.ExceptionConstants;
+import com.jm.online_store.exception.ExceptionEnums;
 import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.exception.customer.CustomerExceptionConstants;
-import com.jm.online_store.exception.customer.CustomerServiceException;
+import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
@@ -103,7 +104,7 @@ public class CustomerRestController {
         }
         catch (IllegalArgumentException | UserNotFoundException e) {
             log.debug("There is no user with id: {}", id);
-            throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_NOT_FOUND);
+            throw new CustomerServiceException(ExceptionEnums.CUSTOMER.getDescription() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         User user = userService.findById(id).get();
         log.debug("User with id: {}, was blocked", id);
@@ -127,7 +128,7 @@ public class CustomerRestController {
             customerService.deleteByID(id);
         }
         catch (EmptyResultDataAccessException |IllegalArgumentException | UserNotFoundException e) {
-            throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_NOT_FOUND);
+            throw new CustomerServiceException(ExceptionEnums.CUSTOMER.getDescription() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userToDelete, UserDto.class)), HttpStatus.OK);
     }
@@ -146,7 +147,7 @@ public class CustomerRestController {
     public ResponseEntity<ResponseDto<UserDto>> getUserById(@PathVariable("id") Long id) {
         if (userService.findById(id).isEmpty()) {
             log.debug("User with id: {} not found", id);
-            throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_NOT_FOUND);
+            throw new CustomerServiceException(ExceptionEnums.CUSTOMER.getDescription() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         log.debug("User with id: {} found", id);
         User user = userService.findUserById(id);

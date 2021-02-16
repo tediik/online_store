@@ -1,4 +1,4 @@
-package com.jm.online_store.exception.admin;
+package com.jm.online_store.exception;
 
 public class UserServiceException extends RuntimeException {
 

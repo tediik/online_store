@@ -1,9 +1,10 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
+import com.jm.online_store.exception.ExceptionConstants;
+import com.jm.online_store.exception.ExceptionEnums;
 import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.exception.customer.CustomerServiceException;
-import com.jm.online_store.exception.customer.CustomerExceptionConstants;
+import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
@@ -16,7 +17,6 @@ import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -133,7 +133,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> findByDayOfWeekForStockSend(String dayOfWeek) {
         List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(dayOfWeek));
         if (customers.isEmpty()) {
-            throw new CustomerServiceException(CustomerExceptionConstants.EMPTY_CUSTOMERS_LIST);
+            throw new CustomerServiceException(ExceptionEnums.CUSTOMERS.getDescription() + ExceptionConstants.NOT_FOUND);
         }
         return customers;
     }
@@ -293,15 +293,15 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (customer == null) {
             log.debug("CUSTOMER ARE NOT AUTHENTICATED: " + newMail);
-            throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_ARE_NOT_AUTHENTICATED);
+            throw new CustomerServiceException(ExceptionEnums.CUSTOMER.getDescription() + ExceptionConstants.NOT_AUTHENTICATED);
         }
         if (isExist(newMail)) {
             log.debug("THIS EMAIL ALREADY EXISTS: " + newMail);
-            throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_EMAIL_ALREADY_EXISTS);
+            throw new CustomerServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.ALREADY_EXISTS);
         }
         if (ValidationUtils.isNotValidEmail(newMail)) {
             log.debug("EMAIL ADDRESS IS NOT VALID" + newMail);
-            throw new CustomerServiceException(CustomerExceptionConstants.CUSTOMER_EMAIL_NOT_VALID);
+            throw new CustomerServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.NOT_VALID);
         }
 
         userService.changeUsersMail(customer, newMail);

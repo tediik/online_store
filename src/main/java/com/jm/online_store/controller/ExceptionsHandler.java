@@ -1,7 +1,7 @@
 package com.jm.online_store.controller;
 
-import com.jm.online_store.exception.admin.UserServiceException;
-import com.jm.online_store.exception.customer.CustomerServiceException;
+import com.jm.online_store.exception.UserServiceException;
+import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.exception.newsService.NewsServiceException;
 import com.jm.online_store.exception.orderSerivce.OrderServiceException;
 import com.jm.online_store.exception.sentStockService.SentStockServiceException;
