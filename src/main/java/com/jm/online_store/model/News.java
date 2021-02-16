@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.ApiModel;
@@ -55,6 +56,7 @@ public class News {
     @Column(name = "archived")
     private boolean archived;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "news-sharedNews")
     private Set<SharedNews> sharedNews;

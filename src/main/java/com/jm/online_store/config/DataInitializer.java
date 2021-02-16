@@ -24,6 +24,7 @@ import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.TaskSettings;
+import com.jm.online_store.model.TemplatesMailingSettings;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.model.User;
@@ -47,6 +48,7 @@ import com.jm.online_store.service.interf.SharedNewsService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.TaskSettingsService;
+import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
 import com.jm.online_store.service.interf.TopicService;
 import com.jm.online_store.service.interf.TopicsCategoryService;
 import com.jm.online_store.service.interf.UserService;
@@ -112,6 +114,7 @@ public class DataInitializer {
     private final CharacteristicService characteristicService;
     private final ProductCharacteristicService productCharacteristicService;
     private final BadWordsService badWordsService;
+    private final TemplatesMailingSettingsService templatesMailingSettingsService;
 
     @Autowired
     private Environment environment;
@@ -143,6 +146,7 @@ public class DataInitializer {
         commentsInit();
         reviewsInit();
         badWordInit();
+        templatesMailingSettingsInit();
     }
 
     /**
@@ -1320,6 +1324,58 @@ public class DataInitializer {
         commonSettingsService.addSetting(badWordsEnabled);
         commonSettingsService.addSetting(maintenanceModeTemplate);
         commonSettingsService.addSetting(storeName);
+    }
+
+    /**
+     * init method for distribution TemplatesMailingSettings templates
+     * creates template for email.
+     */
+    public void templatesMailingSettingsInit() {
+
+        TemplatesMailingSettings confirmationTokenToResetPasswordTemplate = TemplatesMailingSettings.builder()
+                .settingName("send_confirmation_token_to_reset_password")
+                .textValue("<p>Привет, @@user@@ Вы сделали запрос на сброс пароля , для подтверждения перейдите по ссылке:" +
+                        "@@url@@" + "/restorepassword/@@confirmationToken@@</p>" +
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .build();
+        TemplatesMailingSettings regNewAccountTemplate = TemplatesMailingSettings.builder()
+                .settingName("reg_new_account")
+                .textValue("<p>Hello, @@user@@!" + "Welcome to online-store. Please, visit next link: @@url@@" +
+                        "/activate/@@confirmationToken@@</p>" +
+                        "<p>С Уважением</p><p>" +
+                        environment.getProperty("production-url") + "</p>")
+                .build();
+        TemplatesMailingSettings changeUsersPassTemplate = TemplatesMailingSettings.builder()
+                .settingName("change_users_pass")
+                .textValue("<p>Привет, @@user@@ Ваш пароль изменен</p>" +
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .build();
+        TemplatesMailingSettings changeUsersMailTemplate = TemplatesMailingSettings.builder()
+                .settingName("change_users_mail")
+                .textValue("<p>Здравствуйте, @@user@@" +
+                        "Вы запросили изменение адреса электронной почты. Подтвердите, пожалуйста, по ссылке:" +
+                        "@@url@@" + "/activatenewmail/@@confirmationToken@@</p>" +
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .build();
+        TemplatesMailingSettings activateUserTemplate = TemplatesMailingSettings.builder()
+                .settingName("activate_user")
+                .textValue("<p>Привет, @@user@@ Вы зарегистрировались на сайте online_store ! Пароль для входа в вашу учетную запись @@password@@ ," +
+                        "\n" + "можете сменить его в личном кабинете</p>" +
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .status(false)
+                .build();
+        TemplatesMailingSettings restorePasswordTemplate = TemplatesMailingSettings.builder()
+                .settingName("restore_password")
+                .textValue("<p>Привет, @@user@@ Вам Сгенерирован временный новый пароль @@newPassword@@</p>" +
+                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .status(false)
+                .build();
+        templatesMailingSettingsService.addSetting(confirmationTokenToResetPasswordTemplate);
+        templatesMailingSettingsService.addSetting(regNewAccountTemplate);
+        templatesMailingSettingsService.addSetting(changeUsersPassTemplate);
+        templatesMailingSettingsService.addSetting(changeUsersMailTemplate);
+        templatesMailingSettingsService.addSetting(activateUserTemplate);
+        templatesMailingSettingsService.addSetting(restorePasswordTemplate);
     }
 
     /**

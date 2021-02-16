@@ -38,4 +38,6 @@ public interface CustomerService {
     boolean isExist(String email);
 
     void deleteByID(Long id);
+
+    Customer changeMail(String newMail);
 }
