@@ -64,13 +64,9 @@ public class ManagerNewsRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-
-
-
     /**
-     * Method returns all news
-     *
-     * @return List<News> возвращает список всех новостей из базы данных
+     * Возвращает список всех новостей из базы данных.
+     * @return List<News> возвращает список всех новостей из базы данных.
      */
     @GetMapping("/all")
     @ApiOperation(value = "Method returns all news",
@@ -88,8 +84,7 @@ public class ManagerNewsRestController {
 
 
     /**
-     * Метод возвращает страницу новостей
-     *
+     * Возвращает страницу новостей
      * @param page параметры страницы
      * @return Page<News> возвращает страницу новостей
      */
@@ -106,7 +101,6 @@ public class ManagerNewsRestController {
 
     /**
      * Method returns published news
-     *
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/published")
@@ -125,7 +119,6 @@ public class ManagerNewsRestController {
 
     /**
      * Method returns unpublished news
-     *
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/unpublished")
@@ -144,7 +137,6 @@ public class ManagerNewsRestController {
 
     /**
      * Method returns archived news
-     *
      * @return - ResponseEntity<List<News>>
      */
     @GetMapping("/archived")
@@ -163,7 +155,6 @@ public class ManagerNewsRestController {
 
     /**
      * Метод сохраняет новости в базу данных
-     *
      * @param news сущность для сохранения в базе данных
      * @return возвращает заполненную сущность клиенту
      */
@@ -180,7 +171,6 @@ public class ManagerNewsRestController {
 
     /**
      * Метод обновляет сущность в базе данных
-     *
      * @param news сущность для сохранения в базе данных
      * @return возвращает обновленную сущность клиенту
      */
@@ -196,7 +186,6 @@ public class ManagerNewsRestController {
 
     /**
      * Метод удаляет сушность из базы данных по уникальному идентификатору
-     *
      * @param id уникальный идентификатор
      * @return возвращает ответ в виде строки с описанием результата
      */
