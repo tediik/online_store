@@ -5,6 +5,8 @@ import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.AddressService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Manager Rest controller to work with shops
+ */
 @PreAuthorize("hasAuthority('ROLE_MANAGER')")
 @RestController
 @Slf4j
@@ -34,10 +39,14 @@ public class AddressManagerRestController {
 
     /**
      * Контроллер для отображения адресов всех магазинов
-     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus)
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping
     @ApiOperation(value = "Возвращает список всех адресов", authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "NO ONE ADDRESS WAS FOUND"),
+            @ApiResponse(code = 200, message = "Ok")
+    })
     public ResponseEntity<ResponseDto<List<Address>>> allShops() {
         List<Address> allAddress = addressService.findAllShops();
         if (allAddress.size() == 0) {
@@ -48,23 +57,29 @@ public class AddressManagerRestController {
     }
 
     /**
-     * Контроллер для отображения адреса по id
-     * @id - адрес id (Long)
+     * Контроллер для отображения адреса магазина по id.
+     * @param id - адрес id (Long)
      * @return ResponseEntity<>(address, HttpStatus.OK)
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "Возвращает адрес по id", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity< Address> getAddressInfo(@PathVariable Long id) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Address not found"),
+            @ApiResponse(code = 200, message = "Ok")
+    })
+    public ResponseEntity<ResponseDto<Address>> getAddressInfo(@PathVariable Long id) {
         if(addressService.findAddressById(id).isEmpty()) {
             log.debug("Адрес с id: {} не найден", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.NO_CONTENT);
         }
         Address address = addressService.findAddressById(id).get();
-        return new ResponseEntity<>(address, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
 
     /**
-     * Контроллер для изменения адреса
+     * Контроллер для изменения адреса магазина.
+     * @param address {@link Address}
+     * @return
      */
     @PutMapping
     public ResponseEntity<ResponseDto> editAddress(@RequestBody Address address) {
@@ -73,25 +88,30 @@ public class AddressManagerRestController {
     }
 
     /**
-     * Контроллер для добавления адреса
-     * @param newAddress
+     * Контроллер для добавления нового адреса магазина.
+     * @param newAddress - новый адрес {@link Address}
      * @return
      */
     @PostMapping
-    public ResponseEntity addAddress(@RequestBody Address newAddress) {
+    public ResponseEntity<ResponseDto<Address>> addAddress(@RequestBody Address newAddress) {
         addressService.addAddress(newAddress);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
-     * Контроллер для удаления адреса по id
-     * @param id
-     * @return
+     * Контроллер для удаления адреса магазина по id,
+     * удалить все адреса нельзя, должен остаться хотя бы 1.
+     * @param id - адрес id {@link Long}
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Address> deleteAddress(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<Address>> deleteAddress(@PathVariable Long id) {
+        if(addressService.findAddressById(id).isEmpty()) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.BAD_REQUEST);
+        }
+        Address address = addressService.findAddressById(id).get();
         addressService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        log.info("Адрес с id: {} удалён", id);
+        return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
-
 }
