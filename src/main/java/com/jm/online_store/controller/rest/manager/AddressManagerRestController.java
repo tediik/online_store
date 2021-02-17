@@ -35,7 +35,7 @@ public class AddressManagerRestController {
      * Контроллер для отображения всех адресов магазинов
      * @return ResponseEntity<>(allAddress, HttpStatus.OK)
      */
-    @GetMapping("/allShops")
+    @GetMapping
     @ApiOperation(value = "Возвращает список всех адресов", authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Address>> findAll() {
         List<Address> allAddress = addressService.findAllShops();

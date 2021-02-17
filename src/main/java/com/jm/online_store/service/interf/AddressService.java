@@ -11,4 +11,5 @@ public interface AddressService {
     List<Address> findAllShops();
     Optional<Address> findSameAddress(Address address);
     void deleteById(Long id);
+    //boolean checkStatus(boolean status);
 }
