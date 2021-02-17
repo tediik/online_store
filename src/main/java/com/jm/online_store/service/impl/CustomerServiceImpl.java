@@ -1,6 +1,9 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
+<<<<<<< HEAD
+import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.aatest.ExceptionConstants;
 import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.customer.CustomerNotFoundException;
@@ -21,7 +24,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -64,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public boolean changePassword(Long id, String oldPassword, String newPassword) {
-        Customer customer = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        Customer customer = findById(id).orElseThrow(CustomerServiceException::new);
         if (!passwordEncoder.matches(oldPassword, customer.getPassword())) {
             return false;
         }
@@ -297,21 +302,20 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    @Transactional
+
     @Override
+    @Transactional
     public Customer changeMail(String newMail) {
         Customer customer = getCurrentLoggedInUser();
-
         if (customer == null) {
-            throw new CustomerServiceException(UserExceptionConstants.CUSTOMER_ARE_NOT_AUTHENTICATED);
+            throw new AuthenticationCredentialsNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_AUTHENTICATED);
         }
         if (isExist(newMail)) {
-            throw new CustomerServiceException(UserExceptionConstants.CUSTOMER_EMAIL_ALREADY_EXISTS);
+            throw new EmailAlreadyExistsException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.ALREADY_EXISTS, newMail));
         }
         if (ValidationUtils.isNotValidEmail(newMail)) {
-            throw new CustomerServiceException(UserExceptionConstants.CUSTOMER_EMAIL_NOT_VALID);
+            throw new InvalidEmailException(ExceptionEnums.CUSTOMERS.getText() + String.format(ExceptionConstants.NOT_VALID, newMail));
         }
-
         userService.changeUsersMail(customer, newMail);
         return customer;
     }

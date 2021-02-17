@@ -31,4 +31,7 @@ public interface CharacteristicService {
 
     Characteristic getCharacteristicById(Long id);
 
+    List<Characteristic> getAllCharacteristicsExceptSelectedCategory(String categoryName);
+
+    List<Characteristic> addCharacteristicsToCategory(List<Characteristic> characteristics, String categoryName);
 }

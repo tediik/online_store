@@ -64,20 +64,24 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
         return productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, value));
     }
 
+
+    /**
+     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами
+     *
+     *
+     * @param listProductCharacteristics идентификатор товара, к которому добавляем характеристику
+     * @param addedProductName наименование характеристики, значение которой добавляем товару
+     * @return Long id - идентификатор ProductCharacteristic
+     */
     @Override
     @Transactional
-    public List<ProductCharacteristic> addProductCharacteristic(List<ProductCharacteristicDto> list, String addedProductName) {
+    public List<ProductCharacteristic> addProductCharacteristic(List<ProductCharacteristicDto> listProductCharacteristics, String addedProductName) {
         List<ProductCharacteristic> returnValue = new ArrayList<>();
-        list.forEach(s -> {
-            Characteristic characteristic = characteristicService.getCharacteristicById(s.getCharacteristicId());
+        for (ProductCharacteristicDto tmp: listProductCharacteristics) {
+            Characteristic characteristic = characteristicService.getCharacteristicById(tmp.getCharacteristicId());
             Product product = productRepository.findByProduct(addedProductName).orElseThrow(ProductNotFoundException::new);
-            returnValue.add(productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, s.getValue())));
-        });
-//        for (ProductCharacteristicDto tmp: list) {
-//            Characteristic characteristic = characteristicService.getCharacteristicById(tmp.getCharacteristicId());
-//            Product product = productRepository.findByProduct(addedProductName).orElseThrow(ProductNotFoundException::new);
-//            returnValue.add(productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, tmp.getValue())));
-//        }
+            returnValue.add(productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, tmp.getValue())));
+        }
         return returnValue;
     }
 }

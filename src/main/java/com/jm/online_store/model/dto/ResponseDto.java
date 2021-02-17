@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(description =  "DTO для построения ответов REST контроллеров")
-//@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ResponseDto<T> {
     private Boolean success;
     @JsonInclude(JsonInclude.Include.NON_NULL)

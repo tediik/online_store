@@ -170,4 +170,21 @@ public class CharacteristicServiceImpl implements CharacteristicService {
                 -> new CharacteristicNotFoundException(ExceptionEnums.CHARACTERISTIC.getText() +
                 String.format( ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
     }
+
+    @Override
+    public List<Characteristic> getAllCharacteristicsExceptSelectedCategory(String categoryName) {
+        List<Characteristic> characteristicsSelectedCategory = findByCategoryName(categoryName);
+        List<Characteristic> allCharacteristics = findAll();
+        allCharacteristics.removeAll(characteristicsSelectedCategory);
+        return allCharacteristics;
+    }
+
+    @Override
+    public List<Characteristic> addCharacteristicsToCategory(List<Characteristic> characteristics, String categoryName) {
+        Categories  categories = categoriesService.getCategoryByCategoryName(categoryName).orElseThrow(() ->
+                new CategoriesNotFoundException(ExceptionEnums.CATEGORY.getText() + ExceptionConstants.NOT_FOUND));
+        List<Characteristic> characteristicFromDb = categories.getCharacteristics();
+        characteristicFromDb.addAll(characteristics);
+        return characteristicFromDb;
+    }
 }

@@ -43,9 +43,13 @@ import java.util.List;
 public class ManagerStockRestController {
 
     private final StockService stockService;
-    private final ModelMapper modelMapper = new ModelMapper();
+//<<<<<<< HEAD
+//    private final ModelMapper modelMapper = new ModelMapper();
     private final Type listType = new TypeToken<List<StockDto>>() {}.getType();
-
+//
+//=======
+    private final ModelMapper modelMapper;
+//>>>>>>> origin
 
     /**
      * Метод возвращает конкретный Stock по id
@@ -85,7 +89,6 @@ public class ManagerStockRestController {
 
     /**
      * Метод возвращает страницу акций
-     *
      * @param page параметры страницы
      * @return Page<Stock> возвращает страницу новостей
      */
@@ -196,7 +199,7 @@ public class ManagerStockRestController {
     public ResponseEntity<ResponseDto<String>> deleteStockById(@PathVariable Long id) {
         stockService.deleteStockById(id);
         return ResponseEntity.ok(new ResponseDto<>(true,
-                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id),ResponseOperation.NO_ERROR.getMessage()));
+                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id, ResponseOperation.NO_ERROR.getMessage())));
     }
 
     /**
@@ -213,6 +216,5 @@ public class ManagerStockRestController {
         Stock gotBack = stockService.updateStock(modelMapper.map(stockReq, Stock.class));
         return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(gotBack, StockDto.class)));
     }
-
 
 }

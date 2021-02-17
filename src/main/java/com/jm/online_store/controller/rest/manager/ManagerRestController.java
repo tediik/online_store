@@ -2,15 +2,14 @@ package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.News;
+import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.ResponseDto;
-import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.UserService;
-import com.opencsv.bean.StatefulBeanToCsv;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -51,10 +50,11 @@ public class ManagerRestController {
 
     private final NewsService newsService;
     private final OrderService orderService;
-    private final ModelMapper modelMapper = new ModelMapper();
+//    private final ModelMapper modelMapper = new ModelMapper();
+//<<<<<<< HEAD
     private final UserService userService;
     private final  Type listType = new TypeToken<List<NewsDto>>() {}.getType();
-
+    private final ModelMapper modelMapper;
     /**
      * Метод возвращающий залогиненного юзера. Работает при включенной сессии.
      *
@@ -70,7 +70,9 @@ public class ManagerRestController {
         User authUser = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(authUser, UserDto.class)));
     }
-
+//
+//=======
+//>>>>>>> origin
     /**
      * Метод возвращающий всписок всех новостей
      *
@@ -90,8 +92,12 @@ public class ManagerRestController {
 
     /**
      * Метод сохраняет новости в базу данных
+<<<<<<< HEAD
      *
      * @param newsReq сущность для сохранения в базе данных
+=======
+     * @param newsReq сущность для сохранения в базе данных
+>>>>>>> origin
      * @return возвращает заполненную сущность клиенту
      */
     @PostMapping("/news/post")
@@ -109,8 +115,12 @@ public class ManagerRestController {
 
     /**
      * Метод обновляет сущность в базе данных
+<<<<<<< HEAD
      *
      * @param newsReq сущность для сохранения в базе данных
+=======
+     * @param newsReq сущность для сохранения в базе данных
+>>>>>>> origin
      * @return возвращает обновленную сущность клиенту
      */
     @PutMapping("/news/update")
@@ -128,7 +138,6 @@ public class ManagerRestController {
 
     /**
      * Метод удаляет сушность из базы данных по уникальному идентификатору
-     *
      * @param id уникальный идентификатор
      * @return возвращает ответ в виде строки с описанием результата
      */
@@ -148,7 +157,6 @@ public class ManagerRestController {
 
     /**
      * Get mapping for get request to response with sales during the custom date range
-     *
      * @param stringStartDate - start of custom date range
      * @param stringEndDate   - end of custom date range
      * @return - {@link ResponseEntity} with list of Orders with status complete
@@ -169,7 +177,6 @@ public class ManagerRestController {
 
     /**
      * Mapping for csv export.
-     *
      * @param stringStartDate - beginning of the period that receives from frontend in as String
      * @param stringEndDate   - end of the period that receives from frontend in as String
      * @param response        - response to write back stream with csv

@@ -11,6 +11,8 @@ import com.jm.online_store.exception.topicService.TopicNotFoundException;
 import com.jm.online_store.exception.topicsCategoryService.TopicCategoryAlreadyExists;
 import com.jm.online_store.exception.topicsCategoryService.TopicCategoryNotFoundException;
 import com.jm.online_store.exception.userService.UserNotFoundException;
+
+import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.model.dto.ResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,16 +30,27 @@ public class ExceptionsHandler {
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<Object> handlerCategoriesNotFoundException(CustomerNotFoundException ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(CategoriesNotFoundException.class)
     public ResponseEntity<Object> handlerCategoriesNotFoundException(CategoriesNotFoundException ex ) {
+        return new ResponseEntity<>(new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+
+
+    }
+
+    @ExceptionHandler(value = { UserServiceException.class })
+    public ResponseEntity<Object> handlerUserServiceException(UserServiceException ex) {
+
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+
     }
 
     @ExceptionHandler(TopicCategoryAlreadyExists.class)

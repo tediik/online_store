@@ -14,10 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 
 /**
  * Сервис класс, имплементация интерфейса {@link NewsService}
@@ -70,11 +69,9 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public News findById(long id) {
         return newsRepository.findById(id).orElseThrow(() ->
-                        new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id)));
+                new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id)));
+
     }
-
-
-
 
     /**
      * Метод выполняет проверку существует ли сущность в базе.
@@ -86,6 +83,8 @@ public class NewsServiceImpl implements NewsService {
     public boolean existsById(Long id) {
         return newsRepository.existsById(id);
     }
+
+
 
     /**
      * Метод обновляет сущность News в базе данных и изменяет modifiedDate на сегодняшнюю дату
@@ -107,9 +106,10 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public boolean deleteById(Long id) {
+
         newsRepository.findById(id).orElseThrow(() ->
                 new NewsNotFoundException(String.format(ExceptionEnums.NEWS.name() + ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
-        newsRepository.deleteById(id);
+
         return true;
     }
 
