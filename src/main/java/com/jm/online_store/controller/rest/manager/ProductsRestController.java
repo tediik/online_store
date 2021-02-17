@@ -1,6 +1,8 @@
 package com.jm.online_store.controller.rest.manager;
 
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
@@ -65,7 +67,7 @@ public class ProductsRestController {
     @ApiOperation(value = "Method handles uploading a file with products to the server. " +
             "Calls the appropriate service method depending on the file type(CSV or XML)",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
+    public ResponseEntity<ResponseDto<String>> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
         try {
             byte[] bytes = file.getBytes();
             BufferedOutputStream stream =
@@ -82,7 +84,7 @@ public class ProductsRestController {
         } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
             productService.importFromCSVFile(file.getOriginalFilename(), id);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(new ResponseDto<>(true , "success" , ResponseOperation.NO_ERROR.getMessage()));
     }
 
     @PostMapping(value = "/uploadFile")

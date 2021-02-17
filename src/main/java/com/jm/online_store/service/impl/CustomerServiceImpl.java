@@ -1,15 +1,13 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
-<<<<<<< HEAD
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.aatest.ExceptionConstants;
 import com.jm.online_store.exception.aatest.ExceptionEnums;
 import com.jm.online_store.exception.customer.CustomerNotFoundException;
-import com.jm.online_store.exception.userService.UserExceptionConstants;
-import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.exception.customer.CustomerServiceException;
+import com.jm.online_store.exception.userService.UserNotFoundException;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
@@ -26,7 +24,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

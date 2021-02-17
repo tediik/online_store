@@ -1,8 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.enums.ResponseOperation;
-import com.jm.online_store.exception.CharacteristicNotFoundException;
-import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.ProductCharacteristic;
 import com.jm.online_store.model.dto.CharacteristicDto;
@@ -34,7 +32,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Контроллер для работы с характеристиками товаров
@@ -45,13 +46,12 @@ import java.util.List;
 @RequestMapping("/api/manager/product")
 public class ProductCharacteristicsRestController {
 
-    private final ProductService productService;
     private final CharacteristicService characteristicService;
     private final ProductCharacteristicService productCharacteristicService;
-    private final CategoriesService categoriesService;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
     private final Type listTypeCharDto = new TypeToken<List<CharacteristicDto>>() {}.getType();
     private final Type listTypeProdCharDto = new TypeToken<List<ProductCharacteristicDto>>() {}.getType();
+    private final Type listTypeChar = new TypeToken<List<Characteristic>>() {}.getType();
 
     /**
      * Метод выводит список всех характеристик c описанием
@@ -203,11 +203,16 @@ public class ProductCharacteristicsRestController {
     })
     public ResponseEntity<ResponseDto<List<CharacteristicDto>>> getCharacteristicsByCategoryName(@PathVariable String category) {
         List<CharacteristicDto> returnValue ;
-        if (!StringUtils.isNoneBlank(category) && category.equals("default")) {
-            returnValue = modelMapper.map(characteristicService.findAll(), listTypeCharDto);
-            return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
+        if (StringUtils.isNoneBlank(category)) {
+            if (category.equals("default")) {
+                returnValue = modelMapper.map(characteristicService.findAll(), listTypeCharDto);
+            } else {
+                returnValue = modelMapper.map(characteristicService.findByCategoryName(category), listTypeCharDto);
+            }
+        } else {
+            return ResponseEntity.badRequest().build();
         }
-        returnValue = modelMapper.map(characteristicService.findByCategoryName(category), listTypeCharDto);
+
         return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
 
@@ -232,9 +237,14 @@ public class ProductCharacteristicsRestController {
     })
     public ResponseEntity<ResponseDto<List<ProductCharacteristicDto>>> addCharacteristics(@RequestBody ProductCharacteristicDto[] productCharacteristicsDto,
                                                          @PathVariable String addedProductName) {
-        List<ProductCharacteristicDto> list = modelMapper.map(productCharacteristicsDto, listTypeProdCharDto);
-        List<ProductCharacteristic> gotBack = productCharacteristicService.addProductCharacteristic(list, addedProductName);
-        List<ProductCharacteristicDto> returnValue = modelMapper.map(gotBack, listTypeProdCharDto);
+        List<ProductCharacteristicDto> returnValue;
+        if (StringUtils.isNoneBlank(addedProductName)) {
+            List<ProductCharacteristicDto> list = modelMapper.map(productCharacteristicsDto, listTypeProdCharDto);
+            List<ProductCharacteristic> gotBack = productCharacteristicService.addProductCharacteristic(list, addedProductName);
+            returnValue = modelMapper.map(gotBack, listTypeProdCharDto);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
         return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.CREATED);
     }
 
@@ -254,45 +264,40 @@ public class ProductCharacteristicsRestController {
             @ApiResponse(code = 200, message = "Characteristics were found"),
             @ApiResponse(code = 200, message = "Characteristics were not found. Returns empty list"),
             @ApiResponse(code = 404, message = "Categories were not found"),
+            @ApiResponse(code = 400, message = "Bad request")
     })
-    public ResponseEntity<ResponseDto<List<CharacteristicDto>>> findAllOtherThenSelected(@PathVariable String categoryName) {
+    public ResponseEntity<ResponseDto<List<CharacteristicDto>>> findAllOtherExceptSelected(@PathVariable String categoryName) {
         List<Characteristic> gotBack = characteristicService.getAllCharacteristicsExceptSelectedCategory(categoryName);
         List<CharacteristicDto> returnValue =  modelMapper.map(gotBack, listTypeCharDto);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
+
     /**
      * Метод добавляет характеристики выбранной категории
      *
      * @param selectedCategory название выбранной категории
-     * @return ResponseEntity<List < Characteristic>> Возвращает добавленные харакетристики с кодом ответа
+     * @return ResponseEntity<List<CharacteristicDto>> Возвращает добавленные харакетристики с кодом ответа
      */
     @PostMapping(value = "/characteristics/addCharacteristicsToCategory/{selectedCategory}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "add new characteristics to selected category",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Characteristics were added"),
+            @ApiResponse(code = 201, message = "Characteristics were found"),
+            @ApiResponse(code = 200, message = "Characteristics were not found. Returns empty list"),
             @ApiResponse(code = 404, message = "Categories were not found"),
+            @ApiResponse(code = 400, message = "Bad request")
     })
     public ResponseEntity<ResponseDto<List<CharacteristicDto>>> addCharacteristicsToCategory(@RequestBody CharacteristicDto[] characteristics,
                                                                              @PathVariable String selectedCategory) {
-        List<Characteristic> characteristicList = modelMapper.map(characteristics, listTypeCharDto);
-        List<Characteristic> gotBack = characteristicService.addCharacteristicsToCategory(characteristicList, selectedCategory);
-        List<CharacteristicDto> returnValue = modelMapper.map(gotBack, listTypeCharDto);
+        List<CharacteristicDto> returnValue = null;
+        if (StringUtils.isNoneBlank(selectedCategory)) {
+            List<Characteristic> characteristicList = modelMapper.map(characteristics, listTypeChar);
+            List<Characteristic> gotBack = characteristicService.addCharacteristicsToCategory(characteristicList, selectedCategory);
+            returnValue = modelMapper.map(gotBack, listTypeCharDto);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
         return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.CREATED);
-
-
-//
-//        Categories category = categoriesService.getCategoryByCategoryName(selectedCategory).get();
-//        List<Characteristic> characteristicsSelectedCategory = category.getCharacteristics();
-//
-//        for (Characteristic characteristic : characteristics) {
-//            characteristicsSelectedCategory.add(characteristicService.findByCharacteristicName(characteristic.getCharacteristicName())
-//                    .orElseThrow(CharacteristicNotFoundException::new));
-//        }
-//        category.setCharacteristics(characteristicsSelectedCategory);
-//        categoriesService.saveCategory(category);
-//
-//        return ResponseEntity.ok(characteristicsSelectedCategory);
     }
 }

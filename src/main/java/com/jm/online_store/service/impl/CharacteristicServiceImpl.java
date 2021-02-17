@@ -179,12 +179,19 @@ public class CharacteristicServiceImpl implements CharacteristicService {
         return allCharacteristics;
     }
 
+    @Transactional
     @Override
     public List<Characteristic> addCharacteristicsToCategory(List<Characteristic> characteristics, String categoryName) {
-        Categories  categories = categoriesService.getCategoryByCategoryName(categoryName).orElseThrow(() ->
+        Categories  category = categoriesService.getCategoryByCategoryName(categoryName).orElseThrow(() ->
                 new CategoriesNotFoundException(ExceptionEnums.CATEGORY.getText() + ExceptionConstants.NOT_FOUND));
-        List<Characteristic> characteristicFromDb = categories.getCharacteristics();
-        characteristicFromDb.addAll(characteristics);
-        return characteristicFromDb;
+        List<Characteristic> characteristicsFromCategory = category.getCharacteristics();
+        for (Characteristic characteristic : characteristics) {
+            Characteristic foundCharacteristic = findByCharacteristicName(characteristic.getCharacteristicName()).orElseThrow();
+            characteristicsFromCategory.add(foundCharacteristic);
+        }
+        category.setCharacteristics(characteristicsFromCategory);
+        categoriesService.saveCategory(category);
+
+        return characteristics;
     }
 }

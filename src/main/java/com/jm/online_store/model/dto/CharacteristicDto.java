@@ -17,4 +17,5 @@ public class CharacteristicDto {
     private String characteristicName;
 
 
+
 }
