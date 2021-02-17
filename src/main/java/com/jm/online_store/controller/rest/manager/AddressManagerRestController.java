@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.model.Address;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.AddressService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,18 +33,18 @@ public class AddressManagerRestController {
     private final AddressService addressService;
 
     /**
-     * Контроллер для отображения всех адресов магазинов
-     * @return ResponseEntity<>(allAddress, HttpStatus.OK)
+     * Контроллер для отображения адресов всех магазинов
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus)
      */
     @GetMapping
     @ApiOperation(value = "Возвращает список всех адресов", authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<Address>> findAll() {
+    public ResponseEntity<ResponseDto<List<Address>>> allShops() {
         List<Address> allAddress = addressService.findAllShops();
         if (allAddress.size() == 0) {
             log.debug("Адреса магазинов не найдены");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new ResponseDto<>(false, "Адреса магазинов не найдены"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(allAddress, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, allAddress), HttpStatus.OK);
     }
 
     /**
@@ -53,7 +54,7 @@ public class AddressManagerRestController {
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "Возвращает адрес по id", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<Address> getAddressInfo(@PathVariable Long id) {
+    public ResponseEntity< Address> getAddressInfo(@PathVariable Long id) {
         if(addressService.findAddressById(id).isEmpty()) {
             log.debug("Адрес с id: {} не найден", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -66,7 +67,7 @@ public class AddressManagerRestController {
      * Контроллер для изменения адреса
      */
     @PutMapping
-    public ResponseEntity editAddress(@RequestBody Address address) {
+    public ResponseEntity<ResponseDto> editAddress(@RequestBody Address address) {
         addressService.addAddress(address);
         return ResponseEntity.ok().build();
     }
