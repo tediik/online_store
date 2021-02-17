@@ -1,9 +1,8 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.aatest.ExceptionConstants;
-import com.jm.online_store.exception.aatest.ExceptionEnums;
-import com.jm.online_store.exception.stockService.StockExceptionConstants;
-import com.jm.online_store.exception.stockService.StockNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.StockFilterDto;
 import com.jm.online_store.repository.StockRepository;
@@ -25,7 +24,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

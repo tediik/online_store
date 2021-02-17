@@ -1,6 +1,6 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.orderSerivce.OrdersNotFoundException;
+import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.ProductInOrder;

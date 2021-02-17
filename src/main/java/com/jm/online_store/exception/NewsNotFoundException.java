@@ -1,4 +1,4 @@
-package com.jm.online_store.exception.newsService;
+package com.jm.online_store.exception;
 
 import lombok.NoArgsConstructor;
 

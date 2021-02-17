@@ -1,12 +1,9 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.SentStockNotFoundException;
-import com.jm.online_store.exception.aatest.ExceptionConstants;
-import com.jm.online_store.exception.aatest.ExceptionEnums;
-import com.jm.online_store.exception.userService.UserExceptionConstants;
-import com.jm.online_store.exception.userService.UserNotFoundException;
-import com.jm.online_store.exception.sentStockService.SentStockServiceException;
-import com.jm.online_store.exception.sentStockService.SentStocksExceptionConstants;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.repository.SentStockRepository;
 import com.jm.online_store.service.interf.SentStockService;

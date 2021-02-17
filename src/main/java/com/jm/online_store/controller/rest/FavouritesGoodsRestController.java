@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.ProductNotFoundException;
-import com.jm.online_store.exception.userService.UserNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;

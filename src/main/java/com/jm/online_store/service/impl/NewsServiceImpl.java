@@ -1,9 +1,8 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.aatest.ExceptionConstants;
-import com.jm.online_store.exception.aatest.ExceptionEnums;
-import com.jm.online_store.exception.newsService.NewsExceptionConstants;
-import com.jm.online_store.exception.newsService.NewsNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsFilterDto;
 import com.jm.online_store.repository.NewsRepository;
@@ -69,7 +68,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public News findById(long id) {
         return newsRepository.findById(id).orElseThrow(() ->
-                new NewsNotFoundException(String.format(NewsExceptionConstants.NO_NEWS_WITH_SUCH_ID, id)));
+                new NewsNotFoundException(String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
 
     }
 

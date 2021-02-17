@@ -3,7 +3,7 @@ package com.jm.online_store.controller.simple;
 import com.jm.online_store.config.security.Twitter.TwitterAuth;
 import com.jm.online_store.config.security.odnoklassniki.OAuth2Odnoklassniki;
 import com.jm.online_store.config.security.vk.VkApiClient;
-import com.jm.online_store.exception.userService.UserNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;

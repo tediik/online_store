@@ -1,5 +1,6 @@
 package com.jm.online_store.exception;
 
+
 import lombok.Getter;
 
 @Getter
@@ -29,7 +30,4 @@ public enum ExceptionEnums {
         this.description = description;
     }
 
-    public String getText() {
-        return description;
-    }
 }

@@ -1,10 +1,11 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.ConfirmReceiveEmail;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
-import com.jm.online_store.exception.userService.UserExceptionConstants;
-import com.jm.online_store.exception.userService.UserNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Customer;
@@ -178,7 +179,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateUserProfile(User user) {
         User updateUser = userRepository.findById(user.getId()).orElseThrow(() ->
-                new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND));
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         updateUser.setFirstName(user.getFirstName());
         updateUser.setLastName(user.getLastName());
         updateUser.setBirthdayDate(user.getBirthdayDate());
@@ -197,7 +198,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUserAdminPanel(@NotNull User user) {
         User editUser = userRepository.findById(user.getId()).orElseThrow(() ->
-                new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND));
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         if (!editUser.getEmail().equals(user.getEmail())) {
             if (isExist(user.getEmail())) {
                 throw new EmailAlreadyExistsException();
@@ -474,7 +475,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         User user = userRepository.findById(confirmationToken.getUserId()).orElseThrow(() ->
-                new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND));;
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         user.setEmail(confirmationToken.getUserEmail());
         userRepository.save(user);
         log.info("Для пользователя с логином: {} установлен новый логин: {}", user.getEmail(), confirmationToken.getUserEmail());
@@ -605,7 +606,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean changePassword(Long id, String oldPassword, String newPassword) {
         User user = userRepository.findById(id).orElseThrow(() ->
-                new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND));;
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             return false;
         }
@@ -626,7 +627,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addNewAddressForUser(User user, Address address) {
         User usertoUpdate = findById(user.getId()).orElseThrow(() ->
-                new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND));
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         Optional<Address> addressFromDB = addressService.findSameAddress(address);
         if (addressFromDB.isPresent() && !usertoUpdate.getUserAddresses().contains(addressFromDB.get())) {
             Address addressToAdd = addressFromDB.get();
@@ -692,10 +693,10 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(new User(sessionID, null));
             }
             return findByEmail(sessionID).orElseThrow(() ->
-                    new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND));
+                    new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         }
         return findByEmail(auth.getName()).orElseThrow(() ->
-                new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND));
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
     }
 
     /**
@@ -710,7 +711,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         return findByEmail(auth.getName()).orElseThrow(() ->
-                new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND));
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
     }
 
     /**
@@ -725,10 +726,10 @@ public class UserServiceImpl implements UserService {
         log.debug("ConfirmationToken: {}", confirmationToken);
 
         if (confirmationToken == null) {
-            throw new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND);
+            throw new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND);
         }
         return userRepository.findByEmail(confirmationToken.getUserEmail()).orElseThrow(() ->
-                new UserNotFoundException(UserExceptionConstants.USER_NOT_FOUND));
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
     }
 
     /**

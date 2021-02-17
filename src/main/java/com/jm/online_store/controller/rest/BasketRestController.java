@@ -3,7 +3,7 @@ package com.jm.online_store.controller.rest;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.ProductsNotFoundException;
-import com.jm.online_store.exception.userService.UserNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.UserService;

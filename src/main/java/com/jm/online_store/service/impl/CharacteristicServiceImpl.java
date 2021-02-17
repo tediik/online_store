@@ -2,8 +2,8 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
-import com.jm.online_store.exception.aatest.ExceptionConstants;
-import com.jm.online_store.exception.aatest.ExceptionEnums;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.repository.CategoriesRepository;

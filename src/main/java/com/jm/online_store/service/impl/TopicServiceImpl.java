@@ -1,9 +1,9 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.aatest.ExceptionConstants;
-import com.jm.online_store.exception.aatest.ExceptionEnums;
-import com.jm.online_store.exception.topicService.TopicAlreadyExists;
-import com.jm.online_store.exception.topicService.TopicNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.TopicAlreadyExists;
+import com.jm.online_store.exception.TopicNotFoundException;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.repository.TopicRepository;
 import com.jm.online_store.service.interf.TopicService;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

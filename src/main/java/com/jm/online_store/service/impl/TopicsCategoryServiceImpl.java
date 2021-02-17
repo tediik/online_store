@@ -1,10 +1,10 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.aatest.ExceptionConstants;
-import com.jm.online_store.exception.aatest.ExceptionEnums;
-import com.jm.online_store.exception.topicService.TopicNotFoundException;
-import com.jm.online_store.exception.topicsCategoryService.TopicCategoryAlreadyExists;
-import com.jm.online_store.exception.topicsCategoryService.TopicCategoryNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.TopicNotFoundException;
+import com.jm.online_store.exception.TopicCategoryAlreadyExists;
+import com.jm.online_store.exception.TopicCategoryNotFoundException;
 import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.repository.TopicsCategoryRepository;
 import com.jm.online_store.service.interf.TopicsCategoryService;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

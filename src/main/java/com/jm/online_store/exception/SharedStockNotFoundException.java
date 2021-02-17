@@ -1,4 +1,4 @@
-package com.jm.online_store.exception.sharedStockService;
+package com.jm.online_store.exception;
 
 public class SharedStockNotFoundException extends RuntimeException {
 

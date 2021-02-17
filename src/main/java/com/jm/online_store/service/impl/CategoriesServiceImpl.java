@@ -4,20 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.CategoriesNotFoundException;
-import com.jm.online_store.exception.ProductNotFoundException;
-import com.jm.online_store.exception.aatest.ExceptionConstants;
-import com.jm.online_store.exception.aatest.ExceptionEnums;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.CategoriesRepository;
 import com.jm.online_store.service.interf.CategoriesService;
-import com.jm.online_store.service.interf.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

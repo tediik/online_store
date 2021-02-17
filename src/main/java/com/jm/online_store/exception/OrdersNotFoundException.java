@@ -1,4 +1,4 @@
-package com.jm.online_store.exception.orderSerivce;
+package com.jm.online_store.exception;
 
 public class OrdersNotFoundException extends RuntimeException {
     public OrdersNotFoundException(String message) {

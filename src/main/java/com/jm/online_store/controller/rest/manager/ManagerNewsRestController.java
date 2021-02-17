@@ -43,8 +43,8 @@ import java.util.List;
 public class ManagerNewsRestController {
 
     private final NewsService newsService;
-    private final Type listType = new TypeToken<List<NewsDto>>() {}.getType();
     private final ModelMapper modelMapper;
+    private final Type listType = new TypeToken<List<NewsDto>>() {}.getType();
 
 
     /**

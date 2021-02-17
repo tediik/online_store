@@ -2,15 +2,15 @@ package com.jm.online_store.controller;
 
 import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
-import com.jm.online_store.exception.customer.CustomerNotFoundException;
-import com.jm.online_store.exception.newsService.NewsNotFoundException;
-import com.jm.online_store.exception.orderSerivce.OrdersNotFoundException;
-import com.jm.online_store.exception.stockService.StockNotFoundException;
-import com.jm.online_store.exception.topicService.TopicAlreadyExists;
-import com.jm.online_store.exception.topicService.TopicNotFoundException;
-import com.jm.online_store.exception.topicsCategoryService.TopicCategoryAlreadyExists;
-import com.jm.online_store.exception.topicsCategoryService.TopicCategoryNotFoundException;
-import com.jm.online_store.exception.userService.UserNotFoundException;
+import com.jm.online_store.exception.CustomerNotFoundException;
+import com.jm.online_store.exception.NewsNotFoundException;
+import com.jm.online_store.exception.OrdersNotFoundException;
+import com.jm.online_store.exception.StockNotFoundException;
+import com.jm.online_store.exception.TopicAlreadyExists;
+import com.jm.online_store.exception.TopicNotFoundException;
+import com.jm.online_store.exception.TopicCategoryAlreadyExists;
+import com.jm.online_store.exception.TopicCategoryNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.model.dto.ResponseDto;

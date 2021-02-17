@@ -1,6 +1,6 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.newsService.NewsNotFoundException;
+import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.service.interf.NewsService;

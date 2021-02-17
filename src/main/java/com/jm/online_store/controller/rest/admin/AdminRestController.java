@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest.admin;
 
 import com.jm.online_store.enums.ResponseOperation;
-import com.jm.online_store.exception.ExceptionConstants;
+import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.exception.ExceptionEnums;
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.model.CommonSettings;
@@ -10,10 +10,8 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CommonSettingsService;
-//<<<<<<< HEAD
-//
-//=======
-//>>>>>>> origin
+
+
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
