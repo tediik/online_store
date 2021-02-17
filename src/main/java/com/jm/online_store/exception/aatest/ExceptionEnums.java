@@ -1,5 +1,8 @@
 package com.jm.online_store.exception.aatest;
 
+/**
+ *
+ */
 public enum ExceptionEnums {
 
     USER("USER "), USERS("USERS "),

@@ -15,7 +15,6 @@ import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -40,7 +38,7 @@ import java.util.List;
 @Api(value = "Rest controller for actions from prod page")
 public class ProductCategoriesRestController {
     private final CategoriesService categoriesService;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
 
 
@@ -48,14 +46,14 @@ public class ProductCategoriesRestController {
      * Метод для получения списка всех Categories
      *
      * @return ResponseEntity<ResponseDto<ArrayNode>> возвращает все
-     * категории со статусом ответа, если категорий нет - пустой список
+     * категории со статусом ответа
      */
     @GetMapping("/all")
-    @ApiOperation(value = "return all categories",
+    @ApiOperation(value = "returns all categories",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Categories were found"),
-            @ApiResponse(code = 200, message = "Categories were not found")
+            @ApiResponse(code = 200, message = "Categories have been found"),
+            @ApiResponse(code = 200, message = "Categories haven't been found")
     })
     public ResponseEntity<ResponseDto<ArrayNode>> getAllCategories() {
         return ResponseEntity.ok(new ResponseDto<>(true, categoriesService.getAllCategories()));
@@ -68,11 +66,11 @@ public class ProductCategoriesRestController {
      * @return String название категории по id продукта
      */
     @GetMapping("/getOne/{id}")
-    @ApiOperation(value = "return name of category by product's id",
+    @ApiOperation(value = "returns name of category by product's id",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Name was found"),
-            @ApiResponse(code = 200, message = "Name was not found")
+            @ApiResponse(code = 200, message = "Name has been found"),
+            @ApiResponse(code = 200, message = "Name hasn't been found")
     })
     public ResponseEntity<ResponseDto<String>> getCategoryNameByProductId(@PathVariable Long id) {
         return ResponseEntity.ok(new ResponseDto<>(true, categoriesService.getCategoryNameByProductId(id)));
@@ -80,6 +78,7 @@ public class ProductCategoriesRestController {
 
     /**
      * Метод находит список подкатегорий по id
+     * или пустой список
      *
      * @param id саб категории
      * @return Возвращает список подкатегорий для корневой категории
@@ -120,7 +119,10 @@ public class ProductCategoriesRestController {
     @PutMapping
     @ApiOperation(value = "update category",
             authorizations = { @Authorization(value = "jwtToken")})
-    @ApiResponse(code = 200, message = "Update category")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Category has been updated"),
+            @ApiResponse(code = 400, message = "Category hasn't been updated")
+    })
     public ResponseEntity<ResponseDto<CategoriesDto>> updateCategory(@RequestBody CategoriesDto categoriesReq) {
         Categories categories = modelMapper.map(categoriesReq, Categories.class);
         CategoriesDto returnValue = modelMapper.map(categoriesService.updateCategory(categories), CategoriesDto.class);
@@ -137,8 +139,9 @@ public class ProductCategoriesRestController {
     @ApiOperation(value = "delete category",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returns deleted"),
-            @ApiResponse(code = 200, message = "Returns not deleted")
+            @ApiResponse(code = 200, message = "Category has been deleted"),
+            @ApiResponse(code = 200, message = "Category hasn't been deleted"),
+            @ApiResponse(code = 404, message = "Category hasn't been found")
     })
     public ResponseEntity<ResponseDto<String>> deleteCategory(@PathVariable Long id) {
         return categoriesService.deleteCategory(id) ?

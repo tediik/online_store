@@ -33,14 +33,13 @@ import java.util.Map;
 public class ManagerReportsRestController {
     private final CustomerService customerService;
     private final SentStockService sentStockService;
-
     private final Type listType = new TypeToken<List<CustomerDto>>() {}.getType();
-
     private final ModelMapper modelMapper;
 
 
     /**
      * метод получения списка пользователей, подписанных на рассылку по номеру дня
+     * или пустой список
      *
      * @param dayOfWeek день недели
      * @return список пользователей
@@ -50,7 +49,7 @@ public class ManagerReportsRestController {
             authorizations = { @Authorization(value = "jwtToken")})
     @ApiResponses( value = {
             @ApiResponse(code = 200, message = "Subscribed customers has been found"),
-            @ApiResponse(code = 200, message = "Subscribed customers hasn't been found")
+            @ApiResponse(code = 200, message = "Subscribed customers hasn't been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<CustomerDto>>> allUsersByDayOfWeek(@PathVariable String dayOfWeek) {
         List<CustomerDto> returnValue = modelMapper.map(customerService.findByDayOfWeekForStockSend(dayOfWeek), listType);
@@ -59,6 +58,7 @@ public class ManagerReportsRestController {
 
     /**
      * метод поиска пользователя, подписанного на рассылку по email "на лету"
+     * или пустой список
      *
      * @param email почта подписчика
      * @return список пользователей
@@ -68,7 +68,7 @@ public class ManagerReportsRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
             @ApiResponse(code = 200, message = "Subscribed customer has been found"),
-            @ApiResponse(code = 404, message = "Subscribed customer hasn't been found")
+            @ApiResponse(code = 200, message = "Subscribed customer hasn't been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<CustomerDto>>> findSubscriberByEmail(@PathVariable String email) {
         List<CustomerDto> returnValue = modelMapper.map(customerService.findSubscriberByEmail(email), listType);
@@ -76,10 +76,10 @@ public class ManagerReportsRestController {
     }
 
     /**
-     * метод отмены подписки со страницы менеджера
+     * метод отмены подписки со страницы менеджера.
      *
      * @param id пользователя
-     * @return Статус ответа зависящий от успешности отмены подписки для пользователя
+     * @return строковый ответ с описанием результата операции по отмене подписки для пользователя
      */
     @PutMapping("/cancel/{id}")
     @ApiOperation(value = "Method for cancel subscribe  from manager page",

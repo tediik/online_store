@@ -34,12 +34,13 @@ import java.util.List;
 @Api(description = "Rest controller for read/add/update categories for feedback topics")
 public class ManagerTopicsCategoryRestController {
     private final TopicsCategoryService topicsCategoryService;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<TopicsCategoryDto>>() {}.getType();
 
 
     /**
      * Метод для получения всех категорий тем
+     * может вернуть пустой список
      *
      * @return ResponseEntity<List <TopicsCategoryDto>> возвращает все
      * категории тем со статусом ответа, если категорий тем нет - пустой список
@@ -48,8 +49,8 @@ public class ManagerTopicsCategoryRestController {
     @ApiOperation(value = "Get list of all categories",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "TopicCategories were found"),
-            @ApiResponse(code = 200, message = "TopicCategories were not found")
+            @ApiResponse(code = 200, message = "TopicCategories have been found"),
+            @ApiResponse(code = 200, message = "TopicCategories haven't been found")
     })
     public ResponseEntity<ResponseDto<List<TopicsCategoryDto>>> readAllTopicsCategories() {
         List<TopicsCategory> topicsCategories = topicsCategoryService.findAll();
@@ -61,15 +62,14 @@ public class ManagerTopicsCategoryRestController {
      * Метод для получения единственной категории тем
      *
      * @param id идентификатор категории
-     * @return ResponseEntity<TopicsCategory> возвращает единственную категорию тем со статусом ответа,
-     * если категория тем с таким id не существует - выбросит исключение TopicNotFoundException
+     * @return ResponseEntity<TopicsCategoryDto> возвращает единственную категорию тем со статусом ответа
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "Get category by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "TopicCategory was found"),
-            @ApiResponse(code = 404, message = "TopicCategory was not not found")
+            @ApiResponse(code = 200, message = "TopicCategory has been found"),
+            @ApiResponse(code = 404, message = "TopicCategory hasn't been found")
     })
     public ResponseEntity<ResponseDto<TopicsCategoryDto>> readTopicsCategory(@PathVariable(name = "id") long id) {
         TopicsCategoryDto returnValue = modelMapper.map(topicsCategoryService.findById(id), TopicsCategoryDto.class);
@@ -80,14 +80,13 @@ public class ManagerTopicsCategoryRestController {
      * Метод для добавления новой категории тем
      *
      * @param topicsCategoryReq категория тем, которая будет создана
-     * @return ResponseEntity<TopicsCategory> возвращает созданную категорию тем со статусом ответа,
-     * если категория тем с таким именем уже существует - выбросит исключение TopicCategoryAlreadyExists
+     * @return ResponseEntity<TopicsCategoryDto> возвращает созданную категорию тем со статусом ответа
      */
     @PostMapping
     @ApiOperation(value = "Add a new category",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "TopicCategory was found"),
+            @ApiResponse(code = 201, message = "TopicCategory has been created"),
             @ApiResponse(code = 400, message = "TopicCategory with this name is already exists")
     })
     public ResponseEntity<ResponseDto<TopicsCategoryDto>> createTopicsCategory(@RequestBody TopicsCategoryDto topicsCategoryReq) {
@@ -101,16 +100,16 @@ public class ManagerTopicsCategoryRestController {
      *
      * @param id             идентификатор категории
      * @param topicsCategoryReq категория с внесенными изменениями
-     * @return ResponseEntity<TopicsCategory> возвращает измененную категорию тем со статусом ответа,
+     * @return ResponseEntity<TopicsCategoryDto> возвращает измененную категорию тем со статусом ответа,
      * если категория тем с таким id или именем не существует - бросает исключение TopicCategoryNotFoundException
      */
     @PutMapping("/{id}")
     @ApiOperation(value = "Update  category",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "TopicCategory was modified"),
-            @ApiResponse(code = 400, message = "TopicCategory was not modified"),
-            @ApiResponse(code = 404, message = "TopicCategory id is not found")
+            @ApiResponse(code = 200, message = "TopicCategory has been modified"),
+            @ApiResponse(code = 400, message = "TopicCategory hasn't been modified"),
+            @ApiResponse(code = 404, message = "TopicCategory id hasn't been found")
     })
     public ResponseEntity<ResponseDto<TopicsCategoryDto>> updateTopicsCategory(@PathVariable(name = "id") long id,
                                                                                @RequestBody TopicsCategoryDto topicsCategoryReq) {
@@ -123,17 +122,15 @@ public class ManagerTopicsCategoryRestController {
      * Метод для пометки категории тем, как архивной
      *
      * @param id идентификатор категории
-     * @return ResponseEntity<TopicsCategory> возвращает заархивированную категорию тем со статусом ответа,
-     * если категория тем с таким id не существует - бросает исключение TopicCategoryNotFoundException или
-     * TopicCategoryAlreadyExists если пытаются архивировать то что уже в архиве
+     * @return ResponseEntity<TopicsCategoryDto> возвращает заархивированную категорию тем со статусом ответа
      */
     @PutMapping("/archive/{id}")
     @ApiOperation(value = "Mark category as archived by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "TopicCategory was archived"),
-            @ApiResponse(code = 400, message = "TopicCategory was not archived"),
-            @ApiResponse(code = 404, message = "TopicCategory id is not found")
+            @ApiResponse(code = 200, message = "TopicCategory has been archived"),
+            @ApiResponse(code = 400, message = "TopicCategory hasn't been archived"),
+            @ApiResponse(code = 404, message = "TopicCategory id hasn't been found")
     })
     public ResponseEntity<ResponseDto<TopicsCategoryDto>> archiveTopicsCategory(@PathVariable(name = "id") Long id) {
         TopicsCategoryDto returnValue = modelMapper.map(topicsCategoryService.archive(id), TopicsCategoryDto.class);
@@ -144,17 +141,15 @@ public class ManagerTopicsCategoryRestController {
      * Метод для пометки категории тем, как актуальной
      *
      * @param id идентификатор категории
-     * @return ResponseEntity<TopicsCategory> возвращает акутальную категорию тем со статусом ответа,
-     * если категория тем с таким id не существует - бросает исключение TopicCategoryNotFoundException или
-     * TopicCategoryAlreadyExists если пытаются деархивировать то что уже не в архиве
+     * @return ResponseEntity<TopicsCategoryDto> возвращает акутальную категорию тем со статусом ответа,
      */
     @PutMapping("/unarchive/{id}")
     @ApiOperation(value = "Mark category as unarchived by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "TopicCategory was unarchived"),
-            @ApiResponse(code = 400, message = "TopicCategory was not unarchived"),
-            @ApiResponse(code = 404, message = "TopicCategory id is not found")
+            @ApiResponse(code = 200, message = "TopicCategory has been unarchived"),
+            @ApiResponse(code = 400, message = "TopicCategory hasn't been unarchived"),
+            @ApiResponse(code = 404, message = "TopicCategory hasn't been found")
     })
     public ResponseEntity<ResponseDto<TopicsCategoryDto>> unarchiveTopicsCategory(@PathVariable(name = "id") Long id) {
         TopicsCategoryDto returnValue = modelMapper.map(topicsCategoryService.unarchive(id), TopicsCategoryDto.class);

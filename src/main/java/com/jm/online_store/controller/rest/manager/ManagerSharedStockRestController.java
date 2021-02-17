@@ -2,12 +2,10 @@ package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.Stock;
-import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.SharedStockDto;
 import com.jm.online_store.model.dto.StockDto;
 import com.jm.online_store.service.interf.SharedStockService;
-import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -15,7 +13,6 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dom4j.rule.Mode;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
@@ -27,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,21 +34,23 @@ import java.util.stream.Collectors;
 @Api(description = "Rest controller for manage of shared stocks from manager page")
 public class ManagerSharedStockRestController {
     private final SharedStockService sharedStockService;
-    private final ModelMapper modelMapper = new ModelMapper();
-
+    private final ModelMapper modelMapper;
+    private final Type listType1 = new TypeToken<List<SharedStockDto>>() {}.getType();
+    private final Type listType2 = new TypeToken<List<StockDto>>() {}.getType();
 
     /**
      * Метод добавляет сущность в базу данных
      *
      * @param sharedStockReq
-     * @return возвращает добавленную сущность
+     * @return  возвращает добавленную сущность
      */
     @PostMapping
     @ApiOperation(value = "Add shared stock",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Shared stock has been created"),
-            @ApiResponse(code = 400, message = "Stock not found")
+            @ApiResponse(code = 404, message = "Shared stock hasn't been found"),
+            @ApiResponse(code = 404, message = "User hasn't been not found")
     })
     public ResponseEntity<ResponseDto<SharedStockDto>> addSharedStock(@RequestBody SharedStockDto sharedStockReq) {
         SharedStock gotBack = sharedStockService.addSharedStock(modelMapper.map(sharedStockReq, SharedStock.class));
@@ -62,7 +60,8 @@ public class ManagerSharedStockRestController {
     }
 
     /**
-     * Метод возвращает список типа SharedStock.
+     * Метод возвращает список типа SharedStock
+     * или пустой список
      *
      * @return List<SharedStock> возвращает список всех SharedStock из базы данных
      */
@@ -74,8 +73,6 @@ public class ManagerSharedStockRestController {
             @ApiResponse(code = 200, message = "Shared stocks haven't been found")
     })
     public ResponseEntity<ResponseDto<List<SharedStockDto>>> getQuantity() {
-        Type listType1 = new TypeToken<List<SharedStockDto>>() {}.getType();
-        Type listType2 = new TypeToken<List<StockDto>>() {}.getType();
         //вытаскиваем список типа SharedStock из базы
         List<SharedStock> gotBack = sharedStockService.findAll();
         //получаем из списка типа SharedStock  список типа Stock

@@ -50,11 +50,10 @@ public class ManagerRestController {
 
     private final NewsService newsService;
     private final OrderService orderService;
-//    private final ModelMapper modelMapper = new ModelMapper();
-//<<<<<<< HEAD
     private final UserService userService;
-    private final  Type listType = new TypeToken<List<NewsDto>>() {}.getType();
+    private final Type listType = new TypeToken<List<NewsDto>>() {}.getType();
     private final ModelMapper modelMapper;
+
     /**
      * Метод возвращающий залогиненного юзера. Работает при включенной сессии.
      *
@@ -70,13 +69,12 @@ public class ManagerRestController {
         User authUser = userService.getCurrentLoggedInUser();
         return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(authUser, UserDto.class)));
     }
-//
-//=======
-//>>>>>>> origin
+
     /**
      * Метод возвращающий всписок всех новостей
+     * или пустой список
      *
-     * @return List<News> возвращает список всех новстей из базы данных
+     * @return List<NewsDto> возвращает список всех новстей из базы данных
      */
     @GetMapping("/news")
     @ApiOperation(value = "Get list of all news",
@@ -92,13 +90,9 @@ public class ManagerRestController {
 
     /**
      * Метод сохраняет новости в базу данных
-<<<<<<< HEAD
      *
      * @param newsReq сущность для сохранения в базе данных
-=======
-     * @param newsReq сущность для сохранения в базе данных
->>>>>>> origin
-     * @return возвращает заполненную сущность клиенту
+     * @return NewsDto возвращает заполненную сущность клиенту
      */
     @PostMapping("/news/post")
     @ApiOperation(value = "Method for save news in database",
@@ -115,18 +109,17 @@ public class ManagerRestController {
 
     /**
      * Метод обновляет сущность в базе данных
-<<<<<<< HEAD
      *
      * @param newsReq сущность для сохранения в базе данных
-=======
-     * @param newsReq сущность для сохранения в базе данных
->>>>>>> origin
      * @return возвращает обновленную сущность клиенту
      */
     @PutMapping("/news/update")
     @ApiOperation(value = "Method for update news in database",
             authorizations = {@Authorization(value = "jwtToken")})
-    @ApiResponse(code = 200, message = "News has been updated")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "News has been updated"),
+            @ApiResponse(code = 404, message = "News has not been found")
+    })
     public ResponseEntity<ResponseDto<NewsDto>> newsUpdate(@RequestBody NewsDto newsReq) {
         if (newsReq.getPostingDate() == null || newsReq.getPostingDate().isBefore(LocalDate.now())) {
             newsReq.setPostingDate(LocalDate.now());
@@ -138,6 +131,7 @@ public class ManagerRestController {
 
     /**
      * Метод удаляет сушность из базы данных по уникальному идентификатору
+     *
      * @param id уникальный идентификатор
      * @return возвращает ответ в виде строки с описанием результата
      */
@@ -157,6 +151,8 @@ public class ManagerRestController {
 
     /**
      * Get mapping for get request to response with sales during the custom date range
+     * or empty list
+     *
      * @param stringStartDate - start of custom date range
      * @param stringEndDate   - end of custom date range
      * @return - {@link ResponseEntity} with list of Orders with status complete
@@ -165,8 +161,8 @@ public class ManagerRestController {
     @ApiOperation(value = "Get mapping for get request to response with sales during the custom date range",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "sales are found"),
-            @ApiResponse(code = 200, message = "sales  found. Returns empty list")
+            @ApiResponse(code = 200, message = "sales have been found"),
+            @ApiResponse(code = 200, message = "sales haven't been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<SalesReportDto>>> getSalesForCustomRange(@RequestParam String stringStartDate,
                                                                                     @RequestParam String stringEndDate) {
@@ -175,8 +171,10 @@ public class ManagerRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, orderService.findAllSalesBetween(startDate, endDate)));
     }
 
+
     /**
      * Mapping for csv export.
+     *
      * @param stringStartDate - beginning of the period that receives from frontend in as String
      * @param stringEndDate   - end of the period that receives from frontend in as String
      * @param response        - response to write back stream with csv
