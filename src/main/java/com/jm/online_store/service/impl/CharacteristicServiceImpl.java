@@ -167,6 +167,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Override
     public Characteristic getCharacteristicById(Long id) {
         return characteristicRepository.findById(id).orElseThrow(()
-                -> new CharacteristicNotFoundException(ExceptionEnums.CHARACTERISTIC.getText() + ExceptionConstants.NOT_FOUND));
+                -> new CharacteristicNotFoundException(ExceptionEnums.CHARACTERISTIC.getText() +
+                String.format( ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
     }
 }

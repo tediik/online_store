@@ -1,7 +1,10 @@
 package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.ProductCharacteristic;
+import com.jm.online_store.model.dto.ProductCharacteristicDto;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public interface ProductCharacteristicService {
 
@@ -9,4 +12,6 @@ public interface ProductCharacteristicService {
 
     @Transactional
     ProductCharacteristic addProductCharacteristic(long productId, String characteristicName, String value);
+
+    List<ProductCharacteristic> addProductCharacteristic(List<ProductCharacteristicDto> list , String addedProductName);
 }

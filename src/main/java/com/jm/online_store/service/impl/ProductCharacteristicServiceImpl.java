@@ -5,13 +5,19 @@ import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.ProductCharacteristic;
+import com.jm.online_store.model.dto.ProductCharacteristicDto;
 import com.jm.online_store.repository.ProductCharacteristicRepository;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
+import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -50,12 +56,28 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
      */
     @Override
     @Transactional
-    public Long addProductCharacteristic(long productId, String characteristicName, String value) {
+    public ProductCharacteristic addProductCharacteristic(long productId, String characteristicName, String value) {
 
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         Characteristic characteristic = characteristicService.findByCharacteristicName(characteristicName).orElseThrow(CharacteristicNotFoundException::new);
 
-        return productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, value)).getId();
+        return productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, value));
     }
 
+    @Override
+    @Transactional
+    public List<ProductCharacteristic> addProductCharacteristic(List<ProductCharacteristicDto> list, String addedProductName) {
+        List<ProductCharacteristic> returnValue = new ArrayList<>();
+        list.forEach(s -> {
+            Characteristic characteristic = characteristicService.getCharacteristicById(s.getCharacteristicId());
+            Product product = productRepository.findByProduct(addedProductName).orElseThrow(ProductNotFoundException::new);
+            returnValue.add(productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, s.getValue())));
+        });
+//        for (ProductCharacteristicDto tmp: list) {
+//            Characteristic characteristic = characteristicService.getCharacteristicById(tmp.getCharacteristicId());
+//            Product product = productRepository.findByProduct(addedProductName).orElseThrow(ProductNotFoundException::new);
+//            returnValue.add(productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, tmp.getValue())));
+//        }
+        return returnValue;
+    }
 }
