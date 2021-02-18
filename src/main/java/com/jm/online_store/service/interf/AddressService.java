@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AddressService {
-    Optional<Address> findAddressById(Long idAddress);
-    Address addAddress(Address address);
+
     List<Address> findAllShops();
     List<Address> findAllShopsManager();
+    Optional<Address> findAddressById(Long idAddress);
+    Address addAddress(Address address);
     Optional<Address> findSameAddress(Address address);
     void deleteById(Long id);
     //boolean checkStatus(boolean status);

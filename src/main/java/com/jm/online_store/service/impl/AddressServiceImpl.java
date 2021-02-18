@@ -36,9 +36,9 @@ public class AddressServiceImpl implements AddressService {
     }
 
     /**
-     * Метод поиска активных адресов магазинов.
+     * Метод поиска активных адресов магазинов доступных кастомеру.
      * @return List<Address>
-     * @throws AddressNotFoundException
+     * @throws AddressNotFoundException - NotFoundException
      */
     @Override
     public List<Address> findAllShops() {
@@ -55,11 +55,7 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public List<Address> findAllShopsManager() {
-        Address address = new Address();
-        if(address.isShop()) {
-            return addressRepository.findAllByShopIsTrue();
-        }
-        return addressRepository.findAllByShopIsTrue();
+        return addressRepository.findAll();
     }
 
     /**

@@ -49,7 +49,7 @@ public class AddressManagerRestController {
     })
     public ResponseEntity<ResponseDto<List<Address>>> allShops() {
         List<Address> allAddress = addressService.findAllShopsManager();
-        if (allAddress.size() == 0) {
+        if (allAddress.isEmpty()) {
             log.debug("Адреса магазинов не найдены");
             return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.NOT_FOUND);
         }
@@ -102,8 +102,7 @@ public class AddressManagerRestController {
     }
 
     /**
-     * Контроллер для удаления адреса магазина по id,
-     * удалить все адреса нельзя, должен остаться хотя бы 1.
+     * Контроллер для удаления адреса магазина по id.
      * @param id - адрес id {@link Long}
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
