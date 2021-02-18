@@ -44,23 +44,34 @@ public class AddressRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, allAddress),HttpStatus.OK);
     }
 
+    /**
+     * Контроллер для отображения адреса пользователя
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     */
     @GetMapping(value = "/userAddresses")
     @ApiOperation(value = "get current logged in Users address")
-    public ResponseEntity<Set<Address>> userAddresses() {
-        if (userService.getCurrentLoggedInUser().getUserAddresses() != null) {
-            return ResponseEntity.ok(userService.getCurrentLoggedInUser().getUserAddresses());
+    public ResponseEntity<ResponseDto<Set<Address>>> userAddresses() {
+        Set<Address> userAddress =  userService.getCurrentLoggedInUser().getUserAddresses();
+        if (userAddress.isEmpty()) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "User address not found"), HttpStatus.NOT_FOUND);
+
         }
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, userAddress), HttpStatus.OK);
     }
 
+    /**
+     * Контроллер для добавления адреса магазина пользователем
+     * @param address {@link Address}
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     */
     @PostMapping(value = "/addAddress")
     @ApiOperation(value = "adds address for current logged in user")
-    public ResponseEntity addAddressToUser(@RequestBody Address address) {
+    public ResponseEntity<ResponseDto<Address>> addAddressToUser(@RequestBody Address address) {
         User user = userService.getCurrentLoggedInUser();
-        if (userService.addNewAddressForUser(user, address)) {
-            return ResponseEntity.ok().build();
+        if (!userService.addNewAddressForUser(user, address)) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Address is exist"), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.badRequest().body("addressIsExists");
+        return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
 
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})
