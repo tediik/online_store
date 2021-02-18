@@ -32,7 +32,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/api/manager/shops")
-@Api(description = "REST controller for address in manager cabinet")
+@Api(tags = "REST controller for address in manager cabinet")
 public class AddressManagerRestController {
 
     private final AddressService addressService;
@@ -59,7 +59,7 @@ public class AddressManagerRestController {
     /**
      * Контроллер для отображения адреса магазина по id.
      * @param id - адрес id (Long)
-     * @return ResponseEntity<>(address, HttpStatus.OK)
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "Возвращает адрес по id", authorizations = { @Authorization(value="jwtToken") })
@@ -79,23 +79,28 @@ public class AddressManagerRestController {
     /**
      * Контроллер для изменения адреса магазина.
      * @param address {@link Address}
-     * @return
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
-    public ResponseEntity<ResponseDto> editAddress(@RequestBody Address address) {
+    public ResponseEntity<ResponseDto<Address>> editAddress(@RequestBody Address address) {
+        if(addressService.findAddressById(address.getId()).isEmpty()) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Incorrect id" ), HttpStatus.BAD_REQUEST);
+        }
         addressService.addAddress(address);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
 
     /**
      * Контроллер для добавления нового адреса магазина.
      * @param newAddress - новый адрес {@link Address}
-     * @return
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PostMapping
     public ResponseEntity<ResponseDto<Address>> addAddress(@RequestBody Address newAddress) {
+        Long id = newAddress.getId();
         addressService.addAddress(newAddress);
-        return new ResponseEntity<>(HttpStatus.OK);
+        log.info("Новый адрес магазина с id: {} добавлен", id);
+        return new ResponseEntity<>(new ResponseDto<>(true, newAddress), HttpStatus.OK);
     }
 
     /**

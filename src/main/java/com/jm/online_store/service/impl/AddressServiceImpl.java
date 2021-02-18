@@ -16,8 +16,8 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
 
     /**
-     * Метод поиска адреса по id
-     * @param idAddress
+     * Метод поиска адреса по id.
+     * @param idAddress {@link Long}
      * @return Optional<Address>
      */
     @Override
@@ -26,8 +26,8 @@ public class AddressServiceImpl implements AddressService {
     }
 
     /**
-     * Метод добавления адреса
-     * @param address
+     * Метод добавления адреса.
+     * @param address {@link Address}
      * @return Address
      */
     @Override
@@ -36,21 +36,21 @@ public class AddressServiceImpl implements AddressService {
     }
 
     /**
-     * Метод поиска адресов магазинов
+     * Метод поиска адресов магазинов.
      * @return List<Address>
      * @throws AddressNotFoundException
      */
     @Override
     public List<Address> findAllShops() {
         List<Address> shops = addressRepository.findAllByShopIsTrue();
-        if(shops.isEmpty()) {
+        if (shops.isEmpty()) {
             throw new AddressNotFoundException();
         }
         return shops;
     }
 
     /**
-     * Метод для удаления адреса по id
+     * Метод для удаления адреса по id.
      */
     @Override
     public void deleteById(Long id) {
@@ -58,7 +58,8 @@ public class AddressServiceImpl implements AddressService {
     }
 
     /**
-     * Метод поиска адресa, совпадающего по всем полям
+     * Метод поиска адреса, совпадающего по всем полям.
+     * @param address {@link Address}
      * @return Optional<Address>
      */
     @Override
