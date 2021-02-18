@@ -28,7 +28,7 @@ import java.util.Set;
 @AllArgsConstructor
 @RequestMapping("/api/customer")
 @RestController
-@Api(tags = "Rest controller for addresses")
+@Api(value = "Rest controller for addresses")
 public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;

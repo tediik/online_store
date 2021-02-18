@@ -32,7 +32,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/api/manager/shops")
-@Api(tags = "REST controller for address in manager cabinet")
+@Api(value = "REST controller for address in manager cabinet")
 public class AddressManagerRestController {
 
     private final AddressService addressService;
@@ -42,9 +42,9 @@ public class AddressManagerRestController {
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping
-    @ApiOperation(value = "Возвращает список всех адресов", authorizations = { @Authorization(value = "jwtToken") })
+    @ApiOperation(value = "receive all address from db", authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "NO ONE ADDRESS WAS FOUND"),
+            @ApiResponse(code = 400, message = "No one address was found"),
             @ApiResponse(code = 200, message = "Ok")
     })
     public ResponseEntity<ResponseDto<List<Address>>> allShops() {
@@ -62,7 +62,7 @@ public class AddressManagerRestController {
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping("/{id}")
-    @ApiOperation(value = "Возвращает адрес по id", authorizations = { @Authorization(value="jwtToken") })
+    @ApiOperation(value = "receive address by id from db", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Address not found"),
             @ApiResponse(code = 200, message = "Ok")
@@ -82,6 +82,7 @@ public class AddressManagerRestController {
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
+    @ApiOperation(value = "modify address from manager page", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<Address>> editAddress(@RequestBody Address address) {
         if(addressService.findAddressById(address.getId()).isEmpty()) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Incorrect id" ), HttpStatus.BAD_REQUEST);
@@ -96,6 +97,7 @@ public class AddressManagerRestController {
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PostMapping
+    @ApiOperation(value = "add new address from manager page", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<Address>> addAddress(@RequestBody Address newAddress) {
         addressService.addAddress(newAddress);
         return new ResponseEntity<>(new ResponseDto<>(true, newAddress), HttpStatus.OK);
@@ -107,6 +109,7 @@ public class AddressManagerRestController {
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "delete address by id from manager page", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<Address>> deleteAddress(@PathVariable Long id) {
         if(addressService.findAddressById(id).isEmpty()) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.BAD_REQUEST);
