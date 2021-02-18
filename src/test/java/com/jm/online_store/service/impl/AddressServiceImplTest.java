@@ -80,13 +80,12 @@ public class AddressServiceImplTest {
     @Test
     void findSameAdress() {
         Address testAddress = new Address("420079", "Тамбовская область", "Тамбов", "Запорожская", "11", false);
-        when(addressRepository.findAddressByRegionAndDistrictAndCityAndStreetAndBuildingAndFlatAndZip(
+        when(addressRepository.findAddressByRegionAndDistrictAndCityAndStreetAndBuildingAndZip(
                 address3.getRegion(),
                 address3.getDistrict(),
                 address3.getCity(),
                 address3.getStreet(),
                 address3.getBuilding(),
-                address3.getFlat(),
                 address3.getZip())).thenReturn(address3);
         assertEquals(testAddress,address3);
     }

@@ -9,6 +9,7 @@ public interface AddressService {
     Optional<Address> findAddressById(Long idAddress);
     Address addAddress(Address address);
     List<Address> findAllShops();
+    List<Address> findAllShopsManager();
     Optional<Address> findSameAddress(Address address);
     void deleteById(Long id);
     //boolean checkStatus(boolean status);

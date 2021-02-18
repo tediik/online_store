@@ -4,11 +4,13 @@ import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,15 +28,20 @@ import java.util.Set;
 @AllArgsConstructor
 @RequestMapping("/api/customer")
 @RestController
-@Api(description = "Rest controller for addresses")
+@Api(tags = "Rest controller for addresses")
 public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;
 
+    /**
+     * Контроллер для отображения адресов всех активных магазинов
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     */
     @GetMapping(value = "/allShops")
     @ApiOperation(value = "get all the shops")
-    public ResponseEntity<List<Address>> findAll() {
-        return ResponseEntity.ok(addressService.findAllShops());
+    public ResponseEntity<ResponseDto<List<Address>>> findAll() {
+        List<Address> allAddress = addressService.findAllShops();
+        return new ResponseEntity<>(new ResponseDto<>(true, allAddress),HttpStatus.OK);
     }
 
     @GetMapping(value = "/userAddresses")

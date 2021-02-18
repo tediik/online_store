@@ -5,13 +5,13 @@ import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Сущность адрес, связана с сущностью {@link Order}
@@ -29,34 +29,31 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
-    private String zip;
-
-    @NonNull
+    @NotBlank
     private String region;
+
+    @NotBlank
+    private String city;
+
+    @NotBlank
+    private String street;
+
+    @NotBlank
+    private String building;
 
     private String district;
 
-    @NonNull
-    private String city;
-
-    @NonNull
-    private String street;
-
-    @NonNull
-    private String building;
-
-    private String flat;
+    private String zip;
 
     @Column(name = "shop")
     private boolean shop;
 
-    public Address(@NonNull String zip, @NonNull String region, @NonNull String city, @NonNull String street, @NonNull String building, boolean shop) {
-        this.zip = zip;
+    public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String zip, boolean shop) {
         this.region = region;
         this.city = city;
         this.street = street;
         this.building = building;
+        this.zip = zip;
         this.shop = shop;
     }
 }

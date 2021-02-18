@@ -48,17 +48,17 @@ public class AddressManagerRestController {
             @ApiResponse(code = 200, message = "Ok")
     })
     public ResponseEntity<ResponseDto<List<Address>>> allShops() {
-        List<Address> allAddress = addressService.findAllShops();
+        List<Address> allAddress = addressService.findAllShopsManager();
         if (allAddress.size() == 0) {
             log.debug("Адреса магазинов не найдены");
-            return new ResponseEntity<>(new ResponseDto<>(false, "Адреса магазинов не найдены"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(new ResponseDto<>(true, allAddress), HttpStatus.OK);
     }
 
     /**
      * Контроллер для отображения адреса магазина по id.
-     * @param id - адрес id (Long)
+     * @param id - адрес id {@link Long}
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping("/{id}")
@@ -70,7 +70,7 @@ public class AddressManagerRestController {
     public ResponseEntity<ResponseDto<Address>> getAddressInfo(@PathVariable Long id) {
         if(addressService.findAddressById(id).isEmpty()) {
             log.debug("Адрес с id: {} не найден", id);
-            return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.NOT_FOUND);
         }
         Address address = addressService.findAddressById(id).get();
         return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
@@ -97,9 +97,7 @@ public class AddressManagerRestController {
      */
     @PostMapping
     public ResponseEntity<ResponseDto<Address>> addAddress(@RequestBody Address newAddress) {
-        Long id = newAddress.getId();
         addressService.addAddress(newAddress);
-        log.info("Новый адрес магазина с id: {} добавлен", id);
         return new ResponseEntity<>(new ResponseDto<>(true, newAddress), HttpStatus.OK);
     }
 
