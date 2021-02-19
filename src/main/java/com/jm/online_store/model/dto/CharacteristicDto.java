@@ -16,6 +16,4 @@ public class CharacteristicDto {
     private Long id;
     private String characteristicName;
 
-
-
 }
