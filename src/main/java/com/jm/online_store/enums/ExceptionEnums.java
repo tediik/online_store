@@ -29,7 +29,6 @@ public enum ExceptionEnums {
     ROLE("ROLE "), ROLES("ROLES "),
     PASSWORD("PASSWORD ");
 
-
     private final String description;
 
     ExceptionEnums(String description) {
@@ -41,4 +40,3 @@ public enum ExceptionEnums {
     }
 
 }
-
