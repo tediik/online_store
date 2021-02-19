@@ -28,8 +28,7 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
 
     /**
-     * Метод без параметров, который просто тащит список новостей
-     *
+     * Вытаскиваем список новостей.
      * @return List<News> возвращает список всех новостей
      */
     @Override
@@ -39,7 +38,6 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * Метод извлекает страницу новостей
-     *
      * @param page параметры страницы
      * @return Page<News> возвращает страницу новостей
      */
@@ -50,9 +48,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод сохраняет сущность, пришедшую в качестве параметра
-     *
-     * @param news Сущность News c с заполненными полями
+     * Метод сохраняет сущность News
+     * @param news Сущность News c заполненными полями
+     * @return News возвращает сохраненную новость
      */
     @Override
     public News save(News news) {
@@ -61,7 +59,6 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * Method accept Long id as parameter and returns {@link News} entity
-     *
      * @param id - {@link Long}
      * @return returns News entity or throws {@link NewsNotFoundException}
      */
@@ -73,8 +70,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод выполняет проверку существует ли сущность в базе.
-     *
+     * Выполняем проверку, существует ли сущность в базе.
      * @param id уникальный идентификатор сушности
      * @return Возвращает булево значение true или false
      */
@@ -86,9 +82,9 @@ public class NewsServiceImpl implements NewsService {
 
 
     /**
-     * Метод обновляет сущность News в базе данных и изменяет modifiedDate на сегодняшнюю дату
-     *
+     * Обновляем сущность News в БД и изменяем modifiedDate на сегодняшнюю дату.
      * @param news сушность для обновления в базе данных
+     * @return News возвращает обновленную новость
      */
     public News update(News news) {
         newsRepository.findById(news.getId()).orElseThrow(() ->
@@ -99,9 +95,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод удаляет сущность News из базы данных по уникальному идентификатору
-     *
+     * Удаляем сущность News из БД по ее уникальному идентификатору
      * @param id уникальный идентификатор сущности News
+     * @return Возвращает булево значение true или false
      */
     @Override
     public boolean deleteById(Long id) {
@@ -115,7 +111,6 @@ public class NewsServiceImpl implements NewsService {
     /**
      * Метод делающий выборку из базы данных по заданному параметру,
      * где LocalDate postingDate <= LocalDate timeNow.
-     *
      * @return возвращает список опубликованных новостей List<News>
      */
     @Override
@@ -126,7 +121,6 @@ public class NewsServiceImpl implements NewsService {
     /**
      * Метод делающий выборку из базы данных по заданному параметру,
      * где LocalDate postingDate > LocalDate timeNow.
-     *
      * @return возвращает список еще неопубликованных новостей List<News>
      */
     @Override
