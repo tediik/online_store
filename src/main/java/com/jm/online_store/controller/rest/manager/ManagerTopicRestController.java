@@ -34,7 +34,6 @@ public class ManagerTopicRestController {
 
     /**
      * Метод для получения единственной темы
-     *
      * @param id идентификатор темы
      * @return ResponseEntity<Topic> возвращает единственную тему со статусом ответа,
      * если темы с таким id не существует - выбросит исключенине TopicNotFoundException
@@ -53,7 +52,6 @@ public class ManagerTopicRestController {
 
     /**
      * Метод для добавления новой темы
-     *
      * @param topic тема, которая будет создана
      * @return ResponseEntity<TopicDto> возвращает созданную тему со статусом ответа,
      * если тема с таким именем уже существует - выбросит исключение TopicAlreadyExists
@@ -73,7 +71,6 @@ public class ManagerTopicRestController {
 
     /**
      * Метод для изменения темы
-     *
      * @param topic тема с внесенными изменениями
      * @return ResponseEntity<Topic> возвращает измененную тему со статусом ответа,
      * если тема с таким id не существует - только статус
