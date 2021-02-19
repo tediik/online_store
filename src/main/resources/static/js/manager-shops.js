@@ -1,8 +1,66 @@
-$(document).ready(getAllAddress());
+
+fetchAddressesRenderTable()
 
 /**
- * Функция для отображения списка всех магазинов
+ * Функция для отображения списках всех адресов магазинов 2.0
+ * @param address
  */
+function renderAddressTable(addresses){
+    let table = $('#address-table')
+    table.empty()
+        .append(`<tr>
+                <th>ID</th>
+                <th>Регион</th>
+                <th>Город</th>
+                <th>Улица</th>
+                <th>Дом</th>
+                <th>Статус</th>
+                <th>Изменить</th>
+                <th>Удалить</th>
+              </tr>`)
+
+    for (let i = 0; i < address.length; i++) {
+        const address = addresses[i];
+        let row = `
+                <tr id="tr-${address.id}">
+                    <td>${address.id}</td>
+                    <td>${address.region}</td>
+                    <td>${address.city} </td>
+                    <td>${address.street} </td>  
+                    <td>${address.building} </td>
+                    <td>${address.shop} </td>                                
+                    
+                    <td>
+            <!-- Buttons of the right column of main table-->
+                        <button data-user-id="${address.id}" type="button" class="btn btn-success edit-button-user" data-toggle="modal" data-target="#userModalWindow">
+                        Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button data-user-id="${address.id}" type="button" class="btn btn-danger delete-button-user" data-toggle="modal" data-target="#userModalWindow">
+                        Delete
+                        </button>
+                    </td>
+                </tr>
+                `;
+        table.append(row)
+    }
+    $('.edit-button-user').click(handleEditUserButton)
+    $('.delete-button-user').click(handleDeleteUserButton)
+}
+
+/**
+ * Функция для fetch запроса
+ */
+function fetchAddressesRenderTable() {
+    fetch("/api/manager/shops", {
+        method: 'GET'
+    }).then(response => response.json()).then(addresses => renderAddressTable(addresses))
+}
+
+/*/!**
+ * Функция для отображения списка всех магазинов
+ *!/
 function getAllAddress() {
     $("#table").empty();
     $.ajax({
@@ -11,7 +69,7 @@ function getAllAddress() {
         timeout: 3000,
         success: function (data) {
             console.log(data);
-            $.each(data, function (i, address) {
+            $.each(data, function (index, address) {
                 $("#table").append($('<tr>').append(
                     $('<td>').text(address.id),
                     $('<td>').text(address.region),
@@ -30,9 +88,9 @@ function getAllAddress() {
     });
 }
 
-/**
+/!**
  * Заполнение модального окна с изменением адреса
- */
+ *!/
 $("#editAddressModal").on('show.bs.modal', (e) => {
     let addressId = $(e.relatedTarget).data("address-id");
 
@@ -52,9 +110,9 @@ $("#editAddressModal").on('show.bs.modal', (e) => {
     })
 })
 
-/**
+/!**
  * Сохранение изменений в модальном окне редактирования адреса
- */
+ *!/
 $("#buttonEditSubmit").on('click', (e) => {
     e.preventDefault();
 
@@ -80,9 +138,9 @@ $("#buttonEditSubmit").on('click', (e) => {
     getAllAddress();
 })
 
-/**
+/!**
  * Модальное окно удаления адреса
- */
+ *!/
 $("#deleteUserModal").on('show.bs.modal', (e) => {
     let addressId = $(e.relatedTarget).data("address-id");
 
@@ -113,4 +171,4 @@ $("#deleteUserModal").on('show.bs.modal', (e) => {
             })
         })
     });
-})
+})*/
