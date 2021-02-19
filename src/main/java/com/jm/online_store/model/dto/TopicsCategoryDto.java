@@ -1,6 +1,5 @@
 package com.jm.online_store.model.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jm.online_store.model.Topic;
 import io.swagger.annotations.ApiModel;
