@@ -55,7 +55,6 @@ public class ManagerRestController {
 
     /**
      * Метод возвращающий залогиненного юзера. Работает при включенной сессии.
-     *
      * @return authUser возвращает юзера из базы данных
      */
     @GetMapping(value = "/authUser")
@@ -72,7 +71,6 @@ public class ManagerRestController {
     /**
      * Метод возвращающий всписок всех новостей
      * или пустой список
-     *
      * @return List<NewsDto> возвращает список всех новстей из базы данных
      */
     @GetMapping("/news")
@@ -89,7 +87,6 @@ public class ManagerRestController {
 
     /**
      * Метод сохраняет новости в базу данных
-     *
      * @param newsReq сущность для сохранения в базе данных
      * @return NewsDto возвращает заполненную сущность клиенту
      */
@@ -108,7 +105,6 @@ public class ManagerRestController {
 
     /**
      * Метод обновляет сущность в базе данных
-     *
      * @param newsReq сущность для сохранения в базе данных
      * @return возвращает обновленную сущность клиенту
      */
@@ -130,7 +126,6 @@ public class ManagerRestController {
 
     /**
      * Метод удаляет сушность из базы данных по уникальному идентификатору
-     *
      * @param id уникальный идентификатор
      * @return возвращает ответ в виде строки с описанием результата
      */
@@ -151,7 +146,6 @@ public class ManagerRestController {
     /**
      * Get mapping for get request to response with sales during the custom date range
      * or empty list
-     *
      * @param stringStartDate - start of custom date range
      * @param stringEndDate   - end of custom date range
      * @return - {@link ResponseEntity} with list of Orders with status complete
@@ -170,10 +164,8 @@ public class ManagerRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, orderService.findAllSalesBetween(startDate, endDate)));
     }
 
-
     /**
      * Mapping for csv export.
-     *
      * @param stringStartDate - beginning of the period that receives from frontend in as String
      * @param stringEndDate   - end of the period that receives from frontend in as String
      * @param response        - response to write back stream with csv
