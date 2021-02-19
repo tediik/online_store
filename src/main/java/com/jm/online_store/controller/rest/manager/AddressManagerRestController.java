@@ -70,7 +70,7 @@ public class AddressManagerRestController {
     public ResponseEntity<ResponseDto<Address>> getAddressInfo(@PathVariable Long id) {
         if(addressService.findAddressById(id).isEmpty()) {
             log.debug("Адрес с id: {} не найден", id);
-            return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponseDto<>(false, "Incorrect id. Address not found"), HttpStatus.NOT_FOUND);
         }
         Address address = addressService.findAddressById(id).get();
         return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
