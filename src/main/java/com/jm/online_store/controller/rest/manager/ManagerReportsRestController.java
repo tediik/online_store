@@ -35,11 +35,9 @@ public class ManagerReportsRestController {
     private final Type listType = new TypeToken<List<CustomerDto>>() {}.getType();
     private final ModelMapper modelMapper;
 
-
     /**
      * метод получения списка пользователей, подписанных на рассылку по номеру дня
      * или пустой список
-     *
      * @param dayOfWeek день недели
      * @return список пользователей
      */
@@ -58,7 +56,6 @@ public class ManagerReportsRestController {
     /**
      * метод поиска пользователя, подписанного на рассылку по email "на лету"
      * или пустой список
-     *
      * @param email почта подписчика
      * @return список пользователей
      */
@@ -76,7 +73,6 @@ public class ManagerReportsRestController {
 
     /**
      * метод отмены подписки со страницы менеджера.
-     *
      * @param id пользователя
      * @return строковый ответ с описанием результата операции по отмене подписки для пользователя
      */
@@ -96,7 +92,6 @@ public class ManagerReportsRestController {
 
     /**
      * метод поиска отправленных акций в интервале дат
-     *
      * @param beginDate дата, от которой будет осуществляться поиск
      * @param endDate   дата, до которой будет осуществляться поиск
      * @return Словарь, где ключом является объект LocalDate, а значением его частота
