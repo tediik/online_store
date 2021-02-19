@@ -50,7 +50,6 @@ public class ProductCharacteristicsRestController {
     /**
      * Метод выводит список всех характеристик c описанием
      * или пустой список
-     *
      * @return List<CharacteristicDto>> возвращает список характеристик
      */
     @GetMapping(value = "/characteristics/allCharacteristics")
@@ -68,7 +67,6 @@ public class ProductCharacteristicsRestController {
 
     /**
      * Метод добавляет характеристику
-     *
      * @param characteristicReq характеристика для добавления
      * @return ResponseEntity<CharacteristicDto> Возвращает добавленную харакетристику с кодом ответа
      */
@@ -91,7 +89,6 @@ public class ProductCharacteristicsRestController {
 
     /**
      * Метод возвращает характеристику по id или
-     *
      * @param id - characteristic id (Long)
      * @return <CharacteristicDto> найденная сущность
      */
@@ -110,7 +107,6 @@ public class ProductCharacteristicsRestController {
 
     /**
      * Метод обновляет сущность
-     *
      * @param characteristicReq
      * @return <CharacteristicDto> обновленная сущность
      */
@@ -131,8 +127,7 @@ public class ProductCharacteristicsRestController {
 
     /**
      * Метод для удаления характеристики
-     *
-     * @param id       - id харакетристики для удаления
+     * @param id - id харакетристики для удаления
      * @param category - имя категории
      * @return String - описание результата операции
      */
@@ -157,11 +152,9 @@ public class ProductCharacteristicsRestController {
                 ResponseOperation.NO_ERROR.getMessage())));
     }
 
-
     /**
      * Метод, который возвращает характеристи для выбранной категории
      * или пустой список
-     *
      * @param categoryId id нужной категории
      * @return List<CharacteristicDto> лист харктеристик
      */
@@ -181,7 +174,6 @@ public class ProductCharacteristicsRestController {
     /**
      * Метод, который возвращает характеристи для выбранной категории
      * или пустой список
-     *
      * @param category имя нужной категории
      * @return List<CharacteristicDto> список харктеристик
      */
@@ -208,11 +200,8 @@ public class ProductCharacteristicsRestController {
         return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
 
-
-
     /**
      * Метод добавляет характеристики, только что добавленному, товару
-     *
      * @param addedProductName название добавленного товара
      * @return <List<ProductCharacteristicDto>> Возвращает список добавленных хар-к к
      * добавленному товару
@@ -241,7 +230,6 @@ public class ProductCharacteristicsRestController {
 
     /**
      * Метод возвращает список всех характеристик, кроме характеристик выбранной категории
-     *
      * @param categoryName наименование хаарктеристики
      * @return List<Characteristic>> возвращает список характеристик
      */
@@ -261,10 +249,8 @@ public class ProductCharacteristicsRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-
     /**
      * Метод добавляет характеристики выбранной категории
-     *
      * @param selectedCategory название выбранной категории
      * @return ResponseEntity<List<CharacteristicDto>> Возвращает добавленные харакетристики с кодом ответа
      */
