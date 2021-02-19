@@ -32,7 +32,8 @@ public class SharedStockServiceImpl implements SharedStockService {
     @Transactional
     public SharedStock addSharedStock(SharedStock sharedStock) {
         User user = null != sharedStock.getUser() ?
-                userService.findById(sharedStock.getUser().getId()).get() : null;
+                userService.findById(sharedStock.getUser().getId()).orElseThrow(() ->
+                        new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND)) : null ;
         SharedStock sharedStockToAdd = SharedStock.builder()
                 .stock(stockService.findStockById(sharedStock.getStock().getId()))
                 .socialNetworkName(sharedStock.getSocialNetworkName())
