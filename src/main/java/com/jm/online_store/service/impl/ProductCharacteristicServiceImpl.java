@@ -29,8 +29,7 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
     ProductRepository productRepository;
 
     /**
-     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами
-     *
+     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами.
      * @param productId идентификатор товара, к которому добавляем характеристику
      * @param characteristicId идентификатор характеристики, значение которой добавляем товару
      * @param value значение характеристики, которую добавляем товару
@@ -47,8 +46,7 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
     }
 
     /**
-     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами
-     *
+     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами.
      * @param productId идентификатор товара, к которому добавляем характеристику
      * @param characteristicName наименование характеристики, значение которой добавляем товару
      * @param value значение характеристики, которую добавляем товару
@@ -66,9 +64,7 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
 
 
     /**
-     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами
-     *
-     *
+     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами.
      * @param listProductCharacteristics идентификатор товара, к которому добавляем характеристику
      * @param addedProductName наименование характеристики, значение которой добавляем товару
      * @return Long id - идентификатор ProductCharacteristic
