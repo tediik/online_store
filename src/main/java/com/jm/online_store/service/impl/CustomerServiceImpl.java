@@ -46,7 +46,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Все клиенты.
-     *
      * @return List<Customer>.
      */
     @Override
@@ -57,8 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Проверка на валидность пароля и изменения пароля.
-     *
-     * @param id          клиента.
+     * @param id клиента.
      * @param oldPassword - старый пароль.
      * @param newPassword - новый пароль.
      * @return false если пароль не валиден, true если пароль был изменен.
@@ -85,7 +83,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Поиск клиента по id.
-     *
      * @param id клиента.
      * @return Customer.
      */
@@ -96,13 +93,8 @@ public class CustomerServiceImpl implements CustomerService {
                 -> new CustomerServiceException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
     }
 
-
-
-
-
     /**
      * Поиск подписчика по email "на лету".
-     *
      * @param email клиента.
      * @return Customer.
      */
@@ -113,8 +105,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод добавления клиента.
-     *
+     * Добавление клиента.
      * @param customer - клиент для добавления.
      */
     @Override
@@ -124,8 +115,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод отписки от рассылки.
-     *
+     * Отписка от рассылки.
      * @param id клиента.
      */
     @Override
@@ -138,8 +128,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * метод получения клиентов, подписанных на рассылку, по дню недели.
-     *
+     * Получение клиентов, подписанных на рассылку, по дню недели.
      * @param dayOfWeek день недели
      * @return List<Customer>
      */
@@ -172,9 +161,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * метод обновления дня для рассылки.
-     *
-     * @param customer              клиент.
+     * Обновление дня для рассылки.
+     * @param customer клиент.
      * @param dayOfWeekForStockSend день недели.
      */
     @Override
@@ -189,8 +177,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод получения текущего залогининового клиента.
-     *
+     * Получение текущего залогиненного клиента.
      * @return Customer.
      */
     @Override
@@ -206,7 +193,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Обновление клиента.
-     *
      * @param customer клиент.
      */
     @Override
@@ -216,8 +202,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод для восстановления клиента
-     *
+     * Восстановление клиента.
      * @param email - емейл для восстановления
      */
     @Override
@@ -231,8 +216,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод проверки на существование клиента по email.
-     *
+     * Проверка на существование клиента по email.
      * @param email клиента.
      * @return false если такого клиента нет в БД или его статус больше 30 дней.
      * true если статус null или такой пользователь есть в БД.
@@ -251,7 +235,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Удаление клиента по id.
-     *
      * @param id клиента.
      */
     @Override
@@ -263,7 +246,6 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Меняет по идентификатору пользователя в комментариях и отзывах
      * на "Deleted пользователя(DeletedCustomer)".
-     *
      * @param id идентификатор.
      */
     @Override
@@ -278,7 +260,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод который будет ходить по базе раз в день,
+     * Метод, который будет ходить по базе раз в день,
      * и удалять кастомеров которые удалили свой профиль и у которых срок для восстановления истек.
      * Время и таска создается в Datainitializer'e
      * настройка времени находится в  application.yml
@@ -299,7 +281,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-
     @Override
     @Transactional
     public Customer changeMail(String newMail) {
@@ -316,6 +297,5 @@ public class CustomerServiceImpl implements CustomerService {
         userService.changeUsersMail(customer, newMail);
         return customer;
     }
-
 
 }
