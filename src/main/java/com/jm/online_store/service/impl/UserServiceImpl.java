@@ -448,14 +448,19 @@ public class UserServiceImpl implements UserService {
             String templateBody = templatesMailingSettingsService.getSettingByName("activate_user").getTextValue();
             if (customer.getEmail() != null) {
                 messageBody = templateBody.replace("@@user@@", customer.getEmail())
-                        .replace("@@password@@", confirmationToken.getUserPassword());
+                        .replace("@@password@@", confirmationToken.getUserPassword())
+                        .replace("@@url@@", "<a href='https://jm-online-store.herokuapp.com/'>online_store</a>");
             } else {
                 messageBody = templateBody.replace("@@user@@", "Подписчик");
             }
-            mailSenderService.send(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
+            try {
+                mailSenderService.sendHtmlMessage(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
+            } catch (MessagingException e) {
+                log.debug("Message sending error in ActivateUser Method {}", e.getMessage());
+            }
         } else {
             log.debug("Шаблон рассылки при активации пользователя в базе пустой ");
-        }        try {
+        } try {
             request.login(customer.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {
             log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
