@@ -45,10 +45,8 @@ public class ManagerNewsRestController {
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<NewsDto>>() {}.getType();
 
-
     /**
      * Mapping accepts @PathVariable {@link Long} id
-     *
      * @param id - {@link Long} id of news entity
      * @return {@link ResponseEntity<NewsDto>} or ResponseEntity.notFound()
      */
@@ -67,7 +65,6 @@ public class ManagerNewsRestController {
     /**
      * Method returns all news
      * or empty list
-     *
      * @return List<NewsDto> возвращает список всех новостей из базы данных
      */
     @GetMapping("/all")
@@ -83,10 +80,8 @@ public class ManagerNewsRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-
     /**
      * Возвращает страницу новостей
-     *
      * @param page параметры страницы
      * @param filterDto
      * @return Page<NewsDto> возвращает страницу новостей
@@ -108,7 +103,6 @@ public class ManagerNewsRestController {
     /**
      * Method returns published news
      * or empty list
-     *
      * @return - ResponseEntity<List<NewsDto>>
      */
     @GetMapping("/published")
@@ -127,7 +121,6 @@ public class ManagerNewsRestController {
     /**
      * Method returns unpublished news
      * or empty list
-     *
      * @return - ResponseEntity<List<NewsDto>>
      */
     @GetMapping("/unpublished")
@@ -146,7 +139,6 @@ public class ManagerNewsRestController {
     /**
      * Method returns archived news
      * or empty list
-     *
      * @return - ResponseEntity<List<NewsDto>>
      */
     @GetMapping("/archived")
@@ -163,7 +155,6 @@ public class ManagerNewsRestController {
 
     /**
      * Метод сохраняет новости в базу данных
-     *
      * @param newsReq сущность для сохранения в базе данных
      * @return возвращает заполненную сущность клиенту
      */
@@ -178,7 +169,6 @@ public class ManagerNewsRestController {
 
     /**
      * Метод обновляет сущность в базе данных
-     *
      * @param newsReq сущность для сохранения в базе данных
      * @return возвращает обновленную сущность клиенту
      */
@@ -196,7 +186,6 @@ public class ManagerNewsRestController {
 
     /**
      * Метод удаляет сушность из базы данных по уникальному идентификатору
-     *
      * @param id уникальный идентификатор
      * @return возвращает ответ в виде строки с описанием результата
      */
