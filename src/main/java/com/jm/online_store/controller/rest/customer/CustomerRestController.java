@@ -36,8 +36,6 @@ import java.util.List;
 public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
-    private final CommentService commentService;
-    private final ReviewService reviewService;
 
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email")
@@ -119,12 +117,7 @@ public class CustomerRestController {
     @DeleteMapping("/deleteProfileUnrecoverable/{id}")
     @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked")
     public ResponseEntity<String> deleteProfileUnrecoverable(@PathVariable Long id) {
-        User customer = userService.findUserById(id);
-        List<Comment> customerComments = commentService.findAllByCustomer(customer);
-        List<Review> customerReview = reviewService.findAllByCustomer(customer);
-        User deletedUser = userService.findUserByEmail("deleted@mail.ru");
-        for (Comment comment : customerComments) comment.setCustomer(deletedUser);
-        for (Review review : customerReview) review.setCustomer(deletedUser);
+        customerService.changeCustomerProfileToDeletedProfileByID(id);
         customerService.deleteByID(id);
         return ResponseEntity.ok("Delete profile");
     }
