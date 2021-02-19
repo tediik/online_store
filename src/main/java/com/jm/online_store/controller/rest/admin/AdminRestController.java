@@ -2,7 +2,6 @@ package com.jm.online_store.controller.rest.admin;
 
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
-import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -115,7 +113,7 @@ public class AdminRestController {
 
     /**
      * rest mapping to modify user from admin page
-     * @param userDto {@link User}
+     * @param user {@link User}
      * @return new ResponseEntity<>(HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
@@ -125,28 +123,26 @@ public class AdminRestController {
             @ApiResponse(code = 200, message = "Changes were successfully added"),
             @ApiResponse(code = 400, message = "Bad request"),
     })
-    public ResponseEntity editUser(@RequestBody UserDto userDto) {
-        User deSerializedUser = new User();
-        BeanUtils.copyProperties(userDto, deSerializedUser);
-        if (userService.findById(userDto.getId()).isEmpty()) {
-            log.debug("There are no user with id: {}", userDto.getId());
+    public ResponseEntity editUser(@RequestBody User user) {
+        if (userService.findById(user.getId()).isEmpty()) {
+            log.debug("There are no user with id: {}", user.getId());
             return ResponseEntity.noContent().build();
         }
-        if (ValidationUtils.isNotValidEmail(userDto.getEmail())) {
+        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
             log.debug("Wrong email! Не правильно введен email");
             return ResponseEntity.badRequest().body("notValidEmailError");
         }
-        if (userDto.getRoles().size() == 0) {
+        if (user.getRoles().size() == 0) {
             log.debug("Roles not selected");
             return ResponseEntity.badRequest().body("emptyRolesError");
         }
-        if (!userService.findById(userDto.getId()).get().getEmail().equals(userDto.getEmail())
-                && userService.isExist(userDto.getEmail())) {
+        if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
+                && userService.isExist(user.getEmail())) {
             log.debug("User with same email already exists");
             return ResponseEntity.badRequest().body("duplicatedEmailError");
         }
-        userService.updateUserFromAdminPage(deSerializedUser);
-        log.debug("Changes to user with id: {} was successfully added", userDto.getId());
+        userService.updateUserFromAdminPage(user);
+        log.debug("Changes to user with id: {} was successfully added", user.getId());
         return ResponseEntity.ok().build();
     }
 

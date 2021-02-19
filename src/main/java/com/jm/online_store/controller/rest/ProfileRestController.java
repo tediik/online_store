@@ -1,12 +1,18 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.controller.ResponseOperation;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.PasswordDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +22,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -49,19 +53,27 @@ public class ProfileRestController {
     }
 
     /**
-     * Метод изменения пароля
-     * @param passwords принимает старый и новый пароли в виде карты
-     * @return ResponseEntity<String> возвращает статус ответа
+     * Метод изменения пароля пользователя.
+     * @param passwords старый и новый пароль из PasswordDto
+     * @return ResponseEntity<>(body, HttpStatus)
      */
     @PostMapping("/changePassword")
-    @ApiOperation(value = "change password",
+    @ApiOperation(value = "processes request to change password",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> passwords) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "No user with such id"),
+            @ApiResponse(code = 200, message = "Изменения для пользователя с идентификатором: \"id\" были успешно добавлены."),
+    })
+    public ResponseEntity<ResponseDto<String>> changePassword(@RequestBody PasswordDto passwords) {
         User user = userService.getCurrentLoggedInUser();
-        if (!userService.changePassword(user.getId(), passwords.get("oldPassword"), passwords.get("newPassword"))) {
-            return ResponseEntity.badRequest().build();
+        if (passwords.getNewPassword().equals(passwords.getOldPassword())) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Старый и новый пароли совпадают."), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok().build();
+        if (!userService.changePassword(user.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Ошибка при изменении пароля."), HttpStatus.BAD_REQUEST);
+        }
+        log.info("Пароль для пользователя: {} успешно изменён.", user.getEmail());
+        return new ResponseEntity<>(new ResponseDto<>(true, "Изменения для пользователя с идентификатором: " + user.getId() + " были успешно добавлены. ", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 
     /**

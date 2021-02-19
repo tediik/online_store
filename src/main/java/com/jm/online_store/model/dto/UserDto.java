@@ -1,13 +1,13 @@
 package com.jm.online_store.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -15,20 +15,20 @@ import java.util.Set;
 @Accessors(chain = true)
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@ApiModel(description = "DTO для данных юзера")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ApiModel(description =  "DTO для данных юзера")
 public class UserDto {
     private Long id;
     private String email;
+    private boolean isAccountNonBlockedStatus;
     private String firstName;
     private String lastName;
-    private String password;
     private String phoneNumber;
     private User.Gender userGender;
     private LocalDate birthdayDate;
     private LocalDate registerDate;
     private String profilePicture;
     private Set<Role> roles;
-    private Boolean isAccountNonExpiredStatus;
 
     public static UserDto fromUser(User user) {
         UserDto userDto = new UserDto();
@@ -42,8 +42,6 @@ public class UserDto {
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
-        userDto.setPassword(user.getPassword());
-        userDto.setIsAccountNonExpiredStatus(user.getIsAccountNonExpiredStatus());
         return userDto;
     }
 }

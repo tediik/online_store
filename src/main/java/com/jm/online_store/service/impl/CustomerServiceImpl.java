@@ -1,7 +1,10 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
+import com.jm.online_store.exception.ExceptionConstants;
+import com.jm.online_store.exception.ExceptionEnums;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
@@ -59,7 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public boolean changePassword(Long id, String oldPassword, String newPassword) {
-        Customer customer = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        Customer customer = findById(id).orElseThrow(CustomerServiceException::new);
         if (!passwordEncoder.matches(oldPassword, customer.getPassword())) {
             return false;
         }
@@ -114,7 +117,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void cancelSubscription(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        Customer customer = customerRepository.findById(id).orElseThrow(()-> new CustomerServiceException("CUSTOMER_NOT_FOUND"));
         customer.setDayOfWeekForStockSend(null);
         updateCustomer(customer);
     }
@@ -130,7 +133,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> findByDayOfWeekForStockSend(String dayOfWeek) {
         List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(dayOfWeek));
         if (customers.isEmpty()) {
-            throw new UserNotFoundException();
+            throw new CustomerServiceException(ExceptionEnums.CUSTOMERS.getDescription() + ExceptionConstants.NOT_FOUND);
         }
         return customers;
     }
@@ -281,5 +284,27 @@ public class CustomerServiceImpl implements CustomerService {
             listForDelete.forEach(customer -> changeCustomerProfileToDeletedProfileByID(customer.getId()));
             customerRepository.deleteAll(listForDelete);
         }
+    }
+
+    @Override
+    @Transactional
+    public Customer changeMail(String newMail) {
+        Customer customer = getCurrentLoggedInUser();
+
+        if (customer == null) {
+            log.debug("CUSTOMER ARE NOT AUTHENTICATED: " + newMail);
+            throw new CustomerServiceException(ExceptionEnums.CUSTOMER.getDescription() + ExceptionConstants.NOT_AUTHENTICATED);
+        }
+        if (isExist(newMail)) {
+            log.debug("THIS EMAIL ALREADY EXISTS: " + newMail);
+            throw new CustomerServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.ALREADY_EXISTS);
+        }
+        if (ValidationUtils.isNotValidEmail(newMail)) {
+            log.debug("EMAIL ADDRESS IS NOT VALID" + newMail);
+            throw new CustomerServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.NOT_VALID);
+        }
+
+        userService.changeUsersMail(customer, newMail);
+        return customer;
     }
 }

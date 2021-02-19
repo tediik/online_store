@@ -8,42 +8,35 @@ $(document).ready(function () {
     /*Слушатель для кнопки смены email modal*/
     $(document).delegate("#buttonChangeMail", "click", changeMail);
     /*Слушатель для кнопки смены пароля modal*/
-    $(document).delegate("#submitNewPassword", "click", changePass);
+    document.getElementById('changePassword').addEventListener('click', changePassword)
     /*Слушатель для ввода пароля modal*/
     $(document).delegate("#new_password", "keyup", checkPassword);
     fillRecentlyProductsView()
 });
 
 /**
- * Method for customer's pass changing
- * @returns {boolean}
+ * Функция смены пароля в профиле
  */
-function changePass() {
-    var formData = $('#formChangePass').serialize();
-    $.ajax({
-        url: '/api/customer/change-password',
-        type: 'POST',
-        data: formData,
-        success: function (res) {
-            toastr.success("Пароль успешно изменен", {timeOut: 5000});
-            close();
+function changePassword() {
+    let oldPassword = document.getElementById('old_password').value
+    let newPassword = document.getElementById('new_password').value
+    fetch('/api/customer/change-password', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
         },
-        error: function (res) {
-            if (res.responseText === "error_old_pass") {
-                toastr.error("Текущий пароль не совпадает. Введите заново пароль.", {timeOut: 5000});
-                $('#old_password').val('').focus();
-            }
-            if (res.responseText === "error_valid") {
-                toastr.error("Ваш пароль должен состоять из 8-20 символов, содержать буквы и цифры и не должны содержать пробелов и смайлики.", {timeOut: 5000});
-                $('#new_password').val('').focus();
-            }
-            if (res.responseText === "error_pass_len") {
-                toastr.error("Ваш пароль должен состоять минимум из 8 символов.", {timeOut: 5000});
-                $('#new_password').val('').focus();
-            }
+        body: JSON.stringify({
+            oldPassword: oldPassword,
+            newPassword: newPassword})
+    }).then(function (response) {
+        if (response.ok) {
+            toastr.success("Пароль успешно изменен.");
+            $('#openChangePassModal').modal('hide')
+        } else {
+            toastr.error("Некорректный пароль.")
         }
-    });
-    return false;
+    })
 }
 
 /**
