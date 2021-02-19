@@ -36,11 +36,9 @@ public class ManagerTopicsCategoryRestController {
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<TopicsCategoryDto>>() {}.getType();
 
-
     /**
      * Метод для получения всех категорий тем
      * может вернуть пустой список
-     *
      * @return ResponseEntity<List <TopicsCategoryDto>> возвращает все
      * категории тем со статусом ответа, если категорий тем нет - пустой список
      */
@@ -59,7 +57,6 @@ public class ManagerTopicsCategoryRestController {
 
     /**
      * Метод для получения единственной категории тем
-     *
      * @param id идентификатор категории
      * @return ResponseEntity<TopicsCategoryDto> возвращает единственную категорию тем со статусом ответа
      */
@@ -77,7 +74,6 @@ public class ManagerTopicsCategoryRestController {
 
     /**
      * Метод для добавления новой категории тем
-     *
      * @param topicsCategoryReq категория тем, которая будет создана
      * @return ResponseEntity<TopicsCategoryDto> возвращает созданную категорию тем со статусом ответа
      */
@@ -96,8 +92,7 @@ public class ManagerTopicsCategoryRestController {
 
     /**
      * Метод для изменения категории тем
-     *
-     * @param id             идентификатор категории
+     * @param id идентификатор категории
      * @param topicsCategoryReq категория с внесенными изменениями
      * @return ResponseEntity<TopicsCategoryDto> возвращает измененную категорию тем со статусом ответа,
      * если категория тем с таким id или именем не существует - бросает исключение TopicCategoryNotFoundException
@@ -116,10 +111,8 @@ public class ManagerTopicsCategoryRestController {
         return ResponseEntity.ok(new ResponseDto<>(true , modelMapper.map(gotBack, TopicsCategoryDto.class)));
     }
 
-
     /**
      * Метод для пометки категории тем, как архивной
-     *
      * @param id идентификатор категории
      * @return ResponseEntity<TopicsCategoryDto> возвращает заархивированную категорию тем со статусом ответа
      */
@@ -138,7 +131,6 @@ public class ManagerTopicsCategoryRestController {
 
     /**
      * Метод для пометки категории тем, как актуальной
-     *
      * @param id идентификатор категории
      * @return ResponseEntity<TopicsCategoryDto> возвращает акутальную категорию тем со статусом ответа,
      */
