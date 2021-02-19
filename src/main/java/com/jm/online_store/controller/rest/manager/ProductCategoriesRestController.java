@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest.manager;
 
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.Categories;
@@ -39,11 +38,8 @@ public class ProductCategoriesRestController {
     private final CategoriesService categoriesService;
     private final ModelMapper modelMapper;
 
-
-
     /**
      * Метод для получения списка всех Categories
-     *
      * @return ResponseEntity<ResponseDto<ArrayNode>> возвращает все
      * категории со статусом ответа
      */
@@ -60,7 +56,6 @@ public class ProductCategoriesRestController {
 
     /**
      * Метод по id продукта находит название категории
-     *
      * @param id продукта
      * @return String название категории по id продукта
      */
@@ -78,7 +73,6 @@ public class ProductCategoriesRestController {
     /**
      * Метод находит список подкатегорий по id
      * или пустой список
-     *
      * @param id саб категории
      * @return Возвращает список подкатегорий для корневой категории
      */
@@ -95,7 +89,6 @@ public class ProductCategoriesRestController {
 
     /**
      * Метод сохраняет категорию
-     *
      * @param categoriesReq категория для сохранения в БД
      * @return сохраненную сущность
      */
@@ -111,7 +104,6 @@ public class ProductCategoriesRestController {
 
     /**
      * Метод обновляет категорию
-     *
      * @param categoriesReq катогория для обновления в БД
      * @return обновленную сущность
      */
@@ -130,7 +122,6 @@ public class ProductCategoriesRestController {
 
     /**
      * Метод удаляет категорию по id
-     *
      * @param id идентификатор катеогории для удаления
      * @return String описание результата операции
      */
