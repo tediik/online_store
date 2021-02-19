@@ -15,6 +15,8 @@ public interface ProductService {
 
 	Optional<Product> findProductById(Long productId);
 
+	Product getProductById(Long productId);
+
     Optional<Product> findProductByName(String productName);
 
     List<Product> findAllOrderByRatingAsc();

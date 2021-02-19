@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface CharacteristicService {
 
-    Long saveCharacteristic(Characteristic characteristic);
+    Characteristic saveCharacteristic(Characteristic characteristic);
 
     Optional<Characteristic> findCharacteristicById(Long id);
 
@@ -20,7 +20,7 @@ public interface CharacteristicService {
 
     List<Characteristic> findAll();
 
-    void updateCharacteristic(Characteristic characteristic);
+    Characteristic updateCharacteristic(Characteristic characteristic);
 
     void deleteByID(Long id);
 
@@ -28,4 +28,10 @@ public interface CharacteristicService {
     void deleteByIDInSelectedCategory(Long id, String category);
 
     Optional<Characteristic> findByCharacteristicName(String characteristicName);
+
+    Characteristic getCharacteristicById(Long id);
+
+    List<Characteristic> getAllCharacteristicsExceptSelectedCategory(String categoryName);
+
+    List<Characteristic> addCharacteristicsToCategory(List<Characteristic> characteristics, String categoryName);
 }

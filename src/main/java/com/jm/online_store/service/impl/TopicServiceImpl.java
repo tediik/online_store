@@ -1,5 +1,9 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.TopicAlreadyExists;
+import com.jm.online_store.exception.TopicNotFoundException;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.repository.TopicRepository;
 import com.jm.online_store.service.interf.TopicService;
@@ -18,6 +22,9 @@ public class TopicServiceImpl implements TopicService {
     @Override
     @Transactional
     public Topic create(Topic topic) {
+        if (existsByTopicName(topic.getTopicName())) {
+            throw new TopicAlreadyExists(ExceptionEnums.TOPIC.getText() + ExceptionConstants.ALREADY_EXISTS);
+        }
         return topicRepository.saveAndFlush(topic);
     }
 
@@ -43,12 +50,16 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Topic findById(long id) {
-        return topicRepository.findById(id);
+        return topicRepository.findById(id).orElseThrow(() -> new TopicNotFoundException(ExceptionEnums.TOPIC.getText() +
+                String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
     }
 
     @Override
     @Transactional
     public Topic update(Topic topic) {
+        if (!existsById(topic.getId())) {
+            throw new TopicNotFoundException(ExceptionEnums.TOPIC.getText() + ExceptionConstants.NOT_FOUND);
+        }
         return topicRepository.saveAndFlush(topic);
     }
 }

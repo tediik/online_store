@@ -1,13 +1,14 @@
 package com.jm.online_store.controller.rest.customer;
 
-import com.jm.online_store.controller.ResponseOperation;
+import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ExceptionConstants;
-import com.jm.online_store.exception.ExceptionEnums;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.model.dto.ProductModelDto;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -43,7 +44,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/customer")
@@ -63,9 +63,12 @@ public class CustomerRestController {
             @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
     })
     public ResponseEntity<ResponseDto<String>> changeMailReq(@RequestParam String newMail) {
-            customerService.changeMail(newMail);
-            return new ResponseEntity<>(new ResponseDto<>(true, "Email будет изменен после подтверждения.", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
-        }
+
+        Customer customer = customerService.changeMail(newMail);
+        ModelMapper modelMapper = new ModelMapper();
+        CustomerDto returnValue = modelMapper.map(customer, CustomerDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, "success"));
+    }
 
     /**
      * метод обработки изменения пароля User.
@@ -105,7 +108,7 @@ public class CustomerRestController {
         }
         catch (IllegalArgumentException | UserNotFoundException e) {
             log.debug("There is no user with id: {}", id);
-            throw new CustomerServiceException(ExceptionEnums.CUSTOMER.getDescription() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
+            throw new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         User user = userService.findById(id).get();
         log.debug("User with id: {}, was blocked", id);
@@ -129,7 +132,7 @@ public class CustomerRestController {
             customerService.deleteByID(id);
         }
         catch (EmptyResultDataAccessException |IllegalArgumentException | UserNotFoundException e) {
-            throw new CustomerServiceException(ExceptionEnums.CUSTOMER.getDescription() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
+            throw new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userToDelete, UserDto.class)), HttpStatus.OK);
     }
@@ -148,7 +151,7 @@ public class CustomerRestController {
     public ResponseEntity<ResponseDto<UserDto>> getUserById(@PathVariable("id") Long id) {
         if (userService.findById(id).isEmpty()) {
             log.debug("User with id: {} not found", id);
-            throw new CustomerServiceException(ExceptionEnums.CUSTOMER.getDescription() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
+            throw new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         log.debug("User with id: {} found", id);
         User user = userService.findUserById(id);
@@ -227,4 +230,3 @@ public class CustomerRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, productsViewedByUserIdAndDateTimeBetween), HttpStatus.OK);
     }
 }
-

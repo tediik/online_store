@@ -1,5 +1,9 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.SharedStockNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.SharedStockRepository;
@@ -27,14 +31,33 @@ public class SharedStockServiceImpl implements SharedStockService {
     @Override
     @Transactional
     public SharedStock addSharedStock(SharedStock sharedStock) {
-        User user = null != sharedStock.getUser() ?
-                userService.findById(sharedStock.getUser().getId()).get() : null;
-        SharedStock sharedStockToAdd = SharedStock.builder()
-                .stock(stockService.findStockById(sharedStock.getStock().getId()))
-                .socialNetworkName(sharedStock.getSocialNetworkName())
-                .user(user)
-                .build();
-        return sharedStockRepository.save(sharedStockToAdd);
+        sharedStock.setUser(getCurrentLoggedInUser());
+        if (sharedStock.getUser() != null) {
+            User foundUser = sharedStock.getUser();
+            if (userService.findById(foundUser.getId()).isPresent()) {
+                SharedStock returnValue = SharedStock.builder()
+                            .stock(stockService.findStockById(sharedStock.getStock().getId()))
+                            .socialNetworkName(sharedStock.getSocialNetworkName())
+                            .user(foundUser)
+                            .build();
+                return  sharedStockRepository.save(returnValue);
+            } else {
+                throw new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND);
+            }
+        } else {
+            throw new SharedStockNotFoundException(ExceptionEnums.SHARER_STOCK.getText() + ExceptionConstants.NOT_FOUND);
+        }
+
+    }
+
+    /**
+     * Метод возвращает залогиненного юзера. Работает только
+     * при включенной сессии
+     *
+     * @return возвращает User
+     */
+    private User getCurrentLoggedInUser() {
+       return userService.getCurrentLoggedInUser();
     }
 
 }

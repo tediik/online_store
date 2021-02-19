@@ -158,6 +158,11 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(productId);
     }
 
+    @Override
+    public Product getProductById(Long productId) {
+        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+    }
+
     /**
      * Поиск товара по его наименованию.
      * @param productName наименование товара.

@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.controller.ResponseOperation;
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.model.dto.ResponseDto;
