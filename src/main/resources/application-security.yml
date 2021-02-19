@@ -21,7 +21,7 @@ spring:
   auth:
     jwt:
       secure_key: 45jwt3GH
-      validityInMilliseconds: 360000000
+      validityInMilliseconds: 86400000
 
     vk:
       client_id: 7575777
