@@ -23,13 +23,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionsHandler {
 
-
     @ExceptionHandler(CharacteristicNotFoundException.class)
     public ResponseEntity<Object> handlerCharacteristicNotFoundException(CharacteristicNotFoundException ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
-
 
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<Object> handlerCategoriesNotFoundException(CustomerNotFoundException ex ) {
@@ -37,20 +35,15 @@ public class ExceptionsHandler {
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
-
     @ExceptionHandler(CategoriesNotFoundException.class)
     public ResponseEntity<Object> handlerCategoriesNotFoundException(CategoriesNotFoundException ex ) {
         return new ResponseEntity<>(new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
-
-
     }
 
     @ExceptionHandler(value = { UserServiceException.class })
     public ResponseEntity<Object> handlerUserServiceException(UserServiceException ex) {
-
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
-
     }
 
     @ExceptionHandler(TopicCategoryAlreadyExists.class)
@@ -65,13 +58,11 @@ public class ExceptionsHandler {
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
-
     @ExceptionHandler(TopicAlreadyExists.class)
     public ResponseEntity<Object> handlerTopicAlreadyExistsException(TopicAlreadyExists ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
-
 
     @ExceptionHandler(TopicNotFoundException.class)
     public ResponseEntity<Object> handlerTopicNotFoundException(TopicNotFoundException ex ) {
@@ -101,6 +92,5 @@ public class ExceptionsHandler {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
-
 
 }
