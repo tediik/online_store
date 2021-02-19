@@ -104,8 +104,6 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
         return toSave;
     }
 
-
-
     @Override
     @Transactional
     public TopicsCategory unarchive(Long id) {
