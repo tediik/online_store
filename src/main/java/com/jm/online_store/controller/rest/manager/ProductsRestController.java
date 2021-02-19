@@ -57,7 +57,6 @@ public class ProductsRestController {
     /**
      * Метод обрабатывает загрузку файла с товарами на сервер
      * Вызывает соответствующий сервисный метод в зависимости от типа файла(CSV или XML)
-     *
      * @param file файл с данными
      * @return ResponseEntity<String> с кодом ответа
      */
@@ -101,7 +100,6 @@ public class ProductsRestController {
 
     /**
      * Метод для записи загруженного файла
-     *
      * @param file файл для записи
      */
     private void writeFile(@RequestParam("file") MultipartFile file) {
@@ -120,7 +118,6 @@ public class ProductsRestController {
 
     /**
      * Метод-сепаратор, возвращающий расширение файла
-     *
      * @param myFileName имя файла
      */
     private static String getFileExtension(String myFileName) {
@@ -131,7 +128,6 @@ public class ProductsRestController {
     /**
      * Метод выводит список всех товаров
      * или пустой список
-     *
      * @return List<ProductDto> возвращает список товаров
      */
     @GetMapping(value = "/getAll")
@@ -149,7 +145,6 @@ public class ProductsRestController {
     /**
      * Метод возвращает список неудаленных товаров
      * или пустой список
-     *
      * @return List<ProductDto> возвращает список товаров
      */
     @GetMapping(value = "/getNotDeletedProducts")
@@ -166,7 +161,6 @@ public class ProductsRestController {
 
     /**
      * Метод, ищет товар по id
-     *
      * @param productId идентификатор товара
      * @return <ProductDto> возвращает товар
      */
@@ -184,7 +178,6 @@ public class ProductsRestController {
 
     /**
      * Метод добавляет товар
-     *
      * @param product товар для добавления
      * @return ResponseEntity<ProductDto> Возвращает добавленный товар с кодом ответа
      */
@@ -214,7 +207,6 @@ public class ProductsRestController {
 
     /**
      * Редактирует товар
-     *
      * @param product товар для редактирования
      * @return <Long> Возвращает отредактированный товар с кодом ответа
      */
@@ -232,7 +224,6 @@ public class ProductsRestController {
 
     /**
      * Редактирует товар и его категорию
-     *
      * @param product товар для редактирования
      * @return строку с описанием результата операции
      */
@@ -258,7 +249,6 @@ public class ProductsRestController {
 
     /**
      * Метод удаления товара по идентификатору
-     *
      * @param id идентификатор товара
      * @return идентификатор удаленной сущности
      */
@@ -276,7 +266,6 @@ public class ProductsRestController {
 
     /**
      * Метод восстановления удаленного товара по идентификатору
-     *
      * @param id идентификатор товара
      * @return идентификатор удаленной сущности
      */
@@ -295,7 +284,6 @@ public class ProductsRestController {
     /**
      * Метод выбора продукта по категории
      * или пустой список
-     *
      * @param categoryName - id выбранной категории
      * @return List<ProductDto> отредактированный лист продуктов
      */
@@ -314,7 +302,6 @@ public class ProductsRestController {
 
     /**
      * Метод выбора продукта по категории и сортирующий по возрастанию
-     *
      * @param categoryName - id выбранной категории
      * @return List<Product> отредактированный лист продуктов
      */
@@ -360,7 +347,6 @@ public class ProductsRestController {
     /**
      * Метод выбора продукта по категории и сортирующий по убыванию
      * или пустой список
-     *
      * @param categoryName - id выбранной категории
      * @return List<Product> отредактированный лист продуктов
      */
@@ -388,7 +374,6 @@ public class ProductsRestController {
 
     /**
      * Метод, который формирует файл с товарами нужной категории и передаёт обратно на страницу
-     *
      * @param categoryName нужная категория товаров
      * @param response     запрос для возврата информации
      * @return запрос с файлом xlsx
