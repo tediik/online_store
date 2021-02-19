@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.core.io.FileSystemResource;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -70,7 +72,7 @@ public class ProductsRestController {
             @ApiResponse(code = 500, message = "Internal server errors"),
     })
     public ResponseEntity<ResponseDto<String>> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
-        writeFile(file);
+//        writeFile(file);
         if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
             productService.importFromXMLFile(file.getOriginalFilename(), id);
         } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
@@ -89,32 +91,41 @@ public class ProductsRestController {
             @ApiResponse(code = 500, message = "Internal server errors"),
     })
     public ResponseEntity<ResponseDto<String>> handleFileUpload(@RequestParam("file") MultipartFile file) throws FileNotFoundException {
-        writeFile(file);
-        if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
-            productService.importFromXMLFile(file.getOriginalFilename());
-        } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
-            productService.importFromCSVFile(file.getOriginalFilename());
+//        writeFile(file);
+        //получем расширение из названия файла и определяем что к нам пришло
+        if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()), "xml")) {
+            productService.importFromXMLFile(file);
+        } else if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()),"csv")) {
+            productService.importFromCSVFile(file);
+        } else {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(new ResponseDto<>(true , "success" , ResponseOperation.NO_ERROR.getMessage()));
+        return ResponseEntity.ok(new ResponseDto<>(true, "success"));
+//        if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
+//            productService.importFromXMLFile(file.getOriginalFilename());
+//        } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
+//            productService.importFromCSVFile(file.getOriginalFilename());
+//        }
+//        return ResponseEntity.ok(new ResponseDto<>(true , "success" , ResponseOperation.NO_ERROR.getMessage()));
     }
 
     /**
      * Метод для записи загруженного файла
      * @param file файл для записи
      */
-    private void writeFile(@RequestParam("file") MultipartFile file) {
-        try {
-            byte[] bytes = file.getBytes();
-            BufferedOutputStream stream =
-                    new BufferedOutputStream(new FileOutputStream(new File("uploads/import/" + file.getOriginalFilename())));
-            stream.write(bytes);
-            stream.close();
-        } catch (Exception e) {
-            log.error("Ошибка сохранения файла");
-            e.printStackTrace();
-        }
-        log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
-    }
+//    private void writeFile(@RequestParam("file") MultipartFile file) {
+//        try {
+//            byte[] bytes = file.getBytes();
+//            BufferedOutputStream stream =
+//                    new BufferedOutputStream(new FileOutputStream(new File("uploads/import/" + file.getOriginalFilename())));
+//            stream.write(bytes);
+//            stream.close();
+//        } catch (Exception e) {
+//            log.error("Ошибка сохранения файла");
+//            e.printStackTrace();
+//        }
+//        log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
+//    }
 
     /**
      * Метод-сепаратор, возвращающий расширение файла

@@ -31,23 +31,15 @@ public class SharedStockServiceImpl implements SharedStockService {
     @Override
     @Transactional
     public SharedStock addSharedStock(SharedStock sharedStock) {
-        sharedStock.setUser(getCurrentLoggedInUser());
-        if (sharedStock.getUser() != null) {
-            User foundUser = sharedStock.getUser();
-            if (userService.findById(foundUser.getId()).isPresent()) {
-                SharedStock returnValue = SharedStock.builder()
-                            .stock(stockService.findStockById(sharedStock.getStock().getId()))
-                            .socialNetworkName(sharedStock.getSocialNetworkName())
-                            .user(foundUser)
-                            .build();
-                return  sharedStockRepository.save(returnValue);
-            } else {
-                throw new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND);
-            }
-        } else {
-            throw new SharedStockNotFoundException(ExceptionEnums.SHARER_STOCK.getText() + ExceptionConstants.NOT_FOUND);
-        }
-
+        User user = null != sharedStock.getUser() ?
+                userService.findById(sharedStock.getUser().getId()).orElseThrow(() ->
+                        new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND)) : null ;
+        SharedStock sharedStockToAdd = SharedStock.builder()
+                .stock(stockService.findStockById(sharedStock.getStock().getId()))
+                .socialNetworkName(sharedStock.getSocialNetworkName())
+                .user(user)
+                .build();
+        return sharedStockRepository.save(sharedStockToAdd);
     }
 
     /**
