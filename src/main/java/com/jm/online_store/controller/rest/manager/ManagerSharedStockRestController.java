@@ -39,7 +39,6 @@ public class ManagerSharedStockRestController {
 
     /**
      * Метод добавляет сущность в базу данных
-     *
      * @param sharedStockReq
      * @return  возвращает добавленную сущность
      */
@@ -61,7 +60,6 @@ public class ManagerSharedStockRestController {
     /**
      * Метод возвращает список типа SharedStock
      * или пустой список
-     *
      * @return List<SharedStock> возвращает список всех SharedStock из базы данных
      */
     @GetMapping
