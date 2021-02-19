@@ -63,7 +63,6 @@ public class Product {
     @Column(name = "product_picture_name", nullable = false)
     private String productPictureName = "";
 
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
