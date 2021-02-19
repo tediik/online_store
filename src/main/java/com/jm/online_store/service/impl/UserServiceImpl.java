@@ -519,14 +519,8 @@ public class UserServiceImpl implements UserService {
         editedUser.setEmail(user.getEmail());
         editedUser.setFirstName(user.getFirstName());
         editedUser.setLastName(user.getLastName());
-
-        editedUser.setAccountNonExpiredStatus(user.isAccountNonExpired());
-        if(!editedUser.isAccountNonExpiredStatus()){
-            log.debug("Пользователь {} заблокирован", user.getEmail());
-        } else if (editedUser.isAccountNonExpiredStatus()){
-            log.debug("Пользователь {} разблокирован", user.getEmail());
-        }
-
+        editedUser.setIsAccountNonExpiredStatus(user.isAccountNonExpired());
+        log.debug("Пользователь {} {}", user.getEmail(), !editedUser.getIsAccountNonExpiredStatus() ? "заблокирован" : "разблокирован");
         if (!user.getPassword().equals("")) {
             editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }

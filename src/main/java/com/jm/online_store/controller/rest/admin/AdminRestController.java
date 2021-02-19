@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest.admin;
 
-import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.UserDto;
@@ -129,15 +128,6 @@ public class AdminRestController {
     public ResponseEntity editUser(@RequestBody UserDto userDto) {
         User deSerializedUser = new User();
         BeanUtils.copyProperties(userDto, deSerializedUser);
-
-        if (userDto.getExpiredStatus().equals("false")){
-            deSerializedUser.setAccountNonExpiredStatus(false);
-            log.debug("Пользователь {} успешно заблокирован", deSerializedUser.getEmail());
-        } else if (userDto.getExpiredStatus().equals("true")) {
-            deSerializedUser.setAccountNonBlockedStatus(true);
-            log.debug("Пользователь {} успешно разблокирован", deSerializedUser.getEmail());
-        }
-
         if (userService.findById(userDto.getId()).isEmpty()) {
             log.debug("There are no user with id: {}", userDto.getId());
             return ResponseEntity.noContent().build();
@@ -208,12 +198,4 @@ public class AdminRestController {
     public List<User> filterByRoles(@PathVariable String role) {
         return userService.findByRole(role);
     }
-
-//    @PutMapping(value = "/block")
-//    public ResponseEntity<User> blockUserAccount(User user) {
-//        User blockUser = userService.findById(user.getId()).orElseThrow(UserNotFoundException::new);
-//        blockUser.setAccountNonBlockedStatus(false);
-//        userService.updateUser(blockUser);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
 }

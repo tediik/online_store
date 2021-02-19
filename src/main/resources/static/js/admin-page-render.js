@@ -72,6 +72,9 @@ function editUserModalWindowRender(user, allRoles) {
             $('#rolesSelectModal').append(`<option value=${role.id}>${role.name}</option>>`)
         }
     })
+    $('#flexSwitchCheckDefault').val(user.isAccountNonExpiredStatus).prop('checked', function () {
+        return !user.isAccountNonExpiredStatus;
+    })
 }
 
 function compareRolesId(userRoles, roleNameToCheck) {
@@ -234,7 +237,7 @@ function handleUserAcceptButtonFromModalWindow(event) {
         lastName: $('#lastNameInputModal').val(),
         password: $('#passwordInputModal').val(),
         roles: getSelectValues(document.getElementById("rolesSelectModal")),
-        expiredStatus: $('#flexSwitchCheckDefault').checked ? "false" : "true"
+        isAccountNonExpiredStatus: !document.getElementById('flexSwitchCheckDefault').checked
     };
 
     /**
@@ -347,28 +350,6 @@ function getSelectValues(select) {
     }
     return result;
 }
-
-// /**
-//  * Функция возвращает значение чекбокса "Заблокиировать пользователя"
-//  * @param checkbox
-//  * @constructor
-//  */
-// function CheckBox(checkbox) {
-//     let checkbox2 = checkbox
-//     const check = document.querySelector('.form-check-input');
-//     check.addEventListener('change', function () {
-//             if (checkbox2.checked) {
-//                 checkbox2 = false;
-//                 console.log('checked');
-//                 return false;
-//             } else {
-//                 checkbox2 = true;
-//                 console.log('');
-//                 return true
-//             }
-//         }
-//     )
-// }
 
 /**
  * функция рендера таблицы пользователей

@@ -28,7 +28,7 @@ public class UserDto {
     private LocalDate registerDate;
     private String profilePicture;
     private Set<Role> roles;
-    private String expiredStatus;
+    private Boolean isAccountNonExpiredStatus;
 
     public static UserDto fromUser(User user) {
         UserDto userDto = new UserDto();
@@ -42,14 +42,8 @@ public class UserDto {
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
-
         userDto.setPassword(user.getPassword());
-
-        if (!user.isAccountNonExpiredStatus()) {
-            userDto.setExpiredStatus("false");
-        } else {
-            userDto.setExpiredStatus("true");
-        }
+        userDto.setIsAccountNonExpiredStatus(user.getIsAccountNonExpiredStatus());
         return userDto;
     }
 }

@@ -62,7 +62,7 @@ public class User implements UserDetails {
 
     private boolean isAccountNonBlockedStatus = true;
 
-    private boolean isAccountNonExpiredStatus = true;
+    private Boolean isAccountNonExpiredStatus = true;
 
     @Transient
     @NotBlank
