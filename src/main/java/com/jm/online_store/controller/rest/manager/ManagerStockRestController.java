@@ -41,10 +41,8 @@ public class ManagerStockRestController {
     private final Type listType = new TypeToken<List<StockDto>>() {}.getType();
     private final ModelMapper modelMapper;
 
-
     /**
      * Метод возвращает конкретный Stock по id
-     *
      * @param id
      * @return StockDto
      */
@@ -64,7 +62,6 @@ public class ManagerStockRestController {
     /**
      * Метод возвращает список всех Stock
      * или пустой список
-     *
      * @return List<StockDto>
      */
     @GetMapping("/allStocks")
@@ -82,7 +79,6 @@ public class ManagerStockRestController {
 
     /**
      * Метод возвращает страницу акций
-     *
      * @param page параметры страницы
      * @param filterDto параметры фильтра акции
      * @return Page<StockDto> возвращает страницу новостей
@@ -100,11 +96,9 @@ public class ManagerStockRestController {
         return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
 
-
     /**
      * Метод возвращает список текущих Stocks
      * или пустой список
-     *
      * @return List<StockDto> возвращает список StocksDto
      */
     @GetMapping("/currentStocks")
@@ -120,11 +114,9 @@ public class ManagerStockRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-
     /**
      * Метод возвращает список будущих Stocks
      * или пустой список
-     *
      * @return List<StockDto> возвращает список StocksDto
      */
     @GetMapping("/futureStocks")
@@ -140,11 +132,9 @@ public class ManagerStockRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-
     /**
      * Метод возвращает список прошлых Stocks
      * или пустой список
-     *
      * @return List<StockDto> возвращает список StocksDto
      */
     @GetMapping("/pastStocks")
@@ -160,10 +150,8 @@ public class ManagerStockRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-
     /**
      * Метод сохраняет сущность Stock в базу данных
-     *
      * @param stockReq
      * @return StockDto
      */
@@ -176,10 +164,8 @@ public class ManagerStockRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(gotBack, StockDto.class)), HttpStatus.CREATED);
     }
 
-
     /**
      * Метод удаляет сущность Stock из базы данных по id
-     *
      * @param id - Long
      * @return String - описание резльтата операции
      */
@@ -198,7 +184,6 @@ public class ManagerStockRestController {
 
     /**
      * Метод обновляет сущность Stock в базе данных
-     *
      * @param stockReq
      * @return StockDto - обновленную сущность из базы данных
      */
