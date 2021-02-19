@@ -53,7 +53,7 @@ public class StockServiceImpl implements StockService {
     }
 
     /**
-     * Метод извлекает страницу акций
+     * Извлекаем страницу акций.
      * @param page параметры страницы
      * @return Page<Stock> возвращает страницу акций
      */
@@ -103,7 +103,7 @@ public class StockServiceImpl implements StockService {
     }
 
     /**
-     * Метод извлекает список акций, отмеченных для публикации на главной странице
+     * Извлекаем список акций, отмеченных для публикации на главной странице.
      * @return publishedStocks возвращает список опубликованных акций со значением true в поле published из БД
      */
     @Override
@@ -129,7 +129,3 @@ public class StockServiceImpl implements StockService {
         return stockRepository.save(modifiedStock);
     }
 }
-
-
-
-
