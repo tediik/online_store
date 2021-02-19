@@ -44,7 +44,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/customer")
@@ -70,9 +69,6 @@ public class CustomerRestController {
         CustomerDto returnValue = modelMapper.map(customer, CustomerDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, "success"));
     }
-
-
-
 
     /**
      * метод обработки изменения пароля User.
@@ -234,4 +230,3 @@ public class CustomerRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, productsViewedByUserIdAndDateTimeBetween), HttpStatus.OK);
     }
 }
-
