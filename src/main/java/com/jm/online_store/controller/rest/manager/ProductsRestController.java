@@ -14,11 +14,9 @@ import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,11 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -53,8 +50,7 @@ import java.util.stream.Collectors;
 public class ProductsRestController {
     private final ProductService productService;
     private final CategoriesService categoriesService;
-    private final ModelMapper modelMapper;
-    private final Type listType = new TypeToken<List<ProductDto>>() {}.getType();
+
 
     /**
      * Метод обрабатывает загрузку файла с товарами на сервер
@@ -72,13 +68,15 @@ public class ProductsRestController {
             @ApiResponse(code = 500, message = "Internal server errors"),
     })
     public ResponseEntity<ResponseDto<String>> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws FileNotFoundException {
-//        writeFile(file);
-        if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
+        writeFile(file);
+        if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()), "xml")) {
             productService.importFromXMLFile(file.getOriginalFilename(), id);
-        } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
+        } else if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()),"csv")) {
             productService.importFromCSVFile(file.getOriginalFilename(), id);
+        } else  {
+            return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.FAILED.getMessage()));
         }
-        return ResponseEntity.ok(new ResponseDto<>(true , "success" , ResponseOperation.NO_ERROR.getMessage()));
+        return ResponseEntity.ok(new ResponseDto<>(true , ResponseOperation.SUCCESS.getMessage() , ResponseOperation.NO_ERROR.getMessage()));
     }
 
     @PostMapping(value = "/uploadFile")
@@ -91,49 +89,35 @@ public class ProductsRestController {
             @ApiResponse(code = 500, message = "Internal server errors"),
     })
     public ResponseEntity<ResponseDto<String>> handleFileUpload(@RequestParam("file") MultipartFile file) throws FileNotFoundException {
-//        writeFile(file);
-        //получем расширение из названия файла и определяем что к нам пришло
+        writeFile(file);
         if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()), "xml")) {
-            productService.importFromXMLFile(file);
+            productService.importFromXMLFile(file.getOriginalFilename());
         } else if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()),"csv")) {
-            productService.importFromCSVFile(file);
+            productService.importFromCSVFile(file.getOriginalFilename());
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.FAILED.getMessage()));
         }
-        return ResponseEntity.ok(new ResponseDto<>(true, "success"));
-//        if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".xml")) {
-//            productService.importFromXMLFile(file.getOriginalFilename());
-//        } else if (getFileExtension(getFileExtension(file.getOriginalFilename())).equals(".csv")) {
-//            productService.importFromCSVFile(file.getOriginalFilename());
-//        }
-//        return ResponseEntity.ok(new ResponseDto<>(true , "success" , ResponseOperation.NO_ERROR.getMessage()));
+        return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.SUCCESS.name(), ResponseOperation.NO_ERROR.getMessage()));
     }
 
     /**
      * Метод для записи загруженного файла
      * @param file файл для записи
      */
-//    private void writeFile(@RequestParam("file") MultipartFile file) {
-//        try {
-//            byte[] bytes = file.getBytes();
-//            BufferedOutputStream stream =
-//                    new BufferedOutputStream(new FileOutputStream(new File("uploads/import/" + file.getOriginalFilename())));
-//            stream.write(bytes);
-//            stream.close();
-//        } catch (Exception e) {
-//            log.error("Ошибка сохранения файла");
-//            e.printStackTrace();
-//        }
-//        log.debug("тип файла" + getFileExtension(file.getOriginalFilename()));
-//    }
-
-    /**
-     * Метод-сепаратор, возвращающий расширение файла
-     * @param myFileName имя файла
-     */
-    private static String getFileExtension(String myFileName) {
-        int index = myFileName.indexOf('.');
-        return index == -1 ? null : myFileName.substring(index);
+    private void writeFile(@RequestParam("file") MultipartFile file) {
+        try {
+            byte[] bytes = file.getBytes();
+            if (bytes.length == 0)
+                throw new RuntimeException("File is empty");
+            BufferedOutputStream stream =
+                    new BufferedOutputStream(new FileOutputStream("uploads/import/" + file.getOriginalFilename()));
+            stream.write(bytes);
+            stream.close();
+        } catch (Exception e) {
+            log.error("Ошибка сохранения файла");
+            e.printStackTrace();
+        }
+        log.debug("тип файла" + FilenameUtils.getExtension(file.getOriginalFilename()));
     }
 
     /**
@@ -149,7 +133,8 @@ public class ProductsRestController {
             @ApiResponse(code = 200, message = "Products haven't been found. Returns empty list"),
     })
     public ResponseEntity<ResponseDto<List<ProductDto>>> findAll() {
-        List<ProductDto> returnValue = modelMapper.map(productService.findAll(), listType);
+        List<ProductDto> returnValue = new ArrayList<>();
+        productService.findAll().forEach(p -> returnValue.add(new ProductDto(p)));
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -166,7 +151,8 @@ public class ProductsRestController {
             @ApiResponse(code = 200, message = "Products haven't been found. Returns empty list"),
     })
     public ResponseEntity<ResponseDto<List<ProductDto>>> getNotDeleteProducts() {
-        List<ProductDto> returnValue = modelMapper.map(productService.getNotDeleteProducts(), listType);
+        List<ProductDto> returnValue = new ArrayList<>();
+        productService.getNotDeleteProducts().forEach(p -> returnValue.add(new ProductDto(p)));
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -183,42 +169,49 @@ public class ProductsRestController {
             @ApiResponse(code = 404, message = "Product hasn't been found"),
     })
     public ResponseEntity<ResponseDto<ProductDto>> findProductById(@PathVariable("id") Long productId) {
-        ProductDto returnValue = modelMapper.map(productService.getProductById(productId), ProductDto.class);
+        Product gotBack = productService.getProductById(productId);
+        ProductDto returnValue = new ProductDto(gotBack);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
      * Метод добавляет товар
-     * @param product товар для добавления
+     * @param productReq товар для добавления
      * @return ResponseEntity<ProductDto> Возвращает добавленный товар с кодом ответа
      */
-    @PostMapping(value = "/add/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add/{id}")
     @ApiOperation(value = "Add product",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 400, message = "Product has empty name or product with this name is already exists ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Product has been added"),
     })
-    public ResponseEntity<ResponseDto<Long>> addProduct(@RequestBody Product product, @PathVariable Long id) {
-
-        if (product.getProduct().equals("")) {
+    public ResponseEntity<ResponseDto<ProductDto>> addProduct(@RequestBody ProductDto productReq, @PathVariable Long id) {
+        if (!StringUtils.isNoneBlank(productReq.getProduct())) {
             log.debug("EmptyProductName");
             return new ResponseEntity("EmptyProductName", HttpStatus.BAD_REQUEST);
         }
-
-        if (productService.existsProductByProduct(product.getProduct())) {
-            log.debug("Product with name: {} already exists", product.getProduct());
+        if (productService.existsProductByProduct(productReq.getProduct())) {
+            log.debug("Product with name: {} already exists", productReq.getProduct());
             return new ResponseEntity("duplicatedNameProductError", HttpStatus.BAD_REQUEST);
         }
-
-        long gotBack = productService.saveProduct(product);
+        Product product = new Product();
+        product.setId(productReq.getId());
+        product.setProduct(productReq.getProduct());
+        product.setPrice(productReq.getPrice());
+        product.setRating(productReq.getRating());
+        product.setProductType(productReq.getProductType());
+        product.setProductPictureName(product.getProductPictureName());
+        product.setDeleted(false);
+        Product gotBack = productService.saveProduct(product);
         categoriesService.addToProduct(product, id);
-        return ResponseEntity.ok(new ResponseDto<>(true, gotBack ));
+        ProductDto returnValue = new ProductDto(gotBack);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue ));
     }
 
     /**
      * Редактирует товар
-     * @param product товар для редактирования
+     * @param productReq товар для редактирования
      * @return <Long> Возвращает отредактированный товар с кодом ответа
      */
     @PutMapping("/edit")
@@ -228,9 +221,18 @@ public class ProductsRestController {
             @ApiResponse(code = 200, message = "Product has been updated"),
             @ApiResponse(code = 404, message = "Product hasn't been found"),
     })
-    public ResponseEntity<ResponseDto<Long>> editProductM(@RequestBody Product product) {
-        long gotBack = productService.editProduct(product);
-        return ResponseEntity.ok(new ResponseDto<>(true, gotBack));
+    public ResponseEntity<ResponseDto<ProductDto>> editProductM(@RequestBody ProductDto productReq) {
+        Product product = new Product();
+        product.setId(productReq.getId());
+        product.setProduct(productReq.getProduct());
+        product.setPrice(productReq.getPrice());
+        product.setRating(productReq.getRating());
+        product.setProductType(productReq.getProductType());
+        product.setProductPictureName(product.getProductPictureName());
+        product.setDeleted(false);
+        Product gotBack = productService.editProduct(product);
+        ProductDto returnValue = new ProductDto(gotBack);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -298,7 +300,7 @@ public class ProductsRestController {
      * @param categoryName - id выбранной категории
      * @return List<ProductDto> отредактированный лист продуктов
      */
-    @PutMapping(value = "/{categoryName}")
+    @GetMapping(value = "/{categoryName}")
     @ApiOperation(value = "Choosing product by ID",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
@@ -307,7 +309,8 @@ public class ProductsRestController {
             @ApiResponse(code = 404, message = "Category hasn't been found")
     })
     public ResponseEntity<ResponseDto<List<ProductDto>>> filterByCategory(@PathVariable String categoryName) {
-        List<ProductDto> returnValue = modelMapper.map( productService.findProductsByCategoryName(categoryName), listType);
+        List<ProductDto> returnValue = new ArrayList<>();
+        productService.findProductsByCategoryName(categoryName).forEach(p -> returnValue.add(new ProductDto(p)));
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -327,31 +330,31 @@ public class ProductsRestController {
     })
     public ResponseEntity<ResponseDto<List<ProductDto>>> filterByCategoryAndSort(@PathVariable String categoryName,
                                                  @PathVariable String orderSelect) {
-        if (categoryName.equals("default")) {
-            if (orderSelect.equals("ascOrder")) {
-                List<Product> products = productService.findAllOrderByRatingAsc();
-                List<ProductDto> returnValue = modelMapper.map(products, listType);
+        List<ProductDto> returnValue = new ArrayList<>();
+        if (StringUtils.isNoneBlank(categoryName) && categoryName.equals("default")) {
+            if (StringUtils.isNoneBlank(categoryName) && orderSelect.equals("ascOrder")) {
+                productService.findAllOrderByRatingAsc().forEach(p -> returnValue.add(new ProductDto(p)));
                 return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
             }
-            if (orderSelect.equals("descOrder")) {
-                List<Product> products = productService.findAllOrderByRatingDesc();
-                List<ProductDto> returnValue = modelMapper.map(products, listType);
+            if (StringUtils.isNoneBlank(categoryName) && orderSelect.equals("descOrder")) {
+                productService.findAllOrderByRatingDesc().forEach(p -> returnValue.add(new ProductDto(p)));
                 return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
             }
+        } else {
+            return ResponseEntity.badRequest().build();
         }
-        if (orderSelect.equals("ascOrder")) {
+        if (StringUtils.isNoneBlank(categoryName) && orderSelect.equals("ascOrder")) {
             List<Product> products = productService.findProductsByCategoryName(categoryName).stream()
                     .sorted(Comparator.comparing(Product::getRating))
                     .collect(Collectors.toList());
-            List<ProductDto> returnValue = modelMapper.map(products, listType);
+            products.forEach(p -> returnValue.add(new ProductDto(p)));
             return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
         } else {
             List<Product> products = productService.findProductsByCategoryName(categoryName).stream()
                     .sorted((p1, p2) -> p2.getRating().compareTo(p1.getRating()))
                     .collect(Collectors.toList());
-            List<ProductDto> returnValue = modelMapper.map(products, listType);
+            products.forEach(p -> returnValue.add(new ProductDto(p)));
             return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
-
         }
     }
 
@@ -370,15 +373,15 @@ public class ProductsRestController {
             @ApiResponse(code = 404, message = "Category hasn't been found")
     })
     public ResponseEntity<ResponseDto<List<ProductDto>>> filterByCategoryInDescOrder(@PathVariable String categoryName) {
+        List<ProductDto> returnValue = new ArrayList<>();
         if (categoryName.equals("default")) {
-            List<Product> products = productService.findAllOrderByRatingDesc();
-            List<ProductDto> returnValue = modelMapper.map(products, listType);
+            productService.findAllOrderByRatingDesc().forEach(p -> returnValue.add(new ProductDto(p)));
             return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
         }
         List<Product> products = productService.findProductsByCategoryName(categoryName).stream()
                 .sorted((p1, p2) -> p2.getRating().compareTo(p1.getRating()))
                 .collect(Collectors.toList());
-        List<ProductDto> returnValue = modelMapper.map(products, listType);
+        products.forEach(p -> returnValue.add(new ProductDto(p)));
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -406,14 +409,14 @@ public class ProductsRestController {
             response.setContentType("text/html; charset=UTF-8");
             response.setCharacterEncoding("UTF-8");
             List<Product> products;
-            if (categoryName.equals("default")) {
-                if (orderSelect.equals("descOrder")) {
+            if (StringUtils.isNoneBlank(categoryName) && categoryName.equals("default")) {
+                if (StringUtils.isNoneBlank(orderSelect) && orderSelect.equals("descOrder")) {
                     products = productService.findAllOrderByRatingDesc().stream().limit(number).collect(Collectors.toList());
                 } else {
                     products = productService.findAllOrderByRatingAsc().stream().limit(number).collect(Collectors.toList());
                 }
             } else {
-                if (orderSelect.equals("descOrder")) {
+                if (StringUtils.isNoneBlank(orderSelect) && orderSelect.equals("descOrder")) {
                     products = productService.findProductsByCategoryName(categoryName).stream()
                             .sorted((p1, p2) -> p2.getRating().compareTo(p1.getRating())).limit(number)
                             .collect(Collectors.toList());
@@ -425,7 +428,7 @@ public class ProductsRestController {
             }
             response.setHeader("Size", String.valueOf(products.size()));
             productService.createXlsxDoc(products, categoryName).write(response.getOutputStream());
-            return ResponseEntity.ok(new ResponseDto(true, "success", ResponseOperation.NO_ERROR.getMessage()));
+            return ResponseEntity.ok(new ResponseDto(true, ResponseOperation.SUCCESS, ResponseOperation.NO_ERROR.getMessage()));
         } catch (NullPointerException | IOException e) {
             return ResponseEntity.notFound().build();
         }
