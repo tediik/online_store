@@ -132,7 +132,7 @@ public class AdminRestController {
     /**
      * rest mapping to modify user from admin page
      * @param user {@link User}
-     * @return new ResponseEntity<ResponseDto>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
     @ApiOperation(value = "modify user from admin page", authorizations = { @Authorization(value="jwtToken") })
@@ -141,23 +141,6 @@ public class AdminRestController {
             @ApiResponse(code = 200, message = "")
     })
     public ResponseEntity<ResponseDto<UserDto>> editUser(@RequestBody User user) {
-        if (userService.findById(user.getId()).isEmpty()) {
-            log.debug("There are no user with id: {}", user.getId());
-            throw new UserServiceException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND);
-        }
-        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
-            log.debug("Wrong email");
-            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + ExceptionConstants.NOT_VALID);
-        }
-        if (user.getRoles().size() == 0) {
-            log.debug("Roles not selected");
-            throw new UserServiceException(ExceptionEnums.ROLES.getText() + ExceptionConstants.NOT_FOUND);
-        }
-        if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
-                && userService.isExist(user.getEmail())) {
-            log.debug("User with same email already exists");
-            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + ExceptionConstants.ALREADY_EXISTS);
-        }
         userService.updateUserFromAdminPage(user);
         log.debug("Changes to user with id: {} was successfully added", user.getId());
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
@@ -172,25 +155,9 @@ public class AdminRestController {
     @ApiOperation(value = "add new user from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 409, message = "User with same email already exists"),
-            @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / EMAIL ADDRESS IS NOT VALID / PASSWORD COLUMN IS EMPTY / NO ROLES SELECTED"),
+            @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / EMAIL ADDRESS ALREADY EXISTS / PASSWORD IS EMPTY / ROLES IS EMPTY"),
     })
     public ResponseEntity<ResponseDto<UserDto>> addNewUser(@RequestBody User newUser) {
-        if (ValidationUtils.isNotValidEmail(newUser.getEmail())) {
-            log.debug("Wrong email");
-            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + ExceptionConstants.NOT_VALID);
-        }
-        if (userService.isExist(newUser.getEmail())) {
-            log.debug("User with same email already exists");
-            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + ExceptionConstants.ALREADY_EXISTS);
-        }
-        if (newUser.getPassword().equals("")) {
-            log.debug("Password is empty");
-            throw new UserServiceException(ExceptionEnums.PASSWORD.getText() + ExceptionConstants.IS_EMPTY);
-        }
-        if (newUser.getRoles().size() == 0) {
-            log.debug("Roles not selected");
-            throw new UserServiceException(ExceptionEnums.ROLES.getText() + ExceptionConstants.IS_EMPTY);
-        }
         userService.addNewUserFromAdmin(newUser);
         User customer = userService.findByEmail(newUser.getEmail()).get();
         FavouritesGroup favouritesGroup = new FavouritesGroup();
@@ -227,7 +194,7 @@ public class AdminRestController {
     /**
      * Метод для изменения наименования магазина
      * @param commonSettings настройки, содержащие название магазина
-     * @return String, ResponseEntity.ok()
+     * @return ResponseEntity<ResponseDto<String>>(ResponseDto, HttpStatus)
      */
     @ApiOperation(value = "edit store name", authorizations = { @Authorization(value="jwtToken") })
     @PutMapping(value = "/editStoreName")

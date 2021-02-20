@@ -55,6 +55,10 @@ public class CustomerRestController {
     private final RecentlyViewedProductsService recentlyViewedProductsService;
     private final ModelMapper modelMapper;
 
+    /**
+     * Rest mapping to  change customers mail.
+     * @return ResponseEntity<ResponseDto<String>> (ResponseDto, HttpStatus) {@link ResponseEntity}
+     */
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email",
             authorizations = { @Authorization(value = "jwtToken") })
@@ -140,7 +144,7 @@ public class CustomerRestController {
     /**
      * Возвращает пользователя по его id
      * @param id идентификатор пользователя
-     * @return ResponseEntity<User> Объект User
+     * @return ResponseEntity<ResponseDto<UserDto>> Объект User
      */
     @GetMapping("/getManagerById/{id}")
     @ApiOperation(value = "Возвращает пользователя по id",
@@ -168,7 +172,7 @@ public class CustomerRestController {
     @ApiOperation(value = "procces gives and save idProduct into Session and to DataBase",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "")
+            @ApiResponse(code = 200, message = "Product is saved in session")
     })
     public ResponseEntity<ResponseDto<String>> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request) {
         if (userService.getCurrentLoggedInUser() != null) {
