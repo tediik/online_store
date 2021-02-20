@@ -453,7 +453,7 @@ public class UserServiceImpl implements UserService {
             if (customer.getEmail() != null) {
                 messageBody = templateBody.replace("@@user@@", customer.getEmail())
                         .replace("@@password@@", confirmationToken.getUserPassword())
-                        .replace("@@url@@", String.format("<a href='%s'>online_store</a>", productionUrl));
+                        .replace("@@url@@", String.format("<a href='%s'> online_store</a>", productionUrl));
             } else {
                 messageBody = templateBody.replace("@@user@@", "Подписчик");
             }
