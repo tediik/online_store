@@ -78,6 +78,9 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.server.url}")
     private String urlActivate;
 
+    @Value("${production-url}")
+    private String productionUrl;
+
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
@@ -449,7 +452,7 @@ public class UserServiceImpl implements UserService {
             if (customer.getEmail() != null) {
                 messageBody = templateBody.replace("@@user@@", customer.getEmail())
                         .replace("@@password@@", confirmationToken.getUserPassword())
-                        .replace("@@url@@", "<a href='https://jm-online-store.herokuapp.com/'>online_store</a>");
+                        .replace("@@url@@", String.format("<a href='%s'>online_store</a>", productionUrl));
             } else {
                 messageBody = templateBody.replace("@@user@@", "Подписчик");
             }
