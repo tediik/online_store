@@ -38,7 +38,7 @@ public class ExceptionsHandler {
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<Object> handlerCategoriesNotFoundException(CustomerNotFoundException ex ) {
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()),  HttpStatus.NOT_FOUND);
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CategoriesNotFoundException.class)
@@ -49,13 +49,13 @@ public class ExceptionsHandler {
     @ExceptionHandler(value = { UserServiceException.class })
     public ResponseEntity<Object> handlerUserServiceException(UserServiceException ex) {
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()),  HttpStatus.BAD_REQUEST);
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(TopicCategoryAlreadyExists.class)
     public ResponseEntity<Object> handlerTopicCategoryAlreadyExistsException(TopicCategoryAlreadyExists ex ) {
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()),  HttpStatus.BAD_REQUEST);
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(TopicCategoryNotFoundException.class)
@@ -73,13 +73,13 @@ public class ExceptionsHandler {
     @ExceptionHandler(TopicNotFoundException.class)
     public ResponseEntity<Object> handlerTopicNotFoundException(TopicNotFoundException ex ) {
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()),  HttpStatus.NOT_FOUND);
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NewsNotFoundException.class)
     public ResponseEntity<Object> handlerNewsNotFoundException(NewsNotFoundException ex ) {
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()),  HttpStatus.NOT_FOUND);
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

@@ -30,7 +30,6 @@ public class ProductDto {
         this.description = product.getDescriptions();
         this.productType = product.getProductType();
         this.productPictureName = product.getProductPictureName();
-        this.isFavourite = true;
     }
 
 
