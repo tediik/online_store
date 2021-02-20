@@ -35,7 +35,7 @@ public class CustomerTrackableProductRestController {
      * Метод для получения всех товаров, на изменение цены которых подписан
      * залогиненный пользователь
      *
-     * @return ResponseEntity<ResponseDto<List<ProductModelDto>>>  товары со статусом 200,
+     * @return ResponseEntity<ResponseDto<List<ProductModelDto>>> (ResponseDto, HttpStatus),
      * если товаров нет - пустой массив и статус 200
      */
     @GetMapping
@@ -53,7 +53,7 @@ public class CustomerTrackableProductRestController {
      * Метод для удаления подписки на изменение цены конкретного товара
      *
      * @param id идентификатор товара, на который подписан залогиненный пользователь
-     * @return ResponseEntity<Long> с идентификатором товара, на изменение цены которого,
+     * @return ResponseEntity<ResponseDto<Long>> (ResponseDto, HttpStatus) с идентификатором товара, на изменение цены которого,
      * пользователь уже не подписан со статусом ответа
      */
     @DeleteMapping("/{id}")

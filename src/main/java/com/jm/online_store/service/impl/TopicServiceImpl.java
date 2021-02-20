@@ -23,7 +23,7 @@ public class TopicServiceImpl implements TopicService {
     @Transactional
     public Topic create(Topic topic) {
         if (existsByTopicName(topic.getTopicName())) {
-            throw new TopicAlreadyExists(ExceptionEnums.TOPIC.getText() + ExceptionConstants.ALREADY_EXISTS);
+            throw new TopicAlreadyExists(ExceptionEnums.TOPIC.getText() + String.format(ExceptionConstants.ALREADY_EXISTS, topic.getTopicName()));
         }
         return topicRepository.saveAndFlush(topic);
     }
