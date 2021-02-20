@@ -44,7 +44,7 @@ public class ModeratorRestController {
 
     /**
      * Получения списка всех жалоб на комментарии с помощью WebSocket.
-     * @return ReportCommentDto
+     * @return List<ReportCommentDto>
      */
     @MessageMapping("/report")
     @SendTo("/table/report")
@@ -59,6 +59,7 @@ public class ModeratorRestController {
     /**
      * Добавление жалобы на комментарий.
      * @param reportCommentDto , HttpStatus.OK
+     * @return esponseEntity<ResponseDto<ReportCommentDto>>(ResponseDto, HttpStatus)
      */
     @PostMapping
     @ApiOperation(value = "Add a new report on comment",
@@ -74,6 +75,7 @@ public class ModeratorRestController {
     /**
      * Удаления жалобы.
      * @param id жалобы.
+     * @return ResponseEntity<ResponseDto<Long>>(ResponseDto, HttpStatus)
      */
     @DeleteMapping("/leave/{id}")
     @ApiOperation(value = "Delete report on comment by report ID",
@@ -87,6 +89,7 @@ public class ModeratorRestController {
     /**
      * Удаление жалобы и коментария.
      * @param id комментария.
+     * @return ResponseEntity<ResponseDto<Long>>(ResponseDto, HttpStatus)
      */
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "Delete report and comment  by comment ID",
@@ -99,7 +102,7 @@ public class ModeratorRestController {
 
     /**
      * Вывод статистики работы с жалобами
-     * @return List<ModeratorsStatistic> - список со статистикой модераторов
+     * @return ResponseEntity<ResponseDto<List<ModeratorsStatistic>>> (ResponseDto, HttpStatus) - список со статистикой модераторов
      */
     @GetMapping("/statistic")
     @ApiOperation(value = "List moderators statistic",
@@ -111,7 +114,7 @@ public class ModeratorRestController {
 
     /**
      * Вывод количества необработанных комментариев
-     * @return reportCommentService.findAllReportComments().size() - количество комментариев, ожидающих проверки
+     * @return ResponseEntity<ResponseDto<Integer>> (ResponseDto, HttpStatus) - количество комментариев, ожидающих проверки
      */
     @GetMapping("/number-of-reports")
     @ApiOperation(value = "Number of non-checked reports",

@@ -4,6 +4,7 @@ import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
+import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
@@ -549,6 +550,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addNewUserFromAdmin(User newUser) {
+        if (ValidationUtils.isNotValidEmail(newUser.getEmail())) {
+            log.debug("Wrong email");
+            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.NOT_VALID,newUser.getEmail()));
+        }
+        if (isExist(newUser.getEmail())) {
+            log.debug("User with same email already exists");
+            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.ALREADY_EXISTS, newUser.getEmail()));
+        }
+        if (newUser.getPassword().equals("")) {
+            log.debug("Password is empty");
+            throw new UserServiceException(ExceptionEnums.PASSWORD.getText() + ExceptionConstants.IS_EMPTY);
+        }
+        if (newUser.getRoles().size() == 0) {
+            log.debug("Roles not selected");
+            throw new UserServiceException(ExceptionEnums.ROLES.getText() + ExceptionConstants.IS_EMPTY);
+        }
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
         newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
@@ -575,6 +592,23 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUserFromAdminPage(User user) {
+        if (findById(user.getId()).isEmpty()) {
+            log.debug("There are no user with id: {}", user.getId());
+            throw new UserServiceException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND);
+        }
+        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+            log.debug("Wrong email");
+            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.NOT_VALID,user.getEmail()));
+        }
+        if (user.getRoles().size() == 0) {
+            log.debug("Roles not selected");
+            throw new UserServiceException(ExceptionEnums.ROLES.getText() + ExceptionConstants.NOT_FOUND);
+        }
+        if (!findById(user.getId()).get().getEmail().equals(user.getEmail())
+                && isExist(user.getEmail())) {
+            log.debug("User with same email already exists");
+            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.ALREADY_EXISTS, user.getEmail()));
+        }
         User editedUser = userRepository.findById(user.getId()).get();
         Set<Role> newRoles = persistRoles(user.getRoles());
         editedUser.setRoles(newRoles);
