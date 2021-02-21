@@ -304,3 +304,4 @@ function showModalError(message) {
 if (document.getElementById('addToCartButton')) {
     document.getElementById('addToCartButton').addEventListener('click', addToProductToCart);
 }
+

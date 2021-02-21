@@ -122,10 +122,11 @@ public class ProductRestController {
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
         }
     }
+
     /**
      * Возвращает список первых count продуктов - count передаётся в метод сервиса .findNumProducts(count)
      *
-     *  @param count колличество возвращаемых продуктов
+     * @param count колличество возвращаемых продуктов
      */
     @ApiOperation(value = "Returns a list with a given number of first products")
     @GetMapping("/first/{count}")
