@@ -1,8 +1,14 @@
-package com.jm.online_store.exception;
+package com.jm.online_store.enums;
 
 import lombok.Getter;
 
-@Getter
+/**
+ * Набор перечислений для использования при обработке исключений.
+ * Представляют собой наименования сущностей проекта в ед. и мн. числе
+ * Передаются в конструктор и используются в комбинации с константами класса
+ * ExceptionConstants
+ */
+
 public enum ExceptionEnums {
     USER("USER "), USERS("USERS "),
     CUSTOMER("CUSTOMER "), CUSTOMERS("CUSTOMERS "),
@@ -32,4 +38,5 @@ public enum ExceptionEnums {
     public String getText() {
         return description;
     }
+
 }

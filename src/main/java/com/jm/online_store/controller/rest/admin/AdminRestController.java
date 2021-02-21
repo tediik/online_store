@@ -1,8 +1,8 @@
 package com.jm.online_store.controller.rest.admin;
 
-import com.jm.online_store.controller.ResponseOperation;
-import com.jm.online_store.exception.ExceptionConstants;
-import com.jm.online_store.exception.ExceptionEnums;
+import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.FavouritesGroup;
@@ -10,6 +10,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CommonSettingsService;
+
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -97,7 +98,7 @@ public class AdminRestController {
     public ResponseEntity<ResponseDto<UserDto>> getUserInfo(@PathVariable Long id) {
         if (userService.findById(id).isEmpty()) {
             log.debug("User with id: {} not found", id);
-            throw new UserServiceException(ExceptionEnums.USER.getDescription() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
+            throw new UserServiceException(ExceptionEnums.USER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         User user = userService.findById(id).get();
         log.debug("User with id: {} found, email is: {}", id, user.getEmail());
@@ -122,7 +123,7 @@ public class AdminRestController {
             userService.deleteByID(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException | NullPointerException e) {
             log.debug("There is no user with id: {}", id);
-            throw new UserServiceException(ExceptionEnums.USER.getDescription() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
+            throw new UserServiceException(ExceptionEnums.USER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         log.debug("User with id: {}, was deleted successfully", id);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userToDelete, UserDto.class)), HttpStatus.OK);
@@ -131,7 +132,7 @@ public class AdminRestController {
     /**
      * rest mapping to modify user from admin page
      * @param user {@link User}
-     * @return new ResponseEntity<ResponseDto>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
     @ApiOperation(value = "modify user from admin page", authorizations = { @Authorization(value="jwtToken") })
@@ -140,23 +141,6 @@ public class AdminRestController {
             @ApiResponse(code = 200, message = "")
     })
     public ResponseEntity<ResponseDto<UserDto>> editUser(@RequestBody User user) {
-        if (userService.findById(user.getId()).isEmpty()) {
-            log.debug("There are no user with id: {}", user.getId());
-            throw new UserServiceException(ExceptionEnums.USER.getDescription() + ExceptionConstants.NOT_FOUND);
-        }
-        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
-            log.debug("Wrong email");
-            throw new UserServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.NOT_VALID);
-        }
-        if (user.getRoles().size() == 0) {
-            log.debug("Roles not selected");
-            throw new UserServiceException(ExceptionEnums.ROLES.getDescription() + ExceptionConstants.NOT_FOUND);
-        }
-        if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
-                && userService.isExist(user.getEmail())) {
-            log.debug("User with same email already exists");
-            throw new UserServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.ALREADY_EXISTS);
-        }
         userService.updateUserFromAdminPage(user);
         log.debug("Changes to user with id: {} was successfully added", user.getId());
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
@@ -171,25 +155,9 @@ public class AdminRestController {
     @ApiOperation(value = "add new user from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 409, message = "User with same email already exists"),
-            @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / EMAIL ADDRESS IS NOT VALID / PASSWORD COLUMN IS EMPTY / NO ROLES SELECTED"),
+            @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / EMAIL ADDRESS ALREADY EXISTS / PASSWORD IS EMPTY / ROLES IS EMPTY"),
     })
     public ResponseEntity<ResponseDto<UserDto>> addNewUser(@RequestBody User newUser) {
-        if (ValidationUtils.isNotValidEmail(newUser.getEmail())) {
-            log.debug("Wrong email");
-            throw new UserServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.NOT_VALID);
-        }
-        if (userService.isExist(newUser.getEmail())) {
-            log.debug("User with same email already exists");
-            throw new UserServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.ALREADY_EXISTS);
-        }
-        if (newUser.getPassword().equals("")) {
-            log.debug("Password is empty");
-            throw new UserServiceException(ExceptionEnums.PASSWORD.getDescription() + ExceptionConstants.IS_EMPTY);
-        }
-        if (newUser.getRoles().size() == 0) {
-            log.debug("Roles not selected");
-            throw new UserServiceException(ExceptionEnums.ROLES.getDescription() + ExceptionConstants.IS_EMPTY);
-        }
         userService.addNewUserFromAdmin(newUser);
         User customer = userService.findByEmail(newUser.getEmail()).get();
         FavouritesGroup favouritesGroup = new FavouritesGroup();
@@ -218,7 +186,7 @@ public class AdminRestController {
         }
         if (allUsersWithRoleDto.size() == 0) {
             log.debug("There are no users with chosen role in db");
-            throw new UserServiceException(ExceptionEnums.USERS.getDescription() + ExceptionConstants.NOT_FOUND);
+            throw new UserServiceException(ExceptionEnums.USERS.getText() + ExceptionConstants.NOT_FOUND);
         }
         return new ResponseEntity<>(new ResponseDto<>(true, allUsersWithRoleDto), HttpStatus.OK);
     }
@@ -226,7 +194,7 @@ public class AdminRestController {
     /**
      * Метод для изменения наименования магазина
      * @param commonSettings настройки, содержащие название магазина
-     * @return String, ResponseEntity.ok()
+     * @return ResponseEntity<ResponseDto<String>>(ResponseDto, HttpStatus)
      */
     @ApiOperation(value = "edit store name", authorizations = { @Authorization(value="jwtToken") })
     @PutMapping(value = "/editStoreName")

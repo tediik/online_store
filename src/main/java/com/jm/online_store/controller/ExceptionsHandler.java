@@ -1,11 +1,18 @@
 package com.jm.online_store.controller;
 
+import com.jm.online_store.exception.CategoriesNotFoundException;
+import com.jm.online_store.exception.CharacteristicNotFoundException;
+import com.jm.online_store.exception.CustomerNotFoundException;
+import com.jm.online_store.exception.NewsNotFoundException;
+import com.jm.online_store.exception.OrdersNotFoundException;
+import com.jm.online_store.exception.StockNotFoundException;
+import com.jm.online_store.exception.TopicAlreadyExists;
+import com.jm.online_store.exception.TopicNotFoundException;
+import com.jm.online_store.exception.TopicCategoryAlreadyExists;
+import com.jm.online_store.exception.TopicCategoryNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
+
 import com.jm.online_store.exception.UserServiceException;
-import com.jm.online_store.exception.CustomerServiceException;
-import com.jm.online_store.exception.newsService.NewsServiceException;
-import com.jm.online_store.exception.orderSerivce.OrderServiceException;
-import com.jm.online_store.exception.sentStockService.SentStockServiceException;
-import com.jm.online_store.exception.stockService.StockServiceException;
 import com.jm.online_store.model.dto.ResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,40 +23,74 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionsHandler {
 
-    @ExceptionHandler(value = { NewsServiceException.class })
-    public ResponseEntity<Object> handlerUserServiceException(NewsServiceException ex) {
+    @ExceptionHandler(CharacteristicNotFoundException.class)
+    public ResponseEntity<Object> handlerCharacteristicNotFoundException(CharacteristicNotFoundException ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = { CustomerServiceException.class })
-    public ResponseEntity<Object> handlerCustomerServiceException(CustomerServiceException ex) {
-
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<Object> handlerCategoriesNotFoundException(CustomerNotFoundException ex ) {
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CategoriesNotFoundException.class)
+    public ResponseEntity<Object> handlerCategoriesNotFoundException(CategoriesNotFoundException ex ) {
+        return new ResponseEntity<>(new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = { UserServiceException.class })
     public ResponseEntity<Object> handlerUserServiceException(UserServiceException ex) {
-
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = { SentStockServiceException.class })
-    public ResponseEntity<Object> handlerSentStockServiceException(SentStockServiceException ex ) {
+    @ExceptionHandler(TopicCategoryAlreadyExists.class)
+    public ResponseEntity<Object> handlerTopicCategoryAlreadyExistsException(TopicCategoryAlreadyExists ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = { OrderServiceException.class })
-    public ResponseEntity<Object> handlerOrderServiceException(OrderServiceException ex ) {
+    @ExceptionHandler(TopicCategoryNotFoundException.class)
+    public ResponseEntity<Object> handlerTopicCategoryNotFoundException(TopicCategoryNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TopicAlreadyExists.class)
+    public ResponseEntity<Object> handlerTopicAlreadyExistsException(TopicAlreadyExists ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(value = { StockServiceException.class })
-    public ResponseEntity<Object> handlerStockServiceException(StockServiceException ex ) {
+
+    @ExceptionHandler(TopicNotFoundException.class)
+    public ResponseEntity<Object> handlerTopicNotFoundException(TopicNotFoundException ex ) {
         return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(NewsNotFoundException.class)
+    public ResponseEntity<Object> handlerNewsNotFoundException(NewsNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handlerUserNotFoundException(UserNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(OrdersNotFoundException.class)
+    public ResponseEntity<Object> handlerOrdersNotFoundException(OrdersNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(StockNotFoundException.class)
+    public ResponseEntity<Object> handlerStockNotFoundException(StockNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
 }

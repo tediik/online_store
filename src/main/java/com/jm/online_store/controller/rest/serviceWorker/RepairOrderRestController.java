@@ -2,14 +2,17 @@ package com.jm.online_store.controller.rest.serviceWorker;
 
 import com.itextpdf.text.DocumentException;
 import com.jm.online_store.enums.RepairOrderType;
+import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.exception.RepairOrderNotFoundException;
 import com.jm.online_store.model.RepairOrder;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.RepairOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,28 +42,28 @@ public class RepairOrderRestController {
      * Метод возвращает заказ по id
      *
      * @param id идентификатор RepairOrder
-     * @return RepairOrder заказ на ремонт
+     * @return <ResponseDto<RepairOrder>> заказ на ремонт со статусом ответа
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "Get order by ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<RepairOrder> getRepairOrderById(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<RepairOrder>> getRepairOrderById(@PathVariable Long id) {
         RepairOrder repairOrder = repairOrderService.findById(id);
-        return ResponseEntity.ok(repairOrder);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrder), HttpStatus.OK);
     }
 
     /**
      * Метод сохраняет заказ на ремонт
      *
      * @param repairOrder сущность для сохранения в базу данных
-     * @return ResponseEntity<RepairOrder> возвращает добавленный заказ на ремонт
+     * @return ResponseEntity<ResponseDto<RepairOrder>> возвращает добавленный заказ на ремонт
      * со статусом ответа
      */
     @PostMapping("/addRepairOrder")
     @ApiOperation(value = "Add a new repair order",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<RepairOrder> addRepairOrder(@RequestBody RepairOrder repairOrder) {
-        return ResponseEntity.ok(repairOrderService.save(repairOrder));
+    public ResponseEntity<ResponseDto<RepairOrder>> addRepairOrder(@RequestBody RepairOrder repairOrder) {
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderService.save(repairOrder)), HttpStatus.OK);
     }
 
     /**
@@ -72,180 +75,176 @@ public class RepairOrderRestController {
     @PostMapping("/checkStatus")
     @ApiOperation(value = "Get repair order by order ID and telephone number of client",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Repair odred was not found")
-    public ResponseEntity<RepairOrder> getCurrentRepairOrder(@RequestBody RepairOrder repairOrder) {
-        try {
-            RepairOrder repairOrderCheck = repairOrderService.findByOrderNumberAndTelephoneNumber(
-                    repairOrder.getOrderNumber(), repairOrder.getTelephoneNumber());
-            return ResponseEntity.ok(repairOrderCheck);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+    @ApiResponse(code = 400, message = "Repair order not found")
+    public ResponseEntity<ResponseDto<RepairOrder>> getCurrentRepairOrder(@RequestBody RepairOrder repairOrder) {
+        RepairOrder repairOrderCheck = repairOrderService.findByOrderNumberAndTelephoneNumber(
+                repairOrder.getOrderNumber(), repairOrder.getTelephoneNumber());
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderCheck), HttpStatus.OK);
     }
 
     /**
      * Метод удаляет заказ по id
      *
      * @param id идентификатор RepairOrder
-     * @return ResponseEntity<String> статус запроса
+     * @return ResponseEntity<ResponseDto<Long>> id удаленного заказа статусом ответа
      */
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete repair order by ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> deleteRepairOrderById(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<Long>> deleteRepairOrderById(@PathVariable Long id) {
         repairOrderService.deleteById(id);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, id), HttpStatus.OK);
     }
 
     /**
      * Метод обновления заказа на ремонт
      *
      * @param repairOrder принимает заявку на ремонт
-     * @return ResponseEntity.ok(repairOrder) возвращает статус запроса и заявку на ремонт
+     * @return ResponseEntity.ok(repairOrder) возвращает статус ответа и заявку на ремонт
      */
     @PutMapping("/updateRepairOrder")
     @ApiOperation(value = "Update repair order",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<RepairOrder> updateRepairOrder(@RequestBody RepairOrder repairOrder) {
+    public ResponseEntity<ResponseDto<RepairOrder>> updateRepairOrder(@RequestBody RepairOrder repairOrder) {
         repairOrderService.update(repairOrder);
-        return ResponseEntity.ok(repairOrder);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrder), HttpStatus.OK);
     }
 
     /**
      * Метод возвращает все заказы на ремонт
      *
-     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     * @return ResponseEntity<ResponseDto<List<RepairOrder>>> возвращает статус ответа и лист заявок на ремонт
      */
     @GetMapping("/getAllRepairOrder")
     @ApiOperation(value = "Get list of all repair orders",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<RepairOrder>> getAllRepairOrder() {
+    public ResponseEntity<ResponseDto<List<RepairOrder>>> getAllRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.findAll();
-        return ResponseEntity.ok(repairOrderList);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderList), HttpStatus.OK);
     }
 
     /**
-     * Метод возвращает вск заказы на ремонт КРОМЕ ОТМЕНЕННЫХ.
-     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     * Метод возвращает все заказы на ремонт КРОМЕ ОТМЕНЕННЫХ.
+     * @return ResponseEntity<ResponseDto<List<RepairOrder>>> возвращает статус ответа и лист заявок на ремонт
      */
     @GetMapping("/findAllWithoutCanceled")
     @ApiOperation(value = "Get list of all repair orders without cancelled",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<RepairOrder>> getAllWithoutCanceled() {
+    public ResponseEntity<ResponseDto<List<RepairOrder>>>getAllWithoutCanceled() {
         List<RepairOrder> repairOrderList = repairOrderService.findAllWithoutCanceled();
-        return ResponseEntity.ok(repairOrderList);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderList), HttpStatus.OK);
     }
-
     /**
      * Метод возвращает все принятые заказы на ремонт
      *
-     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     * @return ResponseEntity<ResponseDto<List<RepairOrder>>> возвращает статус ответа и лист заявок на ремонт
      */
     @GetMapping("/getAcceptedRepairOrder")
     @ApiOperation(value = "Get list of accepted repair orders",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<RepairOrder>> getAcceptedRepairOrder() {
+    public ResponseEntity<ResponseDto<List<RepairOrder>>> getAcceptedRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllAccepted();
-        return ResponseEntity.ok(repairOrderList);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderList), HttpStatus.OK);
     }
 
     /**
      * Метод возвращает все заказы на ремонт, которые находятся на этапе диагностики
      *
-     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     * @return ResponseEntity<ResponseDto<List<RepairOrder>>> возвращает статус ответа и лист заявок на ремонт
      */
     @GetMapping("/getDiagnosticsRepairOrder")
     @ApiOperation(value = "Get list of all repair orders on diagnostic",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<RepairOrder>> getDiagnosticsRepairOrder() {
+    public ResponseEntity<ResponseDto<List<RepairOrder>>> getDiagnosticsRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllDiagnostics();
-        return ResponseEntity.ok(repairOrderList);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderList), HttpStatus.OK);
     }
 
     /**
      * Метод возвращает все заказы на ремонт, которые находятся на этапе ремонта
      *
-     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     * @return ResponseEntity<ResponseDto<List<RepairOrder>>> возвращает статус ответа и лист заявок на ремонт
      */
     @GetMapping("/getIn_WorkRepairOrder")
     @ApiOperation(value = "Get list of all repair orders in repair process",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<RepairOrder>> getIn_WorkRepairOrder() {
+    public ResponseEntity<ResponseDto<List<RepairOrder>>> getIn_WorkRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllIn_Work();
-        return ResponseEntity.ok(repairOrderList);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderList), HttpStatus.OK);
     }
 
     /**
      * Метод возвращает все заказы на ремонт, ремонт по которым выполнен
      *
-     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     * @return ResponseEntity<ResponseDto<List<RepairOrder>>> возвращает статус ответа и лист заявок на ремонт
      */
     @GetMapping("/getCompleteRepairOrder")
     @ApiOperation(value = "Get list of complete repair orders",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<RepairOrder>> getCompleteRepairOrder() {
+    public ResponseEntity<ResponseDto<List<RepairOrder>>> getCompleteRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllComplete();
-        return ResponseEntity.ok(repairOrderList);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderList), HttpStatus.OK);
     }
 
     /**
      * Метод возвращает все архивные заказы на ремонт
      *
-     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     * @return ResponseEntity<ResponseDto<List<RepairOrder>>> возвращает статус ответа и лист заявок на ремонт
      */
     @GetMapping("/getArchiveRepairOrder")
     @ApiOperation(value = "Get list of archive repair orders",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<RepairOrder>> getArchiveRepairOrder() {
+    public ResponseEntity<ResponseDto<List<RepairOrder>>> getArchiveRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllArchive();
-        return ResponseEntity.ok(repairOrderList);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderList), HttpStatus.OK);
     }
 
     /**
      * Метод возвращает все отмененные заказы на ремонт
      *
-     * @return ResponseEntity<String> возвращает статус запроса и лист заявок на ремонт
+     * @return ResponseEntity<ResponseDto<List<RepairOrder>>> возвращает статус ответа и лист заявок на ремонт
      */
     @GetMapping("/getCanceledRepairOrder")
     @ApiOperation(value = "Get list of cancelled repair orders",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<RepairOrder>> getCanceledRepairOrder() {
+    public ResponseEntity<ResponseDto<List<RepairOrder>>> getCanceledRepairOrder() {
         List<RepairOrder> repairOrderList = repairOrderService.getAllCanceled();
-        return ResponseEntity.ok(repairOrderList);
+        return new ResponseEntity<>(new ResponseDto<>(true, repairOrderList), HttpStatus.OK);
     }
 
     /**
      * Метод возвращает список статусов заказа на ремонт
      *
-     * @return ResponseEntity<List < RepairOrderType>> список статусов
+     * @return ResponseEntity<ResponseDto<List<RepairOrderType>>> список статусов
      */
     @GetMapping("/getAllRepairOrderType")
     @ApiOperation(value = "Get list of repair orders status",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<RepairOrderType>> getAllRepairOrderType() {
+    public ResponseEntity<ResponseDto<List<RepairOrderType>>> getAllRepairOrderType() {
         List<RepairOrderType> orderTypeList = repairOrderService.findAllRepairOrderType();
-        return ResponseEntity.ok().body(orderTypeList);
+        return new ResponseEntity<>(new ResponseDto<>(true, orderTypeList), HttpStatus.OK);
     }
 
     /**
      * Метод генерирует и возвращает заказ-наряд
      *
-     * @param repairOrder Заказ на ремонт
+     * @param repairOrderResponseDto Заказ на ремонт
      * @param response    запрос
-     * @return файл заказ-наряда
+     * @return  ResponseEntity<ResponseDto<String>>  (ResponseDto, HttpStatus) "Repair order was generated" + файл заказ-наряда
      */
     @PostMapping("/getWorkOrder")
     @ApiOperation(value = "Generate and get list of work order",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Repair order was not found")
-    public ResponseEntity<FileSystemResource> getWorkOrder(@RequestBody RepairOrder repairOrder, HttpServletResponse response) {
+    public ResponseEntity<ResponseDto<String>> getWorkOrder(@RequestBody ResponseDto<RepairOrder> repairOrderResponseDto, HttpServletResponse response) {
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         try {
-            repairOrderService.createPdfWorkOrder(repairOrder, response);
-            return ResponseEntity.ok().build();
+            RepairOrder repOrder = repairOrderResponseDto.getData();
+            repairOrderService.createPdfWorkOrder(repOrder, response);
+            return new ResponseEntity<>(new ResponseDto<>(true, "Repair order was generated", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
         } catch (DocumentException | IOException e) {
-            return ResponseEntity.notFound().build();
+            throw new RepairOrderNotFoundException();
         }
     }
 }
