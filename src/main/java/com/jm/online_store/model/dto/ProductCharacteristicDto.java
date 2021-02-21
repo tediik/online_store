@@ -14,4 +14,5 @@ public class ProductCharacteristicDto {
 
     Long characteristicId;
     String value;
+
 }

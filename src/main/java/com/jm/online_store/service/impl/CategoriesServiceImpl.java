@@ -4,20 +4,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.CategoriesNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.CategoriesRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CategoriesServiceImpl implements CategoriesService {
+
+    private static final String loadPictureFrom = ".." + File.separator + "uploads" +
+            File.separator + "images" + File.separator + "products" + File.separator;
 
     private final CategoriesRepository categoriesRepository;
 
@@ -53,9 +58,8 @@ public class CategoriesServiceImpl implements CategoriesService {
      * Метод обновляет категорию
      */
     @Override
-    @Transactional
-    public void updateCategory(Categories category) {
-        categoriesRepository.save(category);
+    public Categories updateCategory(Categories category) {
+        return categoriesRepository.save(category);
     }
 
     /**
@@ -65,8 +69,9 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public String getCategoryNameByProductId(Long productId) {
         List<Categories> categoriesList = categoriesRepository.findAll();
+
         for (Categories categories : categoriesList) {
-            List<Product> listOfProducts = categories.getProducts();
+            List<Product> listOfProducts  = categories.getProducts();
             if (!listOfProducts.isEmpty()) {
                 for (Product product : listOfProducts) {
                     if (product.getId() == productId) {
@@ -75,7 +80,7 @@ public class CategoriesServiceImpl implements CategoriesService {
                 }
             }
         }
-        return "";
+        return "Product list is empty";
     }
 
     /**
@@ -119,17 +124,20 @@ public class CategoriesServiceImpl implements CategoriesService {
      * @param categories категория товара
      */
     @Override
-    public void saveCategory(Categories categories) {
-        categoriesRepository.save(categories);
+    public Categories saveCategory(Categories categories) {
+        return categoriesRepository.save(categories);
     }
 
     /**
      * Метод удаляет категорию по её id
-     * @param idCategory идентификатор категории
+     * @param id идентификатор категории
      */
     @Override
-    public void deleteCategory(Long idCategory) {
-        categoriesRepository.deleteById(idCategory);
+    public boolean deleteCategory(Long id) {
+        getCategoryById(id).orElseThrow(() -> new CategoriesNotFoundException(ExceptionEnums.CATEGORY.getText() +
+                String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
+        categoriesRepository.deleteById(id);
+        return true;
     }
 
     /**
@@ -138,6 +146,9 @@ public class CategoriesServiceImpl implements CategoriesService {
      */
     @Override
     public void saveAll(List<Categories> catList) {
+        catList.stream().filter(categories -> categories.getProducts() != null)
+                .forEach(categories -> categories.getProducts().
+                        forEach(product -> product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg")));
         categoriesRepository.saveAll(catList);
     }
 

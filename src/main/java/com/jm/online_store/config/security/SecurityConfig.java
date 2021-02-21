@@ -84,6 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
+
     }
 
     @Bean

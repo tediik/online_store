@@ -76,6 +76,34 @@
                        aria-controls="nav-profile" aria-selected="false">Снижение цен</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" id="nav-new1-tab" data-toggle="tab" href="#nav-sendConfirmationTokenToResetPassword"
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Сброс пароля</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-new2-tab" data-toggle="tab" href="#nav-regNewAccount"
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Регистрация нового акаунта</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-new3-tab" data-toggle="tab" href="#nav-changeUsersMail"
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Изменение eMail</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-new4-tab" data-toggle="tab" href="#nav-changeUsersPass"
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Изменение пароля</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-new5-tab" data-toggle="tab" href="#nav-activateUser"
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Активация пользователя</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-new6-tab" data-toggle="tab" href="#nav-subscribeConfirmTemplate"
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Подтверждение подписки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-new7-tab" data-toggle="tab" href="#nav-restorePassword"
+                       role="tab" aria-controls="nav-profile" aria-selected="true">Генерация нового временного пароля</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#description" aria-selected="false">Подписки</a>
                 </li>
             </ul>
@@ -150,6 +178,147 @@
                     </ul>
                     <button class="btn btn-primary" id="savePriceChangeTemplateChanges">Сохранить шаблон</button>
                 </div>
+                <!--Таба для шаблона рассылки sendConfirmationTokenToResetPassword-->
+                <div class="tab-pane fade" id="nav-sendConfirmationTokenToResetPassword" role="tabpanel" aria-labelledby="nav-3-tab">
+                    <form id="sendConfirmationTokenToResetPasswordTemplateEditForm">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при запросе на изменение пароля</label>
+                                <textarea id="sendConfirmationTokenToResetPasswordTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация!</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
+                        <li>@@url@@ - вместо этого тэга в письме подставится urlActivate </li>
+                        <li>@@confirmationToken@@ - вместо этого тэга в письме подставится confirmationToken.getConfirmationToken() </li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveSendConfirmationTokenToResetPasswordTemplateChanges">Сохранить шаблон</button>
+                </div>
+                <!--Таба для шаблона рассылки regNewAccount-->
+                <div class="tab-pane fade" id="nav-regNewAccount" role="tabpanel" aria-labelledby="nav-4-tab">
+                    <form id="regNewAccount">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при запросе на регистрацию нового аккаунта</label>
+                                <textarea id="regNewAccountTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация!</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@userEmail@@ - вместо этого тега в письме подставляется user.getEmail() либо String email</li>
+                        <li>@@url@@ - вместо этого тэга в письме подставится urlActivate </li>
+                        <li>@@confirmationToken@@ - вместо этого тэга в письме подставится confirmationToken.getConfirmationToken() </li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveRegNewAccountTemplateChanges">Сохранить шаблон</button>
+                </div>
+                <!--Таба для шаблона рассылки changeUsersMail-->
+                <div class="tab-pane fade" id="nav-changeUsersMail" role="tabpanel" aria-labelledby="nav-5-tab">
+                    <form id="changeUsersMail">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при запросе на изменения емэйла</label>
+                                <textarea id="changeUsersMailTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация!</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@user@@ - вместо этого тега в письме подставляется user.getFirstName()</li>
+                        <li>@@url@@ - вместо этого тэга в письме подставится urlActivate </li>
+                        <li>@@confirmationToken@@ - вместо этого тэга в письме подставится confirmationToken.getConfirmationToken() </li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveChangeUsersMailTemplateChanges">Сохранить шаблон</button>
+                </div>
+                <!--Таба для шаблона рассылки changeUsersPass-->
+                <div class="tab-pane fade" id="nav-changeUsersPass" role="tabpanel" aria-labelledby="nav-6-tab">
+                    <form id="changeUsersPass">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при запросе на изменения пароля</label>
+                                <textarea id="changeUsersPassTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация!</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@user@@ - вместо этого тега в письме подставляется user.getFirstName()</li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveChangeUsersPassTemplateChanges">Сохранить шаблон</button>
+                </div>
+                <div class="tab-pane fade" id="nav-activateUser" role="tabpanel" aria-labelledby="nav-7-tab">
+                    <form id="activateUser">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при активации юзера</label>
+                                <textarea id="activateUserTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация!</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@user@@ - вместо этого тега в письме подставляется customer.getEmail()</li>
+                        <li>@@password@@ - вместо этого тега в письме подставляется confirmationToken.getUserPassword()</li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveChangeActivateUserTemplateChanges">Сохранить шаблон</button>
+                </div>
+                <!--Таба для subscribeConfirmationTemplate-->
+                <div class="tab-pane fade" id="nav-subscribeConfirmTemplate" role="tabpanel" aria-labelledby="nav-8-tab">
+                    <form id="subscribeConfirmTemplate">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при подписке</label>
+                                <textarea id="subscribeConfirmTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация!</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@user@@ - вместо этого тега в письме подставляется userName</li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveSubscribeConfirmTemplateChanges">Сохранить шаблон</button>
+                </div>
+                <!--Таба для шаблона рассылки restore_password-->
+                <div class="tab-pane fade" id="nav-restorePassword" role="tabpanel" aria-labelledby="nav-9-tab">
+                    <form id="restorePassword">
+                        <div class="form-group">
+                            <div class="form-col">
+                                <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                    рассылки при генерации нового временного пароля</label>
+                                <textarea id="restorePasswordTemplateSummernote"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Важная информация!</h2>
+                    <ul>
+                        <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                        <li>@@user@@ - вместо этого тега в письме подставляется user.getFirstName</li>
+                        <li>@@newPassword@@ - вместо этого тэга в письме подставится newPass</li>
+                    </ul>
+                    <button class="btn btn-primary" id="saveRestorePasswordTemplateChanges">Сохранить шаблон</button>
+                </div>
+                <!--Таба для просмотра подписчиков и построения графика-->
                 <div class="tab-pane fade" id="description">
                     <div id="chart-div" style="display: none">
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -220,8 +389,6 @@
 <script src="/static/js/jquery.datepicker.extension.range.min.js"></script>
 <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<script src="/static/js/summernote.js"></script>
-<script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <script src="/static/js/summernote.js"></script>
 <script src="/static/js/summernote_lang/summernote-ru-RU.js"></script>
 <script src="/static/js/search-button.js"></script>

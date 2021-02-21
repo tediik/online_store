@@ -13,6 +13,9 @@ fetch("/api/products" + `/${productIdFromPath}`)
             response.json().then(function (data) {
                 fillBreadcrumb(data);
                 fillAboutProduct(data);
+                $('#showPictureFirstSlide').attr('src', data.productPictureName);
+                $('#showPictureSecondSlide').attr('src', data.productPictureName);
+                $('#showPictureThirdSlide').attr('src', data.productPictureName);
             })
         } else if (response.status === 404) {
             location.href = "/404";
@@ -90,8 +93,8 @@ async function fillAboutProduct(data) {
     } else {
         $("#price").empty().append(`<h5>Цена отсутствует<h5>`)
     }
-    rateInitialize(data.rating)
 
+    rateInitialize(data.rating)
     // заполнение вкладки с описанием продукта
     let description = document.getElementById('text-description');
     if (data.descriptions == null) {
@@ -99,7 +102,6 @@ async function fillAboutProduct(data) {
     } else {
         $(description).append(`${data.descriptions.information}`);
     }
-
 
     // заполнение вкладки с характеристиками продукта
     let specifications = document.getElementById('text-specifications');

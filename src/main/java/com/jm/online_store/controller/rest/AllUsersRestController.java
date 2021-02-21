@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -38,7 +39,8 @@ public class AllUsersRestController {
      * @return
      */
     @GetMapping("/getCurrent")
-    @ApiOperation(value = "Fetches email and roles of logged in user")
+    @ApiOperation(value = "Fetches email and roles of logged in user",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.noContent().build();
@@ -59,7 +61,8 @@ public class AllUsersRestController {
      * @return
      */
     @PutMapping("/restore")
-    @ApiOperation(value = "restores deleted users profile")
+    @ApiOperation(value = "restores deleted users profile",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "User not found"),
     })
@@ -67,7 +70,7 @@ public class AllUsersRestController {
         String msgAlert = "Пользователь не найден!";
         String email = restoreAccountDto.getEmail();
         String passwordOfClient = restoreAccountDto.getPassword();
-        String passwordOfBase = userService.passwordByMail(email);
+        String passwordOfBase = userService.getPasswordByMail(email);
         try {
             if (passwordEncoder.matches(passwordOfClient, passwordOfBase)) {
                 customerService.restoreCustomer(email);

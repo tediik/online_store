@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Categories;
-import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
-import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
@@ -21,15 +19,17 @@ import com.jm.online_store.service.interf.UserService;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,7 +40,10 @@ import javax.mail.MessagingException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -54,9 +57,12 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
+
+    private static final String loadPictureFrom = ".." + File.separator + "uploads" +
+            File.separator + "images" + File.separator + "products" + File.separator;
 
     private final ProductRepository productRepository;
     private final EvaluationService evaluationService;
@@ -65,21 +71,10 @@ public class ProductServiceImpl implements ProductService {
     private final MailSenderService mailSenderService;
     private final CategoriesService categoriesService;
     private final ProductCharacteristicService productCharacteristicService;
-    private final ConfirmationTokenRepository confirmTokenRepository;
-
-    @Value("${spring.server.url}")
-    private String urlActivate;
-
-    @Transactional
-    @Override
-    public void deleteAllByEmail(String email) {
-        productRepository.deleteAllByEmail(email);
-    }
 
     /**
-     * метод получения списка товаров
-     *
-     * @return List<Product>
+     * Получение списка товаров
+     * @return List<Product> - список товаров
      */
     @Transactional
     @Override
@@ -88,7 +83,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для получения списка неудаленных товаров
+     * Получение списка неудаленных товаров
+     * @return List<Product> - список неудаленных товаров
      */
     @Override
     public List<Product> getNotDeleteProducts() {
@@ -96,10 +92,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод для получения списка Product по имени категории.
-     *
-     * @param categoryName идентификатор Product
-     * @return List<Product>
+     * Получение списка товаров по имени категории.
+     * @param categoryName - название категории товара
+     * @return List<Product> - список товаров
      */
     @Override
     public List<Product> findProductsByCategoryName(String categoryName) {
@@ -109,10 +104,9 @@ public class ProductServiceImpl implements ProductService {
 
 
     /**
-     * Метод для создания XLSX файла из списка товаров по категории
-     *
-     * @param products товары
-     * @param category нужная категория
+     * Создание XLSX-файла из списка товаров по категории
+     * @param products - список товаров
+     * @param category - нужная категория
      * @return Excel-документ
      */
     @Override
@@ -160,21 +154,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод поиска Product по идентификатору.
-     *
-     * @param productId идентификатор Product
-     * @return Optional<Product>
+     * Поиск товара по его идентификатору.
+     * @param productId идентификатор товара.
+     * @return Optional<Product> - товар
      */
     @Override
     public Optional<Product> findProductById(Long productId) {
         return productRepository.findById(productId);
     }
 
+    @Override
+    public Product getProductById(Long productId) {
+        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+    }
+
     /**
-     * метод поиска Product по наименованию.
-     *
-     * @param productName наименование Product
-     * @return Optional<Product>
+     * Поиск товара по его наименованию.
+     * @param productName наименование товара.
+     * @return Optional<Product> - товар
      */
     @Override
     public Optional<Product> findProductByName(String productName) {
@@ -182,9 +179,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод получения списка всех продуктов по возрастанию рейтинга
-     *
-     * @return List<Product>
+     * Получение списка всех товаров по возрастанию рейтинга.
+     * @return List<Product> - список товаров, отсортированный по возрастанию рейтинга.
      */
     @Override
     public List<Product> findAllOrderByRatingAsc() {
@@ -192,9 +188,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод получения списка всех продуктов по убыванию рейтинга
-     *
-     * @return List<Product>
+     * Получение списка всех товаров по убыванию рейтинга.
+     * @return List<Product> - список товаров, отсортированный по убыванию рейтинга.
      */
     @Override
     public List<Product> findAllOrderByRatingDesc() {
@@ -202,15 +197,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод обновления Product.
-     *
-     * @param product экземпляр класса Product
-     * @return идентификатор обновленного Product
+     * Обновление товара.
+     * @param product экземпляр класса {@link Product}
+     * @return идентификатор обновленного товара.
      */
     @Override
     public Long saveProduct(Product product) {
+
         if (product.getRating() == null) {
             product.setRating(0d);
+        }
+        if (product.getProductPictureName().isEmpty()) {
+            product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg");
+        } else {
+            product.setProductPictureName(product.getProductPictureName());
         }
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
@@ -223,16 +223,16 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Метод отправляющий сообщения пользователям, которые подписаны на уведомления
-     * о снижении цены. Для зарегистрированных пользователей письма отпровляются только при получении
-     * согласия юзера на таковые рассылки (таблица Users, значение confirm_receive_email - CONFIRMED)
-     * рассылка для незарегистрированных юзеров отключена, чтобы не спамить
-     * @param product  продукт
-     * @param oldPrice старая цена продукта
-     * @param newPrice новая цена продукта
+     * о снижении цены. Для зарегистрированных пользователей письма отправляются только при получении
+     * согласия пользователя на такие рассылки (таблица Users, значение confirm_receive_email - CONFIRMED)
+     * рассылка для незарегистрированных пользователей отключена (чтобы не спамить).
+     *
+     * @param product товар
+     * @param oldPrice старая цена товара.
+     * @param newPrice новая цена товара.
      */
     public void sendNewPrice(Product product, double oldPrice, double newPrice) {
         Product productToSend = findProductById(product.getId()).get();
-        Long productId = productToSend.getId();
         Set<String> emails = productToSend.getPriceChangeSubscribers();
         String templateBody = commonSettingsService
                 .getSettingByName("price_change_distribution_template")
@@ -241,7 +241,6 @@ public class ProductServiceImpl implements ProductService {
         for (String email : emails) {
             Optional<User> user = userService.findByEmail(email);
             if (user.isPresent() && user.get().getConfirmReceiveEmail().toString().equals("CONFIRMED")) { //рассылка для незарегистрированных юзеров отключена.
-                ConfirmationToken confirmationToken = confirmTokenRepository.findByUserEmail(email);
                 if (user.get().getFirstName() != null) {
                     messageBody = templateBody.replaceAll("@@user@@", user.get().getFirstName());
                 } else {
@@ -250,10 +249,6 @@ public class ProductServiceImpl implements ProductService {
                 messageBody = messageBody.replaceAll("@@oldPrice@@", String.valueOf(oldPrice));
                 messageBody = messageBody.replaceAll("@@newPrice@@", String.valueOf(newPrice));
                 messageBody = messageBody.replaceAll("@@product@@", product.getProduct());
-                messageBody = messageBody.replaceAll("@@idProduct@@", Long.toString(product.getId()));
-                messageBody = messageBody.replaceAll("@@url@@", urlActivate  + "/cancelMailing/" + confirmationToken.getConfirmationToken()+ "/" + productId );
-                messageBody = messageBody.replaceAll("@@url2@@", urlActivate  + "/cancelMailing/cancelMailingAll/" + confirmationToken.getConfirmationToken()+ "/" + productId );
-
                 try {
                     mailSenderService.sendHtmlMessage(email, "Снижена цена на товар!", messageBody, "Price change");
                 } catch (MessagingException e) {
@@ -263,11 +258,9 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-
     /**
-     * метод удаления Product.
-     *
-     * @param idProduct идентификатор Product
+     * Удаление товара.
+     * @param idProduct идентификатор товара.
      */
     @Override
     public void deleteProduct(Long idProduct) {
@@ -277,22 +270,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод находит кол-во определенного продукта в БД Product
-     *
-     * @param idProduct идентификатор Product
-     * @return количество данного продукта в БД Product
+     * Возвращает кол-во определенного товара в БД.
+     * @param idProduct идентификатор товара.
+     * @return количество данного товара в БД.
      */
     @Override
     public int findProductAmount(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
         return product.getAmount();
-
     }
 
     /**
-     * метод восстановления удаленного Product.
-     *
-     * @param idProduct идентификатор Product
+     * Восстановление удаленного товара.
+     * @param idProduct идентификатор товара.
      */
     @Override
     public void restoreProduct(Long idProduct) {
@@ -302,79 +292,80 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод импортирует список товаров из сохраненного XML файла
-     * Записывает товары в БД
-     * парсит категории из файла
+     * Импорт списка товаров из XML-файла.
+     * Записывает товары в БД.
+     * Парсит категории из файла.
+     * @param fileName имя файла.
      */
     @Override
     public void importFromXMLFile(String fileName) {
-
-        try {
-            // Создается построитель документа
-            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
-            // Создается дерево DOM документа из файла
-            Document document = documentBuilder.parse("uploads/import/" + fileName);
-            document.getDocumentElement().normalize();
-
-            NodeList nList = document.getElementsByTagName("product");
-
-            for (int temp = 0; temp < nList.getLength(); temp++) {
-
-                Node nNode = nList.item(temp);
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-                    Element eElement = (Element) nNode;
-
-                    String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
-                    String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
-                    String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
-                    String categoryName = eElement.getElementsByTagName("categoryname").item(0).getTextContent();
-                    Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
-                    categoriesService.addToProduct(product, categoryName);
-
-                    String characteristicName;
-                    String characteristicValue;
-                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
-                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
-                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
-                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
-
-                        List<String> listNames = Arrays.asList(characteristicName.split(","));
-                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
-                        Map<String, String> map = new HashMap<>();
-
-                        for (int i = 0; i < listValues.size(); i++) {
-                            map.put(listNames.get(i), listValues.get(i));
-                        }
-                        for (Map.Entry<String, String> entry : map.entrySet()) {
-                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
-                                    entry.getKey(), entry.getValue());
-                        }
-                    }
-                }
-            }
-
-        } catch (ParserConfigurationException e) {
-            log.error("Ошибка конфигурации парсера");
-            e.printStackTrace();
-        } catch (SAXException e) {
-            log.error("Ошибка XML синтаксиса");
-            e.printStackTrace();
-        } catch (IOException e) {
-            log.error("Ошибка ввода/вывода");
-            e.printStackTrace();
-        }
+//        try {
+//            // Создается построитель документа
+//            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+//
+//            // Создается дерево DOM документа из файла
+//            Document document = documentBuilder.parse("uploads/import/" + fileName);
+//            document.getDocumentElement().normalize();
+//
+//            NodeList nList = document.getElementsByTagName("product");
+//
+//            for (int temp = 0; temp < nList.getLength(); temp++) {
+//
+//                Node nNode = nList.item(temp);
+//                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+//
+//                    Element eElement = (Element) nNode;
+//
+//                    String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
+//                    String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
+//                    String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
+//                    String categoryName = eElement.getElementsByTagName("categoryname").item(0).getTextContent();
+//                    Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
+//                    categoriesService.addToProduct(product, categoryName);
+//
+//                    String characteristicName;
+//                    String characteristicValue;
+//                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
+//                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
+//                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
+//                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
+//
+//                        List<String> listNames = Arrays.asList(characteristicName.split(","));
+//                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
+//                        Map<String, String> map = new HashMap<>();
+//
+//                        for (int i = 0; i < listValues.size(); i++) {
+//                            map.put(listNames.get(i), listValues.get(i));
+//                        }
+//                        for (Map.Entry<String, String> entry : map.entrySet()) {
+//                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
+//                                    entry.getKey(), entry.getValue());
+//                        }
+//                    }
+//                }
+//            }
+//
+//        } catch (ParserConfigurationException e) {
+//            log.error("Ошибка конфигурации парсера");
+//            e.printStackTrace();
+//        } catch (SAXException e) {
+//            log.error("Ошибка XML синтаксиса");
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            log.error("Ошибка ввода/вывода");
+//            e.printStackTrace();
+//        }
     }
 
     /**
-     * Метод импортирует список товаров из сохраненного XML файла
-     * Записывает товары в БД
-     * категорию получает из окна загрузки файла в кабинете менеджера
+     * Импорт списка товаров из XML-файла.
+     * Записывает товары в БД.
+     * Категорию получает из окна загрузки файла в кабинете менеджера.
+     * @param fileName имя файла.
+     * @param categoryId идентификатор категории товара.
      */
     @Override
     public void importFromXMLFile(String fileName, Long categoryId) {
-
         try {
             // Создается построитель документа
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -434,15 +425,14 @@ public class ProductServiceImpl implements ProductService {
 
 
     /**
-     * Метод импортирует список товаров из сохраненного CSV файла
-     * Записывает товары в БД
-     * Для правильного считывания используется кастомная MappingStrategy
-     * чтобы не перегружать Products лишними аннотациями
+     * Импорт списка товаров из CSV-файла.
+     * Записывает товары в БД.
+     * Для правильного считывания используется кастомная MappingStrategy, 
+     * чтобы не перегружать Products лишними аннотациями.
      *
-     * @param fileName имя скачанного файла
+     * @param fileName имя файла
      */
     public void importFromCSVFile(String fileName) throws FileNotFoundException {
-
         try (
                 Reader reader = Files.newBufferedReader(Paths.get("uploads/import/" + fileName));
         ) {
@@ -467,16 +457,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод импортирует список товаров из сохраненного CSV файла
-     * Записывает товары в БД
-     * Для правильного считывания используется кастомная MappingStrategy
-     * чтобы не перегружать Products лишними аннотациями
+     * Импорт списка товаров из CSV-файла.
+     * Записывает товары в БД.
+     * Для правильного считывания используется кастомная MappingStrategy, 
+     * чтобы не перегружать Products лишними аннотациями.
      *
-     * @param fileName   имя скачанного файла
-     * @param categoryId категория , полученная из окна загрузки файла в кабинете менеджера
+     * @param fileName имя файла.
+     * @param categoryId категория, полученная из окна загрузки файла в кабинете менеджера.
      */
     public void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException {
-
         try (
                 Reader reader = Files.newBufferedReader(Paths.get("uploads/import/" + fileName));
         ) {
@@ -502,19 +491,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод выбора из БД num первых продуктов
-     *
-     * @param num необходимое количество продуктов
-     * @return список из num продуктов
+     * Выбирает из БД num первых товаров.
+     * @param num необходимое количество товаров.
+     * @return список из запрошенного кол-ва товаров.
      */
     public List<Product> findNumProducts(Integer num) {
         return productRepository.findNumProducts(num);
     }
 
     /**
-     * метод получения коллекции по мониторингу изменения цены на Product.
-     *
-     * @param idProduct идентификатор Product
+     * Получение коллекции по мониторингу изменения цены на товар.
+     * @param idProduct идентификатор товара.
      * @return Map<LocalDateTime, Double> changePriceHistory
      */
     @Override
@@ -524,25 +511,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод удаления Product из таблицы рассылки изменения цены.
-     *
-     * @param email почта пользователя
-     * @param idProduct идентификатор Product
-     */
-    @Transactional
-    @Override
-    public void deleteProductPriceChangeById(String email,Long idProduct) {
-        productRepository.deletePriceChangeSubscriber(email,idProduct);
-    }
-
-    /**
-     * метод изменения рейтинга товара
-     *
-     * @param productId id товара
-     * @param rating    оценка польователем товара
-     * @param user      пользователь оценивший товар
-     * @return double новый рейтинг
-     * @throws UserNotFoundException,ProductNotFoundException
+     * Изменение рейтинга товара.
+     * @param productId идентификатор товара.
+     * @param rating оценка пользователем товара.
+     * @param user пользователь, оценивший товар.
+     * @return double новый рейтинг.
+     * @throws UserNotFoundException, ProductNotFoundException
      */
     @Transactional
     @Override
@@ -569,11 +543,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод формирующий DTO для передачи на страницу товара
-     *
-     * @param productId
-     * @param currentUser
-     * @return Optional<ProductDto> для передачи на страницу товара
+     * метод формирующий DTO для передачи на страницу товара.
+     * @param productId идентификатор товара.
+     * @param currentUser текущий пользователь.
+     * @return Optional<ProductDto> - DTO для передачи на страницу товара.
      * @throws {@link UserNotFoundException}
      */
     @Override
@@ -591,6 +564,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
+                        presentProduct.getProductPictureName(),
                         productSet.contains(presentProduct)
                 );
                 return Optional.of(productDto);
@@ -605,6 +579,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
+                        presentProduct.getProductPictureName(),
                         false
                 );
                 return Optional.of(productDto);
@@ -615,7 +590,6 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Method that finds search string in Product name.
-     *
      * @param searchString - {@link String} search string
      * @return - list of {@link Product} with search result
      */
@@ -626,7 +600,6 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Method that finds search string in Product description.
-     *
      * @param searchString - {@link String} search string
      * @return - list of {@link Product} with search result
      */
@@ -636,12 +609,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для добавления нового email в рассылку при изменении цены на товар
-     * Помимо этого направляет юзеру письмо с просьбой подтвердить получение рассылки.
+     * Добавление нового email в рассылку при изменении цены на товар.
+     * Помимо этого направляет пользователю письмо с просьбой подтвердить получение рассылки.
      * Без этого согласия получать письма об изменении цен он не будет. Письмо отправляется при каждом нажатии
      * на "Подписаться", пока не будет получено согласие. При этом в базу для рассылки он будет заноситься.
+     *
      * @param body тело запроса
-     * @return true если удалось добавить email, false если такой email уже есть
+     * @return true если удалось добавить email, false если такой email уже есть.
      */
     @Override
     public boolean addNewSubscriber(ObjectNode body) {
@@ -668,13 +642,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для редактирования информации о товаре
-     *
-     * @param product изменённый товар
-     * @return id изменённого товара
+     * Редактирование информации о товаре.
+     * @param product изменённый товар.
+     * @return идентификатор изменённого товара.
      */
     @Override
     public Long editProduct(Product product) {
+
+        if (product.getProductPictureName().isEmpty()) {
+            product.setProductPictureName("defaultProductImage.jpg");
+        } else {
+            product.setProductPictureName(product.getProductPictureName());
+        }
+
         Map<LocalDateTime, Double> map = findProductById(product.getId())
                 .orElseThrow(ProductNotFoundException::new)
                 .getChangePriceHistory();
@@ -692,11 +672,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод проверяет существование товара в БД.
-     *
-     * @param productName - поле по которому проверяем товар
-     * @return false -  Если такой товар не был найден.
-     * true -   Если такой товар существует.
+     * Проверяет существование товара в БД.
+     * @param productName - название товара.
+     * @return false - если такой товар не был найден, 
+     * true - если такой товар существует.
      */
     @Override
     @Transactional
@@ -705,10 +684,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для поиска товаров, на изменения цен которых
-     * подписан авторизованный пользователь по email
-     *
-     * @return List<Product> список товаров
+     * Поиск товаров, на изменения цен которых
+     * подписан авторизованный пользователь по email.
+     * @return List<Product> список товаров.
      */
     @Override
     public List<Product> findTrackableProductsByLoggedInUser() {
@@ -716,13 +694,95 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Метод для удаления подписки залогиненного пользователя на изменение цены товара
-     *
-     * @param productId уникальный идентификатор товара
+     * Удаление подписки залогиненного пользователя на изменение цены товара.
+     * @param productId уникальный идентификатор товара.
      */
     @Transactional
     @Override
     public void deleteProductFromTrackedForLoggedInUser(long productId) {
         productRepository.deletePriceChangeSubscriber(userService.getCurrentLoggedInUser().getEmail(), productId);
+    }
+
+    @Override
+    public void importFromXMLFile(MultipartFile file) {
+        writeFile(file);
+        try {
+            // Создается построитель документа
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            // Создается дерево DOM документа из файла
+            Document document = documentBuilder.parse("C:\\Users\\Dalan\\Desktop\\dev\\online_store\\uploads\\import\\" + file.getOriginalFilename());
+            document.getDocumentElement().normalize();
+            NodeList nList = document.getElementsByTagName("product");
+
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+
+                Node nNode = nList.item(temp);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element eElement = (Element) nNode;
+
+                    String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
+                    String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
+                    String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
+                    String categoryName = eElement.getElementsByTagName("categoryname").item(0).getTextContent();
+                    Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
+                    categoriesService.addToProduct(product, categoryName);
+
+                    String characteristicName;
+                    String characteristicValue;
+                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
+                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
+                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
+                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
+
+                        List<String> listNames = Arrays.asList(characteristicName.split(","));
+                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
+                        Map<String, String> map = new HashMap<>();
+
+                        for (int i = 0; i < listValues.size(); i++) {
+                            map.put(listNames.get(i), listValues.get(i));
+                        }
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
+                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
+                                    entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+            }
+
+        } catch (ParserConfigurationException e) {
+            log.error("Ошибка конфигурации парсера");
+            e.printStackTrace();
+        } catch (SAXException e) {
+            log.error("Ошибка XML синтаксиса");
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("Ошибка ввода/вывода");
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void importFromCSVFile(MultipartFile multipartFile) throws FileNotFoundException {
+
+    }
+
+
+
+    private void writeFile(@RequestParam("file") MultipartFile file) {
+        try {
+            byte[] bytes = file.getBytes();
+            if (bytes.length == 0)
+                throw new Exception("File is empty");
+            BufferedOutputStream stream =
+                    new BufferedOutputStream(new FileOutputStream("C:\\Users\\Dalan\\Desktop\\dev\\online_store\\uploads\\import\\" + file.getOriginalFilename()));
+            stream.write(bytes);
+            stream.close();
+        } catch (Exception e) {
+            log.error("Ошибка сохранения файла");
+            e.printStackTrace();
+        }
+        log.debug("тип файла" + FilenameUtils.getExtension(file.getOriginalFilename()));
     }
 }

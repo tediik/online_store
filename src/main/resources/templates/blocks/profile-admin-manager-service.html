@@ -1,5 +1,5 @@
 <!--Профиль для админа, менеджера, сервисного работника.-->
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <div th:fragment="profile" form>
     <div class="container-fluid bg-light">
         <div class="row p-3">
@@ -81,6 +81,11 @@
                         <button type="button" style="background-color: #ff8e05"
                                 class="m-2 btn btn-success d-block mx-auto"
                                 data-toggle="modal" data-target="#changePasswordModal">Изменить пароль
+                        </button>
+
+                        <button sec:authorize="hasAnyAuthority('ROLE_ADMIN')" type="button" style="background-color: #ff8e05"
+                                class="m-2 btn btn-success d-block mx-auto"
+                                data-toggle="modal" data-target="#changeStoreName">Изменить название магазина
                         </button>
                     </div>
                     <div class="form-group text-center font-weight-bold">
@@ -199,6 +204,38 @@
                     </div>
                 </div>
                 <!---------------------- End Change password Profile Modal window ------------------->
+
+                <!---------------------- Change nameStore Profile Modal window ------------------->
+                <div id="changeStoreName" class="modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Изменяем название магазина:</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">x</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="formStoreName" class="form-group">
+                                    <div class="form-group text-center font-weight-bold">
+                                        <label for="new_mail">Введите новое название магазина</label>
+                                        <input type="text" id="nameStore" name="newName" class="form-control"
+                                               required/>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Отмена
+                                </button>
+                                <button type="submit" id="buttonNameStore" class="btn btn-primary">
+                                    Подтвердить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!---------------------- End Change nameStore Profile Modal window ------------------->
             </div>
         </div>
     </div>

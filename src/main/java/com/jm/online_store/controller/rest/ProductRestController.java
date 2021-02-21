@@ -9,6 +9,7 @@ import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,8 @@ public class ProductRestController {
      * @return сущность ProductDto, если продукт с таким id существует
      */
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get product by ID")
+    @ApiOperation(value = "Get product by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Product was not found")
     public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
         ResponseEntity<ProductDto>[] answer = new ResponseEntity[1];
@@ -61,7 +63,8 @@ public class ProductRestController {
      * @return map содержащая значения по изменению цены на товар.
      */
     @PostMapping("/productChangeMonitor")
-    @ApiOperation(value = "Get map with key: date of price changing; value: price")
+    @ApiOperation(value = "Get map with key: date of price changing; value: price",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Map> priceMonitor(@RequestBody Long id) {
         return ResponseEntity.ok(productService.getProductPriceChange(id));
     }
@@ -73,7 +76,8 @@ public class ProductRestController {
      * @param id     id товара
      */
     @PostMapping("/rating")
-    @ApiOperation(value = "Get new rating of product")
+    @ApiOperation(value = "Get new rating of product",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity getNewRating(@RequestParam(value = "rating", required = false) float rating,
                                        @RequestParam(value = "id", required = false) Long id) {
         User user = userService.getCurrentLoggedInUser();
@@ -88,7 +92,8 @@ public class ProductRestController {
      * if there are no such products returns notFound
      */
     @GetMapping("/searchByName/{searchString}")
-    @ApiOperation(value = "Get product by name")
+    @ApiOperation(value = "Get product by name",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Product>> findProductsByName(@PathVariable String searchString) {
         return ResponseEntity.ok(productService.findProductsByNameContains(searchString));
     }
@@ -101,7 +106,8 @@ public class ProductRestController {
      * if there are no such products returns notFound
      */
     @GetMapping("/searchByDescription/{searchString}")
-    @ApiOperation(value = "Get product by description")
+    @ApiOperation(value = "Get product by description",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Product>> findProductsByDescription(@PathVariable String searchString) {
         return ResponseEntity.ok(productService.findProductsByDescriptionContains(searchString));
     }
@@ -113,7 +119,8 @@ public class ProductRestController {
      * @return ResponseEntity<String> со статусом ответа
      */
     @PostMapping("/subscribe")
-    @ApiOperation(value = "Add a new subscriber by email")
+    @ApiOperation(value = "Add a new subscriber by email",
+            authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 208, message = "Subscriber already exists")
     public ResponseEntity<String> addNewSubscriber(@RequestBody ObjectNode body) {
         if (productService.addNewSubscriber(body)) {
@@ -128,8 +135,9 @@ public class ProductRestController {
      *
      * @param count колличество возвращаемых продуктов
      */
-    @ApiOperation(value = "Returns a list with a given number of first products")
     @GetMapping("/first/{count}")
+    @ApiOperation(value = "Returns a list with a given number of first products",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Product>> getSomeProducts(@PathVariable Integer count) {
         return ResponseEntity.ok(productService.findNumProducts(count));
     }

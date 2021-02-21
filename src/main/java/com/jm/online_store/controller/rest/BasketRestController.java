@@ -9,6 +9,7 @@ import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,12 +41,14 @@ public class BasketRestController {
      *
      * @return ResponseEntity<> список товаров данного User + статус ответа.
      */
-    @ApiOperation(value = "get all items for authorised User")
     @GetMapping(value = "/basketGoods")
+    @ApiOperation(value = "get all items for authorised User",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<SubBasket>> getBasket(HttpServletRequest request) {
         List<SubBasket> subBaskets = basketService.getBasket(request.getSession().getId());
         return new ResponseEntity<>(subBaskets, HttpStatus.OK);
     }
+
     /**
      * контроллер для формирования заказа из корзины.
      *
@@ -53,7 +56,8 @@ public class BasketRestController {
      * @return ResponseEntity.ok()
      */
     @PostMapping(value = "/basketGoods")
-    @ApiOperation(value = "builds new order from basket")
+    @ApiOperation(value = "builds new order from basket",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> buildOrderFromBasket(@RequestBody Long id) {
         basketService.buildOrderFromBasket(id);
         return ResponseEntity.ok().build();
@@ -66,7 +70,8 @@ public class BasketRestController {
      * @return ResponseEntity.ok()
      */
     @DeleteMapping(value = "/basketGoods")
-    @ApiOperation(value = "Deletes entity SubBasket from the SubBaskets list by id")
+    @ApiOperation(value = "Deletes entity SubBasket from the SubBaskets list by id",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> deleteBasket(@RequestBody Long id, HttpServletRequest request) {
         basketService.deleteBasket(basketService.findBasketById(id), request.getSession().getId());
         return ResponseEntity.ok().build();
@@ -79,7 +84,8 @@ public class BasketRestController {
      * @return ResponseEntity.ok()
      */
     @PutMapping(value = "/basketGoods")
-    @ApiOperation(value = "Updates the items quantity in SubBasket")
+    @ApiOperation(value = "Updates the items quantity in SubBasket",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> updateUpBasket(@RequestBody ObjectNode json) {
         Long id = json.get("id").asLong();
         int difference = json.get("count").asInt();
@@ -93,7 +99,8 @@ public class BasketRestController {
     }
 
     @PutMapping("/basket/add/{id}")
-    @ApiOperation(value = "Adds product to Basket")
+    @ApiOperation(value = "Adds product to Basket",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> addProductToBasket(@PathVariable Long id, HttpServletRequest request) {
         try {
             basketService.addProductToBasket(id, request.getSession().getId());

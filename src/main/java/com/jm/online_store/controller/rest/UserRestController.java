@@ -4,6 +4,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,27 +29,31 @@ public class UserRestController {
     private final UserService userService;
 
     @GetMapping
-    @ApiOperation(value = "Get all users")
+    @ApiOperation(value = "Get all users",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<User> findAll() {
         return userService.findAll();
     }
 
     @PostMapping
-    @ApiOperation(value = "Save user")
+    @ApiOperation(value = "Save user",
+            authorizations = { @Authorization(value = "jwtToken") })
     public User saveUser(@RequestBody User user) {
         userService.addUser(user);
         return user;
     }
 
     @PutMapping
-    @ApiOperation(value = "Update users")
+    @ApiOperation(value = "Update users",
+            authorizations = { @Authorization(value = "jwtToken") })
     public User updateUser(@RequestBody User user) {
         userService.updateUserAdminPanel(user);
         return user;
     }
 
     @DeleteMapping(value = "/{userId}")
-    @ApiOperation(value = "Delete user by ID")
+    @ApiOperation(value = "Delete user by ID",
+            authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Void> deleteUserById(@PathVariable Long userId) {
         userService.deleteByID(userId);
         return new ResponseEntity<Void>(HttpStatus.OK);

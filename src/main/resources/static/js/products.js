@@ -143,9 +143,9 @@ function getAllProducts() { // не нашел, где используется 
  * @param product продукта из таблицы
  */
 function editModalWindowRender(product) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindow)
     $('#idInputModal').val(product.id)
-    $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
+    $('#acceptChangeButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
     $('.modal-title').text("Edit product")
     $('#productInputModal').val(product.product).prop('readonly', false)
     $('#productPriceInputModal').val(product.price).prop('readonly', false)
@@ -159,13 +159,102 @@ function editModalWindowRender(product) {
  * @param productToEdit
  */
 function deleteModalWindowRender(productToEdit) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindow)
     $('.modal-title').text("Delete product")
-    $('#acceptButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
+    $('#acceptChangeButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
     $('#idInputModal').val(productToEdit.id)
     $('#productInputModal').val(productToEdit.product).prop('readonly', true)
     $('#productPriceInputModal').val(productToEdit.price).prop('readonly', true)
     $('#productAmountInputModal').val(productToEdit.amount).prop('readonly', true)
+}
+
+/**
+ * Функция рендера модального окна Изменить картинку
+ * @param product
+ */
+function editPictureModalWindowRender(product) {
+    $('.modal-dialog').off("click").on("click", "#acceptEditPictureButton", handleEditPictureButtonFromModalWindow)
+    $('#idInputPictureModal').val(product.id)
+    $('#acceptEditPictureButton').text("Применить").removeClass().toggleClass('btn btn-success edit-product')
+    $('.modal-title').text("Изменить картинку")
+}
+
+/**
+ * Функция рендера модального окна Добавить картинку
+ * @param product
+ */
+function addPictureModalWindowRender(product) {
+    $('.modal-dialog').off("click").on("click", "#acceptAddPictureButton", handleAddPictureButton)
+    $('#idAddPictureModal').val(product.id)
+    $('.modal-title').text("Добавить картинку?")
+}
+
+function handleAddPictureButton(event) {
+    const productId = event.target.dataset["productId"]
+    Promise.all([
+        fetch("/api/product/manager/" + productId, {headers: headers}),
+    ])
+        .then(([response]) => Promise.all([response.json()]))
+        .then(([productToEdit]) => {
+            fetch(API_CATEGORIES_URL + 'getOne/' + productId)
+                .then(promiseResult => {
+                    return promiseResult.text()
+                })
+                .then(responseResult => {
+                    currentCategoryNameEdit = "" + responseResult;
+                    addPictureModalWindowRender(productToEdit)
+                });
+        });
+}
+
+/**
+ * Функция обработки нажатия на кнопку Добавить картинку
+ * @param event
+ */
+function handleEditPictureButton(event) {
+    const productId = event.target.dataset["productId"]
+    Promise.all([
+        fetch("/api/product/manager/" + productId, {headers: headers}),
+    ])
+        .then(([response]) => Promise.all([response.json()]))
+        .then(([productToEdit]) => {
+            fetch(API_CATEGORIES_URL + 'getOne/' + productId)
+                .then(promiseResult => {
+                    return promiseResult.text()
+                })
+                .then(responseResult => {
+                    currentCategoryNameEdit = "" + responseResult;
+                    editPictureModalWindowRender(productToEdit)
+                });
+        });
+}
+
+/**
+ * Функция обработки нажатия Применить в модалке добавления картинки
+ */
+function handleEditPictureButtonFromModalWindow() {
+    const product = {
+        id: $('#idInputPictureModal').val(),
+        product: $('#productInputModal').val(),
+        price: $('#productPriceInputModal').val(),
+        amount: $('#productAmountInputModal').val()
+    };
+    $('#acceptEditPictureButton').click(function () {
+        $.ajax({
+            type: 'PUT',
+            url: '/api/product/upload/picture/' + product.id,
+            dataType: 'script',
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function () {},
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    });
+    $('#productPictureModalWindow').modal('hide')
 }
 
 /**
@@ -243,7 +332,6 @@ function showAndRefreshNotDeleteHomeTab() {
 function clearCharacteristicForm() {
     $('#addCharacteristicForm')[0].remove();
 }
-
 /**
  * функция обработки кнопки add на форме нового продукта
  */
@@ -252,7 +340,7 @@ function handleAddBtn() {
         product: $('#addProduct').val(),
         price: $('#addPrice').val(),
         amount: $('#addAmount').val(),
-    }
+    };
 
     /**
      * функция очистки полей формы нового продукта
@@ -260,7 +348,6 @@ function handleAddBtn() {
     function clearFormFields() {
         $('#addForm')[0].reset();
     }
-
     /**
      * проверяем, что выбранная категория продукта != null
      */
@@ -315,15 +402,14 @@ function handleAddBtn() {
                     response.text()
                         .then(
                             function (text) {
-
                                 if (text === "duplicatedNameProductError") {
                                     toastr.error('Такое наименование уже существует');
                                 }
-
                                 console.log(text)
                             })
                 } else {
-                    response.text().then(function () {
+                    response.json().then(function (productID) {
+                        $('#idAddPictureModal').val(productID);
                         $("#jqxTreeHere").jqxTree('selectItem', null);
                         fetchToAddCharacteristics($('#addProduct').val());
                         clearCharacteristicForm();
@@ -417,13 +503,13 @@ function handleAcceptButtonFromModalWindow(event) {
         id: $('#idInputModal').val(),
         product: $('#productInputModal').val(),
         price: $('#productPriceInputModal').val(),
-        amount: $('#productAmountInputModal').val(),
+        amount: $('#productAmountInputModal').val()
     };
 
     /**
      * Проверка кнопки delete или edit
      */
-    if ($('#acceptButton').hasClass('delete-product')) {
+    if ($('#acceptChangeButton').hasClass('delete-product')) {
         fetch("/api/product/" + product.id, {
             headers: headers,
             method: 'DELETE'
@@ -507,6 +593,7 @@ function renderProductsTable(products) {
         .append(`<tr>
                 <th>ID</th>
                 <th>Наименование товара</th>
+                <th>Картинка</th>
                 <th>Цена</th>
                 <th>Количество</th>
                 <th>Edit</th>
@@ -518,6 +605,11 @@ function renderProductsTable(products) {
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>
                     <td>${product.product}</td>
+                    <td>
+                        <button data-product-id="${product.id}" type="button" class="btn btn-link link-button" data-toggle="modal" data-target="#productPictureModalWindow">
+                                                     Изменить картинку
+                            </button>
+                    </td>
                     <td>${product.price}</td>
                     <td>${product.amount}</td>              
                     
@@ -546,6 +638,7 @@ function renderProductsTable(products) {
         }
     }
     $('.edit-button').click(handleEditButton)
+    $('.link-button').click(handleEditPictureButton)
     $('.action').click(checkActionButton)
 }
 

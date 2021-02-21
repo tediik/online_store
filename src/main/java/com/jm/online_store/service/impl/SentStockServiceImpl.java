@@ -1,11 +1,11 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.SentStockNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SentStock;
-import com.jm.online_store.repository.NewsRepository;
 import com.jm.online_store.repository.SentStockRepository;
-import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
@@ -42,13 +42,10 @@ public class SentStockServiceImpl implements SentStockService {
      */
     @Override
     public List<SentStock> findAllByInterval(LocalDate begin, LocalDate end) {
-        List<SentStock> sentStocks = sentStockRepository.findAllBySentDateAfterAndSentDateBefore(
+
+        return sentStockRepository.findAllBySentDateAfterAndSentDateBefore(
                 begin.minusDays(1L),
                 end.plusDays(1L));
-        if(sentStocks.isEmpty()) {
-            throw new SentStockNotFoundException();
-        }
-        return sentStocks;
     }
     /**
      * Метод добавления отправленной акции
@@ -60,7 +57,8 @@ public class SentStockServiceImpl implements SentStockService {
     public SentStock addSentStock(SentStock sentStock) {
         SentStock sentStockToAdd = SentStock.builder()
                 .stock(stockService.findStockById(sentStock.getStock().getId()))
-                .user(userService.findById(sentStock.getUser().getId()).orElseThrow(UserNotFoundException::new))
+                .user(userService.findById(sentStock.getUser().getId()).orElseThrow(()
+                        -> new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND)))
                 .sentDate(sentStock.getSentDate())
                 .build();
         return sentStockRepository.save(sentStockToAdd);

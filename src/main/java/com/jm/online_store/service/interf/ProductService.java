@@ -5,6 +5,7 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public interface ProductService {
 
 	Optional<Product> findProductById(Long productId);
+
+	Product getProductById(Long productId);
 
     Optional<Product> findProductByName(String productName);
 
@@ -37,9 +40,13 @@ public interface ProductService {
 
     void importFromXMLFile(String fileName);
 
+    void importFromXMLFile(MultipartFile multipartFile);
+
     void importFromXMLFile(String fileName, Long categoryId);
 
     void importFromCSVFile(String fileName) throws FileNotFoundException;
+
+    void importFromCSVFile(MultipartFile multipartFile) throws FileNotFoundException;
 
     void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException;
 
@@ -66,7 +73,6 @@ public interface ProductService {
     XSSFWorkbook createXlsxDoc(List<Product> products, String category);
 
     boolean existsProductByProduct(String productName);
-
 
     List<Product> findTrackableProductsByLoggedInUser();
 
