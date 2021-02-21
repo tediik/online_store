@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
+import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
@@ -19,12 +21,13 @@ import com.jm.online_store.service.interf.UserService;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -51,7 +54,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
@@ -62,6 +65,10 @@ public class ProductServiceImpl implements ProductService {
     private final MailSenderService mailSenderService;
     private final CategoriesService categoriesService;
     private final ProductCharacteristicService productCharacteristicService;
+    private final ConfirmationTokenRepository confirmTokenRepository;
+
+    @Value("${spring.server.url}")
+    private String urlActivate;
 
     /**
      * метод получения списка товаров
@@ -219,6 +226,7 @@ public class ProductServiceImpl implements ProductService {
      */
     public void sendNewPrice(Product product, double oldPrice, double newPrice) {
         Product productToSend = findProductById(product.getId()).get();
+        Long productId = productToSend.getId();
         Set<String> emails = productToSend.getPriceChangeSubscribers();
         String templateBody = commonSettingsService
                 .getSettingByName("price_change_distribution_template")
@@ -227,6 +235,7 @@ public class ProductServiceImpl implements ProductService {
         for (String email : emails) {
             Optional<User> user = userService.findByEmail(email);
             if (user.isPresent() && user.get().getConfirmReceiveEmail().toString().equals("CONFIRMED")) { //рассылка для незарегистрированных юзеров отключена.
+                ConfirmationToken confirmationToken = confirmTokenRepository.findByUserEmail(email);
                 if (user.get().getFirstName() != null) {
                     messageBody = templateBody.replaceAll("@@user@@", user.get().getFirstName());
                 } else {
@@ -235,6 +244,9 @@ public class ProductServiceImpl implements ProductService {
                 messageBody = messageBody.replaceAll("@@oldPrice@@", String.valueOf(oldPrice));
                 messageBody = messageBody.replaceAll("@@newPrice@@", String.valueOf(newPrice));
                 messageBody = messageBody.replaceAll("@@product@@", product.getProduct());
+                messageBody = messageBody.replaceAll("@@idProduct@@", Long.toString(product.getId()));
+                messageBody = messageBody.replaceAll("@@url@@", urlActivate  + "/cancelMailing/" + confirmationToken.getConfirmationToken()+ "/" + productId );
+
                 try {
                     mailSenderService.sendHtmlMessage(email, "Снижена цена на товар!", messageBody, "Price change");
                 } catch (MessagingException e) {
@@ -502,6 +514,18 @@ public class ProductServiceImpl implements ProductService {
     public Map<LocalDateTime, Double> getProductPriceChange(Long idProduct) {
         Product product = productRepository.getOne(idProduct);
         return product.getChangePriceHistory();
+    }
+
+    /**
+     * метод удаления Product из таблицы рассылки изменения цены.
+     *
+     * @param email почта пользователя
+     * @param idProduct идентификатор Product
+     */
+    @Transactional
+    @Override
+    public void deleteProductPriceChangeById(String email,Long idProduct) {
+        productRepository.deletePriceChangeSubscriber(email,idProduct);
     }
 
     /**
