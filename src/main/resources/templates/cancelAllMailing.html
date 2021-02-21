@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<meta charset="UTF-8">
+<head>
+    <title>Отписаться от рассылки</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="/static/js/cancelMailing.js"></script>
+
+</head>
+<body>
+<h4>Вы действительно хотите отписаться от всех рассылок ?</h4>
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-1">
+        <form>
+            <button type="button" class="btn btn-sm btn-danger" onclick="closePageCancelMailing()">Отмена</button>
+        </form>
+    </div>
+    <div class="col-md-1">
+        <form id="dataCancelMailingAll" action="/cancelMailing/deleteAll" method="post">
+                        <input type="hidden" id="email" name="email" th:value="${email}">
+            <button type="submit" class="btn btn-sm btn-primary" onclick="cancelAllMailing()">Подтвердить</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
+
+

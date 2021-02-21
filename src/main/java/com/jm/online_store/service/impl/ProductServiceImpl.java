@@ -70,6 +70,12 @@ public class ProductServiceImpl implements ProductService {
     @Value("${spring.server.url}")
     private String urlActivate;
 
+    @Transactional
+    @Override
+    public void deleteAllByEmail(String email) {
+        productRepository.deleteAllByEmail(email);
+    }
+
     /**
      * метод получения списка товаров
      *
@@ -246,6 +252,7 @@ public class ProductServiceImpl implements ProductService {
                 messageBody = messageBody.replaceAll("@@product@@", product.getProduct());
                 messageBody = messageBody.replaceAll("@@idProduct@@", Long.toString(product.getId()));
                 messageBody = messageBody.replaceAll("@@url@@", urlActivate  + "/cancelMailing/" + confirmationToken.getConfirmationToken()+ "/" + productId );
+                messageBody = messageBody.replaceAll("@@url2@@", urlActivate  + "/cancelMailing/cancelMailingAll/" + confirmationToken.getConfirmationToken()+ "/" + productId );
 
                 try {
                     mailSenderService.sendHtmlMessage(email, "Снижена цена на товар!", messageBody, "Price change");

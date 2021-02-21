@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -38,4 +37,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("FROM Product p order by p.rating DESC")
     List<Product> findAllOrderByRatingDesc();
+
+    @Modifying
+    @Query(value = "delete from product_subscribers_mails where email =:email", nativeQuery = true)
+    void deleteAllByEmail(String email);
 }

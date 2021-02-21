@@ -20,6 +20,21 @@ function cancelMailingOnProduct() {
         })
 }
 
+function cancelAllMailing() {
+    let email = document.forms['dataCancelMailingAll'].elements['email'].value;
+    fetch("/cancelMailing/deleteAll",
+        {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+            }),
+        })
+}
+
 // Функция для закрытия текущей вкладки
 function closePageCancelMailing() {
     window.close();

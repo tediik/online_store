@@ -71,4 +71,6 @@ public interface ProductService {
     List<Product> findTrackableProductsByLoggedInUser();
 
     void deleteProductFromTrackedForLoggedInUser(long productId);
+
+    void deleteAllByEmail(String email);
 }
