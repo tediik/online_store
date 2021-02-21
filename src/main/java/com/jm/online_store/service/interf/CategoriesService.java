@@ -14,8 +14,8 @@ public interface CategoriesService {
 
     List<Categories> findAll();
 
-    @Transactional
-    void updateCategory(Categories category);
+
+    Categories updateCategory(Categories category);
 
     String getCategoryNameByProductId(Long productId);
 
@@ -27,9 +27,9 @@ public interface CategoriesService {
 
     List<Categories> getCategoriesWithoutParentCategory();
 
-    void saveCategory (Categories categories);
+    Categories saveCategory (Categories categories);
 
-    void deleteCategory(Long idCategory);
+    boolean deleteCategory(Long idCategory);
 
     void saveAll(List<Categories> catList);
 

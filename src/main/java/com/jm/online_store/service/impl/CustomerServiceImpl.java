@@ -1,10 +1,13 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
-import com.jm.online_store.exception.ExceptionConstants;
-import com.jm.online_store.exception.ExceptionEnums;
-import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.exception.InvalidEmailException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.CustomerServiceException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,7 +46,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Все клиенты.
-     *
      * @return List<Customer>.
      */
     @Override
@@ -53,8 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Проверка на валидность пароля и изменения пароля.
-     *
-     * @param id          клиента.
+     * @param id клиента.
      * @param oldPassword - старый пароль.
      * @param newPassword - новый пароль.
      * @return false если пароль не валиден, true если пароль был изменен.
@@ -74,21 +76,25 @@ public class CustomerServiceImpl implements CustomerService {
         return true;
     }
 
-    /**
-     * Поиск клиента по id.
-     *
-     * @param id клиента.
-     * @return Customer.
-     */
     @Override
-    @Transactional
     public Optional<Customer> findById(Long id) {
         return customerRepository.findById(id);
     }
 
     /**
+     * Поиск клиента по id.
+     * @param id клиента.
+     * @return Customer.
+     */
+    @Override
+    @Transactional
+    public Customer getById(Long id) {
+        return customerRepository.findById(id).orElseThrow(()
+                -> new CustomerServiceException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
+    }
+
+    /**
      * Поиск подписчика по email "на лету".
-     *
      * @param email клиента.
      * @return Customer.
      */
@@ -99,8 +105,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод добавления клиента.
-     *
+     * Добавление клиента.
      * @param customer - клиент для добавления.
      */
     @Override
@@ -110,32 +115,27 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод отписки от рассылки.
-     *
+     * Отписка от рассылки.
      * @param id клиента.
      */
     @Override
     @Transactional
     public void cancelSubscription(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(()-> new CustomerServiceException("CUSTOMER_NOT_FOUND"));
+        Customer customer = customerRepository.findById(id).orElseThrow(() ->
+                new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() +
+                        String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
         customer.setDayOfWeekForStockSend(null);
-        updateCustomer(customer);
     }
 
     /**
-     * метод получения клиентов, подписанных на рассылку, по дню недели.
-     *
+     * Получение клиентов, подписанных на рассылку, по дню недели.
      * @param dayOfWeek день недели
      * @return List<Customer>
      */
     @Override
     @Transactional
     public List<Customer> findByDayOfWeekForStockSend(String dayOfWeek) {
-        List<Customer> customers = customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(dayOfWeek));
-        if (customers.isEmpty()) {
-            throw new CustomerServiceException(ExceptionEnums.CUSTOMERS.getDescription() + ExceptionConstants.NOT_FOUND);
-        }
-        return customers;
+        return customerRepository.findByDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(dayOfWeek));
     }
 
     /**
@@ -161,9 +161,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * метод обновления дня для рассылки.
-     *
-     * @param customer              клиент.
+     * Обновление дня для рассылки.
+     * @param customer клиент.
      * @param dayOfWeekForStockSend день недели.
      */
     @Override
@@ -178,8 +177,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод получения текущего залогининового клиента.
-     *
+     * Получение текущего залогиненного клиента.
      * @return Customer.
      */
     @Override
@@ -189,12 +187,12 @@ public class CustomerServiceImpl implements CustomerService {
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
-        return customerRepository.findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+        return customerRepository.findByEmail(auth.getName()).orElseThrow(()
+                -> new UserNotFoundException(ExceptionEnums.CUSTOMERS.getText() + ExceptionConstants.NOT_FOUND));
     }
 
     /**
      * Обновление клиента.
-     *
      * @param customer клиент.
      */
     @Override
@@ -204,22 +202,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод для восстановления клиента
-     *
+     * Восстановление клиента.
      * @param email - емейл для восстановления
      */
     @Override
     @Transactional
     public void restoreCustomer(String email) {
-        Customer customer = customerRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Customer customer = customerRepository.findByEmail(email).orElseThrow(()
+                -> new UserNotFoundException(ExceptionEnums.CUSTOMERS.getText() + ExceptionConstants.NOT_FOUND));
         customer.setAccountNonBlockedStatus(true);
         customer.setAnchorForDelete(null);
         updateCustomer(customer);
     }
 
     /**
-     * Метод проверки на существование клиента по email.
-     *
+     * Проверка на существование клиента по email.
      * @param email клиента.
      * @return false если такого клиента нет в БД или его статус больше 30 дней.
      * true если статус null или такой пользователь есть в БД.
@@ -238,7 +235,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Удаление клиента по id.
-     *
      * @param id клиента.
      */
     @Override
@@ -250,7 +246,6 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Меняет по идентификатору пользователя в комментариях и отзывах
      * на "Deleted пользователя(DeletedCustomer)".
-     *
      * @param id идентификатор.
      */
     @Override
@@ -265,7 +260,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * Метод который будет ходить по базе раз в день,
+     * Метод, который будет ходить по базе раз в день,
      * и удалять кастомеров которые удалили свой профиль и у которых срок для восстановления истек.
      * Время и таска создается в Datainitializer'e
      * настройка времени находится в  application.yml
@@ -290,21 +285,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public Customer changeMail(String newMail) {
         Customer customer = getCurrentLoggedInUser();
-
         if (customer == null) {
-            log.debug("CUSTOMER ARE NOT AUTHENTICATED: " + newMail);
-            throw new CustomerServiceException(ExceptionEnums.CUSTOMER.getDescription() + ExceptionConstants.NOT_AUTHENTICATED);
+            throw new AuthenticationCredentialsNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_AUTHENTICATED);
         }
         if (isExist(newMail)) {
-            log.debug("THIS EMAIL ALREADY EXISTS: " + newMail);
-            throw new CustomerServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.ALREADY_EXISTS);
+            throw new EmailAlreadyExistsException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.ALREADY_EXISTS, newMail));
         }
         if (ValidationUtils.isNotValidEmail(newMail)) {
-            log.debug("EMAIL ADDRESS IS NOT VALID" + newMail);
-            throw new CustomerServiceException(ExceptionEnums.EMAIL.getDescription() + ExceptionConstants.NOT_VALID);
+            throw new InvalidEmailException(ExceptionEnums.CUSTOMERS.getText() + String.format(ExceptionConstants.NOT_VALID, newMail));
         }
-
         userService.changeUsersMail(customer, newMail);
         return customer;
     }
+
 }

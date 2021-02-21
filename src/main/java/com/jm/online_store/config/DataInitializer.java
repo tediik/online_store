@@ -1359,9 +1359,9 @@ public class DataInitializer {
                 .build();
         TemplatesMailingSettings activateUserTemplate = TemplatesMailingSettings.builder()
                 .settingName("activate_user")
-                .textValue("<p>Привет, @@user@@ Вы зарегистрировались на сайте online_store ! Пароль для входа в вашу учетную запись @@password@@ ," +
-                        "\n" + "можете сменить его в личном кабинете</p>" +
-                        "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .textValue("<p>Привет, @@user@@!</p><p>Вы зарегистрировались на сайте @@url@@. Пароль для входа в вашу учетную запись @@password@@, " +
+                        "можете сменить его в личном кабинете.</p>" +
+                        "<p>С Уважением,</p><p>" + environment.getProperty("production-url") + "</p>")
                 .status(false)
                 .build();
         TemplatesMailingSettings restorePasswordTemplate = TemplatesMailingSettings.builder()
