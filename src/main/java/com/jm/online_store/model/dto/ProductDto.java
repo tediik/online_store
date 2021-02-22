@@ -4,12 +4,14 @@ import com.jm.online_store.model.Description;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * DTO для передачи на страницу товара
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @ApiModel(description =  "DTO для передачи на страницу товара")
 public class ProductDto {
     private long id;
