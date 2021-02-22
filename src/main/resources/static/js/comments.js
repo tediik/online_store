@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <textarea class="form-control" id="reportCommentText${commentId}" rows="3"></textarea>
                                 </div>
                                 <button type="button" id='submitReportCommentBtn${commentId}' class="btn btn-primary">Отправить жалобу</button>
-                                <button type="button" id='declineReportCommentBtn${commentId}' class="btn btn-secondary">Отмена</button>
+                                <button type="button" id='declineReportCommentBtn${commentId}' class="btn btn-secondary">Отмена </button>
                             </div>
                                 `);
         $('#reportCommentBoxSpace' + commentId).html(reportCommentBox);
