@@ -1,7 +1,9 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
@@ -28,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FavouritesGroupRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final UserService userService;
-
+    private final CustomerService customerService;
     /**
      * Получение избранной группы по Id
      * @param id
@@ -61,10 +63,10 @@ public class FavouritesGroupRestController {
     @ApiOperation(value = "saves new list of favourite products",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
-        User user = userService.getCurrentLoggedInUser();
-        favouritesGroup.setUser(user);
+        Customer customer = customerService.getCurrentLoggedInUser();
+        favouritesGroup.setCustomer(customer);
         favouritesGroupService.addFavouritesGroup(favouritesGroup);
-        return ResponseEntity.ok(favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName()));
+        return ResponseEntity.ok(favouritesGroupService.getOneFavouritesGroupByUserAndByName(customer, favouritesGroup.getName()));
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.OrdersNotFoundException;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.ProductInOrder;
@@ -8,6 +9,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.repository.OrderRepository;
 import com.jm.online_store.service.interf.OrderService;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,25 +36,25 @@ class OrderServiceImplTest {
     private List<Order> orderList;
     Order order1;
     Order order2;
-    User user;
+    Customer customer;
     LocalDateTime now;
 
     @BeforeEach
     void init() {
         orderList = new ArrayList<>();
-        user = new User();
-        user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Petrov");
-        user.setEmail("ivan@mail.ru");
+        customer = new Customer();
+        customer.setId(1L);
+        customer.setFirstName("Ivan");
+        customer.setLastName("Petrov");
+        customer.setEmail("ivan@mail.ru");
         order1 = new Order(LocalDateTime.now(), Order.Status.COMPLETED);
         order1.setId(1L);
-        order1.setUser(user);
+        order1.setCustomer(customer);
         order1.setAmount(0L);
         order1.setOrderPrice((double) 0);
         order2 = new Order(LocalDateTime.now(), Order.Status.COMPLETED);
         order2.setId(2L);
-        order2.setUser(user);
+        order2.setCustomer(customer);
         order2.setAmount(0L);
         order2.setOrderPrice((double) 0);
         orderList.add(order1);
@@ -73,7 +75,7 @@ class OrderServiceImplTest {
     void findAllByUserId() {
         when(orderRepository.findAllByUserId(1L))
                 .thenReturn(orderList.stream()
-                        .filter(order -> order.getUser().getId().equals(1L))
+                        .filter(order -> order.getCustomer().getId().equals(1L))
                         .collect(Collectors.toList()));
 
         List<Order> userOrdersList = orderRepository.findAllByUserId(1L);
@@ -86,7 +88,7 @@ class OrderServiceImplTest {
     void findAllByUserIdAndStatus() {
         when(orderRepository.findAllByUserIdAndStatus(1L, Order.Status.COMPLETED))
                 .thenReturn(orderList.stream()
-                        .filter(order -> order.getUser().getId().equals(1L))
+                        .filter(order -> order.getCustomer().getId().equals(1L))
                         .filter(order -> order.getStatus().equals(Order.Status.COMPLETED))
                         .collect(Collectors.toList()));
 
@@ -147,7 +149,7 @@ class OrderServiceImplTest {
                 .amount(2L)
                 .dateTime(now)
                 .status(Order.Status.COMPLETED)
-                .user(user)
+                .customer(customer)
                 .productInOrders(productInOrderList)
                 .build();
         Order completedOrder2 = Order.builder()
@@ -156,7 +158,7 @@ class OrderServiceImplTest {
                 .amount(1L)
                 .dateTime(now.plusDays(1))
                 .status(Order.Status.COMPLETED)
-                .user(user)
+                .customer(customer)
                 .productInOrders(productInOrderList)
                 .build();
         /*делаем лист ордеров и добавляем туда 2 ордера которые сделали выше*/
@@ -193,6 +195,6 @@ class OrderServiceImplTest {
         orderList.clear();
         order1 = null;
         order2 = null;
-        user = null;
+        customer = null;
     }
 }

@@ -1,10 +1,12 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.FavouritesGroupRepository;
 import com.jm.online_store.service.interf.FavouritesGroupService;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,9 +55,9 @@ public class FavouritesGroupServiceImplTest {
     Product product5;
     Product product6;
 
-    User user1;
-    User user2;
-    User user3;
+    Customer customer1;
+    Customer customer2;
+    Customer customer3;
 
     @BeforeEach
     public void init() {
@@ -65,8 +67,8 @@ public class FavouritesGroupServiceImplTest {
         set1 = new HashSet<>();
         set1.add(product1);
         set1.add(product2);
-        user1 = new User("user1@mail.ru", "1");
-        group1 = new FavouritesGroup("apple", user1, set1);
+        customer1 = new Customer("user1@mail.ru", "1");
+        group1 = new FavouritesGroup("apple", customer1, set1);
         findByUser = new ArrayList<>();
         findByUser.add(group1);
 
@@ -75,16 +77,16 @@ public class FavouritesGroupServiceImplTest {
         set2 = new HashSet<>();
         set2.add(product3);
         set2.add(product4);
-        user2 = new User("user2@mail.ru", "2");
-        group2 = new FavouritesGroup("Samsung", user2, set2);
+        customer2 = new Customer("user2@mail.ru", "2");
+        group2 = new FavouritesGroup("Samsung", customer2, set2);
 
         product5 = new Product("e-book1", 200, 4);
         product6 = new Product("e-book2,", 500, 90);
         set3 = new HashSet<>();
         set3.add(product5);
         set3.add(product6);
-        user3 = new User("user3@mail.ru", "3");
-        group3 = new FavouritesGroup("Amazon", user3, set3);
+        customer3 = new Customer("user3@mail.ru", "3");
+        group3 = new FavouritesGroup("Amazon", customer3, set3);
 
         all = new ArrayList<>();
         all.add(group1);
@@ -112,9 +114,9 @@ public class FavouritesGroupServiceImplTest {
         product5 = null;
         product6 = null;
 
-        user1 = null;
-        user2 = null;
-        user3 = null;
+        customer1 = null;
+        customer2 = null;
+        customer3 = null;
 
         all.clear();
         findByUser.clear();
@@ -136,10 +138,10 @@ public class FavouritesGroupServiceImplTest {
      */
     @Test
     void findAllByUserTest() {
-        when(favouritesGroupRepository.findAllByUser(user1)).thenReturn(findByUser);
-        List<FavouritesGroup> list = favouritesGroupService.findAllByUser(user1);
+        when(favouritesGroupRepository.findAllByUser(customer1)).thenReturn(findByUser);
+        List<FavouritesGroup> list = favouritesGroupService.findAllByUser(customer1);
         assertEquals(list, findByUser);
-        verify(favouritesGroupRepository, times(1)).findAllByUser(user1);
+        verify(favouritesGroupRepository, times(1)).findAllByUser(customer1);
     }
 
     /**
@@ -214,10 +216,10 @@ public class FavouritesGroupServiceImplTest {
      */
     @Test
     void getOneFavouritesGroupByUserAndByNameTest() {
-        when(favouritesGroupRepository.getOneFavouritesGroupByUserAndByName(user3, "Amazon")).thenReturn(group3);
-        FavouritesGroup someGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user3, "Amazon");
+        when(favouritesGroupRepository.getOneFavouritesGroupByUserAndByName(customer3, "Amazon")).thenReturn(group3);
+        FavouritesGroup someGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(customer3, "Amazon");
         assertEquals(group3, someGroup);
-        verify(favouritesGroupRepository, times(1)).getOneFavouritesGroupByUserAndByName(user3, "Amazon");
+        verify(favouritesGroupRepository, times(1)).getOneFavouritesGroupByUserAndByName(customer3, "Amazon");
     }
 
     /**

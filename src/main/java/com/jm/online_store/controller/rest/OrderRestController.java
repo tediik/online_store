@@ -1,8 +1,10 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.OrderDTO;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
@@ -29,6 +31,7 @@ import java.util.Set;
 public class OrderRestController {
     private final UserService userService;
     private final OrderService orderService;
+    private final CustomerService customerService;
 
     /**
      * метод получения списка всех заказов авторизованного пользователя.
@@ -38,7 +41,7 @@ public class OrderRestController {
     @ApiOperation(value = "Get list of all orders",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Set<Order>> getAllOrders() {
-        User autorityUser = userService.getCurrentLoggedInUser();
+        Customer autorityUser = customerService.getCurrentLoggedInUser();
         Set<Order> orders = autorityUser.getOrders();
         return ResponseEntity.ok(orders);
     }

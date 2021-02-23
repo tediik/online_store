@@ -35,6 +35,7 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -115,7 +116,7 @@ public class DataInitializer {
     private final ProductCharacteristicService productCharacteristicService;
     private final BadWordsService badWordsService;
     private final TemplatesMailingSettingsService templatesMailingSettingsService;
-
+    private final CustomerService customerService;
     @Autowired
     private Environment environment;
 
@@ -124,7 +125,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct
+    @PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -234,7 +235,7 @@ public class DataInitializer {
         productSet.add(product_2);
         productSet.add(product_3);
 
-        User customerU = userService.findByEmail("customer@mail.ru").get();
+        Customer customerU = customerService.findCustomerByEmail("customer@mail.ru");
         customerU.setFavouritesGoods(productSet);
         userService.updateUser(customerU);
 
@@ -242,7 +243,7 @@ public class DataInitializer {
         FavouritesGroup favouritesGroup = new FavouritesGroup();
         favouritesGroup.setName("Все товары");
         favouritesGroup.setProducts(productSet);
-        favouritesGroup.setUser(customerU);
+        favouritesGroup.setCustomer(customerU);
         favouritesGroupService.save(favouritesGroup);
 
         SubBasket subBasket_1 = new SubBasket();
@@ -268,14 +269,14 @@ public class DataInitializer {
 
             userService.addUser(customer1);
 
-            User customerU1 = userService.findByEmail("customer" + i + "@mail.ru").get();
+            Customer customerU1 = customerService.findCustomerByEmail("customer" + i + "@mail.ru");
             customerU1.setFavouritesGoods(productSet);
             userService.updateUser(customerU1);
 
             FavouritesGroup favouritesGroup1 = new FavouritesGroup();
             favouritesGroup1.setName("Все товары");
             favouritesGroup1.setProducts(productSet);
-            favouritesGroup1.setUser(customerU1);
+            favouritesGroup1.setCustomer(customerU1);
             favouritesGroupService.save(favouritesGroup1);
 
             customer1.setUserBasket(subBasketList);
@@ -859,8 +860,7 @@ public class DataInitializer {
      * Метод первичного тестового заполнения заказов.
      */
     private void ordersInit() {
-        User customer = userService.findByEmail("customer@mail.ru").get();
-
+        Customer customer = customerService.findCustomerByEmail("customer@mail.ru");
         List<Long> productsIds = new ArrayList<>();
         productsIds.add(productService.findProductByName("NX-7893-PC-09878").get().getId());
         productsIds.add(productService.findProductByName("Asus-NX4567").get().getId());

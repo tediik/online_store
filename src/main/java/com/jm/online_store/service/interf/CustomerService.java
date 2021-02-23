@@ -42,4 +42,6 @@ public interface CustomerService {
     Customer changeMail(String newMail);
 
     Customer getById(Long id);
+
+    Customer findCustomerByEmail(String email);
 }

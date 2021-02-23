@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
@@ -101,8 +102,8 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
      * @return FavouritesGroup
      */
     @Override
-    public FavouritesGroup getOneFavouritesGroupByUserAndByName(User user, String name) {
-        return favouritesGroupRepository.getOneFavouritesGroupByUserAndByName(user, name);
+    public FavouritesGroup getOneFavouritesGroupByUserAndByName(Customer customer, String name) {
+        return favouritesGroupRepository.getOneFavouritesGroupByUserAndByName(customer, name);
     }
 
     /**

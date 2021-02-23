@@ -5,12 +5,14 @@ import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.model.CommonSettings;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CommonSettingsService;
 
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
@@ -50,6 +52,7 @@ public class AdminRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final CommonSettingsService commonSettingsService;
     private final ModelMapper modelMapper;
+    private final CustomerService customerService;
 
     /**
      * Rest mapping to  receive authenticated user. from admin page
@@ -192,10 +195,10 @@ public class AdminRestController {
             throw new UserServiceException(ExceptionEnums.ROLES.getText() + ExceptionConstants.IS_EMPTY);
         }
         userService.addNewUserFromAdmin(newUser);
-        User customer = userService.findByEmail(newUser.getEmail()).get();
+        Customer customer = customerService.findCustomerByEmail(newUser.getEmail());
         FavouritesGroup favouritesGroup = new FavouritesGroup();
         favouritesGroup.setName("Все товары");
-        favouritesGroup.setUser(customer);
+        favouritesGroup.setCustomer(customer);
         favouritesGroupService.save(favouritesGroup);
         userService.updateUser(customer);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(newUser, UserDto.class)), HttpStatus.OK);

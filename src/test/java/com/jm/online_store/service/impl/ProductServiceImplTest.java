@@ -7,12 +7,14 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,12 +42,13 @@ class ProductServiceImplTest {
     private final ProductRepository productRepository = mock(ProductRepository.class);
     private final EvaluationService evaluationService = mock(EvaluationService.class);
     private final UserService userService = mock(UserService.class);
+    private final CustomerService customerService = mock(CustomerService.class);
     private final MailSenderService mailSenderService = mock(MailSenderService.class);
     private final CommonSettingsService commonSettingsService = mock(CommonSettingsService.class);
     private final CategoriesService categoriesService = mock(CategoriesService.class);
     private final ProductCharacteristicService productCharacteristicService = mock(ProductCharacteristicService.class);
-    private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService,
-            mailSenderService, categoriesService, productCharacteristicService);
+    private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService , userService, commonSettingsService,
+            mailSenderService, categoriesService, productCharacteristicService, customerService);
     private Product product;
     private Set<String> subscribers;
     private Map<LocalDateTime, Double> prices;

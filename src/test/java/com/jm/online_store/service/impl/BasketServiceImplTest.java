@@ -2,6 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.SubBasketNotFoundException;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
@@ -9,6 +10,7 @@ import com.jm.online_store.repository.BasketRepository;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +46,7 @@ public class BasketServiceImplTest {
     private BasketService basketService;
 
     List<SubBasket> subBasketList;
-    User user;
+    Customer customer;
     SubBasket subBasket_1;
     SubBasket subBasket_2;
     SubBasket subBasket_3;
@@ -54,11 +56,11 @@ public class BasketServiceImplTest {
 
     @BeforeEach
     public void init() {
-        user = new User();
-        user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Petrov");
-        user.setEmail("ivan@mail.ru");
+        customer = new Customer();
+        customer.setId(1L);
+        customer.setFirstName("Ivan");
+        customer.setLastName("Petrov");
+        customer.setEmail("ivan@mail.ru");
         product_1 = new Product("apple", 100000D, 4, 0.1);
         product_2 = new Product("samsung", 80000D, 12, 0.9);
         product_3 = new Product("xiaomi", 30000D, 0, 0.5);
@@ -82,7 +84,7 @@ public class BasketServiceImplTest {
         subBasketList.add(subBasket_1);
         subBasketList.add(subBasket_2);
         subBasketList.add(subBasket_3);
-        user.setUserBasket(subBasketList);
+        customer.setUserBasket(subBasketList);
     }
 
     @Test
@@ -103,7 +105,7 @@ public class BasketServiceImplTest {
 
     @Test
     void getBasket() {
-        when(userService.getCurrentLoggedInUser("")).thenReturn(user);
+        when(userService.getCurrentLoggedInUser("")).thenReturn(customer);
         when(productService.findProductById(subBasket_1.getProduct().getId()))
                 .thenReturn(Optional.ofNullable(product_1));
         List<SubBasket> basketList = basketService.getBasket("");
@@ -133,14 +135,14 @@ public class BasketServiceImplTest {
 
     @Test
     void deleteBasket() {
-        when(userService.getCurrentLoggedInUser("")).thenReturn(user);
+        when(userService.getCurrentLoggedInUser("")).thenReturn(customer);
         basketService.deleteBasket(subBasket_2,"");
         verify(basketRepository, times(1)).delete(subBasket_2);
     }
 
     @Test
     void addProductToBasket() {
-        when(userService.getCurrentLoggedInUser("")).thenReturn(user);
+        when(userService.getCurrentLoggedInUser("")).thenReturn(customer);
         when(productService.findProductById(2L)).thenReturn(Optional.ofNullable(product_2));
         when(basketRepository.save(subBasket_2)).thenReturn(subBasket_2);
         basketService.addProductToBasket(2L,"");
@@ -154,6 +156,6 @@ public class BasketServiceImplTest {
         product_2 = null;
         subBasket_1 = null;
         subBasket_2 = null;
-        user = null;
+        customer = null;
     }
 }

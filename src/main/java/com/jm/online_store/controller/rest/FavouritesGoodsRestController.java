@@ -2,9 +2,11 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouriteGoodsService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.ProductService;
@@ -36,6 +38,7 @@ public class FavouritesGoodsRestController {
     private final UserService userService;
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
+    private final CustomerService customerService;
     /**
      * контроллер для получения товаров "избранное" для авторизованного User.
      * используется поиск по идентификатору User, т.к. используется ленивая
@@ -61,10 +64,10 @@ public class FavouritesGoodsRestController {
     @ApiOperation(value = "Rest Controller adds products to favourites. Adds it to the list \"All products\" ",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
-        User user = userService.getCurrentLoggedInUser();
-        favouriteGoodsService.addToFavouriteGoods(id, user);
+        Customer customer = customerService.getCurrentLoggedInUser();
+        favouriteGoodsService.addToFavouriteGoods(id, customer);
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
-        FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
+        FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(customer, "Все товары");
         favouritesGroupService.addProductToFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok().build();
     }
@@ -79,10 +82,10 @@ public class FavouritesGoodsRestController {
     @ApiOperation(value = "Rest Controller deletes product from favourites. From the list \"All products\" ",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id) {
-        User user = userService.getCurrentLoggedInUser();
-        favouriteGoodsService.deleteFromFavouriteGoods(id, user);
+        Customer customer = customerService.getCurrentLoggedInUser();
+        favouriteGoodsService.deleteFromFavouriteGoods(id, customer);
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
-        FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, "Все товары");
+        FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(customer, "Все товары");
         favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, favouritesGroup);
         return ResponseEntity.ok().build();
     }

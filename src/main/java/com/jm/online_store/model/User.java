@@ -40,7 +40,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -99,47 +99,12 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_product",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> favouritesGoods = new HashSet<>();
-
-    @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private Set<FavouritesGroup> favouritesGroups = new HashSet<>();
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_adresses",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id"))
     private Set<Address> userAddresses = new HashSet<>();
-
-    /**
-     * "Корзина клиента" состоит из подкорзин "SubBasket", состоящих в свою очередь
-     * из сущности "Product" и количества данного "Product" в "SubBasket".
-     * Данная схема необходима, чтобы можно было хранить необходимое количество товара
-     * для заказа пользователя и сам товар, как экземпляр класса "Product".
-     * Для оформления заказа, необходимо пройти по всем "SubBasket" и получить из сущности "Product",
-     * который находится в "SubBasket" актуальную цену, из объекта "SubBasket" получить количество товара "Product".
-     * Для добавления товара в корзину, необходимо пройти по всем "SubBasket" и проверить на наличие данного "Product"
-     * в корзине. При наличии совпадений, необходимо проверить количество (наличие) данного "Product" в БД
-     * и увеличить на "1" в данном "SubBasket".
-     */
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_basket",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "basket_id"))
-    private List<SubBasket> userBasket = new ArrayList<>();
-
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private Set<Order> orders;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonManagedReference(value = "user-sharedStock")

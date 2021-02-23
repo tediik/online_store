@@ -2,6 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
@@ -19,6 +20,7 @@ import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
 import com.jm.online_store.service.interf.UserService;
@@ -74,6 +76,7 @@ public class UserServiceImpl implements UserService {
     private final CommonSettingsService commonSettingsService;
     private final FavouritesGroupService favouritesGroupService;
     private final TemplatesMailingSettingsService templatesMailingSettingsService;
+
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -436,11 +439,14 @@ public class UserServiceImpl implements UserService {
 
         FavouritesGroup favouritesGroup = new FavouritesGroup();
         favouritesGroup.setName("Все товары");
-        favouritesGroup.setUser(customer);
+        favouritesGroup.setCustomer(customer);
         favouritesGroupService.save(favouritesGroup);
 
         if (userRepository.existsByEmail(confirmationToken.getUserEmail())) {
-            List<SubBasket> subBasketList = getCurrentLoggedInUser(request.getSession().getId()).getUserBasket();
+            User user = getCurrentLoggedInUser(request.getSession().getId());
+            Customer customer2 = customerRepository.findByEmail(user.getEmail()).orElseThrow(()
+                    -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND)) ;
+            List<SubBasket> subBasketList = customer2.getUserBasket();
             userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
             customer.setUserBasket(subBasketList);
         }

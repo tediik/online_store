@@ -36,13 +36,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findAllByUserId(Long userId) {
-        return orderRepository.findAllByUserId(userId);
+    public List<Order> findAllByUserId(Long customerId) {
+        return orderRepository.findAllByCustomerId(customerId);
     }
 
     @Override
-    public List<Order> findAllByUserIdAndStatus(Long userId, Order.Status status) {
-        return orderRepository.findAllByUserIdAndStatus(userId, status);
+    public List<Order> findAllByUserIdAndStatus(Long customerId, Order.Status status) {
+        return orderRepository.findAllByCustomerIdAndStatus(customerId, status);
     }
 
     @Override
