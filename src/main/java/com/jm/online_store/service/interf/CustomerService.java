@@ -31,6 +31,8 @@ public interface CustomerService {
 
     Customer getCurrentLoggedInUser();
 
+    Customer getCurrentLoggedInUser(String sessionID);
+
     void updateCustomer(Customer customer);
 
     void restoreCustomer(String email);

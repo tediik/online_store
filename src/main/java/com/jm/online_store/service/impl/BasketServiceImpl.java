@@ -57,8 +57,7 @@ public class BasketServiceImpl implements BasketService {
      */
     @Override
     public List<SubBasket> getBasket(String sessionID) {
-        User user = userService.getCurrentLoggedInUser(sessionID);
-        Customer customer = customerService.findCustomerByEmail(user.getEmail());
+        Customer customer = customerService.getCurrentLoggedInUser(sessionID);
         List<SubBasket> subBaskets = customer.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {

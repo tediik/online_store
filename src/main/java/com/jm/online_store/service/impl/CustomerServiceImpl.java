@@ -303,4 +303,22 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findByEmail(email).orElseThrow(()
                 -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
     }
+
+    @Transactional
+    @Override
+    public Customer getCurrentLoggedInUser(String sessionID) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // AnonymousAuthenticationToken happens when anonymous authentication is enabled
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
+        if (auth instanceof AnonymousAuthenticationToken) {
+            if (userService.findByEmail(sessionID).isEmpty()) {
+                customerRepository.save(new Customer(sessionID, null));
+            }
+            return findCustomerByEmail(sessionID);
+        }
+        return findCustomerByEmail(auth.getName());
+    }
 }

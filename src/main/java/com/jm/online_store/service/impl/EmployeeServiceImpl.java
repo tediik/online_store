@@ -5,8 +5,8 @@ import com.jm.online_store.exception.EmployeeNotFoundException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.Employee;
 import com.jm.online_store.model.Feedback;
+import com.jm.online_store.model.Role;
 import com.jm.online_store.model.dto.EmployeeDto;
-import com.jm.online_store.model.dto.FeedBackDto;
 import com.jm.online_store.repository.EmployeeRepository;
 import com.jm.online_store.service.interf.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -26,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<EmployeeDto>>() {}.getType();
-    private final Type feedBacksType = new TypeToken<List<Feedback>>() {}.getType();
+    private final Type rolesType = new TypeToken<List<Role>>() {}.getType();
 
     @Override
     public List<EmployeeDto> findAllEmployees() {
@@ -45,6 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDto updateEmployee(EmployeeDto employeeReq) {
         Employee employee = employeeRepository.findById(employeeReq.getId()).orElseThrow(()
                 -> new EmployeeNotFoundException(ExceptionEnums.EMPLOYEE.getText() + ExceptionConstants.NOT_FOUND));
+
         return getEmployeeDto(employeeReq, employee);
     }
 
@@ -70,11 +72,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.deleteById(id);
     }
 
+
     private EmployeeDto getEmployeeDto(EmployeeDto employeeReq, Employee employee) {
-        Set<FeedBackDto> feedbacks = employeeReq.getFeedBackDto();
-        Set<Feedback> feedbacksToSave =  modelMapper.map(feedbacks, feedBacksType);
-        employee.setFeedbacks(feedbacksToSave);
-        Employee returnValue = employeeRepository.save(employee);
-        return modelMapper.map(returnValue, EmployeeDto.class);
+        Set<Role> roles = employeeReq.getRoles();
+        Set<Role> rolesToSave =  modelMapper.map(roles, rolesType);
+        employee.setRoles(rolesToSave);
+        return modelMapper.map(employee, EmployeeDto.class);
     }
 }

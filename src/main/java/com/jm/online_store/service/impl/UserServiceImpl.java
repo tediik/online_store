@@ -690,7 +690,6 @@ public class UserServiceImpl implements UserService {
     public User getCurrentLoggedInUser(String sessionID) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
-
         if (auth == null || !auth.isAuthenticated()) {
             return null;
         }

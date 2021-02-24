@@ -12,6 +12,7 @@ import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Description;
+import com.jm.online_store.model.Employee;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
@@ -169,13 +170,13 @@ public class DataInitializer {
         roleService.addRole(moderatorRole);
         roleService.addRole(supermoderatorRole);
 
-        User admin = new User("admin@mail.ru", "1");
-        User manager = new User("manager@mail.ru", "1");
+        Employee admin = new Employee("admin@mail.ru", "1");
+        Employee manager = new Employee("manager@mail.ru", "1");
         Customer customer = new Customer("customer@mail.ru", "1");
-        User service = new User("service@mail.ru", "1");
-        User moderator1 = new User("moderator1@mail.ru", "1");
-        User moderator2 = new User("moderator2@mail.ru", "2");
-        User supermoderator = new User("supermoderator@mail.ru", "1");
+        Employee service = new Employee("service@mail.ru", "1");
+        Employee moderator1 = new Employee("moderator1@mail.ru", "1");
+        Employee moderator2 = new Employee("moderator2@mail.ru", "2");
+        Employee supermoderator = new Employee("supermoderator@mail.ru", "1");
         Customer deletedCustomer = new Customer("deleted@mail.ru", "1");
         deletedCustomer.setProfilePicture(StringUtils.cleanPath("deleted.jpg"));
         deletedCustomer.setFirstName("Deleted");
