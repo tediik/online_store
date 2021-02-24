@@ -49,6 +49,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -207,10 +208,10 @@ public class ProductServiceImpl implements ProductService {
         if (product.getRating() == null) {
             product.setRating(0d);
         }
-        if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg");
+        if (product.getProductPictureNames().size()<1) {
+            product.setProductPictureNames(new ArrayList<>(List.of(loadPictureFrom + "defaultPictureProduct.jpg")));
         } else {
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
         }
         Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
@@ -649,10 +650,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Long editProduct(Product product) {
 
-        if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName("defaultProductImage.jpg");
+        if (product.getProductPictureNames().size() == 0) {
+            product.setProductPictureNames(new ArrayList<>(List.of("defaultProductImage.jpg")));
         } else {
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
         }
 
         Map<LocalDateTime, Double> map = findProductById(product.getId())
