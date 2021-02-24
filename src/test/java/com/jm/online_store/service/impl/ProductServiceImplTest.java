@@ -87,7 +87,7 @@ class ProductServiceImplTest {
     @Test
     void saveProduct() {
         when(productRepository.save(product)).thenReturn(product);
-        Long id = productService.saveProduct(product);
+        Long id = productService.saveProduct(product).getId();
         assertNotNull(id);
         verify(productRepository, times(1)).save(product);
     }

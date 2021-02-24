@@ -25,7 +25,7 @@ public class TopicsCategoryServiceImpl implements TopicsCategoryService {
     @Transactional
     public TopicsCategory create(TopicsCategory topicsCategory) {
         if (topicsCategoryRepository.existsByCategoryName(topicsCategory.getCategoryName()))
-            throw new TopicCategoryAlreadyExists(ExceptionEnums.TOPIC_CATEGORY.getText() + ExceptionConstants.ALREADY_EXISTS);
+            throw new TopicCategoryAlreadyExists(ExceptionEnums.TOPIC_CATEGORY.getText() + String.format(ExceptionConstants.ALREADY_EXISTS, topicsCategory.getCategoryName()));
         return topicsCategoryRepository.saveAndFlush(topicsCategory);
     }
 

@@ -1,6 +1,7 @@
 package com.jm.online_store.model.dto;
 
 import com.jm.online_store.model.Description;
+import com.jm.online_store.model.Product;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,8 +19,19 @@ public class ProductDto {
     private String product;
     private Double price;
     private Double rating;
-    private Description descriptions;
+    private Description description;
     private String productType;
-    private String ProductPictureName;
+    private String productPictureName;
     private boolean isFavourite;
+
+    public ProductDto(Product product) {
+        this.id = product.getId();
+        this.product = product.getProduct();
+        this.price = product.getPrice();
+        this.rating = product.getRating();
+        this.description = product.getDescriptions();
+        this.productType = product.getProductType();
+        this.productPictureName = product.getProductPictureName();
+    }
+
 }
