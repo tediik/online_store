@@ -19,9 +19,9 @@ function renderAddressTable() {
                     $('<td>').text(address.street),
                     $('<td>').text(address.building),
                     $('<td>').append("<button type='button' data-toggle='modal' class='btn-info btn'" +
-                        "data-target='#editUserModal' data-user-id='" + address.id + "'>Изменить</button>"),
+                        "data-target='#editAddressModal' data-user-id='" + address.id + "'>Изменить</button>"),
                     $('<td>').append("<button type='button' data-toggle='modal' class='btn btn-danger'" +
-                        "data-target='#deleteUserModal' data-user-id='" + address.id + "'>Удалить</button>")
+                        "data-target='#deleteAddressModal' data-user-id='" + address.id + "'>Удалить</button>")
                     )
                 );
             });
@@ -36,7 +36,7 @@ $('[href="#v-pills-admin"]').on('show.bs.tab', (e) => {
 /**
  * Заполнение модального окна редактирования
  */
-$("#editUserModal").on('show.bs.modal', (e) => {
+$("#editAddressModal").on('show.bs.modal', (e) => {
     let userId = $(e.relatedTarget).data("user-id");
 
     $.ajax({
@@ -75,7 +75,7 @@ $("#buttonEditSubmit").on('click', (e) => {
         data: JSON.stringify(editAddress)
     }),
 
-        $("#editUserModal").modal('hide'),
+        $("#editAddressModal").modal('hide'),
         location.reload();
         renderAddressTable();
 })
@@ -83,7 +83,7 @@ $("#buttonEditSubmit").on('click', (e) => {
 /**
  * Модальное окно для удаления адреса
  */
-$("#deleteUserModal").on('show.bs.modal', (e) => {
+$("#deleteAddressModal").on('show.bs.modal', (e) => {
     let userId = $(e.relatedTarget).data("user-id");
 
     $.ajax({
@@ -107,7 +107,7 @@ $("#deleteUserModal").on('show.bs.modal', (e) => {
                 type: "DELETE",
                 dataType: "text"
             }).done((deleteMsg) => {
-                $("#deleteUserModal").modal('hide');
+                $("#deleteAddressModal").modal('hide');
                 location.reload();
             })
         })
