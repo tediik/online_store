@@ -3,6 +3,7 @@ package com.jm.online_store.controller;
 import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
 import com.jm.online_store.exception.CustomerNotFoundException;
+import com.jm.online_store.exception.EmployeeNotFoundException;
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.exception.StockNotFoundException;
@@ -22,6 +23,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionsHandler {
+
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public ResponseEntity<Object> handlerEmployeeNotFoundException(EmployeeNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(CharacteristicNotFoundException.class)
     public ResponseEntity<Object> handlerCharacteristicNotFoundException(CharacteristicNotFoundException ex ) {
