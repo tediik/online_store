@@ -17,7 +17,7 @@ public class AddressServiceImpl implements AddressService {
 
     /**
      * Метод поиска адреса магазина по id.
-     * @param idAddress - id адреса {@link Long}
+     * @param idAddress - id адреса.
      * @return Optional<Address>
      */
     @Override
