@@ -29,7 +29,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final Type feedBacksType = new TypeToken<List<Feedback>>() {}.getType();
 
     @Override
-    public List<EmployeeDto> findAllEmployee() {
+    public List<EmployeeDto> findAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
         return modelMapper.map(employees, listType);
     }

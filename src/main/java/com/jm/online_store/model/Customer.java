@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import io.swagger.annotations.ApiModel;
@@ -60,6 +61,7 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
+    @JsonIgnore
     private Set<FavouritesGroup> favouritesGroups = new HashSet<>();
 
     /**

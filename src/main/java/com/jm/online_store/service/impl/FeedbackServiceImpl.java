@@ -1,6 +1,7 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.FeedbackNotFoundException;
+import com.jm.online_store.model.Employee;
 import com.jm.online_store.model.Feedback;
 import com.jm.online_store.repository.FeedbackRepository;
 import com.jm.online_store.service.interf.FeedbackService;
@@ -26,7 +27,7 @@ public class FeedbackServiceImpl implements FeedbackService {
      */
     @Override
     public void addFeedbackFromDto(Feedback feedback) {
-        feedback.setUser(userService.getCurrentLoggedInUser());
+        feedback.setEmployee((Employee) userService.getCurrentLoggedInUser());
         feedback.setFeedbackPostDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         feedback.setStatus(Feedback.Status.IN_PROGRESS);
         feedbackRepository.save(feedback);
@@ -86,7 +87,7 @@ public class FeedbackServiceImpl implements FeedbackService {
      */
     @Override
     public Set<Feedback> getAllFeedbackCurrentCustomer() {
-        return userService.getCurrentLoggedInUser().getFeedbacks();
+        return ((Employee) userService.getCurrentLoggedInUser()).getFeedbacks();
     }
 
     /**

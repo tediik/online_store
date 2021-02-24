@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EmployeeService {
 
-    List<EmployeeDto> findAllEmployee();
+    List<EmployeeDto> findAllEmployees();
 
     EmployeeDto findEmployeeById(Long id);
 
