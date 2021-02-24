@@ -61,6 +61,7 @@ public class PictureProductController {
     public ResponseEntity<ResponseDto<String>> editPicture(@PathVariable("id") Long id, @RequestParam("pictureFile") MultipartFile pictureFile) {
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         String uniqueFilename = StringUtils.cleanPath(UUID.randomUUID() + "." + pictureFile.getOriginalFilename());
+        List<String> productPictureNames = product.getProductPictureNames();
         if (!(pictureFile.isEmpty())) {
             Path fileNameAndPath = Paths.get(uploadDirectory, uniqueFilename);
             try {
@@ -69,7 +70,8 @@ public class PictureProductController {
                 }
                 byte[] bytes = pictureFile.getBytes();
                 Files.write(fileNameAndPath, bytes);
-                product.getProductPictureNames().add(loadPictureFrom + uniqueFilename);
+                productPictureNames.remove(loadPictureFrom + "defaultPictureProduct.jpg");
+                productPictureNames.add(loadPictureFrom + uniqueFilename);
             } catch (IOException e) {
                 log.debug("Failed to store file: {}, because: {}", fileNameAndPath, e.getMessage());
             }
@@ -95,16 +97,17 @@ public class PictureProductController {
         Product product = productService.findProductById(idProduct).orElseThrow(ProductNotFoundException::new);
         List<String> productPictureNames = product.getProductPictureNames();
         Path fileNameAndPath = Paths.get(uploadDirectory, productPictureNames.get(idPicture));
+//        if (productPictureNames.size() == 1 && productPictureNames.contains(loadPictureFrom + "defaultPictureProduct.jpg")) {
+//            return new ResponseEntity<>(new ResponseDto<>(false, ""), HttpStatus.BAD_REQUEST);
+//        }
         try {
             Files.delete(fileNameAndPath);
         } catch (IOException e) {
             log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
         productPictureNames.remove(idPicture);
-        if(productPictureNames.isEmpty()){
+        if(productPictureNames.size() == 0){
             productPictureNames.add(loadPictureFrom + "defaultPictureProduct.jpg");
-            return new ResponseEntity<>(new ResponseDto<>(false,
-                    String.format(ResponseOperation.HAS_NOT_BEEN_DELETED.getMessage(), idPicture)), HttpStatus.BAD_REQUEST);
         }
         product.setProductPictureNames(productPictureNames);
         productService.editProduct(product);

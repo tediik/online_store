@@ -143,6 +143,7 @@ function getAllProducts() { // не нашел, где используется 
  * @param product продукта из таблицы
  */
 function editModalWindowRender(product) {
+    product = product.data
     $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindow)
     $('#idInputModal').val(product.id)
     $('#acceptChangeButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
@@ -159,6 +160,7 @@ function editModalWindowRender(product) {
  * @param productToEdit
  */
 function deleteModalWindowRender(productToEdit) {
+    productToEdit = productToEdit.data;
     $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindow)
     $('.modal-title').text("Delete product")
     $('#acceptChangeButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
@@ -173,10 +175,11 @@ function deleteModalWindowRender(productToEdit) {
  * @param product
  */
 function editPictureModalWindowRender(product) {
+    product = product.data
     $('.modal-dialog').off("click").on("click", "#acceptEditPictureButton", handleEditPictureButtonFromModalWindow)
     $('#idInputPictureModal').val(product.id)
     $('#acceptEditPictureButton').text("Применить").removeClass().toggleClass('btn btn-success edit-product')
-    $('.modal-title').text("Изменить картинку")
+    $('.modal-title').text("Добавить картинку")
 }
 
 /**
@@ -184,6 +187,7 @@ function editPictureModalWindowRender(product) {
  * @param product
  */
 function addPictureModalWindowRender(product) {
+    product = product.data
     $('.modal-dialog').off("click").on("click", "#acceptAddPictureButton", handleAddPictureButton)
     $('#idAddPictureModal').val(product.id)
     $('.modal-title').text("Добавить картинку?")
@@ -208,7 +212,7 @@ function handleAddPictureButton(event) {
 }
 
 /**
- * Функция обработки нажатия на кнопку Добавить картинку
+ * Функция обработки нажатия на кнопку Добавить/Удалить картинку
  * @param event
  */
 function handleEditPictureButton(event) {
@@ -608,7 +612,7 @@ function renderProductsTable(products) {
                     <td>${product.product}</td>
                     <td>
                         <button data-product-id="${product.id}" type="button" class="btn btn-link link-button" data-toggle="modal" data-target="#productPictureModalWindow">
-                                                     Изменить картинку
+                                                     Добавить/Удалить картинку
                             </button>
                     </td>
                     <td>${product.price}</td>

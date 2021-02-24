@@ -14,15 +14,16 @@ $(document).ready(function () {
     }
 
     /**
-     * Функция для изменения картинки выбранного продукта
+     * Функция для добавления картинки выбранному продукту
      */
     $('#productPictureFile').change(function () {
+        console.log("Добавление картинки")
         const product = {id: $('#idInputPictureModal').val()}
         readURL(this);
         var file_data = $('#productPictureFile').prop('files')[0];
         var form_data = new FormData();
         form_data.append("pictureFile", file_data);
-        // $('#acceptEditPictureButton').click(function () {
+        $('#acceptEditPictureButton').click(function () {
             $.ajax({
                 type: 'PUT',
                 url: '/api/product/upload/picture/' + product.id,
@@ -35,7 +36,7 @@ $(document).ready(function () {
                     $('#showPictureFirstSlide').attr("src", data);
                 }
             });
-        // });
+        });
     });
 
     /**
