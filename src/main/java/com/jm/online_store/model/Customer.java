@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -82,6 +83,16 @@ public class Customer extends User {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private Set<Order> orders;
+
+
+    @OneToMany(mappedBy = "customer", orphanRemoval = true)
+    @JsonManagedReference(value = "customer-sharedStock")
+    private Set<SharedStock> sharedStocks;
+
+
+    @OneToMany(mappedBy = "customer", orphanRemoval = true)
+    @JsonManagedReference(value = "customer-sentStock")
+    private Set<SentStock> sentStocks;
 
     public Customer(String email, String password) {
         super(email, password);

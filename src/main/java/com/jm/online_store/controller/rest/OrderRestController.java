@@ -55,7 +55,7 @@ public class OrderRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Order>> getIncartsOrders() {
         User autorityUser = userService.getCurrentLoggedInUser();
-        List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.INCARTS);
+        List<Order> orders = orderService.findAllByCustomerIdAndStatus(autorityUser.getId(), Order.Status.INCARTS);
         return ResponseEntity.ok(orders);
     }
 
@@ -68,7 +68,7 @@ public class OrderRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Order>> getCompletedOrders() {
         User autorityUser = userService.getCurrentLoggedInUser();
-        List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.COMPLETED);
+        List<Order> orders = orderService.findAllByCustomerIdAndStatus(autorityUser.getId(), Order.Status.COMPLETED);
         return ResponseEntity.ok(orders);
     }
 
@@ -81,7 +81,7 @@ public class OrderRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<List<Order>> getCanceledOrders() {
         User autorityUser = userService.getCurrentLoggedInUser();
-        List<Order> orders = orderService.findAllByUserIdAndStatus(autorityUser.getId(), Order.Status.CANCELED);
+        List<Order> orders = orderService.findAllByCustomerIdAndStatus(autorityUser.getId(), Order.Status.CANCELED);
         return ResponseEntity.ok(orders);
     }
 

@@ -107,16 +107,8 @@ public class User implements UserDetails {
     private Set<Address> userAddresses = new HashSet<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @JsonManagedReference(value = "user-sharedStock")
-    private Set<SharedStock> sharedStocks;
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonManagedReference(value = "user-sharedNews")
     private Set<SharedNews> sharedNews;
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @JsonManagedReference(value = "user-sentStock")
-    private Set<SentStock> sentStocks;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonIgnore

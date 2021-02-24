@@ -73,32 +73,32 @@ class OrderServiceImplTest {
 
     @Test
     void findAllByUserId() {
-        when(orderRepository.findAllByUserId(1L))
+        when(orderRepository.findAllByCustomerId(1L))
                 .thenReturn(orderList.stream()
                         .filter(order -> order.getCustomer().getId().equals(1L))
                         .collect(Collectors.toList()));
 
-        List<Order> userOrdersList = orderRepository.findAllByUserId(1L);
+        List<Order> userOrdersList = orderRepository.findAllByCustomerId(1L);
         assertEquals(2, userOrdersList.size());
         assertFalse(userOrdersList.isEmpty());
-        verify(orderRepository, times(1)).findAllByUserId(1L);
+        verify(orderRepository, times(1)).findAllByCustomerId(1L);
     }
 
     @Test
     void findAllByUserIdAndStatus() {
-        when(orderRepository.findAllByUserIdAndStatus(1L, Order.Status.COMPLETED))
+        when(orderRepository.findAllByCustomerIdAndStatus(1L, Order.Status.COMPLETED))
                 .thenReturn(orderList.stream()
                         .filter(order -> order.getCustomer().getId().equals(1L))
                         .filter(order -> order.getStatus().equals(Order.Status.COMPLETED))
                         .collect(Collectors.toList()));
 
         List<Order> orderListByUserIdAndStatus = orderService
-                .findAllByUserIdAndStatus(1L, Order.Status.COMPLETED);
+                .findAllByCustomerIdAndStatus(1L, Order.Status.COMPLETED);
 
         assertEquals(2, orderListByUserIdAndStatus.size());
         assertFalse(orderListByUserIdAndStatus.isEmpty());
         verify(orderRepository, times(1))
-                .findAllByUserIdAndStatus(1L, Order.Status.COMPLETED);
+                .findAllByCustomerIdAndStatus(1L, Order.Status.COMPLETED);
     }
 
     @Test

@@ -1131,15 +1131,15 @@ public class DataInitializer {
     public void sharedStockInit() {
         String[] socialNetworkNames = {"facebook", "vk", "twitter"};
         List<Stock> stocks = stockService.findAll();
-        List<User> users = userService.findAll();
+        List<Customer> customers = customerService.findAll();
         Long firstNumber = stocks.get(0).getId();
         Long lastNumber = stocks.get(stocks.size() - 1).getId();
         Random random = new Random();
         for (Stock stock : stocks) {
-            for (User user : users) {
+            for (Customer customer : customers) {
                 long generatedLongForStock = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
                 SharedStock sharedStock = SharedStock.builder()
-                        .user(user)
+                        .customer(customer)
                         .stock(stockService.findStockById(generatedLongForStock))
                         .socialNetworkName(socialNetworkNames[random.nextInt(socialNetworkNames.length)])
                         .build();
@@ -1177,10 +1177,9 @@ public class DataInitializer {
     public void sentStockInit() {
         Random random = new Random();
         List<Stock> stocks = stockService.findAll();
-        List<User> users = userService.findAll();
-
+        List<Customer> customers = customerService.findAll();
         for (int i = 0; i < 20; i++) {
-            sentStockService.addSentStock(SentStock.builder().user(users.get(random.nextInt(users.size())))
+            sentStockService.addSentStock(SentStock.builder().customer(customers.get(random.nextInt(customers.size())))
                     .stock(stocks.get(random.nextInt(stocks.size())))
                     .sentDate(LocalDate.now().plusDays(random.nextInt(8)))
                     .build());

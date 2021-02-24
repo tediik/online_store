@@ -6,6 +6,7 @@ import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.repository.SentStockRepository;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SentStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
@@ -32,7 +33,7 @@ public class SentStockServiceImpl implements SentStockService {
     private final StockService stockService;
     private final UserService userService;
     private final SentStockRepository sentStockRepository;
-
+    private final CustomerService customerService;
     /**
      * Метод находит отправленные акции в заданном интервале
      * @param begin начало интервала
@@ -57,7 +58,7 @@ public class SentStockServiceImpl implements SentStockService {
     public SentStock addSentStock(SentStock sentStock) {
         SentStock sentStockToAdd = SentStock.builder()
                 .stock(stockService.findStockById(sentStock.getStock().getId()))
-                .user(userService.findById(sentStock.getUser().getId()).orElseThrow(()
+                .customer(customerService.findById(sentStock.getCustomer().getId()).orElseThrow(()
                         -> new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND)))
                 .sentDate(sentStock.getSentDate())
                 .build();

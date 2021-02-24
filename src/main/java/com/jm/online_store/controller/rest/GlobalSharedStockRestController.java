@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.SharedStock;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -20,12 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class GlobalSharedStockRestController {
     private final SharedStockService sharedStockService;
     private final UserService userService;
+    private final CustomerService customerService;
 
     @PostMapping
     @ApiOperation(value = "Adds new sharedStock",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> addSharedStock(@RequestBody SharedStock sharedStock) {
-        sharedStock.setUser(userService.getCurrentLoggedInUser());
+        sharedStock.setCustomer(customerService.getCurrentLoggedInUser());
         sharedStockService.addSharedStock(sharedStock);
         return ResponseEntity.ok().build();
     }
