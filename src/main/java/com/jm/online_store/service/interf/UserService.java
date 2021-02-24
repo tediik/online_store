@@ -60,7 +60,7 @@ public interface UserService {
 
     String deleteUserImage(Long userId) throws IOException;
 
-    void addNewUserFromAdmin(User newUser);
+    User addNewUserFromAdmin(User newUser);
 
     boolean changePassword(Long id, String oldPassword, String newPassword);
 

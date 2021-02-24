@@ -11,10 +11,12 @@ import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.Employee;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.EmployeeDto;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
@@ -22,6 +24,7 @@ import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.CustomerService;
+import com.jm.online_store.service.interf.EmployeeService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
 import com.jm.online_store.service.interf.UserService;
@@ -31,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -77,7 +81,7 @@ public class UserServiceImpl implements UserService {
     private final CommonSettingsService commonSettingsService;
     private final FavouritesGroupService favouritesGroupService;
     private final TemplatesMailingSettingsService templatesMailingSettingsService;
-
+    private final EmployeeService employeeService;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -565,7 +569,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void addNewUserFromAdmin(User newUser) {
+    public User addNewUserFromAdmin(User newUser) {
+        User returnValue = new User();
         if (ValidationUtils.isNotValidEmail(newUser.getEmail())) {
             log.debug("Wrong email");
             throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.NOT_VALID,newUser.getEmail()));
@@ -588,16 +593,36 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                userRepository.save(newUser);
+                EmployeeDto employee = new EmployeeDto();
+                employee.setId(newUser.getId());
+                employee.setEmail(newUser.getEmail());
+                employee.setFirstName(newUser.getFirstName());
+                employee.setLastName(newUser.getLastName());
+                employee.setRoles(newUser.getRoles());
+                employee.setPassword(newUser.getPassword());
+                EmployeeDto employeeDto = employeeService.createEmployee(employee);
+                returnValue.setId(employeeDto.getId());
+                returnValue.setFirstName(employeeDto.getFirstName());
+                returnValue.setLastName(employeeDto.getLastName());
+                returnValue.setEmail(employeeDto.getEmail());
+                returnValue.setRoles(employeeDto.getRoles());
             } else {
-                Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
+                Customer customer = new Customer();
+                customer.setId(newUser.getId());
+                customer.setFirstName(newUser.getFirstName());
+                customer.setLastName(newUser.getLastName());
                 customer.setRoles(newUser.getRoles());
                 customer.setProfilePicture(newUser.getProfilePicture());
-                customerRepository.save(customer);
+                FavouritesGroup favouritesGroup = new FavouritesGroup();
+                favouritesGroup.setName("Все товары");
+                favouritesGroup.setCustomer(customer);
+                favouritesGroupService.save(favouritesGroup);
+                returnValue = customerRepository.save(customer);
             }
+
             log.debug("User with email: {} was saved successfully", newUser.getEmail());
-            return;
         }
+        return returnValue;
     }
 
     /**

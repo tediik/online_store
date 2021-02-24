@@ -161,14 +161,9 @@ public class AdminRestController {
             @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / EMAIL ADDRESS ALREADY EXISTS / PASSWORD IS EMPTY / ROLES IS EMPTY"),
     })
     public ResponseEntity<ResponseDto<UserDto>> addNewUser(@RequestBody User newUser) {
-        userService.addNewUserFromAdmin(newUser);
-        Customer customer = customerService.findCustomerByEmail(newUser.getEmail());
-        FavouritesGroup favouritesGroup = new FavouritesGroup();
-        favouritesGroup.setName("Все товары");
-        favouritesGroup.setCustomer(customer);
-        favouritesGroupService.save(favouritesGroup);
-        userService.updateUser(customer);
-        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(newUser, UserDto.class)), HttpStatus.OK);
+        User user = userService.addNewUserFromAdmin(newUser);
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userDto, UserDto.class)), HttpStatus.OK);
     }
 
     /**
