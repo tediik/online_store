@@ -667,7 +667,6 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-
     /**
      * Метод находит User-а по его логину email
      * @param email Юзера

@@ -48,6 +48,12 @@ public class CustomerServiceImpl implements CustomerService {
     private final ReviewService reviewService;
     private final AddressService addressService;
 
+    /**
+     * Метод сервиса для добавления нового адреса пользователю
+     * @param customerReq переданный пользователь
+     * @param address новый адрес для пользователя
+     * @throws UserNotFoundException вылетает, если пользователь не найден в БД
+     */
     @Override
     @Transactional
     public boolean addNewAddressForCustomer(Customer customerReq, Address address) {

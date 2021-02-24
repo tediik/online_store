@@ -99,10 +99,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @JsonManagedReference(value = "user-sharedNews")
-    private Set<SharedNews> sharedNews;
-
     public User() {
         registerDate = LocalDate.now();
     }

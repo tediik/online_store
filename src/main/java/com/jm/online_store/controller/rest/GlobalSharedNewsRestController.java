@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.SharedNews;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SharedNewsService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GlobalSharedNewsRestController {
     private final SharedNewsService sharedNewsService;
     private final UserService userService;
-
+    private final CustomerService customerService;
     /**
      * Метод для добавления информации о том, какой новостью, какой пользователь,
      * в какой социальной сети поделился
@@ -41,7 +42,7 @@ public class GlobalSharedNewsRestController {
             "SharedNews must include news id, which was shared and the name of social network, where was shared",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> addSharedNews(@RequestBody SharedNews sharedNews) {
-        sharedNews.setUser(userService.getCurrentLoggedInUser());
+        sharedNews.setCustomer(customerService.getCurrentLoggedInUser());
         sharedNewsService.addSharedNews(sharedNews);
         return ResponseEntity.ok().build();
     }

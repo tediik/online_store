@@ -1155,15 +1155,15 @@ public class DataInitializer {
     public void sharedNewsInit() {
         String[] socialNetworkNames = {"facebook", "vk", "twitter"};
         List<News> news = newsService.findAll();//10
-        List<User> users = userService.findAll();//23
+        List<Customer> customers = customerService.findAll();//23
         Long firstNumber = news.get(0).getId();//
         Long lastNumber = news.get(news.size() - 1).getId();//10
         Random random = new Random();
         for (News oneNews : news) {
-            for (User user : users) {
+            for (Customer customer : customers) {
                 long generatedLongForSNews = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
                 SharedNews sharedNews = SharedNews.builder()
-                        .user(user)
+                        .customer(customer)
                         .news(newsService.findById(generatedLongForSNews))
                         .socialNetworkName(socialNetworkNames[random.nextInt(socialNetworkNames.length)])
                         .build();

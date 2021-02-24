@@ -103,6 +103,9 @@ public class Customer extends User {
             inverseJoinColumns = @JoinColumn(name = "address_id"))
     private Set<Address> userAddresses = new HashSet<>();
 
+    @OneToMany(mappedBy = "customer", orphanRemoval = true)
+    @JsonManagedReference(value = "customer-sharedNews")
+    private Set<SharedNews> sharedNews;
 
     public Customer(String email, String password) {
         super(email, password);
