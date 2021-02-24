@@ -1,17 +1,24 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.OrdersNotFoundException;
-import com.jm.online_store.exception.orderSerivce.OrderExceptionConstants;
-import com.jm.online_store.exception.orderSerivce.OrderServiceException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.repository.OrderRepository;
 import com.jm.online_store.service.interf.OrderService;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,11 +103,30 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<SalesReportDto> findAllSalesBetween(LocalDate startDate, LocalDate endDate) {
         List<Order> completedOrders = orderRepository.findAllByStatusEqualsAndDateTimeBetween(Order.Status.COMPLETED, startDate.atStartOfDay(), endDate.atTime(23,59,59));
-        if (completedOrders.isEmpty()) {
-            throw new OrderServiceException(OrderExceptionConstants.NO_ORDERS_IN_CUSTOM_DATE_RANGE);
-        }
         List<SalesReportDto> salesList = new ArrayList<>();
         completedOrders.forEach(order -> salesList.add(SalesReportDto.orderToSalesReportDto(order)));
         return salesList;
+    }
+
+    @Override
+    public StatefulBeanToCsv<SalesReportDto> exportOrdersByCSV(LocalDate startDate, LocalDate endDate, HttpServletResponse response) {
+        List<SalesReportDto> ordersList = findAllSalesBetween(startDate, endDate);
+        if (ordersList.isEmpty()) {
+            throw new OrdersNotFoundException(ExceptionEnums.ORDER.getText() + ExceptionConstants.NOT_FOUND);
+        }
+        StatefulBeanToCsv<SalesReportDto> writer = null;
+        try {
+            response.setContentType("text/html; charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            writer = new StatefulBeanToCsvBuilder<SalesReportDto>(response.getWriter())
+                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                    .withSeparator(';')
+                    .withOrderedResults(true)
+                    .build();
+            writer.write(ordersList);
+        } catch (CsvRequiredFieldEmptyException | IOException | CsvDataTypeMismatchException e) {
+             e.printStackTrace();
+        }
+        return writer;
     }
 }

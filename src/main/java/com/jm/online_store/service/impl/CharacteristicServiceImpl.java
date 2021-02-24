@@ -2,6 +2,8 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.repository.CategoriesRepository;
@@ -34,9 +36,8 @@ public class CharacteristicServiceImpl implements CharacteristicService {
      */
     @Override
     @Transactional
-    public Long saveCharacteristic(Characteristic characteristic) {
-
-        return characteristicRepository.save(characteristic).getId();
+    public Characteristic saveCharacteristic(Characteristic characteristic) {
+        return characteristicRepository.save(characteristic);
     }
 
     /**
@@ -71,8 +72,9 @@ public class CharacteristicServiceImpl implements CharacteristicService {
      */
     @Override
     public List<Characteristic> findByCategoryId(Long categoryId) {
-
-        return categoriesService.getCategoryById(categoryId).orElseThrow(CategoriesNotFoundException::new).getCharacteristics();
+        return categoriesService.getCategoryById(categoryId).orElseThrow(() ->
+                new CategoriesNotFoundException(ExceptionEnums.CATEGORY.getText()
+                        + ExceptionConstants.NOT_FOUND)).getCharacteristics();
     }
 
     /**
@@ -84,7 +86,9 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Override
     public List<Characteristic> findByCategoryName(String category) {
 
-        return categoriesRepository.getCategoriesByCategory(category).orElseThrow(CategoriesNotFoundException::new).getCharacteristics();
+        return categoriesRepository.getCategoriesByCategory(category).orElseThrow(() ->
+                new CategoriesNotFoundException(ExceptionEnums.CATEGORY.getText() +
+                        ExceptionConstants.NOT_FOUND)).getCharacteristics();
     }
 
     /**
@@ -104,8 +108,9 @@ public class CharacteristicServiceImpl implements CharacteristicService {
      */
     @Override
     @Transactional
-    public void updateCharacteristic(Characteristic characteristic) {
-        characteristicRepository.save(characteristic);
+    public Characteristic updateCharacteristic(Characteristic characteristic) {
+        getCharacteristicById(characteristic.getId());
+        return characteristicRepository.save(characteristic);
     }
 
     /**
@@ -151,5 +156,42 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Override
     public Optional<Characteristic> findByCharacteristicName(String characteristicName) {
         return characteristicRepository.findByCharacteristicName(characteristicName);
+    }
+
+
+    /**
+     * Ищет харакетристику по id характеристики
+     * аналог метод findCharacteristicById только возвращает не Optional
+     * @param id - идентификатор хар-ки
+     */
+    @Override
+    public Characteristic getCharacteristicById(Long id) {
+        return characteristicRepository.findById(id).orElseThrow(()
+                -> new CharacteristicNotFoundException(ExceptionEnums.CHARACTERISTIC.getText() +
+                String.format( ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
+    }
+
+    @Override
+    public List<Characteristic> getAllCharacteristicsExceptSelectedCategory(String categoryName) {
+        List<Characteristic> characteristicsSelectedCategory = findByCategoryName(categoryName);
+        List<Characteristic> allCharacteristics = findAll();
+        allCharacteristics.removeAll(characteristicsSelectedCategory);
+        return allCharacteristics;
+    }
+
+    @Transactional
+    @Override
+    public List<Characteristic> addCharacteristicsToCategory(List<Characteristic> characteristics, String categoryName) {
+        Categories  category = categoriesService.getCategoryByCategoryName(categoryName).orElseThrow(() ->
+                new CategoriesNotFoundException(ExceptionEnums.CATEGORY.getText() + ExceptionConstants.NOT_FOUND));
+        List<Characteristic> characteristicsFromCategory = category.getCharacteristics();
+        for (Characteristic characteristic : characteristics) {
+            Characteristic foundCharacteristic = findByCharacteristicName(characteristic.getCharacteristicName()).orElseThrow();
+            characteristicsFromCategory.add(foundCharacteristic);
+        }
+        category.setCharacteristics(characteristicsFromCategory);
+        categoriesService.saveCategory(category);
+
+        return characteristics;
     }
 }

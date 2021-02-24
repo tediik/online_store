@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.controller.ResponseOperation;
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -37,18 +37,18 @@ public class ProfileRestController {
     /**
      * Метод изменения email
      * @param newMail принимает новый email
-     * @return ResponseEntity<String> возвращает статус ответа
+     * @return ResponseEntity<>(body, HttpStatus)
      */
     @PostMapping("/changeEmail")
     @ApiOperation(value = "change email",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> changeMail(@RequestBody String newMail) {
+    public ResponseEntity<ResponseDto<String>> changeMail(@RequestBody String newMail) {
         User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(new ResponseDto<>(false, "Пользователь с таким email уже существует"), HttpStatus.BAD_REQUEST);
         } else {
             userService.changeUsersMail(user, newMail);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(new ResponseDto<>(true, "На почту " + newMail + " было отправлено сообщение с подтверждением.", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
         }
     }
 

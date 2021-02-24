@@ -1,8 +1,11 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.ConfirmReceiveEmail;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
+import com.jm.online_store.exception.UserServiceException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
@@ -75,6 +78,9 @@ public class UserServiceImpl implements UserService {
 
     @Value("${spring.server.url}")
     private String urlActivate;
+
+    @Value("${production-url}")
+    private String productionUrl;
 
     @Override
     public List<User> findAll() {
@@ -176,7 +182,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUserProfile(User user) {
-        User updateUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+        User updateUser = userRepository.findById(user.getId()).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         updateUser.setFirstName(user.getFirstName());
         updateUser.setLastName(user.getLastName());
         updateUser.setBirthdayDate(user.getBirthdayDate());
@@ -194,7 +201,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUserAdminPanel(@NotNull User user) {
-        User editUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+        User editUser = userRepository.findById(user.getId()).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         if (!editUser.getEmail().equals(user.getEmail())) {
             if (isExist(user.getEmail())) {
                 throw new EmailAlreadyExistsException();
@@ -279,13 +287,15 @@ public class UserServiceImpl implements UserService {
         String messageBody;
         if (templatesMailingSettingsService.getSettingByName("change_users_mail").getTextValue() != null) {
             String templateBody = templatesMailingSettingsService.getSettingByName("change_users_mail").getTextValue();
+            String userName;
             if (user.getFirstName() != null) {
-                messageBody = templateBody.replace("@@user@@", user.getFirstName())
-                        .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                        .replace("@@url@@", urlActivate);
+                userName =  user.getFirstName();
             } else {
-                messageBody = templateBody.replace("@@user@@", "Подписчик");
+                userName = "Подписчик";
             }
+            messageBody = templateBody.replace("@@user@@", userName)
+                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
+                    .replace("@@url@@", urlActivate);
             mailSenderService.send(newMail, "Activation code", messageBody, "email address validation");
         } else {
             log.debug("Шаблон рассылки при изменении eMail в базе пустой ");
@@ -444,14 +454,19 @@ public class UserServiceImpl implements UserService {
             String templateBody = templatesMailingSettingsService.getSettingByName("activate_user").getTextValue();
             if (customer.getEmail() != null) {
                 messageBody = templateBody.replace("@@user@@", customer.getEmail())
-                        .replace("@@password@@", confirmationToken.getUserPassword());
+                        .replace("@@password@@", confirmationToken.getUserPassword())
+                        .replace("@@url@@", String.format("<a href='%s'>online_store</a>",  productionUrl));
             } else {
                 messageBody = templateBody.replace("@@user@@", "Подписчик");
             }
-            mailSenderService.send(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
+            try {
+                mailSenderService.sendHtmlMessage(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
+            } catch (MessagingException e) {
+                log.debug("Message sending error in ActivateUser Method {}", e.getMessage());
+            }
         } else {
             log.debug("Шаблон рассылки при активации пользователя в базе пустой ");
-        }        try {
+        } try {
             request.login(customer.getEmail(), confirmationToken.getUserPassword());
         } catch (ServletException e) {
             log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
@@ -470,7 +485,8 @@ public class UserServiceImpl implements UserService {
         if (confirmationToken == null) {
             return false;
         }
-        User user = userRepository.findById(confirmationToken.getUserId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(confirmationToken.getUserId()).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         user.setEmail(confirmationToken.getUserEmail());
         userRepository.save(user);
         log.info("Для пользователя с логином: {} установлен новый логин: {}", user.getEmail(), confirmationToken.getUserEmail());
@@ -544,6 +560,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addNewUserFromAdmin(User newUser) {
+        if (ValidationUtils.isNotValidEmail(newUser.getEmail())) {
+            log.debug("Wrong email");
+            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.NOT_VALID,newUser.getEmail()));
+        }
+        if (isExist(newUser.getEmail())) {
+            log.debug("User with same email already exists");
+            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.ALREADY_EXISTS, newUser.getEmail()));
+        }
+        if (newUser.getPassword().equals("")) {
+            log.debug("Password is empty");
+            throw new UserServiceException(ExceptionEnums.PASSWORD.getText() + ExceptionConstants.IS_EMPTY);
+        }
+        if (newUser.getRoles().size() == 0) {
+            log.debug("Roles not selected");
+            throw new UserServiceException(ExceptionEnums.ROLES.getText() + ExceptionConstants.IS_EMPTY);
+        }
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
         newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
@@ -570,6 +602,23 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUserFromAdminPage(User user) {
+        if (findById(user.getId()).isEmpty()) {
+            log.debug("There are no user with id: {}", user.getId());
+            throw new UserServiceException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND);
+        }
+        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
+            log.debug("Wrong email");
+            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.NOT_VALID,user.getEmail()));
+        }
+        if (user.getRoles().size() == 0) {
+            log.debug("Roles not selected");
+            throw new UserServiceException(ExceptionEnums.ROLES.getText() + ExceptionConstants.NOT_FOUND);
+        }
+        if (!findById(user.getId()).get().getEmail().equals(user.getEmail())
+                && isExist(user.getEmail())) {
+            log.debug("User with same email already exists");
+            throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.ALREADY_EXISTS, user.getEmail()));
+        }
         User editedUser = userRepository.findById(user.getId()).get();
         Set<Role> newRoles = persistRoles(user.getRoles());
         editedUser.setRoles(newRoles);
@@ -600,7 +649,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean changePassword(Long id, String oldPassword, String newPassword) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             return false;
         }
@@ -620,7 +670,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public boolean addNewAddressForUser(User user, Address address) {
-        User usertoUpdate = findById(user.getId()).orElseThrow(UserNotFoundException::new);
+        User usertoUpdate = findById(user.getId()).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         Optional<Address> addressFromDB = addressService.findSameAddress(address);
         if (addressFromDB.isPresent() && !usertoUpdate.getUserAddresses().contains(addressFromDB.get())) {
             Address addressToAdd = addressFromDB.get();
@@ -685,11 +736,17 @@ public class UserServiceImpl implements UserService {
             if (findByEmail(sessionID).isEmpty()) {
                 userRepository.save(new User(sessionID, null));
             }
-            return findByEmail(sessionID).orElseThrow(UserNotFoundException::new);
+            return findByEmail(sessionID).orElseThrow(() ->
+                    new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
         }
-        return findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+        return findByEmail(auth.getName()).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
     }
 
+    /**
+     * Метод работает только при включенной сессии
+     * @return возращает юзера из базы данных
+     */
     @Override
     public User getCurrentLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -697,7 +754,8 @@ public class UserServiceImpl implements UserService {
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
-        return findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+        return findByEmail(auth.getName()).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
     }
 
     /**
@@ -712,9 +770,10 @@ public class UserServiceImpl implements UserService {
         log.debug("ConfirmationToken: {}", confirmationToken);
 
         if (confirmationToken == null) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND);
         }
-        return userRepository.findByEmail(confirmationToken.getUserEmail()).orElseThrow(UserNotFoundException::new);
+        return userRepository.findByEmail(confirmationToken.getUserEmail()).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
     }
 
     /**
