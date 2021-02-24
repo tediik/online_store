@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * DTO для передачи на страницу товара
  */
@@ -18,6 +20,6 @@ public class ProductDto {
     private Double rating;
     private Description descriptions;
     private String productType;
-    private String ProductPictureName;
+    private List<String> ProductPictureNames;
     private boolean isFavourite;
 }

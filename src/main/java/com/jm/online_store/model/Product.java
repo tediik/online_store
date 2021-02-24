@@ -18,7 +18,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -60,8 +59,13 @@ public class Product {
     private String productType; //Что это за поле?
     @NonNull
     private boolean deleted;
-    @Column(name = "product_picture_name", nullable = false)
-    private String productPictureName = "";
+
+    /**
+     * поле для хранения адресов картинок для товара
+     */
+    @ElementCollection
+    @CollectionTable(name = "product_picture_names")
+    private List<String> productPictureNames;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
