@@ -110,10 +110,6 @@ public class User implements UserDetails {
     @JsonManagedReference(value = "user-sharedNews")
     private Set<SharedNews> sharedNews;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @JsonIgnore
-    private Set<Feedback> feedbacks;
-
     public User() {
         registerDate = LocalDate.now();
     }

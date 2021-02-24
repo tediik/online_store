@@ -35,7 +35,7 @@ public class Feedback {
     private Topic topic;
 
     @ManyToOne
-    private User user;
+    private Employee employee;
 
     @Enumerated(EnumType.STRING)
     private Status status;
