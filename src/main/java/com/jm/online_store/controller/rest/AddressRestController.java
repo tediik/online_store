@@ -34,19 +34,18 @@ public class AddressRestController {
     private final UserService userService;
 
     /**
-     * Контроллер для отображения адресов всех активных магазинов
-     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     * Метод для отображения адресов всех активных магазинов
+     * @return ResponseEntity<ResponseDto<List<Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/allShops")
     @ApiOperation(value = "get all the shops")
     public ResponseEntity<ResponseDto<List<Address>>> findAll() {
-        List<Address> allAddress = addressService.findAllShops();
-        return new ResponseEntity<>(new ResponseDto<>(true, allAddress),HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, addressService.findAllShops()),HttpStatus.OK);
     }
 
     /**
-     * Контроллер для отображения адреса пользователя
-     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     * Метод для отображения адресов пользователя
+     * @return ResponseEntity<ResponseDto<Set<Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/userAddresses")
     @ApiOperation(value = "get current logged in Users address")
@@ -60,8 +59,8 @@ public class AddressRestController {
     }
 
     /**
-     * Контроллер для добавления адреса магазина пользователем
-     * @param address {@link Address}
+     * Метод для добавления адреса магазина пользователем
+     * @param address - адрес пользователя {@link Address}
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PostMapping(value = "/addAddress")

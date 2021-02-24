@@ -38,7 +38,7 @@ public class ManagerAddressRestController {
     private final AddressService addressService;
 
     /**
-     * Контроллер для отображения адресов всех магазинов
+     * Метод для отображения адресов всех магазинов
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping
@@ -57,9 +57,9 @@ public class ManagerAddressRestController {
     }
 
     /**
-     * Контроллер для отображения адреса магазина по id.
+     * Метод для отображения адреса магазина по id.
      * @param id - адрес id {@link Long}
-     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     * @return ResponseEntity<ResponseDto<List<Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "receive address by id from db", authorizations = { @Authorization(value="jwtToken") })
@@ -77,8 +77,8 @@ public class ManagerAddressRestController {
     }
 
     /**
-     * Контроллер для изменения адреса магазина.
-     * @param address {@link Address}
+     * Метод для изменения адреса магазина.
+     * @param address - адрес магазина {@link Address}
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
@@ -93,8 +93,8 @@ public class ManagerAddressRestController {
     }
 
     /**
-     * Контроллер для добавления нового адреса магазина.
-     * @param newAddress - новый адрес {@link Address}
+     * Метод для добавления нового адреса магазина.
+     * @param newAddress - новый адрес магазина {@link Address}
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PostMapping
@@ -106,8 +106,8 @@ public class ManagerAddressRestController {
     }
 
     /**
-     * Контроллер для удаления адреса магазина по id.
-     * @param id - адрес id {@link Long}
+     * Метод для удаления адреса магазина по id.
+     * @param id - адрес id
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping("/{id}")

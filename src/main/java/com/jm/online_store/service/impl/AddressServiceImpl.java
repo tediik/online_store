@@ -16,8 +16,8 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
 
     /**
-     * Метод поиска адреса по id.
-     * @param idAddress {@link Long}
+     * Метод поиска адреса магазина по id.
+     * @param idAddress - id адреса {@link Long}
      * @return Optional<Address>
      */
     @Override
@@ -26,8 +26,8 @@ public class AddressServiceImpl implements AddressService {
     }
 
     /**
-     * Метод добавления адреса.
-     * @param address {@link Address}
+     * Метод добавления адреса магазина.
+     * @param address - адрес магазина {@link Address}
      * @return Address
      */
     @Override
@@ -37,7 +37,7 @@ public class AddressServiceImpl implements AddressService {
 
     /**
      * Метод поиска активных адресов магазинов доступных кастомеру.
-     * @return List<Address>
+     * @return List<Address> - список всех адресов магазинов, доступных кастомеру.
      * @throws AddressNotFoundException - NotFoundException
      */
     @Override
@@ -51,7 +51,7 @@ public class AddressServiceImpl implements AddressService {
 
     /**
      * Метод поиска всех адресов магазинов.
-     *
+     * @return List<Address> - список всех адресов магазинов.
      */
     @Override
     public List<Address> findAllShopsManager() {
@@ -60,6 +60,7 @@ public class AddressServiceImpl implements AddressService {
 
     /**
      * Метод для удаления адреса по id.
+     * @param id - id адреса.
      */
     @Override
     public void deleteById(Long id) {
@@ -68,7 +69,7 @@ public class AddressServiceImpl implements AddressService {
 
     /**
      * Метод поиска адреса, совпадающего по всем полям.
-     * @param address {@link Address}
+     * @param address - адрес магазина {@link Address}
      * @return Optional<Address>
      */
     @Override

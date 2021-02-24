@@ -8,7 +8,6 @@ function renderAddressTable() {
     $.ajax({
         type: 'GET',
         url: '/api/manager/shops',
-        timeout: 3000,
         success: function (data) {
             let info = data.data;
             $.each(info, function (i, address) {
@@ -28,10 +27,6 @@ function renderAddressTable() {
         }
     });
 }
-
-$('[href="#v-pills-admin"]').on('show.bs.tab', (e) => {
-    location.reload();
-})
 
 /**
  * Заполнение модального окна редактирования
@@ -55,6 +50,9 @@ $("#editAddressModal").on('show.bs.modal', (e) => {
     });
 })
 
+/**
+ * Сохранение изменений в модальном окне
+ */
 
 $("#buttonEditSubmit").on('click', (e) => {
     e.preventDefault();
@@ -77,7 +75,6 @@ $("#buttonEditSubmit").on('click', (e) => {
 
         $("#editAddressModal").modal('hide'),
         location.reload();
-        renderAddressTable();
 })
 
 /**
