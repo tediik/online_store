@@ -88,132 +88,176 @@
 
                         <!--Display logged in user's name-->
 
-                        <div class="card">
-                            <div id="alert-div">
-                            </div>
-                            <div class="card-body">
-                                <nav>
-                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                        <!-- Таблица адресов -->
-                                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
-                                           href="#nav-home"
-                                           role="tab" aria-controls="nav-home" aria-selected="true">Таблица адресов</a>
-                                        <!-- Таблица адресов -->
+                        <ul class="nav nav-tabs" id="AdminTabs" role="tablist">
+                            <li class="nav-item" role="presentation" id="UsersTableNavTabs">
+                                <a class="nav-link active" id="usersTable-tab" data-toggle="tab" role="tab"
+                                   aria-controls="usersTable" aria-selected="true" href="#addressTable">Таблица адресов</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="newUser-tab" data-toggle="tab" role="tab"
+                                   aria-controls="newUser" aria-selected="false" href="#newUser">Добавление адреса</a>
+                            </li>
+                        </ul>
 
-                                        <!-- Добавление адреса -->
-                                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
-                                           href="#nav-profile"
-                                           role="tab" aria-controls="nav-profile" aria-selected="false">Добавление адреса</a>
-                                        <!-- Добавление адреса  -->
-
-                                    </div>
-                                </nav>
-                                <div class="tab-content" id="nav-tabContent">
-                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                                         aria-labelledby="nav-home-tab">
-                                        <!-- MAIN TAB -->
-                                        <table class="table table-active table-striped" id="address-table"
-                                               style="background-color: white">
+                        <div class="tab-content" id="AdminTabsContent">
+                            <!-- Users table -->
+                            <div class="tab-pane fade show active" id="addressTable" role="tabpanel" aria-labelledby="addressTable-tab">
+                                <div class="card">
+                                    <div id="all-address-table">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Регион</th>
+                                                <th scope="col">Город</th>
+                                                <th scope="col">Улица</th>
+                                                <th scope="col">Дом</th>
+                                                <th scope="col">Статус</th>
+                                                <th scope="col">Изменить</th>
+                                                <th scope="col">Удалить</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="table"> </tbody>
                                         </table>
-                                    </div>
-                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                         aria-labelledby="nav-profile-tab">
-                                        <!--                Secondary user addition form-->
-                                        <h3>Add User</h3>
-                                        <form id="addForm">
-                                            <div class="panel panel-default" id="new-user-form">
-                                                <div class="panel-body">
-                                                    <div id="add-email-form-group" class="form-group">
-                                                        <label for="addEmail">Email:</label>
-                                                        <input type="email" id="addEmail" autocomplete="new-password"
-                                                               name="email"
-                                                               placeholder="E-mail"
-                                                               class="form-control">
-                                                    </div>
-                                                    <div class="form-group addPasswordDiv">
-                                                        <label for="addPassword">Пароль:</label>
-                                                        <input type="password" id="addPassword"
-                                                               autocomplete="new-password"
-                                                               name="password" placeholder="Password"
-                                                               class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Роли:</label>
-                                                        <select id="addRoles" name="roles" class="form-control"
-                                                                multiple="multiple">
-                                                        </select>
-                                                    </div>
-                                                    <button id="addBtn" type="button"
-                                                            class=" btn btn-success btn-md btn">
-                                                        Add
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
+
+
+                            <!--New user-->
+                            <div class="tab-pane fade" id="newUser" role="tabpanel" aria-labelledby="newUser-tab">
+                                <div class="card">
+                                    <form class="form-horizontal mx-auto font-weight-bold" id="new-form">
+                                        <br>
+                                        <div class="form-group row">
+                                            <label class="text-center mx-auto" for="usernameNew">Регион</label>
+                                            <input type="text" class="form-control" id="usernameNew">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="text-center mx-auto" for="firstnameNew">Город</label>
+                                            <input type="text" class="form-control" id="firstNameNew">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="text-center mx-auto" for="lastnameNew">Улица</label>
+                                            <input type="text" class="form-control" id="lastNameNew">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="text-center mx-auto" for="ageNew">Дом</label>
+                                            <input type="text" class="form-control" id="ageNew">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="text-center mx-auto" for="rolesNew">Статус</label>
+                                            <select class="form-control" id="rolesNew" multiple="multiple"></select>
+                                        </div>
+                                        <div class="form-group row">
+                                            <button class="btn btn-success mx-auto" type="button" id="buttonInputNewSubmit">Add new user</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-
-                    </div>
                     <!--Admin-->
-
-                    <!--Профиль-->
-                    <div class="tab-pane" id="Profile" role="tabpanel">
-                        <div th:insert="blocks/profile-admin-manager-service :: profile"></div>
-                    </div>
-                    <!--Профиль-->
-
                 </div>
             </div>
             <!--наполнение справа-->
         </div>
     </div>
 
-    <!--modal-->
-    <div class="modal fade" id="userModalWindow" tabindex="-1" role="dialog" aria-labelledby="EditUserModalWindows"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="userModalWindowTitle"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div id="alert-modal-div">
-
-                </div>
-                <div class="modal-body" id="modalBody">
-                    <div class="row justify-content-center">
-                        <div class="col">
-                            <div class="form-group" id="editFormContainer">
-                                <label for="idInputModal"><strong>Id</strong></label>
-                                <input type="text" class="form-control" id="idInputModal" readonly>
-                                <label for="emailInputModal"><strong>Email</strong></label>
-                                <input type="email" class="form-control" id="emailInputModal" required>
-                                <label for="firstNameInputModal"><strong>Имя</strong></label>
-                                <input type="text" class="form-control" id="firstNameInputModal">
-                                <label for="lastNameInputModal"><strong>Фамилия</strong></label>
-                                <input type="text" class="form-control" id="lastNameInputModal">
-                                <label for="passwordInputModal" id="passwordLabelModal"><strong>Пароль</strong></label>
-                                <input type="password" class="form-control" id="passwordInputModal">
-                                <label for="rolesSelectModal" id="roleLabelModal"><strong>Роли</strong></label>
-                                <select multiple class="form-control" id="rolesSelectModal" name="newRolesIds" required>
-                                </select>
+        <!-- Modal Edit -->
+        <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold" id="editUserModalLabel">Изменение адреса</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal text-center mx-auto font-weight-bold" role="form" id="edit-form">
+                            <div class="form-group">
+                                <label class="control-label" for="idEdit">ID</label>
+                                <input type="text" class="form-control" id="idEdit" readonly/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="regionEdit">Регион</label>
+                                <input type="text" class="form-control" id="regionEdit"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="cityEdit">Город</label>
+                                <input type="text" class="form-control" id="cityEdit"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="streetEdit">Улица</label>
+                                <input type="text" class="form-control" id="streetEdit"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="buildingEdit">Дом</label>
+                                <input type="text" class="form-control" id="buildingEdit"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="statusEdit">Статус</label>
+                                <select class="form-control" id="statusEdit" multiple="multiple"></select>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="buttonEditSubmit">Edit</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button id="dismissButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close
-                    </button>
-                    <button id="acceptButton" type="button" class="btn" data-th-accept="modal"></button>
+            </div>
+        </div>
+
+
+        <!-- Modal Delete -->
+        <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog"
+             aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold" id="deleteUserModalLabel">Удаление адреса</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal text-center mx-auto font-weight-bold" role="form" id="delete-form">
+                            <div class="form-group">
+                                <label class="control-label" for="idDelete">ID</label>
+                                <input type="text" class="form-control" id="idDelete" disabled='disabled'/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="regionDelete">Регион</label>
+                                <input type="text" class="form-control" id="regionDelete" disabled='disabled'/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="cityDelete">Город</label>
+                                <input type="text" class="form-control" id="cityDelete" disabled='disabled'/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="streetDelete">Улица</label>
+                                <input type="text" class="form-control" id="streetDelete" disabled='disabled'/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="buildingDelete">Дом</label>
+                                <input type="text" class="form-control" id="buildingDelete" disabled='disabled'/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="statusDelete">Статус</label>
+                                <select class="form-control" id="statusDelete" multiple="multiple" disabled='disabled'></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" id="buttonDeleteSubmit" class="btn btn-danger">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--modal-->
+    </div>
 </main>
 
 <!--bootstrap scripts-->

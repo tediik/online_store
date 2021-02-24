@@ -1,75 +1,17 @@
-
-fetchAddressesRenderTable()
-
-/**
- * Функция для отображения списках всех адресов магазинов 2.0
- * @param address
- */
-function renderAddressTable(addresses){
-    let table = $('#address-table')
-    table.empty()
-        .append(`<tr>
-                <th>ID</th>
-                <th>Регион</th>
-                <th>Город</th>
-                <th>Улица</th>
-                <th>Дом</th>
-                <th>Статус</th>
-                <th>Изменить</th>
-                <th>Удалить</th>
-              </tr>`)
-
-    for (let i = 0; i < address.length; i++) {
-        const address = addresses[i];
-        let row = `
-                <tr id="tr-${address.id}">
-                    <td>${address.id}</td>
-                    <td>${address.region}</td>
-                    <td>${address.city} </td>
-                    <td>${address.street} </td>  
-                    <td>${address.building} </td>
-                    <td>${address.shop} </td>                                
-                    
-                    <td>
-            <!-- Buttons of the right column of main table-->
-                        <button data-user-id="${address.id}" type="button" class="btn btn-success edit-button-user" data-toggle="modal" data-target="#userModalWindow">
-                        Edit
-                        </button>
-                    </td>
-                    <td>
-                        <button data-user-id="${address.id}" type="button" class="btn btn-danger delete-button-user" data-toggle="modal" data-target="#userModalWindow">
-                        Delete
-                        </button>
-                    </td>
-                </tr>
-                `;
-        table.append(row)
-    }
-    $('.edit-button-user').click(handleEditUserButton)
-    $('.delete-button-user').click(handleDeleteUserButton)
-}
+$(document).ready(renderAddressTable());
 
 /**
- * Функция для fetch запроса
+ * Функция для рендера таблица адресов
  */
-function fetchAddressesRenderTable() {
-    fetch("/api/manager/shops", {
-        method: 'GET'
-    }).then(response => response.json()).then(addresses => renderAddressTable(addresses))
-}
-
-/*/!**
- * Функция для отображения списка всех магазинов
- *!/
-function getAllAddress() {
+function renderAddressTable() {
     $("#table").empty();
     $.ajax({
         type: 'GET',
         url: '/api/manager/shops',
         timeout: 3000,
         success: function (data) {
-            console.log(data);
-            $.each(data, function (index, address) {
+            let info = data.data;
+            $.each(info, function (i, address) {
                 $("#table").append($('<tr>').append(
                     $('<td>').text(address.id),
                     $('<td>').text(address.region),
@@ -78,9 +20,9 @@ function getAllAddress() {
                     $('<td>').text(address.building),
                     $('<td>').text(address.shop),
                     $('<td>').append("<button type='button' data-toggle='modal' class='btn-info btn'" +
-                        "data-target='#editAddressModal' data-address-id='" + address.id + "'>Изменить</button>"),
+                        "data-target='#editUserModal' data-user-id='" + address.id + "'>Изменить</button>"),
                     $('<td>').append("<button type='button' data-toggle='modal' class='btn btn-danger'" +
-                        "data-target='#deleteUserModal' data-address-id='" + address.id + "'>Удалить</button>")
+                        "data-target='#deleteUserModal' data-user-id='" + address.id + "'>Удалить</button>")
                     )
                 );
             });
@@ -88,35 +30,37 @@ function getAllAddress() {
     });
 }
 
-/!**
- * Заполнение модального окна с изменением адреса
- *!/
-$("#editAddressModal").on('show.bs.modal', (e) => {
-    let addressId = $(e.relatedTarget).data("address-id");
+$('[href="#v-pills-admin"]').on('show.bs.tab', (e) => {
+    location.reload();
+})
+
+//Edit form
+$("#editUserModal").on('show.bs.modal', (e) => {
+    let userId = $(e.relatedTarget).data("user-id");
 
     $.ajax({
-        url: "/api/manager/shops/" + addressId,
+        url: "/api/manager/shops/" + userId,
         type: "GET",
         dataType: "json"
     }).done((msg) => {
-        let address = JSON.parse(JSON.stringify(msg));
+
+        let address = msg.data;
 
         $("#idEdit").empty().val(address.id);
         $("#regionEdit").empty().val(address.region);
         $("#cityEdit").empty().val(address.city);
         $("#streetEdit").empty().val(address.street);
         $("#buildingEdit").empty().val(address.building);
-        $("#statusEdit").empty().val(address.shop);
-    })
+        $("#statusEdit").val(address.shop);
+
+    });
 })
 
-/!**
- * Сохранение изменений в модальном окне редактирования адреса
- *!/
+// Edit Modal
 $("#buttonEditSubmit").on('click', (e) => {
     e.preventDefault();
 
-    let editAddress = {
+    let editUser = {
         id: $("#idEdit").val(),
         region: $("#regionEdit").val(),
         city: $("#cityEdit").val(),
@@ -130,39 +74,39 @@ $("#buttonEditSubmit").on('click', (e) => {
         type: "PUT",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        data: JSON.stringify(editAddress)
+        data: JSON.stringify(editUser)
     }),
 
         $("#editUserModal").modal('hide'),
         location.reload();
-    getAllAddress();
+    renderAddressTable();
 })
 
-/!**
- * Модальное окно удаления адреса
- *!/
+/**
+ * Модальное окно для удаления адреса
+ */
 $("#deleteUserModal").on('show.bs.modal', (e) => {
-    let addressId = $(e.relatedTarget).data("address-id");
+    let userId = $(e.relatedTarget).data("user-id");
 
     $.ajax({
-        url: "/api/manager/shops/" + addressId,
+        url: "/api/manager/shops/" + userId,
         type: "GET",
         dataType: "json"
     }).done((msg) => {
-        let address = JSON.parse(JSON.stringify(msg));
+        let address = msg.data;
 
-        $("#idDelete").empty().val(addressId);
+        $("#idDelete").empty().val(address.id);
         $("#regionDelete").empty().val(address.region);
         $("#cityDelete").empty().val(address.city);
         $("#streetDelete").empty().val(address.street);
         $("#buildingDelete").empty().val(address.building);
-        $("#statusDelete").empty().val(address.shop);
+        $("#statusDelete").val(address.shop);
 
         $("#buttonDeleteSubmit").on('click', (e) => {
             e.preventDefault();
 
             $.ajax({
-                url: "/api/manager/shops/" + addressId,
+                url: "/api/manager/shops/" + userId,
                 type: "DELETE",
                 dataType: "text"
             }).done((deleteMsg) => {
@@ -171,4 +115,52 @@ $("#deleteUserModal").on('show.bs.modal', (e) => {
             })
         })
     });
-})*/
+})
+
+// New User
+$('[href="#newUser"]').on('show.bs.tab', (e) => {
+    $(() => {
+        $("#usernameNew").empty().val("");
+        $("#firstnameNew").empty().val("");
+        $("#lastnameNew").empty().val("");
+        $("#ageNew").empty().val("");
+        $("#emailNew").empty().val("");
+        $("#passwordNew").empty().val("");
+        $("#rolesNew").empty().val("");
+        $.each(allRoles, (i, role) => {
+            $("#rolesNew").append(
+                $("<option>").text(role)
+            )
+        });
+    })
+})
+
+$("#buttonInputNewSubmit").on('click', (e) => {
+    e.preventDefault();
+
+    let newUser = {
+        username: $("#usernameNew").val(),
+        firstname: $("#firstnameNew").val(),
+        lastname: $("#lastnameNew").val(),
+        age: $("#ageNew").val(),
+        email: $("#emailNew").val(),
+        password: $("#passwordNew").val(),
+        roles: $("#rolesNew").val()
+    }
+
+    $.ajax({
+        url: "/admin",
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(newUser)
+    }),
+        renderAddressTable(),
+        $('#AdminTabs a[href="#usersTable"]').tab('show'),
+        location.reload();
+})
+
+$('[href="#v-pills-user"]').on('show.bs.tab', (e) => {
+    $("#change-tabContent").hide(),
+        getCurrent();
+})

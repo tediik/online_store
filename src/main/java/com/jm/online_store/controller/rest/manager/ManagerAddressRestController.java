@@ -33,7 +33,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/api/manager/shops")
 @Api(value = "REST controller for address in manager cabinet")
-public class AddressManagerRestController {
+public class ManagerAddressRestController {
 
     private final AddressService addressService;
 
@@ -88,6 +88,7 @@ public class AddressManagerRestController {
             return new ResponseEntity<>(new ResponseDto<>(false, "Incorrect id" ), HttpStatus.BAD_REQUEST);
         }
         addressService.addAddress(address);
+        log.info("Адрес с id: {} успешно обновлён.", address.getId());
         return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
 
@@ -100,6 +101,7 @@ public class AddressManagerRestController {
     @ApiOperation(value = "add new address from manager page", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<Address>> addAddress(@RequestBody Address newAddress) {
         addressService.addAddress(newAddress);
+        log.info("Адрес с id: {} успешно добавлен.", newAddress.getId());
         return new ResponseEntity<>(new ResponseDto<>(true, newAddress), HttpStatus.OK);
     }
 

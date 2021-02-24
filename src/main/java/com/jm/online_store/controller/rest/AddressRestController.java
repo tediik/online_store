@@ -75,7 +75,7 @@ public class AddressRestController {
     }
 
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})
-    public ResponseEntity handleControllerExceptions() {
+    public ResponseEntity<?> handleControllerExceptions() {
         return ResponseEntity.notFound().build();
     }
 }

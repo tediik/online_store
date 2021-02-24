@@ -113,7 +113,11 @@ function getShopAddress() {
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
         }
-    }).then(response => response.json()).then(shops => showShops(shops))
+    }).then(response => response.json())
+        .then(function (shops) {
+            let shopsList = shops.data;
+            showShops(shopsList);
+        })
 }
 
 /**
