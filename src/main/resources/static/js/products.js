@@ -588,6 +588,7 @@ function checkActionButton(event) {
  * @param products
  */
 function renderProductsTable(products) {
+    products = products.data;
     let table = $('#products-table')
     table.empty()
         .append(`<tr>

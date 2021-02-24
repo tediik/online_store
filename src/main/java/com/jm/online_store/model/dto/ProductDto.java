@@ -4,6 +4,7 @@ import com.jm.online_store.model.Description;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 @ApiModel(description =  "DTO для передачи на страницу товара")
 public class ProductDto {
     private long id;
@@ -20,6 +22,7 @@ public class ProductDto {
     private Double rating;
     private Description descriptions;
     private String productType;
-    private List<String> ProductPictureNames;
+    private List<String> productPictureNames;
+    private boolean deleted;
     private boolean isFavourite;
 }
