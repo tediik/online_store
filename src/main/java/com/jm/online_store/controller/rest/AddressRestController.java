@@ -5,6 +5,7 @@ import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,7 @@ import java.util.Set;
 public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;
+    private final CustomerService customerService;
 
     @GetMapping(value = "/allShops")
     @ApiOperation(value = "get all the shops")
@@ -40,8 +42,8 @@ public class AddressRestController {
     @GetMapping(value = "/userAddresses")
     @ApiOperation(value = "get current logged in Users address")
     public ResponseEntity<Set<Address>> userAddresses() {
-        if (userService.getCurrentLoggedInUser().getUserAddresses() != null) {
-            return ResponseEntity.ok(userService.getCurrentLoggedInUser().getUserAddresses());
+        if (customerService.getCurrentLoggedInUser().getUserAddresses() != null) {
+            return ResponseEntity.ok(customerService.getCurrentLoggedInUser().getUserAddresses());
         }
         return ResponseEntity.notFound().build();
     }

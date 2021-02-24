@@ -96,6 +96,14 @@ public class Customer extends User {
     @JsonManagedReference(value = "customer-sentStock")
     private Set<SentStock> sentStocks;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "customer_adresses",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id"))
+    private Set<Address> userAddresses = new HashSet<>();
+
+
     public Customer(String email, String password) {
         super(email, password);
     }

@@ -1241,7 +1241,7 @@ public class DataInitializer {
         Set<Address> userAddresses = new HashSet<>();
         userAddresses.add(addressService.findAddressById(3L).get());
         userAddresses.add(addressService.findAddressById(4L).get());
-        User userToUpdate = userService.findByEmail("customer@mail.ru").get();
+        Customer userToUpdate = customerService.findCustomerByEmail("customer@mail.ru");
         userToUpdate.setUserAddresses(userAddresses);
         userService.updateUser(userToUpdate);
     }

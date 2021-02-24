@@ -99,13 +99,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_adresses",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "address_id"))
-    private Set<Address> userAddresses = new HashSet<>();
-
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonManagedReference(value = "user-sharedNews")
     private Set<SharedNews> sharedNews;
