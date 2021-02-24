@@ -13,5 +13,4 @@ public interface AddressService {
     Address addAddress(Address address);
     Optional<Address> findSameAddress(Address address);
     void deleteById(Long id);
-    //boolean checkStatus(boolean status);
 }

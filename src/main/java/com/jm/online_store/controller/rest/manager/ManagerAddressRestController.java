@@ -118,7 +118,7 @@ public class ManagerAddressRestController {
         }
         Address address = addressService.findAddressById(id).get();
         addressService.deleteById(id);
-        log.info("Адрес с id: {} удалён", id);
+        log.info("Адрес с id: {} удалён.", id);
         return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
 }

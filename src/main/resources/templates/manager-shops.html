@@ -95,7 +95,7 @@
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" id="newUser-tab" data-toggle="tab" role="tab"
-                                   aria-controls="newUser" aria-selected="false" href="#newUser">Добавление адреса</a>
+                                   aria-controls="newUser" aria-selected="false" href="#newAddress">Добавление адреса</a>
                             </li>
                         </ul>
 
@@ -112,7 +112,6 @@
                                                 <th scope="col">Город</th>
                                                 <th scope="col">Улица</th>
                                                 <th scope="col">Дом</th>
-                                                <th scope="col">Статус</th>
                                                 <th scope="col">Изменить</th>
                                                 <th scope="col">Удалить</th>
                                             </tr>
@@ -125,32 +124,25 @@
 
 
                             <!--New user-->
-                            <div class="tab-pane fade" id="newUser" role="tabpanel" aria-labelledby="newUser-tab">
+                            <div class="tab-pane fade" id="newAddress" role="tabpanel" aria-labelledby="newUser-tab">
                                 <div class="card">
                                     <form class="form-horizontal mx-auto font-weight-bold" id="new-form">
                                         <br>
                                         <div class="form-group row">
-                                            <label class="text-center mx-auto" for="usernameNew">Регион</label>
-                                            <input type="text" class="form-control" id="usernameNew">
+                                            <label class="text-center mx-auto" for="regionNew">Регион</label>
+                                            <input type="text" class="form-control" id="regionNew">
                                         </div>
                                         <div class="form-group row">
-                                            <label class="text-center mx-auto" for="firstnameNew">Город</label>
-                                            <input type="text" class="form-control" id="firstNameNew">
+                                            <label class="text-center mx-auto" for="cityNew">Город</label>
+                                            <input type="text" class="form-control" id="cityNew">
                                         </div>
                                         <div class="form-group row">
-                                            <label class="text-center mx-auto" for="lastnameNew">Улица</label>
-                                            <input type="text" class="form-control" id="lastNameNew">
+                                            <label class="text-center mx-auto" for="streetNew">Улица</label>
+                                            <input type="text" class="form-control" id="streetNew">
                                         </div>
                                         <div class="form-group row">
-                                            <label class="text-center mx-auto" for="ageNew">Дом</label>
-                                            <input type="text" class="form-control" id="ageNew">
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="text-center mx-auto" for="rolesNew">Статус</label>
-                                            <select class="form-control" id="rolesNew" multiple="multiple"></select>
-                                        </div>
-                                        <div class="form-group row">
-                                            <button class="btn btn-success mx-auto" type="button" id="buttonInputNewSubmit">Add new user</button>
+                                            <label class="text-center mx-auto" for="buildingNew">Дом</label>
+                                            <input type="text" class="form-control" id="buildingNew">
                                         </div>
                                     </form>
                                 </div>
@@ -195,15 +187,11 @@
                                 <label class="control-label" for="buildingEdit">Дом</label>
                                 <input type="text" class="form-control" id="buildingEdit"/>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label" for="statusEdit">Статус</label>
-                                <select class="form-control" id="statusEdit" multiple="multiple"></select>
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="buttonEditSubmit">Edit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-primary" id="buttonEditSubmit">Изменить</button>
                     </div>
                 </div>
             </div>
@@ -243,15 +231,11 @@
                                 <label class="control-label" for="buildingDelete">Дом</label>
                                 <input type="text" class="form-control" id="buildingDelete" disabled='disabled'/>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label" for="statusDelete">Статус</label>
-                                <select class="form-control" id="statusDelete" multiple="multiple" disabled='disabled'></select>
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" id="buttonDeleteSubmit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                        <button type="submit" id="buttonDeleteSubmit" class="btn btn-danger">Удалить</button>
                     </div>
                 </div>
             </div>

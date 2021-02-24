@@ -18,7 +18,6 @@ function renderAddressTable() {
                     $('<td>').text(address.city),
                     $('<td>').text(address.street),
                     $('<td>').text(address.building),
-                    $('<td>').text(address.shop),
                     $('<td>').append("<button type='button' data-toggle='modal' class='btn-info btn'" +
                         "data-target='#editUserModal' data-user-id='" + address.id + "'>Изменить</button>"),
                     $('<td>').append("<button type='button' data-toggle='modal' class='btn btn-danger'" +
@@ -34,7 +33,9 @@ $('[href="#v-pills-admin"]').on('show.bs.tab', (e) => {
     location.reload();
 })
 
-//Edit form
+/**
+ * Заполнение модального окна редактирования
+ */
 $("#editUserModal").on('show.bs.modal', (e) => {
     let userId = $(e.relatedTarget).data("user-id");
 
@@ -51,22 +52,19 @@ $("#editUserModal").on('show.bs.modal', (e) => {
         $("#cityEdit").empty().val(address.city);
         $("#streetEdit").empty().val(address.street);
         $("#buildingEdit").empty().val(address.building);
-        $("#statusEdit").val(address.shop);
-
     });
 })
 
-// Edit Modal
+
 $("#buttonEditSubmit").on('click', (e) => {
     e.preventDefault();
 
-    let editUser = {
+    let editAddress = {
         id: $("#idEdit").val(),
         region: $("#regionEdit").val(),
         city: $("#cityEdit").val(),
         street: $("#streetEdit").val(),
         building: $("#buildingEdit").val(),
-        status: $("#statusEdit").val()
     }
 
     $.ajax({
@@ -74,12 +72,12 @@ $("#buttonEditSubmit").on('click', (e) => {
         type: "PUT",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        data: JSON.stringify(editUser)
+        data: JSON.stringify(editAddress)
     }),
 
         $("#editUserModal").modal('hide'),
         location.reload();
-    renderAddressTable();
+        renderAddressTable();
 })
 
 /**
@@ -100,7 +98,6 @@ $("#deleteUserModal").on('show.bs.modal', (e) => {
         $("#cityDelete").empty().val(address.city);
         $("#streetDelete").empty().val(address.street);
         $("#buildingDelete").empty().val(address.building);
-        $("#statusDelete").val(address.shop);
 
         $("#buttonDeleteSubmit").on('click', (e) => {
             e.preventDefault();
@@ -117,50 +114,37 @@ $("#deleteUserModal").on('show.bs.modal', (e) => {
     });
 })
 
-// New User
-$('[href="#newUser"]').on('show.bs.tab', (e) => {
+/**
+ * Добавление нового адреса
+ */
+$('[href="#newAddress"]').on('show.bs.tab', (e) => {
     $(() => {
-        $("#usernameNew").empty().val("");
-        $("#firstnameNew").empty().val("");
-        $("#lastnameNew").empty().val("");
-        $("#ageNew").empty().val("");
-        $("#emailNew").empty().val("");
-        $("#passwordNew").empty().val("");
-        $("#rolesNew").empty().val("");
-        $.each(allRoles, (i, role) => {
-            $("#rolesNew").append(
-                $("<option>").text(role)
-            )
-        });
+        $("#regionNew").empty().val("");
+        $("#cityNew").empty().val("");
+        $("#streetNew").empty().val("");
+        $("#buildingNew").empty().val("");
+        $("#statusNew").empty().val("");
     })
 })
 
 $("#buttonInputNewSubmit").on('click', (e) => {
     e.preventDefault();
 
-    let newUser = {
-        username: $("#usernameNew").val(),
-        firstname: $("#firstnameNew").val(),
-        lastname: $("#lastnameNew").val(),
-        age: $("#ageNew").val(),
-        email: $("#emailNew").val(),
-        password: $("#passwordNew").val(),
-        roles: $("#rolesNew").val()
+    let newAddress = {
+        region: $("#regionNew").val(),
+        city: $("#cityNew").val(),
+        street: $("#streetNew").val(),
+        building: $("#buildingNew").val(),
     }
 
     $.ajax({
-        url: "/admin",
+        url: "/api/manager/shops",
         type: "POST",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        data: JSON.stringify(newUser)
+        data: JSON.stringify(newAddress)
     }),
         renderAddressTable(),
         $('#AdminTabs a[href="#usersTable"]').tab('show'),
         location.reload();
-})
-
-$('[href="#v-pills-user"]').on('show.bs.tab', (e) => {
-    $("#change-tabContent").hide(),
-        getCurrent();
 })
