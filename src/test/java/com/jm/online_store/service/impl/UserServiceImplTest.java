@@ -5,6 +5,7 @@ import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.AddressRepository;
@@ -48,10 +49,11 @@ public class UserServiceImplTest {
     private CommonSettingsServiceImpl commonSettingsService = mock(CommonSettingsServiceImpl.class);
     private FavouritesGroupService favouritesGroupService = mock(FavouritesGroupService.class);
     private TemplatesMailingSettingsService templatesMailingSettingsService = mock(TemplatesMailingSettingsServiceImpl.class);
+    private CustomerService customerService = mock(CustomerService.class);
     private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService, favouritesGroupService, templatesMailingSettingsService);
 
     private User userFullParameter;
-    private User userWithIdEmailPassword;
+    private Customer userWithIdEmailPassword;
     private User userFullParameterAndIdPicture;
     private User userWithInvalidEmail;
     private User userWithNull;
@@ -59,7 +61,7 @@ public class UserServiceImplTest {
 
     @BeforeEach
     void init() {
-        userWithIdEmailPassword = new User();
+        userWithIdEmailPassword = new Customer();
         userWithIdEmailPassword.setId(2L);
         userWithIdEmailPassword.setEmail("pochta@google.com");
         userWithIdEmailPassword.setPassword("2");
@@ -227,13 +229,13 @@ public class UserServiceImplTest {
         Address addressToAdd = new Address("420077","Татарстан","Казань","Революционная","25",false);
         when(addressService.findSameAddress(any())).thenReturn(Optional.of(addressToAdd));
         when(userRepository.findById(2L)).thenReturn(Optional.of(userWithIdEmailPassword));
-        assertTrue(userService.addNewAddressForUser(userWithIdEmailPassword,addressToAdd));
+        assertTrue(customerService.addNewAddressForCustomer(userWithIdEmailPassword,addressToAdd));
         verify(addressRepository,times(0)).save(any());
         verify(userRepository,times(1)).save(any());
 
         userWithIdEmailPassword.setUserAddresses(Collections.singleton(addressToAdd));
         when(addressService.findSameAddress(any())).thenReturn(Optional.of(addressToAdd));
         when(userRepository.findById(2L)).thenReturn(Optional.of(userWithIdEmailPassword));
-        assertFalse(userService.addNewAddressForUser(userWithIdEmailPassword,addressToAdd));
+        assertFalse(customerService.addNewAddressForCustomer(userWithIdEmailPassword,addressToAdd));
     }
 }

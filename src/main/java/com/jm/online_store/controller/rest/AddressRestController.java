@@ -3,6 +3,7 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CustomerService;
@@ -50,9 +51,9 @@ public class AddressRestController {
 
     @PostMapping(value = "/addAddress")
     @ApiOperation(value = "adds address for current logged in user")
-    public ResponseEntity addAddressToUser(@RequestBody Address address) {
-        User user = userService.getCurrentLoggedInUser();
-        if (userService.addNewAddressForUser(user, address)) {
+    public ResponseEntity addAddressToCustomer(@RequestBody Address address) {
+        Customer customer = customerService.getCurrentLoggedInUser();
+        if (customerService.addNewAddressForCustomer(customer, address)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body("addressIsExists");

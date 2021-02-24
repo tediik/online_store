@@ -667,40 +667,6 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    /**
-     * Метод сервиса для добавления нового адреса пользователю
-     * @param user переданный пользователь
-     * @param address новый адрес для пользователя
-     * @throws UserNotFoundException вылетает, если пользователь не найден в БД
-     */
-    @Transactional
-    @Override
-    public boolean addNewAddressForUser(User user, Address address) {
-        User usertoUpdate = findById(user.getId()).orElseThrow(() ->
-                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
-        Optional<Address> addressFromDB = addressService.findSameAddress(address);
-        if (addressFromDB.isPresent() && !usertoUpdate.getUserAddresses().contains(addressFromDB.get())) {
-            Address addressToAdd = addressFromDB.get();
-            if (usertoUpdate.getUserAddresses() != null) {
-                usertoUpdate.getUserAddresses().add(addressToAdd);
-            } else {
-                usertoUpdate.setUserAddresses(Collections.singleton(address));
-            }
-            updateUser(usertoUpdate);
-            return true;
-        }
-        if (!addressFromDB.isPresent()) {
-            Address addressToAdd = addressService.addAddress(address);
-            if (usertoUpdate.getUserAddresses() != null) {
-                usertoUpdate.getUserAddresses().add(addressToAdd);
-            } else {
-                usertoUpdate.setUserAddresses(Collections.singleton(address));
-            }
-            updateUser(usertoUpdate);
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Метод находит User-а по его логину email

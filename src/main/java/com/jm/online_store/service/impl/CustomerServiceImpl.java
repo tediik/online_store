@@ -8,11 +8,13 @@ import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CustomerRepository;
+import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.ReviewService;
@@ -30,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +46,37 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CommentService commentService;
     private final ReviewService reviewService;
+    private final AddressService addressService;
+
+    @Override
+    @Transactional
+    public boolean addNewAddressForCustomer(Customer customerReq, Address address) {
+        Customer customer = findById(customerReq.getId()).orElseThrow(() ->
+                new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
+        Optional<Address> addressFromDB = addressService.findSameAddress(address);
+        if (addressFromDB.isPresent() && !customer.getUserAddresses().contains(addressFromDB.get())) {
+            Address addressToAdd = addressFromDB.get();
+            if (customer.getUserAddresses() != null) {
+                customer.getUserAddresses().add(addressToAdd);
+            } else {
+                customer.setUserAddresses(Collections.singleton(address));
+            }
+            updateCustomer(customer);
+            return true;
+        }
+        if (addressFromDB.isEmpty()) {
+            Address addressToAdd = addressService.addAddress(address);
+            if (customer.getUserAddresses() != null) {
+                customer.getUserAddresses().add(addressToAdd);
+            } else {
+                customer.setUserAddresses(Collections.singleton(address));
+            }
+            updateCustomer(customer);
+            return true;
+        }
+        return false;
+
+    }
 
     /**
      * Все клиенты.
