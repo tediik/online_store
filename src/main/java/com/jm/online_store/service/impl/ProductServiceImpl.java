@@ -208,7 +208,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.getRating() == null) {
             product.setRating(0d);
         }
-        if (product.getProductPictureNames().size()<1) {
+        if (product.getProductPictureNames() == null) {
             product.setProductPictureNames(new ArrayList<>(List.of(loadPictureFrom + "defaultPictureProduct.jpg")));
         } else {
             product.setProductPictureNames(product.getProductPictureNames());
