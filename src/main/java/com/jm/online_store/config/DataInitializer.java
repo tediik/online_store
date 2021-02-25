@@ -1229,10 +1229,10 @@ public class DataInitializer {
      * Метод первичной инициалзации адресов, 2 адреса для магазина и 1 адрес прикрепляется к заказу
      */
     private void addressInit() {
-        Address address1 = new Address("Татарстан", "Казань", "Революционная", "25", "2", "420078", true);
-        Address address2 = new Address("Московская область", "Москва", "Ленина", "126", "2", "420078", true);
-        Address address3 = new Address("Тамбовская область", "Тамбов", "Запорожская", "11", "2", "420079", false);
-        Address address4 = new Address("Тамбовская область", "Тамбов", "Запорожская", "12", "2", "420080", false);
+        Address address1 = new Address("Татарстан", "Казань", "Революционная", "25", "420078", true);
+        Address address2 = new Address("Московская область", "Москва", "Ленина", "126", "420078", true);
+        Address address3 = new Address("Тамбовская область", "Тамбов", "Запорожская", "11", "420079", false);
+        Address address4 = new Address("Тамбовская область", "Тамбов", "Запорожская", "12", "420080", false);
         addressService.addAddress(address1);
         addressService.addAddress(address2);
         addressService.addAddress(address3);

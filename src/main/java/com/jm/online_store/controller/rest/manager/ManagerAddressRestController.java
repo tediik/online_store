@@ -64,7 +64,7 @@ public class ManagerAddressRestController {
             @ApiResponse(code = 200, message = "Ok")
     })
     public ResponseEntity<ResponseDto<Address>> getAddressInfo(@PathVariable Long id) {
-        Address address = addressService.findAddressById(id).get();
+        Address address = addressService.findAddressById(id).orElseThrow();
         return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
 
