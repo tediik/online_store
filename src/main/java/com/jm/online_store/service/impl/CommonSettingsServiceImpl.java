@@ -6,7 +6,6 @@ import com.jm.online_store.repository.CommonSettingsRepository;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 
 @Service

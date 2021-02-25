@@ -1,13 +1,21 @@
 package com.jm.online_store.controller.rest.customer;
 
+import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.exception.CustomerNotFoundException;
+import com.jm.online_store.exception.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.Product;
 import com.jm.online_store.model.RecentlyViewedProducts;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.CustomerDto;
+import com.jm.online_store.model.dto.PasswordDto;
+import com.jm.online_store.model.dto.ProductModelDto;
+import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
-import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -15,9 +23,10 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +44,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/customer")
@@ -45,7 +53,12 @@ public class CustomerRestController {
     private final CustomerService customerService;
     private final UserService userService;
     private final RecentlyViewedProductsService recentlyViewedProductsService;
+    private final ModelMapper modelMapper;
 
+    /**
+     * Rest mapping to  change customers mail.
+     * @return ResponseEntity<ResponseDto<String>> (ResponseDto, HttpStatus) {@link ResponseEntity}
+     */
     @PostMapping("/changemail")
     @ApiOperation(value = "processes Customers request to change email",
             authorizations = { @Authorization(value = "jwtToken") })
@@ -53,132 +66,115 @@ public class CustomerRestController {
             @ApiResponse(code = 400, message = "duplicatedEmailError or notValidEmailError"),
             @ApiResponse(code = 200, message = "Email will be changed after confirmation"),
     })
-    public ResponseEntity<String> changeMailReq(@RequestParam String newMail) {
-        Customer customer = customerService.getCurrentLoggedInUser();
-        if (customerService.isExist(newMail)) {
-            log.debug("Попытка ввести дублирующийся email: " + newMail);
-            return new ResponseEntity("duplicatedEmailError", HttpStatus.BAD_REQUEST);
-        }
-        if (ValidationUtils.isNotValidEmail(newMail)) {
-            return new ResponseEntity("notValidEmailError", HttpStatus.BAD_REQUEST);
-        } else {
-            userService.changeUsersMail(customer, newMail);
-            return ResponseEntity.ok("Email будет изменен после подтверждения.");
-        }
+    public ResponseEntity<ResponseDto<String>> changeMailReq(@RequestParam String newMail) {
+
+        Customer customer = customerService.changeMail(newMail);
+        ModelMapper modelMapper = new ModelMapper();
+        CustomerDto returnValue = modelMapper.map(customer, CustomerDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, "success"));
     }
 
     /**
      * метод обработки изменения пароля User.
-     * @param model модель для view
-     * @param oldPassword старый пароль
-     * @param newPassword новый пароль
-     * @return страница User
+     * @param passwords старый и новый пароли из PasswordDto
+     * @return ResponseEntity<ResponseDto<String>>, HttpStatus.OK
      */
     @PostMapping("/change-password")
     @ApiOperation(value = "processes Customers request to change password",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "No user with such id"),
-            @ApiResponse(code = 400, message = "Wrong email or user with such email already exists"),
-            @ApiResponse(code = 200, message = "Changes accepted"),
+            @ApiResponse(code = 400, message = "No user with such id"),
+            @ApiResponse(code = 200, message = "Изменения для пользователя с идентификатором: \"id\" были успешно добавлены."),
     })
-    public ResponseEntity changePassword(Model model,
-                                         @RequestParam String oldPassword,
-                                         @RequestParam String newPassword) {
+    public ResponseEntity<ResponseDto<String>> changePassword(@RequestBody PasswordDto passwords) {
         Customer customer = customerService.getCurrentLoggedInUser();
-        if (customerService.findById(customer.getId()).isEmpty()) {
-            log.debug("Нет пользователя с идентификатором: {}", customer.getId());
-            return ResponseEntity.noContent().build();
+        if(passwords.getOldPassword().equals(passwords.getNewPassword())) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Старый и новый пароли совпадают."), HttpStatus.BAD_REQUEST);
         }
-        if (ValidationUtils.isNotValidEmail(customer.getEmail())) {
-            log.debug("Wrong email! Не правильно введен email");
-            return ResponseEntity.badRequest().body("notValidEmailError");
+        if(!customerService.changePassword(customer.getId(), passwords.getOldPassword(), passwords.getNewPassword())) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Ошибка при изменении пароля."), HttpStatus.BAD_REQUEST);
         }
-        if (customerService.findById(customer.getId()).get().getEmail().equals(customer.getEmail())
-                && customerService.isExist(customer.getEmail())) {
-            log.debug("Пользователь с таким адресом электронной почты уже существует");
-            return ResponseEntity.badRequest().body("duplicatedEmailError");
-        }
-        if (customerService.changePassword(customer.getId(), oldPassword, newPassword))
-            log.debug("Изменения для пользователя с идентификатором: {} был успешно добавлен", customer.getId());
-        return ResponseEntity.ok().build();
+        log.info("Пароль для пользователя: {} успешно изменён.", customer.getEmail());
+        return new ResponseEntity<>(new ResponseDto<>(true, "Изменения для пользователя с идентификатором: " + customer.getId() + " были успешно добавлены. ", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 
     /**
      * Метод который изменяет статус пользователя при нажатии на кнопку "удалить профиль"
      * @param id идентификатор покупателя
-     * @return ResponseEntity.ok()
+     * @return ResponseEntity<ResponseDto<UserDto>>, HttpStatus.OK
      */
     @DeleteMapping("/deleteProfile/{id}")
     @ApiOperation(value = "Changes Users status, when Delete button clicked",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<User> blockProfile(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> blockProfile(@PathVariable Long id) {
         try {
             customerService.changeCustomerStatusToLocked(id);
         }
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException | UserNotFoundException e) {
             log.debug("There is no user with id: {}", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
+        User user = userService.findById(id).get();
         log.debug("User with id: {}, was blocked", id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Метод который безвозвратно удаляет пользователя при нажатии на кнопку "удалить профиль" и
      * сохраняет комментарий и отзывы под сущность DeletedCustomer
      * @param id идентификатор покупателя
-     * @return ResponseEntity.ok()
+     * @return ResponseEntity<ResponseDto<UserDto>>, HttpStatus.OK
      */
     @DeleteMapping("/deleteProfileUnrecoverable/{id}")
     @ApiOperation(value = "Delete Users unrecoverable, when Delete button clicked",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> deleteProfileUnrecoverable(@PathVariable Long id) {
-        customerService.changeCustomerProfileToDeletedProfileByID(id);
-        customerService.deleteByID(id);
-        return ResponseEntity.ok("Delete profile");
+    public ResponseEntity<ResponseDto<UserDto>> deleteProfileUnrecoverable(@PathVariable Long id) {
+        User userToDelete;
+        try {
+            userToDelete = userService.findUserById(id);
+            customerService.changeCustomerProfileToDeletedProfileByID(id);
+            customerService.deleteByID(id);
+        }
+        catch (EmptyResultDataAccessException |IllegalArgumentException | UserNotFoundException e) {
+            throw new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userToDelete, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Возвращает пользователя по его id
      * @param id идентификатор пользователя
-     * @return ResponseEntity<User> Объект User
+     * @return ResponseEntity<ResponseDto<UserDto>> Объект User
      */
     @GetMapping("/getManagerById/{id}")
     @ApiOperation(value = "Возвращает пользователя по id",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "User with this id not found"),
+            @ApiResponse(code = 400, message = "CUSTOMER NOT FOUND"),
     })
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> getUserById(@PathVariable("id") Long id) {
         if (userService.findById(id).isEmpty()) {
             log.debug("User with id: {} not found", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         log.debug("User with id: {} found", id);
         User user = userService.findUserById(id);
-        if (user.getFirstName() == null) {
-            user.setFirstName("");
-        }
-        if (user.getLastName() == null) {
-            user.setLastName("");
-        }
-        return ResponseEntity.ok(user);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Метод добавляет id продукта или товара productIdFromPath в хранилище Session и
      * в базу данных
      * @param productId Product, request
-     * @return ResponseEntity<String>
+     * @return ResponseEntity<ResponseDto<String>>, HttpStatus.OK
      */
     @PostMapping("/addIdProductToSessionAndToBase")
     @ApiOperation(value = "procces gives and save idProduct into Session and to DataBase",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "")
+            @ApiResponse(code = 200, message = "Product is saved in session")
     })
-    public ResponseEntity<String> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<String>> saveIdProductToSession(@RequestBody Long productId, HttpServletRequest request) {
         if (userService.getCurrentLoggedInUser() != null) {
             LocalDateTime localDateTime = LocalDateTime.now();
             HttpSession session = request.getSession();
@@ -187,15 +183,15 @@ public class CustomerRestController {
             if (!recentlyViewedProductsService.ProductExistsInTableOfUserId(productId, userId)) {
                 recentlyViewedProductsService.saveRecentlyViewedProducts(productId, userId, localDateTime);
             } else recentlyViewedProductsService.updateRecentlyViewedProducts(productId, userId, localDateTime);
-            return ResponseEntity.ok("Product is saved in session");
+            return new ResponseEntity<>(new ResponseDto<>(true, "Product is saved in session"), HttpStatus.OK);
         } else {
-            return ResponseEntity.ok("User is not authenticated. Product is not saved to session");
+            return new ResponseEntity<>(new ResponseDto<>(true, "User is not authenticated. Product is not saved to session"), HttpStatus.OK);
         }
     }
 
     /**
      * Метод получает из базы список Продуктов, которые просматривал пользователь
-     * @return ResponseEntity<List<Product>>
+     * @return ResponseEntity<ResponseDto<List<ProductModelDto>>>, HttpStatus.OK
      */
     @GetMapping("/getRecentlyViewedProductsFromDb")
     @ApiOperation(value = "procces return List<Product> from DB",
@@ -204,20 +200,21 @@ public class CustomerRestController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "Request contains incorrect data")
     })
-    public ResponseEntity<List<Product>> getRecentlyViewedProducts()
+    public ResponseEntity<ResponseDto<List<ProductModelDto>>> getRecentlyViewedProducts()
             throws ResponseStatusException {
-        return ResponseEntity.ok(recentlyViewedProductsService
-                .findAllRecentlyViewedProductsByUserId(userService
-                        .getCurrentLoggedInUser().getId()).stream()
-                .map(RecentlyViewedProducts::getProduct)
-                .collect(Collectors.toList()));
+        List<ProductModelDto> recentlyViewedProducts  = recentlyViewedProductsService
+                .findAllRecentlyViewedProductsByUserId(userService.getCurrentLoggedInUser().getId())
+                .stream()
+                .map(RecentlyViewedProducts::getProduct).map(product -> modelMapper.map(product, ProductModelDto.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(new ResponseDto<>(true, recentlyViewedProducts), HttpStatus.OK);
     }
 
     /**
      * Метод возвращает из базы список продуктов, которые просматривал пользователь в промежутке времени
      * @param stringStartDate - start of custom date range that receives from frontend in as String
      * @param stringEndDate   - end of custom date range that receives from frontend in as String
-     * @return - ResponseEntity<List<Product>>
+     * @return - ResponseEntity<ResponseDto<List<ProductModelDto>>>, HttpStatus.OK
      */
     @GetMapping("/recentlyViewedProducts")
 
@@ -225,13 +222,15 @@ public class CustomerRestController {
             "в промежутке времени (stringStartDate и stringEndDate), параметры передаются в строковом значении как 2018-10-23",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 404, message = "Product was not found")
-    public ResponseEntity<List<Product>> getRecentlyViewedProductsByUserIdAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
+    public ResponseEntity<ResponseDto<List<ProductModelDto>>> getRecentlyViewedProductsByUserIdAndDateTimeBetween(@RequestParam String stringStartDate, @RequestParam String stringEndDate) throws ResponseStatusException {
         LocalDate startDate = LocalDate.parse(stringStartDate);
         LocalDate endDate = LocalDate.parse(stringEndDate);
-        return ResponseEntity.ok(recentlyViewedProductsService.findRecentlyViewedProductsByUserIdAndDateTimeBetween(userService
-                .getCurrentLoggedInUser().getId(), startDate, endDate).stream()
+        List<ProductModelDto> productsViewedByUserIdAndDateTimeBetween  = recentlyViewedProductsService.findRecentlyViewedProductsByUserIdAndDateTimeBetween(userService
+                .getCurrentLoggedInUser().getId(), startDate, endDate)
+                .stream()
                 .map(RecentlyViewedProducts::getProduct)
-                .collect(Collectors.toList()));
+                .map(product -> modelMapper.map(product, ProductModelDto.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(new ResponseDto<>(true, productsViewedByUserIdAndDateTimeBetween), HttpStatus.OK);
     }
 }
-

@@ -5,13 +5,19 @@ import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.ProductCharacteristic;
+import com.jm.online_store.model.dto.ProductCharacteristicDto;
 import com.jm.online_store.repository.ProductCharacteristicRepository;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
+import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,8 +29,7 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
     ProductRepository productRepository;
 
     /**
-     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами
-     *
+     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами.
      * @param productId идентификатор товара, к которому добавляем характеристику
      * @param characteristicId идентификатор характеристики, значение которой добавляем товару
      * @param value значение характеристики, которую добавляем товару
@@ -41,8 +46,7 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
     }
 
     /**
-     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами
-     *
+     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами.
      * @param productId идентификатор товара, к которому добавляем характеристику
      * @param characteristicName наименование характеристики, значение которой добавляем товару
      * @param value значение характеристики, которую добавляем товару
@@ -50,12 +54,30 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
      */
     @Override
     @Transactional
-    public Long addProductCharacteristic(long productId, String characteristicName, String value) {
+    public ProductCharacteristic addProductCharacteristic(long productId, String characteristicName, String value) {
 
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         Characteristic characteristic = characteristicService.findByCharacteristicName(characteristicName).orElseThrow(CharacteristicNotFoundException::new);
 
-        return productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, value)).getId();
+        return productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, value));
     }
 
+
+    /**
+     * Метод добавления ProductCharacteristic, который соотносит харкетристики и их значения с товарами.
+     * @param listProductCharacteristics идентификатор товара, к которому добавляем характеристику
+     * @param addedProductName наименование характеристики, значение которой добавляем товару
+     * @return Long id - идентификатор ProductCharacteristic
+     */
+    @Override
+    @Transactional
+    public List<ProductCharacteristic> addProductCharacteristic(List<ProductCharacteristicDto> listProductCharacteristics, String addedProductName) {
+        List<ProductCharacteristic> returnValue = new ArrayList<>();
+        for (ProductCharacteristicDto tmp: listProductCharacteristics) {
+            Characteristic characteristic = characteristicService.getCharacteristicById(tmp.getCharacteristicId());
+            Product product = productRepository.findByProduct(addedProductName).orElseThrow(ProductNotFoundException::new);
+            returnValue.add(productCharacteristicRepository.save(new ProductCharacteristic(product, characteristic, tmp.getValue())));
+        }
+        return returnValue;
+    }
 }

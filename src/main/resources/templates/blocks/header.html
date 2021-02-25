@@ -1,9 +1,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="header">
     <!-- Optional JavaScript -->
-    <script th:src="@{/static/js/downloadSpecificTab.js}"></script>
     <script th:src="@{/static/js/busket.js}"></script>
     <script th:src="@{/static/js/remember-current-url.js}"></script>
+    <script th:src="@{/static/js/headers.js}"></script>
 
     <div class="d-flex flex-column  flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom shadow-sm siteHeader">
         <h5 class="my-0 mr-md-auto font-weight-normal"><a id="storeName" href="/"></a></h5>
@@ -51,7 +51,6 @@
            href="/login" onclick="returnCurrentUrl()">Войти</a>
         <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-light loginbutton" href="/logout">Выйти</a>
     </div>
-    <script src="/static/js/headers.js"></script>
 </div>
 </html>
 

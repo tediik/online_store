@@ -1,5 +1,9 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.SharedStockNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.SharedStockRepository;
@@ -28,13 +32,24 @@ public class SharedStockServiceImpl implements SharedStockService {
     @Transactional
     public SharedStock addSharedStock(SharedStock sharedStock) {
         User user = null != sharedStock.getUser() ?
-                userService.findById(sharedStock.getUser().getId()).get() : null;
+                userService.findById(sharedStock.getUser().getId()).orElseThrow(() ->
+                        new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND)) : null ;
         SharedStock sharedStockToAdd = SharedStock.builder()
                 .stock(stockService.findStockById(sharedStock.getStock().getId()))
                 .socialNetworkName(sharedStock.getSocialNetworkName())
                 .user(user)
                 .build();
         return sharedStockRepository.save(sharedStockToAdd);
+    }
+
+    /**
+     * Метод возвращает залогиненного юзера. Работает только
+     * при включенной сессии
+     *
+     * @return возвращает User
+     */
+    private User getCurrentLoggedInUser() {
+       return userService.getCurrentLoggedInUser();
     }
 
 }
