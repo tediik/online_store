@@ -11,6 +11,7 @@ public interface AddressService {
     List<Address> findAllShopsManager();
     Optional<Address> findAddressById(Long idAddress);
     Address addAddress(Address address);
+    Address editAddress(Address address);
     Optional<Address> findSameAddress(Address address);
     void deleteById(Long id);
 }

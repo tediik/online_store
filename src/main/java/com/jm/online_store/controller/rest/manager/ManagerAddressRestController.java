@@ -48,12 +48,8 @@ public class ManagerAddressRestController {
             @ApiResponse(code = 200, message = "Ok")
     })
     public ResponseEntity<ResponseDto<List<Address>>> allShops() {
-        List<Address> allAddress = addressService.findAllShopsManager();
-        if (allAddress.isEmpty()) {
-            log.debug("Адреса магазинов не найдены");
-            return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(new ResponseDto<>(true, allAddress), HttpStatus.OK);
+        List<Address> addressList = addressService.findAllShopsManager();
+        return new ResponseEntity<>(new ResponseDto<>(true, addressList), HttpStatus.OK);
     }
 
     /**
@@ -68,10 +64,6 @@ public class ManagerAddressRestController {
             @ApiResponse(code = 200, message = "Ok")
     })
     public ResponseEntity<ResponseDto<Address>> getAddressInfo(@PathVariable Long id) {
-        if(addressService.findAddressById(id).isEmpty()) {
-            log.debug("Адрес с id: {} не найден", id);
-            return new ResponseEntity<>(new ResponseDto<>(false, "Incorrect id. Address not found"), HttpStatus.NOT_FOUND);
-        }
         Address address = addressService.findAddressById(id).get();
         return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
@@ -84,11 +76,7 @@ public class ManagerAddressRestController {
     @PutMapping
     @ApiOperation(value = "modify address from manager page", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<Address>> editAddress(@RequestBody Address address) {
-        if(addressService.findAddressById(address.getId()).isEmpty()) {
-            return new ResponseEntity<>(new ResponseDto<>(false, "Incorrect id" ), HttpStatus.BAD_REQUEST);
-        }
-        addressService.addAddress(address);
-        log.info("Адрес с id: {} успешно обновлён.", address.getId());
+        addressService.editAddress(address);
         return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
 
@@ -101,7 +89,6 @@ public class ManagerAddressRestController {
     @ApiOperation(value = "add new address from manager page", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<Address>> addAddress(@RequestBody Address newAddress) {
         addressService.addAddress(newAddress);
-        log.info("Адрес с id: {} успешно добавлен.", newAddress.getId());
         return new ResponseEntity<>(new ResponseDto<>(true, newAddress), HttpStatus.OK);
     }
 
@@ -112,13 +99,13 @@ public class ManagerAddressRestController {
      */
     @DeleteMapping("/{id}")
     @ApiOperation(value = "delete address by id from manager page", authorizations = { @Authorization(value="jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "ADDRESS NOT FOUND"),
+            @ApiResponse(code = 200, message = ""),
+    })
     public ResponseEntity<ResponseDto<Address>> deleteAddress(@PathVariable Long id) {
-        if(addressService.findAddressById(id).isEmpty()) {
-            return new ResponseEntity<>(new ResponseDto<>(false, "Address not found"), HttpStatus.BAD_REQUEST);
-        }
-        Address address = addressService.findAddressById(id).get();
+        Address address = addressService.findAddressById(id).orElse(null);
         addressService.deleteById(id);
-        log.info("Адрес с id: {} удалён.", id);
         return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
 }

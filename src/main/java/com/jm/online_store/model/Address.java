@@ -41,14 +41,14 @@ public class Address {
     @NotBlank
     private String building;
 
-    private String district;
+    private String flat;
 
     private String zip;
 
     @Column(name = "shop")
     private boolean shop = true;
 
-    public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String zip, boolean shop) {
+    public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String flat, String zip, boolean shop) {
         this.region = region;
         this.city = city;
         this.street = street;

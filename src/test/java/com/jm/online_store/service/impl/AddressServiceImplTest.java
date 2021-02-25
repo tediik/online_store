@@ -32,9 +32,9 @@ public class AddressServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         shopList = new ArrayList<>();
-        address1 = new Address("420077", "Татарстан", "Казань", "Революционная", "25", true);
-        address2 = new Address("420078", "Московская область", "Москва", "Ленина", "126", true);
-        address3 = new Address("420079", "Тамбовская область", "Тамбов", "Запорожская", "11", false);
+        address1 = new Address("420077", "Татарстан", "Казань", "Революционная", "2", "25", true);
+        address2 = new Address("420078", "Московская область", "Москва", "Ленина", "2", "126", true);
+        address3 = new Address("420079", "Тамбовская область", "Тамбов", "Запорожская", "2", "11", false);
         shopList.add(address1);
         shopList.add(address2);
     }
@@ -79,10 +79,10 @@ public class AddressServiceImplTest {
     }
     @Test
     void findSameAdress() {
-        Address testAddress = new Address("420079", "Тамбовская область", "Тамбов", "Запорожская", "11", false);
-        when(addressRepository.findAddressByRegionAndDistrictAndCityAndStreetAndBuildingAndZip(
+        Address testAddress = new Address("420079", "Тамбовская область", "Тамбов", "Запорожская", "2", "11", false);
+        when(addressRepository.findAddressByRegionAndFlatAndCityAndStreetAndBuildingAndZip(
                 address3.getRegion(),
-                address3.getDistrict(),
+                address3.getFlat(),
                 address3.getCity(),
                 address3.getStreet(),
                 address3.getBuilding(),

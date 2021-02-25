@@ -9,6 +9,7 @@ import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class AddressRestController {
      * @return ResponseEntity<ResponseDto<List<Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/allShops")
-    @ApiOperation(value = "get all the shops")
+    @ApiOperation(value = "get all the shops", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<List<Address>>> findAll() {
         return new ResponseEntity<>(new ResponseDto<>(true, addressService.findAllShops()),HttpStatus.OK);
     }
@@ -48,7 +49,7 @@ public class AddressRestController {
      * @return ResponseEntity<ResponseDto<Set<Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/userAddresses")
-    @ApiOperation(value = "get current logged in Users address")
+    @ApiOperation(value = "get current logged in Users address", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<Set<Address>>> userAddresses() {
         Set<Address> userAddress =  userService.getCurrentLoggedInUser().getUserAddresses();
         if (userAddress.isEmpty()) {
@@ -64,7 +65,7 @@ public class AddressRestController {
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PostMapping(value = "/addAddress")
-    @ApiOperation(value = "adds address for current logged in user")
+    @ApiOperation(value = "adds address for current logged in user", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<Address>> addAddressToUser(@RequestBody Address address) {
         User user = userService.getCurrentLoggedInUser();
         if (!userService.addNewAddressForUser(user, address)) {

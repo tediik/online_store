@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
     List<Address> findAllByShopIsTrue();
-    Address findAddressByRegionAndDistrictAndCityAndStreetAndBuildingAndZip(String region,
-                                                                                            String district,
+    Address findAddressByRegionAndFlatAndCityAndStreetAndBuildingAndZip(String region,
+                                                                                            String flat,
                                                                                             String city,
                                                                                             String street,
                                                                                             String building,
