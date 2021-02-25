@@ -75,4 +75,8 @@ public interface ProductService {
     List<Product> findTrackableProductsByLoggedInUser();
 
     void deleteProductFromTrackedForLoggedInUser(long productId);
+
+    String findProductPictureNamesById(Long id);
+
+    void deleteProductPictureNameById(Long id);
 }

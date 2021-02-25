@@ -86,32 +86,33 @@ public class PictureProductController {
      * @param idProduct id товара чью картинку удаляем
      * @param idPicture id картинки, которую удаляем
      */
-    @DeleteMapping("/picture/delete/{idProduct}/{idPicture}")
+    @DeleteMapping("/picture/delete/{idProduct}/{idPicture}") //Передавать 1 аргумент
     @ApiOperation(value = "Delete picture product by id from db and Directory",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Picture has been deleted"),
             @ApiResponse(code = 400, message = "Picture hasn't been deleted")
     })
-    public ResponseEntity<ResponseDto<String>> deletePicture(@PathVariable("idProduct") Long idProduct, @PathVariable("idPicture")int idPicture) {
+    public ResponseEntity<ResponseDto<String>> deletePicture(@PathVariable("idProduct") Long idProduct, @PathVariable("idPicture")Integer idPicture) {
         Product product = productService.findProductById(idProduct).orElseThrow(ProductNotFoundException::new);
         List<String> productPictureNames = product.getProductPictureNames();
+//        Path fileNameAndPath = Paths.get(uploadDirectory, productService.findProductPictureNamesById(idPicture));
         Path fileNameAndPath = Paths.get(uploadDirectory, productPictureNames.get(idPicture));
-//        if (productPictureNames.size() == 1 && productPictureNames.contains(loadPictureFrom + "defaultPictureProduct.jpg")) {
-//            return new ResponseEntity<>(new ResponseDto<>(false, ""), HttpStatus.BAD_REQUEST);
-//        }
+        if (productPictureNames.size() == 1 && productPictureNames.contains(loadPictureFrom + "defaultPictureProduct.jpg")) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Все катинки удалены"), HttpStatus.BAD_REQUEST);
+        }
         try {
             Files.delete(fileNameAndPath);
         } catch (IOException e) {
             log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
-        productPictureNames.remove(idPicture);
+        productPictureNames.remove(idPicture); //Это прерделать
         if(productPictureNames.size() == 0){
             productPictureNames.add(loadPictureFrom + "defaultPictureProduct.jpg");
         }
         product.setProductPictureNames(productPictureNames);
         productService.editProduct(product);
         return ResponseEntity.ok(new ResponseDto<>(true,
-                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), idProduct), ResponseOperation.NO_ERROR.getMessage()));
+                String.format("picture with id " + ResponseOperation.HAS_BEEN_DELETED.getMessage(), idPicture), ResponseOperation.NO_ERROR.getMessage()));
     }
 }

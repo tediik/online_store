@@ -771,8 +771,6 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-
-
     private void writeFile(@RequestParam("file") MultipartFile file) {
         try {
             byte[] bytes = file.getBytes();
@@ -787,5 +785,13 @@ public class ProductServiceImpl implements ProductService {
             e.printStackTrace();
         }
         log.debug("тип файла" + FilenameUtils.getExtension(file.getOriginalFilename()));
+    }
+
+    public String findProductPictureNamesById(Long id){
+        return productRepository.findProductPictureNamesById(id);
+    }
+
+    public void deleteProductPictureNameById(Long id){
+        productRepository.deleteProductPictureNameById(id);
     }
 }

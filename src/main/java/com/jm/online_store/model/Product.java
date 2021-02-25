@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CollectionId;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -65,6 +68,8 @@ public class Product {
      */
     @ElementCollection
     @CollectionTable(name = "product_picture_names")
+    @GenericGenerator(name="myGenerator",strategy="sequence")
+    @CollectionId(columns=@Column(name="id"), type=@Type(type="long"), generator="myGenerator")
     private List<String> productPictureNames;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
