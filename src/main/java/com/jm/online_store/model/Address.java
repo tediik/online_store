@@ -1,25 +1,18 @@
 package com.jm.online_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.Set;
+import javax.validation.constraints.NotBlank;
+
 /**
  * Сущность адрес, связана с сущностью {@link Order}
  * и сущностью {@link User}
@@ -36,34 +29,41 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
-    private String zip;
-
-    @NonNull
+    @NotBlank
     private String region;
 
-    private String district;
-
-    @NonNull
+    @NotBlank
     private String city;
 
-    @NonNull
+    @NotBlank
     private String street;
 
-    @NonNull
+    @NotBlank
     private String building;
 
     private String flat;
 
-    @Column(name = "shop")
-    private boolean shop;
+    private String zip;
 
-    public Address(@NonNull String zip, @NonNull String region, @NonNull String city, @NonNull String street, @NonNull String building, boolean shop) {
-        this.zip = zip;
+    @Column(name = "shop")
+    private boolean shop = true;
+
+    public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String flat, String zip, boolean shop) {
         this.region = region;
         this.city = city;
         this.street = street;
         this.building = building;
+        this.flat = flat;
+        this.zip = zip;
+        this.shop = shop;
+    }
+
+    public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String zip, boolean shop) {
+        this.region = region;
+        this.city = city;
+        this.street = street;
+        this.building = building;
+        this.zip = zip;
         this.shop = shop;
     }
 }

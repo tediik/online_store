@@ -1,5 +1,6 @@
 package com.jm.online_store.controller;
 
+import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.AlreadyExists;
 import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
@@ -15,7 +16,6 @@ import com.jm.online_store.exception.UserNotFoundException;
 
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.model.dto.ResponseDto;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -84,6 +84,12 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handlerUserNotFoundException(UserNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<?> handleAddressNotFoundException(AddressNotFoundException ex) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
