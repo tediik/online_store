@@ -28,11 +28,13 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public Optional<Address> findAddressById(Long idAddress) {
-        if(addressRepository.findById(idAddress).isEmpty()) {
+        Optional<Address> address = addressRepository.findById(idAddress);
+        if(address.isEmpty()) {
             log.debug("Address with id: {} not found.", idAddress);
             throw new AddressNotFoundException(ExceptionEnums.ADDRESS.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, idAddress));
+        } else {
+            return address;
         }
-        return addressRepository.findById(idAddress);
     }
 
     /**
@@ -42,7 +44,6 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public Address addAddress(Address address) {
-        log.info("Address with id: {}, added successfully.", address.getId());
         return addressRepository.save(address);
     }
 
