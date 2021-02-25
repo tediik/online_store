@@ -21,8 +21,6 @@ public class AdminController {
 
     @GetMapping
     public String homePage(Model model) {
-        model.addAttribute("listRoles", roleRepository.findAll());
-        model.addAttribute("user", userService.getCurrentLoggedInUser());
         return "admin-page";
     }
 
