@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SearchController {
 
     @GetMapping("/{searchString}")
-    public String openSearchPage(@PathVariable String searchString, Model model) {
-        model.addAttribute("searchString", searchString);
+    public String openSearchPage(@PathVariable String searchString) {
         return "search";
     }
 }

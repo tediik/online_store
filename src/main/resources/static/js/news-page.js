@@ -7,9 +7,12 @@ let newsText;
 $(function () {
     showNews().then();
 })
-
+/**
+ * Функция для получения списка новостей
+ */
 async function showNews() {
-    listOfNews = await fetch("/api/news/all").then(response => response.json())
+    listOfNews = await fetch("/api/news/all").then(response => response.json());
+
     allNewsList = $('#allNewsList')
     allNewsList.empty();
     for (key in listOfNews) {
@@ -18,7 +21,7 @@ async function showNews() {
             <div class="alert alert-info mt-2">
                 <div>${listOfNews[key].title}</div>
                 <div>${listOfNews[key].anons}</div>
-                <div class="mt-2"><a onclick="showNewsDetails()" class="btn btn-warning" >Детальнее</a>
+                <div class="mt-2"><a  onclick="showNewsDetails(${listOfNews[key].id})" type="button" class="btn btn-warning" data-target="#newsInfo">Детальнее</a></div>
                 </div>
             </div>
             `;
@@ -26,5 +29,9 @@ async function showNews() {
         console.log(listOfNews[key].title);
     }
 }
+$(document).on('click', '#newsInfo', function () {
+    setTimeout(function () {
+        showNewsDetails();
+    }, 100)
 
-
+});

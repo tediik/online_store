@@ -5,6 +5,8 @@ import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.interf.StockService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,10 @@ public class StockRestController {
     @GetMapping("/publishedstocks")
     @ApiOperation(value = "Returns list of published stocks",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "Published stocks were not found"),
+            @ApiResponse(code = 200, message = "Published stocks found")
+    })
     public ResponseEntity<List<Stock>> getPublishedStocks() {
         List<Stock> publishedStocks = stockService.findPublishedStocks();
         return ResponseEntity.ok(publishedStocks);
@@ -65,6 +71,10 @@ public class StockRestController {
      */
     @GetMapping(value = "/allStocks")
     @ApiOperation(value = "Get of all stocks")
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "All stocks were not found"),
+            @ApiResponse(code = 200, message = "All stocks found")
+    })
     public List<Stock> findAll() {
         return stockService.findAll();
     }
@@ -78,6 +88,11 @@ public class StockRestController {
     @GetMapping(value = "/{id}")
     @ApiOperation(value = "Get stock by ID",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "Stock not found"),
+            @ApiResponse(code = 200, message = "Stock found"),
+            @ApiResponse(code = 204, message = "There is no stock with such id")
+    })
     public Stock findStockById(@PathVariable("id") Long id) {
         return stockService.findStockById(id);
     }
@@ -91,6 +106,10 @@ public class StockRestController {
     @PostMapping(value = "/addStock", consumes = "application/json")
     @ApiOperation(value = "Add a new stock",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "Stock not found"),
+            @ApiResponse(code = 200, message = "Stock found")
+    })
     public ResponseEntity<Stock> addStockM(@RequestBody Stock stock) {
         stockService.addStock(stock);
         return ResponseEntity.ok().body(stock);
@@ -105,6 +124,10 @@ public class StockRestController {
     @PutMapping("/editStock")
     @ApiOperation(value = "Edit stock",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "Stock not found"),
+            @ApiResponse(code = 200, message = "Stock was successfully updated")
+    })
     public ResponseEntity<Stock> editStockM(String stock) {
         Stock newStock = new Gson().fromJson(stock, Stock.class);
         stockService.addStock(newStock);
@@ -119,6 +142,11 @@ public class StockRestController {
     @DeleteMapping(value = "/{id}")
     @ApiOperation(value = "Delete stock by ID",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "Stock not found"),
+            @ApiResponse(code = 200, message = "Stock was successfully deleted"),
+            @ApiResponse(code = 204, message = "There is no stock with such id")
+    })
     public void deleteStockById(@PathVariable("id") Long id) {
         stockService.deleteStockById(id);
     }

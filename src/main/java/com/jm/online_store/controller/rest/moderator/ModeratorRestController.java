@@ -9,6 +9,8 @@ import com.jm.online_store.service.interf.ReportCommentService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +50,10 @@ public class ModeratorRestController {
     @SendTo("/table/report")
     @ApiOperation(value = "Get list of all reports on comments with WebSocket",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "Reports were not found"),
+            @ApiResponse(code = 200, message = "Reports found")
+    })
     public List<ReportCommentDto> allReportComments() {
         return reportCommentService.findAllReportComments().stream()
                 .map(ReportCommentDto::entityToDto)
@@ -61,6 +67,10 @@ public class ModeratorRestController {
     @PostMapping
     @ApiOperation(value = "Add a new report on comment",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "Report hasn't been added"),
+            @ApiResponse(code = 200, message = "Report has been added")
+    })
     public ResponseEntity<ReportCommentDto> addReportComment(@RequestBody ReportCommentDto reportCommentDto) {
         ReportComment reportComment = ReportCommentDto.DtoToEntity(reportCommentDto);
         reportComment.setComment(commentService.findById(reportCommentDto.getCommentId()));
@@ -76,6 +86,11 @@ public class ModeratorRestController {
     @DeleteMapping("/leave/{id}")
     @ApiOperation(value = "Delete report on comment by report ID",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "Report hasn't been deleted"),
+            @ApiResponse(code = 200, message = "Report has been deleted"),
+            @ApiResponse(code = 204, message = "There is no report with such id")
+    })
     public ResponseEntity<ReportComment> deleteReport(@PathVariable("id") Long id) {
         moderatorsStatisticService.incrementDismissedCount(userService.getCurrentLoggedInUser());
         reportCommentService.deleteReport(id);
@@ -89,6 +104,11 @@ public class ModeratorRestController {
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "Delete report and comment  by comment ID",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "Comment and report haven't been deleted"),
+            @ApiResponse(code = 200, message = "Comment and report have been deleted"),
+            @ApiResponse(code = 204, message = "There is no comment with such id")
+    })
     public ResponseEntity<ReportComment> deleteReportAndComment(@PathVariable("id") Long id) {
         moderatorsStatisticService.incrementApprovedCount(userService.getCurrentLoggedInUser());
         reportCommentService.deleteReportAndComment(id);
@@ -102,6 +122,10 @@ public class ModeratorRestController {
     @GetMapping("/statistic")
     @ApiOperation(value = "List moderators statistic",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "List of statistics not found"),
+            @ApiResponse(code = 200, message = "List of statistics found")
+    })
     public ResponseEntity<List<ModeratorsStatistic>> showModeratorsStatistic() {
         List<ModeratorsStatistic> moderatorsStatistics = moderatorsStatisticService.findAll();
         return ResponseEntity.ok(moderatorsStatistics);
@@ -114,6 +138,10 @@ public class ModeratorRestController {
     @GetMapping("/number-of-reports")
     @ApiOperation(value = "Number of non-checked reports",
             authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses( value = {
+            @ApiResponse(code = 404, message = "No comments found"),
+            @ApiResponse(code = 200, message = "Number of comments found"),
+    })
     public ResponseEntity<Integer> showNumberOfReports() {
         List<ModeratorsStatistic> moderatorsStatistics = moderatorsStatisticService.findAll();
         return ResponseEntity.ok(reportCommentService.findAllReportComments().size());
