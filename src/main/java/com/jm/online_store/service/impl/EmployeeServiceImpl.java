@@ -24,38 +24,8 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
+
     private final EmployeeRepository employeeRepository;
-    private final ModelMapper modelMapper;
-    private final Type listType = new TypeToken<List<EmployeeDto>>() {}.getType();
-    private final Type rolesType = new TypeToken<List<Role>>() {}.getType();
-
-    @Override
-    public List<EmployeeDto> findAllEmployees() {
-        List<Employee> employees = employeeRepository.findAll();
-        return modelMapper.map(employees, listType);
-    }
-
-    @Override
-    public EmployeeDto findEmployeeById(Long id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(()
-                -> new EmployeeNotFoundException(ExceptionEnums.EMPLOYEE.getText() + ExceptionConstants.NOT_FOUND));
-        return modelMapper.map(employee, EmployeeDto.class);
-    }
-
-    @Override
-    public EmployeeDto updateEmployee(EmployeeDto employeeReq) {
-        Employee employee = employeeRepository.findById(employeeReq.getId()).orElseThrow(()
-                -> new EmployeeNotFoundException(ExceptionEnums.EMPLOYEE.getText() + ExceptionConstants.NOT_FOUND));
-
-        return getEmployeeDto(employeeReq, employee);
-    }
-
-    @Override
-    public EmployeeDto updateEmployeeById(Long id, EmployeeDto employeeReq) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(()
-                -> new EmployeeNotFoundException(ExceptionEnums.EMPLOYEE.getText() + ExceptionConstants.NOT_FOUND));
-        return getEmployeeDto(employeeReq, employee);
-    }
 
 
     @Override
@@ -63,18 +33,4 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.save(employeeReq);
     }
 
-    @Override
-    public void deleteEmployeeById(Long id) {
-        employeeRepository.findById(id).orElseThrow(()
-                -> new EmployeeNotFoundException(ExceptionEnums.EMPLOYEE.getText() + ExceptionConstants.NOT_FOUND));
-        employeeRepository.deleteById(id);
-    }
-
-
-    private EmployeeDto getEmployeeDto(EmployeeDto employeeReq, Employee employee) {
-        Set<Role> roles = employeeReq.getRoles();
-        Set<Role> rolesToSave =  modelMapper.map(roles, rolesType);
-        employee.setRoles(rolesToSave);
-        return modelMapper.map(employee, EmployeeDto.class);
-    }
 }
