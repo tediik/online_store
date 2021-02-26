@@ -457,9 +457,16 @@ public class UserServiceImpl implements UserService {
 
         if (userRepository.existsByEmail(confirmationToken.getUserEmail())) {
             User user = getCurrentLoggedInUser(request.getSession().getId());
-            Customer customer2 = customerRepository.findByEmail(user.getEmail()).orElseThrow(()
-                    -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND)) ;
-            List<SubBasket> subBasketList = customer2.getUserBasket();
+            Customer customer1 = new Customer();
+            customer1.setId(user.getId());
+            customer1.setEmail(user.getEmail());
+            customer1.setPassword(user.getPassword());
+            customer1.setRegisterDate(user.getRegisterDate());
+            customer.setProfilePicture(user.getProfilePicture());
+            customer1.setConfirmReceiveEmail(user.getConfirmReceiveEmail());
+            Set<Role> roles = user.getRoles();
+            customer1.setRoles(roles);
+            List<SubBasket> subBasketList = customer1.getUserBasket();
             userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
             customer.setUserBasket(subBasketList);
         }
@@ -486,6 +493,65 @@ public class UserServiceImpl implements UserService {
         }
         return true;
     }
+//    @Override
+//    @Transactional
+//    public boolean activateUser(String token, HttpServletRequest request) {
+//        String messageBody;
+//        ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
+//        if (confirmationToken == null) {
+//            log.debug("ConfirmationToken is null");
+//            return false;
+//        }
+//        Set<Role> userRoles = roleRepository.findByName("ROLE_CUSTOMER")
+//                .map(Collections::singleton)
+//                .orElse(Collections.emptySet());
+//
+//        Customer customer = new Customer();
+//        customer.setEmail(confirmationToken.getUserEmail());
+//        customer.setPassword(confirmationToken.getUserPassword());
+//        customer.setRoles(userRoles);
+//        customerRepository.save(customer);
+//
+//        FavouritesGroup favouritesGroup = new FavouritesGroup();
+//        favouritesGroup.setName("Все товары");
+//        favouritesGroup.setCustomer(customer);
+//        favouritesGroupService.save(favouritesGroup);
+//
+//        Customer gotBack = customerRepository.findByEmail(confirmationToken.getUserEmail()).orElseThrow();
+//        List<SubBasket> subBasketList = gotBack.getUserBasket();
+//        userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
+//        customer.setUserBasket(subBasketList);
+////        if (userRepository.existsByEmail(confirmationToken.getUserEmail())) {
+////            User user = getCurrentLoggedInUser(request.getSession().getId());
+////            Customer customer2 = customerRepository.findByEmail(user.getEmail()).orElseThrow(()
+////                    -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND)) ;
+////            List<SubBasket> subBasketList = customer2.getUserBasket();
+////            userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
+////            customer.setUserBasket(subBasketList);
+////        }
+//        if (templatesMailingSettingsService.getSettingByName("activate_user").getTextValue() != null) {
+//            String templateBody = templatesMailingSettingsService.getSettingByName("activate_user").getTextValue();
+//            if (customer.getEmail() != null) {
+//                messageBody = templateBody.replace("@@user@@", customer.getEmail())
+//                        .replace("@@password@@", confirmationToken.getUserPassword())
+//                        .replace("@@url@@", String.format("<a href='%s'>online_store</a>",  productionUrl));
+//            } else {
+//                messageBody = templateBody.replace("@@user@@", "Подписчик");
+//            }
+//            try {
+//                mailSenderService.sendHtmlMessage(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
+//            } catch (MessagingException e) {
+//                log.debug("Message sending error in ActivateUser Method {}", e.getMessage());
+//            }
+//        } else {
+//            log.debug("Шаблон рассылки при активации пользователя в базе пустой ");
+//        } try {
+//            request.login(customer.getEmail(), confirmationToken.getUserPassword());
+//        } catch (ServletException e) {
+//            log.debug("Servlet exception from ActivateUser Method {}", e.getMessage());
+//        }
+//        return true;
+//    }
 
     /**
      * Method receives token and request after User confirms mail change via link
