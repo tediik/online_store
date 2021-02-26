@@ -58,15 +58,15 @@ function renderRolesSelectOnNewUserForm(allRoles) {
 function editUserModalWindowRender(user, allRoles) {
     $('.modal-dialog').off("click").on("click", "#acceptButton", handleUserAcceptButtonFromModalWindow)
     $('#rolesSelectModal').empty()
-    $('#idInputModal').val(user.id)
+    $('#idInputModal').val(user.data.id)
     $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-user')
     $('.modal-title').text("Edit user")
-    $('#emailInputModal').val(user.email).prop('readonly', false)
-    $('#firstNameInputModal').val(user.firstName).prop('readonly', false)
-    $('#lastNameInputModal').val(user.lastName).prop('readonly', false)
+    $('#emailInputModal').val(user.data.email).prop('readonly', false)
+    $('#firstNameInputModal').val(user.data.firstName).prop('readonly', false)
+    $('#lastNameInputModal').val(user.data.lastName).prop('readonly', false)
     $('#passwordInputModal').val("").prop('readonly', false)
     $.each(allRoles, function (i, role) {
-        if (compareRolesId(user.roles, role.name)) {
+        if (compareRolesId(user.data.roles, role.name)) {
             $('#rolesSelectModal').append(`<option value=${role.id} selected="true">${role.name}</option>>`)
         } else {
             $('#rolesSelectModal').append(`<option value=${role.id}>${role.name}</option>>`)
@@ -90,12 +90,12 @@ function deleteUserModalWindowRender(userToDelete) {
     $('#rolesSelectModal').empty()
     $('.modal-title').text("Delete user")
     $('#acceptButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-user')
-    $('#idInputModal').val(userToDelete.id)
-    $('#emailInputModal').val(userToDelete.email).prop('readonly', true)
-    $('#firstNameInputModal').val(userToDelete.firstName).prop('readonly', true)
-    $('#lastNameInputModal').val(userToDelete.lastName).prop('readonly', true)
+    $('#idInputModal').val(userToDelete.data.id)
+    $('#emailInputModal').val(userToDelete.data.email).prop('readonly', true)
+    $('#firstNameInputModal').val(userToDelete.data.firstName).prop('readonly', true)
+    $('#lastNameInputModal').val(userToDelete.data.lastName).prop('readonly', true)
     $('#passwordInputModal').val("").prop('readonly', true)
-    $.each(userToDelete.roles, function (i, role) {
+    $.each(userToDelete.data.roles, function (i, role) {
         $('#rolesSelectModal').append(`<option value=${role.id} selected="true" disabled>${role.name}</option>>`)
     })
 }
@@ -264,7 +264,7 @@ function handleUserAcceptButtonFromModalWindow(event) {
             fetch(adminRestUrl + "/users/" + user.id, {headers: headers})
                 .then(response => response.json())
                 .then(userToDelete => {
-                    let hasCustomerRole = compareRolesId(userToDelete.roles, 'ROLE_CUSTOMER');
+                    let hasCustomerRole = compareRolesId(userToDelete.data.roles, 'ROLE_CUSTOMER');
                     if (hasCustomerRole === true) {
                         fetch("/api/customer/deleteProfile/" + user.id, {
                             headers: headers,
@@ -376,8 +376,9 @@ function renderUsersTable(users) {
         return rolesNames;
     }
 
-    for (let i = 0; i < users.length; i++) {
-        const user = users[i];
+    for (let i = 0; i < users.data.length; i++) {
+        const user = users.data[i];
+        console.log(user)
         let userRolesNames = getUserRolesNames(user.roles)
         let row = `
                 <tr id="tr-${user.id}">

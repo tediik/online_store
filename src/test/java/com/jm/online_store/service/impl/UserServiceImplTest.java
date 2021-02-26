@@ -11,6 +11,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.AddressRepository;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
+import com.jm.online_store.repository.EmployeeRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
@@ -51,8 +52,8 @@ public class UserServiceImplTest {
     private FavouritesGroupService favouritesGroupService = mock(FavouritesGroupService.class);
     private TemplatesMailingSettingsService templatesMailingSettingsService = mock(TemplatesMailingSettingsServiceImpl.class);
     private CustomerService customerService = mock(CustomerService.class);
-    private EmployeeService employeeService = mock(EmployeeService.class);
-    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService, favouritesGroupService, templatesMailingSettingsService , employeeService);
+    private EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
+    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService, favouritesGroupService, templatesMailingSettingsService , employeeRepository);
 
     private User userFullParameter;
     private Customer userWithIdEmailPassword;

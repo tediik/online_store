@@ -49,9 +49,9 @@ public class EmployeeRestController {
                 ResponseOperation.NO_ERROR.getMessage()));
     }
 
-    @PostMapping()
-    public ResponseEntity<ResponseDto<EmployeeDto>> createEmployee(@RequestBody EmployeeDto employeeReq){
-        EmployeeDto returnValue = employeeService.createEmployee(employeeReq);
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
-    }
+//    @PostMapping()
+//    public ResponseEntity<ResponseDto<EmployeeDto>> createEmployee(@RequestBody EmployeeDto employeeReq){
+//        EmployeeDto returnValue = employeeService.createEmployee(employeeReq);
+//        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
+//    }
 }

@@ -2,6 +2,7 @@ package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ public interface CustomerService {
 
     Optional<Customer> findById(Long id);
 
-    void addCustomer(Customer customer);
+    Customer addCustomer(Customer customer);
 
     void cancelSubscription(Long id);
 
@@ -35,7 +36,7 @@ public interface CustomerService {
 
     Customer getCurrentLoggedInUser();
 
-    Customer getCurrentLoggedInUser(String sessionID);
+    User getCurrentLoggedInUser(String sessionID);
 
     void updateCustomer(Customer customer);
 

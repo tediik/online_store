@@ -25,6 +25,7 @@ public class UserDto {
     private String lastName;
     private String phoneNumber;
     private User.Gender userGender;
+    private String password;
     private LocalDate birthdayDate;
     private LocalDate registerDate;
     private String profilePicture;

@@ -160,10 +160,11 @@ public class AdminRestController {
             @ApiResponse(code = 409, message = "User with same email already exists"),
             @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / EMAIL ADDRESS ALREADY EXISTS / PASSWORD IS EMPTY / ROLES IS EMPTY"),
     })
-    public ResponseEntity<ResponseDto<UserDto>> addNewUser(@RequestBody User newUser) {
-        User user = userService.addNewUserFromAdmin(newUser);
-        UserDto userDto = modelMapper.map(user, UserDto.class);
-        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userDto, UserDto.class)), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<UserDto>> addNewUser(@RequestBody UserDto newUser) {
+        User user = modelMapper.map(newUser, User.class);
+        User gotBack = userService.addNewUserFromAdmin(user);
+        UserDto userDto = modelMapper.map(gotBack, UserDto.class);
+        return new ResponseEntity<>(new ResponseDto<>(true, userDto), HttpStatus.OK);
     }
 
     /**

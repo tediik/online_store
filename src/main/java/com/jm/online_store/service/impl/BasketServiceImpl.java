@@ -9,6 +9,7 @@ import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.BasketRepository;
@@ -57,7 +58,16 @@ public class BasketServiceImpl implements BasketService {
      */
     @Override
     public List<SubBasket> getBasket(String sessionID) {
-        Customer customer = customerService.getCurrentLoggedInUser(sessionID);
+        User user = userService.getCurrentLoggedInUser(sessionID);
+        Customer customer = new Customer();
+        customer.setId(user.getId());
+        customer.setEmail(user.getEmail());
+        customer.setPassword(user.getPassword());
+        customer.setRegisterDate(user.getRegisterDate());
+        customer.setProfilePicture(user.getProfilePicture());
+        customer.setConfirmReceiveEmail(user.getConfirmReceiveEmail());
+        Set<Role> roles = user.getRoles();
+        customer.setRoles(roles);
         List<SubBasket> subBaskets = customer.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {

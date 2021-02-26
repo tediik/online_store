@@ -19,6 +19,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.EmployeeDto;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
+import com.jm.online_store.repository.EmployeeRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
@@ -40,6 +41,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,7 +84,7 @@ public class UserServiceImpl implements UserService {
     private final CommonSettingsService commonSettingsService;
     private final FavouritesGroupService favouritesGroupService;
     private final TemplatesMailingSettingsService templatesMailingSettingsService;
-    private final EmployeeService employeeService;
+    private final EmployeeRepository employeeRepository;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -593,25 +596,22 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                EmployeeDto employee = new EmployeeDto();
+                Employee employee = new Employee();
                 employee.setId(newUser.getId());
                 employee.setEmail(newUser.getEmail());
                 employee.setFirstName(newUser.getFirstName());
                 employee.setLastName(newUser.getLastName());
                 employee.setRoles(newUser.getRoles());
                 employee.setPassword(newUser.getPassword());
-                EmployeeDto employeeDto = employeeService.createEmployee(employee);
-                returnValue.setId(employeeDto.getId());
-                returnValue.setFirstName(employeeDto.getFirstName());
-                returnValue.setLastName(employeeDto.getLastName());
-                returnValue.setEmail(employeeDto.getEmail());
-                returnValue.setRoles(employeeDto.getRoles());
+                returnValue = employeeRepository.save(employee);
             } else {
                 Customer customer = new Customer();
                 customer.setId(newUser.getId());
+                customer.setEmail(newUser.getEmail());
                 customer.setFirstName(newUser.getFirstName());
                 customer.setLastName(newUser.getLastName());
                 customer.setRoles(newUser.getRoles());
+                customer.setPassword(newUser.getPassword());
                 customer.setProfilePicture(newUser.getProfilePicture());
                 FavouritesGroup favouritesGroup = new FavouritesGroup();
                 favouritesGroup.setName("Все товары");
@@ -749,6 +749,7 @@ public class UserServiceImpl implements UserService {
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
+
         return findByEmail(auth.getName()).orElseThrow(() ->
                 new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
     }

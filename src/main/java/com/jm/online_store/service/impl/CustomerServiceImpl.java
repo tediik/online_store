@@ -27,6 +27,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -150,8 +151,8 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     @Transactional
-    public void addCustomer(Customer customer) {
-        customerRepository.save(customer);
+    public Customer addCustomer(Customer customer) {
+       return customerRepository.save(customer);
     }
 
     /**
@@ -346,10 +347,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public Customer getCurrentLoggedInUser(String sessionID) {
+    public User getCurrentLoggedInUser(String sessionID) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
-
         if (auth == null || !auth.isAuthenticated()) {
             return null;
         }
@@ -359,6 +359,7 @@ public class CustomerServiceImpl implements CustomerService {
             }
             return findCustomerByEmail(sessionID);
         }
-        return findCustomerByEmail(auth.getName());
+
+        return userService.findByEmail(auth.getName()).orElseThrow();
     }
 }
