@@ -35,7 +35,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Slf4j
 @Api(description = "Rest controller for product picture")
-@RequestMapping("/api/product")
+@RequestMapping("/api/product")  // Закрыл этот api для всех кроме ROLE_MANAGER
 public class PictureProductController {
 
     private final ProductService productService;
@@ -83,36 +83,32 @@ public class PictureProductController {
 
     /**
      * Метод для удаления картинки, если картинок больше нет она меняется на дефолтную
-     * @param idProduct id товара чью картинку удаляем
-     * @param idPicture id картинки, которую удаляем
+     * @param id id картинки, которую удаляем
      */
-    @DeleteMapping("/picture/delete/{idProduct}/{idPicture}") //Передавать 1 аргумент
+    @DeleteMapping("/picture/delete/{idPicture}") //Передавать 1 аргумент
     @ApiOperation(value = "Delete picture product by id from db and Directory",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Picture has been deleted"),
             @ApiResponse(code = 400, message = "Picture hasn't been deleted")
     })
-    public ResponseEntity<ResponseDto<String>> deletePicture(@PathVariable("idProduct") Long idProduct, @PathVariable("idPicture")Integer idPicture) {
-        Product product = productService.findProductById(idProduct).orElseThrow(ProductNotFoundException::new);
-        List<String> productPictureNames = product.getProductPictureNames();
-//        Path fileNameAndPath = Paths.get(uploadDirectory, productService.findProductPictureNamesById(idPicture));
-        Path fileNameAndPath = Paths.get(uploadDirectory, productPictureNames.get(idPicture));
-        if (productPictureNames.size() == 1 && productPictureNames.contains(loadPictureFrom + "defaultPictureProduct.jpg")) {
-            return new ResponseEntity<>(new ResponseDto<>(false, "Все катинки удалены"), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<ResponseDto<String>> deletePicture(@PathVariable("idPicture")Long id) {
+        Path fileNameAndPath = null;
+        Long productId = null;
         try {
+            productId = productService.findProductIdByIdPicture(id);
+            fileNameAndPath = Paths.get(uploadDirectory, productService.findProductPictureNamesById(id));
             Files.delete(fileNameAndPath);
-        } catch (IOException e) {
+        } catch (NullPointerException e){
+            return new ResponseEntity<>(new ResponseDto<>(false, "файла с id " + id + " не существует" ), HttpStatus.BAD_REQUEST);
+        } catch (IOException e){
             log.debug("Failed to delete file: {}, because: {} ", fileNameAndPath.getFileName().toString(), e.getMessage());
         }
-        productPictureNames.remove(idPicture); //Это прерделать
-        if(productPictureNames.size() == 0){
-            productPictureNames.add(loadPictureFrom + "defaultPictureProduct.jpg");
+        productService.deleteProductPictureNameById(id);
+        if(productService.countAllPictureProductById(productId) == 0L){
+           productService.saveProduct(productService.getProductById(productId));
         }
-        product.setProductPictureNames(productPictureNames);
-        productService.editProduct(product);
         return ResponseEntity.ok(new ResponseDto<>(true,
-                String.format("picture with id " + ResponseOperation.HAS_BEEN_DELETED.getMessage(), idPicture), ResponseOperation.NO_ERROR.getMessage()));
+                String.format("picture with id " + ResponseOperation.HAS_BEEN_DELETED.getMessage(), id), ResponseOperation.NO_ERROR.getMessage()));
     }
 }

@@ -208,7 +208,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.getRating() == null) {
             product.setRating(0d);
         }
-        if (product.getProductPictureNames() == null) {
+        if (product.getProductPictureNames() == null || product.getProductPictureNames().isEmpty()) {
             product.setProductPictureNames(new ArrayList<>(List.of(loadPictureFrom + "defaultPictureProduct.jpg")));
         } else {
             product.setProductPictureNames(product.getProductPictureNames());
@@ -652,7 +652,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Long editProduct(Product product) {
 
-        if (product.getProductPictureNames().size() == 0) {
+        if (product.getProductPictureNames() == null || product.getProductPictureNames().isEmpty()) {
             product.setProductPictureNames(new ArrayList<>(List.of("defaultProductImage.jpg")));
         } else {
             product.setProductPictureNames(product.getProductPictureNames());
@@ -786,12 +786,41 @@ public class ProductServiceImpl implements ProductService {
         }
         log.debug("тип файла" + FilenameUtils.getExtension(file.getOriginalFilename()));
     }
-
+    /**
+     * Удаляет адресс изображения из БД по id
+     * @param id изображения
+     */
+    @Transactional
+    @Override
+    public void deleteProductPictureNameById(Long id) {
+        productRepository.deleteProductPictureNameById(id);
+    }
+    /**
+     * Считает колличество изображений в БД принадлежащее данному продукту
+     * @param id продукта
+     */
+    @Transactional
+    @Override
+    public Long countAllPictureProductById(Long id) {
+        return productRepository.countAllPictureProductById(id);
+    }
+    /**
+     * Получает id продукта
+     * @param idPicture изображения
+     */
+    @Transactional
+    @Override
+    public Long findProductIdByIdPicture(Long idPicture){
+        return productRepository.findProductIdByIdPicture(idPicture);
+    }
+    /**
+     * Находит адресс изображения в БД по id
+     * @param id изображения
+     * @return String
+     */
+    @Transactional
+    @Override
     public String findProductPictureNamesById(Long id){
         return productRepository.findProductPictureNamesById(id);
-    }
-
-    public void deleteProductPictureNameById(Long id){
-        productRepository.deleteProductPictureNameById(id);
     }
 }

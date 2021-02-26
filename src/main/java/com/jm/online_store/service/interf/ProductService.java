@@ -79,4 +79,8 @@ public interface ProductService {
     String findProductPictureNamesById(Long id);
 
     void deleteProductPictureNameById(Long id);
+
+    Long countAllPictureProductById(Long id);
+
+    Long findProductIdByIdPicture(Long id);
 }

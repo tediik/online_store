@@ -14,9 +14,6 @@ fetch("/api/products" + `/${productIdFromPath}`)
                 fillBreadcrumb(data);
                 fillAboutProduct(data);
                 $('#showPictureFirstSlide').attr('src', data.productPictureNames[0]);
-                $('#showPictureSecondSlide').attr('src', data.productPictureNames[1]);
-                $('#showPictureThirdSlide').attr('src', data.productPictureNames[2]);
-
                 for (let i =1; i < data.productPictureNames.length; i++) {
                     $('#picturesCarousel').append(`<li data-target="#myCarousel" data-slide-to="${i+1}"></li>`)
                     $('#displayingPictures').append(`<div class="carousel-item ">

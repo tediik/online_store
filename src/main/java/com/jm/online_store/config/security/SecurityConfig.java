@@ -70,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/feedback/").access("hasAnyRole('ROLE_CUSTOMER', 'ROLE_MANAGER')")
                 .antMatchers("/api/products/productChangeMonitor").access("hasRole('ROLE_MANAGER')")
+                .antMatchers("/api/product/**").access("hasRole('ROLE_MANAGER')")
                 .antMatchers("/manager/**").access("hasRole('ROLE_MANAGER')")
                 .antMatchers("/customer/**").access("hasAnyRole('ROLE_CUSTOMER','ROLE_ADMIN')")
                 .antMatchers("/service/**").access("hasAnyRole('ROLE_SERVICE','ROLE_ADMIN')")
