@@ -24,7 +24,7 @@ public interface ProductService {
 
     List<Product> findAllOrderByRatingDesc();
 
-    Long saveProduct(Product product);
+    Product saveProduct(Product product);
 
     void deleteProduct(Long idProduct);
 
@@ -40,15 +40,12 @@ public interface ProductService {
 
     void importFromXMLFile(String fileName);
 
-    void importFromXMLFile(MultipartFile multipartFile);
 
     void importFromXMLFile(String fileName, Long categoryId);
 
-    void importFromCSVFile(String fileName) throws FileNotFoundException;
+    void importFromCSVFile(String fileName , Long id) throws FileNotFoundException;
 
-    void importFromCSVFile(MultipartFile multipartFile) throws FileNotFoundException;
-
-    void importFromCSVFile(String fileName, Long categoryId) throws FileNotFoundException;
+    void importFromCSVFile(String fileName ) throws FileNotFoundException;
 
     List<Product> findNumProducts(Integer num);
 
@@ -66,7 +63,7 @@ public interface ProductService {
 
     boolean addNewSubscriber(ObjectNode body);
 
-    Long editProduct(Product product);
+    Product editProduct(Product product);
 
     void saveAllProducts(List<Product> products);
 

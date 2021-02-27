@@ -59,6 +59,10 @@ public class MaintenanceFilter implements Filter {
         status = commonSettings.isStatus();
         userRoles = Set.of(commonSettings.getTextValue().split(","));
 
+        if (!status && "/maintenanceMode".equals(path)) {
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/");
+        }
+
         if (roles.stream().anyMatch(userRoles::contains) || "/maintenanceMode".equals(path) || path.contains("login") ||
                 path.contains("maintenancemode.css")) {
             filterChain.doFilter(request, response);
