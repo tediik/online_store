@@ -43,6 +43,7 @@ public class UserDto {
         userDto.setBirthdayDate(user.getBirthdayDate());
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
+        userDto.setAccountNonBlockedStatus(user.isAccountNonBlockedStatus());
         userDto.setRoles(user.getRoles());
         return userDto;
     }

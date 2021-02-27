@@ -131,7 +131,7 @@ public class BasketServiceImpl implements BasketService {
      */
     @Override
     public void deleteBasket(SubBasket subBasket,String sessionID) {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         List<SubBasket> subBasketList = customer.getUserBasket();
         subBasketList.remove(subBasket);
         customer.setUserBasket(subBasketList);
@@ -183,7 +183,7 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public void buildOrderFromBasket(Long id) {
         Address addressToAdd = addressService.findAddressById(id).orElseThrow(AddressNotFoundException::new);
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         List<SubBasket> subBasketList = customer.getUserBasket();
         Product product;
         int count = 0;

@@ -63,7 +63,7 @@ public class FavouritesGroupRestController {
     @ApiOperation(value = "saves new list of favourite products",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         favouritesGroup.setCustomer(customer);
         favouritesGroupService.addFavouritesGroup(favouritesGroup);
         return ResponseEntity.ok(favouritesGroupService.getOneFavouritesGroupByUserAndByName(customer, favouritesGroup.getName()));

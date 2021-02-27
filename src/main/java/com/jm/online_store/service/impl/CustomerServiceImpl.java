@@ -27,7 +27,6 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -223,7 +222,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     @Transactional
-    public Customer getCurrentLoggedInUser() {
+    public Customer getCurrentLoggedInCustomer() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
@@ -325,7 +324,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public Customer changeMail(String newMail) {
-        Customer customer = getCurrentLoggedInUser();
+        Customer customer = getCurrentLoggedInCustomer();
         if (customer == null) {
             throw new AuthenticationCredentialsNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_AUTHENTICATED);
         }
@@ -347,7 +346,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public User getCurrentLoggedInUser(String sessionID) {
+    public User getCurrentLoggedInCustomer(String sessionID) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
         if (auth == null || !auth.isAuthenticated()) {

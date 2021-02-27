@@ -72,9 +72,9 @@ public class AdminRestController {
     })
     public ResponseEntity<ResponseDto<List<UserDto>>> getAllUsersList() {
         List<UserDto> allUsersDto = new ArrayList<>();
-        for (User user: userService.findAll()){
-            allUsersDto.add(modelMapper.map(user, UserDto.class));
-        }
+        List<User> userList = userService.findAll();
+        userList.forEach(u -> allUsersDto.add(UserDto.fromUser(u)));
+
         if (allUsersDto.size() == 0) {
             log.debug("There are no users in db");
             return new ResponseEntity<>(new ResponseDto<>(true, allUsersDto), HttpStatus.OK);

@@ -34,9 +34,9 @@ public interface CustomerService {
 
     void updateCustomerDayOfWeekForStockSend(Customer customer, String dayOfWeekForStockSend);
 
-    Customer getCurrentLoggedInUser();
+    Customer getCurrentLoggedInCustomer();
 
-    User getCurrentLoggedInUser(String sessionID);
+    User getCurrentLoggedInCustomer(String sessionID);
 
     void updateCustomer(Customer customer);
 

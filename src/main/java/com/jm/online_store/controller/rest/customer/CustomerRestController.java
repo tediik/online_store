@@ -87,7 +87,7 @@ public class CustomerRestController {
             @ApiResponse(code = 200, message = "Изменения для пользователя с идентификатором: \"id\" были успешно добавлены."),
     })
     public ResponseEntity<ResponseDto<String>> changePassword(@RequestBody PasswordDto passwords) {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         if(passwords.getOldPassword().equals(passwords.getNewPassword())) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Старый и новый пароли совпадают."), HttpStatus.BAD_REQUEST);
         }

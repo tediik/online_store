@@ -6,7 +6,6 @@ import com.jm.online_store.service.interf.SharedNewsService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +41,7 @@ public class GlobalSharedNewsRestController {
             "SharedNews must include news id, which was shared and the name of social network, where was shared",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> addSharedNews(@RequestBody SharedNews sharedNews) {
-        sharedNews.setCustomer(customerService.getCurrentLoggedInUser());
+        sharedNews.setCustomer(customerService.getCurrentLoggedInCustomer());
         sharedNewsService.addSharedNews(sharedNews);
         return ResponseEntity.ok().build();
     }

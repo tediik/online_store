@@ -65,7 +65,7 @@ public class FavouritesGoodsRestController {
     @ApiOperation(value = "Rest Controller adds products to favourites. Adds it to the list \"All products\" ",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity addFavouritesGoods(@RequestBody Long id) {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         favouriteGoodsService.addToFavouriteGoods(id, customer);
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(customer, "Все товары");
@@ -83,7 +83,7 @@ public class FavouritesGoodsRestController {
     @ApiOperation(value = "Rest Controller deletes product from favourites. From the list \"All products\" ",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity deleteFromFavouritesGoods(@RequestBody Long id) {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         favouriteGoodsService.deleteFromFavouriteGoods(id, customer);
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         FavouritesGroup favouritesGroup = favouritesGroupService.getOneFavouritesGroupByUserAndByName(customer, "Все товары");

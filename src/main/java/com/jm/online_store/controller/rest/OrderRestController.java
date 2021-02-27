@@ -41,7 +41,7 @@ public class OrderRestController {
     @ApiOperation(value = "Get list of all orders",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<Set<Order>> getAllOrders() {
-        Customer autorityUser = customerService.getCurrentLoggedInUser();
+        Customer autorityUser = customerService.getCurrentLoggedInCustomer();
         Set<Order> orders = autorityUser.getOrders();
         return ResponseEntity.ok(orders);
     }

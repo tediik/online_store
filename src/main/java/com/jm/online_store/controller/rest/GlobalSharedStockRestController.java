@@ -27,7 +27,7 @@ public class GlobalSharedStockRestController {
     @ApiOperation(value = "Adds new sharedStock",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<String> addSharedStock(@RequestBody SharedStock sharedStock) {
-        sharedStock.setCustomer(customerService.getCurrentLoggedInUser());
+        sharedStock.setCustomer(customerService.getCurrentLoggedInCustomer());
         sharedStockService.addSharedStock(sharedStock);
         return ResponseEntity.ok().build();
     }

@@ -6,7 +6,6 @@ import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CustomerService;
-import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -38,11 +37,11 @@ public class AddressRestController {
         return ResponseEntity.ok(addressService.findAllShops());
     }
 
-    @GetMapping(value = "/userAddresses")
+    @GetMapping(value = "/customerAddresses")
     @ApiOperation(value = "get current logged in Users address")
-    public ResponseEntity<Set<Address>> userAddresses() {
-        if (customerService.getCurrentLoggedInUser().getUserAddresses() != null) {
-            return ResponseEntity.ok(customerService.getCurrentLoggedInUser().getUserAddresses());
+    public ResponseEntity<Set<Address>> customerAddresses() {
+        if (customerService.getCurrentLoggedInCustomer().getUserAddresses() != null) {
+            return ResponseEntity.ok(customerService.getCurrentLoggedInCustomer().getUserAddresses());
         }
         return ResponseEntity.notFound().build();
     }
@@ -50,7 +49,7 @@ public class AddressRestController {
     @PostMapping(value = "/addAddress")
     @ApiOperation(value = "adds address for current logged in user")
     public ResponseEntity addAddressToCustomer(@RequestBody Address address) {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         if (customerService.addNewAddressForCustomer(customer, address)) {
             return ResponseEntity.ok().build();
         }

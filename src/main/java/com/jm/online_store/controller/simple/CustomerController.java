@@ -44,7 +44,7 @@ public class CustomerController {
     @GetMapping
     public String getUserProfile(Model model) {
         User user = userService.getCurrentLoggedInUser();
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         model.addAttribute("user", user);
         model.addAttribute("customer", customer);
         model.addAttribute("listOfComments", commentService.findAllByCustomer(user));
