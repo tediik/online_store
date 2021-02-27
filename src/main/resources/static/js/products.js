@@ -942,11 +942,3 @@ function fillMagicModal() {
  *  Для отдельной вкладка Категории товаров
  */
 
-/**
- * Функция удаления товара из рассылки снижения цены
- * @param id товара
- */
-function deleteProductFromMailingChangePrice() {
-    alert("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-    console.log(" что-то приторахтело")
-}
