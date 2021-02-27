@@ -431,9 +431,6 @@ function fetchUsersAndRenderTable() {
             'Content-type': 'application/json; charset=UTF-8'
         }
     }).then(response => response.json())
-        // .then(function (users) {
-        //     renderUsersTable(users.data);
-        // })
         .then(users => renderUsersTable(users.data))
 }
 

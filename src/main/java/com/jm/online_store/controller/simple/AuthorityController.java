@@ -29,32 +29,12 @@ public class AuthorityController {
 
     @GetMapping("/profile")
     public String getPersonalInfo(Model model) {
-        User user = userService.getCurrentLoggedInUser();
-        model.addAttribute("user", user);
-        return "profile-authority";
-    }
-
-    @PostMapping("/profile")
-    public String updateUserProfile(User user, Model model) {
-        User updateUser = userService.updateUserProfile(user);
-        model.addAttribute("user", updateUser);
         return "profile-authority";
     }
 
     @GetMapping("/change-password")
     public String changePassword() {
         return "change-password";
-    }
-
-    @PostMapping("/change-password")
-    public String changePassword(Model model,
-                                 @RequestParam String oldPassword,
-                                 @RequestParam String newPassword) {
-        User user = userService.getCurrentLoggedInUser();
-        if (!userService.changePassword(user.getId(), oldPassword, newPassword)) {
-            model.addAttribute("message", "Pls, check your old password!");
-        }
-        return "profile";
     }
 
     @GetMapping("/activatenewmail/{token}")

@@ -4,6 +4,7 @@ import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +35,8 @@ public class ProfileRestController {
      * REST-контролллер для ролей ADMIN & MANAGER & SERVICE
      */
     private final UserService userService;
+    private final ModelMapper modelMapper;
+
 
     /**
      * Метод изменения email
@@ -83,9 +87,14 @@ public class ProfileRestController {
     @GetMapping(value = "/currentUser")
     @ApiOperation(value = "get current Logged in User",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<User> getCurrentUser() {
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Пользователь не найден"),
+            @ApiResponse(code = 200, message = "Пользователь с идентификатором: \"id\" найден."),
+    })
+    public ResponseEntity<ResponseDto<UserDto>> getCurrentUser() {
         User currentLoggedInUser = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(currentLoggedInUser);
+//        return ResponseEntity.ok(currentLoggedInUser);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(currentLoggedInUser, UserDto.class)), HttpStatus.OK);
     }
 
     /**
