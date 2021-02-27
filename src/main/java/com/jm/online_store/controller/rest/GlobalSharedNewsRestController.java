@@ -29,6 +29,7 @@ public class GlobalSharedNewsRestController {
     private final SharedNewsService sharedNewsService;
     private final CustomerService customerService;
     private final ModelMapper modelMapper;
+
     /**
      * Метод для добавления информации о том, какой новостью, какой пользователь,
      * в какой социальной сети поделился
