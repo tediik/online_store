@@ -22,6 +22,7 @@ import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
 import com.jm.online_store.service.interf.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,7 +54,8 @@ public class UserServiceImplTest {
     private TemplatesMailingSettingsService templatesMailingSettingsService = mock(TemplatesMailingSettingsServiceImpl.class);
     private CustomerService customerService = mock(CustomerService.class);
     private EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
-    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService, favouritesGroupService, templatesMailingSettingsService , employeeRepository);
+    private ModelMapper modelMapper = mock(ModelMapper.class);
+    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService, favouritesGroupService, templatesMailingSettingsService , employeeRepository, modelMapper);
 
     private User userFullParameter;
     private Customer userWithIdEmailPassword;

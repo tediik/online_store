@@ -4,7 +4,6 @@ import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.UserService;
@@ -31,7 +30,6 @@ import java.util.Set;
 @Api(description = "Rest controller for addresses")
 public class AddressRestController {
     private final AddressService addressService;
-    private final UserService userService;
     private final CustomerService customerService;
 
     @GetMapping(value = "/allShops")

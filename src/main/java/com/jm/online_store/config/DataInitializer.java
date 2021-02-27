@@ -28,7 +28,6 @@ import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.model.TemplatesMailingSettings;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.model.TopicsCategory;
-import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.BasketService;
@@ -126,7 +125,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct
+    @PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();

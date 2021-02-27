@@ -59,6 +59,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,12 +80,14 @@ public class UserServiceImpl implements UserService {
     private final CustomerRepository customerRepository;
     private final ConfirmationTokenRepository confirmTokenRepository;
     private final MailSenderServiceImpl mailSenderService;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final AddressService addressService;
     private final CommonSettingsService commonSettingsService;
     private final FavouritesGroupService favouritesGroupService;
     private final TemplatesMailingSettingsService templatesMailingSettingsService;
     private final EmployeeRepository employeeRepository;
-    private final ModelMapper modelMapper;
+    private final   ModelMapper modelMapper;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -593,26 +596,16 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
         newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+        newUser.setRegisterDate(LocalDate.now());
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                Employee employee = new Employee();
-                employee.setId(newUser.getId());
-                employee.setEmail(newUser.getEmail());
-                employee.setFirstName(newUser.getFirstName());
-                employee.setLastName(newUser.getLastName());
-                employee.setRoles(newUser.getRoles());
-                employee.setPassword(newUser.getPassword());
+                Employee employee = modelMapper.map(newUser, Employee.class);
+                employee.setAccountNonBlockedStatus(true);
                 returnValue = employeeRepository.save(employee);
             } else {
-                Customer customer = new Customer();
-                customer.setId(newUser.getId());
-                customer.setEmail(newUser.getEmail());
-                customer.setFirstName(newUser.getFirstName());
-                customer.setLastName(newUser.getLastName());
-                customer.setRoles(newUser.getRoles());
-                customer.setPassword(newUser.getPassword());
-                customer.setProfilePicture(newUser.getProfilePicture());
+                Customer customer = modelMapper.map(newUser, Customer.class);
+                customer.setAccountNonBlockedStatus(true);
                 FavouritesGroup favouritesGroup = new FavouritesGroup();
                 favouritesGroup.setName("Все товары");
                 favouritesGroup.setCustomer(customer);

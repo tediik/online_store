@@ -1,21 +1,16 @@
 package com.jm.online_store.controller.rest.admin;
 
-import com.jm.online_store.enums.ResponseOperation;
-import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.exception.UserServiceException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.CommonSettings;
-import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CommonSettingsService;
-
-import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
-import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -52,7 +47,7 @@ public class AdminRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final CommonSettingsService commonSettingsService;
     private final ModelMapper modelMapper;
-    private final CustomerService customerService;
+
 
     /**
      * Rest mapping to  receive authenticated user. from admin page

@@ -39,6 +39,7 @@ public class FavouritesGoodsRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
     private final CustomerService customerService;
+
     /**
      * контроллер для получения товаров "избранное" для авторизованного User.
      * используется поиск по идентификатору User, т.к. используется ленивая
