@@ -20,4 +20,8 @@ public class ProductDto {
     private String productType;
     private String ProductPictureName;
     private boolean isFavourite;
+    private Integer amount;
+
+    public ProductDto() {
+    }
 }

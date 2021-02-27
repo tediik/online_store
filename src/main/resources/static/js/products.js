@@ -144,12 +144,12 @@ function getAllProducts() { // не нашел, где используется 
  */
 function editModalWindowRender(product) {
     $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindow)
-    $('#idInputModal').val(product.id)
+    $('#idInputModal').val(product.data.id)
     $('#acceptChangeButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
     $('.modal-title').text("Edit product")
-    $('#productInputModal').val(product.product).prop('readonly', false)
-    $('#productPriceInputModal').val(product.price).prop('readonly', false)
-    $('#productAmountInputModal').val(product.amount).prop('readonly', false)
+    $('#productInputModal').val(product.data.product).prop('readonly', false)
+    $('#productPriceInputModal').val(product.data.price).prop('readonly', false)
+    $('#productAmountInputModal').val(product.data.amount).prop('readonly', false)
     $('#productCategoryValueModal').val(currentCategoryNameEdit);
     fillProductCategoriesIn('#jqxTreeModal').then();
 }
@@ -270,10 +270,10 @@ function handleEditButton(event) {
         .then(([productToEdit]) => {
             fetch(API_CATEGORIES_URL + 'getOne/' + productId)
                 .then(promiseResult => {
-                    return promiseResult.text()
+                    return promiseResult.json();
                 })
                 .then(responseResult => {
-                    currentCategoryNameEdit = "" + responseResult;
+                    currentCategoryNameEdit = "" + responseResult.error;
                     editModalWindowRender(productToEdit)
                 });
         });
@@ -599,8 +599,8 @@ function renderProductsTable(products) {
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>`)
-    for (let i = 0; i < products.length; i++) {
-        const product = products[i];
+    for (let i = 0; i < products.data.length; i++) {
+        const product = products.data[i];
         let row = `
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>

@@ -597,7 +597,8 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
                         presentProduct.getProductPictureName(),
-                        productSet.contains(presentProduct)
+                        productSet.contains(presentProduct),
+                        presentProduct.getAmount()
                 );
                 return Optional.of(productDto);
             }
@@ -612,7 +613,8 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
                         presentProduct.getProductPictureName(),
-                        false
+                        false,
+                        presentProduct.getAmount()
                 );
                 return Optional.of(productDto);
             }
