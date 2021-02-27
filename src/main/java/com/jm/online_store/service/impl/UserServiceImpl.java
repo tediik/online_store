@@ -287,13 +287,15 @@ public class UserServiceImpl implements UserService {
         String messageBody;
         if (templatesMailingSettingsService.getSettingByName("change_users_mail").getTextValue() != null) {
             String templateBody = templatesMailingSettingsService.getSettingByName("change_users_mail").getTextValue();
+            String userName;
             if (user.getFirstName() != null) {
-                messageBody = templateBody.replace("@@user@@", user.getFirstName())
-                        .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                        .replace("@@url@@", urlActivate);
+                userName =  user.getFirstName();
             } else {
-                messageBody = templateBody.replace("@@user@@", "Подписчик");
+                userName = "Подписчик";
             }
+            messageBody = templateBody.replace("@@user@@", userName)
+                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
+                    .replace("@@url@@", urlActivate);
             mailSenderService.send(newMail, "Activation code", messageBody, "email address validation");
         } else {
             log.debug("Шаблон рассылки при изменении eMail в базе пустой ");
