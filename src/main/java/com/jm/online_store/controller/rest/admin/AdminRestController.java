@@ -46,7 +46,6 @@ public class AdminRestController {
     private final CommonSettingsService commonSettingsService;
     private final ModelMapper modelMapper;
 
-
     /**
      * Rest mapping to  receive authenticated user. from admin page
      * @return ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}

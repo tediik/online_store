@@ -1,9 +1,9 @@
 package com.jm.online_store.controller.rest.customer;
 
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ExceptionConstants;
-import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.RecentlyViewedProducts;
