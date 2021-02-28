@@ -1,9 +1,9 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.SentStockNotFoundException;
-import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.SentStockNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.repository.SentStockRepository;
 import com.jm.online_store.service.interf.CustomerService;
@@ -34,6 +34,7 @@ public class SentStockServiceImpl implements SentStockService {
     private final UserService userService;
     private final SentStockRepository sentStockRepository;
     private final CustomerService customerService;
+
     /**
      * Метод находит отправленные акции в заданном интервале
      * @param begin начало интервала
@@ -48,6 +49,7 @@ public class SentStockServiceImpl implements SentStockService {
                 begin.minusDays(1L),
                 end.plusDays(1L));
     }
+
     /**
      * Метод добавления отправленной акции
      * @param sentStock отправленная акция
@@ -64,6 +66,7 @@ public class SentStockServiceImpl implements SentStockService {
                 .build();
         return sentStockRepository.save(sentStockToAdd);
     }
+
     /**
      * Метод строит словарь, словарь где ключом является дата,
      * а значением частота повторений
