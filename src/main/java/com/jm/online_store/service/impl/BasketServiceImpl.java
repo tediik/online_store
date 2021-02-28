@@ -21,6 +21,7 @@ import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -39,6 +40,7 @@ public class BasketServiceImpl implements BasketService {
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
     private final CustomerService customerService;
+    private final ModelMapper modelMapper;
 
     /**
      * метод поиска сущности SubBasket.
@@ -59,15 +61,7 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public List<SubBasket> getBasket(String sessionID) {
         User user = userService.getCurrentLoggedInUser(sessionID);
-        Customer customer = new Customer();
-        customer.setId(user.getId());
-        customer.setEmail(user.getEmail());
-        customer.setPassword(user.getPassword());
-        customer.setRegisterDate(user.getRegisterDate());
-        customer.setProfilePicture(user.getProfilePicture());
-        customer.setConfirmReceiveEmail(user.getConfirmReceiveEmail());
-        Set<Role> roles = user.getRoles();
-        customer.setRoles(roles);
+        Customer customer = modelMapper.map(user, Customer.class);
         List<SubBasket> subBaskets = customer.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {
