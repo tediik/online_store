@@ -1,5 +1,6 @@
 package com.jm.online_store.controller;
 
+import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.AlreadyExists;
 import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
@@ -23,6 +24,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionsHandler {
 
+
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<Object> handlerEmployeeNotFoundException(AddressNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()),  HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(EmployeeNotFoundException.class)
     public ResponseEntity<Object> handlerEmployeeNotFoundException(EmployeeNotFoundException ex ) {
@@ -91,6 +98,12 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handlerUserNotFoundException(UserNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<?> handleAddressNotFoundException(AddressNotFoundException ex) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
     }

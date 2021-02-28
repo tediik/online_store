@@ -231,7 +231,7 @@ public class UserServiceImplTest {
     }
     @Test
     public void addNewAddressForUserTest() {
-        Address addressToAdd = new Address("420077","Татарстан","Казань","Революционная","25",false);
+        Address addressToAdd = new Address("420077","Татарстан","Казань","Революционная", "25",false);
         when(addressService.findSameAddress(any())).thenReturn(Optional.of(addressToAdd));
         when(userRepository.findById(2L)).thenReturn(Optional.of(userWithIdEmailPassword));
         assertTrue(customerService.addNewAddressForCustomer(userWithIdEmailPassword,addressToAdd));

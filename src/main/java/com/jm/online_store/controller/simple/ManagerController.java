@@ -54,6 +54,11 @@ public class ManagerController {
         return "manager-feedback";
     }
 
+    @GetMapping("/shops")
+    public String getShops() {
+        return "manager-shops";
+    }
+
     @GetMapping("/rating")
     public String getRating(Model model) {
         model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));

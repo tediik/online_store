@@ -417,7 +417,11 @@ function fetchUsersAndRenderTable() {
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
         }
-    }).then(response => response.json()).then(users => renderUsersTable(users))
+    }).then(response => response.json())
+        .then(function(users) {
+            let usersList = users.data;
+            renderUsersTable(usersList);
+        })
 }
 
 /**

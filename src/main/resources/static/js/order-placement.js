@@ -113,7 +113,11 @@ function getShopAddress() {
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
         }
-    }).then(response => response.json()).then(shops => showShops(shops))
+    }).then(response => response.json())
+        .then(function (shops) {
+            let shopsList = shops.data;
+            showShops(shopsList);
+        })
 }
 
 /**
@@ -132,7 +136,7 @@ function showShops(shops1) {
                 <input type="radio" id="shop${address.id}"
                     name="shops" value="${address.id}">
                 <label for="shop${address.id}">
-                    ${address.region},${address.city},${address.street},${address.building}
+                    ${address.region}, г. ${address.city }, улица ${address.street}, дом ${address.building}
                 </label>
             </div>
         `);
