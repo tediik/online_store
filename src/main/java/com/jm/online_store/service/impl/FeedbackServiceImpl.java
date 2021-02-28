@@ -7,7 +7,9 @@ import com.jm.online_store.repository.FeedbackRepository;
 import com.jm.online_store.service.interf.FeedbackService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.Set;
 public class FeedbackServiceImpl implements FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
     /**
      * Method saves feedback from current authenticated user
@@ -27,7 +30,8 @@ public class FeedbackServiceImpl implements FeedbackService {
      */
     @Override
     public void addFeedbackFromDto(Feedback feedback) {
-        feedback.setEmployee((Employee) userService.getCurrentLoggedInUser());
+        Employee employee = modelMapper.map(userService.getCurrentLoggedInUser(), Employee.class);
+        feedback.setEmployee(employee);
         feedback.setFeedbackPostDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         feedback.setStatus(Feedback.Status.IN_PROGRESS);
         feedbackRepository.save(feedback);
@@ -87,7 +91,8 @@ public class FeedbackServiceImpl implements FeedbackService {
      */
     @Override
     public Set<Feedback> getAllFeedbackCurrentCustomer() {
-        return ((Employee) userService.getCurrentLoggedInUser()).getFeedbacks();
+        Employee employee = modelMapper.map(userService.getCurrentLoggedInUser(), Employee.class);
+        return employee.getFeedbacks();
     }
 
     /**
