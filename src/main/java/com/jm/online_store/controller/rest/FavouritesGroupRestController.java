@@ -31,6 +31,7 @@ public class FavouritesGroupRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final UserService userService;
     private final CustomerService customerService;
+
     /**
      * Получение избранной группы по Id
      * @param id
