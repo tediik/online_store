@@ -2,7 +2,6 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.SharedNews;
-import com.jm.online_store.model.User;
 import com.jm.online_store.repository.SharedNewsRepository;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.NewsService;
