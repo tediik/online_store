@@ -1,9 +1,8 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.enums.ExceptionEnums;
-import com.jm.online_store.exception.SharedStockNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.User;
