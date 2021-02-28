@@ -9,7 +9,6 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CommonSettingsService;
-import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +43,6 @@ import java.util.List;
 @RequestMapping(value = "/api/admin")
 public class AdminRestController {
     private final UserService userService;
-    private final FavouritesGroupService favouritesGroupService;
     private final CommonSettingsService commonSettingsService;
     private final ModelMapper modelMapper;
 
