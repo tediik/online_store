@@ -4,7 +4,6 @@ import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.dto.SharedStockDto;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SharedStockService;
-import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;

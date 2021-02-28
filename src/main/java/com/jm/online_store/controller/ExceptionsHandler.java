@@ -9,14 +9,12 @@ import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.exception.TopicAlreadyExists;
-import com.jm.online_store.exception.TopicNotFoundException;
 import com.jm.online_store.exception.TopicCategoryAlreadyExists;
 import com.jm.online_store.exception.TopicCategoryNotFoundException;
+import com.jm.online_store.exception.TopicNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
-
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.model.dto.ResponseDto;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,7 +29,6 @@ public class ExceptionsHandler {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()),  HttpStatus.NOT_FOUND);
     }
-
 
     @ExceptionHandler(AlreadyExists.class)
     public ResponseEntity<Object> handlerAlreadyExistsException(AlreadyExists ex ) {
