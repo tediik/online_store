@@ -339,6 +339,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public Customer findCustomerByEmail(String email) {
         return customerRepository.findByEmail(email).orElseThrow(()
                 -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
@@ -358,7 +359,6 @@ public class CustomerServiceImpl implements CustomerService {
             }
             return findCustomerByEmail(sessionID);
         }
-
         return userService.findByEmail(auth.getName()).orElseThrow();
     }
 }
