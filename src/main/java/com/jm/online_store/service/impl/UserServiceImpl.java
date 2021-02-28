@@ -2,13 +2,11 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.enums.ExceptionEnums;
-import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
-import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Employee;
@@ -16,7 +14,6 @@ import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
-import com.jm.online_store.model.dto.EmployeeDto;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.EmployeeRepository;
@@ -24,8 +21,6 @@ import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CommonSettingsService;
-import com.jm.online_store.service.interf.CustomerService;
-import com.jm.online_store.service.interf.EmployeeService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
 import com.jm.online_store.service.interf.UserService;
@@ -36,19 +31,18 @@ import org.modelmapper.ModelMapper;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +52,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,7 +80,7 @@ public class UserServiceImpl implements UserService {
     private final FavouritesGroupService favouritesGroupService;
     private final TemplatesMailingSettingsService templatesMailingSettingsService;
     private final EmployeeRepository employeeRepository;
-    private final   ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -742,7 +735,6 @@ public class UserServiceImpl implements UserService {
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
-
         return findByEmail(auth.getName()).orElseThrow(() ->
                 new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
     }
