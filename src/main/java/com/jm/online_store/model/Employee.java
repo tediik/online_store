@@ -17,7 +17,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description =  "Сущность Employee расширяющая User")
+@ApiModel(description =  "Сущность Employee - Сотрудник расширяющая User")
 @Table(name = "employees")
 public class Employee extends User {
 

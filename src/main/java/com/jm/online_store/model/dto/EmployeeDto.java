@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Data
 @Slf4j
-@ApiModel(description = "DTO для сущности комментария Employee")
+@ApiModel(description = "DTO для сущности сотрудник - Employee")
 @Component
 public class EmployeeDto {
     private Long id;
