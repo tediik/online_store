@@ -348,7 +348,7 @@ function getSelectValues(select) {
  * @param users
  */
 function renderUsersTable(users) {
-
+    console.log(users)
     let table = $('#user-table')
     table.empty()
         .append(`<tr>
@@ -378,8 +378,8 @@ function renderUsersTable(users) {
         return rolesNames;
     }
 
-    for (let i = 0; i < users.data.length; i++) {
-        const user = users.data[i];
+    for (let i = 0; i < users.length; i++) {
+        const user = users[i];
 
         let userRolesNames = getUserRolesNames(user.roles)
         let row = `

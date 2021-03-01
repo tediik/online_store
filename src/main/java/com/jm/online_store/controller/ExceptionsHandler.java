@@ -25,12 +25,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionsHandler {
 
 
-    @ExceptionHandler(AddressNotFoundException.class)
-    public ResponseEntity<Object> handlerEmployeeNotFoundException(AddressNotFoundException ex ) {
-        return new ResponseEntity<>
-                (new ResponseDto<>(false, ex.getMessage()),  HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(EmployeeNotFoundException.class)
     public ResponseEntity<Object> handlerEmployeeNotFoundException(EmployeeNotFoundException ex ) {
         return new ResponseEntity<>

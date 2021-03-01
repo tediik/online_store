@@ -1,5 +1,7 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.AddressNotFoundException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -11,6 +13,7 @@ import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,5 +73,10 @@ public class AddressRestController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body("addressIsExists");
+    }
+
+    @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})
+    public ResponseEntity<?> handleControllerExceptions() {
+        return ResponseEntity.notFound().build();
     }
 }
