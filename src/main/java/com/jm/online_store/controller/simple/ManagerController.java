@@ -61,15 +61,11 @@ public class ManagerController {
 
     @GetMapping("/rating")
     public String getRating(Model model) {
-        model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
-
         return "products-rating";
     }
 
     @GetMapping("/characteristics")
     public String getCharacteristics(Model model) {
-        model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
-
         return "characteristics";
     }
 
@@ -78,8 +74,6 @@ public class ManagerController {
      */
     @GetMapping("/profile")
     public String getPersonalInfo(Model model) {
-        User user = userService.getCurrentLoggedInUser();
-        model.addAttribute("user", user);
         return "manager-profile";
     }
 }

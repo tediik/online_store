@@ -46,7 +46,8 @@ function changePassword() {
         },
         body: JSON.stringify({
             oldPassword: oldPassword,
-            newPassword: newPassword})
+            newPassword: newPassword
+        })
     }).then(function (response) {
         if (response.ok) {
             toastr.success("Пароль успешно изменен.");
@@ -60,12 +61,12 @@ function changePassword() {
 /**
  * Функция для смены названия магазина
  */
-$("#buttonNameStore").click(function (){
+$("#buttonNameStore").click(function () {
     let name = document.getElementById("nameStore").value
     $.ajax("/api/admin/editStoreName", {
         method: "put",
         data: {
-            settingName:"store_name",
+            settingName: "store_name",
             textValue: name,
             status: false,
         },
@@ -83,52 +84,45 @@ function getCurrentUser() {
     fetch('/api/profile/currentUser')
         .then((res) => res.json())
         .then((currentUser) => {
-            $('#id_update').val(currentUser.id);
-            $('#password_update').val(currentUser.password);
-            $('#first_name_update').val(currentUser.firstName);
-            $('#last_name_input').val(currentUser.lastName);
-            $('#email_input').val(currentUser.email);
-            $("#date_birthday_input").val(moment(currentUser.birthdayDate).format("yyyy-MM-DD"));
-            $("#register_date").html(moment(currentUser.registerDate).format("yyyy-MM-DD"));
-            let picSrc = `/uploads/images/${currentUser.profilePicture}`;
-            $('#profilePic').attr(`src`, picSrc);
-            if(currentUser.userGender === null) {
-                $('#userGenderNone').prop('checked', true);
-            }
-            if(currentUser.userGender === "MAN") {
+            $('#id_update').val(currentUser.data.id);
+            $('#password_update').val(currentUser.data.password);
+            $('#first_name_update').val(currentUser.data.firstName);
+            $('#last_name_input').val(currentUser.data.lastName);
+            $('#email_input').val(currentUser.data.email);
+            $("#date_birthday_input").val(currentUser.data.birthdayDate);
+            $("#register_date").html(currentUser.data.registerDate);
+
+            if (currentUser.data.userGender === "MAN") {
                 $('#userGenderMan').prop('checked', true);
-            }
-            if(currentUser.userGender === "WOMAN") {
+            } else if (currentUser.data.userGender === "WOMAN") {
                 $('#userGenderWoman').prop('checked', true);
+            } else {
+                $('#userGenderNone').prop('checked', true);
             }
         })
 }
 
 /**
  * Функция обновления профиля
- * @param event событие click по кнопке Соохранить
  */
-function updateProfile(event) {
-    let date = event.target.dataset.postDate
-    let isChecked = null
-    if(document.getElementById('userGenderNone').checked) {
-         isChecked = null
-    }
-    if(document.getElementById('userGenderMan').checked) {
-         isChecked = "MAN"
-    }
-    if(document.getElementById('userGenderWoman').checked) {
-         isChecked = "WOMAN"
+function updateProfile() {
+    let isChecked = ""
+    if (document.getElementById('userGenderMan').checked) {
+        isChecked = "MAN"
+    } else if (document.getElementById('userGenderWoman').checked) {
+        isChecked = "WOMAN"
+    } else {
+        isChecked = null
     }
     let userProfile = {
-        id: document.getElementById('id_update').value,
-        password: document.getElementById('password_update').value,
-        firstName: document.getElementById('first_name_update').value,
-        lastName: document.getElementById('last_name_input').value,
-        email: document.getElementById('email_input').value,
-        birthdayDate: document.getElementById('date_birthday_input').value,
+        id: $('#id_update').val(),
+        password: $('#password_update').val(),
+        firstName: $('#first_name_update').val(),
+        lastName: $('#last_name_input').val(),
+        email: $('#email_input').val(),
+        birthdayDate: $('#date_birthday_input').val(),
         userGender: isChecked,
-        registerDate: date
+        registerDate: $('#register_date').val()
     }
     fetch('/api/profile/update', {
         method: 'PUT',
@@ -137,7 +131,8 @@ function updateProfile(event) {
             'Content-type': 'application/json; charset=UTF-8'
         },
         body: JSON.stringify(userProfile)
-    }).then(function (response) {
+    })
+        .then(function (response) {
         if (response.status === 200) {
             getCurrentUser()
             toastr.success("Обновление профиля прошло успешно.");

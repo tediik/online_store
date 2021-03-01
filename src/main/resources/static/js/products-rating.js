@@ -1,4 +1,5 @@
 sortProducts('default')
+getCategories()
 
 /**
  * Обработка события с выбором порядка сортировки товаров
@@ -110,6 +111,20 @@ function createReport() {
                 })
             } else {
                 toastr.error('Товаров не найдено')
+            }
+        })
+}
+
+function getCategories() {
+    let categoriesList = "";
+    fetch("/api/categories/allCategories")
+        .then(response => response.json())
+        .then(categories => {
+            for (let category of categories) {
+                categoriesList = `
+                <option id="${category.id}">${category.category}</option>
+                `
+                $('#filterCategory').append(categoriesList);
             }
         })
 }

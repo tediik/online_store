@@ -83,8 +83,8 @@
                            role="tab" aria-controls="nav-characteristics" aria-selected="true">Все характеристики</a>
                         <a class="nav-item nav-link" id="nav-addCharacteristics-tab" data-toggle="tab"
                            href="#nav-addCharacteristics"
-                           role="tab" aria-controls="nav-addCharacteristics" aria-selected="false">Добавление
-                            харакетеристик</a>
+                           role="tab" aria-controls="nav-addCharacteristics" aria-selected="false" onclick="getCategoriesToAdd()">
+                            Добавление характеристик</a>
                     </div>
                 </nav>
 
@@ -94,9 +94,6 @@
                         <div class="form-group col-3 mt-3">
                             <select class="form-control form-control-sm" id="filterCategory">
                                 <option value="default">Все категории</option>
-                                <option th:each="dropDownItem : ${listCategories}"
-                                        th:value="${dropDownItem}"
-                                        th:text="${dropDownItem}"></option>
                                 <div class="dropdown-divider"></div>
                             </select>
                         </div>
@@ -139,9 +136,6 @@
                                     <h4>Добавление характеристик к выбранной категории</h4>
                                     <select class="form-control form-control-sm" id="filterCategoryToAdd">
                                         <option value="default">Выберите категорию</option>
-                                        <option th:each="dropDownItem : ${listCategories}"
-                                                th:value="${dropDownItem}"
-                                                th:text="${dropDownItem}"></option>
                                         <div class="dropdown-divider"></div>
                                     </select>
                                     <div class="form-group">

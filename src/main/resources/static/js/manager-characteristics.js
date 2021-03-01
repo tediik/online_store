@@ -6,6 +6,7 @@ let categorySelectToAddCharacteristics;
 
 fetchCharacteristicsAndRenderTable("default")
 addCharacteristicsOnNewCharacteristicForm("default")
+getCategories()
 
 /**
  * Обработка события с выбором категории для фильтрации списка харакетристик по выбранной категории
@@ -306,3 +307,32 @@ function handleAcceptAddCharacteristicsToCategoryButton() {
         }
     )
 }
+
+function getCategories() {
+    let categoriesList = "";
+    fetch("/api/categories/allCategories")
+        .then(response => response.json())
+        .then(categories => {
+            for (let category of categories) {
+                categoriesList = `
+                <option id="${category.id}">${category.category}</option>
+                `
+                $('#filterCategory').append(categoriesList);
+            }
+        })
+}
+
+function getCategoriesToAdd() {
+    let categoriesList = "";
+    fetch("/api/categories/allCategories")
+        .then(response => response.json())
+        .then(categories => {
+            for (let category of categories) {
+                categoriesList = `
+                <option id="${category.id}">${category.category}</option>
+                `
+                $('#filterCategoryToAdd').append(categoriesList);
+            }
+        })
+}
+
