@@ -2,12 +2,14 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +38,10 @@ public class FavouritesGroupRestController {
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "gets favourite group by id")
-    public ResponseEntity getFavouritesGroupById(@PathVariable Long id) {
-        return ResponseEntity.ok(favouritesGroupService.findById(id));
+    public ResponseEntity<ResponseDto<?>> getFavouritesGroupById(@PathVariable Long id) {
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, favouritesGroupService.findById(id)), HttpStatus.OK);
+        //return ResponseEntity.ok(favouritesGroupService.findById(id));
     }
 
     /**
@@ -47,9 +51,11 @@ public class FavouritesGroupRestController {
     @GetMapping
     @ApiOperation(value = "gets favourites products for the current logged in user",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity getFavouritesGroups() {
+    public ResponseEntity<ResponseDto<?>>  getFavouritesGroups() {
         User user = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(favouritesGroupService.findAllByUser(user));
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, favouritesGroupService.findAllByUser(user)), HttpStatus.OK);
+        //return ResponseEntity.ok(favouritesGroupService.findAllByUser(user));
     }
 
     /**
@@ -60,11 +66,14 @@ public class FavouritesGroupRestController {
     @PostMapping
     @ApiOperation(value = "saves new list of favourite products",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
+    public ResponseEntity<ResponseDto<?>>  addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
         User user = userService.getCurrentLoggedInUser();
         favouritesGroup.setUser(user);
         favouritesGroupService.addFavouritesGroup(favouritesGroup);
-        return ResponseEntity.ok(favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName()));
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName())),
+                HttpStatus.OK);
+        //return ResponseEntity.ok(favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName()));
     }
 
     /**
@@ -74,8 +83,9 @@ public class FavouritesGroupRestController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "deletes list of favorite goods by its id",
             authorizations = { @Authorization(value = "jwtToken") })
-    public void deleteFavouritesGroups(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseDto<String>> deleteFavouritesGroups(@PathVariable("id") Long id) {
         favouritesGroupService.deleteById(id);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Favourites product list successful deleted"), HttpStatus.OK);
     }
 
     /**
@@ -87,11 +97,12 @@ public class FavouritesGroupRestController {
     @PutMapping(value = "/{id}")
     @ApiOperation(value = "updates list of favorite goods by its id",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity updateFavouritesGroups(@RequestBody String name, @PathVariable("id") Long id) {
+    public ResponseEntity<ResponseDto<?>>  updateFavouritesGroups(@RequestBody String name, @PathVariable("id") Long id) {
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         favouritesGroup.setName(name);
         favouritesGroupService.save(favouritesGroup);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, favouritesGroup), HttpStatus.OK);
+        //return ResponseEntity.ok().build();
     }
 }

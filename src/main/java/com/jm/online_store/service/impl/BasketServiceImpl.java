@@ -130,10 +130,11 @@ public class BasketServiceImpl implements BasketService {
      * Method add product to basket. If product already in subBasket increases by 1
      * @param id - id of product to add
      * @param sessionID номер id сессии для идентификации анонимного пользователя
+     * @return обновленный SubBasket {@link SubBasket}
      */
     @Override
     @Transactional
-    public void addProductToBasket(Long id,String sessionID) {
+    public SubBasket addProductToBasket(Long id, String sessionID) {
         User userWhoseBasketToModify = userService.getCurrentLoggedInUser(sessionID);
         if (userWhoseBasketToModify == null) {
             throw new UserNotFoundException();
@@ -149,7 +150,7 @@ public class BasketServiceImpl implements BasketService {
            for (SubBasket basket : userBasket) {
                if (basket.getProduct().getId() == id) {
                    basket.setCount(basket.getCount() + 1);
-                   return;
+                   //return;
                }
            }
            SubBasket subBasket = SubBasket.builder()
@@ -159,15 +160,17 @@ public class BasketServiceImpl implements BasketService {
            basketRepository.save(subBasket);
            userBasket.add(subBasket);
            userService.updateUser(userWhoseBasketToModify);
+           return subBasket;
        }
     }
 
     /**
      * метод для формирования заказа из корзины.
      * @param id идентификатор
+     * @return {@link Order}
      */
     @Override
-    public void buildOrderFromBasket(Long id) {
+    public Order buildOrderFromBasket(Long id) {
         Address addressToAdd = addressService.findAddressById(id).orElseThrow(AddressNotFoundException::new);
         User authorityUser = userService.getCurrentLoggedInUser();
         List<SubBasket> subBasketList = authorityUser.getUserBasket();
@@ -196,5 +199,6 @@ public class BasketServiceImpl implements BasketService {
         orderService.updateOrder(order);
         authorityUser.setUserBasket(new ArrayList<>());
         userService.updateUser(authorityUser);
+        return order;
     }
 }

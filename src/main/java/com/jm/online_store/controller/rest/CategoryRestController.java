@@ -1,11 +1,13 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.util.Transliteration;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +45,7 @@ public class CategoryRestController {
             "     * \"Ноутбуки\":\"Noutbuki\"},\n" +
             "     * \"Смартфоны и гаджеты\":{\"Планшеты\":\"Planshety\",\n" +
             "     * \"Смартфоны\":\"Smartfony\"}}")
-    public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
+    public ResponseEntity<ResponseDto<Map<String, Map<String, String>>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.findAll();
         Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
 
@@ -54,7 +56,8 @@ public class CategoryRestController {
                     (oldV, newV) -> Stream.concat(oldV.entrySet().stream(), newV.entrySet().stream())
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
-        return ResponseEntity.ok(categoriesBySuperCategories);
+        return new ResponseEntity<>(new ResponseDto<>(true, categoriesBySuperCategories), HttpStatus.OK);
+        //return ResponseEntity.ok(categoriesBySuperCategories);
     }
 
     /**
@@ -64,8 +67,9 @@ public class CategoryRestController {
      */
     @GetMapping("/allCategories")
     @ApiOperation(value = "Get all subcategories")
-    public ResponseEntity<List<Categories>> getAllCategories() {
-        return ResponseEntity.ok(categoriesService.findAll());
+    public ResponseEntity<ResponseDto<List<Categories>>> getAllCategories() {
+        return new ResponseEntity<>(new ResponseDto<>(true, categoriesService.findAll()), HttpStatus.OK);
+        //return ResponseEntity.ok(categoriesService.findAll());
     }
 
     /**

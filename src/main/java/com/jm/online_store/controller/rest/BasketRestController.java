@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Order;
 import com.jm.online_store.model.SubBasket;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
@@ -44,9 +46,10 @@ public class BasketRestController {
     @GetMapping(value = "/basketGoods")
     @ApiOperation(value = "get all items for authorised User",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<SubBasket>> getBasket(HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<List<SubBasket>>> getBasket(HttpServletRequest request) {
         List<SubBasket> subBaskets = basketService.getBasket(request.getSession().getId());
-        return new ResponseEntity<>(subBaskets, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, subBaskets), HttpStatus.OK);
+        //return new ResponseEntity<>(subBaskets, HttpStatus.OK);
     }
 
     /**
@@ -58,10 +61,12 @@ public class BasketRestController {
     @PostMapping(value = "/basketGoods")
     @ApiOperation(value = "builds new order from basket",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> buildOrderFromBasket(@RequestBody Long id) {
-        basketService.buildOrderFromBasket(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseDto<Order>> buildOrderFromBasket(@RequestBody Long id) {
+        Order order = basketService.buildOrderFromBasket(id);
+        return new ResponseEntity<>(new ResponseDto<>(true, order),HttpStatus.OK);
+        //return ResponseEntity.ok().build();
     }
+
 
     /**
      * контроллер для удаления сущности SubBasket из списка подкорзин User.
@@ -72,9 +77,10 @@ public class BasketRestController {
     @DeleteMapping(value = "/basketGoods")
     @ApiOperation(value = "Deletes entity SubBasket from the SubBaskets list by id",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> deleteBasket(@RequestBody Long id, HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<String>> deleteBasket(@RequestBody Long id, HttpServletRequest request) {
         basketService.deleteBasket(basketService.findBasketById(id), request.getSession().getId());
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, "SubBasket successful deleted"), HttpStatus.OK);
+        //return ResponseEntity.ok().build();
     }
 
     /**
@@ -86,14 +92,16 @@ public class BasketRestController {
     @PutMapping(value = "/basketGoods")
     @ApiOperation(value = "Updates the items quantity in SubBasket",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> updateUpBasket(@RequestBody ObjectNode json) {
+    public ResponseEntity<ResponseDto<ObjectNode>> updateUpBasket(@RequestBody ObjectNode json) {
         Long id = json.get("id").asLong();
         int difference = json.get("count").asInt();
         try {
             basketService.updateBasket(basketService.findBasketById(id), difference);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(new ResponseDto<>(true, json), HttpStatus.OK);
+            //return ResponseEntity.ok().build();
         } catch (ProductsNotFoundException e) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(new ResponseDto<>(false, "Products not found"), HttpStatus.BAD_REQUEST);
+            //return ResponseEntity.badRequest().build();
         }
 
     }
@@ -101,14 +109,17 @@ public class BasketRestController {
     @PutMapping("/basket/add/{id}")
     @ApiOperation(value = "Adds product to Basket",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> addProductToBasket(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<SubBasket>> addProductToBasket(@PathVariable Long id, HttpServletRequest request) {
         try {
-            basketService.addProductToBasket(id, request.getSession().getId());
-            return ResponseEntity.ok().build();
-        } catch (UserNotFoundException | ProductNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            SubBasket subBasket = basketService.addProductToBasket(id, request.getSession().getId());
+            return new ResponseEntity<>(new ResponseDto<>(true, subBasket), HttpStatus.OK);
+            //return ResponseEntity.ok().build();
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "User not found"), HttpStatus.NOT_FOUND);
+            //return ResponseEntity.notFound().build();
         } catch (ProductsNotFoundException e) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(new ResponseDto<>(true, "Products not found"), HttpStatus.BAD_REQUEST);
+            //return ResponseEntity.badRequest().build();
         }
     }
 }

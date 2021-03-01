@@ -2,11 +2,13 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.CommonSettingsNotFoundException;
 import com.jm.online_store.model.CommonSettings;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,34 +33,38 @@ public class CommonSettingsRestController {
      * @return - {@link ResponseEntity<String>}
      */
     @ExceptionHandler(CommonSettingsNotFoundException.class)
-    public ResponseEntity<String> commonSettingsNotFoundExceptionHandler() {
+    public ResponseEntity<ResponseDto<String>> commonSettingsNotFoundExceptionHandler() {
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping
     @ApiOperation(value = "adds new common setting",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> addNewSetting(@RequestBody CommonSettings commonSetting) {
-        commonSettingsService.addSetting(commonSetting);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseDto<CommonSettings>> addNewSetting(@RequestBody CommonSettings commonSetting) {
+        CommonSettings commonSettings = commonSettingsService.addSetting(commonSetting);
+        return new ResponseEntity<>(new ResponseDto<>(true, commonSettings), HttpStatus.OK);
+        //return ResponseEntity.ok().build();
     }
 
     @PutMapping
     @ApiOperation(value = "updates common settings",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<CommonSettings> updateSetting(@RequestBody CommonSettings commonSettings) {
+    public ResponseEntity<ResponseDto<CommonSettings>> updateSetting(@RequestBody CommonSettings commonSettings) {
         if (commonSettings.getSettingName().equals("maintenance_mode")) {
             commonSettingsService.updateMaintenanceMode(commonSettings);
         } else {
             commonSettingsService.updateTextValue(commonSettings);
         }
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, commonSettings), HttpStatus.OK);
+        //return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{settingName}")
         @ApiOperation(value = "get Common Setting by name",
                 authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<CommonSettings> getCommonSettingByName(@PathVariable String settingName) {
-        return ResponseEntity.ok(commonSettingsService.getSettingByName(settingName));
+    public ResponseEntity<ResponseDto<CommonSettings>> getCommonSettingByName(@PathVariable String settingName) {
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, commonSettingsService.getSettingByName(settingName)), HttpStatus.OK);
+        //return ResponseEntity.ok(commonSettingsService.getSettingByName(settingName));
     }
 }

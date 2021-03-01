@@ -1,14 +1,15 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.SharedNews;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.SharedNewsService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,10 +41,13 @@ public class GlobalSharedNewsRestController {
     @ApiOperation(value = "Adds information about which user shared which news in which social network. " +
             "SharedNews must include news id, which was shared and the name of social network, where was shared",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> addSharedNews(@RequestBody SharedNews sharedNews) {
+    public ResponseEntity<ResponseDto<SharedNews>> addSharedNews(@RequestBody SharedNews sharedNews) {
         sharedNews.setUser(userService.getCurrentLoggedInUser());
-        sharedNewsService.addSharedNews(sharedNews);
-        return ResponseEntity.ok().build();
+        //sharedNewsService.addSharedNews(sharedNews);
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, sharedNewsService.addSharedNews(sharedNews)), HttpStatus.OK);
+        //return ResponseEntity.ok().build();
+
     }
 
 }

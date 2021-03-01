@@ -4,11 +4,14 @@ import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,31 +36,37 @@ public class AddressRestController {
 
     @GetMapping(value = "/allShops")
     @ApiOperation(value = "get all the shops")
-    public ResponseEntity<List<Address>> findAll() {
-        return ResponseEntity.ok(addressService.findAllShops());
+    public ResponseEntity<ResponseDto<List<Address>>> findAll() {
+        return new ResponseEntity<>(new ResponseDto<>(true, addressService.findAllShops()), HttpStatus.OK);
+                //.ok(addressService.findAllShops());
     }
 
     @GetMapping(value = "/userAddresses")
     @ApiOperation(value = "get current logged in Users address")
-    public ResponseEntity<Set<Address>> userAddresses() {
+    public ResponseEntity<ResponseDto<Set<Address>>> userAddresses() {
         if (userService.getCurrentLoggedInUser().getUserAddresses() != null) {
-            return ResponseEntity.ok(userService.getCurrentLoggedInUser().getUserAddresses());
+            return new ResponseEntity<>(new ResponseDto<>(true, userService.getCurrentLoggedInUser().getUserAddresses()), HttpStatus.OK);
+                    //.ok(userService.getCurrentLoggedInUser().getUserAddresses());
         }
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>(new ResponseDto<>(false, "Addresses not found"), HttpStatus.NOT_FOUND);
+                //.notFound().build();
     }
 
     @PostMapping(value = "/addAddress")
     @ApiOperation(value = "adds address for current logged in user")
-    public ResponseEntity addAddressToUser(@RequestBody Address address) {
+    public ResponseEntity<ResponseDto<Address>> addAddressToUser(@RequestBody Address address) {
         User user = userService.getCurrentLoggedInUser();
         if (userService.addNewAddressForUser(user, address)) {
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(new ResponseDto<>(true, address),HttpStatus.OK);
+            //return ResponseEntity.ok().build();
         }
-        return ResponseEntity.badRequest().body("addressIsExists");
+        return new ResponseEntity<>(new ResponseDto<>(false,"addressIsExists"),HttpStatus.BAD_REQUEST);
+        //return ResponseEntity.badRequest().body("addressIsExists");
     }
 
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})
-    public ResponseEntity handleControllerExceptions() {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<ResponseDto<?>> handleControllerExceptions() {
+        return new ResponseEntity<>(new ResponseDto<>(false, "Not found"),HttpStatus.NOT_FOUND);
+        //return ResponseEntity.notFound().build();
     }
 }
