@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest.customer;
 
+import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ExceptionConstants;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,6 +56,39 @@ public class CustomerRestController {
     private final UserService userService;
     private final RecentlyViewedProductsService recentlyViewedProductsService;
     private final ModelMapper modelMapper;
+
+    /**
+     * Метод получения текущего пользователя
+     * @return ResponseEntity<User> возвращает текущего пользователя
+     */
+    @GetMapping
+    @ApiOperation(value = "get current Logged in Customer",
+            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Пользователь не найден"),
+            @ApiResponse(code = 200, message = "Пользователь с идентификатором: \"id\" найден."),
+    })
+    public ResponseEntity<ResponseDto<UserDto>> getCurrentCustomer() {
+        User currentLoggedInCustomer = customerService.getCurrentLoggedInUser();
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(currentLoggedInCustomer, UserDto.class)), HttpStatus.OK);
+    }
+
+    /**
+     * rest mapping to modify user from admin page
+     * @param user {@link User}
+     * @return new ResponseEntity<ResponseDto<CustomerDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     */
+    @PutMapping
+    @ApiOperation(value = "update Customer profile", authorizations = { @Authorization(value="jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Cannot update customer"),
+            @ApiResponse(code = 200, message = "Customer updated")
+    })
+    public ResponseEntity<ResponseDto<UserDto>> editCustomer(@RequestBody User user) {
+        userService.updateUserProfile(user);
+        log.debug("Changes to customer with id: {} was successfully added", user.getId());
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
+    }
 
     /**
      * Rest mapping to  change customers mail.
@@ -232,5 +267,15 @@ public class CustomerRestController {
                 .map(product -> modelMapper.map(product, ProductModelDto.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(new ResponseDto<>(true, productsViewedByUserIdAndDateTimeBetween), HttpStatus.OK);
+    }
+
+    @GetMapping("/dayOfWeekForStockSend")
+    @ApiOperation(value = "Метод возвращает из базы день, в который будет рассылка",
+            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponse(code = 404, message = "Day was not found")
+    public ResponseEntity<ResponseDto<DayOfWeekForStockSend>> getCustomerDayOfWeekForStockSend() {
+        Customer customer = customerService.getCurrentLoggedInUser();
+        DayOfWeekForStockSend day = customerService.getCustomerDayOfWeekForStockSend(customer);
+        return new ResponseEntity<>(new ResponseDto<>(true, day), HttpStatus.OK);
     }
 }

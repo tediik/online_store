@@ -1,6 +1,8 @@
 let customerRecentlyProductsViewApiUrl = "/api/customer/recentlyViewedProducts"
 
 $(document).ready(function () {
+    /*Заполнение полей с данными пользователя*/
+    userData();
     /* Слушатель для кнопки удалить профиль (в модальном окне)*/
     document.getElementById('deleteProfileCustomer').addEventListener('click', deleteProfile)
     /* Слушатель для кнопки удалить профиль (без возможности восстановить (в модальном окне)*/
@@ -28,11 +30,13 @@ function changePassword() {
         },
         body: JSON.stringify({
             oldPassword: oldPassword,
-            newPassword: newPassword})
+            newPassword: newPassword
+        })
     }).then(function (response) {
         if (response.ok) {
             toastr.success("Пароль успешно изменен.");
             $('#openChangePassModal').modal('hide')
+            userData()
         } else {
             toastr.error("Некорректный пароль.")
         }
@@ -54,6 +58,7 @@ function changeMail() {
             toastr.success(res, {timeOut: 5000});
             close();
             $('#email_input').val($('#new_mail').val());
+            document.location.href = "/logout"
         },
         error: function (res) {
             if (res.status === 400) {
@@ -100,21 +105,23 @@ function checkPassword() {
  * и удаляется значение
  */
 function chekboxChanges(o) {
-    if (o.checked != true) {
+    if (o.checked !== true) {
         $(".day-of-the-week-drop-list").addClass("d-none")
         $("#dayOfWeekDropList").val('')
     } else {
         $(".day-of-the-week-drop-list").removeClass("d-none")
     }
-};
+}
 
 /**
  * Функция удаления профиля
  * @param event
  */
-function deleteProfile(event) {
-    let id = event.target.dataset.delId
-    fetch(`/api/customer/deleteProfile/${id}`, {
+function deleteProfile() {
+    let id = $('#id_update').val();
+    alert(id);
+
+    fetch('/api/customer/deleteProfile/' + id, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -134,8 +141,8 @@ function deleteProfile(event) {
  * @param event
  */
 function deleteProfile2(event) {
-    let id = event.target.dataset.delId
-    fetch(`/api/customer/deleteProfileUnrecoverable/${id}`, {
+    let id = $('#id_update').val();
+    fetch('/api/customer/deleteProfileUnrecoverable/' + id, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -263,4 +270,102 @@ function fillRecentlyProductsViewLastMonth() {
                 $('#headerForRecentlyProductsView').text('Недавно просмотренные товары')
             }
         })
+}
+
+/**
+ * Заполнение полей информации о пользователе
+ */
+function userData() {
+    fetch("/api/customer")
+        .then(response => response.json())
+        .then((customer) => {
+            $('#id_update').val(customer.data.id);
+            $('#password_update').val(customer.data.password);
+            $('#first_name_update').val(customer.data.firstName);
+            $('#last_name_input').val(customer.data.lastName);
+            $('#email_input').val(customer.data.email);
+            $('#date_birthday_input').val(customer.data.birthdayDate);
+            $('#register_date').html(customer.data.registerDate);
+            if (customer.data.userGender === "MAN") {
+                $('#userGenderMan').prop('checked', true);
+            } else if (customer.data.userGender === "WOMAN") {
+                $('#userGenderWoman').prop('checked', true);
+            } else {
+                $('#userGenderNone').prop('checked', true);
+            }
+
+            fetch("/api/customer/dayOfWeekForStockSend")
+                .then(response => response.json())
+                .then(day => {
+                    if (day.data !== undefined || day.data !== null) {
+                        $('#stockMailingCheckbox').prop('checked', true);
+                        $(".day-of-the-week-drop-list").removeClass("d-none")
+                        switch (day.data) {
+                            case "MONDAY":
+                                $('#monday').prop('selected', true);
+                                break;
+                            case "TUESDAY":
+                                $('#tuesday').prop('selected', true);
+                                break;
+                            case "WEDNESDAY":
+                                $('#wednesday').prop('selected', true);
+                                break;
+                            case "THURSDAY":
+                                $('#thursday').prop('selected', true);
+                                break;
+                            case "FRIDAY":
+                                $('#friday').prop('selected', true);
+                                break;
+                            case "SATURDAY":
+                                $('#saturday').prop('selected', true);
+                                break;
+                            case "SUNDAY":
+                                $('#sunday').prop('selected', true);
+                                break;
+                        }
+                    } else {
+                        $('#stockMailingCheckbox').prop('checked', false);
+                        $(".day-of-the-week-drop-list").addClass("d-none")
+                    }
+                })
+        })
+}
+
+/**
+ * Обновление данных пользователя
+ */
+function updateCustomer() {
+    let gender = "";
+    if (document.getElementById('userGenderMan').checked) {
+        gender = "MAN"
+    } else if (document.getElementById('userGenderWoman').checked) {
+        gender = "WOMAN"
+    } else {
+        gender = null
+    }
+
+    let dropList = document.getElementById("dayOfWeekDropList");
+    let selectedDay = dropList.options[dropList.selectedIndex].value;
+
+    let customerForUpdate = {
+        id: $("#id_update").val(),
+        password: $('#password_update').val(),
+        firstName: $('#first_name_update').val(),
+        lastName: $('#last_name_input').val(),
+        email: $('#email_input').val(),
+        birthdayDate: $('#date_birthday_input').val(),
+        userGender: gender,
+        registerDate: $('#register_date').val(),
+        dayOfWeekForStockSend: selectedDay
+    }
+    fetch('/api/customer', {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(customerForUpdate)
+    })
+        .then(() => userData())
+        .catch(error => console.log("Не удалось сохранить изменения " + error))
 }

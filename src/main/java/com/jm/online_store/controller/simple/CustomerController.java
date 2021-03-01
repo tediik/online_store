@@ -38,18 +38,9 @@ public class CustomerController {
      * метод получения данных зарегистрированного пользователя.
      * формирование модели для вывода в "view"
      * модель данных, построенных на основе зарегистрированного User
-     *
-     * @return
      */
     @GetMapping
-    public String getUserProfile(Model model) {
-        User user = userService.getCurrentLoggedInUser();
-        Customer customer = customerService.getCurrentLoggedInUser();
-        model.addAttribute("user", user);
-        model.addAttribute("customer", customer);
-        model.addAttribute("listOfComments", commentService.findAllByCustomer(user));
-        model.addAttribute("favouritesGroupList", favouritesGroupService.findAllByUser(user));
-        model.addAttribute("listOfReviews", reviewService.findAllByCustomer(user));
+    public String getUserProfile() {
         return "customer-page";
     }
 
@@ -59,31 +50,4 @@ public class CustomerController {
         return "basket-page";
     }
 
-    /**
-     * метод для формирования данных для обновления User.
-     * @param user  пользователь
-     * @param model модель для view
-     * @return
-     */
-    @PostMapping("/profile")
-    public String updateUserProfile(@RequestParam("dayOfWeekForStockSend") String dayOfWeekForStockSend, User user, Model model) {
-        Customer customer = customerService.findById(user.getId()).get();
-        customerService.updateCustomerDayOfWeekForStockSend(customer, dayOfWeekForStockSend);
-        User updateUser = userService.updateUserProfile(user);
-        model.addAttribute("user", updateUser);
-        return "redirect:/customer";
-    }
-    // looks like useless
-    @GetMapping("/change-password")
-    public String changePassword() {
-        return "change-password";
-    }
-
-    // looks like useless
-    @GetMapping("/activatenewmail/{token}")
-    public String changeMail(Model model, @PathVariable String token, HttpServletRequest request) {
-        userService.activateNewUsersMail(token, request);
-        model.addAttribute("message", "Email address changes successfully");
-        return "redirect:/customer";
-    }
 }
