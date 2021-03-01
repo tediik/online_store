@@ -3,14 +3,17 @@ package com.jm.online_store.controller.rest.moderator;
 import com.jm.online_store.model.ModeratorsStatistic;
 import com.jm.online_store.model.ReportComment;
 import com.jm.online_store.model.dto.ReportCommentDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.ModeratorsStatisticService;
 import com.jm.online_store.service.interf.ReportCommentService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -41,11 +44,12 @@ public class ModeratorRestController {
 
     /**
      * Получения списка всех жалоб на комментарии с помощью WebSocket.
-     * @return ReportCommentDto
+     * @return List<ReportCommentDto>
      */
     @MessageMapping("/report")
     @SendTo("/table/report")
-    @ApiOperation(value = "Get list of all reports on comments with WebSocket")
+    @ApiOperation(value = "Get list of all reports on comments with WebSocket",
+            authorizations = { @Authorization(value = "jwtToken") })
     public List<ReportCommentDto> allReportComments() {
         return reportCommentService.findAllReportComments().stream()
                 .map(ReportCommentDto::entityToDto)
@@ -54,61 +58,68 @@ public class ModeratorRestController {
 
     /**
      * Добавление жалобы на комментарий.
-     * @param reportCommentDto
+     * @param reportCommentDto , HttpStatus.OK
+     * @return esponseEntity<ResponseDto<ReportCommentDto>>(ResponseDto, HttpStatus)
      */
     @PostMapping
-    @ApiOperation(value = "Add a new report on comment")
-    public ResponseEntity<ReportCommentDto> addReportComment(@RequestBody ReportCommentDto reportCommentDto) {
+    @ApiOperation(value = "Add a new report on comment",
+            authorizations = { @Authorization(value = "jwtToken") })
+    public ResponseEntity<ResponseDto<ReportCommentDto>> addReportComment(@RequestBody ReportCommentDto reportCommentDto) {
         ReportComment reportComment = ReportCommentDto.DtoToEntity(reportCommentDto);
         reportComment.setComment(commentService.findById(reportCommentDto.getCommentId()));
         reportComment.setReportCustomerEmail(userService.getCurrentLoggedInUser().getEmail());
         reportCommentService.addReportComment(reportComment);
-        return ResponseEntity.ok(reportCommentDto);
+        return new ResponseEntity<>(new ResponseDto<>(true, reportCommentDto), HttpStatus.OK);
     }
 
     /**
      * Удаления жалобы.
      * @param id жалобы.
+     * @return ResponseEntity<ResponseDto<Long>>(ResponseDto, HttpStatus)
      */
     @DeleteMapping("/leave/{id}")
-    @ApiOperation(value = "Delete report on comment by report ID")
-    public ResponseEntity<ReportComment> deleteReport(@PathVariable("id") Long id) {
+    @ApiOperation(value = "Delete report on comment by report ID",
+            authorizations = { @Authorization(value = "jwtToken") })
+    public ResponseEntity<ResponseDto<Long>> deleteReport(@PathVariable("id") Long id) {
         moderatorsStatisticService.incrementDismissedCount(userService.getCurrentLoggedInUser());
         reportCommentService.deleteReport(id);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, id), HttpStatus.OK);
     }
 
     /**
      * Удаление жалобы и коментария.
      * @param id комментария.
+     * @return ResponseEntity<ResponseDto<Long>>(ResponseDto, HttpStatus)
      */
     @DeleteMapping("/delete/{id}")
-    @ApiOperation(value = "Delete report and comment  by comment ID")
-    public ResponseEntity<ReportComment> deleteReportAndComment(@PathVariable("id") Long id) {
+    @ApiOperation(value = "Delete report and comment  by comment ID",
+            authorizations = { @Authorization(value = "jwtToken") })
+    public ResponseEntity<ResponseDto<Long>> deleteReportAndComment(@PathVariable("id") Long id) {
         moderatorsStatisticService.incrementApprovedCount(userService.getCurrentLoggedInUser());
         reportCommentService.deleteReportAndComment(id);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, id), HttpStatus.OK);
     }
 
     /**
      * Вывод статистики работы с жалобами
-     * @return List<ModeratorsStatistic> - список со статистикой модераторов
+     * @return ResponseEntity<ResponseDto<List<ModeratorsStatistic>>> (ResponseDto, HttpStatus) - список со статистикой модераторов
      */
     @GetMapping("/statistic")
-    @ApiOperation(value = "List moderators statistic")
-    public ResponseEntity<List<ModeratorsStatistic>> showModeratorsStatistic() {
+    @ApiOperation(value = "List moderators statistic",
+            authorizations = { @Authorization(value = "jwtToken") })
+    public ResponseEntity<ResponseDto<List<ModeratorsStatistic>>> showModeratorsStatistic() {
         List<ModeratorsStatistic> moderatorsStatistics = moderatorsStatisticService.findAll();
-        return ResponseEntity.ok(moderatorsStatistics);
+        return new ResponseEntity<>(new ResponseDto<>(true, moderatorsStatistics), HttpStatus.OK);
     }
 
     /**
      * Вывод количества необработанных комментариев
-     * @return reportCommentService.findAllReportComments().size() - количество комментариев, ожидающих проверки
+     * @return ResponseEntity<ResponseDto<Integer>> (ResponseDto, HttpStatus) - количество комментариев, ожидающих проверки
      */
     @GetMapping("/number-of-reports")
-    @ApiOperation(value = "Number of non-checked reports")
-    public ResponseEntity<Integer> showNumberOfReports() {
-        List<ModeratorsStatistic> moderatorsStatistics = moderatorsStatisticService.findAll();
-        return ResponseEntity.ok(reportCommentService.findAllReportComments().size());
+    @ApiOperation(value = "Number of non-checked reports",
+            authorizations = { @Authorization(value = "jwtToken") })
+    public ResponseEntity<ResponseDto<Integer>> showNumberOfReports() {
+        return new ResponseEntity<>(new ResponseDto<>(true, reportCommentService.findAllReportComments().size()), HttpStatus.OK);
     }
 }

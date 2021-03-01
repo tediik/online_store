@@ -275,7 +275,7 @@
                                         <!--Profile picture change modal-->
                                     </div>
 
-                                    <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.id}"
+                                    <form th:action="@{/customer/profile}" th:object="${user}" th:value="${user.getId()}"
                                           method="post" data-role="personal-info-form">
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="id_update">ID</label>
@@ -450,7 +450,7 @@
                                     </div>
                                     <!-- change mail modal -->
 
-                                    <!-- change PASS modal -->
+                                    <!---------------------- Change password Profile Modal window ------------------->
                                     <div id="openChangePassModal" class="modal">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -462,42 +462,36 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form id="formChangePass"
-
-                                                          method="post"
-                                                          class="form-group">
+                                                    <form class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
-                                                            <label for="old_password">Текущий пароль от личного
-                                                                кабинета</label>
-                                                            <input type="password" id="old_password"
-                                                                   name="oldPassword"
-                                                                   autofocus="autofocus"
-                                                                   class="form-control" required>
+                                                            <label for="old_password">Старый пароль</label>
+                                                            <input type="password" id="old_password" name="oldPassword"
+                                                                   autofocus="autofocus" class="form-control" required>
                                                         </div>
                                                         <div class="form-group text-center font-weight-bold">
-                                                            <label for="new_password">Придумайте новый
-                                                                пароль</label>
+                                                            <label for="new_password">Новый пароль</label>
                                                             <input type="password" id="new_password"
-                                                                   name="newPassword"
-                                                                   class="form-control" required/>
-                                                            <small id="passwordHelpBlock"
-                                                                   class="form-text text-muted">
-                                                                Ваш пароль должен состоять из 8-20 символов,
-                                                                содержать
-                                                                буквы и цифры и не должны содержать пробелов и
-                                                                смайлики.
+                                                                   name="newPassword" class="form-control" required/>
+                                                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                                                Your password must be 8-20 characters long, contain
+                                                                letters and numbers, and must not contain spaces
+                                                                and emoji.
                                                             </small>
                                                         </div>
-                                                        <button id="submitNewPassword" type="submit"
-                                                                class="btn btn-primary btn-sm btn-block">
-                                                            Сохранить
-                                                        </button>
                                                     </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                        Отмена
+                                                    </button>
+                                                    <button id="changePassword" type="submit" class="btn btn-primary">
+                                                        Сохранить
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- change PASS modal -->
+                                    <!---------------------- End Change password Profile Modal window ------------------->
 
                                     <!---------------------- Delete Profile Modal window ------------------->
                                     <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"

@@ -1,18 +1,27 @@
 package com.jm.online_store.controller.rest.admin;
 
+import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.UserServiceException;
+import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.UserDto;
+import com.jm.online_store.service.interf.CommonSettingsService;
+
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
-import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,145 +45,118 @@ import java.util.List;
 @Api(value = "Rest controller for actions from admins page")
 @RequestMapping(value = "/api/admin")
 public class AdminRestController {
-
     private final UserService userService;
-
     private final FavouritesGroupService favouritesGroupService;
+    private final CommonSettingsService commonSettingsService;
+    private final ModelMapper modelMapper;
 
     /**
      * Rest mapping to  receive authenticated user. from admin page
-     * @return ResponseEntity(authUser, HttpStatus) {@link ResponseEntity}
+     * @return ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/authUser")
-    @ApiOperation(value = "receive authenticated user. from admin page")
-    public ResponseEntity<User> showAuthUserInfo() {
+    @ApiOperation(value = "receive authenticated user. from admin page", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<ResponseDto<UserDto>> showAuthUserInfo() {
         User authUser = userService.getCurrentLoggedInUser();
-        return new ResponseEntity<>(authUser, HttpStatus.OK);
+        return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(authUser, UserDto.class)));
     }
 
     /**
      * Rest mapping to receive all users from db. from admin page
-     * @return ResponseEntity(allUsers, HttpStatus) {@link ResponseEntity}
+     * @return ResponseEntity<ResponseDto<List<UserDto>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/allUsers")
-    @ApiOperation(value = "receive all users from db. from admin page")
+    @ApiOperation(value = "return list of users", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "There are no users in db"),
+            @ApiResponse(code = 400, message = "NO ONE USER WAS FOUND"),
+            @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<List<User>> getAllUsersList() {
-        List<User> allUsers = userService.findAll();
-        if (allUsers.size() == 0) {
-            log.debug("There are no users in db");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<ResponseDto<List<UserDto>>> getAllUsersList() {
+        List<UserDto> allUsersDto = new ArrayList<>();
+        for (User user: userService.findAll()){
+            allUsersDto.add(modelMapper.map(user, UserDto.class));
         }
-        return new ResponseEntity<>(allUsers, HttpStatus.OK);
+        if (allUsersDto.size() == 0) {
+            log.debug("There are no users in db");
+            return new ResponseEntity<>(new ResponseDto<>(true, allUsersDto), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, allUsersDto), HttpStatus.OK);
     }
 
     /**
      * rest mapping to receive user by id from db. from admin page
      * @param id - user id (Long)
-     * @return ResponseEntity(user, HttpStatus) {@link ResponseEntity}
+     * @return ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/users/{id}")
-    @ApiOperation(value = "receive user by id from db. from admin page")
+    @ApiOperation(value = "receive user by id from db. from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "User with this id not found"),
+            @ApiResponse(code = 400, message = "User not found"),
+            @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<User> getUserInfo(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> getUserInfo(@PathVariable Long id) {
         if (userService.findById(id).isEmpty()) {
             log.debug("User with id: {} not found", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new UserServiceException(ExceptionEnums.USER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         User user = userService.findById(id).get();
         log.debug("User with id: {} found, email is: {}", id, user.getEmail());
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Rest mapping to delete user from db by his id from admin page
      * @param id - id of User to delete {@link Long}
-     * @return ResponseEntity<>(HttpStatus) {@link ResponseEntity}
+     * @return ResponseEntity<ResponseDto<UserDto>>(userToDelete, HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "delete user from db by his id from admin page")
+    @ApiOperation(value = "delete user from db by his id from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "There is no user with id"),
-            @ApiResponse(code = 200, message = "User was deleted successfully"),
+            @ApiResponse(code = 400, message = "USER NOT FOUND"),
+            @ApiResponse(code = 200, message = ""),
     })
-    public ResponseEntity<User> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> deleteUser(@PathVariable Long id) {
+        User userToDelete;
         try {
+            userToDelete = new User(id, userService.findUserById(id).getEmail());
             userService.deleteByID(id);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | EmptyResultDataAccessException | NullPointerException e) {
             log.debug("There is no user with id: {}", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new UserServiceException(ExceptionEnums.USER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         log.debug("User with id: {}, was deleted successfully", id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userToDelete, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * rest mapping to modify user from admin page
      * @param user {@link User}
-     * @return new ResponseEntity<>(HttpStatus) {@link ResponseEntity}
+     * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
-    @ApiOperation(value = "modify user from admin page")
+    @ApiOperation(value = "modify user from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "There is no user with id"),
-            @ApiResponse(code = 200, message = "Changes were successfully added"),
-            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / NO ROLES SELECTED / USER WITH SAME EMAIL ALREADY EXISTS / USER NOT FOUND"),
+            @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity editUser(@RequestBody User user) {
-        if (userService.findById(user.getId()).isEmpty()) {
-            log.debug("There are no user with id: {}", user.getId());
-            return ResponseEntity.noContent().build();
-        }
-        if (ValidationUtils.isNotValidEmail(user.getEmail())) {
-            log.debug("Wrong email! Не правильно введен email");
-            return ResponseEntity.badRequest().body("notValidEmailError");
-        }
-        if (user.getRoles().size() == 0) {
-            log.debug("Roles not selected");
-            return ResponseEntity.badRequest().body("emptyRolesError");
-        }
-        if (!userService.findById(user.getId()).get().getEmail().equals(user.getEmail())
-                && userService.isExist(user.getEmail())) {
-            log.debug("User with same email already exists");
-            return ResponseEntity.badRequest().body("duplicatedEmailError");
-        }
+    public ResponseEntity<ResponseDto<UserDto>> editUser(@RequestBody User user) {
         userService.updateUserFromAdminPage(user);
         log.debug("Changes to user with id: {} was successfully added", user.getId());
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Rest mapping to add new user from admin page
      * @param newUser {@link User}
-     * @return new ResponseEntity<>(String, HttpStatus) {@link ResponseEntity}
+     * @return new ResponseEntity<ResponseDto>(UserDto user, HttpStatus) {@link ResponseEntity}
      */
     @PostMapping
-    @ApiOperation(value = "add new user from admin page")
+    @ApiOperation(value = "add new user from admin page", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 409, message = "User with same email already exists"),
-            @ApiResponse(code = 400, message = "Bad request, empty password or roles not selected"),
+            @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / EMAIL ADDRESS ALREADY EXISTS / PASSWORD IS EMPTY / ROLES IS EMPTY"),
     })
-    public ResponseEntity addNewUser(@RequestBody User newUser) {
-        if (ValidationUtils.isNotValidEmail(newUser.getEmail())) {
-            log.debug("Wrong email! Не правильно введен email");
-            return new ResponseEntity("notValidEmailError", HttpStatus.BAD_REQUEST);
-        }
-        if (userService.isExist(newUser.getEmail())) {
-            log.debug("User with same email already exists");
-            return new ResponseEntity("duplicatedEmailError", HttpStatus.CONFLICT);
-        }
-        if (newUser.getPassword().equals("")) {
-            log.debug("Password empty");
-            return new ResponseEntity("emptyPasswordError", HttpStatus.BAD_REQUEST);
-        }
-        if (newUser.getRoles().size() == 0) {
-            log.debug("Roles not selected");
-            return new ResponseEntity("emptyRolesError", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<ResponseDto<UserDto>> addNewUser(@RequestBody User newUser) {
         userService.addNewUserFromAdmin(newUser);
         User customer = userService.findByEmail(newUser.getEmail()).get();
         FavouritesGroup favouritesGroup = new FavouritesGroup();
@@ -181,17 +164,41 @@ public class AdminRestController {
         favouritesGroup.setUser(customer);
         favouritesGroupService.save(favouritesGroup);
         userService.updateUser(customer);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(newUser, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Rest mapping to filter list on users by choosen role
      * @param role - choosen role
-     * @return List<User> filtered user's list
+     * @return ResponseEntity<ResponseDto<List<UserDto>>>(ResponseDto, HttpStatus) filtered user's list
      */
-    @ApiOperation(value = "filter list on users by chosen role")
     @PutMapping(value = "/{role}")
-    public List<User> filterByRoles(@PathVariable String role) {
-        return userService.findByRole(role);
+    @ApiOperation(value = "filter list on users by chosen role", authorizations = { @Authorization(value="jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "NO ONE USER WAS FOUND"),
+            @ApiResponse(code = 200, message = "")
+    })
+    public ResponseEntity<ResponseDto<List<UserDto>>> filterByRoles(@PathVariable String role) {
+        List<UserDto> allUsersWithRoleDto = new ArrayList<>();
+        for (User user: userService.findByRole(role)){
+            allUsersWithRoleDto.add(modelMapper.map(user, UserDto.class));
+        }
+        if (allUsersWithRoleDto.size() == 0) {
+            log.debug("There are no users with chosen role in db");
+            throw new UserServiceException(ExceptionEnums.USERS.getText() + ExceptionConstants.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, allUsersWithRoleDto), HttpStatus.OK);
+    }
+
+    /**
+     * Метод для изменения наименования магазина
+     * @param commonSettings настройки, содержащие название магазина
+     * @return ResponseEntity<ResponseDto<String>>(ResponseDto, HttpStatus)
+     */
+    @ApiOperation(value = "edit store name", authorizations = { @Authorization(value="jwtToken") })
+    @PutMapping(value = "/editStoreName")
+    public ResponseEntity<ResponseDto<String>> editStoreName(CommonSettings commonSettings){
+        commonSettingsService.updateTextValue(commonSettings);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Store name was changed", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 }

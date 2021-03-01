@@ -1,5 +1,7 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsFilterDto;
@@ -11,9 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
+
 
 /**
  * Сервис класс, имплементация интерфейса {@link NewsService}
@@ -26,22 +28,16 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
 
     /**
-     * Метод без параметров, который просто тащит список новостей
-     *
+     * Вытаскиваем список новостей.
      * @return List<News> возвращает список всех новостей
      */
     @Override
     public List<News> findAll() {
-        List<News> allNews = newsRepository.findAll();
-        if (allNews.isEmpty()) {
-            throw new NewsNotFoundException("findAll returns empty List<News>");
-        }
-        return allNews;
+        return newsRepository.findAll();
     }
 
     /**
      * Метод извлекает страницу новостей
-     *
      * @param page параметры страницы
      * @return Page<News> возвращает страницу новостей
      */
@@ -52,29 +48,29 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Метод сохраняет сущность, пришедшую в качестве параметра
-     *
-     * @param news Сущность News c с заполненными полями
+     * Метод сохраняет сущность News
+     * @param news Сущность News c заполненными полями
+     * @return News возвращает сохраненную новость
      */
     @Override
-    public void save(News news) {
-        newsRepository.save(news);
+    public News save(News news) {
+        return newsRepository.save(news);
     }
 
     /**
      * Method accept Long id as parameter and returns {@link News} entity
-     *
      * @param id - {@link Long}
      * @return returns News entity or throws {@link NewsNotFoundException}
      */
     @Override
     public News findById(long id) {
-        return newsRepository.findById(id).orElseThrow(() -> new NewsNotFoundException("There are no news with such id"));
+        return newsRepository.findById(id).orElseThrow(() ->
+                new NewsNotFoundException(String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
+
     }
 
     /**
-     * Метод выполняет проверку существует ли сущность в базе.
-     *
+     * Выполняем проверку, существует ли сущность в базе.
      * @param id уникальный идентификатор сушности
      * @return Возвращает булево значение true или false
      */
@@ -83,54 +79,53 @@ public class NewsServiceImpl implements NewsService {
         return newsRepository.existsById(id);
     }
 
+
+
     /**
-     * Метод обновляет сущность News в базе данных и изменяет modifiedDate на сегодняшнюю дату
-     *
+     * Обновляем сущность News в БД и изменяем modifiedDate на сегодняшнюю дату.
      * @param news сушность для обновления в базе данных
+     * @return News возвращает обновленную новость
      */
     public News update(News news) {
+        newsRepository.findById(news.getId()).orElseThrow(() ->
+                new NewsNotFoundException(String.format(ExceptionEnums.NEWS +
+                        ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, news.getId())));
         news.setModifiedDate(LocalDate.now());
         return newsRepository.save(news);
     }
 
     /**
-     * Метод удаляет сущность News из базы данных по уникальному идентификатору
-     *
+     * Удаляем сущность News из БД по ее уникальному идентификатору
      * @param id уникальный идентификатор сущности News
+     * @return Возвращает булево значение true или false
      */
     @Override
-    public void deleteById(Long id) {
-        newsRepository.deleteById(id);
+    public boolean deleteById(Long id) {
+
+        newsRepository.findById(id).orElseThrow(() ->
+                new NewsNotFoundException(String.format(ExceptionEnums.NEWS.name() + ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id)));
+
+        return true;
     }
 
     /**
      * Метод делающий выборку из базы данных по заданному параметру,
      * где LocalDate postingDate <= LocalDate timeNow.
-     *
      * @return возвращает список опубликованных новостей List<News>
      */
     @Override
     public List<News> getAllPublished() {
-        List<News> publishedNews = newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now().plusDays(1), false);
-        if (publishedNews.isEmpty()) {
-            throw new NewsNotFoundException("There are no published news");
-        }
-        return publishedNews;
+        return newsRepository.findAllByPostingDateBeforeAndArchivedEquals(LocalDate.now().plusDays(1), false);
     }
 
     /**
      * Метод делающий выборку из базы данных по заданному параметру,
      * где LocalDate postingDate > LocalDate timeNow.
-     *
      * @return возвращает список еще неопубликованных новостей List<News>
      */
     @Override
     public List<News> getAllUnpublished() {
-        List<News> unpublishedNews = newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
-        if (unpublishedNews.isEmpty()) {
-            throw new NewsNotFoundException("There are no unpublished news");
-        }
-        return unpublishedNews;
+        return newsRepository.findAllByPostingDateAfterAndArchivedEquals(LocalDate.now(), false);
     }
 
     /**
@@ -139,10 +134,6 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public List<News> getAllArchivedNews() {
-        List<News> archivedNews = newsRepository.findAllByArchivedEquals(true);
-        if (archivedNews.isEmpty()) {
-            throw new NewsNotFoundException("There are no archived news");
-        }
-        return archivedNews;
+        return newsRepository.findAllByArchivedEquals(true);
     }
 }

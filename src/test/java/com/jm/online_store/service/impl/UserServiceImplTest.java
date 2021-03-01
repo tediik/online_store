@@ -14,6 +14,7 @@ import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
+import com.jm.online_store.service.interf.TemplatesMailingSettingsService;
 import com.jm.online_store.service.interf.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,8 @@ public class UserServiceImplTest {
     private AddressRepository addressRepository = mock(AddressRepository.class);
     private CommonSettingsServiceImpl commonSettingsService = mock(CommonSettingsServiceImpl.class);
     private FavouritesGroupService favouritesGroupService = mock(FavouritesGroupService.class);
-    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService, favouritesGroupService);
+    private TemplatesMailingSettingsService templatesMailingSettingsService = mock(TemplatesMailingSettingsServiceImpl.class);
+    private UserService userService = new UserServiceImpl(userRepository, roleRepository , customerRepository, confirmTokenRepository, mailSenderService, authenticationManager, passwordEncoder, addressService, commonSettingsService, favouritesGroupService, templatesMailingSettingsService);
 
     private User userFullParameter;
     private User userWithIdEmailPassword;
@@ -221,7 +223,7 @@ public class UserServiceImplTest {
     }
     @Test
     public void addNewAddressForUserTest() {
-        Address addressToAdd = new Address("420077","Татарстан","Казань","Революционная","25",false);
+        Address addressToAdd = new Address("420077","Татарстан","Казань","Революционная", "25",false);
         when(addressService.findSameAddress(any())).thenReturn(Optional.of(addressToAdd));
         when(userRepository.findById(2L)).thenReturn(Optional.of(userWithIdEmailPassword));
         assertTrue(userService.addNewAddressForUser(userWithIdEmailPassword,addressToAdd));

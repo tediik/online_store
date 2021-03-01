@@ -4,8 +4,6 @@ import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.repository.StockRepository;
 import com.jm.online_store.service.interf.StockService;
-import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
