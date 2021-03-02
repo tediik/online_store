@@ -20,9 +20,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/{id}")
-    public String getProductPage(@PathVariable ("id") Long id, Model model) {
-        Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
-        model.addAttribute("product", product);
+    public String getProductPage(@PathVariable ("id") Long id) {
+        productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         return "product-page";
     }
 
