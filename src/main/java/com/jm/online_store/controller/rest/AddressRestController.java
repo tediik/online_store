@@ -52,11 +52,12 @@ public class AddressRestController {
      */
     @GetMapping(value = "/customerAddresses")
     @ApiOperation(value = "get current logged in Users address")
-    public ResponseEntity<Set<Address>> customerAddresses() {
-        if (customerService.getCurrentLoggedInCustomer().getUserAddresses() != null) {
-            return ResponseEntity.ok(customerService.getCurrentLoggedInCustomer().getUserAddresses());
+    public ResponseEntity<ResponseDto<Set<Address>>> customerAddresses() {
+        Set<Address> userAddress =  customerService.getCurrentLoggedInCustomer().getUserAddresses();
+        if (userAddress.isEmpty()) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "User address not found"), HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(new ResponseDto<>(true, userAddress));
     }
 
     /**
@@ -70,9 +71,9 @@ public class AddressRestController {
     public ResponseEntity addAddressToCustomer(@RequestBody Address address) {
         Customer customer = customerService.getCurrentLoggedInCustomer();
         if (customerService.addNewAddressForCustomer(customer, address)) {
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(new ResponseDto<>(false, "Address is exist"), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.badRequest().body("addressIsExists");
+        return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
     }
 
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})

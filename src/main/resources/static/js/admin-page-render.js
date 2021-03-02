@@ -58,15 +58,15 @@ function renderRolesSelectOnNewUserForm(allRoles) {
 function editUserModalWindowRender(user, allRoles) {
     $('.modal-dialog').off("click").on("click", "#acceptButton", handleUserAcceptButtonFromModalWindow)
     $('#rolesSelectModal').empty()
-    $('#idInputModal').val(user.id)
+    $('#idInputModal').val(user.data.id)
     $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-user')
     $('.modal-title').text("Edit user")
-    $('#emailInputModal').val(user.email).prop('readonly', false)
-    $('#firstNameInputModal').val(user.firstName).prop('readonly', false)
-    $('#lastNameInputModal').val(user.lastName).prop('readonly', false)
+    $('#emailInputModal').val(user.data.email).prop('readonly', false)
+    $('#firstNameInputModal').val(user.data.firstName).prop('readonly', false)
+    $('#lastNameInputModal').val(user.data.lastName).prop('readonly', false)
     $('#passwordInputModal').val("").prop('readonly', false)
     $.each(allRoles, function (i, role) {
-        if (compareRolesId(user.roles, role.name)) {
+        if (compareRolesId(user.data.roles, role.name)) {
             $('#rolesSelectModal').append(`<option value=${role.id} selected="true">${role.name}</option>>`)
         } else {
             $('#rolesSelectModal').append(`<option value=${role.id}>${role.name}</option>>`)
@@ -111,7 +111,7 @@ function handleEditUserButton(event) {
         fetch(roleRestUrl, {headers: headers})
     ])
         .then(([response1, response2]) => Promise.all([response1.json(), response2.json()]))
-        .then(([userToEdit, allRoles]) => editUserModalWindowRender(userToEdit.data, allRoles))
+        .then(([userToEdit, allRoles]) => editUserModalWindowRender(userToEdit, allRoles))
 }
 
 /**
