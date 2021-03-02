@@ -65,6 +65,9 @@
                     <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#managerRating" role="tab"> Рейтинг товаров </a>
                 </li>
                 <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#managerShops" role="tab"> Адреса магазинов </a>
+                </li>
+                <li class="nav-item">
                     <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#reports" role="tab"> Отчёты </a>
                 </li>
                 <li class="nav-item">
@@ -1290,6 +1293,188 @@
                     </div>
                 </div>
                 <!--ВКЛАДКА РЕЙТИНГ ТОВАРОВ   -->
+                <!--ВКЛАДКА АДРЕСА МАГАЗИНОВ  -->
+                <div class="tab-pane fade" id="managerShops" role="tabpanel" aria-labelledby="managerShops-tab">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 bg-light">
+                                <div class="tab-content">
+                                    <!--Admin-->
+                                    <div class="tab-pane fade show active" id="Admin" role="tabpanel" aria-labelledby="profile-tab">
+                                        <!--Display logged in user's name-->
+                                        <nav class="navbar navbar-dark bg-dark">
+                                            <ul class="navbar-nav">
+                                                <li class="navbar-text">
+                                                    <span sec:authentication="name"></span> with roles:
+                                                    <th:block th:each="authority, iter:${#authentication.getAuthorities()}">
+                                        <span th:if="${authority.getAuthority().startsWith('ROLE_')}"
+                                              th:text="${authority.getAuthority().replaceFirst('ROLE_', '')}"></span>
+                                                        <th:block th:if="${!iter.last}">,</th:block>
+                                                    </th:block>
+                                                </li>
+                                            </ul>
+                                        </nav>
+
+                                        <!--Display logged in user's name-->
+
+                                        <ul class="nav nav-tabs" id="AdminTabs" role="tablist">
+                                            <li class="nav-item" role="presentation" id="UsersTableNavTabs">
+                                                <a class="nav-link active" id="usersTable-tab" data-toggle="tab" role="tab"
+                                                   aria-controls="usersTable" aria-selected="true" href="#addressTable">Таблица адресов</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a class="nav-link" id="newUser-tab" data-toggle="tab" role="tab"
+                                                   aria-controls="newUser" aria-selected="false" href="#newAddress">Добавление адреса</a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content" id="AdminTabsContent">
+                                            <!-- Users table -->
+                                            <div class="tab-pane fade show active" id="addressTable" role="tabpanel" aria-labelledby="addressTable-tab">
+                                                <div class="card">
+                                                    <div id="all-address-table">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                            <tr>
+                                                                <th scope="col">ID</th>
+                                                                <th scope="col">Регион</th>
+                                                                <th scope="col">Город</th>
+                                                                <th scope="col">Улица</th>
+                                                                <th scope="col">Дом</th>
+                                                                <th scope="col">Изменить</th>
+                                                                <th scope="col">Удалить</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="table"> </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <!--New address-->
+                                            <div class="tab-pane fade" id="newAddress" role="tabpanel" aria-labelledby="newUser-tab">
+                                                <div class="card">
+                                                    <form class="form-horizontal mx-auto font-weight-bold" id="new-form">
+                                                        <br>
+                                                        <div class="form-group row">
+                                                            <label class="text-center mx-auto" for="regionNew">Регион</label>
+                                                            <input type="text" class="form-control" id="regionNew">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="text-center mx-auto" for="cityNew">Город</label>
+                                                            <input type="text" class="form-control" id="cityNew">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="text-center mx-auto" for="streetNew">Улица</label>
+                                                            <input type="text" class="form-control" id="streetNew">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="text-center mx-auto" for="buildingNew">Дом</label>
+                                                            <input type="text" class="form-control" id="buildingNew">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <button class="btn btn-success mx-auto" type="button" id="buttonInputNewSubmit">Добавить адрес</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Admin-->
+                                    </div>
+                                </div>
+                                <!--наполнение справа-->
+                            </div>
+                        </div>
+
+                        <!-- Modal Edit -->
+                        <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold" id="editAddressModalLabel">Изменение адреса</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-horizontal text-center mx-auto font-weight-bold" role="form" id="edit-form">
+                                            <div class="form-group">
+                                                <label class="control-label" for="idEdit">ID</label>
+                                                <input type="text" class="form-control" id="idEdit" readonly/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="regionEdit">Регион</label>
+                                                <input type="text" class="form-control" id="regionEdit"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="cityEdit">Город</label>
+                                                <input type="text" class="form-control" id="cityEdit"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="streetEdit">Улица</label>
+                                                <input type="text" class="form-control" id="streetEdit"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="buildingEdit">Дом</label>
+                                                <input type="text" class="form-control" id="buildingEdit"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                        <button type="button" class="btn btn-primary" id="buttonEditSubmit">Изменить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Modal Delete -->
+                        <div class="modal fade" id="deleteAddressModal" tabindex="-1" role="dialog"
+                             aria-labelledby="deleteAddressModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold" id="deleteUserModalLabel">Удаление адреса</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-horizontal text-center mx-auto font-weight-bold" role="form" id="delete-form">
+                                            <div class="form-group">
+                                                <label class="control-label" for="idDelete">ID</label>
+                                                <input type="text" class="form-control" id="idDelete" disabled='disabled'/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="regionDelete">Регион</label>
+                                                <input type="text" class="form-control" id="regionDelete" disabled='disabled'/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="cityDelete">Город</label>
+                                                <input type="text" class="form-control" id="cityDelete" disabled='disabled'/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="streetDelete">Улица</label>
+                                                <input type="text" class="form-control" id="streetDelete" disabled='disabled'/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="buildingDelete">Дом</label>
+                                                <input type="text" class="form-control" id="buildingDelete" disabled='disabled'/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                        <button type="submit" id="buttonDeleteSubmit" class="btn btn-danger">Удалить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--ВКЛАДКА АДРЕСА МАГАЗИНОВ  -->
                 <!--ВКЛАДКА ОТЧЕТЫ  -->
                 <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="reports-tab">
                     <div class="col-sm-8 text-left">
@@ -1937,5 +2122,6 @@
 <script src="/static/js/date-range.js"></script>
 <script src="/static/js/search-button.js"></script>
 <script src="/static/js/text-redactor.js"></script>
+<script src="/static/js/manager-shops.js"></script>
 </body>
 </html>
