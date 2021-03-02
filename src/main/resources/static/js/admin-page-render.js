@@ -56,25 +56,26 @@ function renderRolesSelectOnNewUserForm(allRoles) {
  * @param allRoles все роли из бд
  */
 function editUserModalWindowRender(user, allRoles) {
+    console.log("Функция рендера модалки")
     $('.modal-dialog').off("click").on("click", "#acceptButton", handleUserAcceptButtonFromModalWindow)
     $('#rolesSelectModal').empty()
-    $('#idInputModal').val(user.id)
+    $('#idInputModal').val(user.data.id)
     $('#acceptButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-user')
     $('.modal-title').text("Edit user")
-    $('#emailInputModal').val(user.email).prop('readonly', false)
-    $('#firstNameInputModal').val(user.firstName).prop('readonly', false)
-    $('#lastNameInputModal').val(user.lastName).prop('readonly', false)
+    $('#emailInputModal').val(user.data.email).prop('readonly', false)
+    $('#firstNameInputModal').val(user.data.firstName).prop('readonly', false)
+    $('#lastNameInputModal').val(user.data.lastName).prop('readonly', false)
     $('#passwordInputModal').val("").prop('readonly', false)
     $.each(allRoles, function (i, role) {
-        if (compareRolesId(user.roles, role.name)) {
+        if (compareRolesId(user.data.roles, role.name)) {
             $('#rolesSelectModal').append(`<option value=${role.id} selected="true">${role.name}</option>>`)
         } else {
             $('#rolesSelectModal').append(`<option value=${role.id}>${role.name}</option>>`)
         }
     })
-    $('#flexSwitchCheckDefault').val(user.isAccountNonExpiredStatus).prop('checked', function () {
-        return !user.isAccountNonExpiredStatus;
-    })
+    $('#flexSwitchCheckDefault').val(user.data.isAccountNonBlockedStatus).prop('checked', function () {
+        return !user.data.isAccountNonBlockedStatus;
+})
 }
 
 function compareRolesId(userRoles, roleNameToCheck) {
@@ -237,7 +238,7 @@ function handleUserAcceptButtonFromModalWindow(event) {
         lastName: $('#lastNameInputModal').val(),
         password: $('#passwordInputModal').val(),
         roles: getSelectValues(document.getElementById("rolesSelectModal")),
-        isAccountNonExpiredStatus: !document.getElementById('flexSwitchCheckDefault').checked
+        isAccountNonBlockedStatus: !document.getElementById('flexSwitchCheckDefault').checked
     };
 
     /**
@@ -373,6 +374,9 @@ function renderUsersTable(users) {
      * @returns {string}
      */
     function getUserRolesNames(userRoles) {
+        if (!userRoles) {
+             return '';
+        }
         let rolesNames = '';
         for (let i = 0; i < userRoles.length; i++) {
             if (i === 0) {
