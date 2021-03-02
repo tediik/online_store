@@ -26,4 +26,8 @@ public class ManagerController {
         model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
         return "manager-page";
     }
+    @GetMapping("/shops")
+    public String getShops() {
+        return "manager-shops";
+    }
 }
