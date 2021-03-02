@@ -20,61 +20,10 @@ public class ManagerController {
     private final CategoriesService categoriesService;
 
     @GetMapping
-    public String getManagerPage() {
-        return "manager-page";
-    }
-
-    @GetMapping("/news")
-    public String getNewsManagementPage() {
-        return "news-management";
-    }
-
-    @GetMapping("/reports")
-    public String getReportsPage() {
-        return "reports";
-    }
-
-    @GetMapping("/settings")
-    public String getSettingsPage (){
-        return "manager-settings";
-    }
-
-    @GetMapping("/stocks")
-    public String getStocks() {
-        return "stocks-manager-page";
-    }
-
-    @GetMapping("/mailing")
-    public String getMailing() {
-        return "manager-mailing";
-    }
-
-    @GetMapping("/feedback")
-    public String getFeedbacks() {
-        return "manager-feedback";
-    }
-
-    @GetMapping("/rating")
-    public String getRating(Model model) {
-        model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
-
-        return "products-rating";
-    }
-
-    @GetMapping("/characteristics")
-    public String getCharacteristics(Model model) {
-        model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
-
-        return "characteristics";
-    }
-
-    /*
-     добавил маппинг для отображения профиля на странице менеджера
-     */
-    @GetMapping("/profile")
-    public String getPersonalInfo(Model model) {
+    public String getManagerPage(Model model) {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
-        return "manager-profile";
+        model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
+        return "manager-page";
     }
 }

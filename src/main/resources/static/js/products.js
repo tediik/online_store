@@ -73,7 +73,7 @@ $(function () {
 
 // build hierarchical structure
 async function fillProductCategoriesIn(htmlId) {
-    listOfAll = await fetch(API_CATEGORIES_URL + "all").then(response => response.json());
+    listOfAll = await fetch(API_CATEGORIES_URL + "all").then(response => response.json().then(response => response.data));
     let source = [];
     let items = [];
     for (let i = 0; i < listOfAll.length; i++) {
@@ -134,7 +134,7 @@ function renderCharacteristicsFields() {
  *
  */
 function getAllProducts() { // не нашел, где используется эта функция
-    fetch(productRestUrl, {headers: headers}).then(response => response.json())
+    fetch(productRestUrl, {headers: headers}).then(response => response.json().then(response => response.data))
         .then(allProducts => renderProductsTable(allProducts))
 }
 
@@ -285,7 +285,7 @@ function handleEditButton(event) {
  */
 function handleDeleteButton(productId) {
     fetch("/api/product/manager/" + productId, {headers: headers})
-        .then(response => response.json())
+        .then(response => response.json()).then(response => response.data)
         .then(productToDelete => deleteModalWindowRender(productToDelete))
 }
 
@@ -408,7 +408,7 @@ function handleAddBtn() {
                                 console.log(text)
                             })
                 } else {
-                    response.json().then(function (productID) {
+                    response.json().then(response => response.data).then(function (productID) {
                         $('#idAddPictureModal').val(productID);
                         $("#jqxTreeHere").jqxTree('selectItem', null);
                         fetchToAddCharacteristics($('#addProduct').val());
@@ -689,7 +689,7 @@ function createProductCharacteristicArray(characteristics) {
  */
 function fetchCharacteristicsAndRenderFields(categoryId) {
     fetch("/api/manager/product/characteristics/" + categoryId)
-        .then(response => response.json())
+        .then(response => response.json()).then(response => response.data)
         .then(characteristics => renderCharacteristicFields(characteristics))
 }
 
@@ -699,7 +699,7 @@ function fetchCharacteristicsAndRenderFields(categoryId) {
  */
 function fetchProductsAndRenderTable() {
     fetch(productRestUrl)
-        .then(response => response.json())
+        .then(response => response.json()).then(response => response.data)
         .then(products => renderProductsTable(products))
 }
 
@@ -710,7 +710,7 @@ function fetchProductsAndRenderTable() {
  */
 function fetchProductsAndRenderNotDeleteTable() {
     fetch("/api/product/getNotDeletedProducts")
-        .then(response => response.json())
+        .then(response => response.json()).then(response => response.data)
         .then(products => renderProductsTable(products))
 }
 
@@ -725,7 +725,7 @@ function fetchProductsAndRenderNotDeleteTable() {
  */
 async function fillProductCategories() {
     $('jqxTree').empty();
-    listOfAll = await fetch(API_CATEGORIES_URL + "all").then(response => response.json());
+    listOfAll = await fetch(API_CATEGORIES_URL + "all").then(response => response.json().then(response => response.data));
     let source = [];
     let items = [];
     for (let i = 0; i < listOfAll.length; i++) {
