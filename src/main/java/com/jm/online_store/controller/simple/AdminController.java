@@ -1,11 +1,7 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.repository.RoleRepository;
-import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -14,15 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @AllArgsConstructor
 public class AdminController {
 
-    private final UserService userService;
-
-
-    private final RoleRepository roleRepository;
-
     @GetMapping
-    public String homePage(Model model) {
+    public String homePage() {
         return "admin-page";
     }
-
 
 }

@@ -140,18 +140,6 @@ function handleDeleteUserButton(event) {
 }
 
 /**
- * функция делает активным таблицу с пользователями
- * и обновляет в ней данные
- */
-function showAndRefreshHomeTab() {
-    fetchUsersAndRenderTable()
-    $('#nav-home').addClass('tab-pane fade active show')
-    $('#nav-profile').removeClass('active show')
-    $('#nav-profile-tab').removeClass('active')
-    $('#nav-home-tab').addClass('active')
-}
-
-/**
  * Функция для очистки всех полей с формы
  * @param fieldIdForm - принимает id формы
  */
@@ -224,11 +212,11 @@ function handleAddBtn() {
                             console.log(text)
                         })
             } else {
-                response.text().then(function () {
-                    showAndRefreshHomeTab();
-                    clearFieldsForm('addForm');
-                    renderRolesSelectOnNewUserForm();
-                })
+                fetchUsersAndRenderTable()
+                $('#nav-home').addClass('show active')
+                $('#nav-home-tab').addClass('active')
+                $('#nav-profile').removeClass('show active')
+                $('#nav-profile-tab').removeClass('active')
             }
         }
     )
@@ -278,7 +266,7 @@ function handleUserAcceptButtonFromModalWindow(event) {
         fetch(adminRestUrl + "/users/" + user.id, {headers: headers})
             .then(response => response.json())
             .then(userToDelete => {
-                let hasCustomerRole = compareRolesId(userToDelete.roles, 'ROLE_CUSTOMER');
+                let hasCustomerRole = compareRolesId(userToDelete.data.roles, 'ROLE_CUSTOMER');
                 if (hasCustomerRole === true) {
                     fetch("/api/customer/deleteProfile/" + user.id, {
                         headers: headers,
@@ -394,8 +382,9 @@ function renderUsersTable(users) {
 
     for (let i = 0; i < users.length; i++) {
         const user = users[i];
-        let userRolesNames = getUserRolesNames(user.roles)
-        let row = `
+        if (user.roles !== undefined) {
+            let userRolesNames = getUserRolesNames(user.roles)
+            let row = `
                 <tr id="tr-${user.id}">
                     <td>${user.id}</td>
                     <td>${user.email}</td>
@@ -414,10 +403,11 @@ function renderUsersTable(users) {
                     </td>
                 </tr>
                 `;
-        table.append(row)
+            table.append(row)
+        }
+        $('.edit-button-user').click(handleEditUserButton)
+        $('.delete-button-user').click(handleDeleteUserButton)
     }
-    $('.edit-button-user').click(handleEditUserButton)
-    $('.delete-button-user').click(handleDeleteUserButton)
 }
 
 /**
