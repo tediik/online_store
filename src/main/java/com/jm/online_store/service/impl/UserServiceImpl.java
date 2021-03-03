@@ -424,6 +424,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean activateUser(String token, HttpServletRequest request) {
+        String storeName = commonSettingsService.getSettingByName("store_name").getTextValue(); //Название магазина из БД
         String messageBody;
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
@@ -455,12 +456,12 @@ public class UserServiceImpl implements UserService {
             if (customer.getEmail() != null) {
                 messageBody = templateBody.replace("@@user@@", customer.getEmail())
                         .replace("@@password@@", confirmationToken.getUserPassword())
-                        .replace("@@url@@", String.format("<a href='%s'>online_store</a>",  productionUrl));
+                        .replace("@@url@@", String.format("<a href='%s'>" + storeName + "</a>",  productionUrl));
             } else {
                 messageBody = templateBody.replace("@@user@@", "Подписчик");
             }
             try {
-                mailSenderService.sendHtmlMessage(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
+                mailSenderService.sendHtmlMessage(customer.getEmail(), "Информация о регистрации на сайте " + storeName, messageBody, "info");
             } catch (MessagingException e) {
                 log.debug("Message sending error in ActivateUser Method {}", e.getMessage());
             }

@@ -119,6 +119,9 @@ public class DataInitializer {
     @Autowired
     private Environment environment;
 
+    // Задайте название магазина
+    private final String STORE_NAME = "Online store";
+
     /**
      * Основной метод для заполнения базы данных.
      * Вызов методов добавлять в этод метод.
@@ -396,7 +399,7 @@ public class DataInitializer {
 
         News sixthNews = News.builder()
                 .title("Отличная новость!")
-                .anons("Online_store открывает продлёнку на скидки!")
+                .anons(STORE_NAME + " открывает продлёнку на скидки!")
                 .fullText("<h1><span style=\"font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "<font color=\"#0000ff\">Хорошие новости в Online-Shop!</font></span></h1><h1>" +
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
@@ -416,7 +419,7 @@ public class DataInitializer {
                         " font-family: &quot;PT Sans&quot;, Arial, sans-serif;\"><b style=\"color: rgb(255, 0, 0);" +
                         " font-size: 1rem;\">Какой бы совершенной ни была сборка, всегда есть маленькая вероятность " +
                         "заводского брака. Как проверить работоспособность ноутбука при покупке — разбираемся вместе " +
-                        "с online_store.</b><br></p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left:\"" +
+                        "с " + STORE_NAME + ".</b><br></p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left:\"" +
                         " 0px; padding: 0px; color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial,\" +\n" +
                         " sans-serif;\">1. Визуальный осмотр\n" +
                         "Покрутите ноутбук в руках. На его корпусе не должно быть царапин и потертостей. Любые " +
@@ -488,7 +491,7 @@ public class DataInitializer {
                         "• наушники\n" +
                         "• портативная версия «тяжелой» программы\n" +
                         "Если ОС отсутствует, в список придется включить загрузочный образ.\n" +
-                        "В online_store представлен огромный выбор ноутбуков. Также у нас вы найдете все " +
+                        "В " + STORE_NAME + " представлен огромный выбор ноутбуков. Также у нас вы найдете все " +
                         "необходимые аксессуары, чтобы проверить и опробовать в деле новый гаджет.</b><br></p>" +
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
@@ -505,7 +508,7 @@ public class DataInitializer {
                         " font-size: 1rem;\">За свою почти вековую историю телевизор стал незаменимым " +
                         "многофункциональным устройством. Он магическим образом собирает у экрана всю семью, " +
                         "может считывать информацию с различных носителей и синхронизироваться со смартфоном, " +
-                        "подключаться к интернету и управлять умным домом. Online_store подскажет, на что " +
+                        "подключаться к интернету и управлять умным домом. " + STORE_NAME + " подскажет, на что " +
                         "обратить внимание при покупке телевизора.</b><br></p><p style=\"margin-right: 0px; " +
                         "margin-bottom: 1em; margin-left:\" +\n\" 0px; padding: 0px; color: rgb(0, 0, 0); font-family: " +
                         "&quot;PT Sans&quot;, Arial,\" sans-serif;\">" +
@@ -533,7 +536,7 @@ public class DataInitializer {
                         "теплого пола и видеодомофона) с помощью пульта от телевизора\n" +
                         "\n" +
                         "• экран на основе квантовых точек для расширения цветовой гаммы" +
-                        "В online_store представлен огромный выбор телевизоров. Также у нас вы найдете все " +
+                        "В " + STORE_NAME + " представлен огромный выбор телевизоров. Также у нас вы найдете все " +
                         "необходимые аксессуары, чтобы в полной мере наслаждаться просмотром телепередач.</b><br></p>" +
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
@@ -550,7 +553,7 @@ public class DataInitializer {
                         " font-size: 1rem;\">Самый полезный способ приготовления пищи — на пару. " +
                         "Продукты минимально теряют пищевую ценность, сохраняя микроэлементы и витамины. " +
                         "Для этого необходим особый прибор — пароварка.\n" +
-                        "Online_store подскажет, на что обратить внимание при выборе.\n" +
+                        STORE_NAME + " подскажет, на что обратить внимание при выборе.\n" +
                         "</b><br></p><p style=\"margin-right: 0px; margin-bottom: 1em; margin-left:\" +\n" +
                         " 0px; padding: 0px; color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial,\" +\n" +
                         " sans-serif;\">Тип управления\n" +
@@ -593,7 +596,7 @@ public class DataInitializer {
                         "и для других круп. Ее можно купить отдельно, главное — соответствие ее размера и лотка " +
                         "выбранной пароварки. Существуют пароварки с углублениями для варки яиц.\n" +
                         "У нас можно приобрести пароварку любого из представленных типов, в том числе купить в " +
-                        "кредит или с использованием бонусных карт. В online_store представлен огромный выбор " +
+                        "кредит или с использованием бонусных карт. В " + STORE_NAME + " представлен огромный выбор " +
                         "пароварок. Выбирайте с учетом представленных рекомендаций. </b><br></p>" +
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
@@ -612,7 +615,7 @@ public class DataInitializer {
                         "сложностям в дороге. Поэтому первый шаг к идеальной автомобильной поездке — составить " +
                         "чек-лист необходимых вещей.\n" +
                         "\n" +
-                        "Какие гаджеты взять с собой и как подготовиться к поездке — подскажет online_store.</b><br>" +
+                        "Какие гаджеты взять с собой и как подготовиться к поездке — подскажет " + STORE_NAME + ".</b><br>" +
                         "</p><p style=\"margin-right: 0px; \" +\n" +
                         "margin-bottom: 1em; margin-left:\" +\n\" 0px; padding: 0px; color: rgb(0, 0, 0); " +
                         "font-family: \" +\n" +
@@ -655,7 +658,7 @@ public class DataInitializer {
                         "дольше — вкусные домашние бутерброды с вяленым мясом и сыром. Для любителей чая пригодится " +
                         "термос или дорожный чайник. И конечно, кофе в дорогу в любимой термокружке!\n" +
                         "Уже решили, куда отправитесь на автомобиле? Тогда обязательно посмотрите, каких товаров в " +
-                        "дорогу вам не хватает. Заходите в online_store, покупайте и путешествуйте с комфортом!</b><br></p>" +
+                        "дорогу вам не хватает. Заходите в " + STORE_NAME + ", покупайте и путешествуйте с комфортом!</b><br></p>" +
                         "<p style=\"margin-right: 0px; margin-bottom: 1em; margin-left: 0px; padding: 0px;" +
                         " color: rgb(0, 0, 0); font-family: &quot;PT Sans&quot;, Arial, sans-serif;\">" +
                         "Online-shop желает всем удачи!</p>")
@@ -921,7 +924,7 @@ public class DataInitializer {
         Stock firstStock = Stock.builder()
                 .startDate(LocalDate.now().plusDays(2L))
                 .endDate(LocalDate.now().plusDays(12L))
-                .stockTitle("Команда Online-Store сообщает о начале акции – «Рассрочка или бонусы! HD-" +
+                .stockTitle("Команда " + STORE_NAME + " сообщает о начале акции – «Рассрочка или бонусы! HD-" +
                         " и UltraHD-телевизоры Samsung»")
                 .stockImg("default.jpg")
                 .stockText("<b style=\"font-weight: bold; color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;," +
@@ -960,7 +963,7 @@ public class DataInitializer {
         Stock secondStock = Stock.builder()
                 .startDate(LocalDate.now().minusDays(5L))
                 .endDate(LocalDate.now().plusDays(3L))
-                .stockTitle("Команда Online-Store сообщает о начале акции – «Выгодный онлайн-шопинг с Visa!»")
+                .stockTitle("Команда " + STORE_NAME + " сообщает о начале акции – «Выгодный онлайн-шопинг с Visa!»")
                 .stockImg("default.jpg")
                 .stockText("<span style=\"color: rgb(51, 51, 51); font-family: &quot;PT Sans&quot;, Helvetica, " +
                         "Arial, sans-serif; font-size: 18px; letter-spacing: 0.23px; text-align: start;\">С " +
@@ -1315,7 +1318,7 @@ public class DataInitializer {
                 .build();
         CommonSettings storeName = CommonSettings.builder()
                 .settingName("store_name")
-                .textValue("Online store")
+                .textValue(STORE_NAME)
                 .status(false)
                 .build();
         commonSettingsService.addSetting(emailStockDistributionTemplate);
@@ -1340,7 +1343,7 @@ public class DataInitializer {
                 .build();
         TemplatesMailingSettings regNewAccountTemplate = TemplatesMailingSettings.builder()
                 .settingName("reg_new_account")
-                .textValue("<p>Hello, @@user@@!" + "Welcome to online-store. Please, visit next link: @@url@@" +
+                .textValue("<p>Hello, @@user@@!" + " Welcome to " + STORE_NAME + ". Please, visit next link: @@url@@" +
                         "/activate/@@confirmationToken@@</p>" +
                         "<p>С Уважением</p><p>" +
                         environment.getProperty("production-url") + "</p>")
