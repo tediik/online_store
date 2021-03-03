@@ -115,7 +115,6 @@ function chekboxChanges(o) {
 
 /**
  * Функция удаления профиля
- * @param event
  */
 function deleteProfile() {
     let id = $('#id_update').val();
@@ -273,7 +272,7 @@ function fillRecentlyProductsViewLastMonth() {
 }
 
 /**
- * Заполнение полей информации о пользователе
+ * Заполнение полей информации о покупателе
  */
 function userData() {
     fetch("/api/customer")
@@ -294,6 +293,9 @@ function userData() {
                 $('#userGenderNone').prop('checked', true);
             }
 
+            /**
+            * Запрос возвращает выбранный день недели для рассылки
+            */
             fetch("/api/customer/dayOfWeekForStockSend")
                 .then(response => response.json())
                 .then(day => {
