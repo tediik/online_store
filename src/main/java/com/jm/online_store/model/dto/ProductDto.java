@@ -23,6 +23,7 @@ public class ProductDto {
     private Description descriptions;
     private String productType;
     private List<String> productPictureNames;
+    private List<Long> productPictureId;
     private boolean deleted;
     private boolean isFavourite;
 }

@@ -83,4 +83,6 @@ public interface ProductService {
     Long countAllPictureProductById(Long id);
 
     Long findProductIdByIdPicture(Long id);
+
+    List<Long> getAllPictureIdByProductId(Long productId);
 }

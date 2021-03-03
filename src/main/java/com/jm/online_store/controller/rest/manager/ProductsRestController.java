@@ -183,7 +183,8 @@ public class ProductsRestController {
             @ApiResponse(code = 404, message = "Product hasn't been found"),
     })
     public ResponseEntity<ResponseDto<ProductDto>> findProductById(@PathVariable("id") Long productId) {
-        ProductDto returnValue = modelMapper.map(productService.getProductById(productId), ProductDto.class);
+//        ProductDto returnValue = modelMapper.map(productService.getProductById(productId), ProductDto.class);
+        ProductDto returnValue = productService.getProductDto(productId, null).get();
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 

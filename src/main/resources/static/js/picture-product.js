@@ -87,15 +87,4 @@ $(document).ready(function () {
             $('#addPictureForNewProductModalWindow').modal('hide')
         });
     });
-    /**
-     * Функция для удаления картинки выбранного продукта
-     */
-    $('#DeletePictureButton').click(function (){
-            const product = {id: $('#idInputPictureModal').val()}
-        $.ajax({
-            type: 'DELETE',
-            url: '/api/product/picture/delete/' + product.id
-        })
-        $('#productPictureModalWindow').modal("hide");
-    })
 });

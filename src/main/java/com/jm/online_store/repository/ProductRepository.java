@@ -52,5 +52,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT product_picture_names.product_id FROM product_picture_names WHERE product_picture_names.id = :idPicture", nativeQuery = true)
     Long findProductIdByIdPicture(Long idPicture);
 
-
+    @Query(value = "SELECT id FROM product_picture_names  WHERE product_picture_names.product_id = :productId", nativeQuery = true)
+    List<Long> findAllPictureIdByProductId(Long productId);
 }

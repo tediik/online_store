@@ -566,6 +566,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
                         presentProduct.getProductPictureNames(),
+                        this.getAllPictureIdByProductId(productId),
                         presentProduct.isDeleted(),
                         productSet.contains(presentProduct)
                 );
@@ -582,6 +583,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
                         presentProduct.getProductPictureNames(),
+                        this.getAllPictureIdByProductId(productId),
                         presentProduct.isDeleted(),
                         false
                 );
@@ -822,5 +824,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String findProductPictureNamesById(Long id){
         return productRepository.findProductPictureNamesById(id);
+    }
+    /**
+     * возвращает все id изображений в БД принадлежащие данному продукту по id Продукта
+     * @param productId id продукта
+     * @return Long
+     */
+    @Transactional
+    @Override
+    public List<Long> getAllPictureIdByProductId(Long productId){
+        return productRepository.findAllPictureIdByProductId(productId);
     }
 }
