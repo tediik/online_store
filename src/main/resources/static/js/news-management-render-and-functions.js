@@ -318,9 +318,9 @@ function fetchNews() {
         data: {page: lastPage.number, sort: 'postingDate,DESC', type: lastPage.type, currentDate: lastPage.currentDate},
         async: false,
         success: function (data) {
-            lastPage.number = data.number + 1;
-            lastPage.last = data.last;
-            renderNewsTable(data)
+            lastPage.number = data.data.number + 1;
+            lastPage.last = data.data.last;
+            renderNewsTable(data.data)
         },
         error: function () {
             infoMessage('#infoMessageMainPage', 'В этом разделе нет новостей', 'error')

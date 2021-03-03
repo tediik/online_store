@@ -70,7 +70,7 @@ function renderProductsRatingTable(products) {
 function fetchCategorySelectProductsInAscOrderAndRender(categorySelect, orderSelect) {
     fetch("/api/product/sort/" + categorySelect + '/' + orderSelect)
         .then(response => response.json())
-        .then(products => renderProductsRatingTable(products))
+        .then(products => renderProductsRatingTable(products.data))
 }
 
 /**
@@ -82,7 +82,7 @@ function fetchCategorySelectProductsInAscOrderAndRender(categorySelect, orderSel
 function fetchCategorySelectProductsInDescOrderAndRender(categorySelect, orderSelect) {
     fetch("/api/product/sort/" + categorySelect + '/' + orderSelect)
         .then(response => response.json())
-        .then(products => renderProductsRatingTable(products))
+        .then(products => renderProductsRatingTable(products.data))
 }
 
 /**

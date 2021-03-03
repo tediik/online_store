@@ -1,16 +1,11 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.model.Categories;
-import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -60,12 +55,12 @@ public class ManagerController {
     }
 
     @GetMapping("/rating")
-    public String getRating(Model model) {
+    public String getRating() {
         return "products-rating";
     }
 
     @GetMapping("/characteristics")
-    public String getCharacteristics(Model model) {
+    public String getCharacteristics() {
         return "characteristics";
     }
 
@@ -73,7 +68,7 @@ public class ManagerController {
      добавил маппинг для отображения профиля на странице менеджера
      */
     @GetMapping("/profile")
-    public String getPersonalInfo(Model model) {
+    public String getPersonalInfo() {
         return "manager-profile";
     }
 }

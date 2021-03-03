@@ -37,9 +37,9 @@ $('#filterCategoryToAdd').on("change", function () {
  * и передает функции рендера таблицы renderCharacteristicsTable
  */
 function fetchCharacteristicsAndRenderTable(categorySelect) {
-    fetch("characteristicsByCategoryName/" + categorySelect)
+    fetch("/api/manager/product/characteristicsByCategoryName/" + categorySelect)
         .then(response => response.json())
-        .then(characteristics => renderCharacteristicsTable(characteristics))
+        .then(characteristics => renderCharacteristicsTable(characteristics.data))
 }
 
 /**
@@ -101,7 +101,7 @@ function handleEditButton(event) {
     if (categorySelectAllCharacteristics === 'default') {
         fetch("/api/manager/product/characteristic/" + characteristicId)
             .then(response => response.json())
-            .then(characteristicToEdit => editModalWindowRender(characteristicToEdit))
+            .then(characteristicToEdit => editModalWindowRender(characteristicToEdit.data))
     } else {
         toastr.error('Изменение категории доступно только для всех категорий')
         return false;
@@ -116,7 +116,7 @@ function handleDeleteButton(event) {
     const characteristicId = event.target.dataset["characteristicId"]
     fetch("/api/manager/product/characteristic/" + characteristicId)
         .then(response => response.json())
-        .then(characteristicToDelete => deleteModalWindowRender(characteristicToDelete))
+        .then(characteristicToDelete => deleteModalWindowRender(characteristicToDelete.data))
 }
 
 /**
@@ -171,7 +171,7 @@ function handleAcceptButtonFromModalWindow(event) {
         $('#characteristicModalWindow').modal('hide')
         toastr.success("Характеристика успешно удалена")
     } else {
-        fetch("/api/manager/characteristics", {
+        fetch("/api/manager/product/characteristics", {
             method: 'PUT',
             headers: headers,
             body: JSON.stringify(characteristic)
@@ -243,7 +243,7 @@ function handleAddBtn() {
 function addCharacteristicsOnNewCharacteristicForm(categorySelect) {
     if (categorySelect !== 'default') {
         fetch("/api/manager/product/characteristics/otherThenSelected/" + categorySelect, {headers: headers}).then(response => response.json())
-            .then(characteristics => renderCharacteristicsOtherThenSelected(characteristics))
+            .then(characteristics => renderCharacteristicsOtherThenSelected(characteristics.data))
     }
 }
 
