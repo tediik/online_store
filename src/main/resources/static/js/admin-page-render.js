@@ -44,7 +44,7 @@ function getAllRoles() {
 function renderRolesSelectOnNewUserForm() {
     getAllRoles().then(allRoles => {
         let selectRoles = $('#addRoles').empty()
-        $.each(allRoles, function (i, role) {
+        $.each(allRoles.data, function (i, role) {
             selectRoles.append(`<option value=${role.id}>${role.name}</option>`)
         })
     })
@@ -57,7 +57,7 @@ function renderRolesSelectOnUserTable() {
     getAllRoles().then(allRoles => {
         let selectRoles = $('#filterRole').empty()
             .append(`<option value="" disabled selected>User filter by Role</option><option value="default">show all users</option>`)
-        $.each(allRoles, function (i, role) {
+        $.each(allRoles.data, function (i, role) {
             selectRoles.append(`<option value=${role.name}>${role.name}</option>`)
         })
     })
@@ -430,7 +430,7 @@ function fetchUsersAndRenderTable() {
 function renderRolesSelectOnMaintenanceMode() {
     getAllRoles().then(allRoles => {
         let selectRoles = $('#rolesMode').empty()
-        $.each(allRoles, function (i, role) {
+        $.each(allRoles.data, function (i, role) {
             selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
         })
     })
