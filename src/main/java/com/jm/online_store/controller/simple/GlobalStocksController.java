@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.impl.StockServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
