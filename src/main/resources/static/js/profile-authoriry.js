@@ -81,14 +81,12 @@ function userData() {
             $('#email_input').val(user.data.email);
             $('#date_birthday_input').val(user.data.birthdayDate);
             $('#register_date').html(user.data.registerDate);
-            if (user.data.userGender === null) {
-                $('#userGenderNone').prop('checked', true);
-            }
-            if (user.userGender === "MAN") {
+            if (user.data.userGender === "MAN") {
                 $('#userGenderMan').prop('checked', true);
-            }
-            if (user.userGender === "WOMAN") {
+            } else if (user.data.userGender === "WOMAN") {
                 $('#userGenderWoman').prop('checked', true);
+            } else {
+                $('#userGenderNone').prop('checked', true);
             }
         })
 }

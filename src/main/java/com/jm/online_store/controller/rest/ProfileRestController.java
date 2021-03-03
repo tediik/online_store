@@ -93,33 +93,32 @@ public class ProfileRestController {
     })
     public ResponseEntity<ResponseDto<UserDto>> getCurrentUser() {
         User currentLoggedInUser = userService.getCurrentLoggedInUser();
-//        return ResponseEntity.ok(currentLoggedInUser);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(currentLoggedInUser, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Метод обновления профиля
-     * @param user текущий пользователь
-     * @return ResponseEntity<String> статус ответа
+     * @param user {@link User}текущий пользователь
+     * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping("/update")
     @ApiOperation(value = "updates current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> updateProfile(@RequestBody User user) {
+    public ResponseEntity<ResponseDto<UserDto>> updateProfile(@RequestBody User user) {
         userService.updateUserProfile(user);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Метод удаления профиля
      * @param id индентификатор пользователя
-     * @return ResponseEntity.ok() код ответа
+     * @return ResponseEntity<ResponseDto<UserDto>>(user, HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "deletes current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> deleteProfile(@PathVariable Long id) {
         userService.deleteByID(id);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userService.findUserById(id), UserDto.class)), HttpStatus.OK);
     }
 }
