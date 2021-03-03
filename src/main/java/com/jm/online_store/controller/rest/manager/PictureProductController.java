@@ -59,6 +59,7 @@ public class PictureProductController {
             @ApiResponse(code = 400, message = "Image was not added")
     })
     public ResponseEntity<ResponseDto<String>> editPicture(@PathVariable("id") Long id, @RequestParam("pictureFile") MultipartFile pictureFile) {
+        System.out.println("Добавляем");
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
         String uniqueFilename = StringUtils.cleanPath(UUID.randomUUID() + "." + pictureFile.getOriginalFilename());
         List<String> productPictureNames = product.getProductPictureNames();

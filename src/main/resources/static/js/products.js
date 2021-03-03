@@ -176,9 +176,10 @@ function deleteModalWindowRender(productToEdit) {
  */
 function editPictureModalWindowRender(product) {
     product = product.data
-    $('.modal-dialog').off("click").on("click", "#acceptEditPictureButton", handleEditPictureButtonFromModalWindow)
+    // $('.modal-dialog').off("click").on("click", "#acceptEditPictureButton", handleEditPictureButtonFromModalWindow)
     $('#idInputPictureModal').val(product.id)
-    $('#acceptEditPictureButton').text("Применить").removeClass().toggleClass('btn btn-success edit-product')
+    $('#acceptEditPictureButton').text("Добавить картинку").removeClass().toggleClass('btn btn-success edit-product')
+    renderPicture(product)
     $('.modal-title').text("Добавить картинку")
 }
 
@@ -191,6 +192,12 @@ function addPictureModalWindowRender(product) {
     $('.modal-dialog').off("click").on("click", "#acceptAddPictureButton", handleAddPictureButton)
     $('#idAddPictureModal').val(product.id)
     $('.modal-title').text("Добавить картинку?")
+}
+function renderPicture(product) {
+//     let table = $('#allProductPictures')
+//     table.append(`<img id="prodPict" src="/uploads/images/stocks/default.jpg"
+// alt="your image" class="rounded-circle img-responsive mt-2 float-right" height="200" width="400">`)
+//    table.append(`<h>sdsdvsdc</h>`)
 }
 
 function handleAddPictureButton(event) {
@@ -231,34 +238,6 @@ function handleEditPictureButton(event) {
                     editPictureModalWindowRender(productToEdit)
                 });
         });
-}
-
-/**
- * Функция обработки нажатия Применить в модалке добавления картинки
- */
-function handleEditPictureButtonFromModalWindow() {
-    const product = {
-        id: $('#idInputPictureModal').val(),
-        product: $('#productInputModal').val(),
-        price: $('#productPriceInputModal').val(),
-        amount: $('#productAmountInputModal').val()
-    };
-    $('#acceptEditPictureButton').click(function () {
-        $.ajax({
-            type: 'PUT',
-            url: '/api/product/upload/picture/' + product.id,
-            dataType: 'script',
-            data: form_data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function () {},
-            error: function (jqXhr, textStatus, errorThrown) {
-                console.log(errorThrown);
-            }
-        });
-    });
-    $('#productPictureModalWindow').modal('hide')
 }
 
 /**
