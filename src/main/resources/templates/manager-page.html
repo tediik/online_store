@@ -1103,9 +1103,6 @@
                                             <div class="form-group col-3 mt-3">
                                                 <select class="form-control form-control-sm" id="filterCategory">
                                                     <option value="default">Все категории</option>
-                                                    <option th:each="dropDownItem : ${listCategories}"
-                                                            th:value="${dropDownItem}"
-                                                            th:text="${dropDownItem}"></option>
                                                     <div class="dropdown-divider"></div>
                                                 </select>
                                             </div>
@@ -1154,9 +1151,6 @@
                                                         <select class="form-control form-control-sm"
                                                                 id="filterCategoryToAdd">
                                                             <option value="default">Выберите категорию</option>
-                                                            <option th:each="dropDownItem : ${listCategories}"
-                                                                    th:value="${dropDownItem}"
-                                                                    th:text="${dropDownItem}"></option>
                                                             <div class="dropdown-divider"></div>
                                                         </select>
                                                         <div class="form-group">
@@ -1211,9 +1205,6 @@
                                             <div class="form-group">
                                                 <select class="form-control form-control-sm" id="ratingFilterCategory">
                                                     <option value="default">Все категории</option>
-                                                    <option th:each="dropDownItem : ${listCategories}"
-                                                            th:value="${dropDownItem}"
-                                                            th:text="${dropDownItem}"></option>
                                                     <div class="dropdown-divider"></div>
                                                 </select>
                                             </div>

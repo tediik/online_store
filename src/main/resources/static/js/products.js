@@ -6,6 +6,9 @@ let productRestUrl = "/api/product/getAll"
 let headers = new Headers()
 headers.append('Content-type', 'application/json; charset=UTF-8')
 document.getElementById('addBtn').addEventListener('click', handleAddBtn)
+$(document).ready(function () {
+    fetchCategoriesWithoutParentCategory();
+})
 /**
  * Переменные для отдельной вкладки "Категории товаров
  */
@@ -941,3 +944,22 @@ function fillMagicModal() {
  *  Конец методов из файла managerProductCategorieCRUD
  *  Для отдельной вкладка Категории товаров
  */
+
+
+function fetchCategoriesWithoutParentCategory() {
+    fetch(API_CATEGORIES_URL + "withoutParentCategory")
+        .then(response => response.json())
+        .then(response => response.data)
+        .then(categories => renderCategoriesLists(categories))
+}
+
+function renderCategoriesLists(listCategories) {
+    let select;
+    for (i in listCategories) {
+        select +=
+            "<option value=" + listCategories[i].category + ">" + listCategories[i].category + "</option>";
+    }
+    $('#ratingFilterCategory').append(select);
+    $('#filterCategoryToAdd').append(select);
+    $('#filterCategory').append(select);
+}

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * REST-контроллер для управления категориями товаров со страницы менеджера
@@ -139,5 +140,25 @@ public class ProductCategoriesRestController {
                 String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id))) :
                 ResponseEntity.ok(new ResponseDto<>(false,
                 String.format(ResponseOperation.HAS_NOT_BEEN_DELETED.getMessage(), id)));
+    }
+
+    /**
+     * Метод находит все категории, не имеющие родительские категии
+     * или пустой список
+     * @return Возвращает список категорий, не имеющих родительских категийй
+     */
+    @GetMapping("/withoutParentCategory")
+    @ApiOperation(value = "return list of categories without parent category",
+            authorizations = { @Authorization(value = "jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns list of  categories without parent category"),
+            @ApiResponse(code = 200, message = "Returns empty list")
+    })
+    public ResponseEntity<ResponseDto<List<CategoriesDto>>> getCategoriesWithoutParentCategory() {
+        List<CategoriesDto> categoriesWithoutParentCategory  = categoriesService.getCategoriesWithoutParentCategory()
+                .stream()
+                .map(category -> modelMapper.map(category, CategoriesDto.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new ResponseDto<>(true, categoriesWithoutParentCategory));
     }
 }

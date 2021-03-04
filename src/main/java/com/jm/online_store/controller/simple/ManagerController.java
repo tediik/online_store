@@ -23,7 +23,6 @@ public class ManagerController {
     public String getManagerPage(Model model) {
         User user = userService.getCurrentLoggedInUser();
         model.addAttribute("user", user);
-        model.addAttribute("listCategories", categoriesService.getCategoriesWithoutParentCategory().stream().map(Categories::getCategory).collect(Collectors.toList()));
         return "manager-page";
     }
 }
