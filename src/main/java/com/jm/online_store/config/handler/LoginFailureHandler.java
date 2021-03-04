@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -39,10 +40,10 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
             response.sendRedirect("/login?loginBadCredentials=true");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         } else if (exception.getClass().equals(LockedException.class)) {
-            response.sendRedirect("/login?accountBlocked=true");
-            response.setStatus(HttpStatus.LOCKED.value());
-        } else if(exception.getClass().equals(AccountExpiredException.class)) {
             response.sendRedirect("/login?accountBanned=true");
+            response.setStatus(HttpStatus.LOCKED.value());
+        } else if(exception.getClass().equals(DisabledException.class)) {
+            response.sendRedirect("/login?accountDisabled=true");
             response.setStatus(HttpStatus.LOCKED.value());
         }
 
