@@ -22,6 +22,7 @@ public class ProductDto {
     private String productType;
     private List<String> productPictureNames;
     private List<Long> productPictureId;
+    private Integer amount;
     private boolean deleted;
     private boolean isFavourite;
 
@@ -34,6 +35,7 @@ public class ProductDto {
         this.productType = product.getProductType();
         this.productPictureNames = product.getProductPictureNames();
         this.productPictureId = product.getProductPictureId();
+        this.amount = product.getAmount();
         this.deleted = product.isDeleted();
     }
 }

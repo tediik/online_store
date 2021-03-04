@@ -581,6 +581,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getProductType(),
                         presentProduct.getProductPictureNames(),
                         presentProduct.getProductPictureId(),
+                        presentProduct.getAmount(),
                         presentProduct.isDeleted(),
                         productSet.contains(presentProduct)
                 );
@@ -598,6 +599,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getProductType(),
                         presentProduct.getProductPictureNames(),
                         presentProduct.getProductPictureId(),
+                        presentProduct.getAmount(),
                         presentProduct.isDeleted(),
                         false
                 );
