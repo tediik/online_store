@@ -43,7 +43,9 @@ $('#managerSalesReportRange').on('apply.daterangepicker', function (ev, picker) 
     fetch(managerSalesApiUrl + `?stringStartDate=${startDate}&stringEndDate=${endDate}`)
         .then(function (response) {
             if (response.status === 200) {
-                response.json().then(sales => renderSalesTable(sales))
+                response.json()
+                    .then(sales => sales.data)
+                    .then(sales => renderSalesTable(sales))
                 showElementsOfReport()
             } else {
                 popupWindow('#infoMessageDiv', 'За указанный период, продаж не найдено', 'error')
