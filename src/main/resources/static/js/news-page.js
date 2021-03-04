@@ -21,7 +21,7 @@ async function showNews() {
             <div class="alert alert-info mt-2">
                 <div>${listOfNews[key].title}</div>
                 <div>${listOfNews[key].anons}</div>
-                <div class="mt-2"><a  onclick="showNewsDetails(${listOfNews[key].id})" type="button" class="btn btn-warning" data-target="#newsInfo">Детальнее</a></div>
+                <div class="mt-2"><a  href="/news/${listOfNews[key].id}" type="button" class="btn btn-warning" data-target="#newsInfo">Детальнее</a></div>
                 </div>
             </div>
             `;
