@@ -26,7 +26,7 @@ $(document).ready(function () {
             $.ajax({
                 type: 'PUT',
                 url: '/api/product/upload/picture/' + id,
-                dataType: 'script',
+                dataType: 'text',
                 data: form_data,
                 cache: false,
                 contentType: false,
@@ -72,7 +72,7 @@ $(document).ready(function () {
             $.ajax({
                 type: 'PUT',
                 url: '/api/product/upload/picture/' + product.id,
-                dataType: 'script',
+                dataType: 'text',
                 data: form_data,
                 cache: false,
                 contentType: false,
