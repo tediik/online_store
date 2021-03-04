@@ -277,17 +277,18 @@ function fillRecentlyProductsViewLastMonth() {
 function userData() {
     fetch("/api/customer")
         .then(response => response.json())
+        .then(res => res.data)
         .then((customer) => {
-            $('#id_update').val(customer.data.id);
-            $('#password_update').val(customer.data.password);
-            $('#first_name_update').val(customer.data.firstName);
-            $('#last_name_input').val(customer.data.lastName);
-            $('#email_input').val(customer.data.email);
-            $('#date_birthday_input').val(customer.data.birthdayDate);
-            $('#register_date').html(customer.data.registerDate);
-            if (customer.data.userGender === "MAN") {
+            $('#id_update').val(customer.id);
+            $('#password_update').val(customer.password);
+            $('#first_name_update').val(customer.firstName);
+            $('#last_name_input').val(customer.lastName);
+            $('#email_input').val(customer.email);
+            $('#date_birthday_input').val(customer.birthdayDate);
+            $('#register_date').html(customer.registerDate);
+            if (customer.userGender === "MAN") {
                 $('#userGenderMan').prop('checked', true);
-            } else if (customer.data.userGender === "WOMAN") {
+            } else if (customer.userGender === "WOMAN") {
                 $('#userGenderWoman').prop('checked', true);
             } else {
                 $('#userGenderNone').prop('checked', true);
@@ -298,11 +299,12 @@ function userData() {
             */
             fetch("/api/customer/dayOfWeekForStockSend")
                 .then(response => response.json())
+                .then(res => res.data)
                 .then(day => {
-                    if (day.data !== undefined || day.data !== null) {
+                    if (day !== undefined || day !== null) {
                         $('#stockMailingCheckbox').prop('checked', true);
                         $(".day-of-the-week-drop-list").removeClass("d-none")
-                        switch (day.data) {
+                        switch (day) {
                             case "MONDAY":
                                 $('#monday').prop('selected', true);
                                 break;

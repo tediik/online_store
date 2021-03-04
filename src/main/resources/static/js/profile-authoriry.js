@@ -73,17 +73,18 @@ function checkPassword() {
 function userData() {
     fetch("/api/profile/currentUser")
         .then(response => response.json())
+        .then(res => res.data)
         .then((user) => {
-            $('#id_update').val(user.data.id);
-            $('#password_update').val(user.data.password);
-            $('#first_name_update').val(user.data.firstName);
-            $('#last_name_input').val(user.data.lastName);
-            $('#email_input').val(user.data.email);
-            $('#date_birthday_input').val(user.data.birthdayDate);
-            $('#register_date').html(user.data.registerDate);
-            if (user.data.userGender === "MAN") {
+            $('#id_update').val(user.id);
+            $('#password_update').val(user.password);
+            $('#first_name_update').val(user.firstName);
+            $('#last_name_input').val(user.lastName);
+            $('#email_input').val(user.email);
+            $('#date_birthday_input').val(user.birthdayDate);
+            $('#register_date').html(user.registerDate);
+            if (user.userGender === "MAN") {
                 $('#userGenderMan').prop('checked', true);
-            } else if (user.data.userGender === "WOMAN") {
+            } else if (user.userGender === "WOMAN") {
                 $('#userGenderWoman').prop('checked', true);
             } else {
                 $('#userGenderNone').prop('checked', true);

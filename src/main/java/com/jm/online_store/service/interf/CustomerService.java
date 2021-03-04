@@ -2,7 +2,6 @@ package com.jm.online_store.service.interf;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Customer;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
