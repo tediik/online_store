@@ -161,12 +161,16 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Optional<Product> findProductById(Long productId) {
-        return productRepository.findById(productId);
+        Product product = productRepository.findById(productId).get();
+        product.setProductPictureId(productRepository.findAllPictureIdByProductId(productId));
+        return Optional.of(product);
     }
 
     @Override
     public Product getProductById(Long productId) {
-        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setProductPictureId(productRepository.findAllPictureIdByProductId(productId));
+        return product;
     }
 
     /**

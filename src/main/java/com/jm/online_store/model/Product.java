@@ -25,6 +25,7 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -71,6 +72,9 @@ public class Product {
     @GenericGenerator(name="myGenerator",strategy="sequence")
     @CollectionId(columns=@Column(name="id"), type=@Type(type="long"), generator="myGenerator")
     private List<String> productPictureNames;
+
+    @Transient
+    private List<Long> productPictureId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
