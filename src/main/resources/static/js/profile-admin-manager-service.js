@@ -82,14 +82,18 @@ $("#buttonNameStore").click(function () {
  */
 function getCurrentUser() {
     fetch('/api/profile/currentUser')
-        .then((response) => response.json())
-        .then(res => res.data)
-        .then((currentUser) => {
+        .then(response => response.json())
+        .then(response => response.data)
+        .then(currentUser => {
             $('#id_update').val(currentUser.id);
             $('#password_update').val(currentUser.password);
             $('#first_name_update').val(currentUser.firstName);
             $('#last_name_input').val(currentUser.lastName);
             $('#email_input').val(currentUser.email);
+            $("#date_birthday_input").val(currentUser.birthdayDate);
+            $("#register_date").html(currentUser.registerDate);
+
+            if (currentUser.data.userGender === "MAN") {
             $("#date_birthday_input").val(currentUser.birthdayDate);
             $("#register_date").html(currentUser.registerDate);
 
