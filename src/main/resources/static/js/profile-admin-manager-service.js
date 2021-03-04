@@ -93,10 +93,6 @@ function getCurrentUser() {
             $("#date_birthday_input").val(currentUser.birthdayDate);
             $("#register_date").html(currentUser.registerDate);
 
-            if (currentUser.data.userGender === "MAN") {
-            $("#date_birthday_input").val(currentUser.birthdayDate);
-            $("#register_date").html(currentUser.registerDate);
-
             if (currentUser.userGender === "MAN") {
                 $('#userGenderMan').prop('checked', true);
             } else if (currentUser.userGender === "WOMAN") {
@@ -136,8 +132,7 @@ function updateProfile() {
             'Content-type': 'application/json; charset=UTF-8'
         },
         body: JSON.stringify(userProfile)
-    })
-        .then(function (response) {
+    }).then(function (response) {
         if (response.status === 200) {
             getCurrentUser()
             toastr.success("Обновление профиля прошло успешно.");
