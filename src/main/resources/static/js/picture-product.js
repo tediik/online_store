@@ -12,33 +12,31 @@ $(document).ready(function () {
             reader.readAsDataURL(input.files[0]); // convert to base64 string
         }
     }
+    $('#productPictureFile').change(function () {
+        readURL(this);
+    });
 
     /**
      * Функция для добавления картинки выбранному продукту
      */
-    $('#productPictureFile').change(function () {
+    $('#acceptEditPictureButton').click(function () {
         let id = $('#idInputPictureModal').val();
-        readURL(this);
-        let file_data = $(this).prop('files')[0];
+        let file_data = $('#productPictureFile').prop('files')[0];
         let form_data = new FormData();
         form_data.append("pictureFile", file_data);
-        $('#acceptEditPictureButton').one("click", function () {
-            $.ajax({
-                type: 'PUT',
-                url: '/api/product/upload/picture/' + id,
-                dataType: 'text',
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    $('#showPictureFirstSlide').attr("src", data);
-                }
-            });
-            form_data.delete("pictureFile")
-            $('#productPictureModalWindow').modal('hide')
+        $.ajax({
+            type: 'PUT',
+            url: '/api/product/upload/picture/' + id,
+            dataType: 'text',
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('#showPictureFirstSlide').attr("src", data);
+            }
         });
-
+        $('#productPictureModalWindow').modal('hide')
     });
 
     /**
