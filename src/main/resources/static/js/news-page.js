@@ -12,7 +12,6 @@ $(function () {
  */
 async function showNews() {
     listOfNews = await fetch("/api/news/all").then(response => response.json());
-
     allNewsList = $('#allNewsList')
     allNewsList.empty();
     for (key in listOfNews) {
@@ -26,12 +25,5 @@ async function showNews() {
             </div>
             `;
         allNewsList.append(content);
-        console.log(listOfNews[key].title);
     }
 }
-$(document).on('click', '#newsInfo', function () {
-    setTimeout(function () {
-        showNewsDetails();
-    }, 100)
-
-});

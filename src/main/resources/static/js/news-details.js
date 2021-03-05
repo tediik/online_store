@@ -15,15 +15,12 @@ async function showNewsDetails(id) {
     fullTextDetails = await fetch("/api/news"+`/${id}`).then(response => response.json())
     fullNews = $('#newsInfo')
         fullNews.empty();
-
         content2 =
             `
             <div class="alert alert-info mt-2">
                 <div>${fullTextDetails.title}</div>
                 <div>${fullTextDetails.fullText}</div>
-
             </div>
             `;
         fullNews.append(content2);
-
 }

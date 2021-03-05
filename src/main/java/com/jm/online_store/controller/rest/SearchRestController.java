@@ -1,5 +1,8 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Product;
+import com.jm.online_store.repository.ProductRepository;
+import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -12,12 +15,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Optional;
+
 
 @RestController
 @AllArgsConstructor
 @Api("Rest controller for search")
 @RequestMapping("api/search/")
 public class SearchRestController {
+    ProductService productService;
+    ProductRepository productRepository;
 
     /**
      * Метод для получения строки, которая используется для поиска товаров
@@ -32,8 +40,8 @@ public class SearchRestController {
             @ApiResponse(code = 404, message = "Product was not found"),
             @ApiResponse(code = 200, message = "Product found"),
     })
-    public ResponseEntity<String> searchProductByString(@PathVariable String searchString) {
-        return ResponseEntity.ok(searchString);
+    public ResponseEntity<Optional<Product>> searchProductByString(@PathVariable String searchString) {
+        return ResponseEntity.ok(productRepository.findByProduct(searchString));
     }
 }
 
