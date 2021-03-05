@@ -192,6 +192,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(updateUser);
     }
 
+    /**
+     * Обновляет данные пользователя в личном кабинете, используя сущность UserDto.
+     * @param userDto сущность, полученная из контроллера.
+     * @return измененный пользователь.
+     * @throws UserNotFoundException если пользователя не существует в БД.
+     */
     @Override
     @Transactional
     public User updateUserDtoProfile(UserDto userDto) {

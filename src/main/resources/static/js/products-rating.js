@@ -1,5 +1,4 @@
 sortProducts('default')
-// getCategories()
 
 /**
  * Обработка события с выбором порядка сортировки товаров
