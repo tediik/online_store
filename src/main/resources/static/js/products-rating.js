@@ -116,17 +116,3 @@ function createReport() {
             }
         })
 }
-//
-// function getCategories() {
-//     let categoriesList = "";
-//     fetch("/api/categories/allCategories")
-//         .then(response => response.json())
-//         .then(categories => {
-//             for (let category of categories) {
-//                 categoriesList = `
-//                 <option id="${category.id}">${category.category}</option>
-//                 `
-//                 $('#filterCategory').append(categoriesList);
-//             }
-//         })
-// }

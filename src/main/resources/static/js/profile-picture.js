@@ -4,7 +4,7 @@ $(document).ready(function () {
             type: 'GET',
             url: '/api/image',
             success: function (data) {
-                $('#profilePic').attr('src', '/uploads/images/' + data);
+                $('#profilePic').attr('src', '/uploads/images/' + data.data);
             },
             error: function (error) {
                 console.log(error)
@@ -22,8 +22,8 @@ $(document).ready(function () {
                     processData: false,
                     cache: false,
                     success: function (data) {
-                        $('#profilePic').attr('src', data);
-                        $('#blah').attr('src', data);
+                        $('#profilePic').attr('src', data.data);
+                        $('#blah').attr('src', data.data);
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -58,7 +58,7 @@ $(document).ready(function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    $('#profilePic').attr('src', data);
+                    $('#profilePic').attr('src', '/uploads/images/' + data.data);
                 },
                 error: function (jqXhr, textStatus, errorThrown) {
                     console.log(errorThrown);

@@ -98,15 +98,15 @@ public class ProfileRestController {
 
     /**
      * Метод обновления профиля
-     * @param user {@link User}текущий пользователь
+     * @param userDto {@link UserDto}текущий пользователь
      * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping("/update")
     @ApiOperation(value = "updates current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<UserDto>> updateProfile(@RequestBody User user) {
-        userService.updateUserProfile(user);
-        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<UserDto>> updateProfile(@RequestBody UserDto userDto) {
+        userService.updateUserDtoProfile(userDto);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userDto, UserDto.class)), HttpStatus.OK);
     }
 
     /**

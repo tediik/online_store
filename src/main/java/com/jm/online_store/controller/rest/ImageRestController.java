@@ -1,11 +1,15 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.model.User;
+import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,23 +32,40 @@ public class ImageRestController {
     @GetMapping
     @ApiOperation(value = "get images",
     authorizations = {@Authorization(value = "jwtToken")})
-    public ResponseEntity<String> getImage() {
-        return ResponseEntity.ok(userService.getCurrentLoggedInUser().getProfilePicture());
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Image not found"),
+            @ApiResponse(code = 200, message = "Image was found")
+    })
+    public ResponseEntity<ResponseDto<String>> getImage() {
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, userService.getCurrentLoggedInUser().getProfilePicture(),
+                ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 
     @PostMapping("/upload")
     @ApiOperation(value = "uploads images",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        User userDetails = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(userService.updateUserImage(userDetails.getId(), imageFile));
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Image not changed"),
+            @ApiResponse(code = 200, message = "Image was changed")
+    })
+    public ResponseEntity<ResponseDto<String>> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, userService.updateUserImage(userService.getCurrentLoggedInUser().getId(), imageFile),
+                ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+
     }
 
     @DeleteMapping("/delete")
     @ApiOperation(value = "deletes images",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> deleteImage() throws IOException {
-        User userDetails = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(userService.deleteUserImage(userDetails.getId()));
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Image not deleted"),
+            @ApiResponse(code = 200, message = "Image was deleted")
+    })
+    public ResponseEntity<ResponseDto<String>> deleteImage() throws IOException {
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, userService.deleteUserImage(userService.getCurrentLoggedInUser().getId()),
+                ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 }
