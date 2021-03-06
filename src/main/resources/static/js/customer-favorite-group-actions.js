@@ -78,6 +78,7 @@ $(document).on("click", ".btn-copy-product", function () {
     defaultInterface();
     $('.close').trigger('click');
 });
+
 /**
  * Закрываем модальное окно
  */
@@ -179,8 +180,8 @@ async function fillFavouritesProducts(id) {
  * Переход во вкладку "Избранное" - рисуем таблицу Списка "Все товары"
  */
 $(document).on("click", "#favouritesGoods-tab", function () {
-    let id = $('.dropdown-item:first').attr("id");
-    fillFavouritesProducts(id);
+    getFavouriteGroups();
+    fillFavouritesGoods();
 });
 /**
  * Нажимаем на кнопку "Выбрать группу"
@@ -465,3 +466,61 @@ async function deleteFavouritesGroupInBD(id) {
         method: 'DELETE'
     })
 };
+
+/**
+ * Заполнение выпадающего списка групп избранных товаров
+ */
+function getFavouriteGroups() {
+    let groupsList = "";
+    fetch('/api/customer/favouritesGroup')
+        .then(response => response.json())
+        .then(groups => {
+            for (let group of groups) {
+                groupsList = groupsList +
+                    `<a class="dropdown-item" id="${group.id}">${group.name}</a>`
+            }
+            $("#allFavouriteGoods").append(groupsList);
+        })
+}
+
+/**
+ * Заполнение списка групп избранных товаров для модального окна
+ * перемещения товара в другой список
+ */
+function getFavouriteGroupsForReplace() {
+    fetch('/api/customer/favouritesGroup')
+        .then(response => response.json())
+        .then(groups => {
+            for (let group of groups) {
+                let tr = `<tr class="select-group-tr mt-3" id="${group.id}">
+                        <td>
+                        <input id="${group.id}" class="check-favourites-group" type="checkbox"
+                               class="form-check-input checkbox_move_group">
+                        <label class="form-check-label" for="${group.id}">
+                        <input id="${group.id}" type="text" value="${group.name}"
+                               class="select-group-tr-input border-0 bg-white" disabled>
+                        </label>
+                        </td>
+                        <td class="text-right">
+                        <div class="ok-cancel-edit-fav-group hidden" id="${group.id}">
+                        <span class="edit-fav-group-ok done btn btn-outline-success btn-sm"
+                        id="${group.id}">Ok</span>
+                        <span class="edit-fav-group-cancel btn btn-outline-danger btn-sm"
+                        id="${group.id}">Cancel</span>
+                        </div>`
+                if (group.name !== "Все товары") {
+                    tr = tr + `<button type="button"
+                        class="edd button-edit-fav-group btn btn-secondary btn-sm" id="${group.id}">EDIT
+                        </button>
+                        <button type="button"
+                        class="button-delete-fav-group btn btn-danger btn-sm" id="${group.id}">DELETE
+                        </button>
+                        </td>
+                        </tr>`
+                } else {
+                    tr = tr + `</td></tr>`
+                }
+                $("#groupsTable").append(tr);
+            }
+        })
+}

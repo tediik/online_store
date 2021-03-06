@@ -3,12 +3,9 @@
 <head>
     <title>Акции</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta property="og:url" th:content="'http://localhost:9999/global/stockDetails/' + ${stock.id}"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:title" th:content="${stock.stockTitle}"/>
-    <meta property="og:description" th:content="${stock.stockText}"/>
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
+          type="text/css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet" type="text/css">
     <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
     <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
@@ -26,11 +23,11 @@
     <div class="row content justify-content-center">
         <div class="col-sm-8 text-left">
             <div class="alert alert-info mt-2">
-                <div th:each="stock : ${stock}" class="alert alert-info mt-2" id="insertSocialNetworksBlock">
-                    <img th:src="@{../../uploads/images/stocks/{name}(name = ${stock.stockImg})}" class="next-slide"
+                <div class="alert alert-info mt-2" id="insertSocialNetworksBlock">
+                    <img id="stockImg" src="" class="next-slide"
                          alt="Ищите новые акции на нашем сайте"/>
-                    <h4 th:text="${stock.stockTitle}"></h4>
-                    <p th:utext="${stock.stockText}"></p>
+                    <h4 id="stockTitle"></h4>
+                    <p id="stockText"></p>
                 </div>
             </div>
         </div>
@@ -41,6 +38,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script th:src="@{/static/js/search-button.js}"></script>
+<script th:src="@{/static/js/stock-global-page.js}"></script>
 <script th:src="@{/static/js/social-networks-sharer.js}"></script>
 <script th:src="@{/static/js/registration.js}"></script>
 </body>
