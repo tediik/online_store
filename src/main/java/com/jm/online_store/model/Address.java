@@ -48,16 +48,6 @@ public class Address {
     @Column(name = "shop")
     private boolean shop = true;
 
-    public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String flat, String zip, boolean shop) {
-        this.region = region;
-        this.city = city;
-        this.street = street;
-        this.building = building;
-        this.flat = flat;
-        this.zip = zip;
-        this.shop = shop;
-    }
-
     public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String zip, boolean shop) {
         this.region = region;
         this.city = city;
@@ -66,4 +56,25 @@ public class Address {
         this.zip = zip;
         this.shop = shop;
     }
+
+//    public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String flat, String zip, boolean shop) {
+//        this.region = region;
+//        this.city = city;
+//        this.street = street;
+//        this.building = building;
+//        this.flat = flat;
+//        this.zip = zip;
+//        this.shop = shop;
+//    }
+//
+//    public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String zip, boolean shop) {
+//        this.region = region;
+//        this.city = city;
+//        this.street = street;
+//        this.building = building;
+//        this.zip = zip;
+//        this.shop = shop;
+//    }
+
+
 }

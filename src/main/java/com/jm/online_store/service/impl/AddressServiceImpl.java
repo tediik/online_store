@@ -71,7 +71,7 @@ public class AddressServiceImpl implements AddressService {
     public List<Address> findAllShops() {
         List<Address> shops = addressRepository.findAllByShopIsTrue();
         if (shops.isEmpty()) {
-            throw new AddressNotFoundException(ExceptionEnums.ADDRESS.getText() + String.format(ExceptionConstants.NOT_FOUND));
+            throw new AddressNotFoundException(ExceptionEnums.ADDRESS.getText() + ExceptionConstants.NOT_FOUND);
         }
         return shops;
     }
