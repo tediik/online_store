@@ -1,6 +1,8 @@
     package com.jm.online_store.controller.rest.manager;
 
+    import com.jm.online_store.enums.ExceptionEnums;
     import com.jm.online_store.enums.ResponseOperation;
+    import com.jm.online_store.exception.constants.ExceptionConstants;
     import com.jm.online_store.model.Product;
     import com.jm.online_store.model.dto.ProductDto;
     import com.jm.online_store.model.dto.ResponseDto;
@@ -341,8 +343,9 @@
                     productService.findAllOrderByRatingDesc().forEach(p -> returnValue.add(new ProductDto(p)));
                     return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
                 }
-            } else {
-                return ResponseEntity.badRequest().build();
+                else {
+                    return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.CATEGORIES.getText() + ExceptionConstants.NOT_FOUND), HttpStatus.BAD_REQUEST);
+                }
             }
             if (StringUtils.isNoneBlank(categoryName) && orderSelect.equals("ascOrder")) {
                 List<Product> products = productService.findProductsByCategoryName(categoryName).stream()
@@ -431,7 +434,7 @@
                 productService.createXlsxDoc(products, categoryName).write(response.getOutputStream());
                 return ResponseEntity.ok(new ResponseDto(true, ResponseOperation.SUCCESS, ResponseOperation.NO_ERROR.getMessage()));
             } catch (NullPointerException | IOException e) {
-                return ResponseEntity.notFound().build();
+                return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.PRODUCTS.getText() + ExceptionConstants.NOT_FOUND), HttpStatus.NOT_FOUND);
             }
         }
     }

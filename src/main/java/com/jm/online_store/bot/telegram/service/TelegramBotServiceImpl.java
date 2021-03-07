@@ -4,6 +4,7 @@ import com.jm.online_store.enums.RepairOrderType;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.RepairOrder;
 import com.jm.online_store.model.Stock;
+import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.RepairOrderService;
 import com.jm.online_store.service.interf.StockService;
@@ -22,6 +23,8 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     private final RepairOrderService repairOrderService;
 
     private final NewsService newsService;
+
+    private final CommonSettingsService commonSettingsService;
 
     @Value("${production-url}")
     private String url;
@@ -80,18 +83,19 @@ public class TelegramBotServiceImpl implements TelegramBotService {
 
     @Override
     public String getHelloMessage() {
+        String storeName = commonSettingsService.getSettingByName("store_name").getTextValue(); //Название магазина из БД
         return "Привет \u270C " +
-                "\nЯ бот магазина online_store: " + url +
+                "\nЯ бот магазина " + storeName + ": " + url +
                 "\nЯ умею рассказывать об акциях проходящих в нашем магазине, " +
                 "могу узнать о статусе вашего заказа на ремонт," +
-                "\nсообщать вам новости нашего магазина ." ;
+                "\nсообщать вам новости нашего магазина .";
     }
 
 
     public String transformRepairOrderStatus(RepairOrderType orderStatus) {
         switch (orderStatus) {
             case ACCEPTED: {
-                return" находится в статусе ПРИНЯТ";
+                return " находится в статусе ПРИНЯТ";
             }
             case DIAGNOSTICS: {
                 return " находится в статусе НА ДИАГНО́СТИКЕ";

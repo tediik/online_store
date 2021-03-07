@@ -18,7 +18,9 @@ function fetchUsersAndRenderTable(day) {
             }
         }).then(function (response) {
             if (response.ok) {
-                response.json().then(users => renderUsersTable(users))
+                response.json()
+                    .then(users => users.data)
+                    .then(users => renderUsersTable(users))
             } else {
                 renderUsersTable(new Array)
             }
@@ -38,7 +40,9 @@ document.querySelector('#searchForSubscribers').oninput = function () {
         }
     }).then(function (response) {
         if (response.ok) {
-            response.json().then(users => renderUsersTable(users))
+            response.json()
+                .then(users => users.data)
+                .then(users => renderUsersTable(users))
         } else {
             renderUsersTable(new Array)
         }
@@ -102,7 +106,7 @@ function cancelSubscripption(element) {
         if (response.ok) {
             handleSuccess("Подписка успешно отменена");
         } else {
-            handleBad("Не удалось отменить подписку", "#alert-div");
+            handleBad("Не удалось отменить подписку", "#mailing-alert-div");
         }
     })
 
@@ -131,6 +135,7 @@ function fetchSentStocks(begin, end) {
     }).then(function (response) {
         if (response.ok) {
             response.json()
+                .then(sentStocks => sentStocks.data)
                 .then(sentStocks => printChart(sentStocks));
         } else {
             handleBad("#chart-div");
@@ -246,5 +251,5 @@ function handleBad(field) {
 
 function clearChart() {
     $('#myChart').remove();
-    $('#chartcontainer').append(`<canvas id="myChart"></canvas>`);
+    $('#mailing-chartcontainer').append(`<canvas id="myChart"></canvas>`);
 }

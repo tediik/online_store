@@ -31,7 +31,7 @@ function getAllCategories() {
             if (response.status === 200) {
                 response.json()
                     .then(topicsCategories => {
-                        for (let topicsCategory of topicsCategories) {
+                        for (let topicsCategory of topicsCategories.data) {
                             if (topicsCategory.actual === true) {
                                 renderActualCategories(topicsCategory);
                             } else {
@@ -158,6 +158,7 @@ function getCategory(id) {
         .then(response => {
             if (response.status === 200) {
                 response.json()
+                    .then(topicsCategory => topicsCategory.data)
                     .then(topicsCategory => completeEditCategory(topicsCategory));
             }
         })
@@ -195,6 +196,7 @@ function addNewCategory() {
                 }
                 if (response.status === 200) {
                     response.json()
+                        .then(topicsCategory => topicsCategory.data)
                         .then(topicsCategory => renderCategory(topicsCategory))
                 }
             })
@@ -237,6 +239,7 @@ function editCategory(id) {
             }
             if (response.status === 200) {
                 response.json()
+                    .then(changedCategory => changeCategoryBody.data)
                     .then(changedCategory => changeCategoryBody(changedCategory));
             }
         })
@@ -273,6 +276,7 @@ function archiveCategory(id) {
     }).then(response => {
         if (response.status === 200) {
             response.json()
+                .then(archiveCategory => archiveCategory.data)
                 .then(archiveCategory => {
                     deleteCategoryBodyFromActual(archiveCategory);
                 })
@@ -302,6 +306,7 @@ function unarchiveCategory(id) {
     }).then(response => {
         if (response.status === 200) {
             response.json()
+                .then(actualCategory => actualCategory.data)
                 .then(actualCategory => {
                     deleteCategoryBodyFromArchive(actualCategory);
                 })
@@ -324,6 +329,7 @@ function getTopic(id) {
         .then(response => {
             if (response.status === 200) {
                 response.json()
+                    .then(topic => completeEditTopic.data)
                     .then(topic => completeEditTopic(topic));
             }
         })
@@ -363,6 +369,7 @@ function editTopic(id) {
             }
             if (response.status === 200) {
                 response.json()
+                    .then(changedTopic => changeTopicRow.data)
                     .then(changedTopic => changeTopicRow(changedTopic));
             }
         })
@@ -406,6 +413,7 @@ function getCategoryForNewTopic(id) {
         .then(response => {
             if (response.status === 200) {
                 response.json()
+                    .then(topicsCategory => completeAddTopic.data)
                     .then(topicsCategory => completeAddTopic(topicsCategory));
             }
         })
@@ -440,6 +448,7 @@ function addNewTopic() {
                 }
                 if (response.status === 200) {
                     response.json()
+                        .then(topic => renderTopic.data)
                         .then(topic => renderTopic(topic))
                 }
             })
