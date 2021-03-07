@@ -30,6 +30,7 @@ public class UserDto {
     private String profilePicture;
     private Set<Role> roles;
     private String active;
+    private String password;
 
     public static UserDto fromUser(User user) {
         UserDto userDto = new UserDto();

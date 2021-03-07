@@ -14,9 +14,9 @@ import java.util.Optional;
 
 public interface ProductService {
 
-	Optional<Product> findProductById(Long productId);
+    Optional<Product> findProductById(Long productId);
 
-	Product getProductById(Long productId);
+    Product getProductById(Long productId);
 
     Optional<Product> findProductByName(String productName);
 
@@ -51,6 +51,8 @@ public interface ProductService {
 
     Map getProductPriceChange(Long idProduct);
 
+    void deleteProductPriceChangeById(String emailLong, Long idProduct);
+
     double changeProductRating(Long productId, double rating, User user);
 
     Optional<ProductDto> getProductDto(Long productI, User user);
@@ -72,4 +74,6 @@ public interface ProductService {
     List<Product> findTrackableProductsByLoggedInUser();
 
     void deleteProductFromTrackedForLoggedInUser(long productId);
+
+    void deleteAllByEmail(String email);
 }

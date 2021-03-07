@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
@@ -44,8 +45,9 @@ class ProductServiceImplTest {
     private final CommonSettingsService commonSettingsService = mock(CommonSettingsService.class);
     private final CategoriesService categoriesService = mock(CategoriesService.class);
     private final ProductCharacteristicService productCharacteristicService = mock(ProductCharacteristicService.class);
+    private final ConfirmationTokenRepository confirmationTokenRepository = mock(ConfirmationTokenRepository.class);
     private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService,
-            mailSenderService, categoriesService, productCharacteristicService);
+    mailSenderService, categoriesService, productCharacteristicService,confirmationTokenRepository);
     private Product product;
     private Set<String> subscribers;
     private Map<LocalDateTime, Double> prices;
@@ -163,3 +165,5 @@ class ProductServiceImplTest {
         log.info("finalize");
     }
 }
+
+

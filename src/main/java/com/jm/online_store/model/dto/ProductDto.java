@@ -21,6 +21,7 @@ public class ProductDto {
     private String productType;
     private String productPictureName;
     private boolean isFavourite;
+    private Integer amount;
 
     public ProductDto(Product product) {
         this.id = product.getId();
@@ -30,6 +31,7 @@ public class ProductDto {
         this.description = product.getDescriptions();
         this.productType = product.getProductType();
         this.productPictureName = product.getProductPictureName();
+        this.amount = product.getAmount();
     }
 
 }
