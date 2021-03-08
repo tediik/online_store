@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.exception.TaskNotFoundException;
 import com.jm.online_store.model.TaskSettings;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.PriceListService;
 import com.jm.online_store.service.interf.StockMailDistributionTask;
 import com.jm.online_store.service.interf.TaskSchedulingService;
@@ -39,37 +40,61 @@ public class SchedulingTaskRestController {
         return ResponseEntity.notFound().build();
     }
 
+
+    /**
+     * Method that starts mail distribution task
+     * @param taskSettings - параметры задачи
+     * @return - ResponseDto<TaskSettings> taskSettings
+     */
     @PostMapping("/stockMailDistribution/start")
     @ApiOperation(value = "Start of mail distribution task",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<TaskSettings> startMailDistributionTask(@RequestBody TaskSettings taskSettings) {
+    public ResponseEntity<ResponseDto<TaskSettings>> startMailDistributionTask(@RequestBody TaskSettings taskSettings) {
         taskSettingsService.updateTask(taskSettings);
         schedulingService.addTaskToScheduler(taskSettings, stockMailDistributionTask);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ResponseDto<>(true, taskSettings));
     }
 
+    /**
+     * Method that stops mail distribution task
+     * @param taskSettings - параметры задачи
+     * @return - ResponseDto<TaskSettings> taskSettings
+     */
     @PostMapping("/stockMailDistribution/stop")
     @ApiOperation(value = "Stop of mail distribution task",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<TaskSettings> stopMailDistributionTask(@RequestBody TaskSettings taskSettings) {
+    public ResponseEntity<ResponseDto<TaskSettings>> stopMailDistributionTask(@RequestBody TaskSettings taskSettings) {
         taskSettingsService.updateTask(taskSettings);
         schedulingService.removeTaskFromScheduler(taskSettings.getId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ResponseDto<>(true, taskSettings));
     }
+
+    /**
+     * Method that changes daily price task
+     * @param taskSettings - параметры задачи
+     * @return - ResponseDto<TaskSettings> taskSettings
+     */
 
     @PostMapping("/dailyPriceCreate")
     @ApiOperation(value = "Changing of daily price task",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<TaskSettings> changeDailyPriceTask(@RequestBody TaskSettings taskSettings) {
+    public ResponseEntity<ResponseDto<TaskSettings>>  changeDailyPriceTask(@RequestBody TaskSettings taskSettings) {
         taskSettingsService.updateTask(taskSettings);
         schedulingService.addTaskToScheduler(taskSettings, priceListService);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ResponseDto<>(true, taskSettings));
     }
+
+
+    /**
+     * Method for getting mail distribution settings by task name
+     * @param taskName - task name
+     * @return - ResponseDto<TaskSettings>
+     */
 
     @GetMapping("/{taskName}")
     @ApiOperation(value = "Get mail distribution settings by task name",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<TaskSettings> getMailDistributionSettings(@PathVariable String taskName) {
-        return ResponseEntity.ok(taskSettingsService.findTaskByName(taskName));
+    public ResponseEntity<ResponseDto<TaskSettings>> getMailDistributionSettings(@PathVariable String taskName) {
+        return ResponseEntity.ok(new ResponseDto<>(true, taskSettingsService.findTaskByName(taskName)));
     }
 }

@@ -1,29 +1,41 @@
 package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.NewsDto;
+import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.ProductDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Рест контроллер страницы продукта.
@@ -37,24 +49,31 @@ public class ProductRestController {
 
     private final ProductService productService;
     private final UserService userService;
-
+    private final ModelMapper modelMapper;
+    private final Type mapType = new TypeToken<Map<LocalDateTime, Double>>() {}.getType();
+    private final Type listType = new TypeToken<List<ProductDto>>() {}.getType();
     /**
      * Ищет продукт в БД по id из пути
      *
      * @param id продукта
      * @return сущность ProductDto, если продукт с таким id существует
      */
+
+
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get product by ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Product was not found")
-    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Product has been found"),
+            @ApiResponse(code = 404, message = "Product has not been found")
+    })
+    public ResponseEntity<ResponseDto<ProductDto>> getProduct(@PathVariable Long id) {
         ResponseEntity<ProductDto>[] answer = new ResponseEntity[1];
         User user = userService.getCurrentLoggedInUser();
-        productService.getProductDto(id, user).ifPresentOrElse(
-                value -> answer[0] = ResponseEntity.ok(value), () -> answer[0] = ResponseEntity.notFound().build());
-        return answer[0];
+        return ResponseEntity.ok(new ResponseDto<>(true, productService.getProductDto(id, user).get()));
     }
+
 
     /**
      * контроллер для получения Map содержащим ключ-значение: дата.время изменения цены - цена.
@@ -62,26 +81,30 @@ public class ProductRestController {
      * @param id идентификатор продукта
      * @return map содержащая значения по изменению цены на товар.
      */
-    @PostMapping("/productChangeMonitor")
+    @PutMapping("/productChangeMonitor")
     @ApiOperation(value = "Get map with key: date of price changing; value: price",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<Map> priceMonitor(@RequestBody Long id) {
-        return ResponseEntity.ok(productService.getProductPriceChange(id));
+
+    public ResponseEntity<ResponseDto<Map<LocalDateTime, Double>>> priceMonitor(@RequestBody Long id) {
+        Map<LocalDateTime, Double> returnValue = modelMapper.map(productService.getProductPriceChange(id), mapType);
+        return ResponseEntity.ok( new ResponseDto<>(true, returnValue));
     }
 
+
     /**
-     * контроллер для получения обновлённого рейтинга товара
+     * контроллер для обновлёния рейтинга товара
      *
      * @param rating оценка пользователя
      * @param id     id товара
      */
     @PostMapping("/rating")
-    @ApiOperation(value = "Get new rating of product",
+    @ApiOperation(value = "Set new rating of product",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity getNewRating(@RequestParam(value = "rating", required = false) float rating,
+
+    public ResponseEntity <ResponseDto<Double>> getNewRating(@RequestParam(value = "rating", required = false) float rating,
                                        @RequestParam(value = "id", required = false) Long id) {
         User user = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(productService.changeProductRating(id, rating, user));
+        return ResponseEntity.ok(new ResponseDto<>(true, productService.changeProductRating(id, rating, user)));
     }
 
     /**
@@ -94,8 +117,14 @@ public class ProductRestController {
     @GetMapping("/searchByName/{searchString}")
     @ApiOperation(value = "Get product by name",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<Product>> findProductsByName(@PathVariable String searchString) {
-        return ResponseEntity.ok(productService.findProductsByNameContains(searchString));
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Products have been found"),
+            @ApiResponse(code = 404, message = "Products haven't been found")
+    })
+    public ResponseEntity<ResponseDto<List<ProductDto>>> findProductsByName(@PathVariable String searchString) {
+        List<ProductDto> returnValue = modelMapper.map(productService.findProductsByNameContains(searchString),
+                listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -108,8 +137,14 @@ public class ProductRestController {
     @GetMapping("/searchByDescription/{searchString}")
     @ApiOperation(value = "Get product by description",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<Product>> findProductsByDescription(@PathVariable String searchString) {
-        return ResponseEntity.ok(productService.findProductsByDescriptionContains(searchString));
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Products have been found"),
+            @ApiResponse(code = 404, message = "Products haven't been found")
+    })
+    public ResponseEntity<ResponseDto<List<ProductDto>>> findProductsByDescription(@PathVariable String searchString) {
+        List<ProductDto> returnValue = modelMapper.map(productService.findProductsByDescriptionContains(searchString),
+                listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**
@@ -122,13 +157,15 @@ public class ProductRestController {
     @ApiOperation(value = "Add a new subscriber by email",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 208, message = "Subscriber already exists")
-    public ResponseEntity<String> addNewSubscriber(@RequestBody ObjectNode body) {
+    public ResponseEntity<ResponseDto<String>> addNewSubscriber(@RequestBody ObjectNode body) {
         if (productService.addNewSubscriber(body)) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.SUCCESS.getMessage()));
         } else {
-            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+            return ResponseEntity.ok(new ResponseDto<>(false, ResponseOperation.FAILED.getMessage()));
         }
     }
+
+
     /**
      * Возвращает список первых count продуктов - count передаётся в метод сервиса .findNumProducts(count)
      *
@@ -137,7 +174,13 @@ public class ProductRestController {
     @GetMapping("/first/{count}")
     @ApiOperation(value = "Returns a list with a given number of first products",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<Product>> getSomeProducts(@PathVariable Integer count) {
-        return ResponseEntity.ok(productService.findNumProducts(count));
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Products have been found"),
+            @ApiResponse(code = 404, message = "Products haven't been found")
+    })
+    public ResponseEntity<ResponseDto<List<ProductDto>>> getSomeProducts(@PathVariable Integer count) {
+        List<ProductDto> returnValue = modelMapper.map(productService.findNumProducts(count),
+                listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 }

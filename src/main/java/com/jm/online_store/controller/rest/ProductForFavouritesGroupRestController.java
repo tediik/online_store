@@ -1,11 +1,15 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,19 +37,26 @@ public class ProductForFavouritesGroupRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
 
+
+
     /**
      * Добавление продукта в Список избранных товаров
      * @param product продукт
      * @param id идентификатор списка избранных товаров
-     * @return
+     * @return ResponseEntity<ResponseDto<FavouritesGroup>>
      */
     @PostMapping(value = "/addProductInFavouritesGroup/{id}")
     @ApiOperation(value = "Add product in favourite group by group ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity addProductInFavouritesGroup(@RequestBody Product product, @PathVariable("id") Long id) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Product has been added"),
+            @ApiResponse(code = 400, message = "Product hasn't been added")
+    })
+    public ResponseEntity <ResponseDto<FavouritesGroup>> addProductInFavouritesGroup(@RequestBody Product product,
+                                                                            @PathVariable("id") Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         favouritesGroupService.addProductToFavouritesGroup(product, favouritesGroup);
-        return ResponseEntity.ok("addProductInFavouritesGroupOK");
+        return ResponseEntity.ok(new ResponseDto<>(true, favouritesGroup));
     }
 
     /**
@@ -56,10 +67,17 @@ public class ProductForFavouritesGroupRestController {
     @GetMapping(value = "/getProductFromFavouritesGroup/{id}")
     @ApiOperation(value = "Get product from favourite group by group ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<Set<Product>> getProductFromFavouritesGroup(@PathVariable Long id) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Products have been found"),
+            @ApiResponse(code = 200, message = "Products have not been found. Returns empty list")
+    })
+    public ResponseEntity<ResponseDto<Set<Product>>> getProductFromFavouritesGroup(@PathVariable Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
-        return ResponseEntity.ok(favouritesGroupService.getProductSet(favouritesGroup));
+        return ResponseEntity.ok(new ResponseDto<>(true, favouritesGroupService.getProductSet(favouritesGroup)));
     }
+
+
+
 
     /**
      * Удаление продукта из выбранного списка избранного
@@ -70,11 +88,15 @@ public class ProductForFavouritesGroupRestController {
     @DeleteMapping(value = "/deleteProductFromFavouritesGroup/{idGroup}")
     @ApiOperation(value = "Delete product from favourite group by group ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity deleteProductFromFavouritesGroup(@RequestBody Long idProduct, @PathVariable("idGroup") Long id) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Product has been deleted"),
+            @ApiResponse(code = 404, message = "Product hasn't been found"),
+    })
+    public ResponseEntity <ResponseDto<Long>> deleteProductFromFavouritesGroup(@RequestBody Long idProduct, @PathVariable("idGroup") Long id) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         Product product = productService.findProductById(idProduct).orElseThrow();
         favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, favouritesGroup);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ResponseDto<>(true, id));
     }
 
     /**
@@ -85,13 +107,18 @@ public class ProductForFavouritesGroupRestController {
      */
     @DeleteMapping(value = "/clearFavouritesGroup/{idGroup}")
     @ApiOperation(value = "Delete all products from favourite group by group ID")
-    public ResponseEntity deleteFromFavouritesGroupProductAll(@RequestBody ArrayList<Long> idProducts, @PathVariable("idGroup") Long idGroup) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Products have been deleted"),
+            @ApiResponse(code = 404, message = "Products havn't been found"),
+    })
+
+    public ResponseEntity <ResponseDto<Long>> deleteFromFavouritesGroupProductAll(@RequestBody ArrayList<Long> idProducts, @PathVariable("idGroup") Long idGroup) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(idGroup).orElseThrow();
         for (int i = 0; i < idProducts.size(); i++){
             Product product = productService.findProductById(idProducts.get(i)).orElseThrow();
             favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, favouritesGroup);
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ResponseDto<>(true, idGroup));
     }
 
     /**
@@ -103,7 +130,11 @@ public class ProductForFavouritesGroupRestController {
      */
     @PutMapping(value = "/deleteProductFromFavouritesGroup/{idNewGroup}/{idOldGroup}")
     @ApiOperation(value = "Remove products from favorite group to another favorite group by old group ID and new group ID")
-    public ResponseEntity moveProducts(@RequestBody ArrayList<Long> idProducts, @PathVariable("idNewGroup") Long idNewGroup, @PathVariable("idOldGroup") Long idOldGroup) {
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "Products have been successfully removed"),
+            @ApiResponse(code = 400, message = "Products havn't been removed, smth goes wrong...")
+    })
+    public ResponseEntity<ResponseDto<String>> moveProducts(@RequestBody ArrayList<Long> idProducts, @PathVariable("idNewGroup") Long idNewGroup, @PathVariable("idOldGroup") Long idOldGroup) {
         FavouritesGroup newFavouritesGroup = favouritesGroupService.findById(idNewGroup).orElseThrow();
         FavouritesGroup oldFavouritesGroup = favouritesGroupService.findById(idOldGroup).orElseThrow();
         for (int i = 0; i < idProducts.size(); i++) {
@@ -111,7 +142,7 @@ public class ProductForFavouritesGroupRestController {
             favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, oldFavouritesGroup);
             favouritesGroupService.addProductToFavouritesGroup(product, newFavouritesGroup);
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok( new ResponseDto<>(true, ResponseOperation.SUCCESS.getMessage()));
     }
 }
 

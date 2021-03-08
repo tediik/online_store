@@ -4,6 +4,7 @@ import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +35,7 @@ public class ProfileRestController {
      * REST-контролллер для ролей ADMIN & MANAGER & SERVICE
      */
     private final UserService userService;
-
+    private final ModelMapper modelMapper;
     /**
      * Метод изменения email
      * @param newMail принимает новый email
@@ -78,14 +80,18 @@ public class ProfileRestController {
 
     /**
      * Метод получения текущего пользователя
-     * @return ResponseEntity<User> возвращает текущего пользователя и статус ответа
+     * @return ResponseEntity<ResponseDto<UserDto>> возвращает текущего пользователя и статус ответа
      */
     @GetMapping(value = "/currentUser")
     @ApiOperation(value = "get current Logged in User",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<User> getCurrentUser() {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User has been found"),
+            @ApiResponse(code = 404, message = "User has not been found")
+    })
+    public ResponseEntity<ResponseDto<UserDto>> getCurrentUser() {
         User currentLoggedInUser = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(currentLoggedInUser);
+        return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(currentLoggedInUser, UserDto.class)));
     }
 
     /**
@@ -96,9 +102,13 @@ public class ProfileRestController {
     @PutMapping("/update")
     @ApiOperation(value = "updates current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> updateProfile(@RequestBody User user) {
-        userService.updateUserProfile(user);
-        return ResponseEntity.ok().build();
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User's profile has been updated"),
+            @ApiResponse(code = 404, message = "User's profile has not been found")
+    })
+    public ResponseEntity<ResponseDto<UserDto>> updateProfile(@RequestBody User user) {
+        return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(userService.updateUserProfile(user),
+                UserDto.class)));
     }
 
     /**
@@ -109,8 +119,13 @@ public class ProfileRestController {
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "deletes current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "User's profile has been successfully deleted"),
+            @ApiResponse(code = 404, message = "User's profile hasn't been found")
+    })
+    public ResponseEntity<ResponseDto<String>> deleteProfile(@PathVariable Long id) {
         userService.deleteByID(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ResponseDto<>(true, String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(),
+                id)));
     }
 }
