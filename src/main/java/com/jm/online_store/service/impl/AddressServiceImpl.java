@@ -83,11 +83,7 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public List<Address> findAllShopsManager() {
-        List<Address> shops = addressRepository.findAll();
-        if (shops.isEmpty()) {
-            throw new AddressNotFoundException(ExceptionEnums.ADDRESS.getText() + String.format(ExceptionConstants.NOT_FOUND));
-        }
-        return shops;
+        return addressRepository.findAll();
     }
 
     /**

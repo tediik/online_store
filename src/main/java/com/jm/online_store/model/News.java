@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Set;
 
+@Data
 @Entity
 @Getter
 @Setter
@@ -65,5 +67,14 @@ public class News {
         this.title = title;
         this.anons = anons;
         this.fullText = fullText;
+    }
+
+    public News(Long id, String title, String anons, String fullText, LocalDate postingDate, boolean archived ) {
+        this.id = id;
+        this.title = title;
+        this.anons = anons;
+        this.fullText = fullText;
+        this.postingDate = postingDate;
+        this.archived = archived;
     }
 }

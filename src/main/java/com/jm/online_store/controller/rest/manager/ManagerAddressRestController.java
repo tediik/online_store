@@ -44,7 +44,7 @@ public class ManagerAddressRestController {
     @GetMapping()
     @ApiOperation(value = "receive all address from db", authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "No one address was found"),
+            @ApiResponse(code = 200, message = "returns empty list"),
             @ApiResponse(code = 200, message = "Ok")
     })
     public ResponseEntity<ResponseDto<List<Address>>> allShops() {

@@ -17,6 +17,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +41,6 @@ import java.util.List;
 @RequestMapping(value = "/api/manager/news")
 @Api(description = "Rest controller for manage news from manager page, also for publishing news")
 public class ManagerNewsRestController {
-
     private final NewsService newsService;
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<NewsDto>>() {}.getType();
@@ -163,8 +163,9 @@ public class ManagerNewsRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponse(code = 201, message = "News has been successfully saved")
     public ResponseEntity<ResponseDto<NewsDto>> createNewsPost(@RequestBody NewsDto newsReq) {
-        NewsDto returnValue = modelMapper.map(newsService.save(modelMapper.map(newsReq, News.class)), NewsDto.class);
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
+        News news = modelMapper.map(newsReq, News.class);
+        NewsDto returnValue = modelMapper.map(newsService.save(news), NewsDto.class);
+        return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.CREATED);
     }
 
     /**

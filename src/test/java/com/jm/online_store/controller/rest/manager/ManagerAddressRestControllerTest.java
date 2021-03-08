@@ -1,21 +1,20 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jm.online_store.controller.ExceptionsHandler;
+import com.jm.online_store.exception.AddressNotFoundException;
+import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.service.interf.AddressService;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -43,7 +42,8 @@ class ManagerAddressRestControllerTest {
     @BeforeEach
     void setUp() {
         addressService = mock(AddressService.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new ManagerAddressRestController(addressService)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new ManagerAddressRestController(addressService))
+                .setControllerAdvice(new ExceptionsHandler()).build();
         objectMapper = new ObjectMapper();
         shopList = new ArrayList<>();
         address1 = new Address( 1L, "Republic Korelia", "Petrozavodsk" , "street" , "1c3", "3", "333", true);
@@ -79,9 +79,18 @@ class ManagerAddressRestControllerTest {
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(print())
                 .andExpect(jsonPath("$.data", hasSize(3)))
-                .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(1,2,3)))
-                .andExpect(jsonPath("$.data[*].region", containsInAnyOrder(address1.getRegion(), address2.getRegion(), address3.getRegion())))
-                .andExpect(jsonPath("$.data[*].city", containsInAnyOrder(address1.getCity(), address2.getCity(), address3.getCity())))
+                .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
+                        address1.getId().intValue(),
+                        address2.getId().intValue(),
+                        address3.getId().intValue())))
+                .andExpect(jsonPath("$.data[*].region", containsInAnyOrder(
+                        address1.getRegion(),
+                        address2.getRegion(),
+                        address3.getRegion())))
+                .andExpect(jsonPath("$.data[*].city", containsInAnyOrder(
+                        address1.getCity(),
+                        address2.getCity(),
+                        address3.getCity())))
                 .andExpect(status().isOk());
 
     }
@@ -95,7 +104,6 @@ class ManagerAddressRestControllerTest {
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(address2)))
                 .andDo(print())
-                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").value(address2.getId()))
                 .andExpect(jsonPath("$.data.region").value(address2.getRegion()))
                 .andExpect(jsonPath("$.data.city").value(address2.getCity()))
@@ -105,9 +113,8 @@ class ManagerAddressRestControllerTest {
     @Test
     @DisplayName("get address info")
     void getAddressInfo() throws Exception {
-        String id = String.valueOf(1L);
         when(addressService.findAddressById(anyLong())).thenReturn(Optional.ofNullable(address1));
-        mockMvc.perform(get(END_POINT+"/{id}", id)
+        mockMvc.perform(get(END_POINT + "/{id}", 11)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8"))
                 .andDo(print())
@@ -120,24 +127,43 @@ class ManagerAddressRestControllerTest {
                 .andExpect(status().isOk());
     }
 
+
     @Test
-    @DisplayName("throw address not found exception")
-    void getAddressInfoThrowsAddressNotFoundException() throws Exception {
-        String exceptionParam = "not_found";
-        mockMvc.perform(get("/exception/{exception_id}", exceptionParam)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+    @DisplayName("address shop list return empty data")
+    void shouldReturnEmptyList() throws Exception {
+        when(addressService.findAllShopsManager()).thenReturn(Collections.emptyList());
+        mockMvc.perform(get(END_POINT))
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("delete address by id")
     void deleteAddress() throws Exception {
-        address3.setId(11L);
-        String id = String.valueOf(11);
         when(addressService.findAddressById(anyLong())).thenReturn(Optional.ofNullable(address3));
-        mockMvc.perform(delete(END_POINT+"/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete(END_POINT+"/{id}", 11)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("throws address not found exception when try to delete address by id")
+    void deleteAddressThrowsAddressNotFoundException() throws Exception {
+        when(addressService.findAddressById(anyLong())).thenThrow(new AddressNotFoundException());
+        mockMvc.perform(delete(END_POINT + "{id}", 11))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    @DisplayName("throws address not found exception when try to get address info by id")
+    void getAddressInfoThrowsAddressNotFoundException() throws Exception {
+        when(addressService.findAddressById(anyLong())).thenThrow(new AddressNotFoundException());
+        mockMvc.perform(get(END_POINT+"/{id}", 11)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 }
