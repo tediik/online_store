@@ -1,6 +1,8 @@
 package com.jm.online_store.controller.rest.manager;
 
+import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.ProductCharacteristic;
 import com.jm.online_store.model.dto.CharacteristicDto;
@@ -194,9 +196,8 @@ public class ProductCharacteristicsRestController {
                 returnValue = modelMapper.map(characteristicService.findByCategoryName(category), listTypeCharDto);
             }
         } else {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.CATEGORY.getText() + ExceptionConstants.IS_EMPTY), HttpStatus.BAD_REQUEST);
         }
-
         return ResponseEntity.ok(new ResponseDto<>(true , returnValue));
     }
 
@@ -223,7 +224,7 @@ public class ProductCharacteristicsRestController {
             List<ProductCharacteristic> gotBack = productCharacteristicService.addProductCharacteristic(list, addedProductName);
             returnValue = modelMapper.map(gotBack, listTypeProdCharDto);
         } else {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.CATEGORY.getText() + ExceptionConstants.IS_EMPTY), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.CREATED);
     }
@@ -271,7 +272,7 @@ public class ProductCharacteristicsRestController {
             List<Characteristic> gotBack = characteristicService.addCharacteristicsToCategory(characteristicList, selectedCategory);
             returnValue = modelMapper.map(gotBack, listTypeCharDto);
         } else {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.CATEGORY.getText() + ExceptionConstants.IS_EMPTY), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.CREATED);
     }

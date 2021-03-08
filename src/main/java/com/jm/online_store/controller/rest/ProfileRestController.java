@@ -36,6 +36,8 @@ public class ProfileRestController {
      */
     private final UserService userService;
     private final ModelMapper modelMapper;
+
+
     /**
      * Метод изменения email
      * @param newMail принимает новый email
@@ -80,52 +82,43 @@ public class ProfileRestController {
 
     /**
      * Метод получения текущего пользователя
-     * @return ResponseEntity<ResponseDto<UserDto>> возвращает текущего пользователя и статус ответа
+     * @return ResponseEntity<User> возвращает текущего пользователя и статус ответа
      */
     @GetMapping(value = "/currentUser")
     @ApiOperation(value = "get current Logged in User",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User has been found"),
-            @ApiResponse(code = 404, message = "User has not been found")
+            @ApiResponse(code = 400, message = "Пользователь не найден"),
+            @ApiResponse(code = 200, message = "Пользователь с идентификатором: \"id\" найден."),
     })
     public ResponseEntity<ResponseDto<UserDto>> getCurrentUser() {
         User currentLoggedInUser = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(currentLoggedInUser, UserDto.class)));
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(currentLoggedInUser, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Метод обновления профиля
-     * @param user текущий пользователь
-     * @return ResponseEntity<String> статус ответа
+     * @param userDto {@link UserDto}текущий пользователь
+     * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping("/update")
     @ApiOperation(value = "updates current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User's profile has been updated"),
-            @ApiResponse(code = 404, message = "User's profile has not been found")
-    })
-    public ResponseEntity<ResponseDto<UserDto>> updateProfile(@RequestBody User user) {
-        return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(userService.updateUserProfile(user),
-                UserDto.class)));
+    public ResponseEntity<ResponseDto<UserDto>> updateProfile(@RequestBody UserDto userDto) {
+        userService.updateUserDtoProfile(userDto);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userDto, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Метод удаления профиля
      * @param id индентификатор пользователя
-     * @return ResponseEntity.ok() код ответа
+     * @return ResponseEntity<ResponseDto<UserDto>>(user, HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "deletes current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponses( value = {
-            @ApiResponse(code = 200, message = "User's profile has been successfully deleted"),
-            @ApiResponse(code = 404, message = "User's profile hasn't been found")
-    })
-    public ResponseEntity<ResponseDto<String>> deleteProfile(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> deleteProfile(@PathVariable Long id) {
         userService.deleteByID(id);
-        return ResponseEntity.ok(new ResponseDto<>(true, String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(),
-                id)));
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userService.findUserById(id), UserDto.class)), HttpStatus.OK);
     }
 }
