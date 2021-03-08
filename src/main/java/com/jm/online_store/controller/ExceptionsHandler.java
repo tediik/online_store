@@ -111,7 +111,7 @@ public class ExceptionsHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<?> handleMaxUploadSizeExceededException() {
         return new ResponseEntity<>
-                (new ResponseDto<>(false,  "Превышен допустимый размер файла - " + maxFileSize +"."), HttpStatus.BAD_REQUEST);
+                (new ResponseDto<>(false,  "Превышен допустимый размер файла - " + maxFileSize +"."), HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
 }

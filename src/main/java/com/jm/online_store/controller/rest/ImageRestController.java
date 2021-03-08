@@ -6,6 +6,8 @@ import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,19 +30,23 @@ public class ImageRestController {
 
     private final UserService userService;
 
+    /**
+     * Метод для загрузки картинки
+     *
+     * @param imageFile загружаемая картинка
+     */
     @PostMapping("/upload")
     @ApiOperation(value = "uploads images",
-            authorizations = { @Authorization(value = "jwtToken") })
+            authorizations = {@Authorization(value = "jwtToken")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Image has been uploaded"),
+            @ApiResponse(code = 400, message = "Image hasn't been uploaded"),
+            @ApiResponse(code = 413, message = "Image hasn't been uploaded - image too large")
+    })
     public ResponseEntity<ResponseDto<String>> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         User userDetails = userService.getCurrentLoggedInUser();
-        try {
-            userService.updateUserImage(userDetails.getId(), imageFile);
-            return new ResponseEntity<>(
-                    new ResponseDto<>(true, "Image was upload", ResponseOperation.NO_ERROR.getMessage()),
-                    HttpStatus.OK);
-        } catch (MaxUploadSizeExceededException | IOException ex){
-            throw ex;
-        }
+        userService.updateUserImage(userDetails.getId(), imageFile);
+        return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.SUCCESS.getMessage()));
     }
 
     @DeleteMapping("/delete")
