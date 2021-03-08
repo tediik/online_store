@@ -5,7 +5,7 @@
 let apiTemplatesMailingSettingsUrl = "/api/templatesMailingSettings"
 let apiManagerSchedulingUrl = "/api/manager/scheduling"
 let apiCommonSettingsUrl = "/api/commonSettings"
-let myHeaders = new Headers()
+let mySettingsHeaders = new Headers()
 myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 
 /**
@@ -78,7 +78,7 @@ function handleSaveTemplateButton(event) {
             textValue: document.getElementById('editTemplateSummernote').value
         }
         fetch(apiCommonSettingsUrl, {
-            headers: myHeaders,
+            headers: mySettingsHeaders,
             method: 'PUT',
             body: JSON.stringify(commonSetting)
 
@@ -145,7 +145,7 @@ function handleAcceptButton(event) {
     if (document.getElementById('distributionTimeInput').value !== '') {
         fetch(apiManagerSchedulingUrl + actionUrl, {
             method: 'POST',
-            headers: myHeaders,
+            headers: mySettingsHeaders,
             body: JSON.stringify(taskSettings)
         }).then(function (response) {
             if (response.status === 200) {
