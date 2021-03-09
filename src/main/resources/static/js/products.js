@@ -533,7 +533,6 @@ function handleAcceptButtonFromModalWindow(event) {
                 method: 'PUT',
                 headers: headers,
                 body: JSON.stringify(product)
-
             }).then(function (response) {
                 if (document.getElementById("deletedCheckbox").checked) {
                     fetchProductsAndRenderNotDeleteTable();
