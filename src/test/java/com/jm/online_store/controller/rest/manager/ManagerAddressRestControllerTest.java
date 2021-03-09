@@ -95,7 +95,6 @@ class ManagerAddressRestControllerTest {
                         address1.getCity(),
                         address2.getCity(),
                         address3.getCity())));
-
     }
 
     @Test
@@ -111,7 +110,6 @@ class ManagerAddressRestControllerTest {
                 .andExpect(jsonPath("$.data.id").value(address2.getId()))
                 .andExpect(jsonPath("$.data.region").value(address2.getRegion()))
                 .andExpect(jsonPath("$.data.city").value(address2.getCity()));
-
     }
 
     @Test

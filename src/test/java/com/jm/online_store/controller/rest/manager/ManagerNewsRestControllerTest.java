@@ -49,9 +49,9 @@ class ManagerNewsRestControllerTest {
         newsService = mock(NewsService.class);
         modelMapper = new ModelMapper();
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new ManagerNewsRestController(newsService, modelMapper))
-                .setControllerAdvice(new ExceptionsHandler())
-                .build();
+                    .standaloneSetup(new ManagerNewsRestController(newsService, modelMapper))
+                    .setControllerAdvice(new ExceptionsHandler())
+                    .build();
         objectMapper = new ObjectMapper();
         allNews = new ArrayList<>();
         archivedNews = Arrays.asList(
@@ -100,36 +100,35 @@ class ManagerNewsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(allNews.size())))
                 .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
-                        allNews.get(0).getId().intValue(),
-                        allNews.get(1).getId().intValue(),
-                        allNews.get(2).getId().intValue(),
-                        allNews.get(3).getId().intValue(),
-                        allNews.get(4).getId().intValue(),
-                        allNews.get(5).getId().intValue(),
-                        allNews.get(6).getId().intValue(),
-                        allNews.get(7).getId().intValue(),
-                        allNews.get(8).getId().intValue())))
+                    allNews.get(0).getId().intValue(),
+                    allNews.get(1).getId().intValue(),
+                    allNews.get(2).getId().intValue(),
+                    allNews.get(3).getId().intValue(),
+                    allNews.get(4).getId().intValue(),
+                    allNews.get(5).getId().intValue(),
+                    allNews.get(6).getId().intValue(),
+                    allNews.get(7).getId().intValue(),
+                    allNews.get(8).getId().intValue())))
                 .andExpect(jsonPath("$.data[*].title", containsInAnyOrder(
-                        allNews.get(0).getTitle(),
-                        allNews.get(1).getTitle(),
-                        allNews.get(2).getTitle(),
-                        allNews.get(3).getTitle(),
-                        allNews.get(4).getTitle(),
-                        allNews.get(5).getTitle(),
-                        allNews.get(6).getTitle(),
-                        allNews.get(7).getTitle(),
-                        allNews.get(8).getTitle())))
+                    allNews.get(0).getTitle(),
+                    allNews.get(1).getTitle(),
+                    allNews.get(2).getTitle(),
+                    allNews.get(3).getTitle(),
+                    allNews.get(4).getTitle(),
+                    allNews.get(5).getTitle(),
+                    allNews.get(6).getTitle(),
+                    allNews.get(7).getTitle(),
+                    allNews.get(8).getTitle())))
                 .andExpect(jsonPath("$.data[*].anons", containsInAnyOrder(
-                        allNews.get(0).getAnons(),
-                        allNews.get(1).getAnons(),
-                        allNews.get(2).getAnons(),
-                        allNews.get(3).getAnons(),
-                        allNews.get(4).getAnons(),
-                        allNews.get(5).getAnons(),
-                        allNews.get(6).getAnons(),
-                        allNews.get(7).getAnons(),
-                        allNews.get(8).getAnons())));
-
+                    allNews.get(0).getAnons(),
+                    allNews.get(1).getAnons(),
+                    allNews.get(2).getAnons(),
+                    allNews.get(3).getAnons(),
+                    allNews.get(4).getAnons(),
+                    allNews.get(5).getAnons(),
+                    allNews.get(6).getAnons(),
+                    allNews.get(7).getAnons(),
+                    allNews.get(8).getAnons())));
     }
 
     @Test
@@ -239,6 +238,7 @@ class ManagerNewsRestControllerTest {
         mockMvc.perform(delete(END_POINT + "/{id}", 11)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
+                .andExpect(jsonPath("$.success").value(true))
                 .andExpect(status().isOk());
     }
 

@@ -95,9 +95,10 @@ class ManagerReportsRestControllerTest {
     void allUsersByDayOfWeek() throws Exception {
         when(customerService.findByDayOfWeekForStockSend(anyString())).thenReturn(customerList);
         mockMvc.perform(get(END_POINT + "/users/{dayOfWeek}", dayOfWeek)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(customerList.size())))
                 .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
                         customerList.get(0).getId().intValue(),
@@ -113,8 +114,8 @@ class ManagerReportsRestControllerTest {
                         customerList.get(0).getDayOfWeekForStockSend().toString(),
                         customerList.get(1).getDayOfWeekForStockSend().toString(),
                         customerList.get(2).getDayOfWeekForStockSend().toString()
-                )))
-                .andExpect(status().isOk());
+                )));
+
     }
 
     @Test
@@ -125,8 +126,9 @@ class ManagerReportsRestControllerTest {
         String email = customerByEmail.get(0).getEmail();
         when(customerService.findSubscriberByEmail(anyString())).thenReturn(customerByEmail);
         mockMvc.perform(get(END_POINT + "/user/{email}", email)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .characterEncoding("UTF-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())

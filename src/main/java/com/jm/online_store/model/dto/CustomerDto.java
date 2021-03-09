@@ -26,8 +26,8 @@ public class CustomerDto {
 
     private Long id;
     private String email;
-    private String firstName;
-    private String lastName;
+//    private String firstName;
+//    private String lastName;
     @JsonSerialize()
     private DayOfWeekForStockSend dayOfWeekForStockSend;
 

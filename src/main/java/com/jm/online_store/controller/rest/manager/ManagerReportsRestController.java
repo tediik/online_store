@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,8 +72,7 @@ public class ManagerReportsRestController {
     })
     public ResponseEntity<ResponseDto<List<CustomerDto>>> findSubscriberByEmail(@PathVariable String email) {
         List<Customer> customer = customerService.findSubscriberByEmail(email);
-        List<CustomerDto> returnValue = modelMapper.map(customer, listType);
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue, ""));
+        return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(customer, listType), ""));
     }
 
     /**

@@ -69,7 +69,7 @@ public class News {
         this.fullText = fullText;
     }
 
-    public News(Long id, String title, String anons, String fullText, LocalDate postingDate, boolean archived ) {
+    public News(Long id, String title, String anons, String fullText, LocalDate postingDate, boolean archived) {
         this.id = id;
         this.title = title;
         this.anons = anons;

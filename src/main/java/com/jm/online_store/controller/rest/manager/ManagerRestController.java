@@ -10,6 +10,7 @@ import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.UserService;
+import com.opencsv.bean.StatefulBeanToCsv;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
@@ -42,7 +44,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "api/manager")
+@RequestMapping(value = "/api/manager")
 @Slf4j
 @Api(description = "Rest controller for manage and publish news from manager page")
 public class ManagerRestController {
@@ -119,7 +121,8 @@ public class ManagerRestController {
         if (newsReq.getPostingDate() == null || newsReq.getPostingDate().isBefore(LocalDate.now())) {
             newsReq.setPostingDate(LocalDate.now());
         }
-        News newsFromService = newsService.update(modelMapper.map(newsReq, News.class));
+        News toService = modelMapper.map(newsReq, News.class);
+        News newsFromService = newsService.update(toService);
         NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
