@@ -12,7 +12,8 @@
             </form>
         </nav>
         <nav class="my-2 my-md-0 mr-md-3">
-            <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')" id="showBasket" href="/basket">
+            <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')" id="showBasket"
+               href="/basket">
                 <img src="/static/img/buscket.jpg" width="25" height="25">
                 <ins style="color: #ff8e05">
                     Корзина
@@ -21,6 +22,20 @@
             </a>
             <a class="p-2 text-dark" href="/">Главная</a>
             <a class="p-2 text-dark" href="/news">Новости</a>
+            <span class="nav-item" sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')">
+                <a class="dropdownbtn" href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false">
+                    <img src="/static/img/bell.png" width="20" height="20" >
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    <a class="dropdown-item" href="/customer/notifications">
+                        Все уведомления
+                    </a>
+                    <a class="dropdown-item" href="/customer/settings">
+                        Настройка уведомлений
+                    </a>
+                </div>
+            </span>
             <a sec:authorize="isAuthenticated()" class="btn btn-light loginbutton" href="/logout">Выйти</a>
         </nav>
     </div>
