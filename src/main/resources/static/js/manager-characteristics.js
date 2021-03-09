@@ -1,6 +1,6 @@
-let headers = new Headers()
-headers.append('Content-type', 'application/json; charset=UTF-8')
-document.getElementById('addBtn').addEventListener('click', handleAddBtn)
+let headersCharacteristics = new Headers()
+headersCharacteristics.append('Content-type', 'application/json; charset=UTF-8')
+document.getElementById('characteristicModalWindow-addBtn').addEventListener('click', handleAddBtn)
 let categorySelectAllCharacteristics = 'default';
 let categorySelectToAddCharacteristics;
 
@@ -36,8 +36,9 @@ $('#filterCategoryToAdd').on("change", function () {
  * и передает функции рендера таблицы renderCharacteristicsTable
  */
 function fetchCharacteristicsAndRenderTable(categorySelect) {
-    fetch("characteristicsByCategoryName/" + categorySelect)
+    fetch("/api/manager/product/characteristicsByCategoryName/" + categorySelect)
         .then(response => response.json())
+        .then(response => response.data)
         .then(characteristics => renderCharacteristicsTable(characteristics))
 }
 
@@ -62,23 +63,23 @@ function renderCharacteristicsTable(characteristics) {
     table.empty()
         .append(`<tr class="d-flex">
                  <th class="col-1">ID<th/>
-                 <th class="col-3">Наименование характеристики</th>
-                 <th class="col-1">Изменить</th>
-                 <th class="col-1">Удалить</th>
+                 <th class="col-4">Наименование характеристики</th>
+                 <th class="col-2">Изменить</th>
+                 <th class="col-2">Удалить</th>
                  </tr>`)
     for (let i = 0; i < characteristics.length; i++) {
         const characteristic = characteristics[i];
         let row = `
                 <tr class="d-flex" id="tr-${characteristic.id}">
                     <td class="col-sm-1">${characteristic.id}</td>
-                    <td class="col-sm-3">${characteristic.characteristicName}</td>
-                    <td class="col-sm-1">
+                    <td class="col-sm-4">${characteristic.characteristicName}</td>
+                    <td class="col-sm-2">
             <!-- Buttons of the right column of main table-->
                         <button data-characteristic-id="${characteristic.id}" type="button" class="btn btn-success edit-button" data-toggle="modal" data-target="#characteristicModalWindow">
                         Изменить
                         </button>
                     </td>
-                    <td class="col-sm-1">
+                    <td class="col-sm-2">
                         <button data-characteristic-id="${characteristic.id}" type="button" class="btn btn-danger delete-button" data-toggle="modal" data-target="#characteristicModalWindow">
                         Удалить
                         </button>
@@ -99,7 +100,7 @@ function handleEditButton(event) {
     const characteristicId = event.target.dataset["characteristicId"]
     if (categorySelectAllCharacteristics === 'default') {
         fetch("/api/manager/product/characteristic/" + characteristicId)
-            .then(response => response.json())
+            .then(response => response.json()).then(response => response.data)
             .then(characteristicToEdit => editModalWindowRender(characteristicToEdit))
     } else {
         toastr.error('Изменение категории доступно только для всех категорий')
@@ -114,7 +115,7 @@ function handleEditButton(event) {
 function handleDeleteButton(event) {
     const characteristicId = event.target.dataset["characteristicId"]
     fetch("/api/manager/product/characteristic/" + characteristicId)
-        .then(response => response.json())
+        .then(response => response.json()).then(response => response.data)
         .then(characteristicToDelete => deleteModalWindowRender(characteristicToDelete))
 }
 
@@ -123,10 +124,10 @@ function handleDeleteButton(event) {
  * @param characteristicToEdit
  */
 function editModalWindowRender(characteristicToEdit) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off("click").on("click", "#characteristicAcceptButton", handleAcceptButtonFromModalWindow)
     $('.modal-title').text("Изменение характеристики")
-    $('#idInputModal').val(characteristicToEdit.id)
-    $('#acceptButton').text("Сохранить изменения").removeClass().toggleClass('btn btn-success edit-characteristic')
+    $('#characteristicIdInputModal').val(characteristicToEdit.id)
+    $('#characteristicAcceptButton').text("Сохранить изменения").removeClass().toggleClass('btn btn-success edit-characteristic')
     $('#characteristicInputModal').val(characteristicToEdit.characteristicName).prop('readonly', false)
 
 }
@@ -136,10 +137,10 @@ function editModalWindowRender(characteristicToEdit) {
  * @param characteristicToDelete
  */
 function deleteModalWindowRender(characteristicToDelete) {
-    $('.modal-dialog').off("click").on("click", "#acceptButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off("click").on("click", "#characteristicAcceptButton", handleAcceptButtonFromModalWindow)
     $('.modal-title').text("Удаление характеристики")
-    $('#acceptButton').text("Удалить").removeClass().toggleClass('btn btn-danger delete-characteristic')
-    $('#idInputModal').val(characteristicToDelete.id)
+    $('#characteristicAcceptButton').text("Удалить").removeClass().toggleClass('btn btn-danger delete-characteristic')
+    $('#characteristicIdInputModal').val(characteristicToDelete.id)
     $('#characteristicInputModal').val(characteristicToDelete.characteristicName).prop('readonly', true)
 }
 
@@ -149,7 +150,7 @@ function deleteModalWindowRender(characteristicToDelete) {
  */
 function handleAcceptButtonFromModalWindow(event) {
     const characteristic = {
-        id: $('#idInputModal').val(),
+        id: $('#characteristicIdInputModal').val(),
         characteristicName: $('#characteristicInputModal').val(),
     };
     if (!characteristic.characteristicName) {
@@ -161,18 +162,19 @@ function handleAcceptButtonFromModalWindow(event) {
     /**
      * Проверка кнопки delete или edit
      */
-    if ($('#acceptButton').hasClass('delete-characteristic')) {
+    if ($('#characteristicAcceptButton').hasClass('delete-characteristic')) {
         fetch("/api/manager/product/characteristics/" + characteristic.id + "/" + categorySelectAllCharacteristics, {
             method: 'DELETE'
         }).then(response => response.text())
             .then(deletedCharacteristic => console.log('Characteristic: ' + deletedCharacteristic + ' was successfully deleted'))
             .then($('#tr-' + characteristic.id).remove())
+        fetchCharacteristicsAndRenderTable($('#filterCategory').val())
         $('#characteristicModalWindow').modal('hide')
         toastr.success("Характеристика успешно удалена")
     } else {
-        fetch("/api/manager/characteristics", {
+        fetch("/api/manager/product/characteristics", {
             method: 'PUT',
-            headers: headers,
+            headers: headersCharacteristics,
             body: JSON.stringify(characteristic)
         }).then(function (response) {
             if (response.ok) {
@@ -196,7 +198,7 @@ function handleAddBtn() {
      * функция очистки полей формы новой харакетристики
      */
     function clearFormFields() {
-        $('#addForm')[0].reset();
+        $('#characteristicModalWindow-addForm')[0].reset();
     }
 
     /**
@@ -241,7 +243,7 @@ function handleAddBtn() {
  */
 function addCharacteristicsOnNewCharacteristicForm(categorySelect) {
     if (categorySelect !== 'default') {
-        fetch("/api/manager/product/characteristics/otherThenSelected/" + categorySelect, {headers: headers}).then(response => response.json())
+        fetch("/api/manager/product/characteristics/otherThenSelected/" + categorySelect, {headers: headersCharacteristics}).then(response => response.json()).then(response => response.data)
             .then(characteristics => renderCharacteristicsOtherThenSelected(characteristics))
     }
 }

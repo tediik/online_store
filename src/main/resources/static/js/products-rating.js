@@ -6,7 +6,7 @@ sortProducts('default')
 function sortProducts(categorySelect) {
     $('#filterRating').on("change", function () {
         let orderSelect = $('#filterRating').val();
-        let categorySelect1 = $('#filterCategory').val();
+        let categorySelect1 = $('#ratingFilterCategory').val();
         if (orderSelect === 'descOrder') {
             fetchCategorySelectProductsInDescOrderAndRender(categorySelect1, orderSelect)
         }
@@ -27,8 +27,8 @@ function sortProducts(categorySelect) {
 /**
  * Обработка события с выбором категории для фильтрации списка товаров по выбранной категории
  */
-$('#filterCategory').on("change", function () {
-    let categorySelect = $('#filterCategory').val();
+$('#ratingFilterCategory').on("change", function () {
+    let categorySelect = $('#ratingFilterCategory').val();
     sortProducts(categorySelect)
 
 });
@@ -38,7 +38,7 @@ $('#filterCategory').on("change", function () {
  * @param products
  */
 function renderProductsRatingTable(products) {
-    let table = $('#products-table')
+    let table = $('#rating-products-table')
     table.empty()
         .append(`<tr>
                 <th>Рейтинг</th>
@@ -69,6 +69,7 @@ function renderProductsRatingTable(products) {
 function fetchCategorySelectProductsInAscOrderAndRender(categorySelect, orderSelect) {
     fetch("/api/product/sort/" + categorySelect + '/' + orderSelect)
         .then(response => response.json())
+        .then(response => response.data)
         .then(products => renderProductsRatingTable(products))
 }
 
@@ -81,6 +82,7 @@ function fetchCategorySelectProductsInAscOrderAndRender(categorySelect, orderSel
 function fetchCategorySelectProductsInDescOrderAndRender(categorySelect, orderSelect) {
     fetch("/api/product/sort/" + categorySelect + '/' + orderSelect)
         .then(response => response.json())
+        .then(response => response.data)
         .then(products => renderProductsRatingTable(products))
 }
 
@@ -89,7 +91,7 @@ function fetchCategorySelectProductsInDescOrderAndRender(categorySelect, orderSe
  *
  */
 function createReport() {
-    let categorySelect = $('#filterCategory').val();
+    let categorySelect = $('#ratingFilterCategory').val();
     let number = $('#addNumber').val();
     let numberField = document.getElementById('addNumber');
     if (!number) {

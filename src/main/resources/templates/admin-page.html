@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -93,12 +94,6 @@
                                         <!--                select                -->
                                         <div class="form-group">
                                             <select class="form-control form-control-sm" id="filterRole">
-                                                <option value="" disabled selected>User filter by Role</option>
-                                                <option th:each="dropDownItem : ${listRoles}"
-                                                        th:value="${dropDownItem.name}"
-                                                        th:text="${dropDownItem.name}"></option>
-                                                <div class="dropdown-divider"></div>
-                                                <option value="default">show all users</option>
                                             </select>
                                         </div>
                                     </div>
