@@ -63,4 +63,5 @@ public class Customer extends User {
         super(id, email);
         this.dayOfWeekForStockSend = dayOfWeekForStockSend;
     }
+
 }

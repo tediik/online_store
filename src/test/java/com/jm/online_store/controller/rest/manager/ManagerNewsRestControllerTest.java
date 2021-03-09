@@ -82,10 +82,11 @@ class ManagerNewsRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8"))
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(allNews.get(0).getId()))
                 .andExpect(jsonPath("$.data.title").value(allNews.get(0).getTitle()))
-                .andExpect(jsonPath("$.data.anons").value(allNews.get(0).getAnons()))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.data.anons").value(allNews.get(0).getAnons()));
+
     }
 
     @Test
@@ -96,6 +97,7 @@ class ManagerNewsRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(allNews.size())))
                 .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
                         allNews.get(0).getId().intValue(),
@@ -126,8 +128,8 @@ class ManagerNewsRestControllerTest {
                         allNews.get(5).getAnons(),
                         allNews.get(6).getAnons(),
                         allNews.get(7).getAnons(),
-                        allNews.get(8).getAnons())))
-                .andExpect(status().isOk());
+                        allNews.get(8).getAnons())));
+
     }
 
     @Test
@@ -138,6 +140,7 @@ class ManagerNewsRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(3)))
                 .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
                         archivedNews.get(0).getId().intValue(),
@@ -146,8 +149,7 @@ class ManagerNewsRestControllerTest {
                 .andExpect(jsonPath("$.data[*].archived", containsInAnyOrder(
                         archivedNews.get(0).isArchived(),
                         archivedNews.get(1).isArchived(),
-                        archivedNews.get(2).isArchived())))
-                .andExpect(status().isOk());
+                        archivedNews.get(2).isArchived())));
     }
 
     @Test
@@ -158,6 +160,7 @@ class ManagerNewsRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(publishedNews.size())))
                 .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
                         publishedNews.get(0).getId().intValue(),
@@ -172,8 +175,7 @@ class ManagerNewsRestControllerTest {
                         publishedNews.get(0).getPostingDate().toString(),
                         publishedNews.get(1).getPostingDate().toString(),
                         publishedNews.get(2).getPostingDate().toString()
-                )))
-                .andExpect(status().isOk());
+                )));
     }
 
     @Test
@@ -184,6 +186,7 @@ class ManagerNewsRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(unPublishedNews.size())))
                 .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
                         unPublishedNews.get(0).getId().intValue(),
@@ -196,8 +199,7 @@ class ManagerNewsRestControllerTest {
                 .andExpect(jsonPath("$.data[*].postingDate", containsInAnyOrder(
                         unPublishedNews.get(0).getPostingDate().toString(),
                         unPublishedNews.get(1).getPostingDate().toString(),
-                        unPublishedNews.get(2).getPostingDate().toString())))
-                .andExpect(status().isOk());
+                        unPublishedNews.get(2).getPostingDate().toString())));
     }
 
     @Test
@@ -209,10 +211,10 @@ class ManagerNewsRestControllerTest {
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(toNewsDto(allNews.get(0)))))
                 .andDo(print())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").value(allNews.get(0).getId()))
                 .andExpect(jsonPath("$.data.title").value(allNews.get(0).getTitle()))
-                .andExpect(jsonPath("$.data.anons").value(allNews.get(0).getAnons()))
-                .andExpect(status().isCreated());
+                .andExpect(jsonPath("$.data.anons").value(allNews.get(0).getAnons()));
     }
 
     @Test
@@ -224,10 +226,10 @@ class ManagerNewsRestControllerTest {
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(toNewsDto(allNews.get(1)))))
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(allNews.get(2).getId()))
                 .andExpect(jsonPath("$.data.title").value(allNews.get(2).getTitle()))
-                .andExpect(jsonPath("$.data.anons").value(allNews.get(2).getAnons()))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.data.anons").value(allNews.get(2).getAnons()));
     }
 
     @Test
@@ -245,20 +247,20 @@ class ManagerNewsRestControllerTest {
     void shouldReturnEmptyList() throws Exception {
         when(newsService.findAll()).thenReturn(Collections.emptyList());
         mockMvc.perform(get(END_POINT + "/all"))
-                .andExpect(jsonPath("$.data").isEmpty())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isEmpty());
         when(newsService.getAllPublished()).thenReturn(Collections.emptyList());
         mockMvc.perform(get(END_POINT + "/published"))
-                .andExpect(jsonPath("$.data").isEmpty())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isEmpty());
         when(newsService.getAllUnpublished()).thenReturn(Collections.emptyList());
         mockMvc.perform(get(END_POINT + "/unpublished"))
-                .andExpect(jsonPath("$.data").isEmpty())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isEmpty());
         when(newsService.getAllArchivedNews()).thenReturn(Collections.emptyList());
         mockMvc.perform(get(END_POINT + "/archived"))
-                .andExpect(jsonPath("$.data").isEmpty())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 
     @Test

@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+@PreAuthorize("hasAuthority('ROLE_MANAGER')")
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/api/manager")
@@ -60,7 +62,7 @@ public class ManagerReportsRestController {
      * @param email почта подписчика
      * @return список пользователей
      */
-    @GetMapping("/customer/{email}")
+    @GetMapping("/user/{email}")
     @ApiOperation(value = "Find user subscribing on the report by email",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
@@ -70,7 +72,7 @@ public class ManagerReportsRestController {
     public ResponseEntity<ResponseDto<List<CustomerDto>>> findSubscriberByEmail(@PathVariable String email) {
         List<Customer> customer = customerService.findSubscriberByEmail(email);
         List<CustomerDto> returnValue = modelMapper.map(customer, listType);
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue, ""));
     }
 
     /**

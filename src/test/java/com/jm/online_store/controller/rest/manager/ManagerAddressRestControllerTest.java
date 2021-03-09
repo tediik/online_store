@@ -66,10 +66,11 @@ class ManagerAddressRestControllerTest {
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(address4)))
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(address4.getId()))
                 .andExpect(jsonPath("$.data.region").value(address4.getRegion()))
-                .andExpect(jsonPath("$.data.city").value(address4.getCity()))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.data.city").value(address4.getCity()));
+
     }
 
     @Test
@@ -80,6 +81,7 @@ class ManagerAddressRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(3)))
                 .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
                         address1.getId().intValue(),
@@ -92,8 +94,7 @@ class ManagerAddressRestControllerTest {
                 .andExpect(jsonPath("$.data[*].city", containsInAnyOrder(
                         address1.getCity(),
                         address2.getCity(),
-                        address3.getCity())))
-                .andExpect(status().isOk());
+                        address3.getCity())));
 
     }
 
@@ -106,10 +107,11 @@ class ManagerAddressRestControllerTest {
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(address2)))
                 .andDo(print())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").value(address2.getId()))
                 .andExpect(jsonPath("$.data.region").value(address2.getRegion()))
-                .andExpect(jsonPath("$.data.city").value(address2.getCity()))
-                .andExpect(status().isCreated());
+                .andExpect(jsonPath("$.data.city").value(address2.getCity()));
+
     }
 
     @Test
@@ -120,13 +122,13 @@ class ManagerAddressRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8"))
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.region").value(address1.getRegion()))
                 .andExpect(jsonPath("$.data.city").value(address1.getCity()))
                 .andExpect(jsonPath("$.data.street").value(address1.getStreet()))
                 .andExpect(jsonPath("$.data.building").value(address1.getBuilding()))
                 .andExpect(jsonPath("$.data.zip").value(address1.getZip()))
-                .andExpect(jsonPath("$.data.shop").value(address1.isShop()))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.data.shop").value(address1.isShop()));
     }
 
 
