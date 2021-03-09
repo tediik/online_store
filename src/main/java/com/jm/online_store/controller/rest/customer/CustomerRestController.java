@@ -269,13 +269,4 @@ public class CustomerRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, productsViewedByUserIdAndDateTimeBetween), HttpStatus.OK);
     }
 
-    @GetMapping("/dayOfWeekForStockSend")
-    @ApiOperation(value = "Метод возвращает из базы день, в который будет рассылка",
-            authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Day was not found")
-    public ResponseEntity<ResponseDto<DayOfWeekForStockSend>> getCustomerDayOfWeekForStockSend() {
-        Customer customer = customerService.getCurrentLoggedInUser();
-        DayOfWeekForStockSend day = customerService.getCustomerDayOfWeekForStockSend(customer);
-        return new ResponseEntity<>(new ResponseDto<>(true, day), HttpStatus.OK);
-    }
 }
