@@ -38,6 +38,11 @@ public class Customer extends User {
     @Enumerated(EnumType.STRING)
     private DayOfWeekForStockSend dayOfWeekForStockSend;
 
+
+    public Customer(Long id, String email ) {
+        super(id, email);
+    }
+
     public Customer(String email, String password) {
         super(email, password);
     }

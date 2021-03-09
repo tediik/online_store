@@ -3,9 +3,9 @@ package com.jm.online_store.controller.rest.manager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jm.online_store.controller.ExceptionsHandler;
 import com.jm.online_store.exception.AddressNotFoundException;
-import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.service.interf.AddressService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +38,8 @@ class ManagerAddressRestControllerTest {
     private Address address2;
     private Address address3;
     private static final String END_POINT = "/api/manager/shops";
+
+    @AfterEach
 
     @BeforeEach
     void setUp() {
@@ -141,7 +143,7 @@ class ManagerAddressRestControllerTest {
     @DisplayName("delete address by id")
     void deleteAddress() throws Exception {
         when(addressService.findAddressById(anyLong())).thenReturn(Optional.ofNullable(address3));
-        mockMvc.perform(delete(END_POINT+"/{id}", 11)
+        mockMvc.perform(delete(END_POINT + "/{id}", 11)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -161,7 +163,7 @@ class ManagerAddressRestControllerTest {
     @DisplayName("throws address not found exception when try to get address info by id")
     void getAddressInfoThrowsAddressNotFoundException() throws Exception {
         when(addressService.findAddressById(anyLong())).thenThrow(new AddressNotFoundException());
-        mockMvc.perform(get(END_POINT+"/{id}", 11)
+        mockMvc.perform(get(END_POINT + "/{id}", 11)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());

@@ -1,6 +1,7 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CustomerService;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "api/manager")
+@RequestMapping(value = "/api/manager")
 @Api(description = "Rest controller for manage subscribes from manager page")
 public class ManagerReportsRestController {
     private final CustomerService customerService;
@@ -59,7 +60,7 @@ public class ManagerReportsRestController {
      * @param email почта подписчика
      * @return список пользователей
      */
-    @GetMapping("/user/{email}")
+    @GetMapping("/customer/{email}")
     @ApiOperation(value = "Find user subscribing on the report by email",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses( value = {
@@ -67,7 +68,8 @@ public class ManagerReportsRestController {
             @ApiResponse(code = 200, message = "Subscribed customer hasn't been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<CustomerDto>>> findSubscriberByEmail(@PathVariable String email) {
-        List<CustomerDto> returnValue = modelMapper.map(customerService.findSubscriberByEmail(email), listType);
+        List<Customer> customer = customerService.findSubscriberByEmail(email);
+        List<CustomerDto> returnValue = modelMapper.map(customer, listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 

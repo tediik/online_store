@@ -48,7 +48,10 @@ class ManagerNewsRestControllerTest {
     void setUp(){
         newsService = mock(NewsService.class);
         modelMapper = new ModelMapper();
-        mockMvc = MockMvcBuilders.standaloneSetup(new ManagerNewsRestController(newsService, modelMapper)).setControllerAdvice(new ExceptionsHandler()).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(new ManagerNewsRestController(newsService, modelMapper))
+                .setControllerAdvice(new ExceptionsHandler())
+                .build();
         objectMapper = new ObjectMapper();
         allNews = new ArrayList<>();
         archivedNews = Arrays.asList(
