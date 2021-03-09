@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Уведомления</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/css/feedback.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/css/customer.css">
+    <link href="/static/css/footer.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.fias.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <!-- CSS fot toaster-->
+    <link rel="stylesheet" href="/static/css/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/static/js/jquery/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="/static/js/toastr/toastr.min.js"></script>
+    <!--    summernote CSS-->
+    <link href="/static/css/summernote.css" rel="stylesheet">
+    <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/static/css/slider.css">
+
+</head>
+<body>
+<header th:insert="blocks/cabinet-header :: header"></header>
+
+<div class="container-fluid">
+    <div class="row min-vh-100">
+
+        <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
+
+        <div class="col-md-2">
+            <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+                <a class="btn btn-outline-primary mt-2" id="notification-tab" href="/customer/notifications">
+                    Все уведомления
+                </a>
+
+                <a class="btn btn-outline-primary mt-2 active" id="notification-settings-tab" href="/customer/settings">
+                    Настройки
+                </a>
+
+                <a class="btn btn-outline-primary mt-2" id="profile-page" href="/customer">
+                    Кабинет покупателя
+                </a>
+
+            </div>
+        </div>
+        <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
+
+        <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
+        <div class="col-md-10" style="background: #edeef0">
+            <div class="tab-content" id="v-pills-tabContent">
+
+                <!-- ВКЛАДКА УВЕДОМЛЕНИЯ  -->
+                <div class="tab-pane active" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+                    <div id="notif-tab"></div>
+                    <h3>Уведомления</h3>
+                    <div class="col-4">
+                        <!--ЧЕК БОКС РАССЫЛКИ -->
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input"
+                                   id="stockMailingCheckbox"
+                                   onchange="checkboxChanges(this)">
+                            <label class="form-check-label" for="stockMailingCheckbox">
+                                Хотите ли вы получать рассылку?</label>
+                        </div>
+                        <!--ЧЕК БОКС РАССЫЛКИ -->
+                        <br>
+                        <!--ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ -->
+                        <div id="dropList" class="form-group day-of-the-week-drop-list d-none">
+                            <label for="dayOfWeekDropList">Выберите день недели</label>
+                            <select class="form-control" name="dayOfWeekForStockSend"
+                                    id="dayOfWeekDropList">
+                                <option value="null" id="none"></option>
+                                <option value="MONDAY" id="monday">Понедельник</option>
+                                <option value="TUESDAY" id="tuesday">Вторник</option>
+                                <option value="WEDNESDAY" id="wednesday">Среда</option>
+                                <option value="THURSDAY" id="thursday">Четверг</option>
+                                <option value="FRIDAY" id="friday">Пятница</option>
+                                <option value="SATURDAY" id="saturday">Суббота</option>
+                                <option value="SUNDAY" id="sunday">Воскресенье</option>
+                            </select>
+                        </div>
+                        <!--ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ -->
+
+                        <!--SAVE BUTTON -->
+                        <div>
+                            <button type="submit" style="background-color: #ff8e05"
+                                    onclick="updateDayForStockSend()"
+                                    class="m-2 btn btn-success d-block mx-auto">
+                                Изменить
+                            </button>
+                        </div>
+                        <!--SAVE BUTTON -->
+
+                        <!-- Rounded switches -->
+                        <div id="sliderProducts">
+                            <label class="switch">
+                                <div class="sliderTitle">Информация об изменении цен</div>
+                                <input id="sliderPricesChanges" type="checkbox" onchange="checkSlider()">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <br><br>
+
+                        <div id="sliderComments">
+                            <label class="switch">
+                                <div class="sliderTitle">Комментарии, ответы пользователей</div>
+                                <input id="sliderNewComments" type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <!-- Rounded switches -->
+
+                        <br>
+
+                        <!--Кнопка удаления профиля-->
+                        <div style="margin-top: 20px">
+                            <button type="button" class="m-2 btn btn-danger d-block mx-auto"
+                                    data-toggle="modal" data-target="#deleteProfile">Удалить профиль
+                            </button>
+                        </div>
+                        <!--Кнопка удаления профиля-->
+
+                    </div>
+                </div>
+                <!-- ВКЛАДКА УВЕДОМЛЕНИЯ  -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
+     aria-labelledby="titleDeleteProfile" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleDeleteProfile">Удалить профиль</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Вы уверены что хотите удалить свой профиль?
+                <br>
+                <small style="color: rgba(243,18,8,0.75)">
+                    Возможность восстановить до 30 дней
+                </small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Отмена
+                </button>
+                <button id="deleteProfileCustomer" type="button"
+                        class="btn btn-danger" onclick="deleteProfile()"
+                        data-dismiss="modal">
+                    Удалить
+                </button>
+                <button id="deleteProfileCustomerUnrecoverable" type="button"
+                        class="btn btn-danger" onclick="deleteProfile2()"
+                        data-dismiss="modal">
+                    Удалить безвозвратно
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!---------------------- End Delete Profile Modal window ------------------->
+
+<footer th:insert="blocks/footer :: footer"></footer>
+<script src="../static/js/search-button.js"></script>
+<script src="../static/js/customer-notifications-settings-page.js"></script>
+
+</body>
+</html>

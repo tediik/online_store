@@ -61,6 +61,8 @@
                 <a class="btn btn-outline-primary mt-2" id="orders-tab" data-toggle="pill" href="#orders" role="tab"
                    aria-controls="orders" aria-selected="false" onclick="fillOrders()">Заказы</a>
 
+                <a class="btn btn-outline-primary mt-2" id="notification-tab" href="/customer/notifications">Уведомления</a>
+
                 <a class="btn btn-outline-primary mt-2" id="feedback-tab" data-toggle="pill" href="#feedback" role="tab"
                    aria-controls="orders" aria-selected="false">Обратная связь</a>
 
@@ -185,7 +187,7 @@
 
                 <!-- ВКЛАДКА ПРОФИЛЯ -->
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div form>
+                    <div>
                         <div class="container-fluid bg-light">
                             <div class="row p-3">
                                 <div class="col-4">
@@ -321,37 +323,39 @@
                                         </div>
                                         <!--пол-->
                                         <hr/>
-                                        <!--ЧЕК БОКС РАССЫЛКИ -->
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input"
-                                                   id="stockMailingCheckbox"
-                                                   onchange="chekboxChanges(this)">
-                                            <label class="form-check-label" for="stockMailingCheckbox">Хотите ли вы
-                                                получать рассылку?</label>
-                                        </div>
-                                        <!--ЧЕК БОКС РАССЫЛКИ -->
-                                        <br>
-                                        <!--ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ -->
-                                        <div id="dropList" class="form-group day-of-the-week-drop-list d-none">
-                                            <label for="dayOfWeekDropList">Выберите день недели</label>
-                                            <select class="form-control" name="dayOfWeekForStockSend"
-                                                    id="dayOfWeekDropList">
-                                                <option value="" id="none"></option>
-                                                <option value="MONDAY" id="monday">Понедельник</option>
-                                                <option value="TUESDAY" id="tuesday">Вторник</option>
-                                                <option value="WEDNESDAY" id="wednesday">Среда</option>
-                                                <option value="THURSDAY" id="thursday">Четверг</option>
-                                                <option value="FRIDAY" id="friday">Пятница</option>
-                                                <option value="SATURDAY" id="saturday">Суббота</option>
-                                                <option value="SUNDAY" id="sunday">Воскресенье</option>
-                                            </select>
-                                        </div>
-                                        <!--ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ -->
-                                        <hr/>
+<!--                                        &lt;!&ndash;ЧЕК БОКС РАССЫЛКИ &ndash;&gt;-->
+<!--                                        <div class="form-check">-->
+<!--                                            <input type="checkbox" class="form-check-input"-->
+<!--                                                   id="stockMailingCheckbox"-->
+<!--                                                   onchange="chekboxChanges(this)">-->
+<!--                                            <label class="form-check-label" for="stockMailingCheckbox">Хотите ли вы-->
+<!--                                                получать рассылку?</label>-->
+<!--                                        </div>-->
+<!--                                        &lt;!&ndash;ЧЕК БОКС РАССЫЛКИ &ndash;&gt;-->
+<!--                                        <br>-->
+<!--                                        &lt;!&ndash;ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ &ndash;&gt;-->
+<!--                                        <div id="dropList" class="form-group day-of-the-week-drop-list d-none">-->
+<!--                                            <label for="dayOfWeekDropList">Выберите день недели</label>-->
+<!--                                            <select class="form-control" name="dayOfWeekForStockSend"-->
+<!--                                                    id="dayOfWeekDropList">-->
+<!--                                                <option value="" id="none"></option>-->
+<!--                                                <option value="MONDAY" id="monday">Понедельник</option>-->
+<!--                                                <option value="TUESDAY" id="tuesday">Вторник</option>-->
+<!--                                                <option value="WEDNESDAY" id="wednesday">Среда</option>-->
+<!--                                                <option value="THURSDAY" id="thursday">Четверг</option>-->
+<!--                                                <option value="FRIDAY" id="friday">Пятница</option>-->
+<!--                                                <option value="SATURDAY" id="saturday">Суббота</option>-->
+<!--                                                <option value="SUNDAY" id="sunday">Воскресенье</option>-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                        &lt;!&ndash;ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ &ndash;&gt;-->
+<!--                                        <hr/>-->
+
                                         <!-- YELLOW SAVE BUTTON -->
                                         <button type="submit" style="background-color: #ff8e05" onclick="updateCustomer()"
                                                 class="m-2 btn btn-success d-block mx-auto">Сохранить
-                                        </button><!--SAVE BUTTON -->
+                                        </button>
+                                        <!--SAVE BUTTON -->
 
                                         <!--DELETE BUTTON -->
                                         <div>
@@ -752,5 +756,6 @@
 <script src="/static/js/customer-feedback-form.js"></script>
 <script src="../static/js/search-button.js"></script>
 <script src="../static/js/customer-trackable-product.js"></script>
+<script src="../static/js/customer-notifications-settings-page.js"></script>
 </body>
 </html>
