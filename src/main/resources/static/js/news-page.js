@@ -11,7 +11,7 @@ $(function () {
  * Функция для получения списка новостей
  */
 async function showNews() {
-    listOfNews = await fetch("/api/news/all").then(response => response.json())
+    listOfNews = await fetch("/api/news/all").then(response => response.json().then(news => news.data))
     allNewsList = $('#allNewsList')
     allNewsList.empty();
     for(key in listOfNews) {

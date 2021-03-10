@@ -12,7 +12,7 @@ $(function () {
  */
 async function showNewsDetails(id) {
     console.log("showNewsDetails")
-    fullTextDetails = await fetch("/api/news"+`/${id}`).then(response => response.json())
+    fullTextDetails = await fetch("/api/news"+`/${id}`).then(response => response.json().then(news => news.data))
     fullNews = $('#newsInfo')
         fullNews.empty();
         content2 =
