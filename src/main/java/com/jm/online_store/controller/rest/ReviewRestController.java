@@ -43,7 +43,6 @@ public class ReviewRestController {
     private final ReviewService reviewService;
     private final BadWordsService badWordsService;
 
-
     /**
      * Fetches an arrayList of all product Review by productId and returns JSON representation response
      *
@@ -85,7 +84,6 @@ public class ReviewRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, commentDtos));
     }
 
-
     /**
      * Receives productReview and passes it to Service layer for processing
      * previously, searches for forbidden words
@@ -116,8 +114,8 @@ public class ReviewRestController {
                 }
             }
         } else
-            return new ResponseEntity(new ResponseDto<>(false, String.format("Запрос содержит неверные данные" +
-                    " = [%s]", getErrors(bindingResult))), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new ResponseDto<>(false, "Запрос содержит неверные данные " +
+                    "- " + getErrors(bindingResult)), HttpStatus.BAD_REQUEST);
     }
 
     private String getErrors(BindingResult bindingResult) {

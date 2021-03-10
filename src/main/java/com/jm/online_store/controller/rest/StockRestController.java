@@ -69,7 +69,7 @@ public class StockRestController {
             authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<ResponseDto<String>> updateStockImage(@RequestParam("file") MultipartFile file) {
         stockService.updateStockImage(file);
-        return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.SUCCESS.getMessage()));
+        return ResponseEntity.ok(new ResponseDto<>(true, file.getName()));
     }
 
     /**
@@ -136,9 +136,8 @@ public class StockRestController {
      */
     @DeleteMapping(value = "/{id}")
     @ApiOperation(value = "Delete stock by ID",
-            authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<String>> deleteStockById(@PathVariable("id") Long id)
-    {
+            authorizations = {@Authorization(value = "jwtToken")})
+    public ResponseEntity<ResponseDto<String>> deleteStockById(@PathVariable("id") Long id) {
         stockService.deleteStockById(id);
         return ResponseEntity.ok(new ResponseDto<>(true, String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(),
                 id)));

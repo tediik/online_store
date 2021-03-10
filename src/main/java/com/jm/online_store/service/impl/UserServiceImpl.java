@@ -254,7 +254,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void regNewAccount(User userForm) {
+    public User regNewAccount(User userForm) {
         if (userForm.getEmail() != null) {
             ConfirmationToken confirmationToken = new ConfirmationToken(userForm.getEmail(), userForm.getPassword());
             confirmTokenRepository.save(confirmationToken);
@@ -271,6 +271,7 @@ public class UserServiceImpl implements UserService {
         } else {
             log.debug("Email пустой");
         }
+    return userForm;
     }
 
     /**

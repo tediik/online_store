@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 
-public class LoginRestController {
+public class CurrentUrlController {
     /**
      * Метод для записи Url залогинившемуся пользователю.
      */

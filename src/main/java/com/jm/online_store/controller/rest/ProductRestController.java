@@ -58,9 +58,6 @@ public class ProductRestController {
      * @param id продукта
      * @return сущность ProductDto, если продукт с таким id существует
      */
-
-
-
     @GetMapping("/{id}")
     @ApiOperation(value = "Get product by ID",
             authorizations = { @Authorization(value = "jwtToken") })
@@ -74,7 +71,6 @@ public class ProductRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, productService.getProductDto(id, user).get()));
     }
 
-
     /**
      * контроллер для получения Map содержащим ключ-значение: дата.время изменения цены - цена.
      *
@@ -84,23 +80,21 @@ public class ProductRestController {
     @PutMapping("/productChangeMonitor")
     @ApiOperation(value = "Get map with key: date of price changing; value: price",
             authorizations = { @Authorization(value = "jwtToken") })
-
     public ResponseEntity<ResponseDto<Map<LocalDateTime, Double>>> priceMonitor(@RequestBody Long id) {
         Map<LocalDateTime, Double> returnValue = modelMapper.map(productService.getProductPriceChange(id), mapType);
         return ResponseEntity.ok( new ResponseDto<>(true, returnValue));
     }
 
-
     /**
-     * контроллер для обновлёния рейтинга товара
+     * контроллер для обновления рейтинга товара
      *
      * @param rating оценка пользователя
      * @param id     id товара
+     * @return - ResponseDto<Double> - обновленный рейтинг товара
      */
     @PostMapping("/rating")
     @ApiOperation(value = "Set new rating of product",
             authorizations = { @Authorization(value = "jwtToken") })
-
     public ResponseEntity <ResponseDto<Double>> getNewRating(@RequestParam(value = "rating", required = false) float rating,
                                        @RequestParam(value = "id", required = false) Long id) {
         User user = userService.getCurrentLoggedInUser();
@@ -164,7 +158,6 @@ public class ProductRestController {
             return ResponseEntity.ok(new ResponseDto<>(false, ResponseOperation.FAILED.getMessage()));
         }
     }
-
 
     /**
      * Возвращает список первых count продуктов - count передаётся в метод сервиса .findNumProducts(count)

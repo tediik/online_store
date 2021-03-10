@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -36,9 +35,6 @@ public class ProductForFavouritesGroupRestController {
 
     private final FavouritesGroupService favouritesGroupService;
     private final ProductService productService;
-
-
-
     /**
      * Добавление продукта в Список избранных товаров
      * @param product продукт
@@ -76,9 +72,6 @@ public class ProductForFavouritesGroupRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, favouritesGroupService.getProductSet(favouritesGroup)));
     }
 
-
-
-
     /**
      * Удаление продукта из выбранного списка избранного
      * @param idProduct идентификатор продукта
@@ -111,7 +104,6 @@ public class ProductForFavouritesGroupRestController {
             @ApiResponse(code = 200, message = "Products have been deleted"),
             @ApiResponse(code = 404, message = "Products havn't been found"),
     })
-
     public ResponseEntity <ResponseDto<Long>> deleteFromFavouritesGroupProductAll(@RequestBody ArrayList<Long> idProducts, @PathVariable("idGroup") Long idGroup) {
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(idGroup).orElseThrow();
         for (int i = 0; i < idProducts.size(); i++){

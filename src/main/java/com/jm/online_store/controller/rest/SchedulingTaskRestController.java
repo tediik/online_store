@@ -40,7 +40,6 @@ public class SchedulingTaskRestController {
         return ResponseEntity.notFound().build();
     }
 
-
     /**
      * Method that starts mail distribution task
      * @param taskSettings - параметры задачи
@@ -74,7 +73,6 @@ public class SchedulingTaskRestController {
      * @param taskSettings - параметры задачи
      * @return - ResponseDto<TaskSettings> taskSettings
      */
-
     @PostMapping("/dailyPriceCreate")
     @ApiOperation(value = "Changing of daily price task",
             authorizations = { @Authorization(value = "jwtToken") })
@@ -84,13 +82,11 @@ public class SchedulingTaskRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, taskSettings));
     }
 
-
     /**
      * Method for getting mail distribution settings by task name
      * @param taskName - task name
      * @return - ResponseDto<TaskSettings>
      */
-
     @GetMapping("/{taskName}")
     @ApiOperation(value = "Get mail distribution settings by task name",
             authorizations = { @Authorization(value = "jwtToken") })

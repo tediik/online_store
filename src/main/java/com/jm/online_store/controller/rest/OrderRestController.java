@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -36,9 +35,6 @@ public class OrderRestController {
     private final OrderService orderService;
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<NewsDto>>() {}.getType();
-
-
-
 
     /**
      * метод получения списка всех заказов авторизованного пользователя или пустой список.
@@ -93,7 +89,6 @@ public class OrderRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-
     /**
      * метод получения списка всех отмененных заказов авторизованного пользователя.
      * @return список заказов.
@@ -118,8 +113,6 @@ public class OrderRestController {
      * @param id идентификатор заказа
      * @return данные заказа по DTO
      */
-
-
     @GetMapping("/getOrderById")
     @ApiOperation(value = "Get data of order by order ID",
             authorizations = { @Authorization(value = "jwtToken") })
@@ -130,5 +123,4 @@ public class OrderRestController {
     public ResponseEntity<ResponseDto<OrderDTO>> getOrderById(@RequestBody Long id) {
         return ResponseEntity.ok(new ResponseDto<>(true, orderService.findOrderDTOById(id)));
     }
-
 }

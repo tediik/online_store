@@ -47,8 +47,6 @@ public class UserRestController {
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<NewsDto>>() {}.getType();
 
-
-
     /**
      * Метод возвращающий список всех пользователей
      * или пустой список
@@ -65,8 +63,6 @@ public class UserRestController {
         List<UserDto> returnValue = modelMapper.map(userService.findAll(), listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
-
-
 
     /**
      * Метод сохраняет пользователя в базу данных
@@ -85,7 +81,6 @@ public class UserRestController {
         UserDto returnValue = modelMapper.map(user,UserDto.class);
         return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.CREATED);
     }
-
 
     /**
      * Метод для обновления сущности пользователя в базе данных
@@ -106,8 +101,6 @@ public class UserRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-
-
     /**
      * Метод для удаления пользователя по ID
      */
@@ -122,7 +115,5 @@ public class UserRestController {
         userService.deleteByID(userId);
         return ResponseEntity.ok(new ResponseDto<>(true, String.format(
                 ResponseOperation.HAS_BEEN_DELETED.getMessage(), userId)));
-
-
     }
 }
