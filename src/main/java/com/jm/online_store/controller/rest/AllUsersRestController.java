@@ -1,6 +1,8 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.RestoreAccountDto;
 import com.jm.online_store.model.dto.UserDto;
@@ -12,6 +14,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,6 +35,7 @@ public class AllUsersRestController {
     private final UserService userService;
     private final CustomerService customerService;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     /**
      * Метод для получения имейла и ролей залогиненного пользователя,
@@ -75,16 +79,15 @@ public class AllUsersRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "User not found"),
     })
-    public ResponseEntity<ResponseDto<RestoreAccountDto>> restoreUser(@RequestBody RestoreAccountDto restoreAccountDto) {
+    public ResponseEntity<ResponseDto<CustomerDto>> restoreUser(@RequestBody RestoreAccountDto restoreAccountDto) {
         String msgAlert = "Пользователь не найден!";
         String email = restoreAccountDto.getEmail();
         String passwordOfClient = restoreAccountDto.getPassword();
         String passwordOfBase = userService.getPasswordByMail(email);
         try {
             if (passwordEncoder.matches(passwordOfClient, passwordOfBase)) {
-                customerService.restoreCustomer(email);
-                msgAlert = "Профиль успешно восстановлен!";
-                return new ResponseEntity<>(new ResponseDto<>(true, restoreAccountDto), HttpStatus.OK);
+                Customer customer = customerService.restoreCustomer(email);
+                return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
                 //return ResponseEntity.ok(msgAlert);
             } else {
                 return new ResponseEntity<>(new ResponseDto<>(false, msgAlert), HttpStatus.BAD_REQUEST);

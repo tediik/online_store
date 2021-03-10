@@ -1,8 +1,11 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.exception.BadWordsNotFoundException;
 import com.jm.online_store.model.BadWords;
 import com.jm.online_store.model.CommonSettings;
+import com.jm.online_store.model.dto.BadWordsDto;
+import com.jm.online_store.model.dto.CommonSettingsDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.CommonSettingsService;
@@ -10,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +39,7 @@ import java.util.List;
 public class BadWordsRestController {
     private final BadWordsService badWordsService;
     private final CommonSettingsService commonSettingsService;
+    private final ModelMapper modelMapper;
 
     /**
      * Метод возвращает все стоп-слова, включая неактивные
@@ -42,8 +48,12 @@ public class BadWordsRestController {
     @GetMapping(value = "/all")
     @ApiOperation(value = "return a list of stop words including inactive",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<List<BadWords>>> findAll() {
-        return new ResponseEntity<>(new ResponseDto<>(true,badWordsService.findAllWords()),HttpStatus.OK);
+    public ResponseEntity<ResponseDto<List<BadWordsDto>>> findAll() {
+        List<BadWordsDto> badWordsDto = new ArrayList<>();
+        for (BadWords badWords : badWordsService.findAllWords()) {
+            badWordsDto.add(modelMapper.map(badWords, BadWordsDto.class));
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, badWordsDto), HttpStatus.OK);
         //return ResponseEntity.ok(badWordsService.findAllWords());
     }
 
@@ -57,8 +67,10 @@ public class BadWordsRestController {
     @GetMapping("/{id}")
     @ApiOperation(value = "return a stop word by id",
             authorizations = {@Authorization(value = "jwtToken")})
-    public ResponseEntity<BadWords> getWordById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(badWordsService.findWordById(id));
+    public ResponseEntity<ResponseDto<BadWordsDto>> getWordById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(new ResponseDto<>(true,
+                modelMapper.map(badWordsService.findWordById(id), BadWordsDto.class)), HttpStatus.OK);
+        //return ResponseEntity.ok(badWordsService.findWordById(id));
     }
 
     /**
@@ -71,7 +83,7 @@ public class BadWordsRestController {
     @PostMapping("/add")
     @ApiOperation(value = "add new stop word",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<BadWords>> addWord(@RequestBody BadWords badWords) {
+    public ResponseEntity<ResponseDto<BadWordsDto>> addWord(@RequestBody BadWords badWords) {
         String newWord = badWords.getBadword().toLowerCase();
         if (newWord.equals("")) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Empty bad word"), HttpStatus.BAD_REQUEST);
@@ -82,9 +94,8 @@ public class BadWordsRestController {
             return new ResponseEntity<>(new ResponseDto<>(false, "Duplicated word name"), HttpStatus.BAD_REQUEST);
             //return new ResponseEntity("duplicatedWordName", HttpStatus.BAD_REQUEST);
         }
-
         badWordsService.saveWord(badWords);
-        return new ResponseEntity<>(new ResponseDto<>(true, badWords), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(badWords, BadWordsDto.class)), HttpStatus.OK);
         //return ResponseEntity.ok(badWords);
     }
 
@@ -97,9 +108,9 @@ public class BadWordsRestController {
     @PutMapping("/update")
     @ApiOperation(value = "update stop word",
             authorizations = {@Authorization(value = "jwtToken")})
-    public ResponseEntity<ResponseDto<BadWords>> updateWord(@RequestBody BadWords badWords) {
+    public ResponseEntity<ResponseDto<BadWordsDto>> updateWord(@RequestBody BadWords badWords) {
         badWordsService.saveWord(badWords);
-        return new ResponseEntity<>(new ResponseDto<>(true, badWords), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(badWords, BadWordsDto.class)), HttpStatus.OK);
         //return ResponseEntity.ok().build();
     }
 
@@ -107,15 +118,15 @@ public class BadWordsRestController {
      * Метод удаления стоп-слова
      * Может выбросить исключение BadWordsNotFoundException если слово не найдено
      * @param id {@link Long} id BadWords стоп-слова для удаления
-     * @return ResponseEntity<Long>
+     * @return ResponseEntity<ResponseDto<String>>
      */
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "delete stop word by id",
             authorizations = {@Authorization(value = "jwtToken")})
-    public ResponseEntity<ResponseDto<Long>> newsDelete(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<String>> newsDelete(@PathVariable Long id) {
         try {
             badWordsService.deleteWord(badWordsService.findWordById(id));
-            return new ResponseEntity<>(new ResponseDto<>(true, "Bad word successful deleted"), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(true, "Bad word successful deleted", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
             //return ResponseEntity.ok().build();
         } catch (BadWordsNotFoundException e) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Bad words not found"), HttpStatus.NOT_FOUND);
@@ -130,21 +141,25 @@ public class BadWordsRestController {
     @GetMapping(value = "/get-active")
     @ApiOperation(value = "return list of all active stop words",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<List<BadWords>>> findAllActive() {
-        return new ResponseEntity<>(new ResponseDto<>(true, badWordsService.findAllWordsActive()), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<List<BadWordsDto>>> findAllActive() {
+        List<BadWordsDto> badWordsDto = new ArrayList<>();
+        for (BadWords badWords : badWordsService.findAllWordsActive()) {
+            badWordsDto.add(modelMapper.map(badWords, BadWordsDto.class));
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, badWordsDto), HttpStatus.OK);
         //return ResponseEntity.ok(badWordsService.findAllWordsActive());
     }
 
     /**
      * Метод для получения текущего статуса фильтра (true, false)
-     * @return ResponseEntity<CommonSettings>
+     * @return ResponseEntity<ResponseDto<CommonSettingsDto>>
      */
     @GetMapping(value = "/status")
     @ApiOperation(value = "return current status of filter (true , false)",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<CommonSettings>> getSetting() {
+    public ResponseEntity<ResponseDto<CommonSettingsDto>> getSetting() {
         CommonSettings templateBody = commonSettingsService.getSettingByName("bad_words_enabled");
-        return new ResponseEntity<>(new ResponseDto<>(true, templateBody),HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(templateBody, CommonSettingsDto.class)), HttpStatus.OK);
         //return ResponseEntity.ok(templateBody);
     }
 
@@ -156,7 +171,7 @@ public class BadWordsRestController {
     @PostMapping(value = "/status")
     @ApiOperation(value = "save current status of filter (true, false)",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<CommonSettings>> setSetting(@RequestBody Boolean isEnabled) {
+    public ResponseEntity<ResponseDto<CommonSettingsDto>> setSetting(@RequestBody Boolean isEnabled) {
         String status = "true";
         if (!isEnabled) {
             status = "false";
@@ -166,7 +181,7 @@ public class BadWordsRestController {
                 .textValue(status)
                 .build();
         commonSettingsService.updateTextValue(setStatus);
-        return new ResponseEntity<>(new ResponseDto<>(true, setStatus), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(setStatus, CommonSettingsDto.class)), HttpStatus.OK);
     }
 
     /**
@@ -187,7 +202,7 @@ public class BadWordsRestController {
             //return new ResponseEntity("EmptyBadWord", HttpStatus.BAD_REQUEST);
         }
         badWordsService.importWord(text);
-        return new ResponseEntity<>(new ResponseDto<>(true, text), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, text, ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
         //return ResponseEntity.ok().build();
     }
 

@@ -61,6 +61,7 @@ public class Address {
     public Address(@NonNull String zip, @NonNull String region, @NonNull String city, @NonNull String street, @NonNull String building, boolean shop) {
         this.zip = zip;
         this.region = region;
+
         this.city = city;
         this.street = street;
         this.building = building;

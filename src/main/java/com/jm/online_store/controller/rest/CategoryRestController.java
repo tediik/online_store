@@ -1,12 +1,14 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.dto.CategoriesDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.util.Transliteration;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,7 @@ import java.util.stream.Stream;
 public class CategoryRestController {
 
     private final CategoriesService categoriesService;
+    private final ModelMapper modelMapper;
 
     /**
      * Создаёт мапу - ключ - название категории, значение - мапа с названиями подкатегории.
@@ -48,7 +52,6 @@ public class CategoryRestController {
     public ResponseEntity<ResponseDto<Map<String, Map<String, String>>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.findAll();
         Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
-
         for (Categories category : categoriesFromDB) {
             Map<String, String> innerMap = new HashMap<>();
             innerMap.put(category.getCategory(), Transliteration.сyrillicToLatin(category.getCategory()));
@@ -67,8 +70,12 @@ public class CategoryRestController {
      */
     @GetMapping("/allCategories")
     @ApiOperation(value = "Get all subcategories")
-    public ResponseEntity<ResponseDto<List<Categories>>> getAllCategories() {
-        return new ResponseEntity<>(new ResponseDto<>(true, categoriesService.findAll()), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<List<CategoriesDto>>> getAllCategories() {
+        List<CategoriesDto> categoriesDtoList = new ArrayList<>();
+        for (Categories categories : categoriesService.findAll()) {
+            categoriesDtoList.add(modelMapper.map(categories, CategoriesDto.class));
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, categoriesDtoList), HttpStatus.OK);
         //return ResponseEntity.ok(categoriesService.findAll());
     }
 

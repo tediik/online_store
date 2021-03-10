@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -55,6 +56,7 @@ public class CommentRestController {
     private final BadWordsService badWordsService;
     private final UserService userService;
     private final CommentDto commentDto;
+    private final ModelMapper modelMapper;
 
     /**
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response

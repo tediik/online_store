@@ -33,7 +33,7 @@ public interface CustomerService {
 
     void updateCustomer(Customer customer);
 
-    void restoreCustomer(String email);
+    Customer restoreCustomer(String email);
 
     boolean isExist(String email);
 

@@ -4,13 +4,14 @@ import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.AddressDto;
 import com.jm.online_store.model.dto.ResponseDto;
-import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,19 +36,29 @@ import java.util.Set;
 public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @GetMapping(value = "/allShops")
     @ApiOperation(value = "get all the shops")
-    public ResponseEntity<ResponseDto<List<Address>>> findAll() {
-        return new ResponseEntity<>(new ResponseDto<>(true, addressService.findAllShops()), HttpStatus.OK);
-                //.ok(addressService.findAllShops());
+    public ResponseEntity<ResponseDto<List<AddressDto>>> findAll() {
+        List<AddressDto> addressDto = new ArrayList<>();
+        for (Address address : addressService.findAllShops()) {
+            addressDto.add(modelMapper.map(address, AddressDto.class));
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, addressDto), HttpStatus.OK);
+        //.ok(addressService.findAllShops());
     }
 
     @GetMapping(value = "/userAddresses")
     @ApiOperation(value = "get current logged in Users address")
-    public ResponseEntity<ResponseDto<Set<Address>>> userAddresses() {
+    public ResponseEntity<ResponseDto<Set<AddressDto>>> userAddresses() {
+        Set<AddressDto> addressDto = new HashSet<>();
+        for (Address address : userService.getCurrentLoggedInUser().getUserAddresses()) {
+            addressDto.add(modelMapper.map(address, AddressDto.class));
+        }
         if (userService.getCurrentLoggedInUser().getUserAddresses() != null) {
-            return new ResponseEntity<>(new ResponseDto<>(true, userService.getCurrentLoggedInUser().getUserAddresses()), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(true,
+                    addressDto), HttpStatus.OK);
                     //.ok(userService.getCurrentLoggedInUser().getUserAddresses());
         }
         return new ResponseEntity<>(new ResponseDto<>(false, "Addresses not found"), HttpStatus.NOT_FOUND);
@@ -54,10 +67,10 @@ public class AddressRestController {
 
     @PostMapping(value = "/addAddress")
     @ApiOperation(value = "adds address for current logged in user")
-    public ResponseEntity<ResponseDto<Address>> addAddressToUser(@RequestBody Address address) {
+    public ResponseEntity<ResponseDto<AddressDto>> addAddressToUser(@RequestBody Address address) {
         User user = userService.getCurrentLoggedInUser();
         if (userService.addNewAddressForUser(user, address)) {
-            return new ResponseEntity<>(new ResponseDto<>(true, address),HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(address, AddressDto.class)), HttpStatus.OK);
             //return ResponseEntity.ok().build();
         }
         return new ResponseEntity<>(new ResponseDto<>(false,"addressIsExists"),HttpStatus.BAD_REQUEST);
@@ -66,7 +79,7 @@ public class AddressRestController {
 
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})
     public ResponseEntity<ResponseDto<?>> handleControllerExceptions() {
-        return new ResponseEntity<>(new ResponseDto<>(false, "Not found"),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ResponseDto<>(false, "Not found"), HttpStatus.NOT_FOUND);
         //return ResponseEntity.notFound().build();
     }
 }
