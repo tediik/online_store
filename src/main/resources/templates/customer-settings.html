@@ -60,21 +60,21 @@
 
                 <!-- ВКЛАДКА УВЕДОМЛЕНИЯ  -->
                 <div class="tab-pane active" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-                    <div id="notif-tab"></div>
-                    <h3>Уведомления</h3>
+                    <h3 style="margin-bottom: 20px">Настройка уведомлений</h3>
                     <div class="col-4">
                         <!--ЧЕК БОКС РАССЫЛКИ -->
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input"
-                                   id="stockMailingCheckbox"
-                                   onchange="checkboxChanges(this)">
-                            <label class="form-check-label" for="stockMailingCheckbox">
-                                Хотите ли вы получать рассылку?</label>
+                        <div id="sliderEmails">
+                            <label class="switch">
+                                <div class="sliderTitle">Получение рассылок на email</div>
+                                <input id="sliderEmailConfirmation" type="checkbox" onchange="checkboxChanges(this)">
+                                <span class="slider round"></span>
+                            </label>
                         </div>
                         <!--ЧЕК БОКС РАССЫЛКИ -->
                         <br>
                         <!--ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ -->
-                        <div id="dropList" class="form-group day-of-the-week-drop-list d-none">
+                        <div id="dropList" class="form-group day-of-the-week-drop-list d-none"
+                             style="margin-top: 25px">
                             <label for="dayOfWeekDropList">Выберите день недели</label>
                             <select class="form-control" name="dayOfWeekForStockSend"
                                     id="dayOfWeekDropList">
@@ -87,24 +87,23 @@
                                 <option value="SATURDAY" id="saturday">Суббота</option>
                                 <option value="SUNDAY" id="sunday">Воскресенье</option>
                             </select>
-                        </div>
                         <!--ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ -->
 
                         <!--SAVE BUTTON -->
-                        <div>
                             <button type="submit" style="background-color: #ff8e05"
                                     onclick="updateDayForStockSend()"
                                     class="m-2 btn btn-success d-block mx-auto">
-                                Изменить
+                                Сохранить
                             </button>
                         </div>
                         <!--SAVE BUTTON -->
 
                         <!-- Rounded switches -->
-                        <div id="sliderProducts">
+
+                        <div id="sliderProducts" style="margin-top:20px">
                             <label class="switch">
-                                <div class="sliderTitle">Информация об изменении цен</div>
-                                <input id="sliderPricesChanges" type="checkbox" onchange="checkSlider()">
+                                <div class="sliderTitle">Изменение цен</div>
+                                <input id="sliderPricesChanges" type="checkbox" onchange="changePriceEmailsSlider()">
                                 <span class="slider round"></span>
                             </label>
                         </div>

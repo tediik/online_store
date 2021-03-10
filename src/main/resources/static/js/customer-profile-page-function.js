@@ -293,45 +293,6 @@ function userData() {
             } else {
                 $('#userGenderNone').prop('checked', true);
             }
-
-            /**
-            * Запрос возвращает выбранный день недели для рассылки
-            */
-            fetch("/api/customer/dayOfWeekForStockSend")
-                .then(response => response.json())
-                .then(res => res.data)
-                .then(day => {
-                    if (day !== undefined || day !== null) {
-                        $('#stockMailingCheckbox').prop('checked', true);
-                        $(".day-of-the-week-drop-list").removeClass("d-none")
-                        switch (day) {
-                            case "MONDAY":
-                                $('#monday').prop('selected', true);
-                                break;
-                            case "TUESDAY":
-                                $('#tuesday').prop('selected', true);
-                                break;
-                            case "WEDNESDAY":
-                                $('#wednesday').prop('selected', true);
-                                break;
-                            case "THURSDAY":
-                                $('#thursday').prop('selected', true);
-                                break;
-                            case "FRIDAY":
-                                $('#friday').prop('selected', true);
-                                break;
-                            case "SATURDAY":
-                                $('#saturday').prop('selected', true);
-                                break;
-                            case "SUNDAY":
-                                $('#sunday').prop('selected', true);
-                                break;
-                        }
-                    } else {
-                        $('#stockMailingCheckbox').prop('checked', false);
-                        $(".day-of-the-week-drop-list").addClass("d-none")
-                    }
-                })
         })
 }
 
@@ -348,9 +309,6 @@ function updateCustomer() {
         gender = null
     }
 
-    let dropList = document.getElementById("dayOfWeekDropList");
-    let selectedDay = dropList.options[dropList.selectedIndex].value;
-
     let customerForUpdate = {
         id: $("#id_update").val(),
         password: $('#password_update').val(),
@@ -360,7 +318,6 @@ function updateCustomer() {
         birthdayDate: $('#date_birthday_input').val(),
         userGender: gender,
         registerDate: $('#register_date').val(),
-        dayOfWeekForStockSend: selectedDay
     }
     fetch('/api/customer', {
         method: 'PUT',

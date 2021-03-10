@@ -1,26 +1,33 @@
 const customerNotificationsUrl = '../api/customer/notifications/';
 
 $(document).ready(function () {
+    /*отображает выбранный день для рассылки*/
     checkSubscribe();
+    /*отображает подписку на рассылку об изменении цен*/
     checkPriceEmails();
     /* Слушатель для кнопки удалить профиль (в модальном окне)*/
     document.getElementById('deleteProfileCustomer').addEventListener('click', deleteProfile)
     /* Слушатель для кнопки удалить профиль (без возможности восстановить (в модальном окне)*/
     document.getElementById('deleteProfileCustomerUnrecoverable').addEventListener('click', deleteProfile2)
-
 })
 
+/**
+ * Отслеживает положение переключателя "Получение рассылок на email"
+ * В случае отказа убирает select с выбором дня для рассылки
+ * @param o - переключение слайдера
+ */
 function checkboxChanges(o) {
     if (o.checked != true) {
         $('.day-of-the-week-drop-list').addClass('d-none')
         $('#dayOfWeekDropList').val('')
+        changeDayOfWeekForStockSend(null)
     } else {
         $('.day-of-the-week-drop-list').removeClass("d-none")
     }
 }
 
 /**
- * отображение выбранного дня для рассылки
+ * fetch запрос для отображения дня для рассылки
  */
 function checkSubscribe() {
     fetch(customerNotificationsUrl + "dayOfWeekForStockSend")
@@ -28,7 +35,7 @@ function checkSubscribe() {
         .then(res => res.data)
         .then(day => {
             if (day != undefined) {
-                $('#stockMailingCheckbox').prop('checked', true);
+                $('#sliderEmailConfirmation').prop('checked', true);
                 $(".day-of-the-week-drop-list").removeClass("d-none")
                 switch (day) {
                     case "MONDAY":
@@ -60,28 +67,43 @@ function checkSubscribe() {
         })
 }
 
+/**
+ * При нажатии на кнопку "сохранить" считывает значение selectа
+ * и передает значение в функцию changeDayOfWeekForStockSend
+ */
 function updateDayForStockSend() {
     let dropList = document.getElementById('dayOfWeekDropList');
-    let checkbox = document.getElementById('stockMailingCheckbox')
+    let checkbox = document.getElementById('sliderEmailConfirmation')
     let selectedDay;
     if (checkbox.checked == true) {
         selectedDay = dropList.options[dropList.selectedIndex].value;
     } else {
         selectedDay = null;
     }
+    changeDayOfWeekForStockSend(selectedDay)
+}
 
+/**
+ *Получает значения для fetch запроса для изменения дня для рассылок
+ * @param day - день недели
+ */
+function changeDayOfWeekForStockSend(day){
     fetch(customerNotificationsUrl + 'dayOfWeekForStockSend', {
         method: 'PUT',
         headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-type': 'text/plain; charset=UTF-8'
         },
-        body: JSON.stringify(selectedDay)
+        body: JSON.stringify(day)
     })
         .then(() => checkSubscribe())
         .catch(err => console.log("Не удалось изменить день рассылки " + err))
 }
 
+/**
+ * Устанавливает положение слайдера в зависимости от того, есть ли согласие на рассылку
+ * об изменении цен товаров
+ */
 function checkPriceEmails() {
     const slider = document.getElementById("sliderPricesChanges")
     fetch(customerNotificationsUrl + 'emailConfirmation')
@@ -96,7 +118,11 @@ function checkPriceEmails() {
         })
 }
 
-function checkSlider() {
+/**
+ * При нажатии на слайдер "Изменение цен" либо отменяет подписку,
+ * либо отправляется запрос на подтверждение
+ */
+function changePriceEmailsSlider() {
     const slider = document.getElementById("sliderPricesChanges")
     if (!slider.checked) {
         fetch(customerNotificationsUrl + 'unsubscribeEmail', {
