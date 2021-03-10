@@ -49,10 +49,9 @@ public class ManagerTopicsCategoryRestController {
             @ApiResponse(code = 200, message = "TopicCategories have been found"),
             @ApiResponse(code = 200, message = "TopicCategories haven't been found")
     })
-    public ResponseEntity<ResponseDto<List<TopicsCategoryDto>>> readAllTopicsCategories() {
+    public ResponseEntity<ResponseDto<List<TopicsCategory>>> readAllTopicsCategories() {
         List<TopicsCategory> topicsCategories = topicsCategoryService.findAll();
-        List<TopicsCategoryDto> returnValue = modelMapper.map(topicsCategories, listType);
-        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
+        return ResponseEntity.ok(new ResponseDto<>(true, topicsCategories));
     }
 
     /**

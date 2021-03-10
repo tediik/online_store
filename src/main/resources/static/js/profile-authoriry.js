@@ -1,7 +1,5 @@
-/**
- * class for customer modals changePass & changMail
- */
 $(document).ready(function () {
+    userData();
     /*Слушатель для кнопки смены email modal*/
     $(document).delegate("#buttonChangeMail", "click", changeMail);
     /*Слушатель для кнопки смены пароля modal*/
@@ -15,73 +13,50 @@ $(document).ready(function () {
  * @returns {boolean}
  */
 function changePass() {
-    var formData = $('#formChangePass').serialize();
-       $.ajax({
-        url: '/api/customer/change-password',
-        type: 'POST',
-        data: formData,
-        success: function (res) {
-            toastr.success("Пароль успешно изменен", {timeOut: 5000});
-            close();
+    fetch('/api/profile/changePassword', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
         },
-        error: function (res) {
-            if (res.responseText === "error_old_pass") {
-                toastr.error("Текущий пароль не совпадает. Введите заново пароль.", {timeOut: 5000});
-                $('#old_password').val('').focus();
+        body: JSON.stringify({
+            oldPassword: $('#old_password').val(),
+            newPassword: $('#new_password').val()
+        })
+    })
+        .then(function (response) {
+            if (response.ok) {
+                $('#openChangePassModal').modal('hide')
+                userData()
+            } else {
+                alert("Не удалось изменить пароль")
             }
-            if (res.responseText === "error_valid") {
-                toastr.error("Ваш пароль должен состоять из 8-20 символов, содержать буквы и цифры и не должны содержать пробелов и смайлики.", {timeOut: 5000});
-                $('#new_password').val('').focus();
-            }
-            if (res.responseText === "error_pass_len") {
-                toastr.error("Ваш пароль должен состоять минимум из 8 символов.", {timeOut: 5000});
-                $('#new_password').val('').focus();
-            }
-        }
-    });
-    return false;
+        })
 }
 
 /**
  * Method for changing customer's mail
- * @returns {boolean}
  */
 function changeMail() {
-
-    var formData = $('#formChangeMail').serialize();
-    $.ajax({
-        url: '/api/customer/changemail',
-        type: 'POST',
-        data: formData,
-        success: function (res) {
-            toastr.success(res, {timeOut: 5000});
-            close();
-            $('#email_input').val($('#new_mail').val());
+    let newEmail = $('#new_mail').val();
+    fetch('/api/profile/changeEmail', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
         },
-        error: function (res) {
-            if (res.status === 400) {
-                if (res.responseText === 'duplicatedEmailError') {
-                    $(".messages-after-submit").text('Ошибка: Электронный адрес уже зарегистрирован');
-                    toastr.error("Ошибка: Электронный адрес уже зарегистрирован", {timeOut: 5000});
-                }
-                if (res.responseText === 'notValidEmailError') {
-                    $(".messages-after-submit").text('Ошибка: Не верно указана электронная почта');
-                    toastr.error("Ошибка: Не верно указана электронная почта", {timeOut: 5000});
-                }
+        body: newEmail
+    })
+        .then(function (response) {
+            if (response.ok) {
+                $('#openNewMailModal').hide()
+                document.location.href = "/logout"
+            } else {
+                alert("Не удалось изменить адрес электронной почты")
             }
-        }
-    });
-    return false;
+        })
 }
 
-/**
- * Method for closing modals
- */
-function close() {
-    $('#openNewMailModal').hide();
-    $('#openChangePassModal').hide();
-    $(".modal-backdrop.show").hide();
-}
 
 //ToDo вроде есть класс ютил для проверки паролей у всех , можно прикручивать в контролллере или сервисе ... разобраться
 /**
@@ -93,4 +68,58 @@ function checkPassword() {
     if (regularExpression.test(newPassword)) {
         $("#submitNewPassword").attr('disabled', false);
     }
+}
+
+function userData() {
+    fetch("/api/profile/currentUser")
+        .then(response => response.json())
+        .then(res => res.data)
+        .then((user) => {
+            $('#id_update').val(user.id);
+            $('#password_update').val(user.password);
+            $('#first_name_update').val(user.firstName);
+            $('#last_name_input').val(user.lastName);
+            $('#email_input').val(user.email);
+            $('#date_birthday_input').val(user.birthdayDate);
+            $('#register_date').html(user.registerDate);
+            if (user.userGender === "MAN") {
+                $('#userGenderMan').prop('checked', true);
+            } else if (user.userGender === "WOMAN") {
+                $('#userGenderWoman').prop('checked', true);
+            } else {
+                $('#userGenderNone').prop('checked', true);
+            }
+        })
+}
+
+function updateUser() {
+    let gender
+    if (document.getElementById('userGenderMan').checked) {
+        gender = "MAN"
+    } else if (document.getElementById('userGenderWoman').checked) {
+        gender = "WOMAN"
+    } else {
+        gender = null
+    }
+
+    let userForUpdate = {
+        id: $("#id_update").val(),
+        password: $('#password_update').val(),
+        firstName: $('#first_name_update').val(),
+        lastName: $('#last_name_input').val(),
+        email: $('#email_input').val(),
+        birthdayDate: $('#date_birthday_input').val(),
+        userGender: gender,
+        registerDate: $('#register_date').val()
+    }
+    fetch('/api/profile/update', {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(userForUpdate)
+    })
+        .then(() => userData())
+        .catch(error => console.log("Не удалось сохранить изменения " + error))
 }
