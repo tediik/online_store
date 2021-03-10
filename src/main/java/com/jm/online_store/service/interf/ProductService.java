@@ -73,13 +73,9 @@ public interface ProductService {
 
     void deleteProductFromTrackedForLoggedInUser(long productId);
 
-    String findProductPictureNamesById(Long id);
+    void deleteProductPictureName(String id);
 
-    void deleteProductPictureNameById(Long id);
+    Long getCountPictureNameByPictureName(Long id);
 
-    Long countAllPictureProductById(Long id);
-
-    Long findProductIdByIdPicture(Long id);
-
-    List<Long> getAllPictureIdByProductId(Long productId);
+    Long getProductIdByPictureName(String name);
 }

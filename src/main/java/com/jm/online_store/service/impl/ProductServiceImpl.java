@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -160,15 +161,15 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Optional<Product> findProductById(Long productId) {
-        Product product = productRepository.findById(productId).get();
-        product.setProductPictureId(productRepository.findAllPictureIdByProductId(productId));
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setProductPictureShortNames(product.getProductPictureNames().stream().map(s -> s.replace(loadPictureFrom, "")).collect(Collectors.toList()));
         return Optional.of(product);
     }
 
     @Override
     public Product getProductById(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
-        product.setProductPictureId(productRepository.findAllPictureIdByProductId(productId));
+        product.setProductPictureShortNames(product.getProductPictureNames().stream().map(s -> s.replace(loadPictureFrom, "")).collect(Collectors.toList()));
         return product;
     }
 
@@ -580,7 +581,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
                         presentProduct.getProductPictureNames(),
-                        presentProduct.getProductPictureId(),
+                        presentProduct.getProductPictureShortNames(),
                         presentProduct.getAmount(),
                         presentProduct.isDeleted(),
                         productSet.contains(presentProduct)
@@ -598,7 +599,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
                         presentProduct.getProductPictureNames(),
-                        presentProduct.getProductPictureId(),
+                        presentProduct.getProductPictureShortNames(),
                         presentProduct.getAmount(),
                         presentProduct.isDeleted(),
                         false
@@ -726,49 +727,31 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Удаляет адресс изображения из БД по id
-     * @param id изображения
+     * @param name изображения
      */
     @Transactional
     @Override
-    public void deleteProductPictureNameById(Long id) {
-        productRepository.deleteProductPictureNameById(id);
+    public void deleteProductPictureName(String name) {
+        productRepository.deleteProductPictureName(name);
     }
+
     /**
-     * Считает колличество изображений в БД принадлежащее данному продукту
+     * Возвращает колличество картинок, принадлежащих продукту
      * @param id продукта
      */
     @Transactional
     @Override
-    public Long countAllPictureProductById(Long id) {
-        return productRepository.countAllPictureProductById(id);
+    public Long getCountPictureNameByPictureName(Long id) {
+        return productRepository.getCountPictureNameByPictureName(id);
     }
+
     /**
-     * Получает id продукта
-     * @param idPicture изображения
+     * Возвращает id продукта по имени картинки, принадлежащей данному продукту
+     * @param name имя картинки
      */
     @Transactional
     @Override
-    public Long findProductIdByIdPicture(Long idPicture){
-        return productRepository.findProductIdByIdPicture(idPicture);
-    }
-    /**
-     * Находит адресс изображения в БД по id
-     * @param id изображения
-     * @return String
-     */
-    @Transactional
-    @Override
-    public String findProductPictureNamesById(Long id){
-        return productRepository.findProductPictureNamesById(id);
-    }
-    /**
-     * возвращает все id изображений в БД принадлежащие данному продукту по id Продукта
-     * @param productId id продукта
-     * @return Long
-     */
-    @Transactional
-    @Override
-    public List<Long> getAllPictureIdByProductId(Long productId){
-        return productRepository.findAllPictureIdByProductId(productId);
+    public Long getProductIdByPictureName(String name) {
+        return productRepository.getProductIdByPictureName(name);
     }
 }

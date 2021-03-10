@@ -21,7 +21,7 @@ public class ProductDto {
     private Description description;
     private String productType;
     private List<String> productPictureNames;
-    private List<Long> productPictureId;
+    private List<String> productPictureShortNames;
     private Integer amount;
     private boolean deleted;
     private boolean isFavourite;
@@ -34,7 +34,7 @@ public class ProductDto {
         this.description = product.getDescriptions();
         this.productType = product.getProductType();
         this.productPictureNames = product.getProductPictureNames();
-        this.productPictureId = product.getProductPictureId();
+        this.productPictureShortNames = product.getProductPictureShortNames();
         this.amount = product.getAmount();
         this.deleted = product.isDeleted();
     }

@@ -222,17 +222,17 @@ function renderPictureDelete(product) {
     $('#idInputPictureModalDelete').val(product.id)
     $('#nameInputPictureModalDelete').val(product.product)
     let pictures = product.productPictureNames
-    let picturesId = product.productPictureId
+    let picturesShort = product.productPictureShortNames
     let table = $('#pictureViewForDelete')
     table.empty()
-    for (let i = 0; i<picturesId.length; i++) {
+    for (let i = 0; i<pictures.length; i++) {
         table.append(`<div class="col-7"> 
                     <img id="prodPict" src="${pictures[i]}"alt="your image"
                      class="rounded img-responsive mt-2 float-right" height="100" width="200">
                   </div> 
                   <div>
                     <button id="deletePictureButton" type="button"
-                     class="btn btn-danger delete-picture-button" data-th-accept="modal" value="${picturesId[i]}">Удалить картинку</button>
+                     class="btn btn-danger delete-picture-button" data-th-accept="modal" value="${picturesShort[i]}">Удалить картинку</button>
                   </div>`)
     }
     $('.delete-picture-button').click(deletePictureProduct)
@@ -244,10 +244,10 @@ function renderPictureDelete(product) {
  * Функция для удаления картинки выбранного продукта
  */
 function deletePictureProduct(event){
-    let id = (event.target.getAttribute("value"))
+    let picturesShort = (event.target.getAttribute("value"))
     $.ajax({
         type: 'DELETE',
-        url: '/api/product/picture/delete/' + id
+        url: '/api/product/picture/delete/' + picturesShort
     })
     $('#productPictureModalWindowDelete').modal("hide");
 }

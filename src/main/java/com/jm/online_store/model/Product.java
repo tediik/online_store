@@ -69,12 +69,10 @@ public class Product {
      */
     @ElementCollection
     @CollectionTable(name = "product_picture_names")
-    @GenericGenerator(name="myGenerator",strategy="sequence")
-    @CollectionId(columns=@Column(name="id"), type=@Type(type="long"), generator="myGenerator")
     private List<String> productPictureNames;
 
     @Transient
-    private List<Long> productPictureId;
+    private List<String> productPictureShortNames;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,

@@ -39,19 +39,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("FROM Product p order by p.rating DESC")
     List<Product> findAllOrderByRatingDesc();
 
-    @Query(value = "SELECT product_picture_names FROM product_picture_names n1 where n1.id =:id", nativeQuery = true)
-    String findProductPictureNamesById(Long id);
-
     @Modifying
-    @Query(value = "delete from product_picture_names p where p.id =:id", nativeQuery = true)
-    void deleteProductPictureNameById(Long id);
+    @Query(value = "delete from product_picture_names where product_picture_names.product_picture_names = :name", nativeQuery = true)
+    void deleteProductPictureName(String name);
 
-    @Query(value = "SELECT COUNT (product_picture_names)FROM product_picture_names WHERE product_id = :id", nativeQuery = true)
-    Long countAllPictureProductById(Long id);
+    @Query(value = "select count (product_picture_names.product_picture_names) from product_picture_names where product_id = :id", nativeQuery = true)
+    Long getCountPictureNameByPictureName(Long id);
 
-    @Query(value = "SELECT product_picture_names.product_id FROM product_picture_names WHERE product_picture_names.id = :idPicture", nativeQuery = true)
-    Long findProductIdByIdPicture(Long idPicture);
-
-    @Query(value = "SELECT id FROM product_picture_names  WHERE product_picture_names.product_id = :productId", nativeQuery = true)
-    List<Long> findAllPictureIdByProductId(Long productId);
+    @Query(value = "select product_id from product_picture_names where product_picture_names.product_picture_names = :name", nativeQuery = true)
+    Long getProductIdByPictureName(String name);
 }
