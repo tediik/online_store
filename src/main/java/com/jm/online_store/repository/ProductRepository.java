@@ -43,7 +43,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "delete from product_picture_names where product_picture_names.product_picture_names = :name", nativeQuery = true)
     void deleteProductPictureName(String name);
 
-    @Query(value = "select count (product_picture_names.product_picture_names) from product_picture_names where product_id = :id", nativeQuery = true)
+    @Query("select p.productPictureNames.size from Product p where p.id = ?1")
     Long getCountPictureNameByPictureName(Long id);
 
     @Query(value = "select product_id from product_picture_names where product_picture_names.product_picture_names = :name", nativeQuery = true)
