@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.dto.CategoriesDto;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -137,9 +137,9 @@ public class ProductCategoriesRestController {
     public ResponseEntity<ResponseDto<String>> deleteCategory(@PathVariable Long id) {
         return categoriesService.deleteCategory(id) ?
                 ResponseEntity.ok(new ResponseDto<>(true ,
-                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id))) :
+                String.format(Response.HAS_BEEN_DELETED.getText(), id))) :
                 ResponseEntity.ok(new ResponseDto<>(false,
-                String.format(ResponseOperation.HAS_NOT_BEEN_DELETED.getMessage(), id)));
+                String.format(Response.HAS_NOT_BEEN_DELETED.getText(), id)));
     }
 
     /**

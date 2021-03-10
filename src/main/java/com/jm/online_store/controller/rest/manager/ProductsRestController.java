@@ -1,7 +1,7 @@
     package com.jm.online_store.controller.rest.manager;
 
     import com.jm.online_store.enums.ExceptionEnums;
-    import com.jm.online_store.enums.ResponseOperation;
+    import com.jm.online_store.enums.Response;
     import com.jm.online_store.exception.constants.ExceptionConstants;
     import com.jm.online_store.model.Product;
     import com.jm.online_store.model.dto.ProductDto;
@@ -76,9 +76,9 @@
             } else if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()),"csv")) {
                 productService.importFromCSVFile(file.getOriginalFilename(), id);
             } else  {
-                return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.FAILED.getMessage()));
+                return ResponseEntity.ok(new ResponseDto<>(true, Response.FAILED.getText()));
             }
-            return ResponseEntity.ok(new ResponseDto<>(true , ResponseOperation.SUCCESS.getMessage() , ResponseOperation.NO_ERROR.getMessage()));
+            return ResponseEntity.ok(new ResponseDto<>(true , Response.SUCCESS.getText() , Response.NO_ERROR.getText()));
         }
 
         @PostMapping(value = "/uploadFile")
@@ -97,9 +97,9 @@
             } else if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()),"csv")) {
                 productService.importFromCSVFile(file.getOriginalFilename());
             } else {
-                return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.FAILED.getMessage()));
+                return ResponseEntity.ok(new ResponseDto<>(true, Response.FAILED.getText()));
             }
-            return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.SUCCESS.name(), ResponseOperation.NO_ERROR.getMessage()));
+            return ResponseEntity.ok(new ResponseDto<>(true, Response.SUCCESS.name(), Response.NO_ERROR.getText()));
         }
 
         /**
@@ -259,7 +259,7 @@
                 categoriesService.removeFromProduct(product, idOld);
                 categoriesService.addToProduct(product, idNew);
             }
-            return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.HAS_BEEN_UPDATED.getMessage()));
+            return ResponseEntity.ok(new ResponseDto<>(true, Response.HAS_BEEN_UPDATED.getText()));
         }
 
         /**
@@ -431,7 +431,7 @@
                 }
                 response.setHeader("Size", String.valueOf(products.size()));
                 productService.createXlsxDoc(products, categoryName).write(response.getOutputStream());
-                return ResponseEntity.ok(new ResponseDto(true, ResponseOperation.SUCCESS, ResponseOperation.NO_ERROR.getMessage()));
+                return ResponseEntity.ok(new ResponseDto(true, Response.SUCCESS, Response.NO_ERROR.getText()));
             } catch (NullPointerException | IOException e) {
                 return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.PRODUCTS.getText() + ExceptionConstants.NOT_FOUND), HttpStatus.NOT_FOUND);
             }

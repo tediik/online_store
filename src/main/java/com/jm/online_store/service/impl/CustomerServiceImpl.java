@@ -1,20 +1,19 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
-import com.jm.online_store.exception.EmailAlreadyExistsException;
-import com.jm.online_store.exception.InvalidEmailException;
-import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.CustomerServiceException;
+import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CustomerRepository;
-import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.ReviewService;
@@ -32,9 +31,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -46,42 +45,42 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CommentService commentService;
     private final ReviewService reviewService;
-    private final AddressService addressService;
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
      * @param customerReq переданный пользователь
      * @param address новый адрес для пользователя
-     * @throws UserNotFoundException вылетает, если пользователь не найден в БД
      */
     @Override
     @Transactional
-    public boolean addNewAddressForCustomer(Customer customerReq, Address address) {
-        Customer customer = findById(customerReq.getId()).orElseThrow(() ->
-                new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
-        Optional<Address> addressFromDB = addressService.findSameAddress(address);
-        if (addressFromDB.isPresent() && !customer.getUserAddresses().contains(addressFromDB.get())) {
-            Address addressToAdd = addressFromDB.get();
-            if (customer.getUserAddresses() != null) {
-                customer.getUserAddresses().add(addressToAdd);
-            } else {
-                customer.setUserAddresses(Collections.singleton(address));
-            }
-            updateCustomer(customer);
-            return true;
-        }
-        if (addressFromDB.isEmpty()) {
-            Address addressToAdd = addressService.addAddress(address);
-            if (customer.getUserAddresses() != null) {
-                customer.getUserAddresses().add(addressToAdd);
-            } else {
-                customer.setUserAddresses(Collections.singleton(address));
-            }
-            updateCustomer(customer);
+    public boolean addNewAddressForCustomer(Customer customerReq, Address addressReq) {
+        if (!customerAddressAlreadyExists(customerReq.getUserAddresses(), addressReq)) {
+            customerReq.getUserAddresses().add(addressReq);
+            customerRepository.save(customerReq);
             return true;
         }
         return false;
+    }
 
+    /**
+     * Метод проверяет существует ли переданный адрес у покупателя.
+     * если да - возвращает true
+     * @param addresses - сет адресов покутеля
+     * @param address - переданный адрес
+     * @return boolean
+     */
+    private boolean customerAddressAlreadyExists(Set<Address> addresses, Address address) {
+        for (Address tmp : addresses) {
+            if (tmp.getRegion().equals(address.getRegion()) &&
+                tmp.getCity().equals(address.getCity()) &&
+                tmp.getStreet().equals(address.getStreet()) &&
+                tmp.getBuilding().equals(address.getBuilding()) &&
+                tmp.getFlat().equals(address.getFlat()) &&
+                tmp.getZip().equals(address.getZip())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

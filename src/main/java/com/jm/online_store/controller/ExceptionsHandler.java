@@ -1,5 +1,6 @@
 package com.jm.online_store.controller;
 
+import com.jm.online_store.exception.AddressAlreadyExists;
 import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.AlreadyExists;
 import com.jm.online_store.exception.CategoriesNotFoundException;
@@ -62,6 +63,12 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(TopicCategoryAlreadyExists.class)
     public ResponseEntity<Object> handlerTopicCategoryAlreadyExistsException(TopicCategoryAlreadyExists ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AddressAlreadyExists.class)
+    public ResponseEntity<Object> handlerAddressAlreadyExistsException(AddressAlreadyExists ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }

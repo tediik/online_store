@@ -5,7 +5,7 @@ package com.jm.online_store.enums;
  * эндпоинтов.
  */
 
-public enum ResponseOperation {
+public enum Response {
 
     HAS_BEEN_DELETED("%s - has successfully deleted"),
     HAS_BEEN_SAVED("%s - has successfully saved"),
@@ -17,14 +17,14 @@ public enum ResponseOperation {
 
     private String message;
 
-    ResponseOperation() {
+    Response() {
     }
 
-    ResponseOperation(String message) {
+    Response(String message) {
         this.message = message;
     }
 
-    public String getMessage() {
+    public String getText() {
         return message;
     }
 

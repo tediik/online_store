@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -101,6 +101,6 @@ public class PictureProductController {
         product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg");
         productService.editProduct(product);
         return ResponseEntity.ok(new ResponseDto<>(true,
-                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id)));
+                String.format(Response.HAS_BEEN_DELETED.getText(), id)));
     }
 }

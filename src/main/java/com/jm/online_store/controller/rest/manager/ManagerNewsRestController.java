@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.NewsFilterDto;
@@ -199,6 +199,6 @@ public class ManagerNewsRestController {
     public ResponseEntity<ResponseDto<String>> deleteNewsById(@PathVariable Long id) {
         newsService.deleteById(id);
         return ResponseEntity.ok(new ResponseDto<>(true,
-                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id)));
+                String.format(Response.HAS_BEEN_DELETED.getText(), id)));
     }
 }

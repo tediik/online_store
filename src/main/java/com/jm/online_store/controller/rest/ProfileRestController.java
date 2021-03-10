@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -52,7 +52,7 @@ public class ProfileRestController {
             return new ResponseEntity<>(new ResponseDto<>(false, "Пользователь с таким email уже существует"), HttpStatus.BAD_REQUEST);
         } else {
             userService.changeUsersMail(user, newMail);
-            return new ResponseEntity<>(new ResponseDto<>(true, "На почту " + newMail + " было отправлено сообщение с подтверждением.", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(true, "На почту " + newMail + " было отправлено сообщение с подтверждением.", Response.NO_ERROR.getText()), HttpStatus.OK);
         }
     }
 
@@ -77,7 +77,7 @@ public class ProfileRestController {
             return new ResponseEntity<>(new ResponseDto<>(false, "Ошибка при изменении пароля."), HttpStatus.BAD_REQUEST);
         }
         log.info("Пароль для пользователя: {} успешно изменён.", user.getEmail());
-        return new ResponseEntity<>(new ResponseDto<>(true, "Изменения для пользователя с идентификатором: " + user.getId() + " были успешно добавлены. ", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Изменения для пользователя с идентификатором: " + user.getId() + " были успешно добавлены. ", Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 
     /**

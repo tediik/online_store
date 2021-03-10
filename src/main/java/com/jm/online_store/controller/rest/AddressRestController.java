@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
@@ -68,12 +69,14 @@ public class AddressRestController {
      */
     @PostMapping(value = "/addAddress")
     @ApiOperation(value = "adds address for current logged in user")
-    public ResponseEntity addAddressToCustomer(@RequestBody Address address) {
+    public ResponseEntity<ResponseDto<String>> addAddressToCustomer(@RequestBody Address address) {
         Customer customer = customerService.getCurrentLoggedInCustomer();
-        if (customerService.addNewAddressForCustomer(customer, address)) {
-            return new ResponseEntity<>(new ResponseDto<>(false, "Address is exist"), HttpStatus.BAD_REQUEST);
+        if (customer != null) {
+            if (customerService.addNewAddressForCustomer(customer, address)) {
+                return ResponseEntity.ok(new ResponseDto<>(true, "successfully added address", Response.NO_ERROR.getText()));
+            }
         }
-        return new ResponseEntity<>(new ResponseDto<>(true, address), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(false, "address already exists"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})

@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.StockDto;
@@ -179,7 +179,7 @@ public class ManagerStockRestController {
     public ResponseEntity<ResponseDto<String>> deleteStockById(@PathVariable Long id) {
         stockService.deleteStockById(id);
         return ResponseEntity.ok(new ResponseDto<>(true,
-                String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id, ResponseOperation.NO_ERROR.getMessage())));
+                String.format(Response.HAS_BEEN_DELETED.getText(), id, Response.NO_ERROR.getText())));
     }
 
     /**

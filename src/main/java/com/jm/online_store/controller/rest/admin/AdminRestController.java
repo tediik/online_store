@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest.admin;
 
 import com.jm.online_store.enums.ExceptionEnums;
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.CommonSettings;
@@ -193,6 +193,6 @@ public class AdminRestController {
     @PutMapping(value = "/editStoreName")
     public ResponseEntity<ResponseDto<String>> editStoreName(CommonSettings commonSettings){
         commonSettingsService.updateTextValue(commonSettings);
-        return new ResponseEntity<>(new ResponseDto<>(true, "Store name was changed", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Store name was changed", Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 }
