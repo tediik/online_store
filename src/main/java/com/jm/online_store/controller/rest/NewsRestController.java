@@ -35,7 +35,7 @@ public class NewsRestController {
 
     /**
      * Метод для получения полного списка новостей
-     * @return ResponseEntity(news) {@link ResponseEntity}
+     * @return ResponseEntity<List<NewsDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping("/all")
     @ApiOperation(value = "Get all news",
@@ -45,7 +45,7 @@ public class NewsRestController {
             @ApiResponse(code = 200, message = "News found")
     })
     public ResponseEntity<ResponseDto<List<NewsDto>>> newsPageRest() {
-        List<NewsDto> news = modelMapper.map(newsService.findAll(), listType);
+        List<NewsDto> news = modelMapper.map(newsService.getAllPublished(), listType);
         return ResponseEntity.ok(new ResponseDto<>(true, news));
     }
 
@@ -62,8 +62,8 @@ public class NewsRestController {
             @ApiResponse(code = 200, message = "News found"),
             @ApiResponse(code = 204, message = "There is no news with such id")
     })
-    public ResponseEntity<ResponseDto<Long>> newsDetails(@PathVariable Long id) {
-        newsService.findById(id);
-        return ResponseEntity.ok((new ResponseDto<>(true, id)));
+    public ResponseEntity<ResponseDto<NewsDto>> findNewsById(@PathVariable Long id) {
+        NewsDto news = modelMapper.map(newsService.findById(id), NewsDto.class);
+        return ResponseEntity.ok(new ResponseDto<>(true, news));
     }
 }

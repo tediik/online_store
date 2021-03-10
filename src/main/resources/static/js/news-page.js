@@ -11,10 +11,10 @@ $(function () {
  * Функция для получения списка новостей
  */
 async function showNews() {
-    listOfNews = await fetch("/api/news/all").then(response => response.json());
+    listOfNews = await fetch("/api/news/all").then(response => response.json())
     allNewsList = $('#allNewsList')
     allNewsList.empty();
-    for (key in listOfNews) {
+    for(key in listOfNews) {
         content =
             `
             <div class="alert alert-info mt-2">
