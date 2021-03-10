@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -54,7 +55,7 @@
             <div class="tab-content" id="nav-tabContent-p">
                 <div class="tab-pane fade show active" id="pills-home-profile" role="tabpanel"
                      aria-labelledby="nav-home-profile">
-                    <div form>
+                    <div>
                         <div class="container-fluid bg-light">
                             <div class="row p-3">
                                 <div class="col-4">
@@ -64,14 +65,14 @@
                                         <div>
                                             <img id="profilePic" alt="UserPhoto"
                                                  class="rounded-circle img-responsive mt-2"
-                                                 height="152"
-                                                 th:src="@{/uploads/images/{name}(name = ${user.getProfilePicture()})}"
+                                                 height="152" src=""
                                                  width="152"></div>
                                         <div class="imgButton">
                                             <button type="button" class="btn btn-link" data-toggle="modal"
                                                     data-target="#myModal"> Edit Profile Picture
                                             </button>
                                         </div>
+
                                         <!--Profile picture change modal-->
                                         <div class="modal" id="myModal">
                                             <div class="modal-dialog">
@@ -110,13 +111,12 @@
                                     </div>
                                     <!-- Image -->
 
-                                    <form th:action="@{/authority/profile}" th:object="${user}" th:value="${user.id}"
-                                          method="post" data-role="personal-info-form">
+                                    <form data-role="personal-info-form">
 
                                         <!-- ID hidden input -->
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="id_update">ID</label>
-                                            <input th:field="*{id}" type="text" class="form-control" id="id_update"
+                                            <input type="text" class="form-control" id="id_update"
                                                    name="id">
                                         </div>
                                         <!-- ID hidden input -->
@@ -124,7 +124,7 @@
                                         <!-- pass input -->
                                         <div class="form-group text-center font-weight-bold" hidden>
                                             <label class="input-row_label" for="password_update">Пароль</label>
-                                            <input th:field="*{password}" type="text" class="form-control"
+                                            <input type="text" class="form-control"
                                                    id="password_update" name="password">
                                         </div>
                                         <!-- pass input -->
@@ -132,7 +132,7 @@
                                         <!-- Name input -->
                                         <div class="form-group text-center font-weight-bold">
                                             <label class="input-row_label" for="first_name_update">Имя</label>
-                                            <input th:field="*{firstName}" type="text" class="form-control"
+                                            <input type="text" class="form-control"
                                                    id="first_name_update" name="firstName">
                                         </div>
                                         <!-- Name input -->
@@ -140,7 +140,7 @@
                                         <!-- lastName input -->
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="last_name_input">Фамилия</label>
-                                            <input th:field="*{lastName}" type="text" class="form-control"
+                                            <input type="text" class="form-control"
                                                    id="last_name_input" name="lastName">
                                         </div>
                                         <!-- lastName input -->
@@ -148,7 +148,7 @@
                                         <!-- email input -->
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="email_input">Email</label>
-                                            <input th:field="*{email}" type="text" class="form-control" id="email_input"
+                                            <input type="text" class="form-control" id="email_input"
                                                    name="email" readonly>
                                         </div>
                                         <!--  email input -->
@@ -167,13 +167,12 @@
                                         </div>
                                         <!-- buttons for change mail & pass  -->
 
-
                                         <!--birthday  -->
                                         <div class="form-group text-center font-weight-bold">
                                             <label for="date_birthday_input" class="col-xs-2 col-form-label">День
                                                 рождения</label>
                                             <div class="col-xs-10">
-                                                <input th:field="*{birthdayDate}" class="form-control"
+                                                <input class="form-control"
                                                        th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
                                                        type="date" id="date_birthday_input" name="birthdayDate">
                                             </div>
@@ -185,27 +184,34 @@
                                             <label for="gender_radio" class="text-center font-weight-bold">Пол</label>
                                             <div id="gender_radio">
                                                 <div class="custom-control custom-radio">
-                                                    <input th:field="*{userGender}" value="" type="radio" id="option1"
+                                                    <input value="" type="radio" id="userGenderNone"
                                                            name="genderRadio" class="custom-control-input">
-                                                    <label class="custom-control-label" for="option1">Не выбрано</label>
+                                                    <label class="custom-control-label" for="userGenderNone">Не
+                                                        выбрано</label>
                                                 </div>
                                                 <div class="custom-control custom-radio">
-                                                    <input th:field="*{userGender}" value="MAN" type="radio"
-                                                           id="option2" name="genderRadio" class="custom-control-input">
-                                                    <label class="custom-control-label" for="option2">Мужской</label>
+                                                    <input value="MAN" type="radio"
+                                                           id="userGenderMan" name="genderRadio"
+                                                           class="custom-control-input">
+                                                    <label class="custom-control-label"
+                                                           for="userGenderMan">Мужской</label>
                                                 </div>
                                                 <div class="custom-control custom-radio">
-                                                    <input th:field="*{userGender}" value="WOMAN" type="radio"
-                                                           id="option3" name="genderRadio" class="custom-control-input">
-                                                    <label class="custom-control-label" for="option3">Женский</label>
+                                                    <input value="WOMAN" type="radio"
+                                                           id="userGenderWoman" name="genderRadio"
+                                                           class="custom-control-input">
+                                                    <label class="custom-control-label"
+                                                           for="userGenderWoman">Женский</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <!--GENDER  -->
 
-                                        <!-- YELLOW BUTTON  сохрнаить -->
-                                        <button type="button" style="background-color: #ff8e05"
-                                                class="m-2 btn btn-success d-block mx-auto">Сохранить
+                                        <!-- YELLOW BUTTON  сохранить -->
+                                        <button type="submit" style="background-color: #ff8e05"
+                                                class="m-2 btn btn-success d-block mx-auto"
+                                                id="updateUserButton" onclick="updateUser()">
+                                            Сохранить
                                         </button>
                                         <!-- YELLOW BUTTON  -->
 
@@ -213,8 +219,7 @@
                                         <div class="m-2 text-center personal-info_register-container"
                                              style="background-color: #f9f9f9">
                                             Дата регистрации:
-                                            <a th:field="*{registerDate}" th:text="*{registerDate}"
-                                               class="personal-info_register-date font-weight-bold"
+                                            <a class="personal-info_register-date font-weight-bold"
                                                id="register_date"></a>
                                         </div>
                                         <!-- REGISTRATION DATE -->
@@ -222,19 +227,18 @@
                                     </form>
 
                                     <!-- Change EMAIL modal -->
-                                    <div id="openNewMailModal" class="modal">
+                                    <div id="openNewMailModal" class="modal fade">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h3 class="modal-title">Название</h3>
+                                                    <h3 class="modal-title">Изменение адреса электронной почты</h3>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
                                                         <span aria-hidden="true">x</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:action="@{/authority/changemail}" method="post"
-                                                          class="form-group">
+                                                    <form id="formChangeMail" class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="new_mail">Введите новый адрес электронной
                                                                 почты</label>
@@ -243,10 +247,16 @@
                                                                    name="newMail"
                                                                    class="form-control" required/>
                                                         </div>
-                                                        <button type="submit" class="btn btn-primary btn-sm btn-block">
-                                                            Подтвердить
-                                                        </button>
                                                     </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">
+                                                        Отмена
+                                                    </button>
+                                                    <button type="submit" id="buttonChangeMail" class="btn btn-primary">
+                                                        Подтвердить
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -254,28 +264,31 @@
                                     <!-- Change EMAIL modal -->
 
                                     <!-- Change PASS modal -->
-                                    <div id="openChangePassModal" class="modal">
+                                    <div id="openChangePassModal" class="modal fade">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h3 class="modal-title">Название</h3>
+                                                    <h3 class="modal-title">Изменение пароля</h3>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
                                                         <span aria-hidden="true">x</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:action="@{/authority/change-password}" method="post"
-                                                          class="form-group">
+                                                    <form class="form-group">
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="old_password">Старый пароль</label>
-                                                            <input type="password" id="old_password" name="oldPassword"
+                                                            <input type="password"
+                                                                   id="old_password"
+                                                                   name="oldPassword"
                                                                    autofocus="autofocus"
                                                                    class="form-control" required>
                                                         </div>
                                                         <div class="form-group text-center font-weight-bold">
                                                             <label for="new_password">Новый пароль</label>
-                                                            <input type="password" id="new_password" name="newPassword"
+                                                            <input type="password"
+                                                                   id="new_password"
+                                                                   name="newPassword"
                                                                    class="form-control" required/>
                                                             <small id="passwordHelpBlock" class="form-text text-muted">
                                                                 Your password must be 8-20 characters long, contain
@@ -283,11 +296,16 @@
                                                                 emoji.
                                                             </small>
                                                         </div>
-                                                        <button type="submit"
-                                                                class="btn btn-primary btn-sm btn-block">Сохранить
-                                                        </button>
                                                     </form>
-
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">
+                                                        Отмена
+                                                    </button>
+                                                    <button id="submitNewPassword" type="submit" class="btn btn-primary">
+                                                        Сохранить
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -309,6 +327,9 @@
         crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous"></script>
 
 

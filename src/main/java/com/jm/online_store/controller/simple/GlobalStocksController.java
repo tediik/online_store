@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.simple;
 
-import com.jm.online_store.model.Stock;
 import com.jm.online_store.service.impl.StockServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,8 +20,6 @@ public class GlobalStocksController {
         if (stockService.findStockById(id) == null) {
             return "redirect:/stocks";
         }
-        Stock stock = stockService.findStockById(id);
-        model.addAttribute("stock", stock);
         return "stock-global-page";
     }
 }

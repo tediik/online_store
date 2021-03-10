@@ -1,12 +1,12 @@
 /**
  * Declaration of global variables
  */
-let myHeaders = new Headers()
+let myStockHeaders = new Headers()
 let sharedStockApiUrl = "/api/manager/sharedStock"
 let stockApiUrl = "/api/manager/stock"
 let stockImgUrl = "../../uploads/images/stocks/"
-myHeaders.append('Content-type', 'application/json; charset=UTF-8')
-const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), number: 0, last: false};
+myStockHeaders.append('Content-type', 'application/json; charset=UTF-8')
+const lastStockPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), number: 0, last: false};
 
 $(document).ready(function () {
     handleSummernote()
@@ -35,7 +35,7 @@ $(document).ready(function () {
 });
 
 function yHandler() {
-    if (lastPage.last) {
+    if (lastStockPage.last) {
         return;
     }
     let stocksDiv = document.getElementById('stocksDiv');
@@ -99,10 +99,10 @@ function handleStockDivButtons(event) {
  * @param event
  */
 function defineFilterAndFetchList(event) {
-    lastPage.type = event.target.dataset.toggleId;
-    lastPage.currentDate = new Date().toLocaleDateString();
-    lastPage.number = 0;
-    lastPage.last = false;
+    lastStockPage.type = event.target.dataset.toggleId;
+    lastStockPage.currentDate = new Date().toLocaleDateString();
+    lastStockPage.number = 0;
+    lastStockPage.last = false;
     fetchStockList();
 }
 
@@ -111,10 +111,13 @@ function defineFilterAndFetchList(event) {
  */
 function fetchStockList() {
     $.ajax(stockApiUrl + '/page', {
-        headers: myHeaders,
+        headers: myStockHeaders,
         async: false,
-        data: {page: lastPage.number, type: lastPage.type, currentDate: lastPage.currentDate},
-        success: renderStockList,
+        data: {page: lastStockPage.number, type: lastStockPage.type, currentDate: lastStockPage.currentDate},
+        success: function (data) {
+            let stockData = data.data;
+            renderStockList(stockData)
+        },
         error: printStocksNotFoundMessage
     })
 }
@@ -156,7 +159,7 @@ function handleDeleteButtonClick(event) {
         console.log(`${stockId} will be deleted`)
         fetch(stockApiUrl + `/${stockId}`, {
             method: 'DELETE',
-            headers: myHeaders
+            headers: myStockHeaders
         }).then(function (response) {
             if (response.status === 200) {
                 successActionMainPage("#mainWindowAlert", "Акция успешно удалена", "success")
@@ -221,7 +224,7 @@ function handleSaveChangesButton(event, file_name_stockImg) {
     function fetchStock(stock, method) {
         fetch(stockApiUrl, {
             method: method,
-            headers: myHeaders,
+            headers: myStockHeaders,
             body: JSON.stringify(stock)
         }).then(function (response) {
             if (response.status === 200) {
@@ -265,8 +268,10 @@ function handleEditButtonClick(event) {
 
     fetch(stockApiUrl + `/${stockId}`, {
         method: 'GET',
-        headers: myHeaders
-    }).then(response => response.json()).then(stock => renderModalWindowEdit(stock))
+        headers: myStockHeaders
+    }).then(response => response.json())
+        .then(stock => stock.data)
+        .then(stock => renderModalWindowEdit(stock))
 }
 
 /**
@@ -307,17 +312,19 @@ function stockModalClearFields() {
  * @param data
  */
 function renderStockList(data) {
-    lastPage.number = data.number;
-    lastPage.last = data.last;
+    lastStockPage.number = data.number;
+    lastStockPage.last = data.last;
     let stockDiv = $("#stocksDiv");
     if (data.number === 0) {
         $(stockDiv).empty();
     }
     let stocks = data.content;
     $.ajax(sharedStockApiUrl, {
-        headers: myHeaders,
+        headers: myStockHeaders,
         async: false,
-        success: render,
+        success: function(data) {
+            let stockData = data.data;
+            render(stockData)},
         error: function (error) {
             console.log(error);
         }
@@ -411,7 +418,7 @@ function handleSummernote() {
  * @param focusField - field to focus
  */
 function invalidModalField(text, focusField) {
-    document.querySelector('#modal-alert').innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    document.querySelector('#stock-modal-alert').innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                     <strong>${text}</strong>
                                                                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                          <span aria-hidden="true">&times;</span>

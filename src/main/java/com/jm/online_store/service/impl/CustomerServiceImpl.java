@@ -201,6 +201,17 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Получение дня для рассылки.
+     * @param customer клиент.
+     * @return dayOfWeekForStockSend день для рассылки
+     */
+    @Override
+    @Transactional
+    public DayOfWeekForStockSend getCustomerDayOfWeekForStockSend(Customer customer) {
+        return customer.getDayOfWeekForStockSend();
+    }
+
+    /**
      * Обновление дня для рассылки.
      * @param customer клиент.
      * @param dayOfWeekForStockSend день недели.

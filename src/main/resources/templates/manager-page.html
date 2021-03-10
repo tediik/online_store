@@ -1,60 +1,1874 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>News Management</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="/static/css/headers.css" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/customer.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/manager-page.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.fias.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/stocks-style.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/headers.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/products.css" >
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="/static/js/jquery/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="/static/js/jquery.fias.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/report.css">
+    <!--    datepicker css-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <!-- Подключаем библиотеку summernote bs-4 -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
+    <title>Manager page</title>
+
 </head>
 <body>
 <header th:insert="blocks/cabinet-header :: header"></header>
 
 <div class="container-fluid">
-    <div class="row content">
-        <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager">Главная</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/news">Новости</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/stocks">Акции</a>
-            </div>
-            <div id="user-profile" class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
-                 aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/profile">Профиль</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/products">Товары</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/characteristics"> Характеристики</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/rating">Рейтинг товаров</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/shops">Адреса магазинов</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/reports">Отчёты</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/mailing">Рассылки</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/feedback">Обратная связь</a>
-            </div>
-            <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist" aria-orientation="vertical">
-                <a class="btn btn-outline-primary" href="/manager/settings">Настройки</a>
+    <div class="row">
+        <div class="col-md-2">
+            <ul class="nav nav-pills flex-column" id="managerSideNavigation">
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link active" data-toggle="tab" href="#managerMain" role="tab">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#managerNews" role="tab">Управление Новостями</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#stocks" role="tab">Управление Акциями</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#managerProfile" role="tab"> Профиль </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#managerProducts" role="tab"> Товары </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#characteristic" role="tab"> Характеристики </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#managerRating" role="tab"> Рейтинг товаров </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#managerShops" role="tab"> Адреса магазинов </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#reports" role="tab"> Отчёты </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#mailing" role="tab"> Рассылки </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#managerFeedback" role="tab"> Обратная связь </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary mt-2 nav-link" data-toggle="tab" href="#settings" role="tab"> Настройки </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
+        <div class="col-md-10 text-left">
+            <div class="tab-content" id="v-pills-tabContent">
+
+                <!--ВКЛАДКА ГЛАВНАЯ  -->
+                <div class="tab-pane fade" id="managerMain" role="tabpanel" aria-labelledby="managerMain-tab">
+                    <h3>Главная пользователя</h3>
+                </div>
+                <!--ВКЛАДКА ГЛАВНАЯ   -->
+                <!--ВКЛАДКА УПРАВЛЕНИЕ НОВОСТЯМИ  -->
+                <div class="tab-pane fade" id="managerNews" role="tabpanel" aria-labelledby="managerNews-tab">
+                    <div class="container-fluid" style="padding-right: 0px; padding-left: 0px">
+                        <div class="row content">
+                            <div class="col-md-2" style="padding-right: 0px; padding-left: 0px">
+                                <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                                     aria-orientation="vertical"
+                                     id="leftNavBar">
+                                    <button class="btn btn-outline-primary"
+                                            data-toggle="modal" data-target="#editNewsModal"
+                                            data-toggle-id="addNewNews">Добавить новость
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-sm-8 tab-pane">
+                                <br>
+                                <h1 class="text-center">Управление новостями</h1>
+                                <div id="infoMessageMainPage">
+                                    <!--place where info message appears-->
+                                </div>
+                                <ul class="nav nav-tabs" id="upperNavTab">
+                                    <!-- Первая вкладка (активная) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="nav-link_allNews" data-toggle="tab"
+                                           data-toggle-id="allNews"
+                                           href="#tab_all_news">Все</a>
+                                    </li>
+                                    <!-- Вторая вкладка -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="nav-link_publishedNews" data-toggle="tab"
+                                           href="#tab_published_news" data-toggle-id="publishedNews">Опубликованные</a>
+                                    </li>
+                                    <!-- Третья вкладка -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="nav-link_unpublishedNews" data-toggle="tab"
+                                           href="#tab_unpublished_news" data-toggle-id="unpublishedNews">Не
+                                            опубликованные</a>
+                                    </li>
+                                    <!-- Четвертая вкладка -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="nav-link_archivedNews" data-toggle="tab"
+                                           href="#tab_archived_news" data-toggle-id="archivedNews">Архивные</a>
+                                    </li>
+                                </ul>
+                                <!-- Блоки с контентом -->
+                                <div class="tab-content mb-5" id="newsTabContent">
+                                    <!-- Первый блок (он отображается по умолчанию, т.к. имеет классы show и active) -->
+                                    <div class="tab-pane fade show active" id="tab_all_news">
+                                        <div id="allNews">
+                                        </div>
+                                    </div>
+                                    <!-- Второй блок -->
+                                    <div class="tab-pane fade" id="tab_published_news">
+                                        <div id="publishedNews">
+                                        </div>
+                                    </div>
+                                    <!-- Третий блок -->
+                                    <div class="tab-pane fade" id="tab_unpublished_news">
+                                        <div id="unpublishedNews">
+                                        </div>
+                                    </div>
+                                    <!--Четвертый блок-->
+                                    <div class="tab-pane fade" id="tab_archived_news">
+                                        <div id="archivedNews">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!---------------------- News Modal window ------------------->
+                    <div class="modal fade" id="editNewsModal" data-backdrop="static" tabindex="-1"
+                         role="dialog" aria-labelledby="editNewsFormModal" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalWindowTitle">Редактировать новость</h5>
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="modal-alert">
+                                    <!--alert messages-->
+                                </div>
+                                <form id="editNewsFormModal">
+                                    <div class="modal-body">
+                                        <div class="container-fluid col-sm-8">
+                                            <form enctype="multipart/form-data" id="editModalNews" method="post">
+                                                <div class="form-group">
+                                                    <div class="text-center" id="idModalDiv">
+                                                        <label for="idNewsUpdate"
+                                                               class="col-form-label col-sm-8 text-center">Id</label>
+                                                        <input type="text"
+                                                               class="form-control"
+                                                               id="idNewsUpdate" readonly>
+                                                    </div>
+                                                    <label for="titleNewsUpdate">Заголовок</label>
+                                                    <input type="text" id="titleNewsUpdate" name="title"
+                                                           placeholder="Введите название"
+                                                           class="form-control" required>
+                                                    <br>
+                                                    <label for="anonsNewsUpdate">Анонс</label>
+                                                    <input type="text" id="anonsNewsUpdate" name="anons"
+                                                           placeholder="Введите краткое описание" class="form-control"
+                                                           required>
+                                                    <br>
+                                                    <label for="fullTextUpdate">Полный текст</label>
+                                                    <textarea id="fullTextUpdate" name="fullText"
+                                                              placeholder="Введите полный текст"
+                                                              class="form-control" required></textarea>
+                                                    <br>
+                                                    <div class="form-check" id="archiveCheckboxDiv">
+                                                        <input class="form-check-input" type="checkbox"
+                                                               id="archiveCheckbox">
+                                                        <label class="form-check-label" for="archiveCheckbox"
+                                                               id="archiveCheckboxLabel">
+                                                            Поместить новость в архив?
+                                                        </label>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="col-xs-10" id="datePublishInputDiv">
+                                                        <label for="postingDateUpdate">Введите дату публикации:</label>
+                                                        <input class="form-control" type="date" id="postingDateUpdate"
+                                                               style="width: 25%">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div id="modalFooterEditSave" class="modal-footer actions">
+                                    <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal" data-toggle-id="close">
+                                        Закрыть
+                                    </button>
+                                    <button id="editSave" type="submit" data-toggle-id="save" class="btn btn-primary">
+                                        Обновить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!---------------------- End News Modal window ------------------->
+                </div>
+                <!--ВКЛАДКА УПРАВЛЕНИЕ НОВОСТЯМИ   -->
+                <!--ВКЛАДКА УПРАВЛЕНИЕ АКЦИЯМИ  -->
+                <div class="tab-pane fade" id="stocks" role="tabpanel" aria-labelledby="stocks-tab">
+                        <h2 class="text-center"><span class="underline">Управление акциями </span></h2>
+                        <div id="mainWindowAlert">
+                        </div>
+                        <div id="cont" class="row no-gutters pb-4">
+                            <div class="col-md-3 pr-3" id="leftNavigationBar">
+                                <br>
+                                <div class="container filters min-height: 100vh pb-4">
+                                    <h4 class="text-center p-1">Фильтры</h4>
+                                    <div id="stockFilters">
+                                        <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                                             aria-orientation="vertical">
+                                            <button data-toggle-id="ALL" type="button" class="btn btn-outline-primary"
+                                                    id="filterAllStocks">Все акции
+                                            </button>
+                                        </div>
+                                        <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                                             aria-orientation="vertical">
+                                            <button data-toggle-id="CURRENT" type="button"
+                                                    class="btn btn-outline-primary" id="filterCurrentStocks">Текущие
+                                                акции
+                                            </button>
+                                        </div>
+                                        <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                                             aria-orientation="vertical">
+                                            <button data-toggle-id="FUTURE" type="button"
+                                                    class="btn btn-outline-primary" id="filterFutureStocks">Планируемые
+                                                акции
+                                            </button>
+                                        </div>
+                                        <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                                             aria-orientation="vertical">
+                                            <button data-toggle-id="PAST" type="button" class="btn btn-outline-primary"
+                                                    id="filterPastStocks">Завершенные акции
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h4 class="text-center p-1">Сортировка</h4>
+                                    <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                                         aria-orientation="vertical">
+                                        <button type="button" class="btn btn-outline-primary" id="sortDown"
+                                                data-sort="sortDown">Рейтинг по
+                                            убыванию
+                                        </button>
+                                    </div>
+                                    <div class="nav flex-column nav-pills mt-2 container-fluid" role="tablist"
+                                         aria-orientation="vertical">
+                                        <button type="button" class="btn btn-outline-primary" id="sortUp"
+                                                data-sort="sortUp">Рейтинг по
+                                            возрастанию
+                                        </button>
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
+                                    <form>
+                                        <button type="button" class="btn btn-primary" data-toggle='modal'
+                                                data-target='#stockModal' id="newStockButton">
+                                            Новая акция
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <!--START of Stocks-->
+                                <br>
+                                <div class="stocksWrapper container-fluid p-3">
+                                    <ul class="allStocks" id="stocksDiv">
+                                        <!-- Здесь загрузка акций в JS -->
+                                    </ul>
+                                </div>
+                                <!--End of Stocks-->
+                                <!---------------------- Stock Modal  ------------------->
+                                <div class="modal fade" id="stockModal" data-backdrop="static" tabindex="-1"
+                                     role="dialog"
+                                     aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Редактировать акцию</h5>
+                                                <div id="stock-modal-alert">
+
+                                                </div>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <form id="stockEditModal">
+                                                <div class="modal-body">
+                                                    <div class="container-fluid col-sm-8">
+                                                        <form enctype="multipart/form-data" method="post">
+                                                            <div class="form-group">
+                                                                <div class="text-center" id="stockIdDiv">
+                                                                    <label for="stockId"
+                                                                           class="col-form-label col-sm-8 text-center">Id</label>
+                                                                    <input type="text"
+                                                                           class="form-control"
+                                                                           id="stockId"
+                                                                           readonly>
+                                                                </div>
+                                                                <div class="field2">
+                                                                    <label for="stockTitle">Заголовок акции:</label>
+                                                                    <input id="stockTitle" type="text" name="title"
+                                                                           placeholder="title"
+                                                                           class="form-control"
+                                                                           required="required">
+                                                                </div>
+                                                                <label for="stockText">Описание акции:</label>
+                                                                <textarea name="comment" id="stockText" cols="45"
+                                                                          rows="6"
+                                                                          class="form-control"
+                                                                          required="required"></textarea>
+                                                                <div id="datepicker_edit"></div>
+                                                                <label for="startDate">Дата начала</label>
+                                                                <input id="startDate" name="date" required/>
+                                                                <br>
+                                                                <label for="endDate">Дата окончания</label>
+                                                                <input id="endDate" name="date"/>
+                                                                <br>
+                                                                <form>
+                                                                    <div>
+                                                                        <label for="fileImgInput">Изображение</label>
+                                                                        <input id="fileImgInput" type="file"
+                                                                               accept="image/*"
+                                                                               class="form-control">
+                                                                        <input type="hidden" name="fileImgInputHidden"
+                                                                               id="fileImgInputHidden" value="">
+                                                                    </div>
+                                                                </form>
+                                                                <br>
+                                                                <div class="form-check" id="publishCheckboxDiv">
+                                                                    <input class="form-check-label" type="checkbox"
+                                                                           id="published"
+                                                                           onchange="chekboxPublished(this)"
+                                                                           name="stocksPublished">
+                                                                    <label class="form-check-label" for="published"
+                                                                           id="publishedCheckboxLabel">
+                                                                        Опубликовать на главной странице
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer actions2" id="modalFooter">
+
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal" data-toggle-id="close">
+                                                        Close
+                                                    </button>
+
+                                                    <button id="editSaveStock" type="submit"
+                                                            class="btn btn-primary" data-toggle-id="submit"
+                                                            onclick="submit()">
+                                                        Save changes
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!---------------------- End of Edit Stock Modal ------------------->
+                            </div>
+                        </div>
+                </div>
+                <!--ВКЛАДКА УПРАВЛЕНИЕ АКЦИЯМИ   -->
+                <!--ВКЛАДКА ПРОФИЛЬ   -->
+                <div class="tab-pane fade" id="managerProfile" role="tabpanel" aria-labelledby="managerProfile-tab">
+                    <div class="col-md-10"
+                         style="background: #edeef0">
+                        <!--Профиль-->
+                        <div class="tab-pane" id="Profile" role="tabpanel">
+                            <div th:insert="blocks/profile-admin-manager-service :: profile"></div>
+                        </div>
+                        <!--Профиль-->
+                    </div>
+                </div>
+                <!--ВКЛАДКА ПРОФИЛЬ  -->
+                <!--ВКЛАДКА ТОВАРЫ  -->
+                <div class="tab-pane fade" id="managerProducts" role="tabpanel" aria-labelledby="managerProducts-tab">
+                    <div class="modal fade" id="productModalWindow" tabindex="-1" role="dialog"
+                         aria-labelledby="EditProductModalWindows"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="Edit product">Edit product</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="alert-modal-div"></div>
+                                <div class="modal-body" id="modalBody">
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <div class="form-group" id="editFormContainer">
+                                                <label for="idInputModal"><strong>Id</strong></label>
+                                                <input type="text" class="form-control" id="idInputModal" readonly>
+                                                <label for="productInputModal"><strong>Наименование
+                                                    товара</strong></label>
+                                                <input type="text" class="form-control" id="productInputModal" required>
+                                                <label for="productPriceInputModal"><strong>Цена</strong></label>
+                                                <input type="number" class="form-control" id="productPriceInputModal">
+                                                <label for="productAmountInputModal"><strong>Количество</strong></label>
+                                                <input type="number" class="form-control" id="productAmountInputModal">
+                                                <label for="productCategoryValueModal"><strong>Категория
+                                                    текущая</strong></label>
+                                                <input type="text" class="form-control mb-4"
+                                                       id="productCategoryValueModal" readonly>
+                                                <div id="jqxTreeModal"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="dismissButton" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close
+                                    </button>
+                                    <button id="acceptChangeButton" type="button" class="btn" data-th-accept="modal">
+                                        Save changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Модалка для изменения и удаления продукта-->
+                    <!--Модалка для изменения картинки продукта-->
+                    <div class="modal fade" id="productPictureModalWindow" tabindex="-1" role="dialog"
+                         aria-labelledby="EditProductPictureModalWindows"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="Edit product Picture">Edit product Picture</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="alert-modal-div-Picture"></div>
+                                <div class="modal-body" id="modalBodyPicture">
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <div class="form-group" id="editPictureFormContainer">
+                                                <label for="idInputPictureModal"><strong>Id</strong></label>
+                                                <input type="text" class="form-control" id="idInputPictureModal"
+                                                       readonly>
+                                                <label for="productPictureFile"><strong>Добавить картинку</strong>
+                                                    <img id="prodPict" src="#" alt="your image"
+                                                         class="rounded-circle img-responsive mt-2 float-right"
+                                                         height="82" width="82"/>
+                                                </label>
+                                                <input type="file" class="form-control mb-4" id="productPictureFile"
+                                                       readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div>
+                                        <button id="DeletePictureButton" type="button" class="btn btn-danger"
+                                                data-th-accept="modal">Удалить картинку
+                                        </button>
+                                    </div>
+                                    <div class="acceptButtons">
+                                        <button id="dismissPictureModalButton" type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close
+                                        </button>
+                                        <button id="acceptEditPictureButton" type="button" class="btn"
+                                                data-th-accept="modal">Применить
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Модалка для изменения картинки продукта-->
+                    <!--Модалка для добавления картинки нового продукта-->
+                    <div class="modal fade" id="addPictureForNewProductModalWindow" tabindex="-1" role="dialog"
+                         aria-labelledby="AddProductPictureModalWindows"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="Add product Picture">Add Picture</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="alert-modal-div-NewPicture"></div>
+                                <div class="modal-body" id="modalBodyForNewPicture">
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <div class="form-group" id="addPictureFormContainer">
+                                                <label for="idAddPictureModal"><strong>Id</strong></label>
+                                                <input type="text" class="form-control" id="idAddPictureModal" readonly>
+                                                <label for="addedPictureFile"><strong>Добавить картинку</strong>
+                                                    <img id="pictForNewProduct" src="#" alt="your image"
+                                                         class="rounded-circle img-responsive mt-2 float-right"
+                                                         height="82" width="82"/>
+                                                </label>
+                                                <input type="file" class="form-control mb-4" id="addedPictureFile"
+                                                       readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="dismissAddPictureModalButton" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close
+                                    </button>
+                                    <button id="acceptAddPictureButton" type="button"
+                                            class="btn btn-success edit-product" data-th-accept="modal">Применить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Модалка для добавления картинки нового продукта-->
+                    <div class="wrapper flex-grow-1 row">
+                        <div class="container col-12">
+                            <!--Display logged in user's name-->
+                            <nav class="navbar navbar-dark bg-dark">
+                                <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
+                                <a class="navbar-brand"
+                                   th:each="authority : ${#authentication.getAuthorities()}"
+                                   th:text="${authority.getAuthority()} + ' '"></a>
+                                <a th:href="@{/manager}" class="btn btn-primary ml-auto">Кабинет менеджера</a>
+                                <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
+                            </nav>
+                            <div class="card">
+                                <h5 class="card-header">Товары</h5>
+                                <div id="alert-div"></div>
+                                <div class="card-body">
+                                    <nav>
+                                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
+                                               href="#nav-home" role="tab" aria-controls="nav-home"
+                                               aria-selected="true">Продукты</a>
+                                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
+                                               href="#nav-profile" role="tab" aria-controls="nav-profile"
+                                               aria-selected="false">Add product</a>
+                                            <a class="nav-item nav-link" id="nav-products-categories-tab"
+                                               data-toggle="tab" href="#nav-products-categories" role="tab"
+                                               aria-controls="nav-products-categories" aria-selected="false">Категории
+                                                товаров</a>
+                                        </div>
+                                    </nav>
+                                    <!-- Модалка добавления из файла -->
+                                    <div class="modal fade" id="newProductImportModal" data-backdrop="static"
+                                         tabindex="-1"
+                                         role="dialog"
+                                         aria-labelledby="exampleModalLabel"
+                                         aria-hidden="true">
+
+                                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="productImportModalLabel">Добавить
+                                                        товар</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="container-fluid col-sm-8">
+                                                        <form id="productImportModal" name="productImportModal"
+                                                              enctype="multipart/form-data" method="post">
+                                                            <label for="file">Выберите файл:</label>
+                                                            <input id="file" type="file" name="file">
+                                                            <br/>
+                                                            <br/>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <div id="jqxTreeHere1"></div>
+                                                <div class="modal-footer actions">
+                                                    <button type="button" id="btnClose" class="btn btn-secondary"
+                                                            data-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <button id="inputFileSubmit" type="submit" data-dismiss="modal"
+                                                            class="btn btn-primary">
+                                                        Загрузить данные из файла
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content" id="nav-tabContent">
+                                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                             aria-labelledby="nav-home-tab">
+                                            <form class="checkbox mt-2 mb-2 ">
+                                                <!-- for keeping checkbox checked when page loads use checked="checked" --->
+                                                <label class="checkText" for="deletedCheckbox">Спрятать удаленные
+                                                    товары</label>
+                                                <input id="deletedCheckbox" type="checkbox" name="check"
+                                                       onclick="toggle(this.form.check);" checked="checked">
+                                                <br>
+                                            </form>
+                                            <!--                main tab -->
+                                            <table class="table table-active table-striped" id="products-table"
+                                                   style="background-color: white">
+
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav-profile" role="tabpanel"
+                                             aria-labelledby="nav-profile-tab">
+                                            <!--                Secondary user addition form-->
+                                            <h3>Добавить товар</h3>
+                                            <form id="addForm">
+                                                <div class="panel panel-default" id="new-user-form">
+                                                    <div class="panel-body">
+                                                        <div id="add-productName-form-group" class="form-group">
+                                                            <label for="addProduct">Наименование:</label>
+                                                            <input type="email" id="addProduct" name="product"
+                                                                   placeholder="Наименование"
+                                                                   class="form-control">
+                                                        </div>
+                                                        <div class="form-group addPriceDiv">
+                                                            <label for="addPrice">Цена:</label>
+                                                            <input type="number" id="addPrice" name="price"
+                                                                   placeholder="Цена"
+                                                                   class="form-control">
+                                                        </div>
+                                                        <div id="add-email-form-group" class="form-group">
+                                                            <label for="addAmount">Количество:</label>
+                                                            <input type="number" id="addAmount" name="amount"
+                                                                   placeholder="Количество"
+                                                                   class="form-control">
+                                                        </div>
+                                                        <div class="input-group mb-4">
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="Поиск по категориям"
+                                                                   id="searchForCategories">
+                                                        </div>
+                                                        <div id="jqxTreeHere"></div>
+                                                        <div class="panel-body" id="addCharacteristicForm">
+                                                        </div>
+                                                        <div class="mt-4">
+                                                            <button id="addBtn" type="button"
+                                                                    class=" btn btn-outline-success btn-md btn"
+                                                                    data-toggle="modal"
+                                                                    data-target="#addPictureForNewProductModalWindow">
+                                                                Добавить новый товар
+                                                            </button>
+                                                            <button type="button" class="btn btn-outline-primary"
+                                                                    data-toggle='modal'
+                                                                    data-target='#newProductImportModal'>Загрузить
+                                                                товары из файла
+                                                            </button>
+                                                            <button onclick="renderCharacteristicsFields()"
+                                                                    id="renderCharacteristic"
+                                                                    type="button"
+                                                                    class=" btn btn-outline-info btn-md btn">
+                                                                Задать характеристики
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!--                    Начала слоя отображения категорий -->
+                                        <div class="tab-pane fade" id="nav-products-categories" role="tabpanel"
+                                             aria-labelledby="nav-products-categories-tab">
+                                            <h2>Управление категориями товаров</h2>
+                                            <button type="button" class="btn btn-outline-primary my-2"
+                                                    data-toggle="modal"
+                                                    data-target="#addNewMainCategoryModal" data-backdrop="static">
+                                                Добавить корневую
+                                                категорию
+                                            </button>
+                                            <div id="jqxTree"></div>
+                                            <button type="button" class="btn btn-outline-success my-2"
+                                                    data-toggle="modal" id="jqxbutton"
+                                                    data-target="#magicButtonModal" data-backdrop="static">Нажмите для
+                                                выбора действия
+                                            </button>
+                                            <div class="modal fade" id="addNewMainCategoryModal" tabindex="-1"
+                                                 role="dialog"
+                                                 aria-labelledby="addNewMainCategoryModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-sm">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="addNewMainCategoryModalLabel">
+                                                                Название корневой
+                                                                категории:</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form id="addProductCategoryForm">
+                                                                <div class="form-group">
+                                                                    <label for="addNewMainCategory"></label>
+                                                                    <input type="text" class="form-control"
+                                                                           name="category"
+                                                                           id="addNewMainCategory">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                                    data-dismiss="modal">
+                                                                Закрыть
+                                                            </button>
+                                                            <button type="button" class="btn btn-success edit-button"
+                                                                    data-toggle="modal" id="addMainCategoryButton"
+                                                                    data-dismiss="modal">
+                                                                Добавить
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="magicButtonModal" tabindex="-1" role="dialog"
+                                                 aria-labelledby="magicButtonModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="magicButtonModalLabel"></h5>
+                                                        </div>
+                                                        <div class="modal-body" id="magicButtonModalBody"></div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                    data-dismiss="modal">
+                                                                Отменить
+                                                            </button>
+                                                            <div id="deleteSubCategoryButtonDiv"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!--                    Конец слоя отображения категорий -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--ВКЛАДКА ТОВАРЫ   -->
+                <!--ВКЛАДКА ХАРАКТЕРИСТИКИ  -->
+                <div class="tab-pane fade" id="characteristic" role="tabpanel" aria-labelledby="characteristic-tab">
+                    <div class="modal fade" id="characteristicModalWindow" tabindex="-1" role="dialog"
+                         aria-labelledby="EditCharacteristicModalWindows"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="Edit characteristic">Изменить характеристику</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="characteristic-alert-modal-div"></div>
+                                <div class="modal-body" id="characteristic-modalBody">
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <div class="form-group" id="characteristic-editFormContainer">
+                                                <label for="characteristicIdInputModal"><strong>Id</strong></label>
+                                                <input type="text" class="form-control" id="characteristicIdInputModal"
+                                                       readonly>
+                                                <label for="characteristicInputModal"><strong>Наименование
+                                                    характеристики</strong></label>
+                                                <input type="text" class="form-control" id="characteristicInputModal"
+                                                       required>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="characteristicDismissButton" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Закрыть
+                                    </button>
+                                    <button id="characteristicAcceptButton" type="button" class="btn"
+                                            data-th-accept="modal">Изменить характеристику
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrapper flex-grow-1 row">
+                        <div class="container col-12">
+                            <nav class="navbar navbar-dark bg-dark">
+                                <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
+                                <a class="navbar-brand"
+                                   th:each="authority : ${#authentication.getAuthorities()}"
+                                   th:text="${authority.getAuthority()} + ' '"></a>
+                                <a th:href="@{/manager}" class="btn btn-primary ml-auto">Кабинет менеджера</a>
+                                <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
+                            </nav>
+                            <div class="card">
+                                <h5 class="card-header">Управление характеристиками</h5>
+                                <div id="characteristicModalWindow-alert-div"></div>
+                                <div class="card-body">
+                                    <nav>
+                                        <div class="nav nav-tabs" id="characteristicModalWindow-nav-tab" role="tablist">
+                                            <a class="nav-item nav-link active" id="nav-characteristics-tab"
+                                               data-toggle="tab"
+                                               href="#nav-characteristics"
+                                               role="tab" aria-controls="nav-characteristics" aria-selected="true">Все
+                                                характеристики</a>
+                                            <a class="nav-item nav-link" id="nav-addCharacteristics-tab"
+                                               data-toggle="tab"
+                                               href="#nav-addCharacteristics"
+                                               role="tab" aria-controls="nav-addCharacteristics" aria-selected="false">Добавление
+                                                харакетеристик</a>
+                                        </div>
+                                    </nav>
+
+                                    <div class="tab-content" id="characteristicModalWindow-nav-tabContent">
+                                        <div class="tab-pane fade show active" id="nav-characteristics" role="tabpanel"
+                                             aria-labelledby="nav-characteristics-tab">
+                                            <div class="form-group col-3 mt-3">
+                                                <select class="form-control form-control-sm" id="filterCategory">
+                                                    <option value="default">Все категории</option>
+                                                    <div class="dropdown-divider"></div>
+                                                </select>
+                                            </div>
+                                            <!--                main tab -->
+                                            <table class="table table-active table-striped bg-white"
+                                                   id="characteristic-table">
+
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav-addCharacteristics" role="tabpanel"
+                                             aria-labelledby="nav-addCharacteristics-tab">
+                                            <!--                Secondary user addition form-->
+
+                                            <div class="container">
+                                                <div class="row mt-5">
+                                                    <div class="col-sm">
+                                                        <h4>Добавление новой харакетристики</h4>
+                                                        <form id="characteristicModalWindow-addForm">
+                                                            <div class="panel panel-default"
+                                                                 id="new-characteristic-form">
+                                                                <div class="panel-body">
+                                                                    <div class="form-group col-6">
+                                                                        <div id="add-characteristicName-form-group"
+                                                                             class="form-group">
+                                                                            <label for="addCharacteristicName">Наименование:</label>
+                                                                            <input type="email"
+                                                                                   id="addCharacteristicName"
+                                                                                   name="characteristicName"
+                                                                                   placeholder="Наименование"
+                                                                                   class="form-control">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="mt-4 ml-3">
+                                                                        <button id="characteristicModalWindow-addBtn"
+                                                                                type="button"
+                                                                                class=" btn btn-outline-success btn-md btn">
+                                                                            Добавить новую характеристику
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col-sm">
+                                                        <h4>Добавление характеристик к выбранной категории</h4>
+                                                        <select class="form-control form-control-sm"
+                                                                id="filterCategoryToAdd">
+                                                            <option value="default">Выберите категорию</option>
+                                                            <div class="dropdown-divider"></div>
+                                                        </select>
+                                                        <div class="form-group">
+                                                            <label>Характеристики, которых нет в выбранной
+                                                                категории:</label>
+                                                            <select id="addCharacteristics" name="characteristics"
+                                                                    class="form-control"
+                                                                    multiple="multiple" size="15">
+                                                            </select>
+                                                            <div class="mt-4"></div>
+                                                            <button id="addCharacteristicsToCategory" type="button"
+                                                                    class=" btn btn-outline-success btn-md btn"
+                                                                    onclick="handleAcceptAddCharacteristicsToCategoryButton()">
+                                                                Добавить характеристики
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--ВКЛАДКА ХАРАКТЕРИСТИКИ   -->
+                <!--ВКЛАДКА РЕЙТИНГ ТОВАРОВ  -->
+                <div class="tab-pane fade" id="managerRating" role="tabpanel" aria-labelledby="managerRating-tab">
+                    <div class="wrapper flex-grow-1 row">
+                        <div class="container col-12">
+                            <!--Display logged in user's name-->
+                            <nav class="navbar navbar-dark bg-dark">
+                                <a class="navbar-brand font-weight-bold" sec:authentication="name"></a>
+                                <a class="navbar-brand"
+                                   th:each="authority : ${#authentication.getAuthorities()}"
+                                   th:text="${authority.getAuthority()} + ' '"></a>
+                                <a th:href="@{/manager}" class="btn btn-primary ml-auto">Кабинет менеджера</a>
+                                <a th:href="@{/logout}" class="btn btn-warning ml-auto">Logout</a>
+                            </nav>
+                            <div class="card">
+                                <h5 class="card-header">Товары</h5>
+                                <div id="rating-alert-div"></div>
+                                <div class="card-body">
+                                    <nav>
+                                        <div class="nav nav-tabs" id="rating-nav-tab" role="tablist">
+                                            <a class="nav-item nav-link active" id="rating-nav-home-tab"
+                                               data-toggle="tab" href="#nav-home"
+                                               role="tab" aria-controls="nav-home" aria-selected="true">Рейтинг
+                                                товаров</a>
+
+                                            <div class="form-group">
+                                                <select class="form-control form-control-sm" id="ratingFilterCategory">
+                                                    <option value="default">Все категории</option>
+                                                    <div class="dropdown-divider"></div>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <select class="form-control form-control-sm" id="filterRating">
+                                                    <option value="ascOrder">По возрастанию рейтинга</option>
+                                                    <!--<div class="dropdown-divider"></div>-->
+                                                    <option value="descOrder">По убыванию рейтинга</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-outline-primary"
+                                                        data-toggle='modal'
+                                                        data-target='#newReportGenerationModal'>Сформировать отчет
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                    <!--Модалка для выгрузки отчета-->
+                                    <div class="modal fade" id="newReportGenerationModal" data-backdrop="static"
+                                         tabindex="-1"
+                                         role="dialog"
+                                         aria-labelledby="exampleModalLabel"
+                                         aria-hidden="true">
+
+                                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="ratingProductImportModalLabel">Выбор
+                                                        количества товаров</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="container-fluid col-sm-8">
+                                                        <form id="ratingProductImportModal" name="productImportModal"
+                                                              enctype="multipart/form-data" method="post">
+                                                            <label for="addNumber">Количество товаров:</label>
+                                                            <input id="addNumber" type="number" name="number">
+                                                            <br/>
+                                                            <br/>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer actions">
+                                                    <button type="button" id="ratingBtnClose" class="btn btn-secondary"
+                                                            data-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <button onclick="createReport()" type="submit" data-dismiss="modal"
+                                                            class="btn btn-primary">
+                                                        Сформировать отчет
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="rating-nav-tabContent">
+                                        <div class="tab-pane fade show active" id="rating-nav-home" role="tabpanel"
+                                             aria-labelledby="nav-home-tab">
+                                            <!--                main tab -->
+                                            <table class="table table-active table-striped bg-white"
+                                                   id="rating-products-table">
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--ВКЛАДКА РЕЙТИНГ ТОВАРОВ   -->
+                <!--ВКЛАДКА АДРЕСА МАГАЗИНОВ  -->
+                <div class="tab-pane fade" id="managerShops" role="tabpanel" aria-labelledby="managerShops-tab">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 bg-light">
+                                <div class="tab-content">
+                                    <!--Admin-->
+                                    <div class="tab-pane fade show active" id="Admin" role="tabpanel" aria-labelledby="profile-tab">
+                                        <!--Display logged in user's name-->
+                                        <nav class="navbar navbar-dark bg-dark">
+                                            <ul class="navbar-nav">
+                                                <li class="navbar-text">
+                                                    <span sec:authentication="name"></span> with roles:
+                                                    <th:block th:each="authority, iter:${#authentication.getAuthorities()}">
+                                        <span th:if="${authority.getAuthority().startsWith('ROLE_')}"
+                                              th:text="${authority.getAuthority().replaceFirst('ROLE_', '')}"></span>
+                                                        <th:block th:if="${!iter.last}">,</th:block>
+                                                    </th:block>
+                                                </li>
+                                            </ul>
+                                        </nav>
+
+                                        <!--Display logged in user's name-->
+
+                                        <ul class="nav nav-tabs" id="AdminTabs" role="tablist">
+                                            <li class="nav-item" role="presentation" id="UsersTableNavTabs">
+                                                <a class="nav-link active" id="usersTable-tab" data-toggle="tab" role="tab"
+                                                   aria-controls="usersTable" aria-selected="true" href="#addressTable">Таблица адресов</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a class="nav-link" id="newUser-tab" data-toggle="tab" role="tab"
+                                                   aria-controls="newUser" aria-selected="false" href="#newAddress">Добавление адреса</a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content" id="AdminTabsContent">
+                                            <!-- Users table -->
+                                            <div class="tab-pane fade show active" id="addressTable" role="tabpanel" aria-labelledby="addressTable-tab">
+                                                <div class="card">
+                                                    <div id="all-address-table">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                            <tr>
+                                                                <th scope="col">ID</th>
+                                                                <th scope="col">Регион</th>
+                                                                <th scope="col">Город</th>
+                                                                <th scope="col">Улица</th>
+                                                                <th scope="col">Дом</th>
+                                                                <th scope="col">Изменить</th>
+                                                                <th scope="col">Удалить</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="table"> </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <!--New address-->
+                                            <div class="tab-pane fade" id="newAddress" role="tabpanel" aria-labelledby="newUser-tab">
+                                                <div class="card">
+                                                    <form class="form-horizontal mx-auto font-weight-bold" id="new-form">
+                                                        <br>
+                                                        <div class="form-group row">
+                                                            <label class="text-center mx-auto" for="regionNew">Регион</label>
+                                                            <input type="text" class="form-control" id="regionNew">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="text-center mx-auto" for="cityNew">Город</label>
+                                                            <input type="text" class="form-control" id="cityNew">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="text-center mx-auto" for="streetNew">Улица</label>
+                                                            <input type="text" class="form-control" id="streetNew">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="text-center mx-auto" for="buildingNew">Дом</label>
+                                                            <input type="text" class="form-control" id="buildingNew">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <button class="btn btn-success mx-auto" type="button" id="buttonInputNewSubmit">Добавить адрес</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Admin-->
+                                    </div>
+                                </div>
+                                <!--наполнение справа-->
+                            </div>
+                        </div>
+
+                        <!-- Modal Edit -->
+                        <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold" id="editAddressModalLabel">Изменение адреса</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-horizontal text-center mx-auto font-weight-bold" role="form" id="edit-form">
+                                            <div class="form-group">
+                                                <label class="control-label" for="idEdit">ID</label>
+                                                <input type="text" class="form-control" id="idEdit" readonly/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="regionEdit">Регион</label>
+                                                <input type="text" class="form-control" id="regionEdit"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="cityEdit">Город</label>
+                                                <input type="text" class="form-control" id="cityEdit"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="streetEdit">Улица</label>
+                                                <input type="text" class="form-control" id="streetEdit"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="buildingEdit">Дом</label>
+                                                <input type="text" class="form-control" id="buildingEdit"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                        <button type="button" class="btn btn-primary" id="buttonEditSubmit">Изменить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Modal Delete -->
+                        <div class="modal fade" id="deleteAddressModal" tabindex="-1" role="dialog"
+                             aria-labelledby="deleteAddressModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold" id="deleteUserModalLabel">Удаление адреса</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-horizontal text-center mx-auto font-weight-bold" role="form" id="delete-form">
+                                            <div class="form-group">
+                                                <label class="control-label" for="idDelete">ID</label>
+                                                <input type="text" class="form-control" id="idDelete" disabled='disabled'/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="regionDelete">Регион</label>
+                                                <input type="text" class="form-control" id="regionDelete" disabled='disabled'/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="cityDelete">Город</label>
+                                                <input type="text" class="form-control" id="cityDelete" disabled='disabled'/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="streetDelete">Улица</label>
+                                                <input type="text" class="form-control" id="streetDelete" disabled='disabled'/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="buildingDelete">Дом</label>
+                                                <input type="text" class="form-control" id="buildingDelete" disabled='disabled'/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                        <button type="submit" id="buttonDeleteSubmit" class="btn btn-danger">Удалить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--ВКЛАДКА АДРЕСА МАГАЗИНОВ  -->
+                <!--ВКЛАДКА ОТЧЕТЫ  -->
+                <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+                    <div class="col-sm-8 text-left">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#nav-sales-report">Отчет по продажам</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="nav-sales-report">
+                                <br>
+                                <h5>Выбирите промежуток времени для формирования отчета:</h5>
+                                <div id="managerSalesReportRange"
+                                     style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 40%">
+                                    <i class="fa fa-calendar"></i>&nbsp;
+                                    <span><i class="fa fa-caret-down"></i></span>
+                                </div>
+                                <hr>
+                                <div id="infoMessageDiv">
+
+                                </div>
+                                <table class="table table_sort" style="visibility: hidden" id="salesReportTable">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Логин(email)</th>
+                                        <th scope="col">Имя</th>
+                                        <th scope="col">Дата заказа</th>
+                                        <th scope="col">Общее количество</th>
+                                        <th scope="col">Список товаров в заказе(кол-во)</th>
+                                        <th scope="col">Сумма заказа</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="salesTableBody">
+
+                                    </tbody>
+                                </table>
+                                <button type="button" id="exportCsvButton" class="btn btn-primary" style="visibility: hidden">
+                                    Выгрузить в csv
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--ВКЛАДКА ОТЧЕТЫ   -->
+                <!--ВКЛАДКА РАССЫЛКИ  -->
+                <div class="tab-pane fade" id="mailing" role="tabpanel" aria-labelledby="mailing-tab">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="mailing-nav-home-tab" data-toggle="tab" href="#nav-distribution"
+                                   role="tab" aria-controls="nav-home" aria-selected="true">E-mail рассылка</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="mailing-nav-profile-tab" data-toggle="tab" href="#nav-priceChange" role="tab"
+                                   aria-controls="nav-profile" aria-selected="false">Снижение цен</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-new1-tab" data-toggle="tab" href="#nav-sendConfirmationTokenToResetPassword"
+                                   role="tab" aria-controls="nav-profile" aria-selected="true">Сброс пароля</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-new2-tab" data-toggle="tab" href="#nav-regNewAccount"
+                                   role="tab" aria-controls="nav-profile" aria-selected="true">Регистрация нового акаунта</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-new3-tab" data-toggle="tab" href="#nav-changeUsersMail"
+                                   role="tab" aria-controls="nav-profile" aria-selected="true">Изменение eMail</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-new4-tab" data-toggle="tab" href="#nav-changeUsersPass"
+                                   role="tab" aria-controls="nav-profile" aria-selected="true">Изменение пароля</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-new5-tab" data-toggle="tab" href="#nav-activateUser"
+                                   role="tab" aria-controls="nav-profile" aria-selected="true">Активация пользователя</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-new6-tab" data-toggle="tab" href="#nav-subscribeConfirmTemplate"
+                                   role="tab" aria-controls="nav-profile" aria-selected="true">Подтверждение подписки</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="nav-new7-tab" data-toggle="tab" href="#nav-restorePassword"
+                                   role="tab" aria-controls="nav-profile" aria-selected="true">Генерация нового временного пароля</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#description" aria-selected="false">Подписки</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="nav-distribution" role="tabpanel"
+                                 aria-labelledby="nav-home-tab">
+                                <br>
+                                <form id="distributionSettingsForm">
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" id="emailDistributionCheckbox">
+                                        <label class="form-check-label" for="emailDistributionCheckbox">Включить рассылку акций на
+                                            почту</label>
+                                    </div>
+                                    <div class="form-group" id="distributionTimeDiv">
+                                        <label for="distributionTimeInput">Выберите время для рассылки</label>
+                                        <input class="form-control" type="time" id="distributionTimeInput" style="width: 12%">
+                                    </div>
+                                    <button class="btn btn-primary" id="saveSettingsChanges">Сохранить</button>
+                                </form>
+                                <hr>
+                                <form id="emailTemplateEditForm">
+                                    <div class="form-group">
+                                        <div class="form-col">
+                                            <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                                рассылки</label>
+                                            <textarea id="editTemplateSummernote"></textarea>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary" id="saveTemplateChanges">Сохранить шаблон</button>
+                                </form>
+                                <hr>
+                                <h2>Важная информация!</h2>
+                                <ul>
+                                    <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                                    <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
+                                    <li>@@stockList@@ - вместо этого тега в письме подставляется List действующих и будущих акций
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="nav-priceChange" role="tabpanel" aria-labelledby="nav-2-tab">
+                                <form id="priceChangeTemplateEditForm">
+                                    <div class="form-group">
+                                        <div class="form-col">
+                                            <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                                рассылки при изменнеии цены</label>
+                                            <textarea id="editPriceChangeTemplateSummernote"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <h2>Важная информация!</h2>
+                                <ul>
+                                    <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                                    <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
+                                    <li>@@oldPrice@@ - вместо этого тега в письме подставится старая цена на товар</li>
+                                    <li>@@newPrice@@ - вместо этого тега в письме подставится новая цена на товар</li>
+                                    <li>@@product@@ - вместо этого тега в письме подставится название товара</li>
+                                </ul>
+                                <button class="btn btn-primary" id="savePriceChangeTemplateChanges">Сохранить шаблон</button>
+                            </div>
+                            <!--Таба для шаблона рассылки sendConfirmationTokenToResetPassword-->
+                            <div class="tab-pane fade" id="nav-sendConfirmationTokenToResetPassword" role="tabpanel" aria-labelledby="nav-3-tab">
+                                <form id="sendConfirmationTokenToResetPasswordTemplateEditForm">
+                                    <div class="form-group">
+                                        <div class="form-col">
+                                            <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                                рассылки при запросе на изменение пароля</label>
+                                            <textarea id="sendConfirmationTokenToResetPasswordTemplateSummernote"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <h2>Важная информация!</h2>
+                                <ul>
+                                    <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                                    <li>@@user@@ - вместо этого тега в письме подставляется user.firstName</li>
+                                    <li>@@url@@ - вместо этого тэга в письме подставится urlActivate </li>
+                                    <li>@@confirmationToken@@ - вместо этого тэга в письме подставится confirmationToken.getConfirmationToken() </li>
+                                </ul>
+                                <button class="btn btn-primary" id="saveSendConfirmationTokenToResetPasswordTemplateChanges">Сохранить шаблон</button>
+                            </div>
+                            <!--Таба для шаблона рассылки regNewAccount-->
+                            <div class="tab-pane fade" id="nav-regNewAccount" role="tabpanel" aria-labelledby="nav-4-tab">
+                                <form id="regNewAccount">
+                                    <div class="form-group">
+                                        <div class="form-col">
+                                            <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                                рассылки при запросе на регистрацию нового аккаунта</label>
+                                            <textarea id="regNewAccountTemplateSummernote"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <h2>Важная информация!</h2>
+                                <ul>
+                                    <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                                    <li>@@userEmail@@ - вместо этого тега в письме подставляется user.getEmail() либо String email</li>
+                                    <li>@@url@@ - вместо этого тэга в письме подставится urlActivate </li>
+                                    <li>@@confirmationToken@@ - вместо этого тэга в письме подставится confirmationToken.getConfirmationToken() </li>
+                                </ul>
+                                <button class="btn btn-primary" id="saveRegNewAccountTemplateChanges">Сохранить шаблон</button>
+                            </div>
+                            <!--Таба для шаблона рассылки changeUsersMail-->
+                            <div class="tab-pane fade" id="nav-changeUsersMail" role="tabpanel" aria-labelledby="nav-5-tab">
+                                <form id="changeUsersMail">
+                                    <div class="form-group">
+                                        <div class="form-col">
+                                            <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                                рассылки при запросе на изменения емэйла</label>
+                                            <textarea id="changeUsersMailTemplateSummernote"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <h2>Важная информация!</h2>
+                                <ul>
+                                    <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                                    <li>@@user@@ - вместо этого тега в письме подставляется user.getFirstName()</li>
+                                    <li>@@url@@ - вместо этого тэга в письме подставится urlActivate </li>
+                                    <li>@@confirmationToken@@ - вместо этого тэга в письме подставится confirmationToken.getConfirmationToken() </li>
+                                </ul>
+                                <button class="btn btn-primary" id="saveChangeUsersMailTemplateChanges">Сохранить шаблон</button>
+                            </div>
+                            <!--Таба для шаблона рассылки changeUsersPass-->
+                            <div class="tab-pane fade" id="nav-changeUsersPass" role="tabpanel" aria-labelledby="nav-6-tab">
+                                <form id="changeUsersPass">
+                                    <div class="form-group">
+                                        <div class="form-col">
+                                            <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                                рассылки при запросе на изменения пароля</label>
+                                            <textarea id="changeUsersPassTemplateSummernote"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <h2>Важная информация!</h2>
+                                <ul>
+                                    <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                                    <li>@@user@@ - вместо этого тега в письме подставляется user.getFirstName()</li>
+                                </ul>
+                                <button class="btn btn-primary" id="saveChangeUsersPassTemplateChanges">Сохранить шаблон</button>
+                            </div>
+                            <div class="tab-pane fade" id="nav-activateUser" role="tabpanel" aria-labelledby="nav-7-tab">
+                                <form id="activateUser">
+                                    <div class="form-group">
+                                        <div class="form-col">
+                                            <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                                рассылки при активации юзера</label>
+                                            <textarea id="activateUserTemplateSummernote"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <h2>Важная информация!</h2>
+                                <ul>
+                                    <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                                    <li>@@user@@ - вместо этого тега в письме подставляется customer.getEmail()</li>
+                                    <li>@@password@@ - вместо этого тега в письме подставляется confirmationToken.getUserPassword()</li>
+                                </ul>
+                                <button class="btn btn-primary" id="saveChangeActivateUserTemplateChanges">Сохранить шаблон</button>
+                            </div>
+                            <!--Таба для subscribeConfirmationTemplate-->
+                            <div class="tab-pane fade" id="nav-subscribeConfirmTemplate" role="tabpanel" aria-labelledby="nav-8-tab">
+                                <form id="subscribeConfirmTemplate">
+                                    <div class="form-group">
+                                        <div class="form-col">
+                                            <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                                рассылки при подписке</label>
+                                            <textarea id="subscribeConfirmTemplateSummernote"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <h2>Важная информация!</h2>
+                                <ul>
+                                    <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                                    <li>@@user@@ - вместо этого тега в письме подставляется userName</li>
+                                </ul>
+                                <button class="btn btn-primary" id="saveSubscribeConfirmTemplateChanges">Сохранить шаблон</button>
+                            </div>
+                            <!--Таба для шаблона рассылки restore_password-->
+                            <div class="tab-pane fade" id="nav-restorePassword" role="tabpanel" aria-labelledby="nav-9-tab">
+                                <form id="restorePassword">
+                                    <div class="form-group">
+                                        <div class="form-col">
+                                            <label for="editTemplateSummernote" class="font-weight-bold">Редактирование шаблона
+                                                рассылки при генерации нового временного пароля</label>
+                                            <textarea id="restorePasswordTemplateSummernote"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <h2>Важная информация!</h2>
+                                <ul>
+                                    <p><strong>Для корректной генерации письма надо использовать теги:</strong></p>
+                                    <li>@@user@@ - вместо этого тега в письме подставляется user.getFirstName</li>
+                                    <li>@@newPassword@@ - вместо этого тэга в письме подставится newPass</li>
+                                </ul>
+                                <button class="btn btn-primary" id="saveRestorePasswordTemplateChanges">Сохранить шаблон</button>
+                            </div>
+                            <!--Таба для просмотра подписчиков и построения графика-->
+                            <div class="tab-pane fade" id="description">
+                                <div id="chart-div" style="display: none">
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong>Не удалось построить график за выбранный период!</strong>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="chartcontainer" style="width: 50% ; height: 60%">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                                Выберите период для построения графика:
+                                <br>
+                                <input id="date_range" readonly>
+                                <br>
+                                <label class="col-xs-2 col-form-label">Выберите день недели</label>
+                                <br>
+                                <select id="date_range2" class="form-control" onchange="onChangeDataInput()" style="width: 15%">
+                                    <option value="MONDAY" selected>Monday</option>
+                                    <option value="TUESDAY">Tuesday</option>
+                                    <option value="WEDNESDAY">Wednesday</option>
+                                    <option value="THURSDAY">Thursday</option>
+                                    <option value="FRIDAY">Friday</option>
+                                    <option value="SATURDAY">Saturday</option>
+                                    <option value="SUNDAY">Sunday</option>
+                                </select>
+                                <br>
+                                <input type="text" class="form-control" placeholder="Поиск по подписчикам" id="searchForSubscribers">
+                                <div id="success-div" style="display: none">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <strong>Подписка успешно отменена!</strong>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="mailing-alert-div" style="display: none">
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong>Не удалось отменить подписку!</strong>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style="background-color: white; padding: 20px; border: 1px solid #DDE1E4;">
+
+                                    <table class="table table-striped" id="users-table">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <!--ВКЛАДКА РАССЫЛКИ   -->
+                <!--ВКЛАДКА ОБРАТНАЯ СВЯЗЬ  -->
+                <div class="tamanagerb-pane fade" id="managerFeedback" role="tabpanel"
+                     aria-labelledby="managerFeedback-tab">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!--навигация слева-->
+                            <div class="col-md-2">
+                                <ul class="nav nav-pills flex-column">
+                                    <li class="nav-item">
+                                        <a id="nav-link-feedbackManager" class="btn btn-outline-primary"
+                                           data-toggle="tab" aria-orientation="vertical" href="#feedbackManager">Обратная
+                                            связь</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--конец навигации слева-->
+                            <div class="tab-pane fade" id="feedbackManager" role="tabpanel">
+                                <ul class="nav nav-tabs" id="navbarFeedbackManager">
+                                    <!-- Первая вкладка обращения в работе -->
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="nav-link_in_progress_feedback" data-toggle="tab"
+                                           data-toggle-id="inProgressFeedback" href="#tab_in_progress_feedback">В
+                                            работе</a>
+                                    </li>
+                                    <!-- Вторая вкладка отложенные обращения-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="nav-link_later_feedback" data-toggle="tab"
+                                           data-toggle-id="laterFeedback" href="#tab_later_feedback">Отложенные</a>
+                                    </li>
+                                    <!-- Третья вкладка завершенные обращения-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="nav-link_resolved_feedback" data-toggle="tab"
+                                           data-toggle-id="resolvedFeedback"
+                                           href="#tab_resolved_feedback">Завершенные</a>
+                                    </li>
+                                </ul>
+
+                                <!-- Блоки с контентом -->
+                                <div class="tab-content mb-5" id="feedbackTabContent">
+                                    <!-- Первый блок -->
+                                    <div class="tab-pane fade show active" id="tab_in_progress_feedback">
+                                        <div id="in_progress_feedback">
+                                        </div>
+                                    </div>
+                                    <!-- Второй блок -->
+                                    <div class="tab-pane fade" id="tab_later_feedback">
+                                        <div id="later_feedback">
+                                        </div>
+                                    </div>
+                                    <!-- Третий блок -->
+                                    <div class="tab-pane fade" id="tab_resolved_feedback">
+                                        <div id="resolved_feedback">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--ВКЛАДКА ОБРАТНАЯ СВЯЗЬ   -->
+                <!--ВКЛАДКА НАСТРОЙКИ  -->
+                <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                    <nav>
+                        <div class="nav nav-tabs" id="settings-nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-contact-tab" data-toggle="tab"
+                               href="#priceListCreate"
+                               role="tab"
+                               aria-controls="nav-contact" aria-selected="true">Ежедневный прайс</a>
+                            <a class="nav-item nav-link" id="nav-categories-and-topics-tab" data-toggle="tab"
+                               href="#nav-categories-and-topics" role="tab"
+                               aria-controls="nav-categories-and-topics" aria-selected="false">Обратная связь</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="settings-nav-tabContent">
+                        <div class="tab-pane fade show active" id="priceListCreate" role="tabpanel"
+                             aria-labelledby="nav-3-tab">
+                            <form id="priceListCreateTimeChange">
+                                <div class="form-group" id="priceListCreateTimeChangeHere">
+                                    <label for="priceTimeInput">Выберите время создания прайс-листа</label>
+                                    <input class="form-control" type="time" id="priceTimeInput" style="width: 10%">
+                                </div>
+                                <button class="btn btn-primary" id="savePriceTimeChanges">Сохранить</button>
+                            </form>
+                        </div>
+                        <!--  Раздел для редактирования категорий и тем -->
+                        <div class="tab-pane fade" id="nav-categories-and-topics" role="tabpanel"
+                             aria-labelledby="nav-categories-and-topics-tab">
+                            <h1 class="font-weight mt-3 pb-1">Здесь вы можете редактировать категории и темы</h1>
+                            <!-- Навигация для категорий и тем-->
+                            <nav>
+                                <div class="nav nav-tabs" id="actual-and-archives-categories-tab" role="tablist">
+                                    <a class="nav-link active" id="nav-actual-categories-tab" data-toggle="tab"
+                                       href="#nav-actual-categories" role="tab" aria-controls="nav-actual-categories"
+                                       aria-selected="true">Категории</a>
+                                    <a class="nav-link" id="nav-archive-categories-tab" data-toggle="tab"
+                                       href="#nav-archive-categories" role="tab" aria-controls="nav-archive-categories"
+                                       aria-selected="false">Архив</a>
+                                </div>
+                            </nav>
+                            <!-- Конец навигация для категорий и тем -->
+                            <!-- Области контроля навигация для категорий и тем -->
+                            <div class="tab-content" id="actual-and-archives-categories-tabContent">
+                                <!-- Вкладка акуальные категории -->
+                                <div class="tab-pane fade show active" id="nav-actual-categories" role="tabpanel"
+                                     aria-labelledby="nav-actual-categories-tab">
+                                    <!-- Акордеон актуальных категорий -->
+                                    <div class="accordion" id="accordionCategories">
+                                        <div class="card">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#addNewCategoryModal">
+                                                Добавить новую категорию
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- Конец акордеона актуальных категорий -->
+                                </div>
+                                <!-- Конец вкладки акуальные категории -->
+                                <!-- Вкладка архивные категории -->
+                                <div class="tab-pane fade" id="nav-archive-categories" role="tabpanel"
+                                     aria-labelledby="nav-archive-categories-tab">
+                                    <div class="accordion" id="accordionCategoriesArchive"></div>
+                                </div>
+                                <!-- Конец вкладки архивные категории -->
+                            </div>
+                            <!-- Конец области контроля навигация для категорий и тем-->
+
+                            <!-- Модальное окно для добавления категории -->
+                            <div class="modal fade" id="addNewCategoryModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="addNewCategoryModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addNewCategoryModalLabel">Введите название
+                                                категории</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="addCategoryForm">
+                                                <div class="form-group">
+                                                    <label for="addNewCategory"></label>
+                                                    <input type="text" class="form-control" name="category"
+                                                           id="addNewCategory">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
+                                                Закрыть
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-sm" id="addCategoryButton">
+                                                Добавить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Конец модального окна для добавления категории -->
+                            <!-- Модальное окно для изменения категории -->
+                            <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editCategoryModalLabel">Введите новое
+                                                назавание категории</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="editCategoryForm">
+                                                <div class="form-group">
+                                                    <label for="editCategoryId"></label>
+                                                    <input type="number" class="form-control" name="id"
+                                                           id="editCategoryId" readonly hidden>
+                                                    <label for="editCategoryName"></label>
+                                                    <input type="text" class="form-control" name="categoryName"
+                                                           id="editCategoryName">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
+                                                Закрыть
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-sm"
+                                                    id="editCategoryButton">
+                                                Изменить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Конец модального окна для изменения категории -->
+                            <!-- Модальное окно для добавления темы -->
+                            <div class="modal fade" id="addNewTopicModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="addNewTopicModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addNewTopicModalLabel">Введите название
+                                                темы</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="addTopicForm">
+                                                <div class="form-group">
+                                                    <label for="addNewTopic"
+                                                           class="font-weight-normal"></label>
+                                                    <input type="text" class="form-control" name="topic"
+                                                           id="addNewTopic">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
+                                                Закрыть
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-sm" id="addTopicButton">
+                                                Добавить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Конец модального окна для добавления темы -->
+                            <!-- Модальное окно для редактирования темы -->
+                            <div class="modal fade" id="editTopicModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="editTopicModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editTopicModalLabel">Введите новое
+                                                назавание темы</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="editTopicForm">
+                                                <div class="form-group">
+                                                    <label for="editTopicId"></label>
+                                                    <input type="number" class="form-control" name="id"
+                                                           id="editTopicId" readonly hidden>
+                                                    <label for="editTopicName"></label>
+                                                    <input type="text" class="form-control" name="topicName"
+                                                           id="editTopicName">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
+                                                Закрыть
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">
+                                                Изменить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Конец модального окна для редактирования темы -->
+                        </div>
+                        <!--  Конец раздела для редактирования категорий и тем -->
+                    </div>
+                </div>
+                <!--ВКЛАДКА НАСТРОЙКИ   -->
             </div>
         </div>
-        <div class="col-sm-8 text-left"></div>
+        <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
     </div>
 </div>
-<script src="../static/js/search-button.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"
+        integrity="sha512-sR3EKGp4SG8zs7B0MEUxDeq8rw9wsuGVYNfbbO/GLCJ59LBE4baEfQBVsP2Y/h2n8M19YV1mujFANO1yA3ko7Q=="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="/static/js/products.js"></script>
+<!-- Toaster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous"></script>
+<!--MomentJs (work with dates)-->
+<script type="text/JavaScript" src="../static/js/moment.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="/static/js/jqx/jqxcore.js"></script>
+<script src="/static/js/jqx/jqxbuttons.js"></script>
+<script src="/static/js/jqx/jqxpanel.js"></script>
+<script src="/static/js/jqx/jqxtree.js"></script>
+<script src="/static/js/jqx/jqxscrollbar.js"></script>
+<script src="/static/js/jquery.datepicker.extension.range.min.js"></script>
+<script src="/static/js/sent-stock-report.js"></script>
+<script src="/static/js/manager-price-change-setting.js"></script>
+<script src="/static/js/manager-sales-report.js"></script>
+<script src="/static/js/news-management-render-and-functions.js"></script>
+<script src="/static/js/stock-page-render-and-functions.js"></script>
+<script src="/static/js/manager-feedback.js"></script>
+<script src="/static/js/manager-settings-page.js"></script>
+<script src="/static/js/manager-price-list-create.js"></script>
+<script src="/static/js/manager-categories-setting.js"></script>
+<script src="/static/js/profile-authoriry.js"></script>
+<script src="/static/js/profile-picture.js"></script>
+<script src="/static/js/products-rating.js"></script>
+<script src="/static/js/manager-characteristics.js"></script>
+<script src="/static/js/picture-product.js"></script>
+<script src="/static/js/profile-admin-manager-service.js"></script>
+<script src="/static/js/date-range.js"></script>
+<script src="/static/js/search-button.js"></script>
+<script src="/static/js/text-redactor.js"></script>
+<script src="/static/js/manager-shops.js"></script>
 </body>
 </html>

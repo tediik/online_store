@@ -86,7 +86,6 @@ public class Customer extends User {
     @JoinColumn(name = "customer_id")
     private Set<Order> orders;
 
-
     @OneToMany(mappedBy = "customer", orphanRemoval = true)
     @JsonManagedReference(value = "customer-sharedStock")
     private Set<SharedStock> sharedStocks;

@@ -75,6 +75,7 @@ public class StockRestController {
      * @param id идентификатор акции
      * @return Optiona<Stock> возвращает акцию
      */
+    @PreAuthorize("permitAll()")
     @GetMapping(value = "/{id}")
     @ApiOperation(value = "Get stock by ID",
             authorizations = { @Authorization(value = "jwtToken") })

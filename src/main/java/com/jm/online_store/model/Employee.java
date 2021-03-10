@@ -21,7 +21,6 @@ import java.util.Set;
 @Table(name = "employees")
 public class Employee extends User {
 
-
     public Employee(String email, String password ) {
         super(email, password);
     }
