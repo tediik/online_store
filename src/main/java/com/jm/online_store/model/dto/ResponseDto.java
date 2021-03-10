@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @ApiModel(description =  "DTO для построения ответов REST контроллеров")
 public class ResponseDto<T> {
     private Boolean success;
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String error;

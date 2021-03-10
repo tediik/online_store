@@ -71,8 +71,8 @@ public class ManagerReportsRestController {
             @ApiResponse(code = 200, message = "Subscribed customer hasn't been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<CustomerDto>>> findSubscriberByEmail(@PathVariable String email) {
-        List<Customer> customer = customerService.findSubscriberByEmail(email);
-        return ResponseEntity.ok(new ResponseDto<>(true, modelMapper.map(customer, listType), ""));
+        List<CustomerDto> returnValue = modelMapper.map(customerService.findSubscriberByEmail(email), listType);
+        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
     /**

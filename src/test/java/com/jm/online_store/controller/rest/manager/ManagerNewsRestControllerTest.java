@@ -43,7 +43,6 @@ class ManagerNewsRestControllerTest {
     private List<News> unPublishedNews;
     private List<News> allNews;
 
-
     @BeforeEach
     void setUp(){
         newsService = mock(NewsService.class);
@@ -58,12 +57,10 @@ class ManagerNewsRestControllerTest {
                 new News(1L, "ArchTitle1", "ArchAnons1", "ArchFullText1", LocalDate.now().minusDays(5), true),
                 new News(2L, "ArchTitle2", "ArchAnons2", "ArchFullText2", LocalDate.now().minusDays(5), true),
                 new News(3L, "ArchTitle3", "ArchAnons3", "ArchFullText3", LocalDate.now().minusDays(5), true));
-
         publishedNews = Arrays.asList(
                 new News(4L, "PubTitle1", "PubAnons1","PubFullText1", LocalDate.now().minusDays(5), false),
                 new News(5L, "PubTitle2", "PubAnons2","PubFullText2", LocalDate.now().minusDays(5), false),
                 new News(6L, "PubTitle3", "PubAnons3","PubFullText3", LocalDate.now().minusDays(5), false));
-
         unPublishedNews = Arrays.asList(
                 new News(7L, "unPubTitle1", "unPubAnons1","unPubFullText1", LocalDate.now().plusDays(5), false),
                 new News(8L, "unPubTitle2", "unPubAnons2","unPubFullText2", LocalDate.now().plusDays(5), false),
@@ -71,7 +68,6 @@ class ManagerNewsRestControllerTest {
         allNews.addAll(publishedNews);
         allNews.addAll(unPublishedNews);
         allNews.addAll(archivedNews);
-
     }
 
     @Test
@@ -86,7 +82,6 @@ class ManagerNewsRestControllerTest {
                 .andExpect(jsonPath("$.data.id").value(allNews.get(0).getId()))
                 .andExpect(jsonPath("$.data.title").value(allNews.get(0).getTitle()))
                 .andExpect(jsonPath("$.data.anons").value(allNews.get(0).getAnons()));
-
     }
 
     @Test
@@ -100,35 +95,35 @@ class ManagerNewsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(allNews.size())))
                 .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
-                    allNews.get(0).getId().intValue(),
-                    allNews.get(1).getId().intValue(),
-                    allNews.get(2).getId().intValue(),
-                    allNews.get(3).getId().intValue(),
-                    allNews.get(4).getId().intValue(),
-                    allNews.get(5).getId().intValue(),
-                    allNews.get(6).getId().intValue(),
-                    allNews.get(7).getId().intValue(),
-                    allNews.get(8).getId().intValue())))
+                        allNews.get(0).getId().intValue(),
+                        allNews.get(1).getId().intValue(),
+                        allNews.get(2).getId().intValue(),
+                        allNews.get(3).getId().intValue(),
+                        allNews.get(4).getId().intValue(),
+                        allNews.get(5).getId().intValue(),
+                        allNews.get(6).getId().intValue(),
+                        allNews.get(7).getId().intValue(),
+                        allNews.get(8).getId().intValue())))
                 .andExpect(jsonPath("$.data[*].title", containsInAnyOrder(
-                    allNews.get(0).getTitle(),
-                    allNews.get(1).getTitle(),
-                    allNews.get(2).getTitle(),
-                    allNews.get(3).getTitle(),
-                    allNews.get(4).getTitle(),
-                    allNews.get(5).getTitle(),
-                    allNews.get(6).getTitle(),
-                    allNews.get(7).getTitle(),
-                    allNews.get(8).getTitle())))
+                        allNews.get(0).getTitle(),
+                        allNews.get(1).getTitle(),
+                        allNews.get(2).getTitle(),
+                        allNews.get(3).getTitle(),
+                        allNews.get(4).getTitle(),
+                        allNews.get(5).getTitle(),
+                        allNews.get(6).getTitle(),
+                        allNews.get(7).getTitle(),
+                        allNews.get(8).getTitle())))
                 .andExpect(jsonPath("$.data[*].anons", containsInAnyOrder(
-                    allNews.get(0).getAnons(),
-                    allNews.get(1).getAnons(),
-                    allNews.get(2).getAnons(),
-                    allNews.get(3).getAnons(),
-                    allNews.get(4).getAnons(),
-                    allNews.get(5).getAnons(),
-                    allNews.get(6).getAnons(),
-                    allNews.get(7).getAnons(),
-                    allNews.get(8).getAnons())));
+                        allNews.get(0).getAnons(),
+                        allNews.get(1).getAnons(),
+                        allNews.get(2).getAnons(),
+                        allNews.get(3).getAnons(),
+                        allNews.get(4).getAnons(),
+                        allNews.get(5).getAnons(),
+                        allNews.get(6).getAnons(),
+                        allNews.get(7).getAnons(),
+                        allNews.get(8).getAnons())));
     }
 
     @Test
@@ -164,8 +159,7 @@ class ManagerNewsRestControllerTest {
                 .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
                         publishedNews.get(0).getId().intValue(),
                         publishedNews.get(1).getId().intValue(),
-                        publishedNews.get(2).getId().intValue()
-                )))
+                        publishedNews.get(2).getId().intValue())))
                 .andExpect(jsonPath("$.data[*].archived", containsInAnyOrder(
                         publishedNews.get(0).isArchived(),
                         publishedNews.get(1).isArchived(),
@@ -173,8 +167,7 @@ class ManagerNewsRestControllerTest {
                 .andExpect(jsonPath("$.data[*].postingDate", containsInAnyOrder(
                         publishedNews.get(0).getPostingDate().toString(),
                         publishedNews.get(1).getPostingDate().toString(),
-                        publishedNews.get(2).getPostingDate().toString()
-                )));
+                        publishedNews.get(2).getPostingDate().toString())));
     }
 
     @Test
@@ -289,5 +282,4 @@ class ManagerNewsRestControllerTest {
         newsDto.setPostingDate(news.getPostingDate());
         return newsDto;
     }
-
 }

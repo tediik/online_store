@@ -69,11 +69,7 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public List<Address> findAllShops() {
-        List<Address> shops = addressRepository.findAllByShopIsTrue();
-        if (shops.isEmpty()) {
-            throw new AddressNotFoundException(ExceptionEnums.ADDRESS.getText() + ExceptionConstants.NOT_FOUND);
-        }
-        return shops;
+        return addressRepository.findAllByShopIsTrue();
     }
 
     /**

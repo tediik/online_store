@@ -1,17 +1,12 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jm.online_store.controller.ExceptionsHandler;
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.model.News;
-import com.jm.online_store.model.Order;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.SalesReportDto;
-import com.jm.online_store.model.dto.UserDto;
-import com.jm.online_store.repository.NewsRepository;
-import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.UserService;
@@ -24,19 +19,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,9 +34,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,7 +47,6 @@ class ManagerRestControllerTest {
     private NewsService newsService;
     private OrderService orderService;
     private UserService userService;
-    private Type listType;
     private ModelMapper modelMapper;
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
@@ -72,7 +62,6 @@ class ManagerRestControllerTest {
         userService = mock(UserService.class);
         objectMapper = new ObjectMapper();
         modelMapper = new ModelMapper();
-        listType = new TypeToken<List<NewsDto>>() {}.getType();
         mockMvc = MockMvcBuilders
                     .standaloneSetup(new ManagerRestController(newsService, orderService, userService, modelMapper))
                     .setControllerAdvice(new ExceptionsHandler())
@@ -82,7 +71,6 @@ class ManagerRestControllerTest {
                 new News(1L, "ArchTitle1", "ArchAnons1", "ArchFullText1", LocalDate.now().plusDays(5), true),
                 new News(2L, "ArchTitle2", "ArchAnons2", "ArchFullText2", LocalDate.now().plusDays(5), true),
                 new News(3L, "ArchTitle3", "ArchAnons3", "ArchFullText3", LocalDate.now().minusDays(5), true));
-
         salesReport = Arrays.asList(
                 new SalesReportDto(5L, "customer@mail.ru", "Покупатель", LocalDate.now().minusMonths(10), 3L, "Apple-10 - (3)", 3071.7),
                 new SalesReportDto(2L, "customer@mail.ru", "Покупатель", LocalDate.now().minusMonths(1), 1L,  "ACER-543 - (1)", 399.9));
@@ -104,21 +92,21 @@ class ManagerRestControllerTest {
     @DisplayName("get all news")
     void getAllNews() throws Exception {
         when(newsService.findAll()).thenReturn(allNews);
-            mockMvc.perform(get(END_POINT + "/news")
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.data").isArray())
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data", hasSize(allNews.size())))
-                    .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
+        mockMvc.perform(get(END_POINT + "/news")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.data").isArray())
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(allNews.size())))
+                .andExpect(jsonPath("$.data[*].id", containsInAnyOrder(
                         allNews.get(0).getId().intValue(),
                         allNews.get(1).getId().intValue(),
                         allNews.get(2).getId().intValue())))
-                    .andExpect(jsonPath("$.data[*].title", containsInAnyOrder(
+                .andExpect(jsonPath("$.data[*].title", containsInAnyOrder(
                         allNews.get(0).getTitle(),
                         allNews.get(1).getTitle(),
                         allNews.get(2).getTitle())))
-                    .andExpect(jsonPath("$.data[*].anons", containsInAnyOrder(
+                .andExpect(jsonPath("$.data[*].anons", containsInAnyOrder(
                         allNews.get(0).getAnons(),
                         allNews.get(1).getAnons(),
                         allNews.get(2).getAnons())));
@@ -178,21 +166,17 @@ class ManagerRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(salesReport.size())))
                 .andExpect(jsonPath("$.data[*].orderNumber", containsInAnyOrder(
-                    salesReport.get(0).getOrderNumber().intValue(),
-                    salesReport.get(1).getOrderNumber().intValue()
-                )))
+                        salesReport.get(0).getOrderNumber().intValue(),
+                        salesReport.get(1).getOrderNumber().intValue())))
                 .andExpect(jsonPath("$.data[*].userEmail", containsInAnyOrder(
-                    salesReport.get(0).getUserEmail(),
-                    salesReport.get(1).getUserEmail()
-                )))
+                        salesReport.get(0).getUserEmail(),
+                        salesReport.get(1).getUserEmail())))
                 .andExpect(jsonPath("$.data[*].quantity", containsInAnyOrder(
-                    salesReport.get(0).getQuantity().intValue(),
-                    salesReport.get(1).getQuantity().intValue()
-                )))
+                        salesReport.get(0).getQuantity().intValue(),
+                        salesReport.get(1).getQuantity().intValue())))
                 .andExpect(jsonPath("$.data[*].listOfProducts", containsInAnyOrder(
-                    salesReport.get(0).getListOfProducts(),
-                    salesReport.get(1).getListOfProducts()
-                )));
+                        salesReport.get(0).getListOfProducts(),
+                        salesReport.get(1).getListOfProducts())));
     }
 
     @Test
@@ -250,14 +234,7 @@ class ManagerRestControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private static NewsDto toNewsDto(News news) {
-        NewsDto newsDto = new NewsDto();
-        newsDto.setId(news.getId());
-        newsDto.setTitle(news.getTitle());
-        newsDto.setAnons(news.getAnons());
-        newsDto.setFullText(news.getFullText());
-        newsDto.setArchived(news.isArchived());
-        newsDto.setPostingDate(news.getPostingDate());
-        return newsDto;
+    private NewsDto toNewsDto(News news) {
+        return modelMapper.map(news, NewsDto.class);
     }
 }

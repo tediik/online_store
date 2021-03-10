@@ -5,7 +5,6 @@ import com.jm.online_store.controller.ExceptionsHandler;
 import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.service.interf.AddressService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,8 +38,6 @@ class ManagerAddressRestControllerTest {
     private Address address3;
     private static final String END_POINT = "/api/manager/shops";
 
-    @AfterEach
-
     @BeforeEach
     void setUp() {
         addressService = mock(AddressService.class);
@@ -70,7 +67,6 @@ class ManagerAddressRestControllerTest {
                 .andExpect(jsonPath("$.data.id").value(address4.getId()))
                 .andExpect(jsonPath("$.data.region").value(address4.getRegion()))
                 .andExpect(jsonPath("$.data.city").value(address4.getCity()));
-
     }
 
     @Test
@@ -129,7 +125,6 @@ class ManagerAddressRestControllerTest {
                 .andExpect(jsonPath("$.data.shop").value(address1.isShop()));
     }
 
-
     @Test
     @DisplayName("address shop list return empty data")
     void shouldReturnEmptyList() throws Exception {
@@ -157,7 +152,6 @@ class ManagerAddressRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
-
 
     @Test
     @DisplayName("throws address not found exception when try to get address info by id")

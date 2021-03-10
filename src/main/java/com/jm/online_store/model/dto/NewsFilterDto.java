@@ -16,9 +16,4 @@ import java.time.LocalDate;
 public class NewsFilterDto {
     NewsFilterType type;
     LocalDate currentDate;
-
-    public NewsFilterDto(NewsFilterType type, LocalDate currentDate) {
-        this.type = type;
-        this.currentDate = currentDate;
-    }
 }

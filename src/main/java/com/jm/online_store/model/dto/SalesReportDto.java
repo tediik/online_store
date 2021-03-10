@@ -33,8 +33,6 @@ public class SalesReportDto {
     @CsvBindByPosition(position = 6)
     private Double orderSummaryPrice;
 
-
-
     /**
      * Static method which converts {@link Order} into SalesReportDto
      * @param order - {@link Order}
