@@ -48,7 +48,7 @@ public class AddressRestController {
     /**
      * Метод для отображения адресов пользователя
      *
-     * @return ResponseEntity<ResponseDto < Set < Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     * @return ResponseEntity<ResponseDto <Set<Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/customerAddresses")
     @ApiOperation(value = "get current logged in Users address")
