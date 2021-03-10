@@ -1,7 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.enums.ResponseOperation;
-import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CustomerService;
@@ -22,9 +21,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.lang.reflect.Type;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
