@@ -203,7 +203,7 @@
             product.setPrice(productReq.getPrice());
             product.setRating(productReq.getRating());
             product.setProductType(productReq.getProductType());
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
             product.setDeleted(false);
             Product gotBack = productService.saveProduct(product);
             categoriesService.addToProduct(product, id);
@@ -230,7 +230,7 @@
             product.setPrice(productReq.getPrice());
             product.setRating(productReq.getRating());
             product.setProductType(productReq.getProductType());
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
             product.setDeleted(false);
             Product gotBack = productService.editProduct(product);
             ProductDto returnValue = new ProductDto(gotBack);
