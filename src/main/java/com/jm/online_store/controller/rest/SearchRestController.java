@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
-
 @RestController
 @AllArgsConstructor
 @Api("Rest controller for search")
@@ -26,7 +25,6 @@ public class SearchRestController {
 
     /**
      * Метод для получения строки, которая используется для поиска товаров
-     *
      * @param searchString Строка поиска
      * @return ResponseEntity(searchString) возвращает строку поиска
      */
@@ -41,4 +39,3 @@ public class SearchRestController {
         return ResponseEntity.ok(productRepository.findByProduct(searchString));
     }
 }
-
