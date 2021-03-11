@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.model.News;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.NewsService;
@@ -12,7 +11,6 @@ import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,8 +49,8 @@ public class NewsRestController {
 
     /**
      * Метод, который возвращает полный текст новости
-     * @param id - идентификатор новости, фулл текст которой нужно вернуть
-     * @return ResponseEntity(newsFullText) возвращает полный текст новости
+     * @param id - {@link Long} идентификатор новости, фулл текст которой нужно вернуть
+     * @return {@link ResponseEntity<NewsDto>} возвращает полный текст новости
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "Get full text by id",

@@ -2,7 +2,6 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Product;
 import com.jm.online_store.repository.ProductRepository;
-import com.jm.online_store.service.interf.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 import java.util.Optional;
 
 
@@ -24,7 +21,7 @@ import java.util.Optional;
 @Api("Rest controller for search")
 @RequestMapping("api/search/")
 public class SearchRestController {
-    ProductService productService;
+
     ProductRepository productRepository;
 
     /**
