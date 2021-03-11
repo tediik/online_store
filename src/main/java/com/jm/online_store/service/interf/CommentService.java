@@ -25,5 +25,5 @@ public interface CommentService {
 
     void removeById(Long commentId);
 
-    void update(Comment comment);
+    Comment update(Comment comment);
 }

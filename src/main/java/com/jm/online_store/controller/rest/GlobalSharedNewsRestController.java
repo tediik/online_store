@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.SharedNews;
 import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.SharedNewsDto;
 import com.jm.online_store.service.interf.SharedNewsService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GlobalSharedNewsRestController {
     private final SharedNewsService sharedNewsService;
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
     /**
      * Метод для добавления информации о том, какой новостью, какой пользователь,
@@ -41,13 +44,9 @@ public class GlobalSharedNewsRestController {
     @ApiOperation(value = "Adds information about which user shared which news in which social network. " +
             "SharedNews must include news id, which was shared and the name of social network, where was shared",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<SharedNews>> addSharedNews(@RequestBody SharedNews sharedNews) {
+    public ResponseEntity<ResponseDto<SharedNewsDto>> addSharedNews(@RequestBody SharedNews sharedNews) {
         sharedNews.setUser(userService.getCurrentLoggedInUser());
-        //sharedNewsService.addSharedNews(sharedNews);
         return new ResponseEntity<>(new ResponseDto<>(
-                true, sharedNewsService.addSharedNews(sharedNews)), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
-
+                true, modelMapper.map(sharedNewsService.addSharedNews(sharedNews), SharedNewsDto.class)), HttpStatus.OK);
     }
-
 }

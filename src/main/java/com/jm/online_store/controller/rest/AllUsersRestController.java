@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.AddressDto;
 import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.RestoreAccountDto;
@@ -15,6 +16,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/allUsers")
@@ -49,22 +54,17 @@ public class AllUsersRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<UserDto>> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
-            return new ResponseEntity<>(new ResponseDto<>(false,"No content"),HttpStatus.NO_CONTENT);
-            //return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(new ResponseDto<>(false,"No content"), HttpStatus.NO_CONTENT);
         }
         User currentUser = userService.getCurrentLoggedInUser();
         if (currentUser == null) {
             return new ResponseEntity<>(new ResponseDto<>(false,"User not found"), HttpStatus.NOT_FOUND);
-            //return ResponseEntity.notFound().build();
         }
         return new ResponseEntity<>(new ResponseDto<>(true,
                 new UserDto()
                         .setEmail(currentUser.getEmail())
                         .setRoles(currentUser.getRoles())),
                         HttpStatus.OK);
-//        return ResponseEntity.ok(new UserDto()
-//                .setEmail(currentUser.getEmail())
-//                .setRoles(currentUser.getRoles()));
     }
 
     /**
@@ -88,7 +88,6 @@ public class AllUsersRestController {
             if (passwordEncoder.matches(passwordOfClient, passwordOfBase)) {
                 Customer customer = customerService.restoreCustomer(email);
                 return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
-                //return ResponseEntity.ok(msgAlert);
             } else {
                 return new ResponseEntity<>(new ResponseDto<>(false, msgAlert), HttpStatus.BAD_REQUEST);
             }

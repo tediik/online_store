@@ -17,6 +17,4 @@ public class AddressDto {
     private String city;
     private String street;
     private String building;
-    private String flat;
-    private boolean shop;
 }

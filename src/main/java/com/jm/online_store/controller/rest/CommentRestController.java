@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
@@ -71,7 +72,6 @@ public class CommentRestController {
                 .map(CommentDto::commentEntityToDto)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(new ResponseDto<>(true, commentDtos), HttpStatus.OK);
-        //return ResponseEntity.ok(commentDtos);
     }
 
     /**
@@ -98,10 +98,8 @@ public class CommentRestController {
                 productFromDb.setComments(List.of(savedComment));
                 commentService.addComment(savedComment);
                 return new ResponseEntity<>(new ResponseDto<>(true, ProductForCommentDto.productToDto(productFromDb)), HttpStatus.OK);
-                //return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
             } else {
                 return new ResponseEntity<>(new ResponseDto<>(true, resultText), HttpStatus.CREATED);
-                //return ResponseEntity.status(201).body(resultText);
             }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
@@ -138,10 +136,8 @@ public class CommentRestController {
                     reviewFromDb.setComments(List.of(savedComment));
                     CommentDto.commentEntityToDto(comment);
                     return new ResponseEntity<>(new ResponseDto<>(true, ReviewForCommentDto.reviewToDto(reviewFromDb)), HttpStatus.OK);
-                    //return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
                 } else {
                     return new ResponseEntity<>(new ResponseDto<>(true, resultText), HttpStatus.CREATED);
-                    //return ResponseEntity.status(201).body(resultText);
                 }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
@@ -164,14 +160,14 @@ public class CommentRestController {
             @ApiResponse(code = 200, message = "comment was successfully deleted")
 
     })
-    public ResponseEntity<ResponseDto<?>> deleteCommentById(@PathVariable Long commentId) {
+    public ResponseEntity<ResponseDto<String>> deleteCommentById(@PathVariable Long commentId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        ResponseEntity<ResponseDto<?>>[] answer = new ResponseEntity[1];
+        ResponseEntity<ResponseDto<String>>[] answer = new ResponseEntity[1];
         userService.findByEmail(email).ifPresentOrElse(e -> {
                     if (e.getId().equals(commentService.findById(commentId).getCustomer().getId())) {
                         commentService.removeById(commentId);
-                        answer[0] = new ResponseEntity<>(new ResponseDto<>(true, commentId),HttpStatus.OK);
+                        answer[0] = new ResponseEntity<>(new ResponseDto<>(true, ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
                     } else
                         answer[0] = new ResponseEntity<>(new ResponseDto<>(false, "Not modified"), HttpStatus.NOT_MODIFIED);
                 },
@@ -204,7 +200,7 @@ public class CommentRestController {
         userService.findByEmail(email).ifPresentOrElse(e -> {
                     if (resultText.isEmpty() && e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
                         commentService.update(comment);
-                        answer[0] = new ResponseEntity<>(new ResponseDto<>(true, comment), HttpStatus.OK);
+                        answer[0] = new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(comment, CommentDto.class)), HttpStatus.OK);
                     } else {
                         answer[0] = new ResponseEntity<>(new ResponseDto<>(true, resultText), HttpStatus.CREATED); // ResponseEntity.status(201).body(resultText);
                     }

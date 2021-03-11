@@ -60,7 +60,6 @@ public class CategoryRestController {
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
         return new ResponseEntity<>(new ResponseDto<>(true, categoriesBySuperCategories), HttpStatus.OK);
-        //return ResponseEntity.ok(categoriesBySuperCategories);
     }
 
     /**
@@ -76,7 +75,6 @@ public class CategoryRestController {
             categoriesDtoList.add(modelMapper.map(categories, CategoriesDto.class));
         }
         return new ResponseEntity<>(new ResponseDto<>(true, categoriesDtoList), HttpStatus.OK);
-        //return ResponseEntity.ok(categoriesService.findAll());
     }
 
     /**
@@ -89,11 +87,12 @@ public class CategoryRestController {
      */
     @GetMapping("/{name}")
     @ApiOperation(value = "Get subcategory by name with translation from latin to cyrillic")
-    public ResponseEntity<Categories> getCategory(@PathVariable String name) {
+    public ResponseEntity<ResponseDto<CategoriesDto>> getCategory(@PathVariable String name) {
         String categoryName = name.replaceAll("\"", "");
-        ResponseEntity<Categories>[] answer = new ResponseEntity[1];
+        ResponseEntity<ResponseDto<CategoriesDto>>[] answer = new ResponseEntity[1];
         categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName)).ifPresentOrElse(
-                value -> answer[0] = ResponseEntity.ok(value), () -> answer[0] = ResponseEntity.notFound().build());
+                value -> answer[0] = new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(value, CategoriesDto.class)), HttpStatus.OK),
+                () -> answer[0] = new ResponseEntity<>(new ResponseDto<>(false, "Not found"), HttpStatus.NOT_FOUND));
         return answer[0];
     }
 }

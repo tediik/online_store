@@ -14,6 +14,7 @@ import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -40,6 +41,7 @@ public class BadWordsRestController {
     private final BadWordsService badWordsService;
     private final CommonSettingsService commonSettingsService;
     private final ModelMapper modelMapper;
+    private final Type listType = new TypeToken<List<BadWordsDto>>() {}.getType();
 
     /**
      * Метод возвращает все стоп-слова, включая неактивные
@@ -49,12 +51,8 @@ public class BadWordsRestController {
     @ApiOperation(value = "return a list of stop words including inactive",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<List<BadWordsDto>>> findAll() {
-        List<BadWordsDto> badWordsDto = new ArrayList<>();
-        for (BadWords badWords : badWordsService.findAllWords()) {
-            badWordsDto.add(modelMapper.map(badWords, BadWordsDto.class));
-        }
+        List<BadWordsDto> badWordsDto = modelMapper.map(badWordsService.findAllWords(), listType);
         return new ResponseEntity<>(new ResponseDto<>(true, badWordsDto), HttpStatus.OK);
-        //return ResponseEntity.ok(badWordsService.findAllWords());
     }
 
     /**
@@ -70,7 +68,6 @@ public class BadWordsRestController {
     public ResponseEntity<ResponseDto<BadWordsDto>> getWordById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(new ResponseDto<>(true,
                 modelMapper.map(badWordsService.findWordById(id), BadWordsDto.class)), HttpStatus.OK);
-        //return ResponseEntity.ok(badWordsService.findWordById(id));
     }
 
     /**
@@ -87,16 +84,13 @@ public class BadWordsRestController {
         String newWord = badWords.getBadword().toLowerCase();
         if (newWord.equals("")) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Empty bad word"), HttpStatus.BAD_REQUEST);
-            //return new ResponseEntity("EmptyBadWord", HttpStatus.BAD_REQUEST);
         }
 
         if (badWordsService.existsBadWordByName(newWord)) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Duplicated word name"), HttpStatus.BAD_REQUEST);
-            //return new ResponseEntity("duplicatedWordName", HttpStatus.BAD_REQUEST);
         }
         badWordsService.saveWord(badWords);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(badWords, BadWordsDto.class)), HttpStatus.OK);
-        //return ResponseEntity.ok(badWords);
     }
 
     /**
@@ -111,7 +105,6 @@ public class BadWordsRestController {
     public ResponseEntity<ResponseDto<BadWordsDto>> updateWord(@RequestBody BadWords badWords) {
         badWordsService.saveWord(badWords);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(badWords, BadWordsDto.class)), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
     }
 
     /**
@@ -127,7 +120,6 @@ public class BadWordsRestController {
         try {
             badWordsService.deleteWord(badWordsService.findWordById(id));
             return new ResponseEntity<>(new ResponseDto<>(true, "Bad word successful deleted", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
-            //return ResponseEntity.ok().build();
         } catch (BadWordsNotFoundException e) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Bad words not found"), HttpStatus.NOT_FOUND);
         }
@@ -142,12 +134,8 @@ public class BadWordsRestController {
     @ApiOperation(value = "return list of all active stop words",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<List<BadWordsDto>>> findAllActive() {
-        List<BadWordsDto> badWordsDto = new ArrayList<>();
-        for (BadWords badWords : badWordsService.findAllWordsActive()) {
-            badWordsDto.add(modelMapper.map(badWords, BadWordsDto.class));
-        }
+        List<BadWordsDto> badWordsDto = modelMapper.map(badWordsService.findAllWordsActive(), listType);
         return new ResponseEntity<>(new ResponseDto<>(true, badWordsDto), HttpStatus.OK);
-        //return ResponseEntity.ok(badWordsService.findAllWordsActive());
     }
 
     /**
@@ -160,7 +148,6 @@ public class BadWordsRestController {
     public ResponseEntity<ResponseDto<CommonSettingsDto>> getSetting() {
         CommonSettings templateBody = commonSettingsService.getSettingByName("bad_words_enabled");
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(templateBody, CommonSettingsDto.class)), HttpStatus.OK);
-        //return ResponseEntity.ok(templateBody);
     }
 
     /**
@@ -199,11 +186,9 @@ public class BadWordsRestController {
     public ResponseEntity<ResponseDto<String>> importWord(@RequestBody String text) {
         if (text.equals("")) {
             return new ResponseEntity<>(new ResponseDto<>(false, "EmptyBadWord"), HttpStatus.BAD_REQUEST);
-            //return new ResponseEntity("EmptyBadWord", HttpStatus.BAD_REQUEST);
         }
         badWordsService.importWord(text);
         return new ResponseEntity<>(new ResponseDto<>(true, text, ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
     }
 
     /**
@@ -214,6 +199,5 @@ public class BadWordsRestController {
     @ExceptionHandler(BadWordsNotFoundException.class)
     public ResponseEntity<ResponseDto<String>> badWordsNotFoundExceptionHandler() {
         return new ResponseEntity<>(new ResponseDto<>(false, "Bad words not found"), HttpStatus.NOT_FOUND);
-        //return ResponseEntity.notFound().build();
     }
 }

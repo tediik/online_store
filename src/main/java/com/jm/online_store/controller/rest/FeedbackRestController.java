@@ -1,9 +1,12 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.Feedback;
-import com.jm.online_store.model.Topic;
 import com.jm.online_store.model.TopicsCategory;
+import com.jm.online_store.model.dto.FeedbackDto;
 import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.TopicDto;
+import com.jm.online_store.model.dto.TopicsCategoryDto;
 import com.jm.online_store.service.interf.FeedbackService;
 import com.jm.online_store.service.interf.TopicsCategoryService;
 import io.swagger.annotations.Api;
@@ -11,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +26,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @RestController
@@ -33,6 +39,10 @@ import java.util.Set;
 public class FeedbackRestController {
     private final FeedbackService feedbackService;
     private final TopicsCategoryService topicsCategoryService;
+    private final ModelMapper modelMapper;
+    private final Type TopicCategoryListType = new TypeToken<List<TopicsCategoryDto>>() {}.getType();
+    private final Type TopicListType = new TypeToken<List<TopicDto>>() {}.getType();
+    private final Type FeedbackListType = new TypeToken<List<FeedbackDto>>() {}.getType();
 
     /**
      * Mapping to get categories from {@link TopicsCategory}
@@ -42,10 +52,9 @@ public class FeedbackRestController {
     @GetMapping("/categories")
     @ApiOperation(value = "gets categories from TopicsCategory",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<List<TopicsCategory>>> getFeedbackTopicsCategories() {
-        return new ResponseEntity<>(new ResponseDto<>(
-                true, topicsCategoryService.findAllByActualIsTrue()), HttpStatus.OK);
-        //return ResponseEntity.ok(topicsCategoryService.findAllByActualIsTrue());
+    public ResponseEntity<ResponseDto<List<TopicsCategoryDto>>> getFeedbackTopicsCategories() {
+        List<TopicsCategoryDto> returnValue = modelMapper.map(topicsCategoryService.findAllByActualIsTrue(), TopicCategoryListType);
+        return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.OK);
     }
 
     /**
@@ -57,10 +66,10 @@ public class FeedbackRestController {
     @GetMapping("/{category}")
     @ApiOperation(value = "gets list of topics for feedback of the current category",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<List<Topic>>> getTopicsByCategory(@PathVariable String category) {
+    public ResponseEntity<ResponseDto<List<TopicDto>>> getTopicsByCategory(@PathVariable String category) {
+        List<TopicDto> returnValue = modelMapper.map(topicsCategoryService.findByCategoryName(category).getTopics(), TopicListType);
         return new ResponseEntity<>(new ResponseDto<>(
-                true, topicsCategoryService.findByCategoryName(category).getTopics()), HttpStatus.OK);
-        //return ResponseEntity.ok(topicsCategoryService.findByCategoryName(category).getTopics());
+                true, returnValue), HttpStatus.OK);
     }
 
     /**
@@ -72,11 +81,9 @@ public class FeedbackRestController {
     @PostMapping
     @ApiOperation(value = "post new feedback",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<Feedback>> addNewFeedback(@RequestBody Feedback newFeedback) {
-//        feedbackService.addFeedbackFromDto(newFeedback);
+    public ResponseEntity<ResponseDto<FeedbackDto>> addNewFeedback(@RequestBody Feedback newFeedback) {
         return new ResponseEntity<>(new ResponseDto<>(
-                true, feedbackService.addFeedbackFromDto(newFeedback)), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
+                true, modelMapper.map(feedbackService.addFeedbackFromDto(newFeedback), FeedbackDto.class)), HttpStatus.OK);
     }
 
     /**
@@ -87,11 +94,9 @@ public class FeedbackRestController {
     @PutMapping("/addAnswer")
     @ApiOperation(value = "Adds answer for the feedback",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<Feedback>> addAnswerFeedback(@RequestBody Feedback feedback) {
-        feedbackService.addAnswerFeedback(feedback);
+    public ResponseEntity<ResponseDto<FeedbackDto>> addAnswerFeedback(@RequestBody Feedback feedback) {
         return new ResponseEntity<>(new ResponseDto<>(
-                true, feedbackService.addAnswerFeedback(feedback)), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
+                true, modelMapper.map(feedbackService.addAnswerFeedback(feedback), FeedbackDto.class)), HttpStatus.OK);
     }
 
     /**
@@ -102,11 +107,9 @@ public class FeedbackRestController {
     @PutMapping("/laterAnswer")
     @ApiOperation(value = "Sets the date and the time of the feedback for the \"responseExpected\" field",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<Feedback>> updateTimeAnswerFeedback(@RequestBody Feedback feedback) {
-        feedbackService.updateTimeAnswerFeedback(feedback);
+    public ResponseEntity<ResponseDto<FeedbackDto>> updateTimeAnswerFeedback(@RequestBody Feedback feedback) {
         return new ResponseEntity<>(new ResponseDto<>(
-                true, feedbackService.updateTimeAnswerFeedback(feedback)), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
+                true, modelMapper.map(feedbackService.updateTimeAnswerFeedback(feedback), FeedbackDto.class)), HttpStatus.OK);
     }
 
     /**
@@ -117,23 +120,22 @@ public class FeedbackRestController {
     @PutMapping("/inWork")
     @ApiOperation(value = "Returns the feedback back at work",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<Feedback>> returnInWork(@RequestBody Long id) {
-        feedbackService.returnInWork(id);
-        return new ResponseEntity<>(new ResponseDto<>(true, feedbackService.returnInWork(id)), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseDto<FeedbackDto>> returnInWork(@RequestBody Long id) {
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, modelMapper.map(feedbackService.returnInWork(id), FeedbackDto.class)), HttpStatus.OK);
+
     }
 
     /**
      * Метод возвращает обращения текущего пользователя
-     * @return ResponseEntity<Set<Feedback>>
+     * @return ResponseEntity<ResponseDto<List<FeedbackDto>>>
      */
     @GetMapping("/messages")
     @ApiOperation(value = "gets all feedbacks from the current customer",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<Set<Feedback>>> getAllFeedbackCurrentCustomer() {
-        Set<Feedback> feedbackSet = feedbackService.getAllFeedbackCurrentCustomer();
-        return new ResponseEntity<>(new ResponseDto<>(true, feedbackSet), HttpStatus.OK);
-        //return ResponseEntity.ok(feedbackSet);
+    public ResponseEntity<ResponseDto<List<FeedbackDto>>> getAllFeedbackCurrentCustomer() {
+        List<FeedbackDto> returnValue = modelMapper.map(feedbackService.getAllFeedbackCurrentCustomer(), FeedbackListType);
+        return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.OK);
     }
 
     /**
@@ -143,10 +145,9 @@ public class FeedbackRestController {
     @GetMapping("/allMessages")
     @ApiOperation(value = "gets all feedbacks",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<List<Feedback>>> getAllFeedback() {
-        List<Feedback> feedbackList = feedbackService.getAllFeedback();
+    public ResponseEntity<ResponseDto<List<FeedbackDto>>> getAllFeedback() {
+        List<FeedbackDto> feedbackList = modelMapper.map(feedbackService.getAllFeedback(), FeedbackListType);
         return new ResponseEntity<>(new ResponseDto<>(true, feedbackList), HttpStatus.OK);
-        //return ResponseEntity.ok(feedbackList);
     }
 
     /**
@@ -156,10 +157,9 @@ public class FeedbackRestController {
     @GetMapping("/inProgress")
     @ApiOperation(value = "gets all feedbacks that are in \"IN_PROGRESS\" status",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<List<Feedback>>> getInProgressFeedback() {
-        List<Feedback> feedbackList = feedbackService.getInProgressFeedback();
+    public ResponseEntity<ResponseDto<List<FeedbackDto>>> getInProgressFeedback() {
+        List<FeedbackDto> feedbackList = modelMapper.map(feedbackService.getInProgressFeedback(), FeedbackListType);
         return new ResponseEntity<>(new ResponseDto<>(true, feedbackList), HttpStatus.OK);
-        //return ResponseEntity.ok(feedbackList);
     }
 
     /**
@@ -169,10 +169,9 @@ public class FeedbackRestController {
     @GetMapping("/later")
     @ApiOperation(value = "gets all feedbacks that are in \"LATER\" status",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<List<Feedback>>> getLaterFeedback() {
-        List<Feedback> feedbackList = feedbackService.getLaterFeedback();
+    public ResponseEntity<ResponseDto<List<FeedbackDto>>> getLaterFeedback() {
+        List<FeedbackDto> feedbackList = modelMapper.map(feedbackService.getLaterFeedback(), FeedbackListType);
         return new ResponseEntity<>(new ResponseDto<>(true, feedbackList), HttpStatus.OK);
-        //return ResponseEntity.ok(feedbackList);
     }
 
     /**
@@ -182,10 +181,9 @@ public class FeedbackRestController {
     @GetMapping("/resolved")
     @ApiOperation(value = "gets all feedbacks that are in \"RESOLVED\" status",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<ResponseDto<List<Feedback>>> getResolvedFeedback() {
-        List<Feedback> feedbackList = feedbackService.getResolvedFeedback();
+    public ResponseEntity<ResponseDto<List<FeedbackDto>>> getResolvedFeedback() {
+        List<FeedbackDto> feedbackList = modelMapper.map(feedbackService.getResolvedFeedback(), FeedbackListType);
         return new ResponseEntity<>(new ResponseDto<>(true, feedbackList), HttpStatus.OK);
-        //return ResponseEntity.ok(feedbackList);
     }
 
     /**
@@ -201,7 +199,6 @@ public class FeedbackRestController {
     public ResponseEntity<ResponseDto<LocalDateTime>> getResponseExpectedFeedback(@PathVariable Long id) {
         LocalDateTime localDateTime = feedbackService.getDateTimeFeedback(id);
         return new ResponseEntity<>(new ResponseDto<>(true, localDateTime), HttpStatus.OK);
-        //return ResponseEntity.ok(localDateTime);
     }
 
     /**
@@ -214,7 +211,6 @@ public class FeedbackRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<String>> deleteFeedback(@PathVariable Long id) {
         feedbackService.deleteFeedbackById(id);
-        return new ResponseEntity<>(new ResponseDto<>(true, "Feedback successful deleted"), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 }

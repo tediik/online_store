@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,10 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Рест контроллер для адресов
@@ -37,32 +36,24 @@ public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final Type listType = new TypeToken<List<AddressDto>>() {}.getType();
 
     @GetMapping(value = "/allShops")
     @ApiOperation(value = "get all the shops")
     public ResponseEntity<ResponseDto<List<AddressDto>>> findAll() {
-        List<AddressDto> addressDto = new ArrayList<>();
-        for (Address address : addressService.findAllShops()) {
-            addressDto.add(modelMapper.map(address, AddressDto.class));
-        }
+        List<AddressDto> addressDto = modelMapper.map(addressService.findAllShops(), listType);
         return new ResponseEntity<>(new ResponseDto<>(true, addressDto), HttpStatus.OK);
-        //.ok(addressService.findAllShops());
     }
 
     @GetMapping(value = "/userAddresses")
     @ApiOperation(value = "get current logged in Users address")
-    public ResponseEntity<ResponseDto<Set<AddressDto>>> userAddresses() {
-        Set<AddressDto> addressDto = new HashSet<>();
-        for (Address address : userService.getCurrentLoggedInUser().getUserAddresses()) {
-            addressDto.add(modelMapper.map(address, AddressDto.class));
-        }
+    public ResponseEntity<ResponseDto<List<AddressDto>>> userAddresses() {
+        List<AddressDto> addressDto = modelMapper.map(userService.getCurrentLoggedInUser().getUserAddresses(), listType);
         if (userService.getCurrentLoggedInUser().getUserAddresses() != null) {
             return new ResponseEntity<>(new ResponseDto<>(true,
                     addressDto), HttpStatus.OK);
-                    //.ok(userService.getCurrentLoggedInUser().getUserAddresses());
         }
         return new ResponseEntity<>(new ResponseDto<>(false, "Addresses not found"), HttpStatus.NOT_FOUND);
-                //.notFound().build();
     }
 
     @PostMapping(value = "/addAddress")
@@ -71,15 +62,12 @@ public class AddressRestController {
         User user = userService.getCurrentLoggedInUser();
         if (userService.addNewAddressForUser(user, address)) {
             return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(address, AddressDto.class)), HttpStatus.OK);
-            //return ResponseEntity.ok().build();
         }
         return new ResponseEntity<>(new ResponseDto<>(false,"addressIsExists"),HttpStatus.BAD_REQUEST);
-        //return ResponseEntity.badRequest().body("addressIsExists");
     }
 
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})
     public ResponseEntity<ResponseDto<?>> handleControllerExceptions() {
         return new ResponseEntity<>(new ResponseDto<>(false, "Not found"), HttpStatus.NOT_FOUND);
-        //return ResponseEntity.notFound().build();
     }
 }

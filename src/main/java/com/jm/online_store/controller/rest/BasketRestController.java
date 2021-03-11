@@ -7,6 +7,7 @@ import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.SubBasket;
+import com.jm.online_store.model.dto.BadWordsDto;
 import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.SubBasketDto;
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +46,7 @@ public class BasketRestController {
     private final BasketService basketService;
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final Type listType = new TypeToken<List<SubBasketDto>>() {}.getType();
 
     /**
      * контроллер для получения товаров в корзине для авторизованного User.
@@ -53,12 +57,8 @@ public class BasketRestController {
     @ApiOperation(value = "get all items for authorised User",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<List<SubBasketDto>>> getBasket(HttpServletRequest request) {
-        List<SubBasketDto> basketDtoList = new ArrayList<>();
-        for (SubBasket subBasket : basketService.getBasket(request.getSession().getId())) {
-            basketDtoList.add(modelMapper.map(subBasket, SubBasketDto.class));
-        }
+        List<SubBasketDto> basketDtoList = modelMapper.map(basketService.getBasket(request.getSession().getId()), listType);
         return new ResponseEntity<>(new ResponseDto<>(true, basketDtoList), HttpStatus.OK);
-        //return new ResponseEntity<>(subBaskets, HttpStatus.OK);
     }
 
     /**
@@ -73,7 +73,6 @@ public class BasketRestController {
     public ResponseEntity<ResponseDto<OrderDTO>> buildOrderFromBasket(@RequestBody Long id) {
         Order order = basketService.buildOrderFromBasket(id);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(order, OrderDTO.class)), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
     }
 
 
@@ -89,7 +88,6 @@ public class BasketRestController {
     public ResponseEntity<ResponseDto<String>> deleteBasket(@RequestBody Long id, HttpServletRequest request) {
         basketService.deleteBasket(basketService.findBasketById(id), request.getSession().getId());
         return new ResponseEntity<>(new ResponseDto<>(true, "SubBasket successful deleted", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
     }
 
     /**
@@ -107,10 +105,8 @@ public class BasketRestController {
         try {
             SubBasket subBasket = basketService.updateBasket(basketService.findBasketById(id), difference);
             return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(subBasket, SubBasketDto.class)), HttpStatus.OK);
-            //return ResponseEntity.ok().build();
         } catch (ProductsNotFoundException e) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Products not found"), HttpStatus.BAD_REQUEST);
-            //return ResponseEntity.badRequest().build();
         }
 
     }
@@ -122,13 +118,10 @@ public class BasketRestController {
         try {
             SubBasket subBasket = basketService.addProductToBasket(id, request.getSession().getId());
             return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(subBasket, SubBasketDto.class)), HttpStatus.OK);
-            //return ResponseEntity.ok().build();
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>(new ResponseDto<>(false, "User not found"), HttpStatus.NOT_FOUND);
-            //return ResponseEntity.notFound().build();
         } catch (ProductsNotFoundException e) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Products not found"), HttpStatus.BAD_REQUEST);
-            //return ResponseEntity.badRequest().build();
         }
     }
 }
