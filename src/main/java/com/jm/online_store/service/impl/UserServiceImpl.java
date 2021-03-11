@@ -14,6 +14,7 @@ import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
@@ -192,6 +193,25 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * Обновляет данные пользователя в личном кабинете, используя сущность UserDto.
+     * @param userDto сущность, полученная из контроллера.
+     * @return измененный пользователь.
+     * @throws UserNotFoundException если пользователя не существует в БД.
+     */
+    @Override
+    @Transactional
+    public User updateUserDtoProfile(UserDto userDto) {
+        User updateUser = userRepository.findById(userDto.getId()).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
+        updateUser.setFirstName(userDto.getFirstName());
+        updateUser.setLastName(userDto.getLastName());
+        updateUser.setBirthdayDate(userDto.getBirthdayDate());
+        updateUser.setUserGender(userDto.getUserGender());
+        return userRepository.save(updateUser);
+
+    }
+
+    /**
      * Обновляет данные польователя в Rest-api UserRestController.
      * @param user сущность, полученный из контроллера.
      * @throws UserNotFoundException       если пользователя не существует в БД.
@@ -234,7 +254,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void regNewAccount(User userForm) {
+    public User regNewAccount(User userForm) {
         if (userForm.getEmail() != null) {
             ConfirmationToken confirmationToken = new ConfirmationToken(userForm.getEmail(), userForm.getPassword());
             confirmTokenRepository.save(confirmationToken);
@@ -251,6 +271,7 @@ public class UserServiceImpl implements UserService {
         } else {
             log.debug("Email пустой");
         }
+    return userForm;
     }
 
     /**

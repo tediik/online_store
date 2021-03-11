@@ -172,7 +172,7 @@ function handleAcceptButtonFromModalWindow(event) {
         $('#characteristicModalWindow').modal('hide')
         toastr.success("Характеристика успешно удалена")
     } else {
-        fetch("/api/manager/characteristics", {
+        fetch("/api/manager/product/characteristics", {
             method: 'PUT',
             headers: headersCharacteristics,
             body: JSON.stringify(characteristic)

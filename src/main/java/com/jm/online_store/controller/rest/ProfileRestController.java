@@ -98,27 +98,27 @@ public class ProfileRestController {
 
     /**
      * Метод обновления профиля
-     * @param user текущий пользователь
-     * @return ResponseEntity<String> статус ответа
+     * @param userDto {@link UserDto}текущий пользователь
+     * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping("/update")
     @ApiOperation(value = "updates current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> updateProfile(@RequestBody User user) {
-        userService.updateUserProfile(user);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseDto<UserDto>> updateProfile(@RequestBody UserDto userDto) {
+        userService.updateUserDtoProfile(userDto);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userDto, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Метод удаления профиля
      * @param id индентификатор пользователя
-     * @return ResponseEntity.ok() код ответа
+     * @return ResponseEntity<ResponseDto<UserDto>>(user, HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "deletes current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> deleteProfile(@PathVariable Long id) {
         userService.deleteByID(id);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userService.findUserById(id), UserDto.class)), HttpStatus.OK);
     }
 }
