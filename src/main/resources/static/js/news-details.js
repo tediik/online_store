@@ -7,11 +7,11 @@ $(function () {
     showNewsDetails(window.location.pathname.substring(6)
     );
 })
+
 /**
  * Функция для получения полного текста новости по id
  */
 async function showNewsDetails(id) {
-    console.log("showNewsDetails")
     fullTextDetails = await fetch("/api/news"+`/${id}`).then(response => response.json().then(news => news.data))
     fullNews = $('#newsInfo')
         fullNews.empty();
