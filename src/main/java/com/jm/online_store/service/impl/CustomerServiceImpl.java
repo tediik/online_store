@@ -2,8 +2,6 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.enums.ExceptionEnums;
-import com.jm.online_store.exception.AddressAlreadyExists;
-import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
@@ -15,7 +13,6 @@ import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.User;
-import com.jm.online_store.repository.AddressRepository;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CommentService;
@@ -40,7 +37,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
