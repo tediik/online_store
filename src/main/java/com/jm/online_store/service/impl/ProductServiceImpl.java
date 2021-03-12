@@ -16,6 +16,7 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
+import com.jm.online_store.service.interf.PriceChangeNotificationsService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
@@ -70,6 +71,7 @@ public class ProductServiceImpl implements ProductService {
     private final MailSenderService mailSenderService;
     private final CategoriesService categoriesService;
     private final ProductCharacteristicService productCharacteristicService;
+    private final PriceChangeNotificationsService priceChangeNotificationsService;
 
     /**
      * Получение списка товаров
@@ -679,6 +681,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPriceChangeSubscribers(findProductById(product.getId())
                 .orElseThrow(ProductNotFoundException::new)
                 .getPriceChangeSubscribers());
+        priceChangeNotificationsService.addPriceChangesNotification(product, oldPrice, newPrice);
         return saveProduct(product);
     }
 

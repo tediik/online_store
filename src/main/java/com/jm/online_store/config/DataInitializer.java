@@ -127,7 +127,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct
+    @PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -1295,6 +1295,11 @@ public class DataInitializer {
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о новых Акциях!" +
                         "</p><p>@@stockList@@</p><p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .build();
+        CommonSettings newCommentAnswerTemplate = CommonSettings.builder()
+                .settingName("new_comment_answer_template")
+                .textValue("<p>Уважаемый @@user@@, появился новый ответ на Ваш комментарий к товару @@product@@!" +
+                        "</p><p>@@stockList@@</p><p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .build();
         CommonSettings priceChangeDistributionTemplate = CommonSettings.builder()
                 .settingName("price_change_distribution_template")
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о снижении цены</p>" +
@@ -1327,6 +1332,7 @@ public class DataInitializer {
         commonSettingsService.addSetting(badWordsEnabled);
         commonSettingsService.addSetting(maintenanceModeTemplate);
         commonSettingsService.addSetting(storeName);
+        commonSettingsService.addSetting(newCommentAnswerTemplate);
     }
 
     /**

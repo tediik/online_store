@@ -34,75 +34,71 @@
 
         <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
 
-            <div class="col-md-2">
-                <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <a class="btn btn-outline-primary mt-2 nav-link active" id="notifications-tab" data-toggle="pill"
-                       href="customer/notifications"
-                       role="tab" aria-controls="notifications" aria-selected="true">
-                        Уведомления
-                    </a>
+        <div class="col-md-2">
+            <div class="nav flex-column nav-pills mt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="btn btn-outline-primary mt-2 nav-link active" id="notifications-tab" data-toggle="pill"
+                   href="customer/notifications"
+                   role="tab" aria-controls="notifications" aria-selected="true">
+                    Уведомления
+                </a>
 
-                    <a class="btn btn-outline-primary mt-2" id="notification-settings-tab" href="/customer/settings">
-                        Настройки
-                    </a>
+                <a class="btn btn-outline-primary mt-2" id="notification-settings-tab" href="/customer/settings">
+                    Настройки
+                </a>
 
-                    <a class="btn btn-outline-primary mt-2"
-                       id="profile-page" href="/customer">
-                        Кабинет покупателя</a>
-                </div>
+                <a class="btn btn-outline-primary mt-2"
+                   id="profile-page" href="/customer">
+                    Кабинет покупателя</a>
             </div>
+        </div>
         <!-- БОКОВАЯ ПАНЕЛЬ С ВКЛАДКАМИ  -->
 
         <!-- ОСНОВНАЯ  ПАНЕЛЬ  -->
-            <div class="col-md-10" style="background: #edeef0">
-                <div class="tab-content" id="v-pills-tabContent">
+        <div class="col-md-10" style="background: #edeef0">
+            <div class="tab-content" id="v-pills-tabContent">
 
-                    <!-- Уведомления -->
+                <!-- Уведомления -->
 
-                    <div class="tab-pane active" id="notifications-tabs" role="tabpanel"
-                         aria-labelledby="notification-tab">
-                        <div class="container-fluid bg-light">
-                            <div class="tab-content" id="containerNotifications">
-                                <h3>Уведомления</h3>
-                                <ul class="nav nav-tabs">
-                                    <!-- вкладка для уведомлений об изменении цен товаров-->
-                                    <li class="nav-item">
-                                        <a class="nav-link active" data-toggle="tab"
-                                           href="#tabPriceChanges">
-                                            Изменение цен на товары
-                                        </a>
-                                    </li>
-                                    <!-- вкладка для уведомлений о комментариях-->
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab"
-                                           href="#tabComments">
-                                            Комментарии и ответы
-                                        </a>
-                                    </li>
+                <div class="tab-pane active" id="notifications-tabs" role="tabpanel"
+                     aria-labelledby="notification-tab">
+                    <div class="container-fluid bg-light">
+                        <div class="tab-content" id="containerNotifications">
+                            <h3>Уведомления</h3>
+                            <ul class="nav nav-tabs">
+                                <!-- вкладка для уведомлений об изменении цен товаров-->
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab"
+                                       href="#tabPriceChanges">
+                                        Изменение цен на товары
+                                    </a>
+                                </li>
+                                <!-- вкладка для уведомлений о комментариях-->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab"
+                                       href="#tabComments">
+                                        Комментарии и ответы
+                                    </a>
+                                </li>
 
-                                </ul>
-                                <!-- Блоки с контентом -->
-                                <div class="tab-content">
-                                    <!--                        За все время-->
-                                    <div class="tab-pane fade show active" id="tabPriceChanges">
-                                        <!--                                        <div id="allRecentlyProducts">-->
-                                        <div class="col-10">
-                                            <br>
-                                            <div id="recentlyProductsViewDiv">
+                            </ul>
+                            <!-- Блоки с контентом -->
+                            <div class="tab-content">
+                                <!--                                    Изменение цен-->
+                                <div class="tab-pane fade show active" id="tabPriceChanges">
+<!--                                        <div class="col-10">-->
+<!--                                    <div id="PriceChangeTable">-->
+                                        <table id="priceChangeNotificationTable"
+                                        class="table table-striped">
 
-                                            </div>
-                                        </div>
-                                        <!--                                        </div>-->
-                                    </div>
-                                    <!--                        На этой неделе-->
-                                    <div class="tab-pane fade show" id="tabComments">
-                                        <!--                                        <div id="thisWeekRecentlyProducts">-->
-                                        <div class="col-10">
-                                            <br>
-                                            <div id="thisWeekRecentlyProductsDiv">
+                                        </table>
+<!--                                    </div>-->
+                                </div>
+                                <!--Комментарии-->
+                                <div class="tab-pane fade show" id="tabComments">
+                                    <div class="col-10">
+                                        <br>
+                                        <div id="thisWeekRecentlyProductsDiv">
 
-                                            </div>
-                                            <!--                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -112,11 +108,13 @@
                 </div>
             </div>
         </div>
+    </div>
 </div>
 
 
 <footer th:insert="blocks/footer :: footer"></footer>
 <script src="../static/js/search-button.js"></script>
+<script src="../static/js/price-change-notifications.js"></script>
 
 </body>
 </html>

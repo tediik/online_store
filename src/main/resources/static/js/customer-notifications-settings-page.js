@@ -5,6 +5,8 @@ $(document).ready(function () {
     checkSubscribe();
     /*отображает подписку на рассылку об изменении цен*/
     checkPriceEmails();
+
+    getCustomerPriceChangeNotifications()
     /* Слушатель для кнопки удалить профиль (в модальном окне)*/
     document.getElementById('deleteProfileCustomer').addEventListener('click', deleteProfile)
     /* Слушатель для кнопки удалить профиль (без возможности восстановить (в модальном окне)*/
@@ -87,7 +89,7 @@ function updateDayForStockSend() {
  *Получает значения для fetch запроса для изменения дня для рассылок
  * @param day - день недели
  */
-function changeDayOfWeekForStockSend(day){
+function changeDayOfWeekForStockSend(day) {
     fetch(customerNotificationsUrl + 'dayOfWeekForStockSend', {
         method: 'PUT',
         headers: {
@@ -203,3 +205,4 @@ function getCurrentLoggedInCustomer() {
         .then(response => response.json())
         .then(response => response.data)
 }
+

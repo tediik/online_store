@@ -3,9 +3,11 @@ package com.jm.online_store.controller.rest.customer;
 import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.PriceChangeNotifications;
 import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CustomerService;
+import com.jm.online_store.service.interf.PriceChangeNotificationsService;
 import com.jm.online_store.service.interf.RecentlyViewedProductsService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
@@ -20,12 +22,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+import java.util.List;
+
+//@PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
 @AllArgsConstructor
 @RestController
 @RequestMapping("api/customer/notifications")
@@ -37,6 +42,7 @@ public class CustomerNotificationsRestController {
     private final UserService userService;
     private final RecentlyViewedProductsService recentlyViewedProductsService;
     private final ModelMapper modelMapper;
+    private final PriceChangeNotificationsService priceChangeNotificationsService;
 
     @GetMapping("/dayOfWeekForStockSend")
     @ApiOperation(value = "Метод возвращает из базы день, в который будет рассылка",
@@ -104,5 +110,17 @@ public class CustomerNotificationsRestController {
         Customer customer = customerService.getCurrentLoggedInUser();
         customer.setConfirmReceiveEmail(ConfirmReceiveEmail.NO_ACTIONS);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
+    }
+
+    @GetMapping("/priceChanges/{id}")
+    @ApiOperation(value = "Запрашивает данные об изменении товаров из подписки",
+            authorizations = {@Authorization(value = "jwtToken")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Prices changes found"),
+            @ApiResponse(code = 400, message = "Could not get prices changes")
+    })
+    public ResponseEntity<ResponseDto<List<PriceChangeNotifications>>> getPriceNotifications(@PathVariable Long id) {
+        List<PriceChangeNotifications> list = priceChangeNotificationsService.getCustomerPriceChangeNotifications(id);
+        return new ResponseEntity<>(new ResponseDto<>(true, list), HttpStatus.OK);
     }
 }

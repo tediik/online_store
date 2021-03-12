@@ -16,7 +16,7 @@ function getTrackableProducts() {
             if (response.status === 200) {
                 response.json()
                     .then(trackableProduct => {
-                        for (let product of trackableProduct) {
+                        for (let product of trackableProduct.data) {
                             renderTrackingProducts(product);
                         }
                     })
@@ -84,7 +84,7 @@ function stopTrackingProduct(id) {
         if (response.status === 200) {
             response.json()
                 .then(untraceableProduct => {
-                    deleteProductBodyFromTrackableProducts(untraceableProduct);
+                    deleteProductBodyFromTrackableProducts(untraceableProduct.data);
                 })
         }
     })
