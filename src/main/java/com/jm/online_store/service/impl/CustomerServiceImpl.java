@@ -3,6 +3,7 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.AddressAlreadyExists;
+import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
@@ -24,6 +25,7 @@ import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -35,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -59,18 +62,26 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public boolean addNewAddressForCustomer(Customer customerReq, Address addressReq) {
-        //сохраняем если переданного адреса нету в таблице
-        if (addressService.findSameAddress(addressReq).isEmpty()) {
-            customerReq.getUserAddresses().add(addressReq);
-            customerRepository.save(customerReq);
-            return true;
-        } else {
-            //возращаем false и выходим из метода если есть совпадение
-            if (customerAddressAlreadyExists(customerReq.getUserAddresses(), addressReq)) {
-                return false;
-            }
+        Optional <Address> optional = addressService.findSameAddress(addressReq);
+        if (optional.isPresent() && !customerAddressAlreadyExists(customerReq.getUserAddresses(), addressReq)) {
+            Address address = optional.get();
+            return updateUserAddress(customerReq, address);
+        }
+        if (optional.isEmpty()){
+            Address address = addressService.addAddress(addressReq);
+            return updateUserAddress(customerReq, address);
         }
         return false;
+    }
+
+    private boolean updateUserAddress(Customer customerReq, Address address) {
+        if (customerReq.getUserAddresses() != null) {
+            customerReq.getUserAddresses().add(address);
+        } else {
+            customerReq.setUserAddresses(Collections.singleton(address));
+        }
+        updateCustomer(customerReq);
+        return true;
     }
 
     /**
@@ -83,12 +94,12 @@ public class CustomerServiceImpl implements CustomerService {
     private boolean customerAddressAlreadyExists(Collection<Address> addresses, Address address) {
         if (addresses != null)
             for (Address tmp : addresses) {
-                if (tmp.getRegion().equals(address.getRegion()) &&
-                    tmp.getCity().equals(address.getCity()) &&
-                    tmp.getStreet().equals(address.getStreet()) &&
-                    tmp.getBuilding().equals(address.getBuilding()) &&
-                    tmp.getFlat().equals(address.getFlat()) &&
-                    tmp.getZip().equals(address.getZip())) {
+                if (StringUtils.equalsIgnoreCase(tmp.getRegion(), address.getRegion()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getCity(), address.getCity()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getStreet(), address.getStreet()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getBuilding(), address.getBuilding()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getFlat(), address.getFlat()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getZip(), address.getZip())) {
                     return true;
                 }
             }
