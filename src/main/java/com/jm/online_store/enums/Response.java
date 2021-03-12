@@ -8,7 +8,7 @@ package com.jm.online_store.enums;
 public enum Response {
 
     HAS_BEEN_DELETED("%s - has successfully deleted"),
-    HAS_BEEN_SAVED("%s - has successfully saved"),
+    SAVED("%s - has successfully saved"),
     HAS_BEEN_UPDATED("%s - has successfully updated"),
     // используется как заглушка в ResponseDto для поля error, в случае если тело передает строковый тип
     NO_ERROR(""),

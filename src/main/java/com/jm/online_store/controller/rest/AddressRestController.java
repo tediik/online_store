@@ -71,13 +71,17 @@ public class AddressRestController {
     @ApiOperation(value = "adds address for current logged in user")
     public ResponseEntity<ResponseDto<String>> addAddressToCustomer(@RequestBody Address address) {
         Customer customer = customerService.getCurrentLoggedInCustomer();
-        if (customer != null) {
-            if (customerService.addNewAddressForCustomer(customer, address)) {
-                return ResponseEntity.ok(new ResponseDto<>(true, "successfully added address", Response.NO_ERROR.getText()));
-            }
-        }
-        return new ResponseEntity<>(new ResponseDto<>(false, "address already exists"), HttpStatus.BAD_REQUEST);
+        return customer != null && customerService.addNewAddressForCustomer(customer, address) ?
+                ResponseEntity.ok(new ResponseDto<>(true, Response.SAVED.name(), Response.NO_ERROR.getText())) :
+                new ResponseEntity<>(new ResponseDto<>(false, Response.FAILED.name()), HttpStatus.BAD_REQUEST);
+
     }
+//        if (customer != null) {
+//            if (customerService.addNewAddressForCustomer(customer, address)) {
+//                return ResponseEntity.ok(new ResponseDto<>(true, Response.SAVED.name(), Response.NO_ERROR.getText()));
+//            }
+//        }
+//        return new ResponseEntity<>(new ResponseDto<>(false, Response.FAILED.name()), HttpStatus.BAD_REQUEST);
 
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})
     public ResponseEntity<?> handleControllerExceptions() {

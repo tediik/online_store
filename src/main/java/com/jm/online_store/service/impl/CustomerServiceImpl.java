@@ -2,6 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.AddressAlreadyExists;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.CustomerServiceException;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
@@ -13,7 +14,9 @@ import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.User;
+import com.jm.online_store.repository.AddressRepository;
 import com.jm.online_store.repository.CustomerRepository;
+import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.ReviewService;
@@ -31,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -45,19 +49,26 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CommentService commentService;
     private final ReviewService reviewService;
+    private final AddressService addressService;
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
      * @param customerReq переданный пользователь
-     * @param address новый адрес для пользователя
+     * @param addressReq новый адрес для пользователя
      */
     @Override
     @Transactional
     public boolean addNewAddressForCustomer(Customer customerReq, Address addressReq) {
-        if (!customerAddressAlreadyExists(customerReq.getUserAddresses(), addressReq)) {
+        //сохраняем если переданного адреса нету в таблице
+        if (addressService.findSameAddress(addressReq).isEmpty()) {
             customerReq.getUserAddresses().add(addressReq);
             customerRepository.save(customerReq);
             return true;
+        } else {
+            //возращаем false и выходим из метода если есть совпадение
+            if (customerAddressAlreadyExists(customerReq.getUserAddresses(), addressReq)) {
+                return false;
+            }
         }
         return false;
     }
@@ -69,17 +80,18 @@ public class CustomerServiceImpl implements CustomerService {
      * @param address - переданный адрес
      * @return boolean
      */
-    private boolean customerAddressAlreadyExists(Set<Address> addresses, Address address) {
-        for (Address tmp : addresses) {
-            if (tmp.getRegion().equals(address.getRegion()) &&
-                tmp.getCity().equals(address.getCity()) &&
-                tmp.getStreet().equals(address.getStreet()) &&
-                tmp.getBuilding().equals(address.getBuilding()) &&
-                tmp.getFlat().equals(address.getFlat()) &&
-                tmp.getZip().equals(address.getZip())) {
-                return true;
+    private boolean customerAddressAlreadyExists(Collection<Address> addresses, Address address) {
+        if (addresses != null)
+            for (Address tmp : addresses) {
+                if (tmp.getRegion().equals(address.getRegion()) &&
+                    tmp.getCity().equals(address.getCity()) &&
+                    tmp.getStreet().equals(address.getStreet()) &&
+                    tmp.getBuilding().equals(address.getBuilding()) &&
+                    tmp.getFlat().equals(address.getFlat()) &&
+                    tmp.getZip().equals(address.getZip())) {
+                    return true;
+                }
             }
-        }
         return false;
     }
 
