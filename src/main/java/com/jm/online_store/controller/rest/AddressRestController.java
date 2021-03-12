@@ -74,9 +74,8 @@ public class AddressRestController {
         return customer != null && customerService.addNewAddressForCustomer(customer, address) ?
                 ResponseEntity.ok(new ResponseDto<>(true, Response.SAVED.name(), Response.NO_ERROR.getText())) :
                 new ResponseEntity<>(new ResponseDto<>(false, Response.FAILED.name()), HttpStatus.BAD_REQUEST);
-
     }
-    
+
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})
     public ResponseEntity<?> handleControllerExceptions() {
         return ResponseEntity.notFound().build();
