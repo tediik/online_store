@@ -64,6 +64,8 @@ public class User implements UserDetails {
 
     private boolean isAccountNonBlockedStatus = true;
 
+    private Boolean isAccountNonReadOnlyStatus = true;
+
     @Transient
     @NotBlank
     private String passwordConfirm;
@@ -225,6 +227,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean getAccountNonReadOnlyStatus() {
+        return isAccountNonReadOnlyStatus;
     }
 
     public enum Gender {

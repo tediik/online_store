@@ -161,6 +161,20 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Метод, который изменяет статус клиента на "Только Чтение"
+     *
+     * @param id клиента
+     */
+    @Override
+    @Transactional
+    public void changeCustomerStatusToReadOnly(Long id) {
+        Customer customerStatusChange = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        customerStatusChange.setIsAccountNonReadOnlyStatus(!customerStatusChange.getAccountNonReadOnlyStatus());
+        updateCustomer(customerStatusChange);
+        log.info("профиль покупателя с почтой " + customerStatusChange.getEmail() + "переведен в статус ReadOnly");
+    }
+
+    /**
      * Получение дня для рассылки.
      * @param customer клиент.
      * @return dayOfWeekForStockSend день для рассылки

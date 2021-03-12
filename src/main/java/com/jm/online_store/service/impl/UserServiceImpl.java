@@ -170,8 +170,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void updateUser(User user) {
-        userRepository.save(user);
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     /**
@@ -647,6 +647,8 @@ public class UserServiceImpl implements UserService {
         editedUser.setEmail(user.getEmail());
         editedUser.setFirstName(user.getFirstName());
         editedUser.setLastName(user.getLastName());
+        editedUser.setIsAccountNonReadOnlyStatus(user.getIsAccountNonReadOnlyStatus());
+        log.debug("Права пользователя {} {}", user.getEmail(), !editedUser.getIsAccountNonReadOnlyStatus() ? "ReadOnly" : "Read & Write");
         if (!user.getPassword().equals("")) {
             editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
