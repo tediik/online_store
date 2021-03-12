@@ -1,5 +1,6 @@
 let productSearchByNameUrl = '/api/products/searchByName/'
 let productSearchByDescription = '/api/products/searchByDescription/'
+let searchProductBySearchStringRest = '/api/search/{searchString}/'
 $(document).ready(function ($) {
     searchProduct(window.location.pathname.split('/')[2])
     preventDefaultEventForEnterKeyPress()
@@ -28,10 +29,10 @@ function handleSearchButton(){
 
 /**
  * Function searches products by string typed in #mainPageSearchInput
- * @param searchString - string to search
+ * @param searchProductBySearchStringRest - string to search
  */
-function searchProduct(searchString) {
-    fetch(productSearchByNameUrl + searchString)
+function searchProduct(searchProductBySearchStringRest) {
+    fetch(productSearchByNameUrl + searchProductBySearchStringRest)
         .then(function (response) {
             if (response.ok) {
                 response.json().then(searchResult => fillSearchNameDiv(searchResult, 'searchInNameDiv'))
@@ -41,7 +42,7 @@ function searchProduct(searchString) {
         })
         .catch(error => console.log(error))
 
-    fetch(productSearchByDescription + searchString)
+    fetch(productSearchByDescription + searchProductBySearchStringRest)
         .then(function (response) {
             if (response.ok) {
                 response.json().then(searchResult => fillSearchNameDiv(searchResult, 'searchInDescriptionDiv'))
@@ -90,6 +91,6 @@ function fillSearchNameDiv(data, elementIdToFill) {
             });
         }
     } else {
-        searchDiv.innerHTML = 'Продуктов не найденно'
+        searchDiv.innerHTML = 'Продуктов не найдено'
     }
 }

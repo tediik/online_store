@@ -42,7 +42,7 @@ public interface UserService {
 
     boolean isExist(String email);
 
-    void regNewAccount(User user);
+    User regNewAccount(User user);
 
     void regNewAccount(String email);
 

@@ -31,7 +31,7 @@ public class ImageRestController {
 
     @GetMapping
     @ApiOperation(value = "get images",
-    authorizations = {@Authorization(value = "jwtToken")})
+            authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Image not found"),
             @ApiResponse(code = 200, message = "Image was found")
@@ -42,23 +42,31 @@ public class ImageRestController {
                 ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 
+    /**
+     * Метод для загрузки картинки
+     *
+     * @param imageFile загружаемая картинка
+     */
     @PostMapping("/upload")
     @ApiOperation(value = "uploads images",
-            authorizations = { @Authorization(value = "jwtToken") })
+            authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Image not changed"),
-            @ApiResponse(code = 200, message = "Image was changed")
+            @ApiResponse(code = 200, message = "Image has been uploaded"),
+            @ApiResponse(code = 400, message = "Image hasn't been uploaded"),
+            @ApiResponse(code = 413, message = "Image hasn't been uploaded - image too large")
     })
     public ResponseEntity<ResponseDto<String>> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         return new ResponseEntity<>(new ResponseDto<>(
                 true, userService.updateUserImage(userService.getCurrentLoggedInUser().getId(), imageFile),
                 ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
-
     }
 
+    /**
+     * Метод для удаления картинки
+     */
     @DeleteMapping("/delete")
     @ApiOperation(value = "deletes images",
-            authorizations = { @Authorization(value = "jwtToken") })
+            authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Image not deleted"),
             @ApiResponse(code = 200, message = "Image was deleted")

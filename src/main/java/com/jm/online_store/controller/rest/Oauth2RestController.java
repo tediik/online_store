@@ -3,8 +3,11 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.config.security.Twitter.TwitterAuth;
 import com.jm.online_store.config.security.odnoklassniki.OAuth2Odnoklassniki;
 import com.jm.online_store.config.security.vk.VkApiClient;
+import com.jm.online_store.model.dto.ResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +34,12 @@ public class Oauth2RestController {
      */
     @GetMapping(value = "/login/odnoklassniki")
     @ApiOperation(value = "Get authorization with odnoklassniki in login.js")
-    public ResponseEntity<String> odnoklassnikiBtn() {
-        return ResponseEntity.ok(oAuth2Odnoklassniki.getAuthorizationUrl());
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Authorization was initialized successfully "),
+            @ApiResponse(code = 400, message = "Authorization wasn't initialized "),
+    })
+    public ResponseEntity<ResponseDto<String>> odnoklassnikiBtn() {
+        return ResponseEntity.ok(new ResponseDto<>(true, oAuth2Odnoklassniki.getAuthorizationUrl()));
     }
 
     /**
@@ -42,8 +49,12 @@ public class Oauth2RestController {
      */
     @GetMapping(value = "/login/vkontakte")
     @ApiOperation(value = "Get authorization with VK in login.js")
-    public ResponseEntity<String> vkBtn() {
-        return ResponseEntity.ok(vkApiClient.getVkAuthUrl());
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Authorization was initialized successfully "),
+            @ApiResponse(code = 400, message = "Authorization wasn't initialized "),
+    })
+    public ResponseEntity<ResponseDto<String>> vkBtn() {
+        return ResponseEntity.ok(new ResponseDto<>(true, vkApiClient.getVkAuthUrl()));
     }
 
     /**
@@ -53,8 +64,13 @@ public class Oauth2RestController {
      */
     @GetMapping(value = "/login/twitter")
     @ApiOperation(value = "Get authorization with twitter in login.js")
-    public ResponseEntity<String> twitterBtn() throws InterruptedException, ExecutionException, IOException {
-        return ResponseEntity.ok(twitterAuth.twitterAuth());
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Authorization was initialized successfully "),
+            @ApiResponse(code = 400, message = "Authorization wasn't initialized "),
+    })
+    public ResponseEntity<ResponseDto<String>> twitterBtn() throws InterruptedException, ExecutionException,
+            IOException {
+        return ResponseEntity.ok( new ResponseDto<>(true, twitterAuth.twitterAuth()));
     }
 }
 

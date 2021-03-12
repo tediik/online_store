@@ -49,12 +49,14 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -161,12 +163,16 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Optional<Product> findProductById(Long productId) {
-        return productRepository.findById(productId);
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setProductPictureShortNames(product.getProductPictureNames().stream().map(s -> s.replace(loadPictureFrom, "")).collect(Collectors.toList()));
+        return Optional.of(product);
     }
 
     @Override
     public Product getProductById(Long productId) {
-        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setProductPictureShortNames(product.getProductPictureNames().stream().map(s -> s.replace(loadPictureFrom, "")).collect(Collectors.toList()));
+        return product;
     }
 
     /**
@@ -208,13 +214,12 @@ public class ProductServiceImpl implements ProductService {
         if (product.getRating() == null) {
             product.setRating(0d);
         }
-        if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg");
+        if (product.getProductPictureNames() == null || product.getProductPictureNames().isEmpty()) {
+            product.setProductPictureNames(new ArrayList<>(List.of(loadPictureFrom + "defaultPictureProduct.jpg")));
         } else {
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
         }
-        Product savedProduct = productRepository.save(product);
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     @Override
@@ -577,7 +582,10 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
-                        presentProduct.getProductPictureName(),
+                        presentProduct.getProductPictureNames(),
+                        presentProduct.getProductPictureShortNames(),
+                        presentProduct.getAmount(),
+                        presentProduct.isDeleted(),
                         productSet.contains(presentProduct)
                 );
                 return Optional.of(productDto);
@@ -592,7 +600,10 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
-                        presentProduct.getProductPictureName(),
+                        presentProduct.getProductPictureNames(),
+                        presentProduct.getProductPictureShortNames(),
+                        presentProduct.getAmount(),
+                        presentProduct.isDeleted(),
                         false
                 );
                 return Optional.of(productDto);
@@ -662,10 +673,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product editProduct(Product product) {
 
-        if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName("defaultProductImage.jpg");
+        if (product.getProductPictureNames() == null || product.getProductPictureNames().isEmpty()) {
+            product.setProductPictureNames(new ArrayList<>(List.of("defaultProductImage.jpg")));
         } else {
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
         }
 
         Map<LocalDateTime, Double> map = findProductById(product.getId())
@@ -717,4 +728,33 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deletePriceChangeSubscriber(userService.getCurrentLoggedInUser().getEmail(), productId);
     }
 
+    /**
+     * Удаляет адресс изображения из БД по id
+     * @param name изображения
+     */
+    @Transactional
+    @Override
+    public void deleteProductPictureName(String name) {
+        productRepository.deleteProductPictureName(name);
+    }
+
+    /**
+     * Возвращает колличество картинок, принадлежащих продукту
+     * @param id продукта
+     */
+    @Transactional
+    @Override
+    public Long getCountPictureNameByPictureName(Long id) {
+        return productRepository.getCountPictureNameByPictureName(id);
+    }
+
+    /**
+     * Возвращает id продукта по имени картинки, принадлежащей данному продукту
+     * @param name имя картинки
+     */
+    @Transactional
+    @Override
+    public Long getProductIdByPictureName(String name) {
+        return productRepository.getProductIdByPictureName(name);
+    }
 }
