@@ -52,6 +52,10 @@ public class CustomerNotificationsRestController {
     private final CommentService commentService;
     private final ReviewService reviewService;
 
+    /**
+     * Получение дня, выбранного покупателем для рассылки (если день не выбран возращает null)
+     * @return DayOfWeekForStockSend - день для рассылки
+     */
     @GetMapping("/dayOfWeekForStockSend")
     @ApiOperation(value = "Метод возвращает из базы день, в который будет рассылка",
             authorizations = {@Authorization(value = "jwtToken")})
@@ -62,6 +66,11 @@ public class CustomerNotificationsRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, day), HttpStatus.OK);
     }
 
+    /**
+     * Установка, изменение или удаление дня для рассылки
+     * @param day - день недели
+     * @return DayOfWeekForStockSend новый день для рассылки или null если отписка
+     */
     @PutMapping("/dayOfWeekForStockSend")
     @ApiOperation(value = "Метод устанавливает день для рассылки",
             authorizations = {@Authorization(value = "jwtToken")})
@@ -82,6 +91,11 @@ public class CustomerNotificationsRestController {
         }
     }
 
+    /**
+     * Проверка согласия на рассылку email об изменении цен товаров и новые комментарии
+     * @param type - тип рассылки (price - об изменеии цен, comments - о новых комментариях)
+     * @return ConfirmReceiveEmail статус рассыки
+     */
     @GetMapping("/emailConfirmation/{type}")
     @ApiOperation(value = "Проверяет есть ли согласие на рассылку сообщений",
             authorizations = {@Authorization(value = "jwtToken")})
@@ -100,6 +114,10 @@ public class CustomerNotificationsRestController {
         }
     }
 
+    /**
+     * Отправляет запрос на рассылки для залогиненного пользоватея
+     * @return CustomerDto залогиненный пользователь, которому отправлено письмо с подтвержением
+     */
     @PutMapping("/emailConfirmation")
     @ApiOperation(value = "Запрашивает подтверждение на рассылку об изменении цен",
             authorizations = {@Authorization(value = "jwtToken")})
@@ -113,6 +131,10 @@ public class CustomerNotificationsRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
     }
 
+    /**
+     * запрос на отмену email рассылки об изменении цен
+     * @return CustomerDto пользователь, для которого отменяется подписка
+     */
     @PutMapping("/unsubscribePriceChangesEmail")
     @ApiOperation(value = "Прекращает рассылку сообщений об изменении цен",
             authorizations = {@Authorization(value = "jwtToken")})
@@ -126,12 +148,16 @@ public class CustomerNotificationsRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
     }
 
+    /**
+     * запрос на отмену email рассылки о новых комментариях
+     * @return CustomerDto пользователь, для которого отменяется подписка
+     */
     @PutMapping("/unsubscribeCommentsEmail")
     @ApiOperation(value = "Прекращает рассылку сообщений о новых комментариях",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Email unsubscribed"),
-            @ApiResponse(code = 400, message = "Email was not unsuscribed")
+            @ApiResponse(code = 400, message = "Email was not unsubscribed")
     })
     public ResponseEntity<ResponseDto<CustomerDto>> unsubscribeNewComments() {
         Customer customer = customerService.getCurrentLoggedInUser();
@@ -139,6 +165,11 @@ public class CustomerNotificationsRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
     }
 
+    /**
+     * Поиск всех уведомлений об изменении цен конкретного покупателя
+     * @param id покупателя
+     * @return List<PriceChangeNotifications> список уведомлений
+     */
     @GetMapping("/priceChanges/{id}")
     @ApiOperation(value = "Запрашивает данные об изменении товаров из подписки",
             authorizations = {@Authorization(value = "jwtToken")})
@@ -151,6 +182,10 @@ public class CustomerNotificationsRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, list), HttpStatus.OK);
     }
 
+    /**
+     * Поиск ответов на комментарии и отзывы
+     * @return <List<Comment> список комментариев-ответов
+     */
     @GetMapping("/commentAnswers")
     @ApiOperation(value = "Запрашивает ответы на комментарии",
             authorizations = {@Authorization(value = "jwtToken")})

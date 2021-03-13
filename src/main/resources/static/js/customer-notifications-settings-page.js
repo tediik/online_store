@@ -27,7 +27,8 @@ function checkboxChanges(o) {
 }
 
 /**
- * fetch запрос для отображения дня для рассылки
+ * fetch запрос для отображения дня для рассылки.
+ * Если день не выбран (undefined), переводит слайдер в неактивное положение и прячет select с выбором ролей
  */
 function checkSubscribe() {
     fetch(customerNotificationsUrl + "dayOfWeekForStockSend")
@@ -101,8 +102,9 @@ function changeDayOfWeekForStockSend(day) {
 }
 
 /**
- * Устанавливает положение слайдера в зависимости от того, есть ли согласие на рассылку
- * об изменении цен товаров
+ * Устанавливает положение слайдеров
+ * sliderPriceChanges - рассылка об изменении цен
+ * sliderNewComments - рассылка о новых комментариях
  */
 function checkEmails() {
     const sliderPriceChanges = document.getElementById("sliderPricesChanges")
@@ -132,7 +134,7 @@ function checkEmails() {
 
 /**
  * При нажатии на слайдер "Изменение цен" либо отменяет подписку,
- * либо отправляется запрос на подтверждение
+ * либо отправляется запрос на подтверждение рассылки
  */
 function changePriceEmailsSlider() {
     const slider = document.getElementById("sliderPricesChanges")
@@ -167,7 +169,7 @@ function changePriceEmailsSlider() {
 
 /**
  * При нажатии на слайдер "Комментарии, ответы" либо отменяет рассылку писем,
- * либо отправляется запрос на подтверждение
+ * либо отправляется запрос на подтверждение рассылки
  */
 function changeCommentsEmailSlider() {
     const slider = document.getElementById("sliderNewComments");

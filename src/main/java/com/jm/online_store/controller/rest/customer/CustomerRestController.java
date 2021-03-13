@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest.customer;
 
-import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ExceptionConstants;

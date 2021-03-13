@@ -69,7 +69,8 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Method checks if Comment is a new post or reply  to previous comment or comment for review
-     * then sets a current user as author of a comment and saves to dataBase
+     * then sets a current user as author of a comment, saves to dataBase
+     * and send comment to method for sending email to customer
      *
      * @param comment
      * @return Comment
@@ -133,6 +134,12 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.save(comment);
     }
 
+    /**
+     * Отправляет покупателю email с информацией о новом ответе на комментарий или отзыв,
+     * если есть согласие на рассылку
+     * @param comment новый ответ на комментарий/отзыв
+     */
+    @Override
     public void sendCommentAnswer(Comment comment) {
         User user;
         String message;
@@ -159,7 +166,6 @@ public class CommentServiceImpl implements CommentService {
             }
             message = message.replaceAll("@@product@@", product.getProduct());
             try {
-                System.out.println(message);
                 mailSenderService.sendHtmlMessage(email, "У Вас новый ответ!", message, "New answer to comment");
             } catch (MessagingException e) {
                 log.debug("Can not send mail about new answer to comment {} to {}", comment.getId(), email);
@@ -167,6 +173,11 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    /**
+     * Поик комментариев (ответов) по id родителя
+     * @param parentId - id родительского комментария
+     * @return List<Comment> список ответных комментариев
+     */
     @Override
     @Transactional
     public List<Comment> getCommentsByParentId(Long parentId) {

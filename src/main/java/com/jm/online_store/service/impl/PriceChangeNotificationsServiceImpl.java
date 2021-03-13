@@ -1,9 +1,7 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.PriceChangeNotifications;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.User;
 import com.jm.online_store.repository.PriceChangeNotificationRepository;
 import com.jm.online_store.service.interf.PriceChangeNotificationsService;
 import com.jm.online_store.service.interf.UserService;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +25,8 @@ public class PriceChangeNotificationsServiceImpl implements PriceChangeNotificat
     public void addPriceChangesNotification(Product product, double oldPrice, double newPrice) {
         Set<String> emails = product.getPriceChangeSubscribers();
         for (String email : emails) {
-            notificationRepository.save(new PriceChangeNotifications(oldPrice, newPrice, product.getId(), userService.findByEmail(email).get().getId(), LocalDateTime.now()));
+            notificationRepository.save(new PriceChangeNotifications(oldPrice, newPrice, product.getId(),
+                    userService.findByEmail(email).get().getId(), LocalDateTime.now()));
         }
     }
 

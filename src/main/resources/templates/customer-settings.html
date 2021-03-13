@@ -62,7 +62,7 @@
                 <div class="tab-pane active" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
                     <h3 style="margin-bottom: 20px">Настройка уведомлений</h3>
                     <div class="col-4">
-                        <!--ЧЕК БОКС РАССЫЛКИ -->
+                        <!--Слайдер РАССЫЛКИ -->
                         <div id="sliderEmails">
                             <label class="switch">
                                 <div class="sliderTitle">Получение рассылок на email</div>
@@ -70,14 +70,13 @@
                                 <span class="slider round"></span>
                             </label>
                         </div>
-                        <!--ЧЕК БОКС РАССЫЛКИ -->
+                        <!--Слайдер РАССЫЛКИ -->
                         <br>
                         <!--ВЫПАДАЮЩИЙ СПИСОК  РАССЫЛКИ -->
                         <div id="dropList" class="form-group day-of-the-week-drop-list d-none"
                              style="margin-top: 25px">
                             <label for="dayOfWeekDropList">Выберите день недели</label>
-                            <select class="form-control" name="dayOfWeekForStockSend"
-                                    id="dayOfWeekDropList">
+                            <select class="form-control" name="dayOfWeekForStockSend" id="dayOfWeekDropList">
                                 <option value="null" id="none"></option>
                                 <option value="MONDAY" id="monday">Понедельник</option>
                                 <option value="TUESDAY" id="tuesday">Вторник</option>
@@ -99,7 +98,7 @@
                         <!--SAVE BUTTON -->
 
                         <!-- Rounded switches -->
-
+                        <!--Сладер уведомлений об изменении цен-->
                         <div id="sliderProducts" style="margin-top:20px">
                             <label class="switch">
                                 <div class="sliderTitle">Изменение цен</div>
@@ -107,9 +106,9 @@
                                 <span class="slider round"></span>
                             </label>
                         </div>
-
+                        <!--Сладер уведомлений об изменении цен-->
                         <br><br>
-
+                        <!--Сладер уведомлений о новых комментариях-->
                         <div id="sliderComments">
                             <label class="switch">
                                 <div class="sliderTitle">Комментарии, ответы пользователей</div>
@@ -117,6 +116,7 @@
                                 <span class="slider round"></span>
                             </label>
                         </div>
+                        <!--Сладер уведомлений о новых комментариях-->
                         <!-- Rounded switches -->
 
                         <br>
@@ -138,14 +138,14 @@
     </div>
 </div>
 
+<!--Модалка удаления профиля-->
 <div id="deleteProfile" class="modal" tabindex="-1" role="dialog"
      aria-labelledby="titleDeleteProfile" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="titleDeleteProfile">Удалить профиль</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                        aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal"aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -157,25 +157,22 @@
                 </small>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
                     Отмена
                 </button>
-                <button id="deleteProfileCustomer" type="button"
-                        class="btn btn-danger" onclick="deleteProfile()"
-                        data-dismiss="modal">
+                <button id="deleteProfileCustomer" type="button" class="btn btn-danger"
+                        onclick="deleteProfile()" data-dismiss="modal">
                     Удалить
                 </button>
-                <button id="deleteProfileCustomerUnrecoverable" type="button"
-                        class="btn btn-danger" onclick="deleteProfile2()"
-                        data-dismiss="modal">
+                <button id="deleteProfileCustomerUnrecoverable" type="button" class="btn btn-danger"
+                        onclick="deleteProfile2()" data-dismiss="modal">
                     Удалить безвозвратно
                 </button>
             </div>
         </div>
     </div>
 </div>
-<!---------------------- End Delete Profile Modal window ------------------->
+<!--Модалка удаления профиля-->
 
 <footer th:insert="blocks/footer :: footer"></footer>
 <script src="../static/js/search-button.js"></script>

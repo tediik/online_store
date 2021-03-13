@@ -1,25 +1,40 @@
 const customerNotificationsUrl = '../api/customer/notifications/';
 
 $(document).ready(function () {
+    //получение уведомлений об изменении цен
     getCustomerPriceChangeNotifications()
+    //получение уведомлений о новых комментариях
     getCommentAnswers()
 })
 
+/**
+ * Запрос на получение уведомлений об изменении цен для залогиненного пользователя
+ */
 function getCustomerPriceChangeNotifications() {
     getCurrentLoggedInCustomer().then(customer => {
         fetch(customerNotificationsUrl + "priceChanges/" + customer.id)
             .then(response => response.json())
-            .then(response => renderNotificationTable(response.data))
+            .then(response => renderPriceChangeNotificationTable(response.data))
     })
 }
 
+/**
+ * Получение товара по id
+ * @param id товара
+ * @returns данные товара
+ */
 function getProductById(id) {
     return fetch("../api/products/" + id)
         .then(response => response.json())
         .then(product => product.data)
 }
 
-function renderNotificationTable(notifications) {
+/**
+ * отрисовка таблицы с уведомлениями об изменении цен
+ * Сортировка по дате от новых к старым
+ * @param notifications список уведомлений
+ */
+function renderPriceChangeNotificationTable(notifications) {
     let table = $('#priceChangeNotificationTable');
     table.empty()
         .append(`<tr>
@@ -42,12 +57,20 @@ function renderNotificationTable(notifications) {
     }
 }
 
+/**
+ * Получение списка ответов на комментарии
+ */
 function getCommentAnswers() {
     fetch(customerNotificationsUrl + "commentAnswers")
         .then(response => response.json())
         .then(response => renderNewCommentsTable(response.data))
 }
 
+/**
+ * отрисовка таблицы с уведомлениями о новых комментариях
+ * Сортировка по дате от новых к старым
+ * @param comments список уведомлений
+ */
 function renderNewCommentsTable(comments) {
     let table = $('#newCommentsNotificationTable');
     table.empty()
@@ -72,6 +95,10 @@ function renderNewCommentsTable(comments) {
     }
 }
 
+/**
+ * получение залогиненного пользователя
+ * @returns данные пользователя
+ */
 function getCurrentLoggedInCustomer() {
     return fetch('../api/customer')
         .then(response => response.json())

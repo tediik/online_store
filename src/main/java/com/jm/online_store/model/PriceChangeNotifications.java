@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "price_change_notifications")
-@ApiModel(description = "Сущность уведомление пользователя")
+@ApiModel(description = "Сущность уведомление пользователя об изменении цены")
 public class PriceChangeNotifications {
 
     @Id
