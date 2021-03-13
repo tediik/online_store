@@ -814,6 +814,7 @@ public class UserServiceImpl implements UserService {
             String[] userName = {"Покупатель"};
             findByEmail(email).ifPresent(user -> {
                 user.setConfirmReceiveEmail(ConfirmReceiveEmail.REQUESTED);
+                user.setConfirmCommentsEmails(ConfirmReceiveEmail.REQUESTED);
                 userRepository.save(user);
                 if (user.getFirstName() != null) {
                     userName[0] = user.getFirstName();

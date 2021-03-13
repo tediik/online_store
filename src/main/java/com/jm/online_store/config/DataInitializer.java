@@ -127,7 +127,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    @PostConstruct
+    //@PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -1297,7 +1297,7 @@ public class DataInitializer {
                 .build();
         CommonSettings newCommentAnswerTemplate = CommonSettings.builder()
                 .settingName("new_comment_answer_template")
-                .textValue("<p>Уважаемый @@user@@, появился новый ответ на Ваш комментарий к товару @@product@@!" +
+                .textValue("<p>Уважаемый @@user@@, появился новый ответ на Ваш @@parentType@@ к товару @@product@@!" +
                         "</p><p>@@stockList@@</p><p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .build();
         CommonSettings priceChangeDistributionTemplate = CommonSettings.builder()

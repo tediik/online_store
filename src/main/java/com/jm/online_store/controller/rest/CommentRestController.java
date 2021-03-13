@@ -86,13 +86,12 @@ public class CommentRestController {
     })
     public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
-        Comment savedComment = comment;
         if (!bindingResult.hasErrors()) {
-            String checkText = savedComment.getContent();
+            String checkText = comment.getContent();
             List<String> resultText = badWordsService.checkComment(checkText);
             if (resultText.isEmpty()) {
-                productFromDb.setComments(List.of(savedComment));
-                commentService.addComment(savedComment);
+                productFromDb.setComments(List.of(comment));
+                commentService.addComment(comment);
                 return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
             } else {
                 return ResponseEntity.status(201).body(resultText);
@@ -126,6 +125,7 @@ public class CommentRestController {
         if (!bindingResult.hasErrors()) {
             String checkText = comment.getContent();
             comment.setReview(reviewFromDb);
+            comment.setProductId(reviewFromDb.getProductId());
                 List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
                     Comment savedComment = commentService.addComment(comment);

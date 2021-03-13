@@ -2,13 +2,19 @@ package com.jm.online_store.controller.rest.customer;
 
 import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.UserServiceException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.PriceChangeNotifications;
+import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.PriceChangeNotificationsService;
-import com.jm.online_store.service.interf.RecentlyViewedProductsService;
+import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,9 +34,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
-//@PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+@PreAuthorize("hasRole('ROLE_CUSTOMER')")
 @AllArgsConstructor
 @RestController
 @RequestMapping("api/customer/notifications")
@@ -40,13 +47,14 @@ public class CustomerNotificationsRestController {
 
     private final CustomerService customerService;
     private final UserService userService;
-    private final RecentlyViewedProductsService recentlyViewedProductsService;
     private final ModelMapper modelMapper;
     private final PriceChangeNotificationsService priceChangeNotificationsService;
+    private final CommentService commentService;
+    private final ReviewService reviewService;
 
     @GetMapping("/dayOfWeekForStockSend")
     @ApiOperation(value = "Метод возвращает из базы день, в который будет рассылка",
-            authorizations = { @Authorization(value = "jwtToken") })
+            authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponse(code = 404, message = "Day was not found")
     public ResponseEntity<ResponseDto<DayOfWeekForStockSend>> getCustomerDayOfWeekForStockSend() {
         Customer customer = customerService.getCurrentLoggedInUser();
@@ -74,20 +82,26 @@ public class CustomerNotificationsRestController {
         }
     }
 
-    @GetMapping("/emailConfirmation")
-    @ApiOperation(value = "Проверяет есть ли согласие на рассылку сообщений об изменении цен",
+    @GetMapping("/emailConfirmation/{type}")
+    @ApiOperation(value = "Проверяет есть ли согласие на рассылку сообщений",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Данные получены"),
             @ApiResponse(code = 400, message = "Информация не получена")
     })
-    public ResponseEntity<ResponseDto<ConfirmReceiveEmail>> isEmailConfirmed() {
+    public ResponseEntity<ResponseDto<ConfirmReceiveEmail>> isEmailConfirmed(@PathVariable String type) {
         Customer customer = customerService.getCurrentLoggedInUser();
-        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer.getConfirmReceiveEmail(), ConfirmReceiveEmail.class)), HttpStatus.OK);
+        if (type.equalsIgnoreCase("price")) {
+            return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer.getConfirmReceiveEmail(), ConfirmReceiveEmail.class)), HttpStatus.OK);
+        } else if (type.equalsIgnoreCase("comments")){
+            return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer.getConfirmCommentsEmails(), ConfirmReceiveEmail.class)), HttpStatus.OK);
+        } else {
+            throw new UserServiceException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND);
+        }
     }
 
     @PutMapping("/emailConfirmation")
-    @ApiOperation(value = "Запрашивает подтверждение на рассылку",
+    @ApiOperation(value = "Запрашивает подтверждение на рассылку об изменении цен",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Данные получены"),
@@ -99,16 +113,29 @@ public class CustomerNotificationsRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
     }
 
-    @PutMapping("/unsubscribeEmail")
+    @PutMapping("/unsubscribePriceChangesEmail")
     @ApiOperation(value = "Прекращает рассылку сообщений об изменении цен",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Email unsubscribed"),
             @ApiResponse(code = 400, message = "Email was not unsuscribed")
     })
-    public ResponseEntity<ResponseDto<CustomerDto>> unsubscribe() {
+    public ResponseEntity<ResponseDto<CustomerDto>> unsubscribeNewPrice() {
         Customer customer = customerService.getCurrentLoggedInUser();
         customer.setConfirmReceiveEmail(ConfirmReceiveEmail.NO_ACTIONS);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
+    }
+
+    @PutMapping("/unsubscribeCommentsEmail")
+    @ApiOperation(value = "Прекращает рассылку сообщений о новых комментариях",
+            authorizations = {@Authorization(value = "jwtToken")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Email unsubscribed"),
+            @ApiResponse(code = 400, message = "Email was not unsuscribed")
+    })
+    public ResponseEntity<ResponseDto<CustomerDto>> unsubscribeNewComments() {
+        Customer customer = customerService.getCurrentLoggedInUser();
+        customer.setConfirmCommentsEmails(ConfirmReceiveEmail.NO_ACTIONS);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
     }
 
@@ -122,5 +149,25 @@ public class CustomerNotificationsRestController {
     public ResponseEntity<ResponseDto<List<PriceChangeNotifications>>> getPriceNotifications(@PathVariable Long id) {
         List<PriceChangeNotifications> list = priceChangeNotificationsService.getCustomerPriceChangeNotifications(id);
         return new ResponseEntity<>(new ResponseDto<>(true, list), HttpStatus.OK);
+    }
+
+    @GetMapping("/commentAnswers")
+    @ApiOperation(value = "Запрашивает ответы на комментарии",
+            authorizations = {@Authorization(value = "jwtToken")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Comments were foung"),
+            @ApiResponse(code = 400, message = "Comments were not found")
+    })
+    public ResponseEntity<ResponseDto<List<Comment>>> getCommentAnswers() {
+        List<Comment> customerComments = commentService.findAllByCustomer(customerService.getCurrentLoggedInUser());
+        List<Review> customerReviews = reviewService.findAllByCustomer(customerService.getCurrentLoggedInUser());
+        List<Comment> answers = new ArrayList<>();
+        for(Comment comment : customerComments) {
+            answers.addAll(commentService.getCommentsByParentId(comment.getId()));
+        }
+        for(Review review : customerReviews) {
+            answers.addAll(review.getComments());
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, answers), HttpStatus.OK);
     }
 }

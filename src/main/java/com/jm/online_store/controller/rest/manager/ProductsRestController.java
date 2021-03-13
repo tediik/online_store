@@ -224,7 +224,8 @@
                 @ApiResponse(code = 404, message = "Product hasn't been found"),
         })
         public ResponseEntity<ResponseDto<ProductDto>> editProductM(@RequestBody ProductDto productReq) {
-            Product product = productService.findProductById(productReq.getId()).get();
+            Product product = new Product();
+            product.setId(productReq.getId());
             product.setProduct(productReq.getProduct());
             product.setPrice(productReq.getPrice());
             product.setRating(productReq.getRating());

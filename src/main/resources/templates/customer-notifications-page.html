@@ -83,24 +83,20 @@
                             </ul>
                             <!-- Блоки с контентом -->
                             <div class="tab-content">
-                                <!--                                    Изменение цен-->
+                                <!--Изменение цен-->
                                 <div class="tab-pane fade show active" id="tabPriceChanges">
-<!--                                        <div class="col-10">-->
-<!--                                    <div id="PriceChangeTable">-->
-                                        <table id="priceChangeNotificationTable"
-                                        class="table table-striped">
+                                    <table id="priceChangeNotificationTable"
+                                           class="table table-striped">
 
-                                        </table>
-<!--                                    </div>-->
+                                    </table>
                                 </div>
+
                                 <!--Комментарии-->
                                 <div class="tab-pane fade show" id="tabComments">
-                                    <div class="col-10">
-                                        <br>
-                                        <div id="thisWeekRecentlyProductsDiv">
+                                    <table id="newCommentsNotificationTable"
+                                           class="table table-striped">
 
-                                        </div>
-                                    </div>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -114,7 +110,7 @@
 
 <footer th:insert="blocks/footer :: footer"></footer>
 <script src="../static/js/search-button.js"></script>
-<script src="../static/js/price-change-notifications.js"></script>
+<script src="../static/js/notifications.js"></script>
 
 </body>
 </html>

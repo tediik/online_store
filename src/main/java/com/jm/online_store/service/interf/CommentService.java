@@ -26,4 +26,6 @@ public interface CommentService {
     void removeById(Long commentId);
 
     void update(Comment comment);
+
+    List<Comment> getCommentsByParentId(Long parentId);
 }

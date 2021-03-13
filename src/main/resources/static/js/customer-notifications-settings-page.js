@@ -3,10 +3,8 @@ const customerNotificationsUrl = '../api/customer/notifications/';
 $(document).ready(function () {
     /*отображает выбранный день для рассылки*/
     checkSubscribe();
-    /*отображает подписку на рассылку об изменении цен*/
-    checkPriceEmails();
-
-    getCustomerPriceChangeNotifications()
+    /*отображает положение слайдеров email подписок*/
+    checkEmails();
     /* Слушатель для кнопки удалить профиль (в модальном окне)*/
     document.getElementById('deleteProfileCustomer').addEventListener('click', deleteProfile)
     /* Слушатель для кнопки удалить профиль (без возможности восстановить (в модальном окне)*/
@@ -106,16 +104,28 @@ function changeDayOfWeekForStockSend(day) {
  * Устанавливает положение слайдера в зависимости от того, есть ли согласие на рассылку
  * об изменении цен товаров
  */
-function checkPriceEmails() {
-    const slider = document.getElementById("sliderPricesChanges")
-    fetch(customerNotificationsUrl + 'emailConfirmation')
+function checkEmails() {
+    const sliderPriceChanges = document.getElementById("sliderPricesChanges")
+    const sliderNewComments = document.getElementById("sliderNewComments")
+    fetch(customerNotificationsUrl + 'emailConfirmation/price')
         .then(response => response.json())
         .then(response => response.data)
         .then(confirmation => {
             if (confirmation === "CONFIRMED") {
-                slider.checked = true;
+                sliderPriceChanges.checked = true;
             } else {
-                slider.checked = false;
+                sliderPriceChanges.checked = false;
+            }
+        })
+
+    fetch(customerNotificationsUrl + 'emailConfirmation/comments')
+        .then(response => response.json())
+        .then(response => response.data)
+        .then(confirmation => {
+            if (confirmation === "CONFIRMED") {
+                sliderNewComments.checked = true;
+            } else {
+                sliderNewComments.checked = false;
             }
         })
 }
@@ -127,7 +137,7 @@ function checkPriceEmails() {
 function changePriceEmailsSlider() {
     const slider = document.getElementById("sliderPricesChanges")
     if (!slider.checked) {
-        fetch(customerNotificationsUrl + 'unsubscribeEmail', {
+        fetch(customerNotificationsUrl + 'unsubscribePriceChangesEmail', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -140,7 +150,42 @@ function changePriceEmailsSlider() {
                 }
             })
     } else {
-        fetch(customerNotificationsUrl + 'emailConfirmation', {
+        fetch(customerNotificationsUrl + 'emailPriceChangeConfirmation', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-type': 'application/json'
+            }
+        })
+            .then(function (response) {
+                if (response.ok) {
+                    toastr.success('Письмо с подтверждением отправлено Вам на почту', {timeOut: 3000})
+                }
+            })
+    }
+}
+
+/**
+ * При нажатии на слайдер "Комментарии, ответы" либо отменяет рассылку писем,
+ * либо отправляется запрос на подтверждение
+ */
+function changeCommentsEmailSlider() {
+    const slider = document.getElementById("sliderNewComments");
+    if (!slider.checked) {
+        fetch(customerNotificationsUrl + 'unsubscribeCommentsEmail', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    toastr.success('Вы были отписаны от рассылки', {timeOut: 3000});
+                }
+            })
+    } else {
+        fetch(customerNotificationsUrl + 'emailPriceChangeConfirmation', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
