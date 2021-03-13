@@ -152,7 +152,7 @@ function changePriceEmailsSlider() {
                 }
             })
     } else {
-        fetch(customerNotificationsUrl + 'emailPriceChangeConfirmation', {
+        fetch(customerNotificationsUrl + 'emailConfirmation', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -187,7 +187,7 @@ function changeCommentsEmailSlider() {
                 }
             })
     } else {
-        fetch(customerNotificationsUrl + 'emailPriceChangeConfirmation', {
+        fetch(customerNotificationsUrl + 'emailConfirmation', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
