@@ -99,6 +99,15 @@ public class Product {
             property = "id")
     private List<ProductCharacteristic> productCharacteristics;
 
+    public Product(Long id, @NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating, @NonNull String productType) {
+        this.id = id;
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+        this.rating = rating;
+        this.productType = productType;
+    }
+
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating, @NonNull String productType) {
         this.product = product;
         this.price = price;

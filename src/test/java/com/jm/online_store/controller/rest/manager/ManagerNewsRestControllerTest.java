@@ -45,8 +45,8 @@ class ManagerNewsRestControllerTest {
 
     @BeforeEach
     void setUp(){
-        newsService = mock(NewsService.class);
         modelMapper = new ModelMapper();
+        newsService = mock(NewsService.class);
         mockMvc = MockMvcBuilders
                     .standaloneSetup(new ManagerNewsRestController(newsService, modelMapper))
                     .setControllerAdvice(new ExceptionsHandler())

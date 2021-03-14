@@ -42,4 +42,10 @@ public class Topic {
     @ManyToOne
     @JoinColumn(name = "topic_сategory_id")
     private TopicsCategory topicsCategory;
+
+    public Topic(Long id, @NotNull String topicName, TopicsCategory topicsCategory) {
+        this.id = id;
+        this.topicName = topicName;
+        this.topicsCategory = topicsCategory;
+    }
 }

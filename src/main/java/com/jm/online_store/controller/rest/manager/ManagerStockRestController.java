@@ -38,8 +38,8 @@ import java.util.List;
 @Api(description = "Rest controller for manage of stocks from manager page")
 public class ManagerStockRestController {
     private final StockService stockService;
-    private final Type listType = new TypeToken<List<StockDto>>() {}.getType();
     private final ModelMapper modelMapper;
+    private final Type listType = new TypeToken<List<StockDto>>() {}.getType();
 
     /**
      * Метод возвращает конкретный Stock по id
