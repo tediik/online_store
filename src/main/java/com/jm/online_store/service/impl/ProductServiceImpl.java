@@ -445,7 +445,7 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Импорт списка товаров из CSV-файла.
      * Записывает товары в БД.
-     * Для правильного считывания используется кастомная MappingStrategy, 
+     * Для правильного считывания используется кастомная MappingStrategy,
      * чтобы не перегружать Products лишними аннотациями.
      *
      * @param fileName имя файла
@@ -477,7 +477,7 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Импорт списка товаров из CSV-файла.
      * Записывает товары в БД.
-     * Для правильного считывания используется кастомная MappingStrategy, 
+     * Для правильного считывания используется кастомная MappingStrategy,
      * чтобы не перегружать Products лишними аннотациями.
      *
      * @param fileName имя файла.
@@ -692,14 +692,16 @@ public class ProductServiceImpl implements ProductService {
         product.setPriceChangeSubscribers(findProductById(product.getId())
                 .orElseThrow(ProductNotFoundException::new)
                 .getPriceChangeSubscribers());
-        priceChangeNotificationsService.addPriceChangesNotification(product, oldPrice, newPrice);
+        if (newPrice != oldPrice) {
+            priceChangeNotificationsService.addPriceChangesNotification(product, oldPrice, newPrice);
+        }
         return saveProduct(product);
     }
 
     /**
      * Проверяет существование товара в БД.
      * @param productName - название товара.
-     * @return false - если такой товар не был найден, 
+     * @return false - если такой товар не был найден,
      * true - если такой товар существует.
      */
     @Override

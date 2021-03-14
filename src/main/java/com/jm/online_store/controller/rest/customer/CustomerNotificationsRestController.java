@@ -68,8 +68,8 @@ public class CustomerNotificationsRestController {
 
     /**
      * Установка, изменение или удаление дня для рассылки
-     * @param day - день недели
-     * @return DayOfWeekForStockSend новый день для рассылки или null если отписка
+     * @param day - день недели или null в случае отмены подписки
+     * @return DayOfWeekForStockSend новый день для рассылки или null в случае отмены подписки
      */
     @PutMapping("/dayOfWeekForStockSend")
     @ApiOperation(value = "Метод устанавливает день для рассылки",
@@ -82,9 +82,8 @@ public class CustomerNotificationsRestController {
         Customer customer = customerService.getCurrentLoggedInUser();
         day = day.replaceAll("\"", "");
         if (!day.equals("null")) {
-            DayOfWeekForStockSend dayOfWeekForStockSend = DayOfWeekForStockSend.valueOf(day);
-            customer.setDayOfWeekForStockSend(dayOfWeekForStockSend);
-            return new ResponseEntity<>(new ResponseDto<>(true, dayOfWeekForStockSend), HttpStatus.OK);
+            customer.setDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(day));
+            return new ResponseEntity<>(new ResponseDto<>(true, DayOfWeekForStockSend.valueOf(day)), HttpStatus.OK);
         } else {
             customer.setDayOfWeekForStockSend(null);
             return new ResponseEntity<>(new ResponseDto<>(true, day), HttpStatus.OK);

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Repository для действий с сущностью PriceChangeNotifications (уведомления об изменении цены)
+ * Repository для действий с сущностью {@link PriceChangeNotifications}(уведомления об изменении цены)
  */
 @Repository
 public interface PriceChangeNotificationRepository extends JpaRepository<PriceChangeNotifications, Long> {
