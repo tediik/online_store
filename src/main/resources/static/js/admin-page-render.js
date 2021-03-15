@@ -85,6 +85,9 @@ function editUserModalWindowRender(user, allRoles) {
             $('#rolesSelectModal').append(`<option value=${role.id}>${role.name}</option>>`)
         }
     })
+    $('#flexSwitchCheckDefault').val(user.data.isAccountNonBlockedStatus).prop('checked', function () {
+        return !user.data.isAccountNonBlockedStatus;
+    })
 }
 
 function compareRolesId(userRoles, roleNameToCheck) {
@@ -234,6 +237,7 @@ function handleUserAcceptButtonFromModalWindow(event) {
         lastName: $('#lastNameInputModal').val(),
         password: $('#passwordInputModal').val(),
         roles: getSelectValues(document.getElementById("rolesSelectModal")),
+        isAccountNonBlockedStatus: !document.getElementById('flexSwitchCheckDefault').checked
     };
 
     /**
@@ -369,6 +373,9 @@ function renderUsersTable(users) {
      * @returns {string}
      */
     function getUserRolesNames(userRoles) {
+        if (!userRoles) {
+            return '';
+        }
         let rolesNames = '';
         for (let i = 0; i < userRoles.length; i++) {
             if (i === 0) {

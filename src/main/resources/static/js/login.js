@@ -77,7 +77,7 @@ function vkBtn() {
 document.getElementById('twitterBtn').addEventListener('click',twitterBtn)
 function twitterBtn() {
     //В данный момент не срабатывает, раскоментировать при необходимости!
-    // fetch("/api/login/twitter").then(response => response.text())
+    // fetch("/api/login/twitter").then(response => response.text()).
     // then(url => document.location.href = url)
 }
 
