@@ -157,7 +157,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerStatusChange.setIsEnabled(false);
         customerStatusChange.setAnchorForDelete(LocalDateTime.now());
         updateCustomer(customerStatusChange);
-        log.info("профиль покупателя с почтой " + customerStatusChange.getEmail() + "заблокирован");
+        log.info("профиль покупателя с почтой " + customerStatusChange.getEmail() + " заблокирован");
     }
 
     /**

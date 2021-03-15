@@ -23,6 +23,7 @@ public class UserDto {
     private Boolean isAccountNonBlockedStatus;
     private String firstName;
     private String lastName;
+    private String password;
     private String phoneNumber;
     private User.Gender userGender;
     private LocalDate birthdayDate;
@@ -43,6 +44,7 @@ public class UserDto {
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
+        userDto.setPassword(user.getPassword());
         userDto.setIsAccountNonBlockedStatus(user.getIsAccountNonExpiredStatus());
         return userDto;
     }

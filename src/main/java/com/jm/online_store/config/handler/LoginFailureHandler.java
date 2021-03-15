@@ -42,7 +42,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
             response.setStatus(HttpStatus.LOCKED.value());
         } else if (exception.getClass().equals(DisabledException.class)) {
             response.sendRedirect("/login?accountDisabled=true");
-
+            response.setStatus(HttpStatus.LOCKED.value());
         }
     }
 }
