@@ -8,7 +8,6 @@ import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.dto.CharacteristicDto;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

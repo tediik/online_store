@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class PictureProductControllerTest {
-
     private ProductService productService;
     private static final String END_POINT = "/api/product";
     private MockMvc mockMvc;
