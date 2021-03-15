@@ -29,6 +29,5 @@ public class CommonRestController {
     public ResponseEntity<ResponseDto<String>> getStoreName() {
         return new ResponseEntity<>(new ResponseDto<>(true,
                 commonSettingsService.getSettingByName("store_name").getTextValue(), ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
-        //return ResponseEntity.ok(commonSettingsService.getSettingByName("store_name").getTextValue());
     }
 }

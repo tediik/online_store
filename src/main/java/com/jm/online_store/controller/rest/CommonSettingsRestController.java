@@ -38,7 +38,6 @@ public class CommonSettingsRestController {
     @ExceptionHandler(CommonSettingsNotFoundException.class)
     public ResponseEntity<ResponseDto<String>> commonSettingsNotFoundExceptionHandler() {
         return new ResponseEntity<>(new ResponseDto<>(false, "Common settings not found"), HttpStatus.NOT_FOUND);
-        //return ResponseEntity.notFound().build();
     }
 
     @PostMapping
@@ -47,7 +46,6 @@ public class CommonSettingsRestController {
     public ResponseEntity<ResponseDto<CommonSettingsDto>> addNewSetting(@RequestBody CommonSettings commonSetting) {
         return new ResponseEntity<>(new ResponseDto<>(true,
                 modelMapper.map(commonSettingsService.addSetting(commonSetting), CommonSettingsDto.class)), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
     }
 
     @PutMapping
@@ -61,7 +59,6 @@ public class CommonSettingsRestController {
         }
         return new ResponseEntity<>(new ResponseDto<>(true,
                 modelMapper.map(commonSettings, CommonSettingsDto.class)), HttpStatus.OK);
-        //return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{settingName}")
@@ -70,6 +67,5 @@ public class CommonSettingsRestController {
     public ResponseEntity<ResponseDto<CommonSettingsDto>> getCommonSettingByName(@PathVariable String settingName) {
         return new ResponseEntity<>(new ResponseDto<>(
                 true, modelMapper.map(commonSettingsService.getSettingByName(settingName), CommonSettingsDto.class)), HttpStatus.OK);
-        //return ResponseEntity.ok(commonSettingsService.getSettingByName(settingName));
     }
 }
