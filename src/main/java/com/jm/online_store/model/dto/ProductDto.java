@@ -22,6 +22,9 @@ public class ProductDto {
     private String productPictureName;
     private boolean isFavourite;
 
+    public ProductDto() {
+    }
+
     public ProductDto(Product product) {
         this.id = product.getId();
         this.product = product.getProduct();

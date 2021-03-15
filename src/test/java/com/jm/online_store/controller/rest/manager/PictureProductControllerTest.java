@@ -25,10 +25,8 @@ class PictureProductControllerTest {
     private ProductService productService;
     private static final String END_POINT = "/api/product";
     private MockMvc mockMvc;
-    private MockMultipartFile pictureFile;
     private Product product1;
     private Product product2;
-
 
     @BeforeEach
     void setUp() {

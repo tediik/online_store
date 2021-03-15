@@ -43,7 +43,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false, updatable = false, nullable = false)
-    private long id;
+    private Long id;
     @NonNull
     @Column(name = "product", nullable = false)
     private String product;

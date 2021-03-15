@@ -1,14 +1,11 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jm.online_store.controller.ExceptionsHandler;
-import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.dto.CharacteristicDto;
-import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import org.junit.jupiter.api.AfterEach;
@@ -27,9 +24,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -61,11 +56,6 @@ class ProductCharacteristicsRestControllerTest {
                 new Characteristic(1L, "black"),
                 new Characteristic(2L, "red")
         );
-    }
-
-    @AfterEach
-    void endUp() {
-        characteristics = null;
     }
 
     @Test

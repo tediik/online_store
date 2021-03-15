@@ -17,6 +17,7 @@
     import lombok.extern.slf4j.Slf4j;
     import org.apache.commons.io.FilenameUtils;
     import org.apache.commons.lang3.StringUtils;
+    import org.apache.poi.xssf.usermodel.XSSFWorkbook;
     import org.springframework.core.io.FileSystemResource;
     import org.springframework.http.HttpStatus;
     import org.springframework.http.ResponseEntity;
@@ -78,7 +79,7 @@
             } else  {
                 return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.FAILED.getMessage()));
             }
-            return ResponseEntity.ok(new ResponseDto<>(true , ResponseOperation.SUCCESS.getMessage() , ResponseOperation.NO_ERROR.getMessage()));
+            return new ResponseEntity<>(new ResponseDto<>(true, ResponseOperation.SUCCESS.getMessage()), HttpStatus.CREATED);
         }
 
         @PostMapping(value = "/uploadFile")
@@ -208,7 +209,7 @@
             Product gotBack = productService.saveProduct(product);
             categoriesService.addToProduct(product, id);
             ProductDto returnValue = new ProductDto(gotBack);
-            return ResponseEntity.ok(new ResponseDto<>(true, returnValue ));
+            return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.CREATED);
         }
 
         /**
@@ -223,7 +224,7 @@
                 @ApiResponse(code = 200, message = "Product has been updated"),
                 @ApiResponse(code = 404, message = "Product hasn't been found"),
         })
-        public ResponseEntity<ResponseDto<ProductDto>> editProductM(@RequestBody ProductDto productReq) {
+        public ResponseEntity<ResponseDto<ProductDto>> editProduct(@RequestBody ProductDto productReq) {
             Product product = new Product();
             product.setId(productReq.getId());
             product.setProduct(productReq.getProduct());
@@ -259,7 +260,8 @@
                 categoriesService.removeFromProduct(product, idOld);
                 categoriesService.addToProduct(product, idNew);
             }
-            return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.HAS_BEEN_UPDATED.getMessage()));
+            return ResponseEntity.ok(
+                    new ResponseDto<>(true, ResponseOperation.HAS_BEEN_UPDATED.getMessage(), ResponseOperation.NO_ERROR.getMessage()));
         }
 
         /**
