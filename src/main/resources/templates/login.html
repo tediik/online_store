@@ -61,11 +61,16 @@
                         </div>
                         <!-- alert for login failure Bad credentials-->
 
-                        <!-- alert for login failure аккаунт заблокирован-->
-                        <div class="alert alert-danger" th:if="${param.accountBlocked}" role="alert">
+                        <!-- alert for login failure аккаунт удален-->
+                        <div class="alert alert-danger" th:if="${param.accountDisabled}" role="alert">
                             <strong>Ваш акаунт был удален.</strong>
                             <a id="linkForOpenRestoreModal" href="#" class="alert-link">Восстановить</a>
+                        </div>
+                        <!-- alert for login failure аккаунт удален-->
 
+                        <!-- alert for login failure аккаунт заблокирован-->
+                        <div class="alert alert-danger" th:if="${param.accountBanned}" role="alert">
+                            <strong>Ваш акаунт заблокирован.</strong>
                         </div>
                         <!-- alert for login failure аккаунт заблокирован-->
 

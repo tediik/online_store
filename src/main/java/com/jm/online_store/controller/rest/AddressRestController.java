@@ -10,7 +10,6 @@ import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Рест контроллер для адресов
@@ -33,13 +31,17 @@ import java.util.Set;
 @AllArgsConstructor
 @RequestMapping("/api/customer")
 @RestController
-@Api(description = "Rest controller for addresses")
+@Api(value = "Rest controller for addresses")
 public class AddressRestController {
     private final AddressService addressService;
     private final UserService userService;
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<AddressDto>>() {}.getType();
 
+    /**
+     * Метод для отображения адресов всех активных магазинов
+     * @return ResponseEntity<ResponseDto<List<Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     */
     @GetMapping(value = "/allShops")
     @ApiOperation(value = "get all the shops")
     public ResponseEntity<ResponseDto<List<AddressDto>>> findAll() {
@@ -47,6 +49,10 @@ public class AddressRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, addressDto), HttpStatus.OK);
     }
 
+    /**
+     * Метод для отображения адресов пользователя
+     * @return ResponseEntity<ResponseDto<Set<Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     */
     @GetMapping(value = "/userAddresses")
     @ApiOperation(value = "get current logged in Users address")
     public ResponseEntity<ResponseDto<List<AddressDto>>> userAddresses() {
@@ -57,6 +63,11 @@ public class AddressRestController {
             return new ResponseEntity<>(new ResponseDto<>(true, addressDto), HttpStatus.OK);
     }
 
+    /**
+     * Метод для добавления адреса магазина пользователем
+     * @param address - адрес пользователя {@link Address}
+     * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
+     */
     @PostMapping(value = "/addAddress")
     @ApiOperation(value = "adds address for current logged in user")
     public ResponseEntity<ResponseDto<AddressDto>> addAddressToUser(@RequestBody Address address) {

@@ -1,9 +1,9 @@
 /**
  * Declaration of global variables
  */
-let myHeaders = new Headers()
+let myNewsHeaders = new Headers()
 let newsApiUrl = "/api/manager/news"
-myHeaders.append('Content-type', 'application/json; charset=UTF-8')
+myNewsHeaders.append('Content-type', 'application/json; charset=UTF-8')
 const lastPage = {type: 'ALL', currentDate: new Date().toLocaleDateString(), divId: '#allNews', number: 0, last: false};
 let clickUpperNavButton = 'allNews'
 
@@ -140,7 +140,7 @@ function addNewNews() {
     if (checkFields()) {
         fetch(newsApiUrl, {
             method: 'POST',
-            headers: myHeaders,
+            headers: myNewsHeaders,
             body: JSON.stringify(newNews)
         }).then(function (response) {
             if (response.status === 200) {
@@ -170,7 +170,7 @@ function updateNews() {
     if (checkFields()) {
         fetch(newsApiUrl, {
             method: 'PUT',
-            headers: myHeaders,
+            headers: myNewsHeaders,
             body: JSON.stringify(news)
         }).then(function (response) {
             if (response.status === 200) {
@@ -224,10 +224,12 @@ function renderEditModalWindow(newsId) {
     $('#postingDateUpdate').attr('min', moment(new Date).format("yyyy-MM-DD"))
     $('#archiveCheckboxDiv').show()
     fetch(newsApiUrl + `/${newsId}`, {
-        headers: myHeaders
+        headers: myNewsHeaders
     }).then(function (response) {
         if (response.status === 200) {
-            response.json().then(news => renderEditModal(news))
+            response.json()
+                .then(news => news.data)
+                .then(news => renderEditModal(news))
         } else {
             console.log('news not found')
             infoMessage('#infoMessageMainPage', 'Новость не найдена', 'error')
@@ -283,7 +285,7 @@ function handleDeleteButton(newsId) {
     if (doDelete) {
         fetch(newsApiUrl + `/${newsId}`, {
             method: 'DELETE',
-            headers: myHeaders
+            headers: myNewsHeaders
         }).then(function (response) {
             if (response.status === 200) {
                 $('#div-' + newsId).remove()
@@ -314,13 +316,13 @@ function archiveCheckboxHandler() {
  */
 function fetchNews() {
     $.ajax(newsApiUrl + '/page', {
-        headers: myHeaders,
+        headers: myNewsHeaders,
         data: {page: lastPage.number, sort: 'postingDate,DESC', type: lastPage.type, currentDate: lastPage.currentDate},
         async: false,
         success: function (data) {
-            lastPage.number = data.number + 1;
-            lastPage.last = data.last;
-            renderNewsTable(data)
+            lastPage.number = data.data.number + 1;
+            lastPage.last = data.data.last;
+            renderNewsTable(data.data)
         },
         error: function () {
             infoMessage('#infoMessageMainPage', 'В этом разделе нет новостей', 'error')

@@ -64,6 +64,10 @@ public class User implements UserDetails {
 
     private Boolean isAccountNonBlockedStatus = true;
 
+    private Boolean isAccountNonExpiredStatus = true;
+
+    private Boolean isEnabled = true;
+
     @Transient
     @NotBlank
     private String passwordConfirm;
@@ -209,7 +213,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return isAccountNonExpiredStatus;
     }
 
     @Override
@@ -224,7 +228,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 
     public enum Gender {

@@ -38,4 +38,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("FROM Product p order by p.rating DESC")
     List<Product> findAllOrderByRatingDesc();
+
+    @Modifying
+    @Query(value = "delete from product_picture_names where product_picture_names.product_picture_names = :name", nativeQuery = true)
+    void deleteProductPictureName(String name);
+
+    @Query("select p.productPictureNames.size from Product p where p.id = ?1")
+    Long getCountPictureNameByPictureName(Long id);
+
+    @Query(value = "select product_id from product_picture_names where product_picture_names.product_picture_names = :name", nativeQuery = true)
+    Long getProductIdByPictureName(String name);
 }

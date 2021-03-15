@@ -14,6 +14,7 @@ import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
 import com.jm.online_store.repository.RoleRepository;
@@ -166,11 +167,12 @@ public class UserServiceImpl implements UserService {
     /**
      * Обновление пользователя.
      * @param user пользователь, полученный из контроллера.
+     * @return добавленного/обновленного {@link User}
      */
     @Override
     @Transactional
-    public void updateUser(User user) {
-        userRepository.save(user);
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     /**
@@ -189,6 +191,25 @@ public class UserServiceImpl implements UserService {
         updateUser.setBirthdayDate(user.getBirthdayDate());
         updateUser.setUserGender(user.getUserGender());
         return userRepository.save(updateUser);
+    }
+
+    /**
+     * Обновляет данные пользователя в личном кабинете, используя сущность UserDto.
+     * @param userDto сущность, полученная из контроллера.
+     * @return измененный пользователь.
+     * @throws UserNotFoundException если пользователя не существует в БД.
+     */
+    @Override
+    @Transactional
+    public User updateUserDtoProfile(UserDto userDto) {
+        User updateUser = userRepository.findById(userDto.getId()).orElseThrow(() ->
+                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
+        updateUser.setFirstName(userDto.getFirstName());
+        updateUser.setLastName(userDto.getLastName());
+        updateUser.setBirthdayDate(userDto.getBirthdayDate());
+        updateUser.setUserGender(userDto.getUserGender());
+        return userRepository.save(updateUser);
+
     }
 
     /**
@@ -234,7 +255,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void regNewAccount(User userForm) {
+    public User regNewAccount(User userForm) {
         if (userForm.getEmail() != null) {
             ConfirmationToken confirmationToken = new ConfirmationToken(userForm.getEmail(), userForm.getPassword());
             confirmTokenRepository.save(confirmationToken);
@@ -251,6 +272,7 @@ public class UserServiceImpl implements UserService {
         } else {
             log.debug("Email пустой");
         }
+    return userForm;
     }
 
     /**
@@ -287,13 +309,15 @@ public class UserServiceImpl implements UserService {
         String messageBody;
         if (templatesMailingSettingsService.getSettingByName("change_users_mail").getTextValue() != null) {
             String templateBody = templatesMailingSettingsService.getSettingByName("change_users_mail").getTextValue();
+            String userName;
             if (user.getFirstName() != null) {
-                messageBody = templateBody.replace("@@user@@", user.getFirstName())
-                        .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                        .replace("@@url@@", urlActivate);
+                userName =  user.getFirstName();
             } else {
-                messageBody = templateBody.replace("@@user@@", "Подписчик");
+                userName = "Подписчик";
             }
+            messageBody = templateBody.replace("@@user@@", userName)
+                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
+                    .replace("@@url@@", urlActivate);
             mailSenderService.send(newMail, "Activation code", messageBody, "email address validation");
         } else {
             log.debug("Шаблон рассылки при изменении eMail в базе пустой ");
@@ -422,6 +446,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean activateUser(String token, HttpServletRequest request) {
+        String storeName = commonSettingsService.getSettingByName("store_name").getTextValue(); //Название магазина из БД
         String messageBody;
         ConfirmationToken confirmationToken = confirmTokenRepository.findByConfirmationToken(token);
         if (confirmationToken == null) {
@@ -453,12 +478,12 @@ public class UserServiceImpl implements UserService {
             if (customer.getEmail() != null) {
                 messageBody = templateBody.replace("@@user@@", customer.getEmail())
                         .replace("@@password@@", confirmationToken.getUserPassword())
-                        .replace("@@url@@", String.format("<a href='%s'>online_store</a>",  productionUrl));
+                        .replace("@@url@@", String.format("<a href='%s'>" + storeName + "</a>",  productionUrl));
             } else {
                 messageBody = templateBody.replace("@@user@@", "Подписчик");
             }
             try {
-                mailSenderService.sendHtmlMessage(customer.getEmail(), "Информация о регистрации на сайте online_store", messageBody, "info");
+                mailSenderService.sendHtmlMessage(customer.getEmail(), "Информация о регистрации на сайте " + storeName, messageBody, "info");
             } catch (MessagingException e) {
                 log.debug("Message sending error in ActivateUser Method {}", e.getMessage());
             }
@@ -623,6 +648,8 @@ public class UserServiceImpl implements UserService {
         editedUser.setEmail(user.getEmail());
         editedUser.setFirstName(user.getFirstName());
         editedUser.setLastName(user.getLastName());
+        editedUser.setIsAccountNonBlockedStatus(user.getIsAccountNonBlockedStatus());
+        log.debug("Пользователь {} {}", user.getEmail(), !editedUser.getIsAccountNonBlockedStatus() ? "заблокирован" : "разблокирован");
         if (!user.getPassword().equals("")) {
             editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
@@ -681,7 +708,7 @@ public class UserServiceImpl implements UserService {
             updateUser(usertoUpdate);
             return true;
         }
-        if (!addressFromDB.isPresent()) {
+        if (addressFromDB.isEmpty()) {
             Address addressToAdd = addressService.addAddress(address);
             if (usertoUpdate.getUserAddresses() != null) {
                 usertoUpdate.getUserAddresses().add(addressToAdd);

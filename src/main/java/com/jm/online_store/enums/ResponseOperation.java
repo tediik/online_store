@@ -7,14 +7,18 @@ package com.jm.online_store.enums;
 
 public enum ResponseOperation {
 
-    HAS_BEEN_DELETED("%s - was successfully deleted"),
-    HAS_BEEN_SAVED("%s - was successfully saved"),
-    HAS_BEEN_UPDATED("%s - was successfully updated"),
+    HAS_BEEN_DELETED("%s - has successfully deleted"),
+    HAS_BEEN_SAVED("%s - has successfully saved"),
+    HAS_BEEN_UPDATED("%s - has successfully updated"),
     // используется как заглушка в ResponseDto для поля error, в случае если тело передает строковый тип
     NO_ERROR(""),
-    HAS_NOT_BEEN_DELETED("%s - was not deleted");
+    HAS_NOT_BEEN_DELETED("%s - has not deleted"),
+    SUCCESS, FAILED;
 
     private String message;
+
+    ResponseOperation() {
+    }
 
     ResponseOperation(String message) {
         this.message = message;

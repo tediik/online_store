@@ -1,5 +1,6 @@
 package com.jm.online_store.service.interf;
 
+import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Customer;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public interface CustomerService {
     void changeCustomerStatusToLocked(Long id);
 
     void changeCustomerProfileToDeletedProfileByID(long id);
+
+    DayOfWeekForStockSend getCustomerDayOfWeekForStockSend(Customer customer);
 
     void updateCustomerDayOfWeekForStockSend(Customer customer, String dayOfWeekForStockSend);
 

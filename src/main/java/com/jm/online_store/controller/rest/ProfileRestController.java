@@ -4,6 +4,7 @@ import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.PasswordDto;
 import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,22 +35,24 @@ public class ProfileRestController {
      * REST-контролллер для ролей ADMIN & MANAGER & SERVICE
      */
     private final UserService userService;
+    private final ModelMapper modelMapper;
+
 
     /**
      * Метод изменения email
      * @param newMail принимает новый email
-     * @return ResponseEntity<String> возвращает статус ответа
+     * @return ResponseEntity<>(body, HttpStatus)
      */
     @PostMapping("/changeEmail")
     @ApiOperation(value = "change email",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> changeMail(@RequestBody String newMail) {
+    public ResponseEntity<ResponseDto<String>> changeMail(@RequestBody String newMail) {
         User user = userService.getCurrentLoggedInUser();
         if (userService.isExist(newMail)) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(new ResponseDto<>(false, "Пользователь с таким email уже существует"), HttpStatus.BAD_REQUEST);
         } else {
             userService.changeUsersMail(user, newMail);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(new ResponseDto<>(true, "На почту " + newMail + " было отправлено сообщение с подтверждением.", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
         }
     }
 
@@ -83,34 +87,38 @@ public class ProfileRestController {
     @GetMapping(value = "/currentUser")
     @ApiOperation(value = "get current Logged in User",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<User> getCurrentUser() {
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Пользователь не найден"),
+            @ApiResponse(code = 200, message = "Пользователь с идентификатором: \"id\" найден."),
+    })
+    public ResponseEntity<ResponseDto<UserDto>> getCurrentUser() {
         User currentLoggedInUser = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(currentLoggedInUser);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(currentLoggedInUser, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Метод обновления профиля
-     * @param user текущий пользователь
-     * @return ResponseEntity<String> статус ответа
+     * @param userDto {@link UserDto}текущий пользователь
+     * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping("/update")
     @ApiOperation(value = "updates current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> updateProfile(@RequestBody User user) {
-        userService.updateUserProfile(user);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseDto<UserDto>> updateProfile(@RequestBody UserDto userDto) {
+        userService.updateUserDtoProfile(userDto);
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userDto, UserDto.class)), HttpStatus.OK);
     }
 
     /**
      * Метод удаления профиля
      * @param id индентификатор пользователя
-     * @return ResponseEntity.ok() код ответа
+     * @return ResponseEntity<ResponseDto<UserDto>>(user, HttpStatus) {@link ResponseEntity}
      */
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "deletes current User's profile",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<UserDto>> deleteProfile(@PathVariable Long id) {
         userService.deleteByID(id);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userService.findUserById(id), UserDto.class)), HttpStatus.OK);
     }
 }

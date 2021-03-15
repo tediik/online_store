@@ -7,9 +7,10 @@ document.getElementById('addBtn').addEventListener('click', handleAddBtn)
 /*Слушатель для кнопки Подтвердить в Режиме техобслуживания*/
 document.getElementById('maintenanceBtn').addEventListener('click', handleMaintenanceBtn)
 
-addRolesOnNewUserForm()
-addRolesOnMaintenanceMode()
 fetchUsersAndRenderTable()
+renderRolesSelectOnUserTable()
+renderRolesSelectOnNewUserForm()
+renderRolesSelectOnMaintenanceMode()
 renderAcceptedRolesInMaintenance()
 
 /**
@@ -22,7 +23,7 @@ $('#filterRole').on("change", function () {
             type: 'PUT',
             url: '/api/admin/' + roleSelect,
             success: function (filteredUsers) {
-                renderUsersTable(filteredUsers)
+                renderUsersTable(filteredUsers.data)
             }
         });
     } else {
@@ -32,21 +33,33 @@ $('#filterRole').on("change", function () {
 
 /**
  * fetch запрос на roleRestUrl для получения всех ролей из бд
- *
  */
-function addRolesOnNewUserForm() {
-    fetch(roleRestUrl, {headers: headers}).then(response => response.json())
-        .then(allRoles => renderRolesSelectOnNewUserForm(allRoles))
+function getAllRoles() {
+    return fetch(roleRestUrl, {headers: headers}).then(response => response.json())
 }
 
 /**
  * рендерит <Select> c выбором ролей на странице добавления нового User'a
- * @param allRoles - принимается список всех ролей
  */
-function renderRolesSelectOnNewUserForm(allRoles) {
-    let selectRoles = $('#addRoles').empty()
-    $.each(allRoles, function (i, role) {
-        selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
+function renderRolesSelectOnNewUserForm() {
+    getAllRoles().then(allRoles => {
+        let selectRoles = $('#addRoles').empty()
+        $.each(allRoles.data, function (i, role) {
+            selectRoles.append(`<option value=${role.id}>${role.name}</option>`)
+        })
+    })
+}
+
+/**
+ * рендерит <Select> c выбором ролей для списка всех User'ов
+ */
+function renderRolesSelectOnUserTable() {
+    getAllRoles().then(allRoles => {
+        let selectRoles = $('#filterRole').empty()
+            .append(`<option value="" disabled selected>User filter by Role</option><option value="default">show all users</option>`)
+        $.each(allRoles.data, function (i, role) {
+            selectRoles.append(`<option value=${role.name}>${role.name}</option>`)
+        })
     })
 }
 
@@ -72,7 +85,11 @@ function editUserModalWindowRender(user, allRoles) {
             $('#rolesSelectModal').append(`<option value=${role.id}>${role.name}</option>>`)
         }
     })
+    $('#flexSwitchCheckDefault').val(user.data.isAccountNonBlockedStatus).prop('checked', function () {
+        return !user.data.isAccountNonBlockedStatus;
+    })
 }
+
 function compareRolesId(userRoles, roleNameToCheck) {
     for (let i = 0; i < userRoles.length; i++) {
         if (userRoles[i].name === roleNameToCheck) {
@@ -111,7 +128,7 @@ function handleEditUserButton(event) {
         fetch(roleRestUrl, {headers: headers})
     ])
         .then(([response1, response2]) => Promise.all([response1.json(), response2.json()]))
-        .then(([userToEdit, allRoles]) => editUserModalWindowRender(userToEdit, allRoles))
+        .then(([userToEdit, allRoles]) => editUserModalWindowRender(userToEdit.data, allRoles))
 }
 
 /**
@@ -122,19 +139,7 @@ function handleDeleteUserButton(event) {
     const userId = event.target.dataset["userId"]
     fetch(adminRestUrl + "/users/" + userId, {headers: headers})
         .then(response => response.json())
-        .then(userToDelete => deleteUserModalWindowRender(userToDelete))
-}
-
-/**
- * функция делает активным таблицу с пользователями
- * и обновляет в ней данные
- */
-function showAndRefreshHomeTab() {
-    fetchUsersAndRenderTable()
-    $('#nav-home').addClass('tab-pane fade active show')
-    $('#nav-profile').removeClass('active show')
-    $('#nav-profile-tab').removeClass('active')
-    $('#nav-home-tab').addClass('active')
+        .then(userToDelete => deleteUserModalWindowRender(userToDelete.data))
 }
 
 /**
@@ -156,7 +161,7 @@ function handleAddBtn() {
     }
 
     clearFieldsForm('addForm');
-    addRolesOnNewUserForm();
+    renderRolesSelectOnNewUserForm();
 
     /**
      * обработка валидности полей формы, если поле пустое или невалидное, появляется предупреждение
@@ -210,11 +215,11 @@ function handleAddBtn() {
                             console.log(text)
                         })
             } else {
-                response.text().then(function () {
-                    showAndRefreshHomeTab();
-                    clearFieldsForm('addForm');
-                    addRolesOnNewUserForm();
-                })
+                fetchUsersAndRenderTable()
+                $('#nav-home').addClass('show active')
+                $('#nav-home-tab').addClass('active')
+                $('#nav-profile').removeClass('show active')
+                $('#nav-profile-tab').removeClass('active')
             }
         }
     )
@@ -232,6 +237,7 @@ function handleUserAcceptButtonFromModalWindow(event) {
         lastName: $('#lastNameInputModal').val(),
         password: $('#passwordInputModal').val(),
         roles: getSelectValues(document.getElementById("rolesSelectModal")),
+        isAccountNonBlockedStatus: !document.getElementById('flexSwitchCheckDefault').checked
     };
 
     /**
@@ -261,36 +267,38 @@ function handleUserAcceptButtonFromModalWindow(event) {
      * Проверка кнопки delete или edit
      */
     if ($('#acceptButton').hasClass('delete-user')) {
-            fetch(adminRestUrl + "/users/" + user.id, {headers: headers})
-                .then(response => response.json())
-                .then(userToDelete => {
-                    let hasCustomerRole = compareRolesId(userToDelete.roles, 'ROLE_CUSTOMER');
-                    if (hasCustomerRole === true) {
-                        fetch("/api/customer/deleteProfile/" + user.id, {
-                            headers: headers,
-                            method: 'DELETE'
-                        }).then(function (response) {
-                            if (response.ok) {
-                                fetchUsersAndRenderTable()
-                                $('#userModalWindow').modal('hide')
-                                toastr.success("Пользователь заблокирован");
-                            } else {
-                                modalHandleNotValidFormField("Не удается заблокировать пользователя")
-                            }})
-                    } else {
-                        fetch(adminRestUrl + "/" + user.id, {
-                            headers: headers,
-                            method: 'DELETE'
-                        }).then(function (response) {
-                            if (response.ok) {
-                                $('#tr-' + user.id).remove()
-                                $('#userModalWindow').modal('hide')
-                                toastr.success("Пользователь удален");
-                            } else {
-                                modalHandleNotValidFormField("Не удается удалить пользователя")
-                            }})
-                    }
-                })
+        fetch(adminRestUrl + "/users/" + user.id, {headers: headers})
+            .then(response => response.json())
+            .then(userToDelete => {
+                let hasCustomerRole = compareRolesId(userToDelete.data.roles, 'ROLE_CUSTOMER');
+                if (hasCustomerRole === true) {
+                    fetch("/api/customer/deleteProfile/" + user.id, {
+                        headers: headers,
+                        method: 'DELETE'
+                    }).then(function (response) {
+                        if (response.ok) {
+                            fetchUsersAndRenderTable()
+                            $('#userModalWindow').modal('hide')
+                            toastr.success("Пользователь заблокирован");
+                        } else {
+                            modalHandleNotValidFormField("Не удается заблокировать пользователя")
+                        }
+                    })
+                } else {
+                    fetch(adminRestUrl + "/" + user.id, {
+                        headers: headers,
+                        method: 'DELETE'
+                    }).then(function (response) {
+                        if (response.ok) {
+                            $('#tr-' + user.id).remove()
+                            $('#userModalWindow').modal('hide')
+                            toastr.success("Пользователь удален");
+                        } else {
+                            modalHandleNotValidFormField("Не удается удалить пользователя")
+                        }
+                    })
+                }
+            })
     } else {
         fetch(adminRestUrl, {
             method: 'PUT',
@@ -365,6 +373,9 @@ function renderUsersTable(users) {
      * @returns {string}
      */
     function getUserRolesNames(userRoles) {
+        if (!userRoles) {
+            return '';
+        }
         let rolesNames = '';
         for (let i = 0; i < userRoles.length; i++) {
             if (i === 0) {
@@ -378,8 +389,9 @@ function renderUsersTable(users) {
 
     for (let i = 0; i < users.length; i++) {
         const user = users[i];
-        let userRolesNames = getUserRolesNames(user.roles)
-        let row = `
+        if (user.roles !== undefined) {
+            let userRolesNames = getUserRolesNames(user.roles)
+            let row = `
                 <tr id="tr-${user.id}">
                     <td>${user.id}</td>
                     <td>${user.email}</td>
@@ -398,10 +410,11 @@ function renderUsersTable(users) {
                     </td>
                 </tr>
                 `;
-        table.append(row)
+            table.append(row)
+        }
+        $('.edit-button-user').click(handleEditUserButton)
+        $('.delete-button-user').click(handleDeleteUserButton)
     }
-    $('.edit-button-user').click(handleEditUserButton)
-    $('.delete-button-user').click(handleDeleteUserButton)
 }
 
 /**
@@ -414,28 +427,19 @@ function fetchUsersAndRenderTable() {
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
         }
-    }).then(response => response.json()).then(function (users){
-        let user = users.data
-        renderUsersTable(user)})
-}
-
-/**
- * fetch запрос на roleRestUrl для получения всех ролей из бд
- * и добавления их на страницу Режим Техобслуживания
- */
-function addRolesOnMaintenanceMode() {
-    fetch(roleRestUrl, {headers: headers}).then(response => response.json())
-        .then(allRoles => renderRolesSelectOnMaintenanceMode(allRoles))
+    }).then(response => response.json())
+        .then(users => renderUsersTable(users.data))
 }
 
 /**
  * рендерит <Select> c выбором ролей на странице Режим техобслуживания
- * @param allRoles - принимается список всех ролей
  */
-function renderRolesSelectOnMaintenanceMode(allRoles) {
-    let selectRoles = $('#rolesMode').empty()
-    $.each(allRoles, function (i, role) {
-        selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
+function renderRolesSelectOnMaintenanceMode() {
+    getAllRoles().then(allRoles => {
+        let selectRoles = $('#rolesMode').empty()
+        $.each(allRoles.data, function (i, role) {
+            selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
+        })
     })
 }
 

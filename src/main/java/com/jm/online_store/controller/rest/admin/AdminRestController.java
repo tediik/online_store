@@ -13,7 +13,6 @@ import com.jm.online_store.service.interf.CommonSettingsService;
 
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
-import com.jm.online_store.util.ValidationUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -25,6 +24,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +40,7 @@ import java.util.List;
 /**
  * Admin rest controller
  */
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @Slf4j
 @AllArgsConstructor
 @RestController
@@ -131,7 +132,7 @@ public class AdminRestController {
 
     /**
      * rest mapping to modify user from admin page
-     * @param user {@link User}
+     * @param userDto {@link User}
      * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
@@ -140,10 +141,10 @@ public class AdminRestController {
             @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / NO ROLES SELECTED / USER WITH SAME EMAIL ALREADY EXISTS / USER NOT FOUND"),
             @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<ResponseDto<UserDto>> editUser(@RequestBody User user) {
-        userService.updateUserFromAdminPage(user);
-        log.debug("Changes to user with id: {} was successfully added", user.getId());
-        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<UserDto>> editUser(@RequestBody UserDto userDto) {
+        userService.updateUserFromAdminPage(modelMapper.map(userDto, User.class));
+        log.debug("Changes to user with id: {} was successfully added", userDto.getId());
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userDto, UserDto.class)), HttpStatus.OK);
     }
 
     /**

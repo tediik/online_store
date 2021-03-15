@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -148,7 +149,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     public void saveAll(List<Categories> catList) {
         catList.stream().filter(categories -> categories.getProducts() != null)
                 .forEach(categories -> categories.getProducts().
-                        forEach(product -> product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg")));
+                        forEach(product -> product.setProductPictureNames(new ArrayList<>(List.of(loadPictureFrom + "defaultPictureProduct.jpg")))));
         categoriesRepository.saveAll(catList);
     }
 

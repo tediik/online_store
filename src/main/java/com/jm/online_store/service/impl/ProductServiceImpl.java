@@ -1,6 +1,9 @@
 package com.jm.online_store.service.impl;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.AlreadyExists;
+import com.jm.online_store.exception.ExceptionConstants;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Categories;
@@ -21,15 +24,13 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,21 +41,21 @@ import javax.mail.MessagingException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -160,12 +161,16 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Optional<Product> findProductById(Long productId) {
-        return productRepository.findById(productId);
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setProductPictureShortNames(product.getProductPictureNames().stream().map(s -> s.replace(loadPictureFrom, "")).collect(Collectors.toList()));
+        return Optional.of(product);
     }
 
     @Override
     public Product getProductById(Long productId) {
-        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setProductPictureShortNames(product.getProductPictureNames().stream().map(s -> s.replace(loadPictureFrom, "")).collect(Collectors.toList()));
+        return product;
     }
 
     /**
@@ -202,18 +207,17 @@ public class ProductServiceImpl implements ProductService {
      * @return идентификатор обновленного товара.
      */
     @Override
-    public Long saveProduct(Product product) {
+    public Product saveProduct(Product product) {
 
         if (product.getRating() == null) {
             product.setRating(0d);
         }
-        if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg");
+        if (product.getProductPictureNames() == null || product.getProductPictureNames().isEmpty()) {
+            product.setProductPictureNames(new ArrayList<>(List.of(loadPictureFrom + "defaultPictureProduct.jpg")));
         } else {
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
         }
-        Product savedProduct = productRepository.save(product);
-        return savedProduct.getId();
+        return productRepository.save(product);
     }
 
     @Override
@@ -299,62 +303,68 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void importFromXMLFile(String fileName) {
-//        try {
-//            // Создается построитель документа
-//            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-//
-//            // Создается дерево DOM документа из файла
-//            Document document = documentBuilder.parse("uploads/import/" + fileName);
-//            document.getDocumentElement().normalize();
-//
-//            NodeList nList = document.getElementsByTagName("product");
-//
-//            for (int temp = 0; temp < nList.getLength(); temp++) {
-//
-//                Node nNode = nList.item(temp);
-//                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-//
-//                    Element eElement = (Element) nNode;
-//
-//                    String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
-//                    String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
-//                    String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
-//                    String categoryName = eElement.getElementsByTagName("categoryname").item(0).getTextContent();
-//                    Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
-//                    categoriesService.addToProduct(product, categoryName);
-//
-//                    String characteristicName;
-//                    String characteristicValue;
-//                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
-//                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
-//                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
-//                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
-//
-//                        List<String> listNames = Arrays.asList(characteristicName.split(","));
-//                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
-//                        Map<String, String> map = new HashMap<>();
-//
-//                        for (int i = 0; i < listValues.size(); i++) {
-//                            map.put(listNames.get(i), listValues.get(i));
-//                        }
-//                        for (Map.Entry<String, String> entry : map.entrySet()) {
-//                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
-//                                    entry.getKey(), entry.getValue());
-//                        }
-//                    }
-//                }
-//            }
-//
-//        } catch (ParserConfigurationException e) {
-//            log.error("Ошибка конфигурации парсера");
-//            e.printStackTrace();
-//        } catch (SAXException e) {
-//            log.error("Ошибка XML синтаксиса");
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            log.error("Ошибка ввода/вывода");
-//            e.printStackTrace();
-//        }
+        try {
+            // Создается построитель документа
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+            // Создается дерево DOM документа из файла
+            Document document = documentBuilder.parse("uploads/import/" + fileName);
+            document.getDocumentElement().normalize();
+
+            NodeList nList = document.getElementsByTagName("product");
+
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+
+                Node nNode = nList.item(temp);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element eElement = (Element) nNode;
+
+                    String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
+                    String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
+                    String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
+                    String categoryName = eElement.getElementsByTagName("categoryname").item(0).getTextContent();
+                    Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
+                    categoriesService.addToProduct(product, categoryName);
+
+                    String characteristicName;
+                    String characteristicValue;
+                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
+                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
+                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
+                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
+
+                        List<String> listNames = Arrays.asList(characteristicName.split(","));
+                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
+                        Map<String, String> map = new HashMap<>();
+
+                        for (int i = 0; i < listValues.size(); i++) {
+                            map.put(listNames.get(i), listValues.get(i));
+                        }
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
+                            try {
+                                productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(() ->
+                                                new ProductNotFoundException(ExceptionEnums.PRODUCT.getText() + ExceptionConstants.NOT_FOUND)).getId(),
+                                        entry.getKey(), entry.getValue());
+                            } catch (IncorrectResultSizeDataAccessException e) {
+                                log.error("COULDN'T ADD PRODUCT CATEGORY");
+                                throw new AlreadyExists(ExceptionEnums.PRODUCT_CHARACTERISTICS.getText() + ExceptionConstants.ALREADY_EXISTS);
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (ParserConfigurationException e) {
+            log.error("Ошибка конфигурации парсера");
+            e.printStackTrace();
+        } catch (SAXException e) {
+            log.error("Ошибка XML синтаксиса");
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("Ошибка ввода/вывода");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -404,8 +414,14 @@ public class ProductServiceImpl implements ProductService {
                             map.put(listNames.get(i), listValues.get(i));
                         }
                         for (Map.Entry<String, String> entry : map.entrySet()) {
-                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
-                                    entry.getKey(), entry.getValue());
+                            try {
+                                productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(() ->
+                                                new ProductNotFoundException(ExceptionEnums.PRODUCT.getText() + ExceptionConstants.NOT_FOUND)).getId(),
+                                        entry.getKey(), entry.getValue());
+                            } catch (IncorrectResultSizeDataAccessException e) {
+                                log.error("COULDN'T ADD PRODUCT CATEGORY");
+                                throw new AlreadyExists(ExceptionEnums.PRODUCT_CHARACTERISTICS.getText() + ExceptionConstants.ALREADY_EXISTS);
+                            }
                         }
                     }
                 }
@@ -564,7 +580,10 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
-                        presentProduct.getProductPictureName(),
+                        presentProduct.getProductPictureNames(),
+                        presentProduct.getProductPictureShortNames(),
+                        presentProduct.getAmount(),
+                        presentProduct.isDeleted(),
                         productSet.contains(presentProduct)
                 );
                 return Optional.of(productDto);
@@ -579,7 +598,10 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
-                        presentProduct.getProductPictureName(),
+                        presentProduct.getProductPictureNames(),
+                        presentProduct.getProductPictureShortNames(),
+                        presentProduct.getAmount(),
+                        presentProduct.isDeleted(),
                         false
                 );
                 return Optional.of(productDto);
@@ -647,12 +669,12 @@ public class ProductServiceImpl implements ProductService {
      * @return идентификатор изменённого товара.
      */
     @Override
-    public Long editProduct(Product product) {
+    public Product editProduct(Product product) {
 
-        if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName("defaultProductImage.jpg");
+        if (product.getProductPictureNames() == null || product.getProductPictureNames().isEmpty()) {
+            product.setProductPictureNames(new ArrayList<>(List.of("defaultProductImage.jpg")));
         } else {
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
         }
 
         Map<LocalDateTime, Double> map = findProductById(product.getId())
@@ -703,86 +725,33 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deletePriceChangeSubscriber(userService.getCurrentLoggedInUser().getEmail(), productId);
     }
 
+    /**
+     * Удаляет адресс изображения из БД по id
+     * @param name изображения
+     */
+    @Transactional
     @Override
-    public void importFromXMLFile(MultipartFile file) {
-        writeFile(file);
-        try {
-            // Создается построитель документа
-            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            // Создается дерево DOM документа из файла
-            Document document = documentBuilder.parse("C:\\Users\\Dalan\\Desktop\\dev\\online_store\\uploads\\import\\" + file.getOriginalFilename());
-            document.getDocumentElement().normalize();
-            NodeList nList = document.getElementsByTagName("product");
-
-            for (int temp = 0; temp < nList.getLength(); temp++) {
-
-                Node nNode = nList.item(temp);
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-                    Element eElement = (Element) nNode;
-
-                    String productName = eElement.getElementsByTagName("productname").item(0).getTextContent();
-                    String productPrice = eElement.getElementsByTagName("price").item(0).getTextContent();
-                    String productAmount = eElement.getElementsByTagName("amount").item(0).getTextContent();
-                    String categoryName = eElement.getElementsByTagName("categoryname").item(0).getTextContent();
-                    Product product = new Product(productName, Double.parseDouble(productPrice), Integer.parseInt(productAmount));
-                    categoriesService.addToProduct(product, categoryName);
-
-                    String characteristicName;
-                    String characteristicValue;
-                    if (eElement.getElementsByTagName("characteristicname").getLength() != 0
-                            && eElement.getElementsByTagName("characteristicvalue").getLength() != 0) {
-                        characteristicName = eElement.getElementsByTagName("characteristicname").item(0).getTextContent();
-                        characteristicValue = eElement.getElementsByTagName("characteristicvalue").item(0).getTextContent();
-
-                        List<String> listNames = Arrays.asList(characteristicName.split(","));
-                        List<String> listValues = Arrays.asList(characteristicValue.split(","));
-                        Map<String, String> map = new HashMap<>();
-
-                        for (int i = 0; i < listValues.size(); i++) {
-                            map.put(listNames.get(i), listValues.get(i));
-                        }
-                        for (Map.Entry<String, String> entry : map.entrySet()) {
-                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
-                                    entry.getKey(), entry.getValue());
-                        }
-                    }
-                }
-            }
-
-        } catch (ParserConfigurationException e) {
-            log.error("Ошибка конфигурации парсера");
-            e.printStackTrace();
-        } catch (SAXException e) {
-            log.error("Ошибка XML синтаксиса");
-            e.printStackTrace();
-        } catch (IOException e) {
-            log.error("Ошибка ввода/вывода");
-            e.printStackTrace();
-        }
-
+    public void deleteProductPictureName(String name) {
+        productRepository.deleteProductPictureName(name);
     }
 
+    /**
+     * Возвращает колличество картинок, принадлежащих продукту
+     * @param id продукта
+     */
+    @Transactional
     @Override
-    public void importFromCSVFile(MultipartFile multipartFile) throws FileNotFoundException {
-
+    public Long getCountPictureNameByPictureName(Long id) {
+        return productRepository.getCountPictureNameByPictureName(id);
     }
 
-
-
-    private void writeFile(@RequestParam("file") MultipartFile file) {
-        try {
-            byte[] bytes = file.getBytes();
-            if (bytes.length == 0)
-                throw new Exception("File is empty");
-            BufferedOutputStream stream =
-                    new BufferedOutputStream(new FileOutputStream("C:\\Users\\Dalan\\Desktop\\dev\\online_store\\uploads\\import\\" + file.getOriginalFilename()));
-            stream.write(bytes);
-            stream.close();
-        } catch (Exception e) {
-            log.error("Ошибка сохранения файла");
-            e.printStackTrace();
-        }
-        log.debug("тип файла" + FilenameUtils.getExtension(file.getOriginalFilename()));
+    /**
+     * Возвращает id продукта по имени картинки, принадлежащей данному продукту
+     * @param name имя картинки
+     */
+    @Transactional
+    @Override
+    public Long getProductIdByPictureName(String name) {
+        return productRepository.getProductIdByPictureName(name);
     }
 }
