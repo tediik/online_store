@@ -154,7 +154,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void changeCustomerStatusToLocked(Long id) {
         Customer customerStatusChange = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        customerStatusChange.setAccountNonBlockedStatus(false);
+        customerStatusChange.setIsEnabled(false);
         customerStatusChange.setAnchorForDelete(LocalDateTime.now());
         updateCustomer(customerStatusChange);
         log.info("профиль покупателя с почтой " + customerStatusChange.getEmail() + "заблокирован");
@@ -221,7 +221,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void restoreCustomer(String email) {
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()
                 -> new UserNotFoundException(ExceptionEnums.CUSTOMERS.getText() + ExceptionConstants.NOT_FOUND));
-        customer.setAccountNonBlockedStatus(true);
+        customer.setIsEnabled(true);
         customer.setAnchorForDelete(null);
         updateCustomer(customer);
     }

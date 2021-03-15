@@ -20,7 +20,7 @@ import java.util.Set;
 public class UserDto {
     private Long id;
     private String email;
-    private boolean isAccountNonBlockedStatus;
+    private Boolean isAccountNonBlockedStatus;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -43,6 +43,7 @@ public class UserDto {
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
+        userDto.setIsAccountNonBlockedStatus(user.getIsAccountNonExpiredStatus());
         return userDto;
     }
 }

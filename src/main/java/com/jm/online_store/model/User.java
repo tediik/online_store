@@ -62,7 +62,11 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
-    private boolean isAccountNonBlockedStatus = true;
+    private Boolean isAccountNonBlockedStatus = true;
+
+    private Boolean isAccountNonExpiredStatus = true;
+
+    private Boolean isEnabled = true;
 
     @Transient
     @NotBlank
@@ -209,7 +213,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return isAccountNonExpiredStatus;
     }
 
     @Override
@@ -219,7 +223,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return isEnabled;
     }
 
     @Override
