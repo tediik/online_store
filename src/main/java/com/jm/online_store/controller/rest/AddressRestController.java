@@ -10,6 +10,7 @@ import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Рест контроллер для адресов
@@ -49,11 +51,10 @@ public class AddressRestController {
     @ApiOperation(value = "get current logged in Users address")
     public ResponseEntity<ResponseDto<List<AddressDto>>> userAddresses() {
         List<AddressDto> addressDto = modelMapper.map(userService.getCurrentLoggedInUser().getUserAddresses(), listType);
-        if (userService.getCurrentLoggedInUser().getUserAddresses() != null) {
-            return new ResponseEntity<>(new ResponseDto<>(true,
-                    addressDto), HttpStatus.OK);
+        if (addressDto.isEmpty()) {
+            return new ResponseEntity<>(new ResponseDto<>(false, "Addresses not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(new ResponseDto<>(false, "Addresses not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponseDto<>(true, addressDto), HttpStatus.OK);
     }
 
     @PostMapping(value = "/addAddress")
