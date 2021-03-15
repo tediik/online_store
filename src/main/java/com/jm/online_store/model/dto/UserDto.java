@@ -20,11 +20,11 @@ import java.util.Set;
 public class UserDto {
     private Long id;
     private String email;
-    private boolean isAccountNonBlockedStatus;
+    private Boolean isAccountNonBlockedStatus;
     private boolean isAccountNonReadOnlyStatus;
-    private String password;
     private String firstName;
     private String lastName;
+    private String password;
     private String phoneNumber;
     private User.Gender userGender;
     private LocalDate birthdayDate;
@@ -47,6 +47,7 @@ public class UserDto {
         userDto.setRoles(user.getRoles());
         userDto.setPassword(user.getPassword());
         userDto.setAccountNonReadOnlyStatus(user.isAccountNonReadOnlyStatus());
+        userDto.setIsAccountNonBlockedStatus(user.getIsAccountNonExpiredStatus());
         return userDto;
     }
 }

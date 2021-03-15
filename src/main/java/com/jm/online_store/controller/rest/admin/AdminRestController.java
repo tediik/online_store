@@ -132,7 +132,7 @@ public class AdminRestController {
 
     /**
      * rest mapping to modify user from admin page
-     * @param user {@link User}
+     * @param userDto {@link User}
      * @return new ResponseEntity<ResponseDto<UserDto>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @PutMapping
@@ -141,10 +141,10 @@ public class AdminRestController {
             @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / NO ROLES SELECTED / USER WITH SAME EMAIL ALREADY EXISTS / USER NOT FOUND"),
             @ApiResponse(code = 200, message = "")
     })
-    public ResponseEntity<ResponseDto<UserDto>> editUser(@RequestBody User user) {
-        userService.updateUserFromAdminPage(user);
-        log.debug("Changes to user with id: {} was successfully added", user.getId());
-        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<UserDto>> editUser(@RequestBody UserDto userDto) {
+        userService.updateUserFromAdminPage(modelMapper.map(userDto, User.class));
+        log.debug("Changes to user with id: {} was successfully added", userDto.getId());
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(userDto, UserDto.class)), HttpStatus.OK);
     }
 
     /**
