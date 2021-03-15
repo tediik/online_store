@@ -287,18 +287,17 @@ public class CustomerRestController {
      */
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/changeProfileStatusToReadOnly/{id}")
-    @ApiOperation(value = "Changes User ReadOnly status",
+    @ApiOperation(value = "Changes Customer ReadOnly status",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<UserDto>> changeReadOnlyStatus(@PathVariable Long id){
         try {
             customerService.changeCustomerStatusToReadOnly(id);
-        }
-        catch (IllegalArgumentException | UserNotFoundException e) {
+        } catch (IllegalArgumentException | UserNotFoundException e) {
             log.debug("There is no user with id: {}", id);
             throw new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         User user = userService.findById(id).get();
-        log.debug("User with id: {}, was change - ReadOnlyStatus - " + !user.isAccountNonReadOnlyStatus(), id);
+        log.debug("User with id: {}, was change - ReadOnlyStatus - {}", id, !user.isAccountNonReadOnlyStatus());
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
     }
 

@@ -96,7 +96,6 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Delete ProductComment from database by comment Id
-     *
      * @param commentId
      */
     @Override
@@ -107,7 +106,6 @@ public class CommentServiceImpl implements CommentService {
     /**
      * Обновляет комментарий. Из измененного коммента с фронта достается контент и присваивается
      * этому же комментарию в БД
-     *
      * @param commentEdited
      */
     @Override

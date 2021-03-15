@@ -162,7 +162,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Метод, который меняет статус клиента на "Только Чтение" или "Чтение и Запись"
-     *
      * @param id клиента
      */
     @Override
@@ -171,7 +170,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customerStatusChange = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
         customerStatusChange.setAccountNonReadOnlyStatus(!customerStatusChange.isAccountNonReadOnlyStatus());
         updateCustomer(customerStatusChange);
-        log.info("Права на запись у покупателя с почтой " + customerStatusChange.getEmail() + "изменены. Запись - " + customerStatusChange.isAccountNonReadOnlyStatus());
+        log.info("Права на запись у покупателя с почтой {} изменены. Запись - {}", customerStatusChange.getEmail(), customerStatusChange.isAccountNonReadOnlyStatus());
     }
 
     /**
