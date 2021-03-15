@@ -28,6 +28,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -284,6 +285,7 @@ public class CustomerRestController {
      * @param id идентификатор покупателя
      * @return ResponseEntity<ResponseDto<UserDto>>, HttpStatus.OK
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/changeProfileStatusToReadOnly/{id}")
     @ApiOperation(value = "Changes User ReadOnly status",
             authorizations = { @Authorization(value = "jwtToken") })
@@ -296,7 +298,7 @@ public class CustomerRestController {
             throw new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
         }
         User user = userService.findById(id).get();
-        log.debug("User with id: {}, was readOnly status", id);
+        log.debug("User with id: {}, was change - ReadOnlyStatus - " + !user.isAccountNonReadOnlyStatus(), id);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
     }
 

@@ -21,7 +21,7 @@ public class UserDto {
     private Long id;
     private String email;
     private boolean isAccountNonBlockedStatus;
-    private Boolean isAccountNonReadOnlyStatus;
+    private boolean isAccountNonReadOnlyStatus;
     private String password;
     private String firstName;
     private String lastName;
@@ -46,7 +46,7 @@ public class UserDto {
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
         userDto.setPassword(user.getPassword());
-        userDto.setIsAccountNonReadOnlyStatus(user.getIsAccountNonReadOnlyStatus());
+        userDto.setAccountNonReadOnlyStatus(user.isAccountNonReadOnlyStatus());
         return userDto;
     }
 }

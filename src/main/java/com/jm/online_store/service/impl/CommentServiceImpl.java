@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public Comment addComment(Comment comment) {
         User loggedInUser = userService.getCurrentLoggedInUser();
-        if (loggedInUser.getIsAccountNonReadOnlyStatus()) {
+        if (loggedInUser.isAccountNonReadOnlyStatus()) {
             if (comment.getParentId() != null) {
                 comment.setParentComment(commentRepository.findById(comment.getParentId()).get());
             }
@@ -96,6 +96,7 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Delete ProductComment from database by comment Id
+     *
      * @param commentId
      */
     @Override
@@ -106,6 +107,7 @@ public class CommentServiceImpl implements CommentService {
     /**
      * Обновляет комментарий. Из измененного коммента с фронта достается контент и присваивается
      * этому же комментарию в БД
+     *
      * @param commentEdited
      */
     @Override
