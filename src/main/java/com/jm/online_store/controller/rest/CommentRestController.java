@@ -134,15 +134,16 @@ public class CommentRestController {
         if (!bindingResult.hasErrors()) {
             String checkText = comment.getContent();
             comment.setReview(reviewFromDb);
-            List<String> resultText = badWordsService.checkComment(checkText);
-            if (resultText.isEmpty()) {
-                Comment savedComment = commentService.addComment(comment);
-                reviewFromDb.setComments(List.of(savedComment));
-                CommentDto.commentEntityToDto(comment);
-                return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
-            } else {
-                return ResponseEntity.status(201).body(resultText);
-            }
+            comment.setProductId(reviewFromDb.getProductId());
+                List<String> resultText = badWordsService.checkComment(checkText);
+                if (resultText.isEmpty()) {
+                    Comment savedComment = commentService.addComment(comment);
+                    reviewFromDb.setComments(List.of(savedComment));
+                    CommentDto.commentEntityToDto(comment);
+                    return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
+                } else {
+                    return ResponseEntity.status(201).body(resultText);
+                }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,

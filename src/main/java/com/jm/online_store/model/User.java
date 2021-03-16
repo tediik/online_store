@@ -97,6 +97,13 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private ConfirmReceiveEmail confirmReceiveEmail = ConfirmReceiveEmail.NO_ACTIONS;
 
+    /**
+     * Согласие пользователя на рассылки о новых комментариях
+     */
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ConfirmReceiveEmail confirmCommentsEmails = ConfirmReceiveEmail.NO_ACTIONS;
+
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
     @JoinTable(

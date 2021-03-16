@@ -1,5 +1,6 @@
 package com.jm.online_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,6 +51,7 @@ public class Comment {
     @Column(name = "comment_edit")
     private String commentTimeEdit;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "product")
     private Product product;
@@ -57,6 +59,7 @@ public class Comment {
     @Column(name = "product_id")
     private Long productId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "review_id")
     private Review review;

@@ -1,6 +1,5 @@
 package com.jm.online_store.controller.rest.customer;
 
-import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ExceptionConstants;
@@ -268,16 +267,6 @@ public class CustomerRestController {
                 .map(product -> modelMapper.map(product, ProductModelDto.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(new ResponseDto<>(true, productsViewedByUserIdAndDateTimeBetween), HttpStatus.OK);
-    }
-
-    @GetMapping("/dayOfWeekForStockSend")
-    @ApiOperation(value = "Метод возвращает из базы день, в который будет рассылка",
-            authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Day was not found")
-    public ResponseEntity<ResponseDto<DayOfWeekForStockSend>> getCustomerDayOfWeekForStockSend() {
-        Customer customer = customerService.getCurrentLoggedInUser();
-        DayOfWeekForStockSend day = customerService.getCustomerDayOfWeekForStockSend(customer);
-        return new ResponseEntity<>(new ResponseDto<>(true, day), HttpStatus.OK);
     }
 
     /**
