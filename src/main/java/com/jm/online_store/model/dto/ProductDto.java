@@ -29,9 +29,6 @@ public class ProductDto {
     private boolean deleted;
     private boolean isFavourite;
 
-    public ProductDto() {
-    }
-
     public ProductDto(Product product) {
         this.id = product.getId();
         this.product = product.getProduct();

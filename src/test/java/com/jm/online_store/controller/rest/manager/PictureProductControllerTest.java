@@ -14,6 +14,9 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+
+import java.io.File;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -26,6 +29,7 @@ class PictureProductControllerTest {
     private MockMvc mockMvc;
     private Product product1;
     private Product product2;
+    private static final String loadPictureFrom = ".." + File.separator + "uploads" + File.separator + "images" + File.separator + "products" + File.separator;
 
     @BeforeEach
     void setUp() {
@@ -34,32 +38,15 @@ class PictureProductControllerTest {
                 .standaloneSetup(new PictureProductController(productService))
                 .setControllerAdvice(new ExceptionsHandler())
                 .build();
-        product1 = new Product(1L, "PRODUCT1", 1.0, 2, 2.3, "TYPE1");
-        product2 = new Product(2L,"PRODUCT2", 2.0, 3, 4.3, "TYPE2");
+        product1 = new Product(1L, "PRODUCT1", 1.0, 2, 2.3, "TYPE1", Collections.singletonList(loadPictureFrom + "defaultPictureProduct1.jpg"));
+        product2 = new Product(2L,"PRODUCT2", 2.0, 3, 4.3, "TYPE2", Collections.singletonList(loadPictureFrom + "defaultPictureProduct2.jpg"));
     }
 
     @Test
-    @DisplayName("edit picture")
-    void editPicture() throws Exception {
-        MockMultipartFile pictureFile = new MockMultipartFile("file", "hello.txt", MediaType.TEXT_PLAIN_VALUE, "Hello, World!".getBytes());
-        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(END_POINT + "/upload/picture/{id}", 1L);
-        when(productService.findProductById(1L)).thenReturn(Optional.ofNullable(product2));
-        when(productService.editProduct(product1)).thenReturn(product2);
-        builder.with(request -> {
-            request.setMethod("PUT");
-            return request;
-        });
-        mockMvc.perform(builder
-                .file("pictureFile", pictureFile.getBytes()))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("delete picture by id")
+    @DisplayName("delete picture by name")
     void deletePicture() throws Exception {
-        doNothing().when(productService).deleteProduct(1L);
-        when(productService.findProductById(1L)).thenReturn(Optional.ofNullable(product2));
-        mockMvc.perform(MockMvcRequestBuilders.delete(END_POINT + "/picture/delete/{id}" , 1L)
+        doNothing().when(productService).deleteProductPictureName("picture");
+        mockMvc.perform(MockMvcRequestBuilders.delete(END_POINT + "/picture/delete/{id}" , "picture")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -81,11 +68,10 @@ class PictureProductControllerTest {
     }
 
     @Test
-    @DisplayName("delete picture by id throws product not found exception")
+    @DisplayName("delete picture by name throws product not found exception")
     void deletePictureThrowsProductNotFoundException() throws Exception {
-        doNothing().when(productService).deleteProduct(1L);
-        when(productService.findProductById(1L)).thenThrow(ProductNotFoundException.class);
-        mockMvc.perform(MockMvcRequestBuilders.delete(END_POINT + "/picture/delete/{id}" , 1L)
+        doThrow(ProductNotFoundException.class).when(productService).deleteProductPictureName(anyString());
+        mockMvc.perform(MockMvcRequestBuilders.delete(END_POINT + "/picture/delete/{pictureShortName}" , anyString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
