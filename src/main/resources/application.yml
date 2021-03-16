@@ -6,8 +6,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/online_store
-    username: postgres
-    password: postgres
+    username: root
+    password: root
     #    url: jdbc:postgresql://ec2-52-208-138-246.eu-west-1.compute.amazonaws.com:5432/datmbr0etpmdhb
     #    username: ivrmvajsnlixth
     #    password: ec3c54e3047872e2eb2075ec1e333e04aedb0ab4604410209771d31fe5042050
