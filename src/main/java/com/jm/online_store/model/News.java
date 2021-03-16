@@ -25,12 +25,10 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Data
-@Entity
-@Getter
-@Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "news")
 @ApiModel(description =  "Сущность News, связь SharedNews")
