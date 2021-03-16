@@ -1,10 +1,12 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.CommentNotSavedException;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForCommentDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.ReviewForCommentDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.BadWordsService;
@@ -63,7 +65,7 @@ public class CommentRestController {
      */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches all the comments from current product")
-        public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
+    public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
         List<CommentDto> commentDtos = commentService.findAllByProductId(productId).stream()
                 .map(CommentDto::commentEntityToDto)
                 .collect(Collectors.toList());
@@ -75,16 +77,17 @@ public class CommentRestController {
      * Returns JSON representation, previously, searches for forbidden words
      *
      * @param comment комментарий
-     * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
+     * @return ResponseEntity<ResponseDto<ProductForCommentDto>> or ResponseEntity<ResponseDto<List<String>>>
      */
     @PostMapping
     @ApiOperation(value = "Post new savedComment to the current product",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
+            @ApiResponse(code = 423, message = "You do not have adequate permission to perform this operation!"),
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
-            @ApiResponse(code = 200, message = "Comment was successfully added")
+            @ApiResponse(code = 200, message = "Comment was successfully added"),
     })
-    public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
+    public ResponseEntity<ResponseDto<?>> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
         Comment savedComment = comment;
         if (!bindingResult.hasErrors()) {
@@ -92,10 +95,15 @@ public class CommentRestController {
             List<String> resultText = badWordsService.checkComment(checkText);
             if (resultText.isEmpty()) {
                 productFromDb.setComments(List.of(savedComment));
-                commentService.addComment(savedComment);
-                return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
+                try {
+                    commentService.addComment(savedComment);
+                } catch (CommentNotSavedException e) {
+                    log.debug("LOCKED! cause: {}", e.getMessage());
+                    throw new ResponseStatusException(HttpStatus.LOCKED, e.getMessage());
+                }
+                return new ResponseEntity<>(new ResponseDto<>(true, ProductForCommentDto.productToDto(productFromDb)), HttpStatus.OK);
             } else {
-                return ResponseEntity.status(201).body(resultText);
+                return new ResponseEntity<>(new ResponseDto<>(true, resultText), HttpStatus.CREATED);
             }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
@@ -126,15 +134,15 @@ public class CommentRestController {
         if (!bindingResult.hasErrors()) {
             String checkText = comment.getContent();
             comment.setReview(reviewFromDb);
-                List<String> resultText = badWordsService.checkComment(checkText);
-                if (resultText.isEmpty()) {
-                    Comment savedComment = commentService.addComment(comment);
-                    reviewFromDb.setComments(List.of(savedComment));
-                    CommentDto.commentEntityToDto(comment);
-                    return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
-                } else {
-                    return ResponseEntity.status(201).body(resultText);
-                }
+            List<String> resultText = badWordsService.checkComment(checkText);
+            if (resultText.isEmpty()) {
+                Comment savedComment = commentService.addComment(comment);
+                reviewFromDb.setComments(List.of(savedComment));
+                CommentDto.commentEntityToDto(comment);
+                return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
+            } else {
+                return ResponseEntity.status(201).body(resultText);
+            }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
