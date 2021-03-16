@@ -15,7 +15,7 @@ myHeaders.append('Content-type', 'application/json; charset=UTF-8')
  * алерта выпадающегоесли пытается залогниться кастомер который удалил свой профиль
  * но 30 дней еще не прошло
  */
-// document.getElementById('linkForOpenRestoreModal').addEventListener('click', showModalForRestore)
+document.getElementById('linkForOpenRestoreModal').addEventListener('click', showModalForRestore)
 
 /**
  * функиця показывает модалку для восстановления профиля

@@ -1,5 +1,6 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.CommentNotSavedException;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
@@ -79,15 +80,19 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public Comment addComment(Comment comment) {
         User loggedInUser = userService.getCurrentLoggedInUser();
-        if (comment.getParentId() != null) {
-            comment.setParentComment(commentRepository.findById(comment.getParentId()).get());
+        if (loggedInUser.isAccountNonReadOnlyStatus()) {
+            if (comment.getParentId() != null) {
+                comment.setParentComment(commentRepository.findById(comment.getParentId()).get());
+            }
+            if (comment.getReview() != null) {
+                comment.setReview(reviewRepository.findById(comment.getReview().getId()).get());
+            }
+            comment.setCustomer(userService.findById(loggedInUser.getId()).get());
+            sendCommentAnswer(comment);
+            return commentRepository.save(comment);
+        } else {
+            throw new CommentNotSavedException();
         }
-        if (comment.getReview() != null) {
-            comment.setReview(reviewRepository.findById(comment.getReview().getId()).get());
-        }
-        comment.setCustomer(userService.findById(loggedInUser.getId()).get());
-        sendCommentAnswer(comment);
-        return commentRepository.save(comment);
     }
 
     /**
