@@ -68,21 +68,20 @@ public class CustomerNotificationsRestController {
 
     /**
      * Установка, изменение или удаление дня для рассылки
-     * @param day - день недели или null в случае отмены подписки
+     * @param day - (String) - день недели  или null в случае отмены подписки
      * @return DayOfWeekForStockSend новый день для рассылки или null в случае отмены подписки
      */
     @PutMapping("/dayOfWeekForStockSend")
-    @ApiOperation(value = "Метод устанавливает день для рассылки",
+    @ApiOperation(value = "Метод устанавливает день для рассылки, принимает String",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Day was not set"),
-            @ApiResponse(code = 200, message = "Day was set")
+            @ApiResponse(code = 400, message = "Wrong string data"),
+            @ApiResponse(code = 200, message = "Day was changed")
     })
     public ResponseEntity<ResponseDto<DayOfWeekForStockSend>> setCustomerDayOfWeekForStockSend(@RequestBody String day) {
         Customer customer = customerService.getCurrentLoggedInUser();
-        day = day.replaceAll("\"", "");
         if (!day.equals("null")) {
-            customer.setDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(day));
+            customer.setDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(day.toUpperCase()));
             return new ResponseEntity<>(new ResponseDto<>(true, DayOfWeekForStockSend.valueOf(day)), HttpStatus.OK);
         } else {
             customer.setDayOfWeekForStockSend(null);
@@ -92,15 +91,16 @@ public class CustomerNotificationsRestController {
 
     /**
      * Проверка согласия на рассылку email об изменении цен товаров и новые комментарии
-     * @param type - тип рассылки (price - об изменеии цен, comments - о новых комментариях)
+     * @param type - (String) - тип рассылки (price - об изменеии цен, comments - о новых комментариях)
      * @return ConfirmReceiveEmail статус рассыки
+     * @throws UserServiceException - если передана ошибочная строка
      */
     @GetMapping("/emailConfirmation/{type}")
-    @ApiOperation(value = "Проверяет есть ли согласие на рассылку сообщений",
+    @ApiOperation(value = "Проверяет есть ли согласие на рассылку сообщений, принимает String ('price', 'comments')",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Данные получены"),
-            @ApiResponse(code = 400, message = "Информация не получена")
+            @ApiResponse(code = 200, message = "Data received successfully"),
+            @ApiResponse(code = 400, message = "Wrong string data")
     })
     public ResponseEntity<ResponseDto<ConfirmReceiveEmail>> isEmailConfirmed(@PathVariable String type) {
         Customer customer = customerService.getCurrentLoggedInUser();
@@ -115,7 +115,7 @@ public class CustomerNotificationsRestController {
 
     /**
      * Отправляет запрос на рассылки для залогиненного пользоватея
-     * @return CustomerDto залогиненный пользователь, которому отправлено письмо с подтвержением
+     * @return CustomerDto залогиненный пользователь, которому отправлено письмо с подтвержением {@link CustomerDto}
      */
     @PutMapping("/emailConfirmation")
     @ApiOperation(value = "Запрашивает подтверждение на рассылку об изменении цен",
@@ -132,9 +132,9 @@ public class CustomerNotificationsRestController {
 
     /**
      * запрос на отмену email рассылки об изменении цен
-     * @return CustomerDto пользователь, для которого отменяется подписка
+     * @return CustomerDto пользователь, для которого отменяется подписка {@link CustomerDto}
      */
-    @PutMapping("/unsubscribePriceChangesEmail")
+    @PutMapping("/unsubscribe/priceChangesEmails")
     @ApiOperation(value = "Прекращает рассылку сообщений об изменении цен",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
@@ -149,9 +149,9 @@ public class CustomerNotificationsRestController {
 
     /**
      * запрос на отмену email рассылки о новых комментариях
-     * @return CustomerDto пользователь, для которого отменяется подписка
+     * @return CustomerDto пользователь, для которого отменяется подписка {@link CustomerDto}
      */
-    @PutMapping("/unsubscribeCommentsEmail")
+    @PutMapping("/unsubscribe/commentsEmails")
     @ApiOperation(value = "Прекращает рассылку сообщений о новых комментариях",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
@@ -166,15 +166,15 @@ public class CustomerNotificationsRestController {
 
     /**
      * Поиск всех уведомлений об изменении цен конкретного покупателя
-     * @param id покупателя
+     * @param id покупателя {@link Long}
      * @return List<PriceChangeNotifications> список уведомлений
      */
     @GetMapping("/priceChanges/{id}")
-    @ApiOperation(value = "Запрашивает данные об изменении товаров из подписки",
+    @ApiOperation(value = "Запрашивает данные об изменении товаров из подписки покупателя по его id",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Prices changes found"),
-            @ApiResponse(code = 400, message = "Could not get prices changes")
+            @ApiResponse(code = 400, message = "Could not get price notifications")
     })
     public ResponseEntity<ResponseDto<List<PriceChangeNotifications>>> getPriceNotifications(@PathVariable Long id) {
         List<PriceChangeNotifications> list = priceChangeNotificationsService.getCustomerPriceChangeNotifications(id);
@@ -183,25 +183,23 @@ public class CustomerNotificationsRestController {
 
     /**
      * Поиск ответов на комментарии и отзывы
-     * @return <List<Comment> список комментариев-ответов
+     * @return <List<Comment>> список комментариев-ответов {@link Comment}
      */
     @GetMapping("/commentAnswers")
     @ApiOperation(value = "Запрашивает ответы на комментарии",
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Comments were foung"),
+            @ApiResponse(code = 200, message = "Comments were found"),
             @ApiResponse(code = 400, message = "Comments were not found")
     })
     public ResponseEntity<ResponseDto<List<Comment>>> getCommentAnswers() {
         List<Comment> customerComments = commentService.findAllByCustomer(customerService.getCurrentLoggedInUser());
         List<Review> customerReviews = reviewService.findAllByCustomer(customerService.getCurrentLoggedInUser());
         List<Comment> answers = new ArrayList<>();
-        for(Comment comment : customerComments) {
-            answers.addAll(commentService.getCommentsByParentId(comment.getId()));
-        }
-        for(Review review : customerReviews) {
-            answers.addAll(review.getComments());
-        }
+        customerComments.stream()
+                .forEach(comment -> answers.addAll(commentService.getCommentsByParentId(comment.getId())));
+        customerReviews.stream()
+                .forEach(review -> answers.addAll(review.getComments()));
         return new ResponseEntity<>(new ResponseDto<>(true, answers), HttpStatus.OK);
     }
 }

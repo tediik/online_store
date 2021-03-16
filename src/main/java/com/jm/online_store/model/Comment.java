@@ -51,6 +51,7 @@ public class Comment {
     @Column(name = "comment_edit")
     private String commentTimeEdit;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "product")
     private Product product;

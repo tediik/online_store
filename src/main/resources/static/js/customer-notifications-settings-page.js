@@ -95,7 +95,7 @@ function changeDayOfWeekForStockSend(day) {
             'Accept': 'application/json, text/plain, */*',
             'Content-type': 'text/plain; charset=UTF-8'
         },
-        body: JSON.stringify(day)
+        body: day
     })
         .then(() => checkSubscribe())
         .catch(err => console.log("Не удалось изменить день рассылки " + err))
@@ -139,7 +139,7 @@ function checkEmails() {
 function changePriceEmailsSlider() {
     const slider = document.getElementById("sliderPricesChanges")
     if (!slider.checked) {
-        fetch(customerNotificationsUrl + 'unsubscribePriceChangesEmail', {
+        fetch(customerNotificationsUrl + 'unsubscribe/priceChangesEmails', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -174,7 +174,7 @@ function changePriceEmailsSlider() {
 function changeCommentsEmailSlider() {
     const slider = document.getElementById("sliderNewComments");
     if (!slider.checked) {
-        fetch(customerNotificationsUrl + 'unsubscribeCommentsEmail', {
+        fetch(customerNotificationsUrl + 'unsubscribe/commentsEmails', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
