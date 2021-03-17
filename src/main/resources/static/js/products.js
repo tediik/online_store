@@ -145,8 +145,8 @@ function getAllProducts() { // не нашел, где используется 
  * Функция рендера модального окна Edit product
  * @param product продукта из таблицы
  */
-function editModalWindowRender(product) {
-    $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindow)
+function editModalWindowRenderP(product) {
+    $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindowProduct)
     $('#idInputModal').val(product.data.id)
     $('#acceptChangeButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
     $('.modal-title').text("Edit product")
@@ -162,7 +162,7 @@ function editModalWindowRender(product) {
  * @param productToEdit
  */
 function deleteModalWindowRender(productToEdit) {
-    $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindow)
+    $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindowProduct)
     $('.modal-title').text("Delete product")
     $('#acceptChangeButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
     $('#idInputModal').val(productToEdit.id)
@@ -277,7 +277,7 @@ function handleEditButton(event) {
                 })
                 .then(responseResult => {
                     currentCategoryNameEdit = "" + responseResult.error;
-                    editModalWindowRender(productToEdit)
+                    editModalWindowRenderP(productToEdit)
                 });
         });
 }
@@ -501,7 +501,7 @@ function importProductsFromFile() {
  * функция обработки нажатия кнопки accept в модальном окне
  * @param event
  */
-function handleAcceptButtonFromModalWindow(event) {
+function handleAcceptButtonFromModalWindowProduct(event) {
     const product = {
         id: $('#idInputModal').val(),
         product: $('#productInputModal').val(),
@@ -602,8 +602,8 @@ function renderProductsTable(products) {
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>`)
-    for (let i = 0; i < products.data.length; i++) {
-        const product = products.data[i];
+    for (let i = 0; i < products.length; i++) {
+        const product = products[i];
         let row = `
                 <tr id="tr-${product.id}">
                     <td>${product.id}</td>
