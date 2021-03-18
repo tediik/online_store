@@ -1,9 +1,12 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +26,8 @@ public class CommonRestController {
      */
     @GetMapping("/storeName")
     @ApiOperation(value = "Get store name")
-    public ResponseEntity<String> getStoreName() {
-        return ResponseEntity.ok(commonSettingsService.getSettingByName("store_name").getTextValue());
+    public ResponseEntity<ResponseDto<String>> getStoreName() {
+        return new ResponseEntity<>(new ResponseDto<>(true,
+                commonSettingsService.getSettingByName("store_name").getTextValue(), ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
     }
 }

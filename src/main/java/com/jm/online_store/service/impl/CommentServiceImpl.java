@@ -121,11 +121,11 @@ public class CommentServiceImpl implements CommentService {
      * @param commentEdited
      */
     @Override
-    public void update(Comment commentEdited) {
+    public Comment update(Comment commentEdited) {
         Comment commentToUpdate = findById(commentEdited.getId());
         commentToUpdate.setContent(commentEdited.getContent());
         commentToUpdate.setDeletedHasKids(commentEdited.isDeletedHasKids());
-        commentRepository.save(commentToUpdate);
+        return commentRepository.save(commentToUpdate);
     }
 
     /**

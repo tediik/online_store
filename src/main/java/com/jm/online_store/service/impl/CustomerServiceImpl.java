@@ -228,15 +228,17 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Восстановление клиента.
      * @param email - емейл для восстановления
+     * @return восстановленного Customer-а
      */
     @Override
     @Transactional
-    public void restoreCustomer(String email) {
+    public Customer restoreCustomer(String email) {
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()
                 -> new UserNotFoundException(ExceptionEnums.CUSTOMERS.getText() + ExceptionConstants.NOT_FOUND));
         customer.setIsEnabled(true);
         customer.setAnchorForDelete(null);
         updateCustomer(customer);
+        return customer;
     }
 
     /**

@@ -60,6 +60,7 @@ public class Address {
 
     public Address(@NotBlank String region, @NotBlank String city, @NotBlank String street, @NotBlank String building, String zip, boolean shop) {
         this.region = region;
+
         this.city = city;
         this.street = street;
         this.building = building;
