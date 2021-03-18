@@ -92,14 +92,13 @@ public class CommentRestController {
     })
     public ResponseEntity<ResponseDto<?>> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
-        Comment savedComment = comment;
         if (!bindingResult.hasErrors()) {
-            String checkText = savedComment.getContent();
+            String checkText = comment.getContent();
             List<String> resultText = badWordsService.checkComment(checkText);
             if (resultText.isEmpty()) {
-                productFromDb.setComments(List.of(savedComment));
+                productFromDb.setComments(List.of(comment));
                 try {
-                    commentService.addComment(savedComment);
+                    commentService.addComment(comment);
                 } catch (CommentNotSavedException e) {
                     log.debug("LOCKED! cause: {}", e.getMessage());
                     throw new ResponseStatusException(HttpStatus.LOCKED, e.getMessage());
