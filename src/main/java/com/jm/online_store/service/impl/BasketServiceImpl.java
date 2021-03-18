@@ -150,7 +150,6 @@ public class BasketServiceImpl implements BasketService {
            for (SubBasket basket : userBasket) {
                if (basket.getProduct().getId() == id) {
                    basket.setCount(basket.getCount() + 1);
-                   //return;
                }
            }
            SubBasket subBasket = SubBasket.builder()

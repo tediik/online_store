@@ -117,12 +117,8 @@ public class BadWordsRestController {
     @ApiOperation(value = "delete stop word by id",
             authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<ResponseDto<String>> newsDelete(@PathVariable Long id) {
-        try {
             badWordsService.deleteWord(badWordsService.findWordById(id));
             return new ResponseEntity<>(new ResponseDto<>(true, "Bad word successful deleted", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
-        } catch (BadWordsNotFoundException e) {
-            return new ResponseEntity<>(new ResponseDto<>(false, "Bad words not found"), HttpStatus.NOT_FOUND);
-        }
     }
 
     /**

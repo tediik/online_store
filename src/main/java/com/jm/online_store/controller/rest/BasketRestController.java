@@ -2,6 +2,7 @@ package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.exception.BadWordsNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
@@ -22,6 +23,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,7 +77,6 @@ public class BasketRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(order, OrderDTO.class)), HttpStatus.OK);
     }
 
-
     /**
      * контроллер для удаления сущности SubBasket из списка подкорзин User.
      *
@@ -102,26 +103,25 @@ public class BasketRestController {
     public ResponseEntity<ResponseDto<SubBasketDto>> updateUpBasket(@RequestBody ObjectNode json) {
         Long id = json.get("id").asLong();
         int difference = json.get("count").asInt();
-        try {
             SubBasket subBasket = basketService.updateBasket(basketService.findBasketById(id), difference);
             return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(subBasket, SubBasketDto.class)), HttpStatus.OK);
-        } catch (ProductsNotFoundException e) {
-            return new ResponseEntity<>(new ResponseDto<>(false, "Products not found"), HttpStatus.BAD_REQUEST);
-        }
-
     }
 
     @PutMapping("/basket/add/{id}")
     @ApiOperation(value = "Adds product to Basket",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<SubBasketDto>> addProductToBasket(@PathVariable Long id, HttpServletRequest request) {
-        try {
             SubBasket subBasket = basketService.addProductToBasket(id, request.getSession().getId());
             return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(subBasket, SubBasketDto.class)), HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(new ResponseDto<>(false, "User not found"), HttpStatus.NOT_FOUND);
-        } catch (ProductsNotFoundException e) {
-            return new ResponseEntity<>(new ResponseDto<>(false, "Products not found"), HttpStatus.BAD_REQUEST);
-        }
+    }
+
+    /**
+     * Exception handler method that catches all {@link ProductNotFoundException,UserNotFoundException}
+     * in current class and return ResponseEntity with not found status
+     * @return - {@link ResponseEntity<ResponseDto<String>>}
+     */
+    @ExceptionHandler({ProductNotFoundException.class, UserNotFoundException.class})
+    public ResponseEntity<ResponseDto<String>> NotFoundExceptionHandler() {
+        return new ResponseEntity<>(new ResponseDto<>(false, "Not found"), HttpStatus.NOT_FOUND);
     }
 }

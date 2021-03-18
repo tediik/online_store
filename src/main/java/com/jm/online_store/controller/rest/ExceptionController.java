@@ -20,13 +20,13 @@ import java.util.Map;
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({EmailAlreadyExistsException.class, InvalidEmailException.class})
-    public ResponseEntity<ResponseDto<Object>> handleExceptions(RuntimeException ex, WebRequest request) {
-        return new ResponseEntity<>(new ResponseDto<>(false, getBody(ex)), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ResponseDto<String>> handleExceptions(RuntimeException ex, WebRequest request) {
+        return new ResponseEntity<>(new ResponseDto<>(false, getBody(ex).toString()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({UserNotFoundException.class, NewsNotFoundException.class})
-    public ResponseEntity<ResponseDto<Object>> handleNotFoundExceptions(RuntimeException ex, WebRequest request) {
-        return new ResponseEntity<>(new ResponseDto<>(false, getBody(ex)), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ResponseDto<String>> handleNotFoundExceptions(RuntimeException ex, WebRequest request) {
+        return new ResponseEntity<>(new ResponseDto<>(false, getBody(ex).toString()), HttpStatus.NOT_FOUND);
     }
 
     private Map<String, Object> getBody(Throwable throwable) {
