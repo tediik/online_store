@@ -31,4 +31,13 @@ public class CustomerController {
         return "basket-page";
     }
 
+    @GetMapping("/notifications")
+    public String notifications() {
+        return "customer-notifications-page";
+    }
+
+    @GetMapping("/settings")
+    public String settings() {
+        return "customer-settings";
+    }
 }

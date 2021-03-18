@@ -18,6 +18,7 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
+import com.jm.online_store.service.interf.PriceChangeNotificationsService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
@@ -51,12 +52,14 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +86,7 @@ public class ProductServiceImpl implements ProductService {
     public void deleteAllByEmail(String email) {
         productRepository.deleteAllByEmail(email);
     }
+    private final PriceChangeNotificationsService priceChangeNotificationsService;
 
     /**
      * Получение списка товаров
@@ -172,12 +176,16 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Optional<Product> findProductById(Long productId) {
-        return productRepository.findById(productId);
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setProductPictureShortNames(product.getProductPictureNames().stream().map(s -> s.replace(loadPictureFrom, "")).collect(Collectors.toList()));
+        return Optional.of(product);
     }
 
     @Override
     public Product getProductById(Long productId) {
-        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        product.setProductPictureShortNames(product.getProductPictureNames().stream().map(s -> s.replace(loadPictureFrom, "")).collect(Collectors.toList()));
+        return product;
     }
 
     /**
@@ -219,13 +227,12 @@ public class ProductServiceImpl implements ProductService {
         if (product.getRating() == null) {
             product.setRating(0d);
         }
-        if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName(loadPictureFrom + "defaultPictureProduct.jpg");
+        if (product.getProductPictureNames() == null || product.getProductPictureNames().isEmpty()) {
+            product.setProductPictureNames(new ArrayList<>(List.of(loadPictureFrom + "defaultPictureProduct.jpg")));
         } else {
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
         }
-        Product savedProduct = productRepository.save(product);
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     @Override
@@ -275,6 +282,7 @@ public class ProductServiceImpl implements ProductService {
             }
         }
     }
+
 
     /**
      * Удаление товара.
@@ -428,8 +436,14 @@ public class ProductServiceImpl implements ProductService {
                             map.put(listNames.get(i), listValues.get(i));
                         }
                         for (Map.Entry<String, String> entry : map.entrySet()) {
-                            productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(ProductNotFoundException::new).getId(),
-                                    entry.getKey(), entry.getValue());
+                            try {
+                                productCharacteristicService.addProductCharacteristic(findProductByName(productName).orElseThrow(() ->
+                                                new ProductNotFoundException(ExceptionEnums.PRODUCT.getText() + ExceptionConstants.NOT_FOUND)).getId(),
+                                        entry.getKey(), entry.getValue());
+                            } catch (IncorrectResultSizeDataAccessException e) {
+                                log.error("COULDN'T ADD PRODUCT CATEGORY");
+                                throw new AlreadyExists(ExceptionEnums.PRODUCT_CHARACTERISTICS.getText() + ExceptionConstants.ALREADY_EXISTS);
+                            }
                         }
                     }
                 }
@@ -534,10 +548,7 @@ public class ProductServiceImpl implements ProductService {
         return product.getChangePriceHistory();
     }
 
-    /**
-     * метод удаления Product из таблицы рассылки изменения цены.
-     *
-     * @param email почта пользователя
+    /* @param email почта пользователя
      * @param idProduct идентификатор Product
      */
     @Transactional
@@ -547,13 +558,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * метод изменения рейтинга товара
-     *
-     * @param productId id товара
-     * @param rating    оценка польователем товара
-     * @param user      пользователь оценивший товар
-     * @return double новый рейтинг
-     * @throws UserNotFoundException,ProductNotFoundException
+     * Изменение рейтинга товара.
+     * @param productId идентификатор товара.
+     * @param rating оценка пользователем товара.
+     * @param user пользователь, оценивший товар.
+     * @return double новый рейтинг.
+     * @throws UserNotFoundException, ProductNotFoundException
      */
     @Transactional
     @Override
@@ -601,9 +611,12 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
-                        presentProduct.getProductPictureName(),
-                        productSet.contains(presentProduct),
-                        presentProduct.getAmount()
+                        presentProduct.getProductPictureNames(),
+                        presentProduct.getProductPictureShortNames(),
+                        presentProduct.getAmount(),
+                        presentProduct.isDeleted(),
+                        productSet.contains(presentProduct)
+
                 );
                 return Optional.of(productDto);
             }
@@ -617,9 +630,11 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getRating(),
                         presentProduct.getDescriptions(),
                         presentProduct.getProductType(),
-                        presentProduct.getProductPictureName(),
-                        false,
-                        presentProduct.getAmount()
+                        presentProduct.getProductPictureNames(),
+                        presentProduct.getProductPictureShortNames(),
+                        presentProduct.getAmount(),
+                        presentProduct.isDeleted(),
+                        false
                 );
                 return Optional.of(productDto);
             }
@@ -688,10 +703,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product editProduct(Product product) {
 
-        if (product.getProductPictureName().isEmpty()) {
-            product.setProductPictureName("defaultProductImage.jpg");
+        if (product.getProductPictureNames() == null || product.getProductPictureNames().isEmpty()) {
+            product.setProductPictureNames(new ArrayList<>(List.of("defaultProductImage.jpg")));
         } else {
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
         }
 
         Map<LocalDateTime, Double> map = findProductById(product.getId())
@@ -707,6 +722,9 @@ public class ProductServiceImpl implements ProductService {
         product.setPriceChangeSubscribers(findProductById(product.getId())
                 .orElseThrow(ProductNotFoundException::new)
                 .getPriceChangeSubscribers());
+        if (newPrice != oldPrice) {
+            priceChangeNotificationsService.addPriceChangesNotification(product, oldPrice, newPrice);
+        }
         return saveProduct(product);
     }
 
@@ -740,6 +758,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProductFromTrackedForLoggedInUser(long productId) {
         productRepository.deletePriceChangeSubscriber(userService.getCurrentLoggedInUser().getEmail(), productId);
+    }
+
+    @Override
+    public void deleteProductPictureName(String id) {
+
+    }
+
+    @Override
+    public Long getCountPictureNameByPictureName(Long id) {
+        return null;
+    }
+
+    @Override
+    public Long getProductIdByPictureName(String name) {
+        return null;
     }
 
 }

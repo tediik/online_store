@@ -1295,10 +1295,17 @@ public class DataInitializer {
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о новых Акциях!" +
                         "</p><p>@@stockList@@</p><p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .build();
+        CommonSettings newCommentAnswerTemplate = CommonSettings.builder()
+                .settingName("new_comment_answer_template")
+                .textValue("<p>Уважаемый @@user@@, появился новый ответ на Ваш @@parentType@@ к товару @@product@@!" +
+                        "</p><p>@@stockList@@</p><p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
+                .build();
         CommonSettings priceChangeDistributionTemplate = CommonSettings.builder()
                 .settingName("price_change_distribution_template")
                 .textValue("<p>Уважаемый @@user@@, спешим сообщить вам о снижении цены</p>" +
                         "<p>Старая @@oldPrice@@ на @@product@@, новая @@newPrice@@</p>" +
+                        "<p><a href=\"@@url@@\">Отписаться от рассылки на продукт</a></p>" +
+                        "  <p><a href=\"@@url2@@\">Отписаться от всех рассылок</a></p>" +
                         "<p>С Уважением</p><p>" + environment.getProperty("production-url") + "</p>")
                 .build();
         CommonSettings subscribeConfirmationTemplate = CommonSettings.builder()
@@ -1327,6 +1334,7 @@ public class DataInitializer {
         commonSettingsService.addSetting(badWordsEnabled);
         commonSettingsService.addSetting(maintenanceModeTemplate);
         commonSettingsService.addSetting(storeName);
+        commonSettingsService.addSetting(newCommentAnswerTemplate);
     }
 
     /**

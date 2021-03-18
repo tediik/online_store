@@ -75,5 +75,11 @@ public interface ProductService {
 
     void deleteProductFromTrackedForLoggedInUser(long productId);
 
+    void deleteProductPictureName(String id);
+
+    Long getCountPictureNameByPictureName(Long id);
+
+    Long getProductIdByPictureName(String name);
+
     void deleteAllByEmail(String email);
 }

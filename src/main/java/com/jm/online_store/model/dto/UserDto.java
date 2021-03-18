@@ -16,13 +16,15 @@ import java.util.Set;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@ApiModel(description =  "DTO для данных юзера")
+@ApiModel(description = "DTO для данных юзера")
 public class UserDto {
     private Long id;
     private String email;
-    private boolean isAccountNonBlockedStatus;
+    private Boolean isAccountNonBlockedStatus;
+    private boolean isAccountNonReadOnlyStatus;
     private String firstName;
     private String lastName;
+    private String password;
     private String phoneNumber;
     private User.Gender userGender;
     private LocalDate birthdayDate;
@@ -30,7 +32,6 @@ public class UserDto {
     private String profilePicture;
     private Set<Role> roles;
     private String active;
-    private String password;
 
     public static UserDto fromUser(User user) {
         UserDto userDto = new UserDto();
@@ -44,6 +45,9 @@ public class UserDto {
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
         userDto.setRoles(user.getRoles());
+        userDto.setPassword(user.getPassword());
+        userDto.setAccountNonReadOnlyStatus(user.isAccountNonReadOnlyStatus());
+        userDto.setIsAccountNonBlockedStatus(user.getIsAccountNonExpiredStatus());
         return userDto;
     }
 }

@@ -26,7 +26,7 @@ public interface UserService {
 
     void deleteByID(Long id);
 
-    void updateUser(User user);
+    User updateUser(User user);
 
     User updateUserProfile(User user);
 
@@ -42,7 +42,7 @@ public interface UserService {
 
     boolean isExist(String email);
 
-    void regNewAccount(User user);
+    User regNewAccount(User user);
 
     void regNewAccount(String email);
 

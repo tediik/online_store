@@ -3,12 +3,6 @@
 <head>
     <title>Новости</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta property="og:url" th:content="'http://localhost:9999/news/newsDetails/' + ${news.id}"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:title" th:content="${news.title}"/>
-    <meta property="og:description" th:content="${news.fullText}"/>
-    <meta property="og:image" content="https://www.your-domain.com/path/image.jpg"/>
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
@@ -29,9 +23,7 @@
             <a class="btn btn-link" href="/news"><---ко всем новостям</a>
         </div>
         <div class="col-sm-8 text-left">
-            <div th:each="news : ${news}" class="alert alert-info mt-2" id="insertSocialNetworksBlock">
-                <h3 th:text="${news.title}" id="newsTitle" th:value="${news.title}"></h3>
-                <p th:utext="${news.fullText}" id="newsDescription" th:value="${news.fullText}"></p>
+            <div id ="newsInfo">
             </div>
         </div>
     </div>
@@ -46,6 +38,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous"></script>
+<script src="../static/js/news-details.js"></script>
 <script src="../static/js/registration.js"></script>
 <script src="../static/js/search-button.js"></script>
 <script src="/static/js/social-networks-sharer.js"></script>

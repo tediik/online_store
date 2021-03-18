@@ -146,13 +146,14 @@ function getAllProducts() { // не нашел, где используется 
  * @param product продукта из таблицы
  */
 function editModalWindowRenderP(product) {
+    product = product.data
     $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindowProduct)
-    $('#idInputModal').val(product.data.id)
+    $('#idInputModal').val(product.id)
     $('#acceptChangeButton').text("Save changes").removeClass().toggleClass('btn btn-success edit-product')
     $('.modal-title').text("Edit product")
-    $('#productInputModal').val(product.data.product).prop('readonly', false)
-    $('#productPriceInputModal').val(product.data.price).prop('readonly', false)
-    $('#productAmountInputModal').val(product.data.amount).prop('readonly', false)
+    $('#productInputModal').val(product.product).prop('readonly', false)
+    $('#productPriceInputModal').val(product.price).prop('readonly', false)
+    $('#productAmountInputModal').val(product.amount).prop('readonly', false)
     $('#productCategoryValueModal').val(currentCategoryNameEdit);
     fillProductCategoriesIn('#jqxTreeModal').then();
 }
@@ -162,6 +163,7 @@ function editModalWindowRenderP(product) {
  * @param productToEdit
  */
 function deleteModalWindowRender(productToEdit) {
+    productToEdit = productToEdit.data;
     $('.modal-dialog').off("click").on("click", "#acceptChangeButton", handleAcceptButtonFromModalWindowProduct)
     $('.modal-title').text("Delete product")
     $('#acceptChangeButton').text("Delete").removeClass().toggleClass('btn btn-danger delete-product')
@@ -175,7 +177,7 @@ function deleteModalWindowRender(productToEdit) {
  * Функция рендера модального окна Изменить картинку
  * @param product
  */
-function editPictureModalWindowRender(product) {
+function editPictureModalWindowRenderPr(product) {
     $('.modal-dialog').off("click").on("click", "#acceptEditPictureButton", handleEditPictureButtonFromModalWindow)
     $('#idInputPictureModal').val(product.id)
     $('#acceptEditPictureButton').text("Применить").removeClass().toggleClass('btn btn-success edit-product')
@@ -227,7 +229,7 @@ function handleEditPictureButton(event) {
                 })
                 .then(responseResult => {
                     currentCategoryNameEdit = "" + responseResult;
-                    editPictureModalWindowRender(productToEdit)
+                    editPictureModalWindowRenderPr(productToEdit)
                 });
         });
 }
@@ -273,7 +275,7 @@ function handleEditButton(event) {
         .then(([productToEdit]) => {
             fetch(API_CATEGORIES_URL + 'getOne/' + productId)
                 .then(promiseResult => {
-                    return promiseResult.json();
+                    return promiseResult.text()
                 })
                 .then(responseResult => {
                     currentCategoryNameEdit = "" + responseResult.error;
@@ -939,6 +941,7 @@ function fillMagicModal() {
     `;
     $('#magicButtonModalBody').empty().append(body);
 }
+
 /**
  *  Конец методов из файла managerProductCategorieCRUD
  *  Для отдельной вкладка Категории товаров

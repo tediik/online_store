@@ -13,9 +13,16 @@ fetch("/api/products" + `/${productIdFromPath}`)
             response.json().then(function (data) {
                 fillBreadcrumb(data);
                 fillAboutProduct(data);
-                $('#showPictureFirstSlide').attr('src', data.productPictureName);
-                $('#showPictureSecondSlide').attr('src', data.productPictureName);
-                $('#showPictureThirdSlide').attr('src', data.productPictureName);
+                $('#showPictureFirstSlide').attr('src', data.productPictureNames[0]);
+                for (let i =1; i < data.productPictureNames.length; i++) {
+                    $('#picturesCarousel').append(`<li data-target="#myCarousel" data-slide-to="${i+1}"></li>`)
+                    $('#displayingPictures').append(`<div class="carousel-item ">
+                                                        <img id="showPictureFirstSlide"
+                                                             class="first-slide"
+                                                             src="${data.productPictureNames[i]}"
+                                                             alt="${i+1} slide">
+                                                     </div>`)
+                }
             })
         } else if (response.status === 404) {
             location.href = "/404";

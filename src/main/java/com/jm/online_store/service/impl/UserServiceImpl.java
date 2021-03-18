@@ -167,11 +167,12 @@ public class UserServiceImpl implements UserService {
     /**
      * Обновление пользователя.
      * @param user пользователь, полученный из контроллера.
+     * @return добавленного/обновленного {@link User}
      */
     @Override
     @Transactional
-    public void updateUser(User user) {
-        userRepository.save(user);
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     /**
@@ -254,7 +255,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void regNewAccount(User userForm) {
+    public User regNewAccount(User userForm) {
         if (userForm.getEmail() != null) {
             ConfirmationToken confirmationToken = new ConfirmationToken(userForm.getEmail(), userForm.getPassword());
             confirmTokenRepository.save(confirmationToken);
@@ -271,6 +272,7 @@ public class UserServiceImpl implements UserService {
         } else {
             log.debug("Email пустой");
         }
+    return userForm;
     }
 
     /**
@@ -646,6 +648,10 @@ public class UserServiceImpl implements UserService {
         editedUser.setEmail(user.getEmail());
         editedUser.setFirstName(user.getFirstName());
         editedUser.setLastName(user.getLastName());
+        editedUser.setAccountNonReadOnlyStatus(user.isAccountNonReadOnlyStatus());
+        log.debug("Права пользователя {} {}", user.getEmail(), !editedUser.isAccountNonReadOnlyStatus() ? "ReadOnly" : "Read & Write");
+        editedUser.setIsAccountNonBlockedStatus(user.getIsAccountNonBlockedStatus());
+        log.debug("Пользователь {} {}", user.getEmail(), !editedUser.getIsAccountNonBlockedStatus() ? "заблокирован" : "разблокирован");
         if (!user.getPassword().equals("")) {
             editedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
@@ -704,7 +710,7 @@ public class UserServiceImpl implements UserService {
             updateUser(usertoUpdate);
             return true;
         }
-        if (!addressFromDB.isPresent()) {
+        if (addressFromDB.isEmpty()) {
             Address addressToAdd = addressService.addAddress(address);
             if (usertoUpdate.getUserAddresses() != null) {
                 usertoUpdate.getUserAddresses().add(addressToAdd);
@@ -813,6 +819,7 @@ public class UserServiceImpl implements UserService {
             String[] userName = {"Покупатель"};
             findByEmail(email).ifPresent(user -> {
                 user.setConfirmReceiveEmail(ConfirmReceiveEmail.REQUESTED);
+                user.setConfirmCommentsEmails(ConfirmReceiveEmail.REQUESTED);
                 userRepository.save(user);
                 if (user.getFirstName() != null) {
                     userName[0] = user.getFirstName();
