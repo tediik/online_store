@@ -17,10 +17,20 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.easymock.EasyMock.anyLong;
+import static org.easymock.EasyMock.anyObject;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -151,8 +161,8 @@ class ProductsRestControllerTest {
     @Test
     @DisplayName("edit product")
     void editProductAndCategory() throws Exception {
-        when(productService.editProduct(any(Product.class))).thenReturn(products.get(1));
-        doNothing().when(categoriesService).addToProduct(any(Product.class), anyLong());
+        when(productService.editProduct(anyObject(Product.class))).thenReturn(products.get(1));
+        doNothing().when(categoriesService).addToProduct(anyObject(Product.class), anyLong());
         mockMvc.perform(put(END_POINT + "/edit/{idOld}/{idNew}", -1L, anyLong())
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
