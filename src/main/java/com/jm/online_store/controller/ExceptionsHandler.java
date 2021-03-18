@@ -7,6 +7,7 @@ import com.jm.online_store.exception.CharacteristicNotFoundException;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.exception.OrdersNotFoundException;
+import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.exception.TopicAlreadyExists;
 import com.jm.online_store.exception.TopicCategoryAlreadyExists;
@@ -30,6 +31,13 @@ public class ExceptionsHandler {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<Object> handlerProductNotFoundException(ProductNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(CharacteristicNotFoundException.class)
     public ResponseEntity<Object> handlerCharacteristicNotFoundException(CharacteristicNotFoundException ex ) {
         return new ResponseEntity<>
