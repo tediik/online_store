@@ -1,5 +1,6 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.exception.CommentNotSavedException;
 import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
@@ -79,14 +80,15 @@ public class CommentRestController {
      * Returns JSON representation, previously, searches for forbidden words
      *
      * @param comment комментарий
-     * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
+     * @return ResponseEntity<ResponseDto<ProductForCommentDto>> or ResponseEntity<ResponseDto<List<String>>>
      */
     @PostMapping
     @ApiOperation(value = "Post new savedComment to the current product",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
+            @ApiResponse(code = 423, message = "You do not have adequate permission to perform this operation!"),
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
-            @ApiResponse(code = 200, message = "Comment was successfully added")
+            @ApiResponse(code = 200, message = "Comment was successfully added"),
     })
     public ResponseEntity<ResponseDto<?>> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
@@ -96,7 +98,12 @@ public class CommentRestController {
             List<String> resultText = badWordsService.checkComment(checkText);
             if (resultText.isEmpty()) {
                 productFromDb.setComments(List.of(savedComment));
-                commentService.addComment(savedComment);
+                try {
+                    commentService.addComment(savedComment);
+                } catch (CommentNotSavedException e) {
+                    log.debug("LOCKED! cause: {}", e.getMessage());
+                    throw new ResponseStatusException(HttpStatus.LOCKED, e.getMessage());
+                }
                 return new ResponseEntity<>(new ResponseDto<>(true, ProductForCommentDto.productToDto(productFromDb)), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ResponseDto<>(true, resultText), HttpStatus.CREATED);
@@ -130,6 +137,7 @@ public class CommentRestController {
         if (!bindingResult.hasErrors()) {
             String checkText = comment.getContent();
             comment.setReview(reviewFromDb);
+            comment.setProductId(reviewFromDb.getProductId());
                 List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
                     Comment savedComment = commentService.addComment(comment);

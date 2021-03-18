@@ -26,6 +26,8 @@ public interface CustomerService {
 
     void changeCustomerStatusToLocked(Long id);
 
+    void changeCustomerStatusToReadOnly(Long id);
+
     void changeCustomerProfileToDeletedProfileByID(long id);
 
     DayOfWeekForStockSend getCustomerDayOfWeekForStockSend(Customer customer);

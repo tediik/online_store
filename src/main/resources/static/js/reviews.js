@@ -7,7 +7,7 @@ $(document).ready(function () {
             url: '/api/reviews/' + productId,
             dataType: "json",
             success: function (response) {
-                $.each(response, function (i, review) {
+                $.each(response.data, function (i, review) {
                     $('#showReviews').append($(`
                         <div class="media mb-4">
                             <div>
@@ -28,7 +28,7 @@ $(document).ready(function () {
                         url: '/api/reviews/comments/' + review.id,
                         dataType: "json",
                         success: function (response) {
-                            $.each(response, function (i, comment) {
+                            $.each(response.data, function (i, comment) {
                                 let commentDisplayId = $('#commentReviewDisplayId' + review.id);
                                 $(commentDisplayId).append($(`
                                     <div class="media mt-4">

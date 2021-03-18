@@ -21,6 +21,20 @@
             </a>
             <a class="p-2 text-dark" href="/">Главная</a>
             <a class="p-2 text-dark" href="/news">Новости</a>
+            <span class="nav-item" sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')">
+                <a class="dropdownbtn" href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false">
+                    <img src="/static/img/bell.png" width="20" height="20" >
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    <a class="dropdown-item" href="/customer/notifications">
+                        Все уведомления
+                    </a>
+                    <a class="dropdown-item" href="/customer/settings">
+                        Настройка уведомлений
+                    </a>
+                </div>
+            </span>
             <a sec:authorize="isAuthenticated()" class="btn btn-light loginbutton" href="/logout">Выйти</a>
         </nav>
     </div>
