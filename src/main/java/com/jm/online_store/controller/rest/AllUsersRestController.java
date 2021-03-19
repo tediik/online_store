@@ -1,6 +1,10 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.User;
+import com.jm.online_store.model.dto.AddressDto;
+import com.jm.online_store.model.dto.CustomerDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.RestoreAccountDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CustomerService;
@@ -11,6 +15,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +28,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/allUsers")
 @RequiredArgsConstructor
@@ -30,6 +40,7 @@ public class AllUsersRestController {
     private final UserService userService;
     private final CustomerService customerService;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     /**
      * Метод для получения имейла и ролей залогиненного пользователя,
@@ -41,17 +52,19 @@ public class AllUsersRestController {
     @GetMapping("/getCurrent")
     @ApiOperation(value = "Fetches email and roles of logged in user",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
+    public ResponseEntity<ResponseDto<UserDto>> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(new ResponseDto<>(false,"No content"), HttpStatus.NO_CONTENT);
         }
         User currentUser = userService.getCurrentLoggedInUser();
         if (currentUser == null) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(new ResponseDto<>(false,"User not found"), HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(new UserDto()
-                .setEmail(currentUser.getEmail())
-                .setRoles(currentUser.getRoles()));
+        return new ResponseEntity<>(new ResponseDto<>(true,
+                new UserDto()
+                        .setEmail(currentUser.getEmail())
+                        .setRoles(currentUser.getRoles())),
+                        HttpStatus.OK);
     }
 
     /**
@@ -66,21 +79,20 @@ public class AllUsersRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "User not found"),
     })
-    public ResponseEntity<String> restoreUser(@RequestBody RestoreAccountDto restoreAccountDto) {
+    public ResponseEntity<ResponseDto<CustomerDto>> restoreUser(@RequestBody RestoreAccountDto restoreAccountDto) {
         String msgAlert = "Пользователь не найден!";
         String email = restoreAccountDto.getEmail();
         String passwordOfClient = restoreAccountDto.getPassword();
         String passwordOfBase = userService.getPasswordByMail(email);
         try {
             if (passwordEncoder.matches(passwordOfClient, passwordOfBase)) {
-                customerService.restoreCustomer(email);
-                msgAlert = "Профиль успешно восстановлен!";
-                return ResponseEntity.ok(msgAlert);
+                Customer customer = customerService.restoreCustomer(email);
+                return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
             } else {
-                throw new UsernameNotFoundException(msgAlert);
+                return new ResponseEntity<>(new ResponseDto<>(false, msgAlert), HttpStatus.BAD_REQUEST);
             }
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.badRequest().body(msgAlert);
+            return new ResponseEntity<>(new ResponseDto<>(false, msgAlert), HttpStatus.BAD_REQUEST);
         }
     }
 }

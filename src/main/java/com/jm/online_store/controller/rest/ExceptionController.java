@@ -4,6 +4,7 @@ import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.dto.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,13 +20,13 @@ import java.util.Map;
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({EmailAlreadyExistsException.class, InvalidEmailException.class})
-    public ResponseEntity<Object> handleExceptions(RuntimeException ex, WebRequest request) {
-        return new ResponseEntity<>(getBody(ex), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ResponseDto<String>> handleExceptions(RuntimeException ex, WebRequest request) {
+        return new ResponseEntity<>(new ResponseDto<>(false, getBody(ex).toString()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({UserNotFoundException.class, NewsNotFoundException.class})
-    public ResponseEntity<Object> handleNotFoundExceptions(RuntimeException ex, WebRequest request) {
-        return new ResponseEntity<>(getBody(ex), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ResponseDto<String>> handleNotFoundExceptions(RuntimeException ex, WebRequest request) {
+        return new ResponseEntity<>(new ResponseDto<>(false, getBody(ex).toString()), HttpStatus.NOT_FOUND);
     }
 
     private Map<String, Object> getBody(Throwable throwable) {

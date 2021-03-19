@@ -12,30 +12,31 @@ $(document).ready(function () {
             reader.readAsDataURL(input.files[0]); // convert to base64 string
         }
     }
+    $('#productPictureFile').change(function () {
+        readURL(this);
+    });
 
     /**
-     * Функция для изменения картинки выбранного продукта
+     * Функция для добавления картинки выбранному продукту
      */
-    $('#productPictureFile').change(function () {
-        const product = {id: $('#idInputPictureModal').val()}
-        readURL(this);
-        var file_data = $('#productPictureFile').prop('files')[0];
-        var form_data = new FormData();
+    $('#acceptEditPictureButton').click(function () {
+        let id = $('#idInputPictureModal').val();
+        let file_data = $('#productPictureFile').prop('files')[0];
+        let form_data = new FormData();
         form_data.append("pictureFile", file_data);
-        // $('#acceptEditPictureButton').click(function () {
-            $.ajax({
-                type: 'PUT',
-                url: '/api/product/upload/picture/' + product.id,
-                dataType: 'script',
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    $('#showPictureFirstSlide').attr("src", data);
-                }
-            });
-        // });
+        $.ajax({
+            type: 'PUT',
+            url: '/api/product/upload/picture/' + id,
+            dataType: 'text',
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('#showPictureFirstSlide').attr("src", data);
+            }
+        });
+        $('#productPictureModalWindow').modal('hide')
     });
 
     /**
@@ -45,7 +46,7 @@ $(document).ready(function () {
      */
     function readURLForNewProduct(input) {
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
+            let reader = new FileReader();
             reader.onload = function (e) {
                 $('#pictForNewProduct').attr('src', e.target.result);
             }
@@ -69,7 +70,7 @@ $(document).ready(function () {
             $.ajax({
                 type: 'PUT',
                 url: '/api/product/upload/picture/' + product.id,
-                dataType: 'script',
+                dataType: 'text',
                 data: form_data,
                 cache: false,
                 contentType: false,
@@ -84,15 +85,4 @@ $(document).ready(function () {
             $('#addPictureForNewProductModalWindow').modal('hide')
         });
     });
-    /**
-     * Функция для удаления картинки выбранного продукта
-     */
-    $('#DeletePictureButton').click(function (){
-            const product = {id: $('#idInputPictureModal').val()}
-        $.ajax({
-            type: 'DELETE',
-            url: '/api/product/picture/delete/' + product.id
-        })
-        $('#productPictureModalWindow').modal("hide");
-    })
 });

@@ -1,24 +1,35 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.CommentNotSavedException;
 import com.jm.online_store.model.Comment;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CommentRepository;
 import com.jm.online_store.repository.ReviewRepository;
 import com.jm.online_store.service.interf.CommentService;
+import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.MailSenderService;
+import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final ReviewRepository reviewRepository;
     private final UserService userService;
+    private final CommonSettingsService commonSettingsService;
+    private final MailSenderService mailSenderService;
+    private final ProductService productService;
 
     @Override
     public void deleteComment(Long id) {
@@ -59,7 +70,8 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Method checks if Comment is a new post or reply  to previous comment or comment for review
-     * then sets a current user as author of a comment and saves to dataBase
+     * then sets a current user as author of a comment, saves to dataBase
+     * and send comment to method for sending email to customer
      *
      * @param comment
      * @return Comment
@@ -68,14 +80,19 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public Comment addComment(Comment comment) {
         User loggedInUser = userService.getCurrentLoggedInUser();
-        if (comment.getParentId() != null) {
-            comment.setParentComment(commentRepository.findById(comment.getParentId()).get());
+        if (loggedInUser.isAccountNonReadOnlyStatus()) {
+            if (comment.getParentId() != null) {
+                comment.setParentComment(commentRepository.findById(comment.getParentId()).get());
+            }
+            if (comment.getReview() != null) {
+                comment.setReview(reviewRepository.findById(comment.getReview().getId()).get());
+            }
+            comment.setCustomer(userService.findById(loggedInUser.getId()).get());
+            sendCommentAnswer(comment);
+            return commentRepository.save(comment);
+        } else {
+            throw new CommentNotSavedException();
         }
-        if (comment.getReview() != null) {
-            comment.setReview(reviewRepository.findById(comment.getReview().getId()).get());
-        }
-        comment.setCustomer(userService.findById(loggedInUser.getId()).get());
-        return commentRepository.save(comment);
     }
 
     /**
@@ -104,11 +121,11 @@ public class CommentServiceImpl implements CommentService {
      * @param commentEdited
      */
     @Override
-    public void update(Comment commentEdited) {
+    public Comment update(Comment commentEdited) {
         Comment commentToUpdate = findById(commentEdited.getId());
         commentToUpdate.setContent(commentEdited.getContent());
         commentToUpdate.setDeletedHasKids(commentEdited.isDeletedHasKids());
-        commentRepository.save(commentToUpdate);
+        return commentRepository.save(commentToUpdate);
     }
 
     /**
@@ -121,4 +138,56 @@ public class CommentServiceImpl implements CommentService {
     public void addCommentInit(Comment comment) {
         commentRepository.save(comment);
     }
+
+    /**
+     * Отправляет покупателю email с информацией о новом ответе на комментарий или отзыв,
+     * если есть согласие на рассылку
+     * @param comment новый ответ на комментарий/отзыв
+     */
+    @Override
+    public void sendCommentAnswer(Comment comment) {
+        User user;
+        String message;
+        String template = commonSettingsService
+                .getSettingByName("new_comment_answer_template")
+                .getTextValue();
+
+        if(comment.getParentId() != null) {
+            user = comment.getParentComment().getCustomer();
+            message = template.replaceAll("@@parentType@@", "комментарий");
+        } else if(comment.getReview() != null) {
+            user = comment.getReview().getCustomer();
+            message = template.replaceAll("@@parentType@@", "отзыв");
+        } else {
+            return;
+        }
+        String email = user.getEmail();
+        Product product = productService.getProductById(comment.getProductId());
+        if (user.getConfirmCommentsEmails().toString().equals("CONFIRMED")) {
+            if(user.getFirstName() != null) {
+                message = message.replaceAll("@@user@@", user.getFirstName());
+            } else {
+                message = message.replaceAll("@@user@@", "Покупатель");
+            }
+            message = message.replaceAll("@@product@@", product.getProduct());
+            try {
+                mailSenderService.sendHtmlMessage(email, "У Вас новый ответ!", message, "New answer to comment");
+            } catch (MessagingException e) {
+                log.debug("Can not send mail about new answer to comment {} to {}", comment.getId(), email);
+            }
+        }
+    }
+
+    /**
+     * Поик комментариев (ответов) по id родителя
+     * @param parentId - id родительского комментария
+     * @return List<Comment> список ответных комментариев
+     */
+    @Override
+    @Transactional
+    public List<Comment> getCommentsByParentId(Long parentId) {
+        return commentRepository.findAllByParentId(parentId);
+    }
+
 }
+

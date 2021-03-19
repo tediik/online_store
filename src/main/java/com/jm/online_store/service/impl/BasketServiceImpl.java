@@ -9,7 +9,6 @@ import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SubBasket;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.BasketRepository;
@@ -137,11 +136,13 @@ public class BasketServiceImpl implements BasketService {
      * Method add product to basket. If product already in subBasket increases by 1
      * @param id - id of product to add
      * @param sessionID номер id сессии для идентификации анонимного пользователя
+     * @return обновленный SubBasket {@link SubBasket}
      */
     @Override
     @Transactional
-    public void addProductToBasket(Long id,String sessionID) {
+    public SubBasket addProductToBasket(Long id, String sessionID) {
         User userWhoseBasketToModify = userService.getCurrentLoggedInUser(sessionID);
+        Customer customerWhoseBasketToModify = modelMapper.map(userWhoseBasketToModify, Customer.class);
         Customer customer = customerService.findCustomerByEmail(userWhoseBasketToModify.getEmail());
         if (customer == null) {
             throw new UserNotFoundException();
@@ -157,7 +158,6 @@ public class BasketServiceImpl implements BasketService {
            for (SubBasket basket : userBasket) {
                if (basket.getProduct().getId() == id) {
                    basket.setCount(basket.getCount() + 1);
-                   return;
                }
            }
            SubBasket subBasket = SubBasket.builder()
@@ -166,16 +166,18 @@ public class BasketServiceImpl implements BasketService {
                    .build();
            basketRepository.save(subBasket);
            userBasket.add(subBasket);
-           userService.updateUser(customer);
+           userService.updateUser(customerWhoseBasketToModify);
+           return subBasket;
        }
     }
 
     /**
      * метод для формирования заказа из корзины.
      * @param id идентификатор
+     * @return {@link Order}
      */
     @Override
-    public void buildOrderFromBasket(Long id) {
+    public Order buildOrderFromBasket(Long id) {
         Address addressToAdd = addressService.findAddressById(id).orElseThrow(AddressNotFoundException::new);
         Customer customer = customerService.getCurrentLoggedInCustomer();
         List<SubBasket> subBasketList = customer.getUserBasket();
@@ -204,5 +206,6 @@ public class BasketServiceImpl implements BasketService {
         orderService.updateOrder(order);
         customer.setUserBasket(new ArrayList<>());
         userService.updateUser(customer);
+        return order;
     }
 }

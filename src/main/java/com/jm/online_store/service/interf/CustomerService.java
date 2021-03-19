@@ -32,6 +32,8 @@ public interface CustomerService {
 
     void changeCustomerStatusToLocked(Long id);
 
+    void changeCustomerStatusToReadOnly(Long id);
+
     void changeCustomerProfileToDeletedProfileByID(long id);
 
     DayOfWeekForStockSend getCustomerDayOfWeekForStockSend(Customer customer);
@@ -44,7 +46,7 @@ public interface CustomerService {
 
     void updateCustomer(Customer customer);
 
-    void restoreCustomer(String email);
+    Customer restoreCustomer(String email);
 
     boolean isExist(String email);
 

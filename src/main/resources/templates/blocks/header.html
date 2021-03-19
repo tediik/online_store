@@ -24,10 +24,24 @@
                 <i id="countInBasket"></i>
             </ins>
         </a>
+        <span class="nav-item" sec:authorize="hasAnyAuthority('ROLE_CUSTOMER')" style="margin-left: 20px">
+            <a class="dropdownbtn" href="#" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+               aria-expanded="false">
+                <img src="/static/img/bell.png" width="20" height="20">
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                <a class="dropdown-item" href="/customer/notifications">
+                    Все уведомления
+                </a>
+                <a class="dropdown-item" href="/customer/settings">
+                    Настройка уведомлений
+                </a>
+            </div>
+        </span>
+
         <a sec:authorize="hasAnyAuthority('ROLE_CUSTOMER') and not hasAnyAuthority('ROLE_ADMIN')"
            class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/customer">Кабинет покупателя</a>
-
 
         <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="btn btn-outline-secondary font-weight-bold secondarybtn"
            href="/admin">Кабинет администратора</a>

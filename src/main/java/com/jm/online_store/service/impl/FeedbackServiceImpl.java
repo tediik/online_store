@@ -27,40 +27,43 @@ public class FeedbackServiceImpl implements FeedbackService {
      * with current time {@link LocalDateTime} trimmed to seconds and default status
      *  for new feedbacks TO_DO
      * @param feedback - {@link Feedback} to save
+     * @return saved feedback {@link Feedback}
      */
     @Override
-    public void addFeedbackFromDto(Feedback feedback) {
+    public Feedback addFeedbackFromDto(Feedback feedback) {
         Employee employee = modelMapper.map(userService.getCurrentLoggedInUser(), Employee.class);
         feedback.setEmployee(employee);
         feedback.setFeedbackPostDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         feedback.setStatus(Feedback.Status.IN_PROGRESS);
-        feedbackRepository.save(feedback);
+        return feedbackRepository.save(feedback);
     }
 
     /**
      * Метод добавления ответа на обращения,плюс еще мы сохраняем юзера-менеджера, задает статус RESOLVED
      * @param feedback - {@link Feedback} обращение
+     * @return feedback - {@link Feedback} добавленное обращение
      */
     @Override
-    public void addAnswerFeedback(Feedback feedback) {
+    public Feedback addAnswerFeedback(Feedback feedback) {
         Feedback feedbackDB = feedbackRepository.findById(feedback.getId()).orElseThrow(FeedbackNotFoundException::new);
         feedbackDB.setManagerId(feedback.getManagerId());
         feedbackDB.setAnswer(feedback.getAnswer());
         feedbackDB.setStatus(Feedback.Status.RESOLVED);
         feedbackDB.setResponseExpected(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
-        feedbackRepository.save(feedbackDB);
+        return feedbackRepository.save(feedbackDB);
     }
 
     /**
      * Метод устанавливает дату и время обращения, для поля responseExpected и переводит в статус LATER
      * @param feedback - {@link Feedback} обращение
+     * @return feedback - {@link Feedback} обновленное обращение
      */
     @Override
-    public void updateTimeAnswerFeedback(Feedback feedback) {
+    public Feedback updateTimeAnswerFeedback(Feedback feedback) {
         Feedback feedbackDB = feedbackRepository.findById(feedback.getId()).orElseThrow(FeedbackNotFoundException::new);
         feedbackDB.setResponseExpected(feedback.getResponseExpected());
         feedbackDB.setStatus(Feedback.Status.LATER);
-        feedbackRepository.save(feedbackDB);
+        return feedbackRepository.save(feedbackDB);
     }
 
     /**
@@ -68,11 +71,11 @@ public class FeedbackServiceImpl implements FeedbackService {
      * @param id - идентификатор обращения
      */
     @Override
-    public void returnInWork(Long id) {
+    public Feedback returnInWork(Long id) {
         Feedback feedbackDB = feedbackRepository.findById(id).orElseThrow(FeedbackNotFoundException::new);
         feedbackDB.setStatus(Feedback.Status.IN_PROGRESS);
         feedbackDB.setResponseExpected(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
-        feedbackRepository.save(feedbackDB);
+        return feedbackRepository.save(feedbackDB);
     }
 
     /**

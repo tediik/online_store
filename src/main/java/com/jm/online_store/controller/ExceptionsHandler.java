@@ -9,6 +9,7 @@ import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.EmployeeNotFoundException;
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.exception.OrdersNotFoundException;
+import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.StockNotFoundException;
 import com.jm.online_store.exception.TopicAlreadyExists;
 import com.jm.online_store.exception.TopicCategoryAlreadyExists;
@@ -17,10 +18,12 @@ import com.jm.online_store.exception.TopicNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.model.dto.ResponseDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @ControllerAdvice
 public class ExceptionsHandler {
@@ -34,6 +37,12 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(AlreadyExists.class)
     public ResponseEntity<Object> handlerAlreadyExistsException(AlreadyExists ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<Object> handlerProductNotFoundException(ProductNotFoundException ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
@@ -118,6 +127,14 @@ public class ExceptionsHandler {
     public ResponseEntity<Object> handlerStockNotFoundException(StockNotFoundException ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+    @Value("${spring.servlet.multipart.max-file-size}")
+    private String maxFileSize;
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<?> handleMaxUploadSizeExceededException() {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false,  "Превышен допустимый размер файла - " + maxFileSize +"."), HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
 }

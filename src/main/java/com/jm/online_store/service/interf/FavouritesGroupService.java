@@ -15,7 +15,7 @@ public interface FavouritesGroupService {
 
     List<FavouritesGroup> findAllByUser(User user);
 
-    void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup);
+    FavouritesGroup addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup);
 
     void addFavouritesGroup(FavouritesGroup favouritesGroup);
 

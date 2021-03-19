@@ -8,13 +8,13 @@ import java.util.Set;
 
 public interface FeedbackService {
 
-    void addFeedbackFromDto(Feedback feedback);
+    Feedback addFeedbackFromDto(Feedback feedback);
 
-    void addAnswerFeedback(Feedback feedback);
+    Feedback addAnswerFeedback(Feedback feedback);
 
-    void updateTimeAnswerFeedback(Feedback feedback);
+    Feedback updateTimeAnswerFeedback(Feedback feedback);
 
-    void returnInWork(Long id);
+    Feedback returnInWork(Long id);
 
     void deleteFeedbackById(Long id);
 

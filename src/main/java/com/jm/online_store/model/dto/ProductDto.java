@@ -7,6 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+import java.util.List;
+
+
 /**
  * DTO для передачи на страницу товара
  */
@@ -21,7 +25,10 @@ public class ProductDto {
     private Double rating;
     private Description description;
     private String productType;
-    private String productPictureName;
+    private List<String> productPictureNames;
+    private List<String> productPictureShortNames;
+    private Integer amount;
+    private boolean deleted;
     private boolean isFavourite;
 
     public ProductDto(Product product) {
@@ -31,7 +38,9 @@ public class ProductDto {
         this.rating = product.getRating();
         this.description = product.getDescriptions();
         this.productType = product.getProductType();
-        this.productPictureName = product.getProductPictureName();
+        this.productPictureNames = product.getProductPictureNames();
+        this.productPictureShortNames = product.getProductPictureShortNames();
+        this.amount = product.getAmount();
+        this.deleted = product.isDeleted();
     }
-
 }

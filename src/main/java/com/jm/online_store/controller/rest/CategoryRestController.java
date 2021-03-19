@@ -1,17 +1,22 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.dto.CategoriesDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.util.Transliteration;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +30,7 @@ import java.util.stream.Stream;
 public class CategoryRestController {
 
     private final CategoriesService categoriesService;
+    private final ModelMapper modelMapper;
 
     /**
      * Создаёт мапу - ключ - название категории, значение - мапа с названиями подкатегории.
@@ -43,10 +49,9 @@ public class CategoryRestController {
             "     * \"Ноутбуки\":\"Noutbuki\"},\n" +
             "     * \"Смартфоны и гаджеты\":{\"Планшеты\":\"Planshety\",\n" +
             "     * \"Смартфоны\":\"Smartfony\"}}")
-    public ResponseEntity<Map<String, Map<String, String>>> getCategories() {
+    public ResponseEntity<ResponseDto<Map<String, Map<String, String>>>> getCategories() {
         List<Categories> categoriesFromDB = categoriesService.findAll();
         Map<String, Map<String, String>> categoriesBySuperCategories = new HashMap<>();
-
         for (Categories category : categoriesFromDB) {
             Map<String, String> innerMap = new HashMap<>();
             innerMap.put(category.getCategory(), Transliteration.сyrillicToLatin(category.getCategory()));
@@ -54,7 +59,7 @@ public class CategoryRestController {
                     (oldV, newV) -> Stream.concat(oldV.entrySet().stream(), newV.entrySet().stream())
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
-        return ResponseEntity.ok(categoriesBySuperCategories);
+        return new ResponseEntity<>(new ResponseDto<>(true, categoriesBySuperCategories), HttpStatus.OK);
     }
 
     /**
@@ -64,8 +69,12 @@ public class CategoryRestController {
      */
     @GetMapping("/allCategories")
     @ApiOperation(value = "Get all subcategories")
-    public ResponseEntity<List<Categories>> getAllCategories() {
-        return ResponseEntity.ok(categoriesService.findAll());
+    public ResponseEntity<ResponseDto<List<CategoriesDto>>> getAllCategories() {
+        List<CategoriesDto> categoriesDtoList = new ArrayList<>();
+        for (Categories categories : categoriesService.findAll()) {
+            categoriesDtoList.add(modelMapper.map(categories, CategoriesDto.class));
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, categoriesDtoList), HttpStatus.OK);
     }
 
     /**
@@ -78,11 +87,12 @@ public class CategoryRestController {
      */
     @GetMapping("/{name}")
     @ApiOperation(value = "Get subcategory by name with translation from latin to cyrillic")
-    public ResponseEntity<Categories> getCategory(@PathVariable String name) {
+    public ResponseEntity<ResponseDto<CategoriesDto>> getCategory(@PathVariable String name) {
         String categoryName = name.replaceAll("\"", "");
-        ResponseEntity<Categories>[] answer = new ResponseEntity[1];
+        ResponseEntity<ResponseDto<CategoriesDto>>[] answer = new ResponseEntity[1];
         categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(categoryName)).ifPresentOrElse(
-                value -> answer[0] = ResponseEntity.ok(value), () -> answer[0] = ResponseEntity.notFound().build());
+                value -> answer[0] = new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(value, CategoriesDto.class)), HttpStatus.OK),
+                () -> answer[0] = new ResponseEntity<>(new ResponseDto<>(false, "Not found"), HttpStatus.NOT_FOUND));
         return answer[0];
     }
 }

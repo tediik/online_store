@@ -17,6 +17,7 @@
     import lombok.extern.slf4j.Slf4j;
     import org.apache.commons.io.FilenameUtils;
     import org.apache.commons.lang3.StringUtils;
+    import org.apache.poi.xssf.usermodel.XSSFWorkbook;
     import org.springframework.core.io.FileSystemResource;
     import org.springframework.http.HttpStatus;
     import org.springframework.http.ResponseEntity;
@@ -78,7 +79,8 @@
             } else  {
                 return ResponseEntity.ok(new ResponseDto<>(true, Response.FAILED.getText()));
             }
-            return ResponseEntity.ok(new ResponseDto<>(true , Response.SUCCESS.getText() , Response.NO_ERROR.getText()));
+            return new ResponseEntity<>(new ResponseDto<>(true, Response.SUCCESS.getText()), HttpStatus.CREATED);
+
         }
 
         @PostMapping(value = "/uploadFile")
@@ -203,12 +205,12 @@
             product.setPrice(productReq.getPrice());
             product.setRating(productReq.getRating());
             product.setProductType(productReq.getProductType());
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
             product.setDeleted(false);
             Product gotBack = productService.saveProduct(product);
             categoriesService.addToProduct(product, id);
             ProductDto returnValue = new ProductDto(gotBack);
-            return ResponseEntity.ok(new ResponseDto<>(true, returnValue ));
+            return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.CREATED);
         }
 
         /**
@@ -223,14 +225,14 @@
                 @ApiResponse(code = 200, message = "Product has been updated"),
                 @ApiResponse(code = 404, message = "Product hasn't been found"),
         })
-        public ResponseEntity<ResponseDto<ProductDto>> editProductM(@RequestBody ProductDto productReq) {
+        public ResponseEntity<ResponseDto<ProductDto>> editProduct(@RequestBody ProductDto productReq) {
             Product product = new Product();
             product.setId(productReq.getId());
             product.setProduct(productReq.getProduct());
             product.setPrice(productReq.getPrice());
             product.setRating(productReq.getRating());
             product.setProductType(productReq.getProductType());
-            product.setProductPictureName(product.getProductPictureName());
+            product.setProductPictureNames(product.getProductPictureNames());
             product.setDeleted(false);
             Product gotBack = productService.editProduct(product);
             ProductDto returnValue = new ProductDto(gotBack);
@@ -259,7 +261,8 @@
                 categoriesService.removeFromProduct(product, idOld);
                 categoriesService.addToProduct(product, idNew);
             }
-            return ResponseEntity.ok(new ResponseDto<>(true, Response.HAS_BEEN_UPDATED.getText()));
+            return ResponseEntity.ok(
+                    new ResponseDto<>(true, Response.HAS_BEEN_UPDATED.getText(), Response.NO_ERROR.getText()));
         }
 
         /**

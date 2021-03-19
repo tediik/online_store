@@ -42,7 +42,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "api/manager")
+@RequestMapping(value = "/api/manager")
 @Slf4j
 @Api(description = "Rest controller for manage and publish news from manager page")
 public class ManagerRestController {
@@ -119,7 +119,8 @@ public class ManagerRestController {
         if (newsReq.getPostingDate() == null || newsReq.getPostingDate().isBefore(LocalDate.now())) {
             newsReq.setPostingDate(LocalDate.now());
         }
-        News newsFromService = newsService.update(modelMapper.map(newsReq, News.class));
+        News toService = modelMapper.map(newsReq, News.class);
+        News newsFromService = newsService.update(toService);
         NewsDto returnValue = modelMapper.map(newsFromService, NewsDto.class);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }

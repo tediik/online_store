@@ -1,9 +1,9 @@
 package com.jm.online_store.controller.rest.customer;
 
-
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.enums.Response;
+
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ExceptionConstants;
 import com.jm.online_store.exception.UserNotFoundException;
@@ -29,6 +29,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -270,13 +271,25 @@ public class CustomerRestController {
         return new ResponseEntity<>(new ResponseDto<>(true, productsViewedByUserIdAndDateTimeBetween), HttpStatus.OK);
     }
 
-    @GetMapping("/dayOfWeekForStockSend")
-    @ApiOperation(value = "Метод возвращает из базы день, в который будет рассылка",
+    /**
+     * Метод меняет права пользователя Read|Read&Write на комментарии
+     * @param id идентификатор покупателя
+     * @return ResponseEntity<ResponseDto<UserDto>>, HttpStatus.OK
+     */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/changeProfileStatusToReadOnly/{id}")
+    @ApiOperation(value = "Changes Customer ReadOnly status",
             authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponse(code = 404, message = "Day was not found")
-    public ResponseEntity<ResponseDto<DayOfWeekForStockSend>> getCustomerDayOfWeekForStockSend() {
-        Customer customer = customerService.getCurrentLoggedInCustomer();
-        DayOfWeekForStockSend day = customerService.getCustomerDayOfWeekForStockSend(customer);
-        return new ResponseEntity<>(new ResponseDto<>(true, day), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<UserDto>> changeReadOnlyStatus(@PathVariable Long id){
+        try {
+            customerService.changeCustomerStatusToReadOnly(id);
+        } catch (IllegalArgumentException | UserNotFoundException e) {
+            log.debug("There is no user with id: {}", id);
+            throw new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + String.format(ExceptionConstants.WITH_SUCH_ID_NOT_FOUND, id));
+        }
+        User user = userService.findById(id).get();
+        log.debug("User with id: {}, was change - ReadOnlyStatus - {}", id, !user.isAccountNonReadOnlyStatus());
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(user, UserDto.class)), HttpStatus.OK);
     }
+
 }

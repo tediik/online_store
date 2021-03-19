@@ -50,6 +50,7 @@ public class Customer extends User {
     @Enumerated(EnumType.STRING)
     private DayOfWeekForStockSend dayOfWeekForStockSend;
 
+
     @ManyToMany
     @JoinTable(
             name = "customer_product",
@@ -90,7 +91,6 @@ public class Customer extends User {
     @JsonManagedReference(value = "customer-sharedStock")
     private Set<SharedStock> sharedStocks;
 
-
     @OneToMany(mappedBy = "customer", orphanRemoval = true)
     @JsonManagedReference(value = "customer-sentStock")
     private Set<SentStock> sentStocks;
@@ -105,6 +105,10 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer", orphanRemoval = true)
     @JsonManagedReference(value = "customer-sharedNews")
     private Set<SharedNews> sharedNews;
+
+    public Customer(Long id, String email ) {
+        super(id, email);
+    }
 
     public Customer(String email, String password) {
         super(email, password);

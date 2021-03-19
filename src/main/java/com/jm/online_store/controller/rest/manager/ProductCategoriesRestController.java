@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * REST-контроллер для управления категориями товаров со страницы менеджера
  */
 @RestController
-@RequestMapping("api/categories")
+@RequestMapping("/api/categories")
 @AllArgsConstructor
 @Slf4j
 @Api(value = "Rest controller for actions from prod page")
@@ -68,7 +68,7 @@ public class ProductCategoriesRestController {
             @ApiResponse(code = 200, message = "Name hasn't been found")
     })
     public ResponseEntity<ResponseDto<String>> getCategoryNameByProductId(@PathVariable Long id) {
-        return ResponseEntity.ok(new ResponseDto<>(true, categoriesService.getCategoryNameByProductId(id)));
+        return ResponseEntity.ok(new ResponseDto<>(true, categoriesService.getCategoryNameByProductId(id), Response.NO_ERROR.getText()));
     }
 
     /**

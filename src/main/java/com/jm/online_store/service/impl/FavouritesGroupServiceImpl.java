@@ -39,10 +39,10 @@ public class FavouritesGroupServiceImpl implements FavouritesGroupService {
      * @param favouritesGroup favorite group
      */
     @Override
-    public void addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
+    public FavouritesGroup addProductToFavouritesGroup(Product product, FavouritesGroup favouritesGroup) {
         Set<Product> productSet = favouritesGroup.getProducts();
         productSet.add(product);
-        favouritesGroupRepository.save(favouritesGroup);
+        return favouritesGroupRepository.save(favouritesGroup);
     }
 
     /**

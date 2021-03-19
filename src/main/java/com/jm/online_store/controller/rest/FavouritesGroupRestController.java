@@ -1,15 +1,23 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CustomerService;
+
+import com.jm.online_store.model.dto.FavouritesGroupDto;
+import com.jm.online_store.model.dto.ResponseDto;
+
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +27,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * Рест контроллер для "Списков" Избранных товаров
@@ -31,6 +42,9 @@ public class FavouritesGroupRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final UserService userService;
     private final CustomerService customerService;
+    private final ModelMapper modelMapper;
+    private final Type listType = new TypeToken<List<FavouritesGroupDto>>() {}.getType();
+
 
     /**
      * Получение избранной группы по Id
@@ -39,8 +53,9 @@ public class FavouritesGroupRestController {
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "gets favourite group by id")
-    public ResponseEntity getFavouritesGroupById(@PathVariable Long id) {
-        return ResponseEntity.ok(favouritesGroupService.findById(id));
+    public ResponseEntity<ResponseDto<FavouritesGroupDto>> getFavouritesGroupById(@PathVariable Long id) {
+        return new ResponseEntity<>(new ResponseDto<>(
+                true, modelMapper.map(favouritesGroupService.findById(id), FavouritesGroupDto.class)), HttpStatus.OK);
     }
 
     /**
@@ -50,9 +65,10 @@ public class FavouritesGroupRestController {
     @GetMapping
     @ApiOperation(value = "gets favourites products for the current logged in user",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity getFavouritesGroups() {
+    public ResponseEntity<ResponseDto<List<FavouritesGroupDto>>>  getFavouritesGroups() {
         User user = userService.getCurrentLoggedInUser();
-        return ResponseEntity.ok(favouritesGroupService.findAllByUser(user));
+        List<FavouritesGroupDto> returnValue = modelMapper.map(favouritesGroupService.findAllByUser(user), listType);
+        return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.OK);
     }
 
     /**
@@ -63,11 +79,12 @@ public class FavouritesGroupRestController {
     @PostMapping
     @ApiOperation(value = "saves new list of favourite products",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
-        Customer customer = customerService.getCurrentLoggedInCustomer();
-        favouritesGroup.setCustomer(customer);
+    public ResponseEntity<ResponseDto<List<FavouritesGroupDto>>>  addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
+        Customer authCustomer = customerService.getCurrentLoggedInCustomer();
+        favouritesGroup.setCustomer(authCustomer);
         favouritesGroupService.addFavouritesGroup(favouritesGroup);
-        return ResponseEntity.ok(favouritesGroupService.getOneFavouritesGroupByUserAndByName(customer, favouritesGroup.getName()));
+        List<FavouritesGroupDto> returnValue = modelMapper.map(favouritesGroupService.getOneFavouritesGroupByUserAndByName(authCustomer, favouritesGroup.getName()), listType);
+        return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.OK);
     }
 
     /**
@@ -77,24 +94,25 @@ public class FavouritesGroupRestController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "deletes list of favorite goods by its id",
             authorizations = { @Authorization(value = "jwtToken") })
-    public void deleteFavouritesGroups(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseDto<String>> deleteFavouritesGroups(@PathVariable("id") Long id) {
         favouritesGroupService.deleteById(id);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Favourites product list successful deleted", Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 
     /**
      * Обновляем в БД имя списка избранных товаров
      * @param name новое имя
      * @param id идентификатор списка
-     * @return  статус ответа 200
+     * @return статус ответа 200
      */
     @PutMapping(value = "/{id}")
     @ApiOperation(value = "updates list of favorite goods by its id",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity updateFavouritesGroups(@RequestBody String name, @PathVariable("id") Long id) {
+    public ResponseEntity<ResponseDto<FavouritesGroupDto>>  updateFavouritesGroups(@RequestBody String name, @PathVariable("id") Long id) {
         User user = userService.getCurrentLoggedInUser();
         FavouritesGroup favouritesGroup = favouritesGroupService.findById(id).orElseThrow();
         favouritesGroup.setName(name);
         favouritesGroupService.save(favouritesGroup);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(favouritesGroup, FavouritesGroupDto.class)), HttpStatus.OK);
     }
 }

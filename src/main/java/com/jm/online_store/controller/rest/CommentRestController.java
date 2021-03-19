@@ -1,10 +1,13 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.enums.Response;
+import com.jm.online_store.exception.CommentNotSavedException;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForCommentDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.ReviewForCommentDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.BadWordsService;
@@ -18,6 +21,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,7 +57,7 @@ public class CommentRestController {
     private final ProductRepository productRepository;
     private final BadWordsService badWordsService;
     private final UserService userService;
-    private final CommentDto commentDto;
+    private final ModelMapper modelMapper;
 
     /**
      * Fetches an arrayList of all product Comments by productId and returns JSON representation response
@@ -63,11 +67,11 @@ public class CommentRestController {
      */
     @GetMapping("/{productId}")
     @ApiOperation(value = "Fetches all the comments from current product")
-        public ResponseEntity<List<CommentDto>> findAll(@PathVariable Long productId) {
+        public ResponseEntity<ResponseDto<List<CommentDto>>> findAll(@PathVariable Long productId) {
         List<CommentDto> commentDtos = commentService.findAllByProductId(productId).stream()
                 .map(CommentDto::commentEntityToDto)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(commentDtos);
+        return new ResponseEntity<>(new ResponseDto<>(true, commentDtos), HttpStatus.OK);
     }
 
     /**
@@ -75,27 +79,32 @@ public class CommentRestController {
      * Returns JSON representation, previously, searches for forbidden words
      *
      * @param comment комментарий
-     * @return ResponseEntity<ProductComment> or ResponseEntity<List<String>>
+     * @return ResponseEntity<ResponseDto<ProductForCommentDto>> or ResponseEntity<ResponseDto<List<String>>>
      */
     @PostMapping
     @ApiOperation(value = "Post new savedComment to the current product",
             authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
+            @ApiResponse(code = 423, message = "You do not have adequate permission to perform this operation!"),
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
-            @ApiResponse(code = 200, message = "Comment was successfully added")
+            @ApiResponse(code = 200, message = "Comment was successfully added"),
     })
-    public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
+    public ResponseEntity<ResponseDto<?>> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(comment.getProductId()).get();
-        Comment savedComment = comment;
         if (!bindingResult.hasErrors()) {
-            String checkText = savedComment.getContent();
+            String checkText = comment.getContent();
             List<String> resultText = badWordsService.checkComment(checkText);
             if (resultText.isEmpty()) {
-                productFromDb.setComments(List.of(savedComment));
-                commentService.addComment(savedComment);
-                return ResponseEntity.ok().body(ProductForCommentDto.productToDto(productFromDb));
+                productFromDb.setComments(List.of(comment));
+                try {
+                    commentService.addComment(comment);
+                } catch (CommentNotSavedException e) {
+                    log.debug("LOCKED! cause: {}", e.getMessage());
+                    throw new ResponseStatusException(HttpStatus.LOCKED, e.getMessage());
+                }
+                return new ResponseEntity<>(new ResponseDto<>(true, ProductForCommentDto.productToDto(productFromDb)), HttpStatus.OK);
             } else {
-                return ResponseEntity.status(201).body(resultText);
+                return new ResponseEntity<>(new ResponseDto<>(true, resultText), HttpStatus.CREATED);
             }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
@@ -120,20 +129,21 @@ public class CommentRestController {
             @ApiResponse(code = 400, message = "Request contains incorrect data"),
             @ApiResponse(code = 200, message = "Review comment has successfully added")
     })
-    public ResponseEntity<?> addReviewComment(@RequestBody @Valid Comment comment,
+    public ResponseEntity<ResponseDto<?>> addReviewComment(@RequestBody @Valid Comment comment,
                                               @PathVariable Long reviewId, BindingResult bindingResult) {
         Review reviewFromDb = reviewService.findById(reviewId).get();
         if (!bindingResult.hasErrors()) {
             String checkText = comment.getContent();
             comment.setReview(reviewFromDb);
+            comment.setProductId(reviewFromDb.getProductId());
                 List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
                     Comment savedComment = commentService.addComment(comment);
                     reviewFromDb.setComments(List.of(savedComment));
                     CommentDto.commentEntityToDto(comment);
-                    return ResponseEntity.ok().body(ReviewForCommentDto.reviewToDto(reviewFromDb));
+                    return new ResponseEntity<>(new ResponseDto<>(true, ReviewForCommentDto.reviewToDto(reviewFromDb)), HttpStatus.OK);
                 } else {
-                    return ResponseEntity.status(201).body(resultText);
+                    return new ResponseEntity<>(new ResponseDto<>(true, resultText), HttpStatus.CREATED);
                 }
         } else {
             log.debug("Request contains incorrect data = {}", getErrors(bindingResult));
@@ -156,18 +166,18 @@ public class CommentRestController {
             @ApiResponse(code = 200, message = "comment was successfully deleted")
 
     })
-    public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId) {
+    public ResponseEntity<ResponseDto<String>> deleteCommentById(@PathVariable Long commentId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        ResponseEntity<?>[] answer = new ResponseEntity[1];
+        ResponseEntity<ResponseDto<String>>[] answer = new ResponseEntity[1];
         userService.findByEmail(email).ifPresentOrElse(e -> {
                     if (e.getId().equals(commentService.findById(commentId).getCustomer().getId())) {
                         commentService.removeById(commentId);
-                        answer[0] = new ResponseEntity<>(HttpStatus.OK);
+                        answer[0] = new ResponseEntity<>(new ResponseDto<>(true, Response.NO_ERROR.getText()), HttpStatus.OK);
                     } else
-                        answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+                        answer[0] = new ResponseEntity<>(new ResponseDto<>(false, "Not modified"), HttpStatus.NOT_MODIFIED);
                 },
-                () -> answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED)
+                () -> answer[0] = new ResponseEntity<>( new ResponseDto<>(false, "Not modified"), HttpStatus.NOT_MODIFIED)
         );
         return answer[0];
     }
@@ -185,23 +195,23 @@ public class CommentRestController {
             @ApiResponse(code = 304, message = "Request contains incorrect data - only comment author can change it"),
             @ApiResponse(code = 200, message = "comment was successfully updated")
     })
-    public ResponseEntity<?> updateComment(@RequestBody @Valid Comment comment) {
+    public ResponseEntity<ResponseDto<?>> updateComment(@RequestBody @Valid Comment comment) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm yyyy.MM.dd");
         comment.setCommentTimeEdit("Изменено: " + dateFormat.format(new Date()));
-        ResponseEntity<?>[] answer = new ResponseEntity[1];
+        ResponseEntity<ResponseDto<?>>[] answer = new ResponseEntity[1];
         String checkText = comment.getContent();
         List<String> resultText = badWordsService.checkComment(checkText);
         userService.findByEmail(email).ifPresentOrElse(e -> {
                     if (resultText.isEmpty() && e.getId().equals(commentService.findById(comment.getId()).getCustomer().getId())) {
                         commentService.update(comment);
-                        answer[0] = new ResponseEntity<>(comment, HttpStatus.OK);
+                        answer[0] = new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(comment, CommentDto.class)), HttpStatus.OK);
                     } else {
-                        answer[0] = new ResponseEntity<>(resultText, HttpStatus.valueOf(201)); // ResponseEntity.status(201).body(resultText);
+                        answer[0] = new ResponseEntity<>(new ResponseDto<>(true, resultText), HttpStatus.CREATED); // ResponseEntity.status(201).body(resultText);
                     }
                 },
-                () -> answer[0] = new ResponseEntity<>(HttpStatus.NOT_MODIFIED)
+                () -> answer[0] = new ResponseEntity<>(new ResponseDto<>(false, "Not modified"), HttpStatus.NOT_MODIFIED)
         );
         return answer[0];
     }

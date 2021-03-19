@@ -4,6 +4,7 @@ import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CommentDto;
 import com.jm.online_store.model.dto.ProductForReviewDto;
+import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.ReviewDto;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.BadWordsService;
@@ -12,6 +13,7 @@ import com.jm.online_store.service.interf.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -51,11 +53,15 @@ public class ReviewRestController {
     @ApiOperation(value = "Fetches an arrayList of all product Review by productId " +
             "and returns JSON representation response by product ID",
             authorizations = { @Authorization(value = "jwtToken") })
-    public ResponseEntity<List<ReviewDto>> findAll(@PathVariable Long productId) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Reviews have been found"),
+            @ApiResponse(code = 404, message = "Reviews haven't been found")
+    })
+    public ResponseEntity<ResponseDto<List<ReviewDto>>> findAll(@PathVariable Long productId) {
         List<ReviewDto> reviewDtos = reviewService.findAll(productId).stream()
                 .map(ReviewDto::reviewEntityToDto)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(reviewDtos);
+        return ResponseEntity.ok(new ResponseDto<>(true, reviewDtos));
     }
 
     /**
@@ -67,22 +73,27 @@ public class ReviewRestController {
     @GetMapping("/comments/{reviewId}")
     @ApiOperation(value = "Fetches an arrayList of all review comments by reviewId" +
             " and returns JSON representation response by review ID")
-    public ResponseEntity<List<CommentDto>> findAllComments(@PathVariable Long reviewId) {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Comments have been found"),
+            @ApiResponse(code = 404, message = "Comments haven't been found")
+    })
+    public ResponseEntity<ResponseDto<List<CommentDto>>> findAllComments(@PathVariable Long reviewId) {
         List<CommentDto> commentDtos = commentService.findAllByReviewId(reviewId).stream()
                 .map(CommentDto::commentEntityToDto)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(commentDtos);
+        return ResponseEntity.ok(new ResponseDto<>(true, commentDtos));
     }
 
     /**
      * Receives productReview and passes it to Service layer for processing
      * previously, searches for forbidden words
+     *
      * @param review
      * @return ResponseEntity<productReview> or ResponseEntity<List<String>>
      */
     @PostMapping
     @ApiOperation(value = "Receives productReview requestBody and passes it to Service layer for processing",
-            authorizations = { @Authorization(value = "jwtToken") })
+            authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponse(code = 400, message = "Request has an incorrect data")
     public ResponseEntity<?> addReview(@RequestBody @Valid Review review, BindingResult bindingResult) {
         Product productFromDb = productRepository.findById(review.getProductId()).get();
@@ -91,20 +102,20 @@ public class ReviewRestController {
             if (!badWordsService.checkEnabledCheckText()) {
                 Review savedReview = reviewService.addReview(review);
                 productFromDb.setReviews(List.of(savedReview));
-                return ResponseEntity.ok().body(ProductForReviewDto.productToDto(productFromDb));
+                return ResponseEntity.ok(new ResponseDto<>(true, ProductForReviewDto.productToDto(productFromDb)));
             } else {
                 List<String> resultText = badWordsService.checkComment(checkText);
                 if (resultText.isEmpty()) {
                     Review savedReview = reviewService.addReview(review);
                     productFromDb.setReviews(List.of(savedReview));
-                    return ResponseEntity.ok().body(ProductForReviewDto.productToDto(productFromDb));
+                    return ResponseEntity.ok(new ResponseDto<>(true, ProductForReviewDto.productToDto(productFromDb)));
                 } else {
-                    return ResponseEntity.status(201).body(resultText);
+                    return ResponseEntity.status(201).body(new ResponseDto<>(true, resultText));
                 }
             }
         } else
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("Запрос содержит неверные данные = [%s]", getErrors(bindingResult)));
+            return new ResponseEntity(new ResponseDto<>(false, "Запрос содержит неверные данные " +
+                    "- " + getErrors(bindingResult)), HttpStatus.BAD_REQUEST);
     }
 
     private String getErrors(BindingResult bindingResult) {

@@ -41,4 +41,8 @@ public class Characteristic {
             property = "id")
     private List<ProductCharacteristic> productCharacteristics;
 
+    public Characteristic(Long id, @NonNull String characteristicName) {
+        this.id = id;
+        this.characteristicName = characteristicName;
+    }
 }

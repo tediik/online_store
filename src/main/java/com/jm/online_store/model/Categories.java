@@ -52,4 +52,14 @@ public class Categories {
             inverseJoinColumns = @JoinColumn(name = "characteristic_id"))
     private List<Characteristic> characteristics;
 
+    public Categories(Long id, @NonNull String category) {
+        this.id = id;
+        this.category = category;
+    }
+
+    public Categories(Long id, @NonNull String category, @NonNull Long parentCategoryId) {
+        this.id = id;
+        this.category = category;
+        this.parentCategoryId = parentCategoryId;
+    }
 }

@@ -5,13 +5,16 @@ import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.dto.AddressDto;
+
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +38,8 @@ import java.util.Set;
 public class AddressRestController {
     private final AddressService addressService;
     private final CustomerService customerService;
+    private final ModelMapper modelMapper;
+    private final Type listType = new TypeToken<List<AddressDto>>() {}.getType();
 
     /**
      * Метод для отображения адресов всех активных магазинов
@@ -41,9 +47,10 @@ public class AddressRestController {
      * @return ResponseEntity<ResponseDto < List < Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/allShops")
-    @ApiOperation(value = "get all the shops", authorizations = {@Authorization(value = "jwtToken")})
-    public ResponseEntity<ResponseDto<List<Address>>> findAll() {
-        return new ResponseEntity<>(new ResponseDto<>(true, addressService.findAllShops()), HttpStatus.OK);
+    @ApiOperation(value = "get all the shops")
+    public ResponseEntity<ResponseDto<List<AddressDto>>> findAll() {
+        List<AddressDto> addressDto = modelMapper.map(addressService.findAllShops(), listType);
+        return new ResponseEntity<>(new ResponseDto<>(true, addressDto), HttpStatus.OK);
     }
 
     /**
@@ -77,7 +84,7 @@ public class AddressRestController {
     }
 
     @ExceptionHandler({AddressNotFoundException.class, UserNotFoundException.class})
-    public ResponseEntity<?> handleControllerExceptions() {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<ResponseDto<?>> handleControllerExceptions() {
+        return new ResponseEntity<>(new ResponseDto<>(false, "Not found"), HttpStatus.NOT_FOUND);
     }
 }

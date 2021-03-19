@@ -23,6 +23,7 @@ import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -46,9 +47,23 @@ public class CustomerServiceImpl implements CustomerService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final CustomerRepository customerRepository;
-    private final CommentService commentService;
     private final ReviewService reviewService;
     private final AddressService addressService;
+    private CommentService commentService;
+
+    /*
+    * добавлены Getters and Setters для commentService для
+    * устранения циклической зависимости между бинами
+    * CustomerService -> CommentService -> ProductService
+    * */
+    @Autowired
+    public CommentService getCommentService() {
+        return commentService;
+    }
+    @Autowired
+    public void setCommentService(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     /**
      * Метод сервиса для добавления нового адреса пользователю
@@ -212,10 +227,23 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void changeCustomerStatusToLocked(Long id) {
         Customer customerStatusChange = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        customerStatusChange.setAccountNonBlockedStatus(false);
+        customerStatusChange.setIsEnabled(false);
         customerStatusChange.setAnchorForDelete(LocalDateTime.now());
         updateCustomer(customerStatusChange);
-        log.info("профиль покупателя с почтой " + customerStatusChange.getEmail() + "заблокирован");
+        log.info("профиль покупателя с почтой " + customerStatusChange.getEmail() + " заблокирован");
+    }
+
+    /**
+     * Метод, который меняет статус клиента на "Только Чтение" или "Чтение и Запись"
+     * @param id клиента
+     */
+    @Override
+    @Transactional
+    public void changeCustomerStatusToReadOnly(Long id) {
+        Customer customerStatusChange = customerRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        customerStatusChange.setAccountNonReadOnlyStatus(!customerStatusChange.isAccountNonReadOnlyStatus());
+        updateCustomer(customerStatusChange);
+        log.info("Права на запись у покупателя с почтой {} изменены. Запись - {}", customerStatusChange.getEmail(), customerStatusChange.isAccountNonReadOnlyStatus());
     }
 
     /**
@@ -273,15 +301,17 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Восстановление клиента.
      * @param email - емейл для восстановления
+     * @return восстановленного Customer-а
      */
     @Override
     @Transactional
-    public void restoreCustomer(String email) {
+    public Customer restoreCustomer(String email) {
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()
                 -> new UserNotFoundException(ExceptionEnums.CUSTOMERS.getText() + ExceptionConstants.NOT_FOUND));
-        customer.setAccountNonBlockedStatus(true);
+        customer.setIsEnabled(true);
         customer.setAnchorForDelete(null);
         updateCustomer(customer);
+        return customer;
     }
 
     /**
@@ -321,7 +351,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void changeCustomerProfileToDeletedProfileByID(long id) {
         User customer = userService.findUserById(id);
-        List<Comment> customerComments = commentService.findAllByCustomer(customer);
+        List<Comment> customerComments = getCommentService().findAllByCustomer(customer);
         List<Review> customerReview = reviewService.findAllByCustomer(customer);
         User deletedUser = userService.findUserByEmail("deleted@mail.ru");
         for (Comment comment : customerComments) comment.setCustomer(deletedUser);

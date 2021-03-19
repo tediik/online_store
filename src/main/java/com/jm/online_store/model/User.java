@@ -39,7 +39,7 @@ import java.util.Set;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@ApiModel(description =  "Сущность User, расширяет UserDetails, связана с Role, Product, " +
+@ApiModel(description = "Сущность User, расширяет UserDetails, связана с Role, Product, " +
         "FavouritesGroup и Address")
 @Table(name = "users")
 public class User implements UserDetails {
@@ -56,7 +56,13 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
-    private boolean isAccountNonBlockedStatus = true;
+    private Boolean isAccountNonBlockedStatus = true;
+
+    private Boolean isAccountNonExpiredStatus = true;
+
+    private Boolean isEnabled = true;
+
+    private boolean isAccountNonReadOnlyStatus = true;
 
     @Transient
     @NotBlank
@@ -84,6 +90,13 @@ public class User implements UserDetails {
     @Column
     @Enumerated(EnumType.STRING)
     private ConfirmReceiveEmail confirmReceiveEmail = ConfirmReceiveEmail.NO_ACTIONS;
+
+    /**
+     * Согласие пользователя на рассылки о новых комментариях
+     */
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ConfirmReceiveEmail confirmCommentsEmails = ConfirmReceiveEmail.NO_ACTIONS;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.REFRESH)
@@ -120,7 +133,8 @@ public class User implements UserDetails {
 
     /**
      * Конструктор для поиска подписчиков из CustomerRepository (метод findSubscriberByEmail())
-     * @param id - поле id
+     *
+     * @param id    - поле id
      * @param email - поле email
      */
     public User(Long id, String email) {
@@ -145,7 +159,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return isAccountNonExpiredStatus;
     }
 
     @Override
@@ -160,7 +174,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 
     public enum Gender {
