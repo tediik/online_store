@@ -1,13 +1,13 @@
 package com.jm.online_store.service.impl;
 
 import com.jm.online_store.enums.DayOfWeekForStockSend;
-import com.jm.online_store.exception.EmailAlreadyExistsException;
-import com.jm.online_store.exception.InvalidEmailException;
-import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.CustomerServiceException;
+import com.jm.online_store.exception.EmailAlreadyExistsException;
+import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
@@ -228,15 +228,17 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * Восстановление клиента.
      * @param email - емейл для восстановления
+     * @return восстановленного Customer-а
      */
     @Override
     @Transactional
-    public void restoreCustomer(String email) {
+    public Customer restoreCustomer(String email) {
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()
                 -> new UserNotFoundException(ExceptionEnums.CUSTOMERS.getText() + ExceptionConstants.NOT_FOUND));
         customer.setIsEnabled(true);
         customer.setAnchorForDelete(null);
         updateCustomer(customer);
+        return customer;
     }
 
     /**
@@ -321,5 +323,4 @@ public class CustomerServiceImpl implements CustomerService {
         userService.changeUsersMail(customer, newMail);
         return customer;
     }
-
 }

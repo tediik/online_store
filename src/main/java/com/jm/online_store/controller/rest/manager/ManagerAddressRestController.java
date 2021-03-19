@@ -41,10 +41,10 @@ public class ManagerAddressRestController {
      * Метод для отображения адресов всех магазинов
      * @return ResponseEntity<ResponseDto<Address>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
-    @GetMapping
+    @GetMapping()
     @ApiOperation(value = "receive all address from db", authorizations = { @Authorization(value = "jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "No one address was found"),
+            @ApiResponse(code = 200, message = "returns empty list"),
             @ApiResponse(code = 200, message = "Ok")
     })
     public ResponseEntity<ResponseDto<List<Address>>> allShops() {
@@ -60,7 +60,7 @@ public class ManagerAddressRestController {
     @GetMapping("/{id}")
     @ApiOperation(value = "receive address by id from db", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Address not found"),
+            @ApiResponse(code = 404, message = "Address not found"),
             @ApiResponse(code = 200, message = "Ok")
     })
     public ResponseEntity<ResponseDto<Address>> getAddressInfo(@PathVariable Long id) {
@@ -89,7 +89,7 @@ public class ManagerAddressRestController {
     @ApiOperation(value = "add new address from manager page", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ResponseDto<Address>> addAddress(@RequestBody Address newAddress) {
         addressService.addAddress(newAddress);
-        return new ResponseEntity<>(new ResponseDto<>(true, newAddress), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, newAddress), HttpStatus.CREATED);
     }
 
     /**

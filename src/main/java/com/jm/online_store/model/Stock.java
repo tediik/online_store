@@ -65,4 +65,12 @@ public class Stock {
     @JsonManagedReference(value = "stock-sentStock")
     private Set<SentStock> sentStocks;
 
+    public Stock(Long id, String stockImg, String stockTitle, String stockText, LocalDate startDate, LocalDate endDate) {
+        this.id = id;
+        this.stockImg = stockImg;
+        this.stockTitle = stockTitle;
+        this.stockText = stockText;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

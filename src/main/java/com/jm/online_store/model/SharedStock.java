@@ -45,4 +45,9 @@ public class SharedStock {
     @JsonBackReference(value = "stock-sharedStock")
     private Stock stock;
 
+    public SharedStock(Long id, String socialNetworkName, Stock stock) {
+        this.id = id;
+        this.socialNetworkName = socialNetworkName;
+        this.stock = stock;
+    }
 }
