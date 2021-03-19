@@ -1,6 +1,5 @@
 package com.jm.online_store.service.interf;
 
-
 import com.jm.online_store.model.Address;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.model.Customer;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerService {
-
 
     boolean addNewAddressForCustomer(Customer customer , Address address);
 

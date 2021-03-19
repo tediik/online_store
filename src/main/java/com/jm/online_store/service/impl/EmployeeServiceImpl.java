@@ -18,5 +18,4 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee createEmployee(Employee employeeReq) {
         return employeeRepository.save(employeeReq);
     }
-
 }

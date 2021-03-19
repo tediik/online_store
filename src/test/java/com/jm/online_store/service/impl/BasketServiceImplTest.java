@@ -10,7 +10,6 @@ import com.jm.online_store.repository.BasketRepository;
 import com.jm.online_store.service.interf.BasketService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

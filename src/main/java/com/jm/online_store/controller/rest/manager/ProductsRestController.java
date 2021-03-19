@@ -80,7 +80,6 @@
                 return ResponseEntity.ok(new ResponseDto<>(true, Response.FAILED.getText()));
             }
             return new ResponseEntity<>(new ResponseDto<>(true, Response.SUCCESS.getText()), HttpStatus.CREATED);
-
         }
 
         @PostMapping(value = "/uploadFile")

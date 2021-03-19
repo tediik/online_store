@@ -50,14 +50,12 @@ public class Customer extends User {
     @Enumerated(EnumType.STRING)
     private DayOfWeekForStockSend dayOfWeekForStockSend;
 
-
     @ManyToMany
     @JoinTable(
             name = "customer_product",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favouritesGoods = new HashSet<>();
-
 
     @OneToMany(mappedBy = "customer",
             cascade = CascadeType.ALL,

@@ -5,10 +5,8 @@ import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.CustomerService;
-
 import com.jm.online_store.model.dto.FavouritesGroupDto;
 import com.jm.online_store.model.dto.ResponseDto;
-
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
@@ -44,7 +42,6 @@ public class FavouritesGroupRestController {
     private final CustomerService customerService;
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<FavouritesGroupDto>>() {}.getType();
-
 
     /**
      * Получение избранной группы по Id

@@ -39,5 +39,4 @@ public class CustomerController {
     public String settings() {
         return "customer-settings";
     }
-
 }

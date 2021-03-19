@@ -19,6 +19,7 @@ public class SharedNewsServiceImpl implements SharedNewsService {
     private final NewsService newsService;
     private final UserService userService;
     private final CustomerService customerService;
+
     @Override
     public List<SharedNews> findAll() {
         return sharedNewsRepository.findAll();

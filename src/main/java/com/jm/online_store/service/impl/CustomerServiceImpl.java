@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
     private CommentService commentService;
 
     /*
-    * добавлены Getters and Setters для commentService для
+    * добавлены Getter and Setter для commentService для
     * устранения циклической зависимости между бинами
     * CustomerService -> CommentService -> ProductService
     * */

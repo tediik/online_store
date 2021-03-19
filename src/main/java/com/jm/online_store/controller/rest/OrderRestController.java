@@ -2,7 +2,6 @@ package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Order;
-import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.ResponseDto;

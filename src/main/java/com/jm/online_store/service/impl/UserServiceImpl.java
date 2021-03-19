@@ -43,7 +43,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -628,7 +627,6 @@ public class UserServiceImpl implements UserService {
                 favouritesGroupService.save(favouritesGroup);
                 returnValue = customerRepository.save(customer);
             }
-
             log.debug("User with email: {} was saved successfully", newUser.getEmail());
         }
         return returnValue;

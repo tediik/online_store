@@ -117,6 +117,7 @@ public class DataInitializer {
     private final BadWordsService badWordsService;
     private final TemplatesMailingSettingsService templatesMailingSettingsService;
     private final CustomerService customerService;
+
     @Autowired
     private Environment environment;
 

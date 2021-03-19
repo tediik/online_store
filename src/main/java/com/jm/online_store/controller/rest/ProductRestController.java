@@ -1,8 +1,6 @@
 package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-
 import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;

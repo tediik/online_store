@@ -79,7 +79,6 @@ public class ProductServiceImpl implements ProductService {
     private final CustomerService customerService;
     private final PriceChangeNotificationsService priceChangeNotificationsService;
 
-
     /**
      * Получение списка товаров
      * @return List<Product> - список товаров

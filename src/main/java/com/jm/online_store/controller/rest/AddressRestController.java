@@ -6,7 +6,6 @@ import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.dto.AddressDto;
-
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CustomerService;
@@ -43,7 +42,6 @@ public class AddressRestController {
 
     /**
      * Метод для отображения адресов всех активных магазинов
-     *
      * @return ResponseEntity<ResponseDto < List < Address>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
      */
     @GetMapping(value = "/allShops")

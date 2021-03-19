@@ -3,7 +3,6 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.User;
 import com.jm.online_store.repository.FavouritesGroupRepository;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import org.checkerframework.checker.units.qual.C;

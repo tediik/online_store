@@ -1,10 +1,9 @@
 package com.jm.online_store.controller.rest;
 
 import com.jm.online_store.model.SharedNews;
-import com.jm.online_store.model.dto.SharedNewsDto;
-import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.SharedNewsDto;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SharedNewsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

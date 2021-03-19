@@ -165,7 +165,6 @@ public class StockRestController {
     })
     public ResponseEntity<ResponseDto<String>> deleteStockById(@PathVariable("id") Long id) {
         stockService.deleteStockById(id);
-        return ResponseEntity.ok(new ResponseDto<>(true, String.format(Response.HAS_BEEN_DELETED.getText(),
-                id)));
+        return ResponseEntity.ok(new ResponseDto<>(true, String.format(Response.HAS_BEEN_DELETED.getText(), id)));
     }
 }
