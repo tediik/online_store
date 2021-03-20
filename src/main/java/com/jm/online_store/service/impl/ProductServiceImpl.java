@@ -9,10 +9,12 @@ import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
+import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
@@ -26,13 +28,14 @@ import com.jm.online_store.service.interf.UserService;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +66,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
@@ -77,17 +80,18 @@ public class ProductServiceImpl implements ProductService {
     private final MailSenderService mailSenderService;
     private final CategoriesService categoriesService;
     private final ProductCharacteristicService productCharacteristicService;
+    private final ConfirmationTokenRepository confirmTokenRepository;
+    private final CustomerService customerService;
+
+    @Value("${spring.server.url}")
+    private String urlActivate;
+
+    @Transactional
+    @Override
+    public void deleteAllByEmail(String email) {
+        productRepository.deleteAllByEmail(email);
+    }
     private final PriceChangeNotificationsService priceChangeNotificationsService;
-    @Autowired
-    private CustomerService customerService;
-
-    public CustomerService getCustomerService() {
-        return customerService;
-    }
-
-    public void setCustomerService(CustomerService customerService) {
-        this.customerService = customerService;
-    }
 
     /**
      * Получение списка товаров
@@ -253,6 +257,7 @@ public class ProductServiceImpl implements ProductService {
      */
     public void sendNewPrice(Product product, double oldPrice, double newPrice) {
         Product productToSend = findProductById(product.getId()).get();
+        Long productId = productToSend.getId();
         Set<String> emails = productToSend.getPriceChangeSubscribers();
         String templateBody = commonSettingsService
                 .getSettingByName("price_change_distribution_template")
@@ -261,6 +266,7 @@ public class ProductServiceImpl implements ProductService {
         for (String email : emails) {
             Optional<User> user = userService.findByEmail(email);
             if (user.isPresent() && user.get().getConfirmReceiveEmail().toString().equals("CONFIRMED")) { //рассылка для незарегистрированных юзеров отключена.
+                ConfirmationToken confirmationToken = confirmTokenRepository.findByUserEmail(email);
                 if (user.get().getFirstName() != null) {
                     messageBody = templateBody.replaceAll("@@user@@", user.get().getFirstName());
                 } else {
@@ -269,6 +275,10 @@ public class ProductServiceImpl implements ProductService {
                 messageBody = messageBody.replaceAll("@@oldPrice@@", String.valueOf(oldPrice));
                 messageBody = messageBody.replaceAll("@@newPrice@@", String.valueOf(newPrice));
                 messageBody = messageBody.replaceAll("@@product@@", product.getProduct());
+                messageBody = messageBody.replaceAll("@@idProduct@@", Long.toString(product.getId()));
+                messageBody = messageBody.replaceAll("@@url@@", urlActivate  + "/cancelMailing/" + confirmationToken.getConfirmationToken()+ "/" + productId );
+                messageBody = messageBody.replaceAll("@@url2@@", urlActivate  + "/cancelMailing/cancelMailingAll/" + confirmationToken.getConfirmationToken()+ "/" + productId );
+
                 try {
                     mailSenderService.sendHtmlMessage(email, "Снижена цена на товар!", messageBody, "Price change");
                 } catch (MessagingException e) {
@@ -277,6 +287,7 @@ public class ProductServiceImpl implements ProductService {
             }
         }
     }
+
 
     /**
      * Удаление товара.
@@ -542,6 +553,15 @@ public class ProductServiceImpl implements ProductService {
         return product.getChangePriceHistory();
     }
 
+    /* @param email почта пользователя
+     * @param idProduct идентификатор Product
+     */
+    @Transactional
+    @Override
+    public void deleteProductPriceChangeById(String email,Long idProduct) {
+        productRepository.deletePriceChangeSubscriber(email,idProduct);
+    }
+
     /**
      * Изменение рейтинга товара.
      * @param productId идентификатор товара.
@@ -602,6 +622,7 @@ public class ProductServiceImpl implements ProductService {
                         presentProduct.getAmount(),
                         presentProduct.isDeleted(),
                         productSet.contains(presentProduct)
+
                 );
                 return Optional.of(productDto);
             }
@@ -745,33 +766,19 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deletePriceChangeSubscriber(userService.getCurrentLoggedInUser().getEmail(), productId);
     }
 
-    /**
-     * Удаляет адресс изображения из БД по id
-     * @param name изображения
-     */
-    @Transactional
     @Override
-    public void deleteProductPictureName(String name) {
-        productRepository.deleteProductPictureName(name);
+    public void deleteProductPictureName(String id) {
+
     }
 
-    /**
-     * Возвращает колличество картинок, принадлежащих продукту
-     * @param id продукта
-     */
-    @Transactional
     @Override
     public Long getCountPictureNameByPictureName(Long id) {
-        return productRepository.getCountPictureNameByPictureName(id);
+        return null;
     }
 
-    /**
-     * Возвращает id продукта по имени картинки, принадлежащей данному продукту
-     * @param name имя картинки
-     */
-    @Transactional
     @Override
     public Long getProductIdByPictureName(String name) {
-        return productRepository.getProductIdByPictureName(name);
+        return null;
     }
+
 }

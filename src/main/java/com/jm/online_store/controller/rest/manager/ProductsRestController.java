@@ -224,13 +224,14 @@
                 @ApiResponse(code = 200, message = "Product has been updated"),
                 @ApiResponse(code = 404, message = "Product hasn't been found"),
         })
-        public ResponseEntity<ResponseDto<ProductDto>> editProduct(@RequestBody ProductDto productReq) {
+        public ResponseEntity<ResponseDto<ProductDto>> editProductM(@RequestBody ProductDto productReq) {
+            Product productCurrentDto = productService.getProductById(productReq.getId());
             Product product = new Product();
             product.setId(productReq.getId());
             product.setProduct(productReq.getProduct());
             product.setPrice(productReq.getPrice());
-            product.setRating(productReq.getRating());
-            product.setProductType(productReq.getProductType());
+            product.setRating(productCurrentDto.getRating());
+            product.setProductType(productCurrentDto.getProductType());
             product.setProductPictureNames(product.getProductPictureNames());
             product.setDeleted(false);
             Product gotBack = productService.editProduct(product);
