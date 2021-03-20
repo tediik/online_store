@@ -61,7 +61,7 @@ public class CustomerNotificationsRestController {
             authorizations = {@Authorization(value = "jwtToken")})
     @ApiResponse(code = 404, message = "Day was not found")
     public ResponseEntity<ResponseDto<DayOfWeekForStockSend>> getCustomerDayOfWeekForStockSend() {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         DayOfWeekForStockSend day = customerService.getCustomerDayOfWeekForStockSend(customer);
         return new ResponseEntity<>(new ResponseDto<>(true, day), HttpStatus.OK);
     }
@@ -79,7 +79,7 @@ public class CustomerNotificationsRestController {
             @ApiResponse(code = 200, message = "Day was changed")
     })
     public ResponseEntity<ResponseDto<DayOfWeekForStockSend>> setCustomerDayOfWeekForStockSend(@RequestBody String day) {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         if (!day.equals("null")) {
             customer.setDayOfWeekForStockSend(DayOfWeekForStockSend.valueOf(day.toUpperCase()));
             return new ResponseEntity<>(new ResponseDto<>(true, DayOfWeekForStockSend.valueOf(day)), HttpStatus.OK);
@@ -103,7 +103,7 @@ public class CustomerNotificationsRestController {
             @ApiResponse(code = 400, message = "Wrong string data")
     })
     public ResponseEntity<ResponseDto<ConfirmReceiveEmail>> isEmailConfirmed(@PathVariable String type) {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         if (type.equalsIgnoreCase("price")) {
             return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer.getConfirmReceiveEmail(), ConfirmReceiveEmail.class)), HttpStatus.OK);
         } else if (type.equalsIgnoreCase("comments")){
@@ -125,7 +125,7 @@ public class CustomerNotificationsRestController {
             @ApiResponse(code = 400, message = "Информация не получена")
     })
     public ResponseEntity<ResponseDto<CustomerDto>> getEmailConfirmed() {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         userService.sendConfirmationSubscribeLetter(customer.getEmail());
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
     }
@@ -142,7 +142,7 @@ public class CustomerNotificationsRestController {
             @ApiResponse(code = 400, message = "Email was not unsuscribed")
     })
     public ResponseEntity<ResponseDto<CustomerDto>> unsubscribeNewPrice() {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         customer.setConfirmReceiveEmail(ConfirmReceiveEmail.NO_ACTIONS);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
     }
@@ -159,7 +159,7 @@ public class CustomerNotificationsRestController {
             @ApiResponse(code = 400, message = "Email was not unsubscribed")
     })
     public ResponseEntity<ResponseDto<CustomerDto>> unsubscribeNewComments() {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         customer.setConfirmCommentsEmails(ConfirmReceiveEmail.NO_ACTIONS);
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(customer, CustomerDto.class)), HttpStatus.OK);
     }
@@ -193,8 +193,8 @@ public class CustomerNotificationsRestController {
             @ApiResponse(code = 400, message = "Comments were not found")
     })
     public ResponseEntity<ResponseDto<List<Comment>>> getCommentAnswers() {
-        List<Comment> customerComments = commentService.findAllByCustomer(customerService.getCurrentLoggedInUser());
-        List<Review> customerReviews = reviewService.findAllByCustomer(customerService.getCurrentLoggedInUser());
+        List<Comment> customerComments = commentService.findAllByCustomer(customerService.getCurrentLoggedInCustomer());
+        List<Review> customerReviews = reviewService.findAllByCustomer(customerService.getCurrentLoggedInCustomer());
         List<Comment> answers = new ArrayList<>();
         customerComments.stream()
                 .forEach(comment -> answers.addAll(commentService.getCommentsByParentId(comment.getId())));

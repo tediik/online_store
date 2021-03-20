@@ -41,8 +41,8 @@ public class SalesReportDto {
     public static SalesReportDto orderToSalesReportDto(Order order) {
         SalesReportDto salesReportDto = new SalesReportDto();
         salesReportDto.setOrderNumber(order.getId());
-        salesReportDto.setUserEmail(order.getUser().getEmail());
-        salesReportDto.setCustomerInitials(createUserInitialsFromUser(order.getUser()));
+        salesReportDto.setUserEmail(order.getCustomer().getEmail());
+        salesReportDto.setCustomerInitials(createUserInitialsFromUser(order.getCustomer()));
         salesReportDto.setPurchaseDate(order.getDateTime().toLocalDate());
         salesReportDto.setQuantity(order.getAmount());
         salesReportDto.setListOfProducts(order

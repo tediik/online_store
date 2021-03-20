@@ -1,5 +1,6 @@
 package com.jm.online_store.service.interf;
 
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
@@ -26,7 +27,7 @@ public interface FavouritesGroupService {
 
     Optional<FavouritesGroup> findByName(String name);
 
-    FavouritesGroup getOneFavouritesGroupByUserAndByName(User user, String name);
+    FavouritesGroup getOneFavouritesGroupByUserAndByName(Customer customer, String name);
 
     void save (FavouritesGroup favouritesGroup);
 

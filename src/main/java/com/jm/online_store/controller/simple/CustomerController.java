@@ -25,7 +25,6 @@ public class CustomerController {
         return "customer-page";
     }
 
-
     @GetMapping("/basket")
     public String getUserBasket() {
         return "basket-page";

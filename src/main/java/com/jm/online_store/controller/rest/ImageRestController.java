@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
@@ -39,7 +39,7 @@ public class ImageRestController {
     public ResponseEntity<ResponseDto<String>> getImage() {
         return new ResponseEntity<>(new ResponseDto<>(
                 true, userService.getCurrentLoggedInUser().getProfilePicture(),
-                ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+                Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 
     /**
@@ -58,7 +58,7 @@ public class ImageRestController {
     public ResponseEntity<ResponseDto<String>> handleImagePost(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         return new ResponseEntity<>(new ResponseDto<>(
                 true, userService.updateUserImage(userService.getCurrentLoggedInUser().getId(), imageFile),
-                ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+                Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 
     /**
@@ -74,6 +74,6 @@ public class ImageRestController {
     public ResponseEntity<ResponseDto<String>> deleteImage() throws IOException {
         return new ResponseEntity<>(new ResponseDto<>(
                 true, userService.deleteUserImage(userService.getCurrentLoggedInUser().getId()),
-                ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+                Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 }

@@ -4,12 +4,12 @@ import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
+import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
-import com.jm.online_store.exception.UserNotFoundException;
-import com.jm.online_store.model.Address;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Customer;
+import com.jm.online_store.model.Employee;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.SubBasket;
@@ -17,6 +17,7 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.CustomerRepository;
+import com.jm.online_store.repository.EmployeeRepository;
 import com.jm.online_store.repository.RoleRepository;
 import com.jm.online_store.repository.UserRepository;
 import com.jm.online_store.service.interf.AddressService;
@@ -27,6 +28,7 @@ import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
@@ -50,6 +52,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,6 +79,8 @@ public class UserServiceImpl implements UserService {
     private final CommonSettingsService commonSettingsService;
     private final FavouritesGroupService favouritesGroupService;
     private final TemplatesMailingSettingsService templatesMailingSettingsService;
+    private final EmployeeRepository employeeRepository;
+    private final ModelMapper modelMapper;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -465,11 +470,13 @@ public class UserServiceImpl implements UserService {
 
         FavouritesGroup favouritesGroup = new FavouritesGroup();
         favouritesGroup.setName("Все товары");
-        favouritesGroup.setUser(customer);
+        favouritesGroup.setCustomer(customer);
         favouritesGroupService.save(favouritesGroup);
 
         if (userRepository.existsByEmail(confirmationToken.getUserEmail())) {
-            List<SubBasket> subBasketList = getCurrentLoggedInUser(request.getSession().getId()).getUserBasket();
+            User user = getCurrentLoggedInUser(request.getSession().getId());
+            Customer customer1 = modelMapper.map(user, Customer.class);
+            List<SubBasket> subBasketList = customer1.getUserBasket();
             userRepository.delete(getCurrentLoggedInUser(request.getSession().getId()));
             customer.setUserBasket(subBasketList);
         }
@@ -496,6 +503,7 @@ public class UserServiceImpl implements UserService {
         }
         return true;
     }
+
 
     /**
      * Method receives token and request after User confirms mail change via link
@@ -582,7 +590,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void addNewUserFromAdmin(User newUser) {
+    public User addNewUserFromAdmin(User newUser) {
+        User returnValue = new User();
         if (ValidationUtils.isNotValidEmail(newUser.getEmail())) {
             log.debug("Wrong email");
             throw new UserServiceException(ExceptionEnums.EMAIL.getText() + String.format(ExceptionConstants.NOT_VALID,newUser.getEmail()));
@@ -602,19 +611,25 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.getRoles().forEach(role -> role.setId(roleRepository.findByName(role.getName()).get().getId()));
         newUser.setProfilePicture(StringUtils.cleanPath("def.jpg"));
+        newUser.setRegisterDate(LocalDate.now());
         Set<Role> roles = newUser.getRoles();
         for (Role role : roles) {
             if (!role.getName().equals("ROLE_CUSTOMER") || roles.size() > 1) {
-                userRepository.save(newUser);
+                Employee employee = modelMapper.map(newUser, Employee.class);
+                employee.setIsAccountNonBlockedStatus(true);
+                returnValue = employeeRepository.save(employee);
             } else {
-                Customer customer = new Customer(newUser.getEmail(), newUser.getPassword());
-                customer.setRoles(newUser.getRoles());
-                customer.setProfilePicture(newUser.getProfilePicture());
-                customerRepository.save(customer);
+                Customer customer = modelMapper.map(newUser, Customer.class);
+                customer.setIsAccountNonBlockedStatus(true);
+                FavouritesGroup favouritesGroup = new FavouritesGroup();
+                favouritesGroup.setName("Все товары");
+                favouritesGroup.setCustomer(customer);
+                favouritesGroupService.save(favouritesGroup);
+                returnValue = customerRepository.save(customer);
             }
             log.debug("User with email: {} was saved successfully", newUser.getEmail());
-            return;
         }
+        return returnValue;
     }
 
     /**
@@ -689,41 +704,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод сервиса для добавления нового адреса пользователю
-     * @param user переданный пользователь
-     * @param address новый адрес для пользователя
-     * @throws UserNotFoundException вылетает, если пользователь не найден в БД
-     */
-    @Transactional
-    @Override
-    public boolean addNewAddressForUser(User user, Address address) {
-        User usertoUpdate = findById(user.getId()).orElseThrow(() ->
-                new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND));
-        Optional<Address> addressFromDB = addressService.findSameAddress(address);
-        if (addressFromDB.isPresent() && !usertoUpdate.getUserAddresses().contains(addressFromDB.get())) {
-            Address addressToAdd = addressFromDB.get();
-            if (usertoUpdate.getUserAddresses() != null) {
-                usertoUpdate.getUserAddresses().add(addressToAdd);
-            } else {
-                usertoUpdate.setUserAddresses(Collections.singleton(address));
-            }
-            updateUser(usertoUpdate);
-            return true;
-        }
-        if (addressFromDB.isEmpty()) {
-            Address addressToAdd = addressService.addAddress(address);
-            if (usertoUpdate.getUserAddresses() != null) {
-                usertoUpdate.getUserAddresses().add(addressToAdd);
-            } else {
-                usertoUpdate.setUserAddresses(Collections.singleton(address));
-            }
-            updateUser(usertoUpdate);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Метод находит User-а по его логину email
      * @param email Юзера
      * @return User
@@ -755,7 +735,6 @@ public class UserServiceImpl implements UserService {
     public User getCurrentLoggedInUser(String sessionID) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // AnonymousAuthenticationToken happens when anonymous authentication is enabled
-
         if (auth == null || !auth.isAuthenticated()) {
             return null;
         }

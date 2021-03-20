@@ -1,9 +1,9 @@
 package com.jm.online_store.controller.rest.customer;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ExceptionConstants;
-import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.RecentlyViewedProducts;
@@ -69,7 +69,7 @@ public class CustomerRestController {
             @ApiResponse(code = 200, message = "Пользователь с идентификатором: \"id\" найден."),
     })
     public ResponseEntity<ResponseDto<UserDto>> getCurrentCustomer() {
-        User currentLoggedInCustomer = customerService.getCurrentLoggedInUser();
+        User currentLoggedInCustomer = customerService.getCurrentLoggedInCustomer();
         return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(currentLoggedInCustomer, UserDto.class)), HttpStatus.OK);
     }
 
@@ -122,7 +122,7 @@ public class CustomerRestController {
             @ApiResponse(code = 200, message = "Изменения для пользователя с идентификатором: \"id\" были успешно добавлены."),
     })
     public ResponseEntity<ResponseDto<String>> changePassword(@RequestBody PasswordDto passwords) {
-        Customer customer = customerService.getCurrentLoggedInUser();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
         if(passwords.getOldPassword().equals(passwords.getNewPassword())) {
             return new ResponseEntity<>(new ResponseDto<>(false, "Старый и новый пароли совпадают."), HttpStatus.BAD_REQUEST);
         }
@@ -130,7 +130,7 @@ public class CustomerRestController {
             return new ResponseEntity<>(new ResponseDto<>(false, "Ошибка при изменении пароля."), HttpStatus.BAD_REQUEST);
         }
         log.info("Пароль для пользователя: {} успешно изменён.", customer.getEmail());
-        return new ResponseEntity<>(new ResponseDto<>(true, "Изменения для пользователя с идентификатором: " + customer.getId() + " были успешно добавлены. ", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Изменения для пользователя с идентификатором: " + customer.getId() + " были успешно добавлены. ", Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 
     /**

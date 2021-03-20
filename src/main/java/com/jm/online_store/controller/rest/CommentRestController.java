@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.CommentNotSavedException;
-import com.jm.online_store.enums.ResponseOperation;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.Review;
@@ -57,7 +57,6 @@ public class CommentRestController {
     private final ProductRepository productRepository;
     private final BadWordsService badWordsService;
     private final UserService userService;
-    private final CommentDto commentDto;
     private final ModelMapper modelMapper;
 
     /**
@@ -174,7 +173,7 @@ public class CommentRestController {
         userService.findByEmail(email).ifPresentOrElse(e -> {
                     if (e.getId().equals(commentService.findById(commentId).getCustomer().getId())) {
                         commentService.removeById(commentId);
-                        answer[0] = new ResponseEntity<>(new ResponseDto<>(true, ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+                        answer[0] = new ResponseEntity<>(new ResponseDto<>(true, Response.NO_ERROR.getText()), HttpStatus.OK);
                     } else
                         answer[0] = new ResponseEntity<>(new ResponseDto<>(false, "Not modified"), HttpStatus.NOT_MODIFIED);
                 },

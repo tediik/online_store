@@ -1,6 +1,5 @@
 package com.jm.online_store.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -35,7 +34,7 @@ public class Feedback {
     private Topic topic;
 
     @ManyToOne
-    private User user;
+    private Employee employee;
 
     @Enumerated(EnumType.STRING)
     private Status status;

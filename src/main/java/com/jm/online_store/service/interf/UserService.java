@@ -1,6 +1,5 @@
 package com.jm.online_store.service.interf;
 
-import com.jm.online_store.model.Address;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.UserDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,7 +63,7 @@ public interface UserService {
 
     String deleteUserImage(Long userId) throws IOException;
 
-    void addNewUserFromAdmin(User newUser);
+    User addNewUserFromAdmin(User newUser);
 
     boolean changePassword(Long id, String oldPassword, String newPassword);
 
@@ -75,8 +74,6 @@ public interface UserService {
     User getCurrentLoggedInUser();
 
     User getUserByToken(String token);
-
-    boolean addNewAddressForUser(User user, Address address);
 
     public void sendConfirmationSubscribeLetter(String email);
 }

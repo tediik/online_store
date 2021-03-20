@@ -6,6 +6,7 @@ import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.SubBasketNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Address;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.SubBasket;
@@ -13,11 +14,13 @@ import com.jm.online_store.model.User;
 import com.jm.online_store.repository.BasketRepository;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BasketService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.ProductInOrderService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -35,6 +38,8 @@ public class BasketServiceImpl implements BasketService {
     private final AddressService addressService;
     private final OrderService orderService;
     private final ProductInOrderService productInOrderService;
+    private final CustomerService customerService;
+    private final ModelMapper modelMapper;
 
     /**
      * метод поиска сущности SubBasket.
@@ -54,16 +59,17 @@ public class BasketServiceImpl implements BasketService {
      */
     @Override
     public List<SubBasket> getBasket(String sessionID) {
-        User authorityUser = userService.getCurrentLoggedInUser(sessionID);
-        List<SubBasket> subBaskets = authorityUser.getUserBasket();
+        User user = userService.getCurrentLoggedInUser(sessionID);
+        Customer customer = modelMapper.map(user, Customer.class);
+        List<SubBasket> subBaskets = customer.getUserBasket();
         int productCount;
         for (SubBasket subBasket : subBaskets) {
             productCount = productService.findProductById(subBasket.getProduct().getId())
                     .orElseThrow(ProductNotFoundException::new).getAmount();
             if (productCount < subBasket.getCount()) {
                 subBasket.setCount(productCount);
-                authorityUser.setUserBasket(subBaskets);
-                userService.updateUser(authorityUser);
+                customer.setUserBasket(subBaskets);
+                userService.updateUser(customer);
                 if (productCount < 1) {
                     deleteBasket(subBasket,"");
                 }
@@ -118,11 +124,11 @@ public class BasketServiceImpl implements BasketService {
      */
     @Override
     public void deleteBasket(SubBasket subBasket,String sessionID) {
-        User authorityUser = userService.getCurrentLoggedInUser(sessionID);
-        List<SubBasket> subBasketList = authorityUser.getUserBasket();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
+        List<SubBasket> subBasketList = customer.getUserBasket();
         subBasketList.remove(subBasket);
-        authorityUser.setUserBasket(subBasketList);
-        userService.updateUser(authorityUser);
+        customer.setUserBasket(subBasketList);
+        userService.updateUser(customer);
         basketRepository.delete(subBasket);
     }
 
@@ -136,13 +142,15 @@ public class BasketServiceImpl implements BasketService {
     @Transactional
     public SubBasket addProductToBasket(Long id, String sessionID) {
         User userWhoseBasketToModify = userService.getCurrentLoggedInUser(sessionID);
-        if (userWhoseBasketToModify == null) {
+        Customer customerWhoseBasketToModify = modelMapper.map(userWhoseBasketToModify, Customer.class);
+        Customer customer = customerService.findCustomerByEmail(userWhoseBasketToModify.getEmail());
+        if (customer == null) {
             throw new UserNotFoundException();
         }
         Product productToAdd = productService
                 .findProductById(id)
                 .orElseThrow(ProductNotFoundException::new);
-        List<SubBasket> userBasket = userWhoseBasketToModify.getUserBasket();
+        List<SubBasket> userBasket = customer.getUserBasket();
 
        if(productToAdd.getAmount() <= 0) {
             throw new ProductsNotFoundException("В БД закончился данный продукт");
@@ -158,7 +166,7 @@ public class BasketServiceImpl implements BasketService {
                    .build();
            basketRepository.save(subBasket);
            userBasket.add(subBasket);
-           userService.updateUser(userWhoseBasketToModify);
+           userService.updateUser(customerWhoseBasketToModify);
            return subBasket;
        }
     }
@@ -171,8 +179,8 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public Order buildOrderFromBasket(Long id) {
         Address addressToAdd = addressService.findAddressById(id).orElseThrow(AddressNotFoundException::new);
-        User authorityUser = userService.getCurrentLoggedInUser();
-        List<SubBasket> subBasketList = authorityUser.getUserBasket();
+        Customer customer = customerService.getCurrentLoggedInCustomer();
+        List<SubBasket> subBasketList = customer.getUserBasket();
         Product product;
         int count = 0;
         double sum = 0;
@@ -192,12 +200,12 @@ public class BasketServiceImpl implements BasketService {
         order.setStatus(Order.Status.INCARTS);
         order.setAddress(addressService.findAddressById(addressToAdd.getId())
                  .orElseThrow(AddressNotFoundException::new));
-        Set<Order> orderSet = authorityUser.getOrders();
+        Set<Order> orderSet = customer.getOrders();
         orderSet.add(order);
-        authorityUser.setOrders(orderSet);
+        customer.setOrders(orderSet);
         orderService.updateOrder(order);
-        authorityUser.setUserBasket(new ArrayList<>());
-        userService.updateUser(authorityUser);
+        customer.setUserBasket(new ArrayList<>());
+        userService.updateUser(customer);
         return order;
     }
 }

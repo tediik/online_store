@@ -1,15 +1,19 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouriteGoodsService;
 import com.jm.online_store.service.interf.ProductService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.Set;
 
 @Service
@@ -17,7 +21,7 @@ import java.util.Set;
 public class FavouriteGoodsServiceImpl implements FavouriteGoodsService {
     private final UserService userService;
     private final ProductService productService;
-
+    private final CustomerService customerService;
     /**
      * метод удаления продукта из списка избранного
      * @param id продукта
@@ -26,14 +30,15 @@ public class FavouriteGoodsServiceImpl implements FavouriteGoodsService {
      */
     @Override
     public void deleteFromFavouriteGoods(Long id, User currentUser) {
-        User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
+        Customer customer = customerService.findById(currentUser.getId()).orElseThrow(()
+                -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
         Product productToDelete = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
-        Set<Product> favouriteGoods = user.getFavouritesGoods();
+        Set<Product> favouriteGoods = customer.getFavouritesGoods();
         if(favouriteGoods.contains(productToDelete)) {
             favouriteGoods.remove(productToDelete);
         }
-        user.setFavouritesGoods(favouriteGoods);
-        userService.updateUser(user);
+        customer.setFavouritesGoods(favouriteGoods);
+        userService.updateUser(currentUser);
     }
 
     /**
@@ -44,12 +49,13 @@ public class FavouriteGoodsServiceImpl implements FavouriteGoodsService {
      */
     @Override
     public void addToFavouriteGoods(Long id, User currentUser) {
-        User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
+        Customer customer = customerService.findById(currentUser.getId()).orElseThrow(()
+                -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
         Product product = productService.findProductById(id).orElseThrow(ProductNotFoundException::new);
-        Set<Product> favouritesGoods = user.getFavouritesGoods();
+        Set<Product> favouritesGoods = customer.getFavouritesGoods();
         favouritesGoods.add(product);
-        user.setFavouritesGoods(favouritesGoods);
-        userService.updateUser(user);
+        customer.setFavouritesGoods(favouritesGoods);
+        userService.updateUser(customer);
     }
 
     /**
@@ -59,7 +65,8 @@ public class FavouriteGoodsServiceImpl implements FavouriteGoodsService {
      */
     @Override
     public Set<Product> getFavouriteGoods(User currentUser) {
-        User user = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
-        return user.getFavouritesGoods();
+        Customer customer = customerService.findById(currentUser.getId()).orElseThrow(()
+                -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
+        return customer.getFavouritesGoods();
     }
 }

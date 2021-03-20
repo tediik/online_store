@@ -1,7 +1,5 @@
 package com.jm.online_store.enums;
 
-import lombok.Getter;
-
 /**
  * Набор перечислений для использования при обработке исключений.
  * Представляют собой наименования сущностей проекта в ед. и мн. числе
@@ -12,6 +10,7 @@ import lombok.Getter;
 public enum ExceptionEnums {
     USER("USER "), USERS("USERS "),
     CUSTOMER("CUSTOMER "), CUSTOMERS("CUSTOMERS "),
+    EMPLOYEE("EMPLOYEE "), EMPLOYEES("EMPLOYEES "),
     ORDER("ORDER "), ORDERS("ORDERS"),
     SHARER_STOCK("SHARED STOCK "), SHARER_STOCKS("SHARED STOCKS "),
     STOCK("STOCK "), STOCKS("STOCKS"),

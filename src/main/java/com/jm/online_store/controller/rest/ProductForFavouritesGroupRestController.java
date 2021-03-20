@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -134,7 +134,7 @@ public class ProductForFavouritesGroupRestController {
             favouritesGroupService.deleteSpecificProductFromSpecificFavouritesGroup(product, oldFavouritesGroup);
             favouritesGroupService.addProductToFavouritesGroup(product, newFavouritesGroup);
         }
-        return ResponseEntity.ok( new ResponseDto<>(true, ResponseOperation.SUCCESS.getMessage()));
+        return ResponseEntity.ok( new ResponseDto<>(true, Response.SUCCESS.getText()));
     }
 }
 
