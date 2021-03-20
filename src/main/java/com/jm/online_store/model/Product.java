@@ -46,7 +46,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false, updatable = false, nullable = false)
-    private long id;
+    private Long id;
     @NonNull
     @Column(name = "product", nullable = false)
     private String product;
@@ -109,6 +109,27 @@ public class Product {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     private List<ProductCharacteristic> productCharacteristics;
+
+    public Product(Long id, @NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating, @NonNull String productType) {
+        this.id = id;
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+        this.rating = rating;
+        this.productType = productType;
+    }
+
+    public Product(Long id, @NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating, @NonNull String productType, @NonNull List<String> productPictureNames) {
+        this.id = id;
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+        this.rating = rating;
+        this.productType = productType;
+        this.productPictureNames = productPictureNames;
+    }
+
+
 
     public Product(@NonNull String product, @NonNull Double price, @NonNull int amount, @NonNull Double rating, @NonNull String productType) {
         this.product = product;

@@ -46,4 +46,10 @@ public class TopicsCategory {
 
     @Column(nullable = false)
     private Boolean actual = Boolean.TRUE;
+
+    public TopicsCategory(Long id, @NotNull String categoryName, Boolean actual) {
+        this.id = id;
+        this.categoryName = categoryName;
+        this.actual = actual;
+    }
 }

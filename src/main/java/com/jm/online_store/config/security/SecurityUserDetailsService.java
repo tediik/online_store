@@ -1,5 +1,6 @@
 package com.jm.online_store.config.security;
 
+import com.jm.online_store.config.handler.LoginFailureHandler;
 import com.jm.online_store.model.Role;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.UserRepository;

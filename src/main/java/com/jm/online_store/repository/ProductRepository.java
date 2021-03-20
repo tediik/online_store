@@ -48,4 +48,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "select product_id from product_picture_names where product_picture_names.product_picture_names = :name", nativeQuery = true)
     Long getProductIdByPictureName(String name);
+
+    @Modifying
+    @Query(value = "delete from product_subscribers_mails where email =:email", nativeQuery = true)
+    void deleteAllByEmail(String email);
 }
