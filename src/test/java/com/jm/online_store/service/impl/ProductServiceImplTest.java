@@ -51,7 +51,7 @@ class ProductServiceImplTest {
     private final PriceChangeNotificationsService priceChangeNotificationsService = mock(PriceChangeNotificationsService.class);
     private final ProductCharacteristicService productCharacteristicService = mock(ProductCharacteristicService.class);
     private final ProductService productService = new ProductServiceImpl(productRepository, evaluationService, userService, commonSettingsService,
-            mailSenderService, categoriesService, productCharacteristicService, customerService, priceChangeNotificationsService);
+            mailSenderService, categoriesService, productCharacteristicService, priceChangeNotificationsService,  customerService);
     private Product product;
     private Set<String> subscribers;
     private Map<LocalDateTime, Double> prices;

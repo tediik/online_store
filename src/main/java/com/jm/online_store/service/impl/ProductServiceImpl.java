@@ -32,6 +32,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,10 +77,17 @@ public class ProductServiceImpl implements ProductService {
     private final MailSenderService mailSenderService;
     private final CategoriesService categoriesService;
     private final ProductCharacteristicService productCharacteristicService;
-    private final CustomerService customerService;
     private final PriceChangeNotificationsService priceChangeNotificationsService;
+    @Autowired
+    private CustomerService customerService;
 
+    public CustomerService getCustomerService() {
+        return customerService;
+    }
 
+    public void setCustomerService(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     /**
      * Получение списка товаров
