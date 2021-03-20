@@ -1351,7 +1351,7 @@ public class DataInitializer {
                 .build();
         TemplatesMailingSettings regNewAccountTemplate = TemplatesMailingSettings.builder()
                 .settingName("reg_new_account")
-                .textValue("<p>Hello, @@user@@!" + " Welcome to " + STORE_NAME + ". Please, visit next link: @@url@@" +
+                .textValue("<p>Hello, @@userEmail@@!</p><p>" + " Welcome to " + STORE_NAME + ". Please, visit next link: @@url@@" +
                         "/activate/@@confirmationToken@@</p>" +
                         "<p>С Уважением</p><p>" +
                         environment.getProperty("production-url") + "</p>")
