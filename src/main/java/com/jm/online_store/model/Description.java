@@ -44,13 +44,16 @@ public class Description {
     private String information;
     //Optional fields
     private int ram;
+    private int storage;
     private int hdd;
     private String screenResolution;
     private boolean wifiOnBoard;
     private String bluetoothVersion;
+    private String OS;
 
     public Description(String serialNumber, String producer, int warranty, String dimensions, String color,
-                       Double weight, String information, int ram, int hdd, String screenResolution, boolean wifiOnBoard, String bluetoothVersion) {
+                       Double weight, String information, int ram, int storage, int hdd, String screenResolution,
+                       boolean wifiOnBoard, String bluetoothVersion, String OS) {
         this.serialNumber = serialNumber;
         this.producer = producer;
         this.warranty = warranty;
@@ -59,9 +62,11 @@ public class Description {
         this.weight = weight;
         this.information = information;
         this.ram = ram;
+        this.storage = storage;
         this.hdd = hdd;
         this.screenResolution = screenResolution;
         this.wifiOnBoard = wifiOnBoard;
         this.bluetoothVersion = bluetoothVersion;
+        this.OS = OS;
     }
 }

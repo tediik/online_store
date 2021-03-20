@@ -747,9 +747,9 @@ public class DataInitializer {
         Description description4 = new Description("33311432NXU", "ATop corp.", 3, "698x785x368", "black", 3.1, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim");
         Description description5 = new Description("33211678NXU", "ATop corp.", 3, "690x765x322", "black", 3.5, "some additional info here");
         Description description6 = new Description("333367653Rh", "Rhino corp.", 3, "612x678x315", "orange", 2.8, "some additional info here");
-        Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim", 512, 512, "1920x960", true, "5.0");
-        Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 256, "1920x960", false, "4.0");
-        Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 128, "1024x480", true, "5.0");
+        Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim", 512, 64, 512, "1920x960", true, "5.0", "Android");
+        Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 128,256, "1920x960", false, "4.0", "Android");
+        Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 256,128, "1024x480", true, "5.0", "Apple");
         Description description10 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
         Description description11 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
         Description description12 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
@@ -757,7 +757,7 @@ public class DataInitializer {
         Description description14 = new Description("CFE867594316856743201", "Bosch", 1, "360x350x490", "violet", 10.9, "Моющий пылесос Bosch BWD41720 — надежное устройство, позволяющее поддерживать чистоту напольных покрытий любого типа.");
         Description description15 = new Description("08UV8NEM703511M", "Samsung", 1, "365x230x275", "blue", 3.8, "Пылесос Samsung SC4131 используется для сухой уборки многокомнатных квартир и жилых домов.");
         Description description16 = new Description("X54355543455", "Samsung", 2, "850x600x450", "white", 54.0, "Позволяет бережно очищать от загрязнений одежду и текстильные изделия из хлопка, льна, синтетических волокон и деликатных тканей");
-        Description description17 = new Description("A886UW16575632", "Whirlpool Corp.", 1, "815x595x540", "white", 65.0, "Встраиваемая стиральная машина способна за один цикл постирать и высушить до 7 кг вещей", 1024, 256, "1920x960", false, "4.0");
+        Description description17 = new Description("A886UW16575632", "Whirlpool Corp.", 1, "815x595x540", "white", 65.0, "Встраиваемая стиральная машина способна за один цикл постирать и высушить до 7 кг вещей");
         Description description18 = new Description("A88563902273", "Whirlpool Corp.", 1, "900x420x600", "white", 49.0, "Автоматически определяется тип белья, расход воды и моющих средств. Устройство бережно относится к ткани и обеспечивает превосходный результат стирки.");
         Description description19 = new Description("AHP4388843455", "Whirlpool Corp.", 1, "270x835x210", "white", 6.5, "Кондиционер Hotpoint-Ariston SPOWHA 409-K используется для создания благоприятного микроклимата в помещениях площадью 27 м²");
         Description description20 = new Description("L856XZ11564632", "LG", 1, "265x756x184", "white", 7.4, "Кондиционер LG P09EP2 используется для установки оптимальной температуры в помещении дома или офиса площадью 20 м²");
@@ -781,9 +781,9 @@ public class DataInitializer {
         product16.setDescriptions(description16);
         product17.setDescriptions(description17);
         product18.setDescriptions(description18);
-        product18.setDescriptions(description19);
-        product18.setDescriptions(description20);
-        product18.setDescriptions(description21);
+        product19.setDescriptions(description19);
+        product20.setDescriptions(description20);
+        product21.setDescriptions(description21);
 
         category26.setProducts(Arrays.asList(product1, product2, product3));
         category28.setProducts(Arrays.asList(product4, product5, product6));
@@ -1566,6 +1566,7 @@ public class DataInitializer {
         characteristicList.add(new Characteristic("Частота обновления дисплея"));
         characteristicList.add(new Characteristic("Частота оперативной памяти"));
         characteristicList.add(new Characteristic("Сенсорный экран"));
+        characteristicList.add(new Characteristic("Операционная система"));
 
 
         characteristicList.forEach(characteristicService::saveCharacteristic);
@@ -1586,6 +1587,7 @@ public class DataInitializer {
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4780");
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "208");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Android");
     }
 
     /**
