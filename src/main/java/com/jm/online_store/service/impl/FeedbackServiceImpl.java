@@ -94,7 +94,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public Set<Feedback> getAllFeedbackCurrentCustomer() {
         Employee employee = modelMapper.map(userService.getCurrentLoggedInUser(), Employee.class);
-        return employee.getFeedbacks();
+        return employee.getFeeadbacks();
     }
 
     /**

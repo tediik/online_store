@@ -27,5 +27,5 @@ public class Employee extends User {
 
     @OneToMany(mappedBy = "employee", orphanRemoval = true)
     @JsonIgnore
-    private Set<Feedback> feedbacks;
+    private Set<Feedback> feeadbacks;
 }
