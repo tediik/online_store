@@ -40,7 +40,6 @@ import static org.mockito.Mockito.when;
 
 @Slf4j
 class ProductServiceImplTest {
-
     private final ProductRepository productRepository = mock(ProductRepository.class);
     private final EvaluationService evaluationService = mock(EvaluationService.class);
     private final UserService userService = mock(UserService.class);
