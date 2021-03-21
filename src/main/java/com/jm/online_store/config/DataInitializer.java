@@ -12,6 +12,7 @@ import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Description;
+import com.jm.online_store.model.Employee;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
 import com.jm.online_store.model.Order;
@@ -27,7 +28,6 @@ import com.jm.online_store.model.TaskSettings;
 import com.jm.online_store.model.TemplatesMailingSettings;
 import com.jm.online_store.model.Topic;
 import com.jm.online_store.model.TopicsCategory;
-import com.jm.online_store.model.User;
 import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.BadWordsService;
 import com.jm.online_store.service.interf.BasketService;
@@ -35,6 +35,7 @@ import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -115,6 +116,7 @@ public class DataInitializer {
     private final ProductCharacteristicService productCharacteristicService;
     private final BadWordsService badWordsService;
     private final TemplatesMailingSettingsService templatesMailingSettingsService;
+    private final CustomerService customerService;
 
     @Autowired
     private Environment environment;
@@ -140,7 +142,7 @@ public class DataInitializer {
         stockInit();
         sharedStockInit();
         sharedNewsInit();
-        addressInit();
+        addressInit(); 
 //      sentStockInit();  // метод нужен только для тестирования рассылки акций
 //      paginationNewsAndStocksInit();  // метод нужен для тестирования динамической пагинации
         taskSettingsInit();
@@ -171,13 +173,13 @@ public class DataInitializer {
         roleService.addRole(moderatorRole);
         roleService.addRole(supermoderatorRole);
 
-        User admin = new User("admin@mail.ru", "1");
-        User manager = new User("manager@mail.ru", "1");
+        Employee admin = new Employee("admin@mail.ru", "1");
+        Employee manager = new Employee("manager@mail.ru", "1");
         Customer customer = new Customer("customer@mail.ru", "1");
-        User service = new User("service@mail.ru", "1");
-        User moderator1 = new User("moderator1@mail.ru", "1");
-        User moderator2 = new User("moderator2@mail.ru", "2");
-        User supermoderator = new User("supermoderator@mail.ru", "1");
+        Employee service = new Employee("service@mail.ru", "1");
+        Employee moderator1 = new Employee("moderator1@mail.ru", "1");
+        Employee moderator2 = new Employee("moderator2@mail.ru", "2");
+        Employee supermoderator = new Employee("supermoderator@mail.ru", "1");
         Customer deletedCustomer = new Customer("deleted@mail.ru", "1");
         deletedCustomer.setProfilePicture(StringUtils.cleanPath("deleted.jpg"));
         deletedCustomer.setFirstName("Deleted");
@@ -237,7 +239,7 @@ public class DataInitializer {
         productSet.add(product_2);
         productSet.add(product_3);
 
-        User customerU = userService.findByEmail("customer@mail.ru").get();
+        Customer customerU = customerService.findCustomerByEmail("customer@mail.ru");
         customerU.setFavouritesGoods(productSet);
         userService.updateUser(customerU);
 
@@ -245,7 +247,7 @@ public class DataInitializer {
         FavouritesGroup favouritesGroup = new FavouritesGroup();
         favouritesGroup.setName("Все товары");
         favouritesGroup.setProducts(productSet);
-        favouritesGroup.setUser(customerU);
+        favouritesGroup.setCustomer(customerU);
         favouritesGroupService.save(favouritesGroup);
 
         SubBasket subBasket_1 = new SubBasket();
@@ -271,14 +273,14 @@ public class DataInitializer {
 
             userService.addUser(customer1);
 
-            User customerU1 = userService.findByEmail("customer" + i + "@mail.ru").get();
+            Customer customerU1 = customerService.findCustomerByEmail("customer" + i + "@mail.ru");
             customerU1.setFavouritesGoods(productSet);
             userService.updateUser(customerU1);
 
             FavouritesGroup favouritesGroup1 = new FavouritesGroup();
             favouritesGroup1.setName("Все товары");
             favouritesGroup1.setProducts(productSet);
-            favouritesGroup1.setUser(customerU1);
+            favouritesGroup1.setCustomer(customerU1);
             favouritesGroupService.save(favouritesGroup1);
 
             customer1.setUserBasket(subBasketList);
@@ -862,8 +864,7 @@ public class DataInitializer {
      * Метод первичного тестового заполнения заказов.
      */
     private void ordersInit() {
-        User customer = userService.findByEmail("customer@mail.ru").get();
-
+        Customer customer = customerService.findCustomerByEmail("customer@mail.ru");
         List<Long> productsIds = new ArrayList<>();
         productsIds.add(productService.findProductByName("NX-7893-PC-09878").get().getId());
         productsIds.add(productService.findProductByName("Asus-NX4567").get().getId());
@@ -1134,15 +1135,15 @@ public class DataInitializer {
     public void sharedStockInit() {
         String[] socialNetworkNames = {"facebook", "vk", "twitter"};
         List<Stock> stocks = stockService.findAll();
-        List<User> users = userService.findAll();
+        List<Customer> customers = customerService.findAll();
         Long firstNumber = stocks.get(0).getId();
         Long lastNumber = stocks.get(stocks.size() - 1).getId();
         Random random = new Random();
         for (Stock stock : stocks) {
-            for (User user : users) {
+            for (Customer customer : customers) {
                 long generatedLongForStock = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
                 SharedStock sharedStock = SharedStock.builder()
-                        .user(user)
+                        .customer(customer)
                         .stock(stockService.findStockById(generatedLongForStock))
                         .socialNetworkName(socialNetworkNames[random.nextInt(socialNetworkNames.length)])
                         .build();
@@ -1157,15 +1158,15 @@ public class DataInitializer {
     public void sharedNewsInit() {
         String[] socialNetworkNames = {"facebook", "vk", "twitter"};
         List<News> news = newsService.findAll();//10
-        List<User> users = userService.findAll();//23
+        List<Customer> customers = customerService.findAll();//23
         Long firstNumber = news.get(0).getId();//
         Long lastNumber = news.get(news.size() - 1).getId();//10
         Random random = new Random();
         for (News oneNews : news) {
-            for (User user : users) {
+            for (Customer customer : customers) {
                 long generatedLongForSNews = firstNumber + (long) (Math.random() * (lastNumber - firstNumber));
                 SharedNews sharedNews = SharedNews.builder()
-                        .user(user)
+                        .customer(customer)
                         .news(newsService.findById(generatedLongForSNews))
                         .socialNetworkName(socialNetworkNames[random.nextInt(socialNetworkNames.length)])
                         .build();
@@ -1180,10 +1181,9 @@ public class DataInitializer {
     public void sentStockInit() {
         Random random = new Random();
         List<Stock> stocks = stockService.findAll();
-        List<User> users = userService.findAll();
-
+        List<Customer> customers = customerService.findAll();
         for (int i = 0; i < 20; i++) {
-            sentStockService.addSentStock(SentStock.builder().user(users.get(random.nextInt(users.size())))
+            sentStockService.addSentStock(SentStock.builder().customer(customers.get(random.nextInt(customers.size())))
                     .stock(stocks.get(random.nextInt(stocks.size())))
                     .sentDate(LocalDate.now().plusDays(random.nextInt(8)))
                     .build());
@@ -1232,10 +1232,10 @@ public class DataInitializer {
      * Метод первичной инициалзации адресов, 2 адреса для магазина и 1 адрес прикрепляется к заказу
      */
     private void addressInit() {
-        Address address1 = new Address("Татарстан", "Казань", "Революционная", "25", "420078", true);
-        Address address2 = new Address("Московская область", "Москва", "Ленина", "126", "420078", true);
-        Address address3 = new Address("Тамбовская область", "Тамбов", "Запорожская", "11", "420079", false);
-        Address address4 = new Address("Тамбовская область", "Тамбов", "Запорожская", "12", "420080", false);
+        Address address1 = new Address("Татарстан", "Казань", "Революционная", "25","12", "420078", true);
+        Address address2 = new Address("Московская область", "Москва", "Ленина", "126", "12","420078", true);
+        Address address3 = new Address("Тамбовская область", "Тамбов", "Запорожская", "11","12", "420079", false);
+        Address address4 = new Address("Тамбовская область", "Тамбов", "Запорожская", "12", "12","420080", false);
         addressService.addAddress(address1);
         addressService.addAddress(address2);
         addressService.addAddress(address3);
@@ -1244,7 +1244,7 @@ public class DataInitializer {
         Set<Address> userAddresses = new HashSet<>();
         userAddresses.add(addressService.findAddressById(3L).get());
         userAddresses.add(addressService.findAddressById(4L).get());
-        User userToUpdate = userService.findByEmail("customer@mail.ru").get();
+        Customer userToUpdate = customerService.findCustomerByEmail("customer@mail.ru");
         userToUpdate.setUserAddresses(userAddresses);
         userService.updateUser(userToUpdate);
     }

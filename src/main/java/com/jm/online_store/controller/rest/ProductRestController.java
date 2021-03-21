@@ -1,12 +1,9 @@
 package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.jm.online_store.enums.ResponseOperation;
-import com.jm.online_store.model.FavouritesGroup;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
-import com.jm.online_store.model.dto.NewsDto;
-import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.ProductService;
@@ -20,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +31,6 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Рест контроллер страницы продукта.
@@ -46,7 +41,6 @@ import java.util.Set;
 @RequestMapping("/api/products")
 @Api(description = "Rest controller for product page")
 public class ProductRestController {
-
     private final ProductService productService;
     private final UserService userService;
     private final ModelMapper modelMapper;
@@ -153,9 +147,9 @@ public class ProductRestController {
     @ApiResponse(code = 208, message = "Subscriber already exists")
     public ResponseEntity<ResponseDto<String>> addNewSubscriber(@RequestBody ObjectNode body) {
         if (productService.addNewSubscriber(body)) {
-            return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.SUCCESS.getMessage()));
+            return ResponseEntity.ok(new ResponseDto<>(true, Response.SUCCESS.getText()));
         } else {
-            return ResponseEntity.ok(new ResponseDto<>(false, ResponseOperation.FAILED.getMessage()));
+            return ResponseEntity.ok(new ResponseDto<>(false, Response.FAILED.getText()));
         }
     }
 

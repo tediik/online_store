@@ -53,7 +53,7 @@ public class Order {
     //TODO @JsonManagedReference пока не удаляю, возможно придется менять обратно
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    private User user;
+    private Customer customer;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     @JsonBackReference //пока не удаляю, возможно придется менять обратно

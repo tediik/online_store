@@ -1,12 +1,12 @@
 package com.jm.online_store.controller.rest;
 
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Order;
-import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.OrderService;
-import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -31,8 +31,8 @@ import java.util.List;
 @RestController
 @Api(description = "Rest controller for orders")
 public class OrderRestController {
-    private final UserService userService;
     private final OrderService orderService;
+    private final CustomerService customerService;
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<NewsDto>>() {}.getType();
 
@@ -48,8 +48,8 @@ public class OrderRestController {
             @ApiResponse(code = 200, message = "Orders have not been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<OrderDTO>>> getAllOrders() {
-        User autorityUser = userService.getCurrentLoggedInUser();
-        List<OrderDTO> returnValue = modelMapper.map(autorityUser.getOrders(), listType);
+        Customer autorityCustomer = customerService.getCurrentLoggedInCustomer();
+        List<OrderDTO> returnValue = modelMapper.map(autorityCustomer.getOrders(), listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
@@ -65,8 +65,8 @@ public class OrderRestController {
             @ApiResponse(code = 200, message = "Orders have not been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<OrderDTO>>> getIncartsOrders() {
-        User autorityUser = userService.getCurrentLoggedInUser();
-        List<OrderDTO> returnValue = modelMapper.map(orderService.findAllByUserIdAndStatus(autorityUser.getId(),
+        Customer autorityCustomer = customerService.getCurrentLoggedInCustomer();
+        List<OrderDTO> returnValue = modelMapper.map(orderService.findAllByCustomerIdAndStatus(autorityCustomer.getId(),
                 Order.Status.INCARTS), listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
@@ -83,8 +83,8 @@ public class OrderRestController {
             @ApiResponse(code = 200, message = "Orders have not been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<OrderDTO>>> getCompletedOrders() {
-        User autorityUser = userService.getCurrentLoggedInUser();
-        List<OrderDTO> returnValue = modelMapper.map(orderService.findAllByUserIdAndStatus(autorityUser.getId(),
+        Customer autorityCustomer = customerService.getCurrentLoggedInCustomer();
+        List<OrderDTO> returnValue = modelMapper.map(orderService.findAllByCustomerIdAndStatus(autorityCustomer.getId(),
                 Order.Status.COMPLETED), listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
@@ -101,8 +101,8 @@ public class OrderRestController {
             @ApiResponse(code = 200, message = "Orders have not been found. Returns empty list")
     })
     public ResponseEntity<ResponseDto<List<OrderDTO>>> getCanceledOrders() {
-        User autorityUser = userService.getCurrentLoggedInUser();
-        List<OrderDTO> returnValue = modelMapper.map(orderService.findAllByUserIdAndStatus(autorityUser.getId(),
+        Customer autorityCustomer = customerService.getCurrentLoggedInCustomer();
+        List<OrderDTO> returnValue = modelMapper.map(orderService.findAllByCustomerIdAndStatus(autorityCustomer.getId(),
                 Order.Status.CANCELED), listType);
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }

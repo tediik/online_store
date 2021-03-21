@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.CurrentUrl;
 import com.jm.online_store.model.dto.ResponseDto;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +36,6 @@ public class CurrentUrlController {
 
     public ResponseEntity<ResponseDto<String>> getCurrentUrl(@RequestBody String currentUrl) {
         CurrentUrl.setUrl(currentUrl);
-        return ResponseEntity.ok(new ResponseDto<>(true, ResponseOperation.SUCCESS.getMessage()));
+        return ResponseEntity.ok(new ResponseDto<>(true, Response.SUCCESS.getText()));
     }
 }

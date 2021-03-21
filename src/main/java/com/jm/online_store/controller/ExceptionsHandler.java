@@ -1,10 +1,12 @@
 package com.jm.online_store.controller;
 
+import com.jm.online_store.exception.AddressAlreadyExists;
 import com.jm.online_store.exception.AddressNotFoundException;
 import com.jm.online_store.exception.AlreadyExists;
 import com.jm.online_store.exception.CategoriesNotFoundException;
 import com.jm.online_store.exception.CharacteristicNotFoundException;
 import com.jm.online_store.exception.CustomerNotFoundException;
+import com.jm.online_store.exception.EmployeeNotFoundException;
 import com.jm.online_store.exception.NewsNotFoundException;
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.exception.ProductNotFoundException;
@@ -25,6 +27,13 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @ControllerAdvice
 public class ExceptionsHandler {
+
+
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public ResponseEntity<Object> handlerEmployeeNotFoundException(EmployeeNotFoundException ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()),  HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(AlreadyExists.class)
     public ResponseEntity<Object> handlerAlreadyExistsException(AlreadyExists ex ) {
@@ -63,6 +72,12 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(TopicCategoryAlreadyExists.class)
     public ResponseEntity<Object> handlerTopicCategoryAlreadyExistsException(TopicCategoryAlreadyExists ex ) {
+        return new ResponseEntity<>
+                (new ResponseDto<>(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AddressAlreadyExists.class)
+    public ResponseEntity<Object> handlerAddressAlreadyExistsException(AddressAlreadyExists ex ) {
         return new ResponseEntity<>
                 (new ResponseDto<>(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }

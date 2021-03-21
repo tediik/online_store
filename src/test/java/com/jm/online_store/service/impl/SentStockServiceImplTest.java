@@ -2,6 +2,7 @@ package com.jm.online_store.service.impl;
 
 import com.jm.online_store.exception.SentStockNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.SentStock;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.User;
@@ -42,7 +43,7 @@ public class SentStockServiceImplTest {
     SentStock sentStock1;
     SentStock sentStock2;
     SentStock sentStock3;
-    User testUser;
+    Customer testCustomer;
     Stock testStock;
 
     public SentStockServiceImplTest() {
@@ -53,8 +54,8 @@ public class SentStockServiceImplTest {
         MockitoAnnotations.initMocks(this);
         sentStockList = new ArrayList<>();
 
-        testUser = new User("testuser@mail.ru", "1");
-        testUser.setId(1L);
+        testCustomer = new Customer("testuser@mail.ru", "1");
+        testCustomer.setId(1L);
 
         testStock = Stock.builder()
                 .id(1L)
@@ -65,17 +66,17 @@ public class SentStockServiceImplTest {
                 .build();
 
         sentStock1 = SentStock.builder()
-                .user(testUser)
+                .customer(testCustomer)
                 .sentDate(LocalDate.now())
                 .stock(testStock)
                 .build();
         sentStock2 = SentStock.builder()
-                .user(testUser)
+                .customer(testCustomer)
                 .sentDate(LocalDate.now().plusDays(1L))
                 .stock(testStock)
                 .build();
         sentStock3 = SentStock.builder()
-                .user(testUser)
+                .customer(testCustomer)
                 .sentDate(LocalDate.now().plusDays(2L))
                 .stock(testStock)
                 .build();
@@ -91,7 +92,7 @@ public class SentStockServiceImplTest {
         sentStock2 = null;
         sentStock3 = null;
         sentStockList = null;
-        testUser = null;
+        testCustomer = null;
         testStock = null;
     }
 
@@ -122,7 +123,7 @@ public class SentStockServiceImplTest {
     public void addSentStock() {
         when(sentStockRepository.save(sentStock1)).thenReturn(sentStock1);
         when(stockService.findStockById(any())).thenReturn(testStock);
-        when(userService.findById(testUser.getId())).thenReturn(Optional.of(testUser));
+        when(userService.findById(testCustomer.getId())).thenReturn(Optional.of(testCustomer));
         SentStock testSentStock = sentStockService.addSentStock(sentStock1);
         assertNotNull(testSentStock);
         verify(sentStockRepository, times(1)).save(sentStock1);

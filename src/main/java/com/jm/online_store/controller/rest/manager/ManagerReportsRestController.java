@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CustomerService;
@@ -89,8 +89,8 @@ public class ManagerReportsRestController {
     public ResponseEntity<ResponseDto<String>> cancelSubscription(@PathVariable Long id) {
         customerService.cancelSubscription(id);
         return ResponseEntity.ok(new ResponseDto<>(true,
-               String.format( ResponseOperation.HAS_BEEN_UPDATED.getMessage(), id),
-               ResponseOperation.NO_ERROR.getMessage()));
+               String.format( Response.HAS_BEEN_UPDATED.getText(), id),
+               Response.NO_ERROR.getText()));
     }
 
     /**

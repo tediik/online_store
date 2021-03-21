@@ -45,9 +45,9 @@ public class SentStock {
     private LocalDate sentDate;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference(value = "user-sentStock")
-    private User user;
+    @JoinColumn(name = "customer_id", nullable = false)
+    @JsonBackReference(value = "customer-sentStock")
+    private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "stock_id", nullable = false)

@@ -1,12 +1,13 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.enums.ExceptionEnums;
-import com.jm.online_store.exception.SharedStockNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.SharedStock;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.SharedStockRepository;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SharedStockService;
 import com.jm.online_store.service.interf.StockService;
 import com.jm.online_store.service.interf.UserService;
@@ -22,7 +23,7 @@ public class SharedStockServiceImpl implements SharedStockService {
     private final SharedStockRepository sharedStockRepository;
     private final StockService stockService;
     private final UserService userService;
-
+    private final CustomerService customerService;
     @Override
     public List<SharedStock> findAll() {
         return sharedStockRepository.findAll();
@@ -31,13 +32,13 @@ public class SharedStockServiceImpl implements SharedStockService {
     @Override
     @Transactional
     public SharedStock addSharedStock(SharedStock sharedStock) {
-        User user = null != sharedStock.getUser() ?
-                userService.findById(sharedStock.getUser().getId()).orElseThrow(() ->
+        Customer customer = null != sharedStock.getCustomer() ?
+                customerService.findById(sharedStock.getCustomer().getId()).orElseThrow(() ->
                         new UserNotFoundException(ExceptionEnums.USER.getText() + ExceptionConstants.NOT_FOUND)) : null ;
         SharedStock sharedStockToAdd = SharedStock.builder()
                 .stock(stockService.findStockById(sharedStock.getStock().getId()))
                 .socialNetworkName(sharedStock.getSocialNetworkName())
-                .user(user)
+                .customer(customer)
                 .build();
         return sharedStockRepository.save(sharedStockToAdd);
     }

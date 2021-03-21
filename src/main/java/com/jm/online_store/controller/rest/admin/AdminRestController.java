@@ -1,17 +1,14 @@
 package com.jm.online_store.controller.rest.admin;
 
-import com.jm.online_store.enums.ResponseOperation;
-import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.UserServiceException;
+import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.CommonSettings;
-import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.CommonSettingsService;
-
-import com.jm.online_store.service.interf.FavouritesGroupService;
 import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,7 +45,6 @@ import java.util.List;
 @RequestMapping(value = "/api/admin")
 public class AdminRestController {
     private final UserService userService;
-    private final FavouritesGroupService favouritesGroupService;
     private final CommonSettingsService commonSettingsService;
     private final ModelMapper modelMapper;
 
@@ -75,9 +71,9 @@ public class AdminRestController {
     })
     public ResponseEntity<ResponseDto<List<UserDto>>> getAllUsersList() {
         List<UserDto> allUsersDto = new ArrayList<>();
-        for (User user: userService.findAll()){
-            allUsersDto.add(modelMapper.map(user, UserDto.class));
-        }
+        List<User> userList = userService.findAll();
+        userList.forEach(u -> allUsersDto.add(UserDto.fromUser(u)));
+
         if (allUsersDto.size() == 0) {
             log.debug("There are no users in db");
             return new ResponseEntity<>(new ResponseDto<>(true, allUsersDto), HttpStatus.OK);
@@ -158,15 +154,11 @@ public class AdminRestController {
             @ApiResponse(code = 409, message = "User with same email already exists"),
             @ApiResponse(code = 400, message = "EMAIL ADDRESS IS NOT VALID / EMAIL ADDRESS ALREADY EXISTS / PASSWORD IS EMPTY / ROLES IS EMPTY"),
     })
-    public ResponseEntity<ResponseDto<UserDto>> addNewUser(@RequestBody User newUser) {
-        userService.addNewUserFromAdmin(newUser);
-        User customer = userService.findByEmail(newUser.getEmail()).get();
-        FavouritesGroup favouritesGroup = new FavouritesGroup();
-        favouritesGroup.setName("Все товары");
-        favouritesGroup.setUser(customer);
-        favouritesGroupService.save(favouritesGroup);
-        userService.updateUser(customer);
-        return new ResponseEntity<>(new ResponseDto<>(true, modelMapper.map(newUser, UserDto.class)), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<UserDto>> addNewUser(@RequestBody UserDto newUser) {
+        User user = modelMapper.map(newUser, User.class);
+        User gotBack = userService.addNewUserFromAdmin(user);
+        UserDto userDto = modelMapper.map(gotBack, UserDto.class);
+        return new ResponseEntity<>(new ResponseDto<>(true, userDto), HttpStatus.OK);
     }
 
     /**
@@ -201,6 +193,6 @@ public class AdminRestController {
     @PutMapping(value = "/editStoreName")
     public ResponseEntity<ResponseDto<String>> editStoreName(CommonSettings commonSettings){
         commonSettingsService.updateTextValue(commonSettings);
-        return new ResponseEntity<>(new ResponseDto<>(true, "Store name was changed", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Store name was changed", Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 }

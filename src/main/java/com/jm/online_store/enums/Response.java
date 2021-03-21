@@ -5,10 +5,10 @@ package com.jm.online_store.enums;
  * эндпоинтов.
  */
 
-public enum ResponseOperation {
+public enum Response {
 
     HAS_BEEN_DELETED("%s - has successfully deleted"),
-    HAS_BEEN_SAVED("%s - has successfully saved"),
+    SAVED("%s - has successfully saved"),
     HAS_BEEN_UPDATED("%s - has successfully updated"),
     // используется как заглушка в ResponseDto для поля error, в случае если тело передает строковый тип
     NO_ERROR(""),
@@ -17,14 +17,14 @@ public enum ResponseOperation {
 
     private String message;
 
-    ResponseOperation() {
+    Response() {
     }
 
-    ResponseOperation(String message) {
+    Response(String message) {
         this.message = message;
     }
 
-    public String getMessage() {
+    public String getText() {
         return message;
     }
 

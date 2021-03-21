@@ -1,8 +1,10 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.User;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.model.dto.FavouritesGroupDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.FavouritesGroupService;
@@ -37,6 +39,7 @@ import java.util.List;
 public class FavouritesGroupRestController {
     private final FavouritesGroupService favouritesGroupService;
     private final UserService userService;
+    private final CustomerService customerService;
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<FavouritesGroupDto>>() {}.getType();
 
@@ -74,10 +77,10 @@ public class FavouritesGroupRestController {
     @ApiOperation(value = "saves new list of favourite products",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<List<FavouritesGroupDto>>>  addFavouritesGroups(@RequestBody FavouritesGroup favouritesGroup) {
-        User user = userService.getCurrentLoggedInUser();
-        favouritesGroup.setUser(user);
+        Customer authCustomer = customerService.getCurrentLoggedInCustomer();
+        favouritesGroup.setCustomer(authCustomer);
         favouritesGroupService.addFavouritesGroup(favouritesGroup);
-        List<FavouritesGroupDto> returnValue = modelMapper.map(favouritesGroupService.getOneFavouritesGroupByUserAndByName(user, favouritesGroup.getName()), listType);
+        List<FavouritesGroupDto> returnValue = modelMapper.map(favouritesGroupService.getOneFavouritesGroupByUserAndByName(authCustomer, favouritesGroup.getName()), listType);
         return new ResponseEntity<>(new ResponseDto<>(true, returnValue), HttpStatus.OK);
     }
 
@@ -90,7 +93,7 @@ public class FavouritesGroupRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<String>> deleteFavouritesGroups(@PathVariable("id") Long id) {
         favouritesGroupService.deleteById(id);
-        return new ResponseEntity<>(new ResponseDto<>(true, "Favourites product list successful deleted", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Favourites product list successful deleted", Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 
     /**
