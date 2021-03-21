@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Сущность для осуществления фильтрации и формирования фильтров
+ */
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Getter
@@ -13,7 +16,9 @@ import lombok.Setter;
 public class Filter {
 
     FilterType type;
+    //подпись формы на странице
     String label;
+    //ключ, по которому возвращаются данные для фильтрации
     String key;
 
     @JsonUnwrapped

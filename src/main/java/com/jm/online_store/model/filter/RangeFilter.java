@@ -9,10 +9,13 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * сущность для range фильтра (от ... до ...)
+ */
 @Getter
 @Setter
 @AllArgsConstructor
-public class RangeFilter extends FilterData {
+public class RangeFilter implements FilterData {
 
     @JsonIgnore
     long min;

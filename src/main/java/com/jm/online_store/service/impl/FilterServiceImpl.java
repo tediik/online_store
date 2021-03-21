@@ -26,6 +26,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+/**
+ * сервис для реализации логики фильтров товаров
+ */
 @Service
 @AllArgsConstructor
 @Transactional
@@ -33,8 +36,17 @@ public class FilterServiceImpl implements FilterService {
     private final ProductService productService;
     private final CharacteristicService characteristicService;
 
+    /**
+     * Comparator для сравнения товаров по ценам
+     */
     private final Comparator<Product> priceComparator = Comparator.comparing(Product::getPrice);
 
+    /**
+     * Возвращает сущность Filters{@link Filters} для отображения возможным фильтров на странице,
+     * проверяет, какие данные есть у товаров данной категории, чтобы их отправить на фронт
+     * @param category - String - категория товара
+     * @return {@link Filters} набор фильтров с данными для отображения
+     */
     @Override
     public Filters getFilters(String category) {
         List<Filter> filterList = new ArrayList<>();
@@ -111,16 +123,29 @@ public class FilterServiceImpl implements FilterService {
         return new Filters(filterList);
     }
 
+    /**
+     * Список продуктов, соответствующих заданным фильтрам
+     * @param category         - String - категория товара
+     * @param price            List<Long> набор цен от ... до ...
+     * @param brands           List<String> производители
+     * @param color            List<String> цвета
+     * @param RAM              List<String> оперативная память
+     * @param storage          List<String> встроенная память
+     * @param screenResolution List<String> разрешение экрана
+     * @param OS               List<String> операционная система
+     * @param bluetooth        List<String> версия bluetooth
+     * @return List<ProductDto> {@link ProductDto} - список отфильтрованных товаров
+     */
     @Override
     public List<ProductDto> filterProducts(String category,
-                                       List<Long> price,
-                                       List<String> brands,
-                                       List<String> color,
-                                       List<String> RAM,
-                                       List<String> storage,
-                                       List<String> screenResolution,
-                                       List<String> OS,
-                                       List<String> bluetooth) {
+                                           List<Long> price,
+                                           List<String> brands,
+                                           List<String> color,
+                                           List<String> RAM,
+                                           List<String> storage,
+                                           List<String> screenResolution,
+                                           List<String> OS,
+                                           List<String> bluetooth) {
         List<Product> products = productService.findProductsByCategoryName(category);
         if (price != null && !price.isEmpty()) {
             products = products.stream()
@@ -171,7 +196,6 @@ public class FilterServiceImpl implements FilterService {
                     .filter(product -> bluetooth.contains(product.getDescriptions().getBluetoothVersion()))
                     .collect(Collectors.toList());
         }
-
 
         return products.stream().map(ProductDto::new).collect(Collectors.toList());
     }

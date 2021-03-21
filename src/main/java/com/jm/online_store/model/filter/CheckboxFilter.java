@@ -7,10 +7,14 @@ import lombok.Setter;
 
 import java.util.Set;
 
+/**
+ * сущность для checkbox фильтра
+ * label - список объектов с данными для фильтров (требование фронтов)
+ */
 @Getter
 @Setter
 @AllArgsConstructor
-public class CheckboxFilter extends FilterData {
+public class CheckboxFilter implements FilterData {
 
     @JsonProperty("data")
     private Set<Label> labels;
@@ -22,6 +26,10 @@ public class CheckboxFilter extends FilterData {
                 '}';
     }
 
+    /**
+     * сущность для формирования списка фильтров
+     * Comparable - для сортировки по имени
+     */
     @Getter
     @Setter
     @AllArgsConstructor

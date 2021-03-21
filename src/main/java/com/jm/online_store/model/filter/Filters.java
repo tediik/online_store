@@ -7,6 +7,10 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * сущность для формирования списка фильтров в один объект
+ * (по просьбе фронтов)
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
