@@ -1,16 +1,32 @@
 package com.jm.online_store.model.filter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class RangeFilter extends FilterData {
 
+    @JsonIgnore
     long min;
+
+    @JsonIgnore
     long max;
+
+    @JsonProperty(value = "data")
+    public Map<String, Long> getData() {
+        Map<String, Long> map = new HashMap<>();
+        map.put("min", getMin());
+        map.put("max", getMax());
+        return map;
+    }
 
     @Override
     public String toString() {

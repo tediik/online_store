@@ -1,28 +1,31 @@
 package com.jm.online_store.model.filter;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 public class Filter {
 
-    String filterType;
+    FilterType type;
     String label;
     String key;
-    FilterData filterData;
+
+    @JsonUnwrapped
+    FilterData data;
 
     @Override
     public String toString() {
         return "Filter{" +
-                "filterType=" + filterType +
+                "filterType=" + type +
                 ", label='" + label + '\'' +
                 ", key='" + key + '\'' +
-                ", filterData=" + filterData +
+                ", filterData=" + data +
                 '}';
     }
 }
