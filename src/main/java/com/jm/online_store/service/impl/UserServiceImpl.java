@@ -269,8 +269,16 @@ public class UserServiceImpl implements UserService {
                 String templateBody = templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue();
                 messageBody = templateBody.replace("@@userEmail@@", userForm.getEmail())
                         .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                        .replace("@@url@@", urlActivate);
-                mailSenderService.send(userForm.getEmail(), "Activation code", messageBody, "Confirmation");
+                        .replace("@@url@@", String.format("<a href='%s'>" + urlActivate +
+                                "/activate/" + confirmationToken.getConfirmationToken() + "</a>", urlActivate +
+                "/activate/" + confirmationToken.getConfirmationToken()));
+
+                try {
+                    mailSenderService.sendHtmlMessage(userForm.getEmail(), "Activation code", messageBody, "Confirmation");
+                } catch (MessagingException e) {
+                    log.debug("Message sending error in ActivateUser Method {}", e.getMessage());
+                }
+                //mailSenderService.send(userForm.getEmail(), "Activation code", messageBody, "Confirmation");
             } else {
                 log.debug("Шаблон рассылки при регистрации нового пользователя в базе пустой ");
             }
