@@ -271,7 +271,8 @@ public class UserServiceImpl implements UserService {
                         .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
                         .replace("@@url@@", String.format("<a href='%s'>" + urlActivate +
                                 "/activate/" + confirmationToken.getConfirmationToken() + "</a>", urlActivate +
-                "/activate/" + confirmationToken.getConfirmationToken()));
+                "/activate/" + confirmationToken.getConfirmationToken()))
+                        .replace("@@production-url@@", String.format("<a href='%s'>" + productionUrl + "</a>", productionUrl));
 
                 try {
                     mailSenderService.sendHtmlMessage(userForm.getEmail(), "Activation code", messageBody, "Confirmation");
