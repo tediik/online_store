@@ -8,11 +8,13 @@ import com.jm.online_store.exception.EmailAlreadyExistsException;
 import com.jm.online_store.exception.InvalidEmailException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.model.Address;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CustomerRepository;
+import com.jm.online_store.service.interf.AddressService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.ReviewService;
@@ -20,6 +22,8 @@ import com.jm.online_store.service.interf.UserService;
 import com.jm.online_store.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -30,6 +34,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +47,75 @@ public class CustomerServiceImpl implements CustomerService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final CustomerRepository customerRepository;
-    private final CommentService commentService;
     private final ReviewService reviewService;
+    private final AddressService addressService;
+    private CommentService commentService;
+
+    /*
+    * добавлены Getter and Setter для commentService для
+    * устранения циклической зависимости между бинами
+    * CustomerService -> CommentService -> ProductService
+    * */
+    @Autowired
+    public CommentService getCommentService() {
+        return commentService;
+    }
+    @Autowired
+    public void setCommentService(CommentService commentService) {
+        this.commentService = commentService;
+    }
+
+    /**
+     * Метод сервиса для добавления нового адреса пользователю
+     * @param customerReq переданный пользователь
+     * @param addressReq новый адрес для пользователя
+     */
+    @Override
+    @Transactional
+    public boolean addNewAddressForCustomer(Customer customerReq, Address addressReq) {
+        Optional <Address> optional = addressService.findSameAddress(addressReq);
+        if (optional.isPresent() && !customerAddressAlreadyExists(customerReq.getUserAddresses(), addressReq)) {
+            Address address = optional.get();
+            return updateUserAddress(customerReq, address);
+        }
+        if (optional.isEmpty()){
+            Address address = addressService.addAddress(addressReq);
+            return updateUserAddress(customerReq, address);
+        }
+        return false;
+    }
+
+    private boolean updateUserAddress(Customer customerReq, Address address) {
+        if (customerReq.getUserAddresses() != null) {
+            customerReq.getUserAddresses().add(address);
+        } else {
+            customerReq.setUserAddresses(Collections.singleton(address));
+        }
+        updateCustomer(customerReq);
+        return true;
+    }
+
+    /**
+     * Метод проверяет существует ли переданный адрес у покупателя.
+     * если да - возвращает true
+     * @param addresses - сет адресов покутеля
+     * @param address - переданный адрес
+     * @return boolean
+     */
+    private boolean customerAddressAlreadyExists(Collection<Address> addresses, Address address) {
+        if (addresses != null)
+            for (Address tmp : addresses) {
+                if (StringUtils.equalsIgnoreCase(tmp.getRegion(), address.getRegion()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getCity(), address.getCity()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getStreet(), address.getStreet()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getBuilding(), address.getBuilding()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getFlat(), address.getFlat()) &&
+                    StringUtils.equalsIgnoreCase(tmp.getZip(), address.getZip())) {
+                    return true;
+                }
+            }
+        return false;
+    }
 
     /**
      * Все клиенты.
@@ -110,8 +183,8 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     @Transactional
-    public void addCustomer(Customer customer) {
-        customerRepository.save(customer);
+    public Customer addCustomer(Customer customer) {
+       return customerRepository.save(customer);
     }
 
     /**
@@ -206,7 +279,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     @Transactional
-    public Customer getCurrentLoggedInUser() {
+    public Customer getCurrentLoggedInCustomer() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
@@ -278,7 +351,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void changeCustomerProfileToDeletedProfileByID(long id) {
         User customer = userService.findUserById(id);
-        List<Comment> customerComments = commentService.findAllByCustomer(customer);
+        List<Comment> customerComments = getCommentService().findAllByCustomer(customer);
         List<Review> customerReview = reviewService.findAllByCustomer(customer);
         User deletedUser = userService.findUserByEmail("deleted@mail.ru");
         for (Comment comment : customerComments) comment.setCustomer(deletedUser);
@@ -310,7 +383,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public Customer changeMail(String newMail) {
-        Customer customer = getCurrentLoggedInUser();
+        Customer customer = getCurrentLoggedInCustomer();
         if (customer == null) {
             throw new AuthenticationCredentialsNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_AUTHENTICATED);
         }
@@ -322,5 +395,29 @@ public class CustomerServiceImpl implements CustomerService {
         }
         userService.changeUsersMail(customer, newMail);
         return customer;
+    }
+
+    @Override
+    @Transactional
+    public Customer findCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email).orElseThrow(()
+                -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
+    }
+
+    @Transactional
+    @Override
+    public User getCurrentLoggedInCustomer(String sessionID) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // AnonymousAuthenticationToken happens when anonymous authentication is enabled
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
+        if (auth instanceof AnonymousAuthenticationToken) {
+            if (userService.findByEmail(sessionID).isEmpty()) {
+                customerRepository.save(new Customer(sessionID, null));
+            }
+            return findCustomerByEmail(sessionID);
+        }
+        return userService.findByEmail(auth.getName()).orElseThrow();
     }
 }

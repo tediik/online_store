@@ -1,11 +1,8 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.enums.ResponseOperation;
-import com.jm.online_store.model.News;
-import com.jm.online_store.model.Product;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.NewsDto;
-import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.UserService;
@@ -16,7 +13,6 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
@@ -31,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
 import java.util.List;
 /**
  * Контроллер для работы с добавлением/изменением пользователей
@@ -87,7 +82,6 @@ public class UserRestController {
      * @param user сущность для сохранения в базе данных
      * @return возвращает обновленную сущность
      */
-
     @PutMapping
     @ApiOperation(value = "Update users",
             authorizations = { @Authorization(value = "jwtToken") })
@@ -114,6 +108,6 @@ public class UserRestController {
     public ResponseEntity<ResponseDto<String>> deleteUserById(@PathVariable Long userId) {
         userService.deleteByID(userId);
         return ResponseEntity.ok(new ResponseDto<>(true, String.format(
-                ResponseOperation.HAS_BEEN_DELETED.getMessage(), userId)));
+                Response.HAS_BEEN_DELETED.getText(), userId)));
     }
 }

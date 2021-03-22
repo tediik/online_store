@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest.manager;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -78,7 +78,7 @@ public class PictureProductController {
         }
         productService.editProduct(product);
         return ResponseEntity.ok(new ResponseDto<>(true, "uploads" + File.separator + "images"
-                + File.separator + "products" + uniqueFilename, ResponseOperation.NO_ERROR.getMessage()));
+                + File.separator + "products" + uniqueFilename, Response.NO_ERROR.getText()));
     }
 
     /**
@@ -111,6 +111,6 @@ public class PictureProductController {
            productService.saveProduct(productService.getProductById(productId));
         }
         return ResponseEntity.ok(new ResponseDto<>(true,
-                String.format("picture with name " + ResponseOperation.HAS_BEEN_DELETED.getMessage(), pictureShortName), ResponseOperation.NO_ERROR.getMessage()));
+                String.format("picture with name " + Response.HAS_BEEN_DELETED.getText(), pictureShortName), Response.NO_ERROR.getText()));
     }
 }

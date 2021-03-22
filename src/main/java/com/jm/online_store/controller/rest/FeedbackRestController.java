@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.Feedback;
 import com.jm.online_store.model.TopicsCategory;
 import com.jm.online_store.model.dto.FeedbackDto;
@@ -211,6 +211,6 @@ public class FeedbackRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<String>> deleteFeedback(@PathVariable Long id) {
         feedbackService.deleteFeedbackById(id);
-        return new ResponseEntity<>(new ResponseDto<>(true, ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 }

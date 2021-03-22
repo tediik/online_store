@@ -1,19 +1,15 @@
 package com.jm.online_store.controller.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.jm.online_store.enums.ResponseOperation;
-import com.jm.online_store.exception.BadWordsNotFoundException;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.ProductNotFoundException;
-import com.jm.online_store.exception.ProductsNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Order;
 import com.jm.online_store.model.SubBasket;
-import com.jm.online_store.model.dto.BadWordsDto;
 import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.SubBasketDto;
 import com.jm.online_store.service.interf.BasketService;
-import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -34,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +41,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class BasketRestController {
     private final BasketService basketService;
-    private final UserService userService;
     private final ModelMapper modelMapper;
     private final Type listType = new TypeToken<List<SubBasketDto>>() {}.getType();
 
@@ -88,7 +82,7 @@ public class BasketRestController {
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<String>> deleteBasket(@RequestBody Long id, HttpServletRequest request) {
         basketService.deleteBasket(basketService.findBasketById(id), request.getSession().getId());
-        return new ResponseEntity<>(new ResponseDto<>(true, "SubBasket successful deleted", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, "SubBasket successful deleted", Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 
     /**

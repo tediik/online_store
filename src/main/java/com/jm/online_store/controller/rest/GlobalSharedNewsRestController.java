@@ -3,8 +3,8 @@ package com.jm.online_store.controller.rest;
 import com.jm.online_store.model.SharedNews;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.model.dto.SharedNewsDto;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.SharedNewsService;
-import com.jm.online_store.service.interf.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(description = "Rest controller for adding news, that users shared in social networks")
 public class GlobalSharedNewsRestController {
     private final SharedNewsService sharedNewsService;
-    private final UserService userService;
+    private final CustomerService customerService;
     private final ModelMapper modelMapper;
 
     /**
@@ -45,7 +45,7 @@ public class GlobalSharedNewsRestController {
             "SharedNews must include news id, which was shared and the name of social network, where was shared",
             authorizations = { @Authorization(value = "jwtToken") })
     public ResponseEntity<ResponseDto<SharedNewsDto>> addSharedNews(@RequestBody SharedNews sharedNews) {
-        sharedNews.setUser(userService.getCurrentLoggedInUser());
+        sharedNews.setCustomer(customerService.getCurrentLoggedInCustomer());
         return new ResponseEntity<>(new ResponseDto<>(
                 true, modelMapper.map(sharedNewsService.addSharedNews(sharedNews), SharedNewsDto.class)), HttpStatus.OK);
     }

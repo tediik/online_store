@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest;
 
 import com.google.gson.Gson;
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.Stock;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -165,7 +165,6 @@ public class StockRestController {
     })
     public ResponseEntity<ResponseDto<String>> deleteStockById(@PathVariable("id") Long id) {
         stockService.deleteStockById(id);
-        return ResponseEntity.ok(new ResponseDto<>(true, String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(),
-                id)));
+        return ResponseEntity.ok(new ResponseDto<>(true, String.format(Response.HAS_BEEN_DELETED.getText(), id)));
     }
 }

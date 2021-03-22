@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.BadWordsNotFoundException;
 import com.jm.online_store.model.BadWords;
 import com.jm.online_store.model.CommonSettings;
@@ -118,7 +118,7 @@ public class BadWordsRestController {
             authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<ResponseDto<String>> newsDelete(@PathVariable Long id) {
             badWordsService.deleteWord(badWordsService.findWordById(id));
-            return new ResponseEntity<>(new ResponseDto<>(true, "Bad word successful deleted", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(true, "Bad word successful deleted", Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 
     /**
@@ -184,7 +184,7 @@ public class BadWordsRestController {
             return new ResponseEntity<>(new ResponseDto<>(false, "EmptyBadWord"), HttpStatus.BAD_REQUEST);
         }
         badWordsService.importWord(text);
-        return new ResponseEntity<>(new ResponseDto<>(true, text, ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, text, Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 
     /**

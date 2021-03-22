@@ -1,6 +1,6 @@
 package com.jm.online_store.controller.rest;
 
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.model.dto.ResponseDto;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import io.swagger.annotations.Api;
@@ -28,6 +28,6 @@ public class CommonRestController {
     @ApiOperation(value = "Get store name")
     public ResponseEntity<ResponseDto<String>> getStoreName() {
         return new ResponseEntity<>(new ResponseDto<>(true,
-                commonSettingsService.getSettingByName("store_name").getTextValue(), ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+                commonSettingsService.getSettingByName("store_name").getTextValue(), Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 }

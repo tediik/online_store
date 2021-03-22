@@ -2,7 +2,7 @@ package com.jm.online_store.controller.rest.serviceWorker;
 
 import com.itextpdf.text.DocumentException;
 import com.jm.online_store.enums.RepairOrderType;
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.RepairOrderNotFoundException;
 import com.jm.online_store.model.RepairOrder;
 import com.jm.online_store.model.dto.ResponseDto;
@@ -242,7 +242,7 @@ public class RepairOrderRestController {
         try {
             RepairOrder repOrder = repairOrderResponseDto.getData();
             repairOrderService.createPdfWorkOrder(repOrder, response);
-            return new ResponseEntity<>(new ResponseDto<>(true, "Repair order was generated", ResponseOperation.NO_ERROR.getMessage()), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(true, "Repair order was generated", Response.NO_ERROR.getText()), HttpStatus.OK);
         } catch (DocumentException | IOException e) {
             throw new RepairOrderNotFoundException();
         }

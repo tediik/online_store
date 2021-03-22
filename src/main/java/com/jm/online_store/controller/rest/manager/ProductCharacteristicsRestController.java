@@ -1,7 +1,7 @@
 package com.jm.online_store.controller.rest.manager;
 
 import com.jm.online_store.enums.ExceptionEnums;
-import com.jm.online_store.enums.ResponseOperation;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.constants.ExceptionConstants;
 import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.ProductCharacteristic;
@@ -150,8 +150,8 @@ public class ProductCharacteristicsRestController {
             characteristicService.deleteByIDInSelectedCategory(id, category);
 
         }
-        return ResponseEntity.ok(new ResponseDto<>(true, String.format(ResponseOperation.HAS_BEEN_DELETED.getMessage(), id,
-                ResponseOperation.NO_ERROR.getMessage())));
+        return ResponseEntity.ok(new ResponseDto<>(true, String.format(Response.HAS_BEEN_DELETED.getText(), id,
+                Response.NO_ERROR.getText())));
     }
 
     /**

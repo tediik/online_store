@@ -44,6 +44,7 @@ public class UserDto {
         userDto.setBirthdayDate(user.getBirthdayDate());
         userDto.setRegisterDate(user.getRegisterDate());
         userDto.setProfilePicture(user.getProfilePicture());
+        userDto.setAccountNonReadOnlyStatus(user.getIsAccountNonBlockedStatus());
         userDto.setRoles(user.getRoles());
         userDto.setPassword(user.getPassword());
         userDto.setAccountNonReadOnlyStatus(user.isAccountNonReadOnlyStatus());

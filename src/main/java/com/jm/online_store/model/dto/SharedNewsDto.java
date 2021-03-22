@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(description =  "DTO для новостей")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@ApiModel(description = "DTO для сущности адресов Address")
 public class SharedNewsDto {
     private Long id;
     private String socialNetworkName;

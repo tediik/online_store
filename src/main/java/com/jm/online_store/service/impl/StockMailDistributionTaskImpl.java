@@ -57,23 +57,23 @@ public class StockMailDistributionTaskImpl implements StockMailDistributionTask 
                 .findAllByStartDateBetweenAndEndDateIsAfter(LocalDate.now().minusDays(7L), LocalDate.now().plusDays(7L), LocalDate.now());
         if (currentAndFutureStocks.size() != 0) {
             if (customersToSendStock.size() != 0) {
-                for (User user : customersToSendStock) {
+                for (Customer customer : customersToSendStock) {
                     for (Stock stock : currentAndFutureStocks) {
                         SentStock sentStock = SentStock.builder()
-                                .user(user)
+                                .customer(customer)
                                 .stock(stock)
                                 .sentDate(LocalDate.now())
                                 .build();
                         try {
                             sentStockService.addSentStock(sentStock);
                         } catch (UserNotFoundException e) {
-                            log.debug("Cannot add Stock {} for user {}", stock.getId(), user.getEmail());
+                            log.debug("Cannot add Stock {} for user {}", stock.getId(), customer.getEmail());
                         }
                     }
-                    String messageSubject = user.getFirstName() + ", мы подобрали вам список актуальных акций!!!";
-                    String messageBody = prepareMessageBody(currentAndFutureStocks, user);
-                    mailSenderService.sendHtmlMessage(user.getEmail(), messageSubject, messageBody, EMAIL_TYPE);
-                    log.debug("Stock message was sent to {} with email {}", user, user.getEmail());
+                    String messageSubject = customer.getFirstName() + ", мы подобрали вам список актуальных акций!!!";
+                    String messageBody = prepareMessageBody(currentAndFutureStocks, customer);
+                    mailSenderService.sendHtmlMessage(customer.getEmail(), messageSubject, messageBody, EMAIL_TYPE);
+                    log.debug("Stock message was sent to {} with email {}", customer, customer.getEmail());
                 }
                 log.debug("{} stock emails were sent", customersToSendStock.size());
             } else {

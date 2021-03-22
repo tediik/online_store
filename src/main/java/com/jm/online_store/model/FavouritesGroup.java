@@ -33,7 +33,7 @@ public class FavouritesGroup {
     private String name;
 
     @ManyToOne
-    User user;
+    private Customer customer;
 
     @ManyToMany
     @JoinTable(
@@ -42,9 +42,9 @@ public class FavouritesGroup {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> products = new HashSet<>();
 
-    public FavouritesGroup(String name, User user, Set<Product> products) {
+    public FavouritesGroup(String name, Customer customer, Set<Product> products) {
         this.name = name;
-        this.user = user;
+        this.customer = customer;
         this.products = products;
     }
 }

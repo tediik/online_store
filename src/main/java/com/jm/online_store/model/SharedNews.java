@@ -43,9 +43,9 @@ public class SharedNews {
     private String socialNetworkName;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id")
-    @JsonBackReference(value = "user-sharedNews")
-    private User user;
+    @JoinColumn(name = "customer_id")
+    @JsonBackReference(value = "customer-sharedNews")
+    private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "news_id", nullable = false)

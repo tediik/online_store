@@ -3,10 +3,12 @@ package com.jm.online_store.service.impl;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.AlreadyExists;
+import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ExceptionConstants;
 import com.jm.online_store.exception.ProductNotFoundException;
 import com.jm.online_store.exception.UserNotFoundException;
 import com.jm.online_store.model.Categories;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
@@ -16,6 +18,7 @@ import com.jm.online_store.repository.ConfirmationTokenRepository;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CommonSettingsService;
+import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.EvaluationService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.PriceChangeNotificationsService;
@@ -31,6 +34,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
@@ -77,6 +81,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoriesService categoriesService;
     private final ProductCharacteristicService productCharacteristicService;
     private final ConfirmationTokenRepository confirmTokenRepository;
+    private final CustomerService customerService;
 
     @Value("${spring.server.url}")
     private String urlActivate;
@@ -600,9 +605,10 @@ public class ProductServiceImpl implements ProductService {
     public Optional<ProductDto> getProductDto(Long productId, User currentUser) {
         Optional<Product> product = findProductById(productId);
         if (currentUser != null) {
-            User userFromDB = userService.findById(currentUser.getId()).orElseThrow(UserNotFoundException::new);
+            Customer customer = customerService.findById(currentUser.getId()).orElseThrow(()
+                    -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
             if (product.isPresent()) {
-                Set<Product> productSet = userFromDB.getFavouritesGoods();
+                Set<Product> productSet = customer.getFavouritesGoods();
                 Product presentProduct = product.get();
                 ProductDto productDto = new ProductDto(
                         presentProduct.getId(),
