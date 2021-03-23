@@ -268,8 +268,8 @@ public class UserServiceImpl implements UserService {
             if (templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue() != null) {
                 String templateBody = templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue();
                 messageBody = templateBody.replace("@@userEmail@@", userForm.getEmail())
-                        .replace("@@url@@", String.format("<a href='%s'>" + urlActivate +
-                                "/activate/" + confirmationToken.getConfirmationToken() + "</a>", urlActivate +
+                        .replace("@@url@@", String.format("<a href='%s'>" + productionUrl +
+                                "/activate/" + confirmationToken.getConfirmationToken() + "</a>", productionUrl +
                 "/activate/" + confirmationToken.getConfirmationToken()))
                         .replace("@@production-url@@", String.format("<a href='%s'>" + productionUrl + "</a>", productionUrl));
                 try {
@@ -299,8 +299,8 @@ public class UserServiceImpl implements UserService {
         if (templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue() != null) {
             String templateBody = templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue();
             messageBody = templateBody.replace("@@userEmail@@", email)
-                    .replace("@@url@@", String.format("<a href='%s'>" + urlActivate +
-                            "/activate/" + confirmationToken.getConfirmationToken() + "</a>", urlActivate +
+                    .replace("@@url@@", String.format("<a href='%s'>" + productionUrl +
+                            "/activate/" + confirmationToken.getConfirmationToken() + "</a>", productionUrl +
                             "/activate/" + confirmationToken.getConfirmationToken()))
                     .replace("@@production-url@@", String.format("<a href='%s'>" + productionUrl + "</a>", productionUrl));
             try {
