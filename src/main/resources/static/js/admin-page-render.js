@@ -35,7 +35,9 @@ $('#filterRole').on("change", function () {
  * fetch запрос на roleRestUrl для получения всех ролей из бд
  */
 function getAllRoles() {
-    return fetch(roleRestUrl, {headers: headers}).then(response => response.json())
+    return fetch(roleRestUrl, {headers: headers})
+        .then(response => response.json())
+        .then(response => response.data)
 }
 
 /**
@@ -44,7 +46,7 @@ function getAllRoles() {
 function renderRolesSelectOnNewUserForm() {
     getAllRoles().then(allRoles => {
         let selectRoles = $('#addRoles').empty()
-        $.each(allRoles.data, function (i, role) {
+        $.each(allRoles, function (i, role) {
             selectRoles.append(`<option value=${role.id}>${role.name}</option>`)
         })
     })
@@ -57,7 +59,7 @@ function renderRolesSelectOnUserTable() {
     getAllRoles().then(allRoles => {
         let selectRoles = $('#filterRole').empty()
             .append(`<option value="" disabled selected>User filter by Role</option><option value="default">show all users</option>`)
-        $.each(allRoles.data, function (i, role) {
+        $.each(allRoles, function (i, role) {
             selectRoles.append(`<option value=${role.name}>${role.name}</option>`)
         })
     })
@@ -85,7 +87,7 @@ function editUserModalWindowRender(user, allRoles) {
             $('#rolesSelectModal').append(`<option value=${role.id}>${role.name}</option>>`)
         }
     })
-    $('#flexSwitchCheckDefault').val(user.data.isAccountNonBlockedStatus).prop('checked', function () {
+    $('#flexSwitchCheckDefault').val(user.isAccountNonBlockedStatus).prop('checked', function () {
         return !user.data.isAccountNonBlockedStatus;
     })
 }
@@ -128,7 +130,7 @@ function handleEditUserButton(event) {
         fetch(roleRestUrl, {headers: headers})
     ])
         .then(([response1, response2]) => Promise.all([response1.json(), response2.json()]))
-        .then(([userToEdit, allRoles]) => editUserModalWindowRender(userToEdit.data, allRoles))
+        .then(([userToEdit, allRoles]) => editUserModalWindowRender(userToEdit.data, allRoles.data))
 }
 
 /**
@@ -437,7 +439,7 @@ function fetchUsersAndRenderTable() {
 function renderRolesSelectOnMaintenanceMode() {
     getAllRoles().then(allRoles => {
         let selectRoles = $('#rolesMode').empty()
-        $.each(allRoles.data, function (i, role) {
+        $.each(allRoles, function (i, role) {
             selectRoles.append(`<option value=${role.id}>${role.name}</option>>`)
         })
     })
@@ -487,7 +489,7 @@ function renderAcceptedRolesInMaintenance() {
         method: 'GET',
         headers: headers
     }).then(response => response.json())
-        .then(allRoles1 => f(allRoles1))
+        .then(allRoles1 => f(allRoles1.data))
 
     function f(allRoles1) {
         let selectRoles = $('#maintenance-mode-access').empty()
