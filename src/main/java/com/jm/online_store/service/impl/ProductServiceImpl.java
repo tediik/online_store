@@ -604,7 +604,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<ProductDto> getProductDto(Long productId, User currentUser) {
         Optional<Product> product = findProductById(productId);
-        if (currentUser != null) {
+        if (currentUser != null && currentUser.getRoles().contains("ROLE_CUSTOMER")) {
             Customer customer = customerService.findById(currentUser.getId()).orElseThrow(()
                     -> new CustomerNotFoundException(ExceptionEnums.CUSTOMER.getText() + ExceptionConstants.NOT_FOUND));
             if (product.isPresent()) {
