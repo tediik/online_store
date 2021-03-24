@@ -268,9 +268,15 @@ public class UserServiceImpl implements UserService {
             if (templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue() != null) {
                 String templateBody = templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue();
                 messageBody = templateBody.replace("@@userEmail@@", userForm.getEmail())
-                        .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                        .replace("@@url@@", urlActivate);
-                mailSenderService.send(userForm.getEmail(), "Activation code", messageBody, "Confirmation");
+                        .replace("@@url@@", String.format("<a href='%s'>" + productionUrl +
+                                "/activate/" + confirmationToken.getConfirmationToken() + "</a>", productionUrl +
+                "/activate/" + confirmationToken.getConfirmationToken()))
+                        .replace("@@production-url@@", String.format("<a href='%s'>" + productionUrl + "</a>", productionUrl));
+                try {
+                    mailSenderService.sendHtmlMessage(userForm.getEmail(), "Activation code", messageBody, "Confirmation");
+                } catch (MessagingException e) {
+                    log.debug("Message sending error in ActivateUser Method {}", e.getMessage());
+                }
             } else {
                 log.debug("Шаблон рассылки при регистрации нового пользователя в базе пустой ");
             }
@@ -293,9 +299,15 @@ public class UserServiceImpl implements UserService {
         if (templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue() != null) {
             String templateBody = templatesMailingSettingsService.getSettingByName("reg_new_account").getTextValue();
             messageBody = templateBody.replace("@@userEmail@@", email)
-                    .replace("@@confirmationToken@@", confirmationToken.getConfirmationToken())
-                    .replace("@@url@@", urlActivate);
-            mailSenderService.send(email, "Activation code", messageBody, "Confirmation");
+                    .replace("@@url@@", String.format("<a href='%s'>" + productionUrl +
+                            "/activate/" + confirmationToken.getConfirmationToken() + "</a>", productionUrl +
+                            "/activate/" + confirmationToken.getConfirmationToken()))
+                    .replace("@@production-url@@", String.format("<a href='%s'>" + productionUrl + "</a>", productionUrl));
+            try {
+                mailSenderService.sendHtmlMessage(email, "Activation code", messageBody, "Confirmation");
+            } catch (MessagingException e) {
+                log.debug("Message sending error in ActivateUser Method {}", e.getMessage());
+            }
         } else {
             log.debug("Шаблон рассылки при регистрации нового пользователя в базе пустой ");
         }
