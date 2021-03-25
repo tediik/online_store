@@ -42,6 +42,7 @@ function renderPriceChangeNotificationTable(notifications) {
                 <th>Товар</th>
                 <th>Прежняя цена</th>
                 <th>Новая цена</th>
+                <th>Действия</th>
               </tr>`)
 
     for (let notification of notifications.reverse()) {
@@ -51,7 +52,14 @@ function renderPriceChangeNotificationTable(notifications) {
                     <td><a href="/products/${product.id}">${product.product}</a></td>
                     <td>${notification.oldPrice}</td>
                     <td>${notification.newPrice}</td>
-                    <td>`
+                    <td class="text-center">
+                       <div class="btn-group" role="group" aria-label="Action Buttons">
+                          <button type="button" class="btn btn-danger btn-primary" data-toggle="modal" id="deleteButton"
+                            data-id="${user.id}" data-action="deleteUser" data-toggle="modal" data-target="#deleteModal">
+                          Удалить уведомление
+                          </button>
+                       </div>
+                    </td>`
             table.append(row)
         })
     }
@@ -78,6 +86,7 @@ function renderNewCommentsTable(comments) {
                 <th>Дата</th>
                 <th>Товар</th>
                 <th>Ответ</th>
+                <th>Действия</th>
               </tr>`)
 
     for (let comment of comments.sort(function (a,b) {
