@@ -57,8 +57,6 @@ public class Product {
     private Integer amount;
     @NonNull
     private Double rating;
-    @OneToOne(cascade = CascadeType.ALL)
-    private Description descriptions;
     @NonNull
     private String productType; //Что это за поле?
     @NonNull
