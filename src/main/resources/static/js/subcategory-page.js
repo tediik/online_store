@@ -9,9 +9,11 @@ let categoryNameFromPath = decodeURI(document.URL.substring(document.URL.lastInd
 fetch("/api/categories" + `/${categoryNameFromPath}`)
     .then(function (response) {
         if (response.status === 200) {
-            response.json().then(function (data) {
-                fillBreadcrumb(data);
-                fillSomeProducts(data);
+            response.json()
+                // .then(response => response.data)
+                .then(function (data) {
+                fillBreadcrumb(data.data);
+                fillSomeProducts(data.data);
             })
         } else if (response.status === 404) {
             location.href = "/404";

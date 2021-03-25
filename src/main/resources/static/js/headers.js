@@ -8,7 +8,8 @@ $(document).ready(function () {
  */
 function storeName() {
     fetch("/api/storeName")
-        .then(response => response.text())
+        .then(response => response.json())
+        .then(response => response.data)
         .then(data => {
             document.getElementById("storeName").innerHTML = data;
         })
