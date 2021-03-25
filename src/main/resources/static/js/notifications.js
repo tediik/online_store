@@ -98,6 +98,11 @@ function renderNewCommentsTable(comments) {
                     <td>${new Date(comment.commentDate).toLocaleDateString()}</td>
                     <td><a href="/products/${product.id}">${product.product}</a></td>
                     <td>${comment.content}</td>
+                    <td>
+                       <button type="button" class="btn btn-danger btn-primary">
+                        Удалить уведомление
+                        </button>
+                    </td>
                     <td>`
             table.append(row)
         })
