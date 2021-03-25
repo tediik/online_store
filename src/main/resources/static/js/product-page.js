@@ -10,7 +10,9 @@ myHeaders.append('Content-type', 'application/json; charset=UTF-8')
 fetch("/api/products" + `/${productIdFromPath}`)
     .then(function (response) {
         if (response.status === 200) {
-            response.json().then(function (data) {
+            response.json()
+                .then(response => response.data)
+                .then(function (data) {
                 fillBreadcrumb(data);
                 fillAboutProduct(data);
                 $('#showPictureFirstSlide').attr('src', data.productPictureNames[0]);
@@ -36,8 +38,12 @@ fetch("/api/products" + `/${productIdFromPath}`)
  * @returns {Promise<void>}
  */
 async function fillBreadcrumb(data) {
-    let categories = await fetch("/api/categories/allCategories").then(response => response.json());
-    let categoriesWithLatin = await fetch("/api/categories").then(response => response.json());
+    let categories = await fetch("/api/categories/allCategories")
+        .then(response => response.json())
+        .then(response => response.data);
+    let categoriesWithLatin = await fetch("/api/categories")
+        .then(response => response.json())
+        .then(response => response.data);
 
     let breadcr = document.getElementById('categoriesBreadcrumb');
     let categoryOfProduct;

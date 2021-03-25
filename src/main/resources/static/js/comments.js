@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 dataType: "json",
                 success: function (response) {
                     if (response !== undefined) {
-                        currentUserEmail = response.email;
+                        currentUserEmail = response.data.email;
                     }
                 }
             });
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 url: '/api/comments/' + productId,
                 dataType: "json",
                 success: function (response) {
-                    commentsCache = response;
+                    commentsCache = response.data;
                     if (document.getElementById('CommentsNewFirst').checked) {
                         commentsCache.reverse();
 

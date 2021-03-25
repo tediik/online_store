@@ -20,7 +20,10 @@ function preventDefaultEventForEnterKeyPress() {
 }
 
 function fetchAndRenderSomeProducts(number_products) {
-    fetch("/api/products/first/"+ number_products).then(response => response.json()).then(data => fillSomeProducts(data));
+    fetch("/api/products/first/" + number_products)
+        .then(response => response.json())
+        .then(response => response.data)
+        .then(data => fillSomeProducts(data));
     $('#headerForSomeProductsView').text('Актуальные предложения')
 }
 
@@ -29,6 +32,7 @@ function getCurrent() {
         .then(response => {
             if (response.status == 200) {
                 response.json()
+                    .then(response => response.data)
                     .then(user => {
                         let role = user.roles.map(role => role.name);
                         $('#user-email').append(user.email);
@@ -56,7 +60,9 @@ function close() {
  * function fills main categories list at left column
  */
 async function fillMainCategories() {
-    let data = await fetch("/api/categories").then(response => response.json());
+    let data = await fetch("/api/categories")
+        .then(response => response.json())
+        .then(response => response.data);
     let siteMenu = document.getElementById('siteMenu');
     for (let key in data) {
         let item = `
@@ -73,6 +79,7 @@ async function fillMainCategories() {
         $(siteMenu).append(item);
     }
 }
+
 /**
  * function that fills main page with products
  * @param data - products list
@@ -128,6 +135,7 @@ function fillSomeProducts(data) {
 function fetchAndRenderPublishedStocks() {
     fetch("/api/stock/publishedstocks")
         .then(response => response.json())
+        .then(response => response.data)
         .then(data => fillPublishedStocks(data))
 }
 
@@ -137,10 +145,8 @@ function fetchAndRenderPublishedStocks() {
  */
 function fillPublishedStocks(data) {
     if (data !== 'error') {
-        let item = ``;
         let stockCarouselIndicator = ``;
         let stockCarouselItem = ``;
-
         for (let key = 0; key < data.length; key++) {
             let li = key + 1;
             stockCarouselIndicator = `<li data-target="#myCarousel" data-slide-to="${li}"></li>`;
@@ -176,6 +182,7 @@ function fillPublishedStocks(data) {
 function fetchAndRenderPublishedNews() {
     fetch("/api/manager/news/publishednews")
         .then(response => response.json())
+        .then(response => response.data)
         .then(data => fillPublishedNews(data))
 }
 
