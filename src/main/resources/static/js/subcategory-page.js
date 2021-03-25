@@ -12,8 +12,8 @@ fetch("/api/categories" + `/${categoryNameFromPath}`)
             response.json()
                 // .then(response => response.data)
                 .then(function (data) {
-                    fillBreadcrumb(data.data);
-                    fillSomeProducts(data.data);
+                fillBreadcrumb(data.data);
+                fillSomeProducts(data.data);
             })
         } else if (response.status === 404) {
             location.href = "/404";
