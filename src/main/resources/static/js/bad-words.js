@@ -17,6 +17,7 @@ async function getBadWords() {
     let url = badWordsRestUrl + "all";
     await fetch(url)
         .then(response => response.json())
+        .then(response => response.data)
         .then(allWords => renderBadWordsTable(allWords))
 }
 
@@ -79,6 +80,7 @@ function handleEditButton(event) {
     const wordId = event.target.dataset["productId"]
     fetch(badWordsRestUrl + wordId, {headers: headers})
         .then(response => response.json())
+        .then(response => response.data)
         .then(productToEdit => editModalWindowRender(productToEdit))
 }
 
@@ -102,6 +104,7 @@ function editModalWindowRender(word) {
 function handleDeleteButton(wordId) {
     fetch(badWordsRestUrl + wordId)
         .then(response => response.json())
+        .then(response => response.data)
         .then(productToDelete => deleteWordModalWindowRender(productToDelete))
 }
 
@@ -237,14 +240,16 @@ function handleAddBtn() {
 function renderEnabled() {
     fetch('/api/bad-words/status')
         .then((response) => {
-            response.json().then((data) => {
-                if (data.textValue === 'true') {
-                    $("#activateBadWords").attr('checked', true)
-                }
-                if (data.textValue === 'false') {
-                    $("#activateBadWords").attr('checked', false)
-                }
-            })
+            response.json()
+                .then(response => response.data)
+                .then((data) => {
+                    if (data.textValue === 'true') {
+                        $("#activateBadWords").attr('checked', true)
+                    }
+                    if (data.textValue === 'false') {
+                        $("#activateBadWords").attr('checked', false)
+                    }
+                })
         })
 }
 
@@ -296,7 +301,6 @@ function handleImportBtn() {
             body: wordToAdd
         })
             .then(function (response) {
-                    let field;
                     if (response.status !== 200) {
                         toastr.error('Ошибка импорта стоп-слова успешно импортированны')
                     } else {

@@ -12,7 +12,7 @@ async function fillBasket() {
     let response = await fetch("/api/basketGoods");
     let basketGoodsJson = document.getElementById('basketTable');
     if (response.ok) {
-        let content = await response.json();
+        let content = await response.json().then(response => response.data);
         let countGoods = 0;
         let sumBasket = 0;
         let key;
