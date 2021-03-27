@@ -3,6 +3,7 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.CommentNotSavedException;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.ReviewNotifications;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CommentRepository;
 import com.jm.online_store.repository.ReviewRepository;
@@ -10,6 +11,7 @@ import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.ReviewNotificationsService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommonSettingsService commonSettingsService;
     private final MailSenderService mailSenderService;
     private final ProductService productService;
+    private final ReviewNotificationsService reviewNotificationsService;
 
     @Override
     public void deleteComment(Long id) {
@@ -89,6 +92,7 @@ public class CommentServiceImpl implements CommentService {
             }
             comment.setCustomer(userService.findById(loggedInUser.getId()).get());
             sendCommentAnswer(comment);
+            reviewNotificationsService.addReview(comment);
             return commentRepository.save(comment);
         } else {
             throw new CommentNotSavedException();
