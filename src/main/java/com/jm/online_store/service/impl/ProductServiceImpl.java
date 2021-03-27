@@ -657,16 +657,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Method that finds search string in Product description.
-     * @param searchString - {@link String} search string
-     * @return - list of {@link Product} with search result
-     */
-    @Override
-    public List<Product> findProductsByDescriptionContains(String searchString) {
-        return productRepository.findProductByDescriptionsContains(searchString);
-    }
-
-    /**
      * Добавление нового email в рассылку при изменении цены на товар.
      * Помимо этого направляет пользователю письмо с просьбой подтвердить получение рассылки.
      * Без этого согласия получать письма об изменении цен он не будет. Письмо отправляется при каждом нажатии

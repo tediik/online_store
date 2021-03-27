@@ -57,6 +57,8 @@ public class Product {
     private Integer amount;
     @NonNull
     private Double rating;
+    @Column(name = "description")
+    private String description;
     @NonNull
     private String productType; //Что это за поле?
     @NonNull

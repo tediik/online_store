@@ -128,7 +128,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    //@PostConstruct
+    @PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -742,9 +742,11 @@ public class DataInitializer {
         Product product20 = new Product("LG P09EP2", 529.9, 2, 4.1, "Air_conditioner");
         Product product21 = new Product("LG Mega Plus P12EP1", 584.9, 2, 4.7, "Air_conditioner");
 
+        Product product22 = new Product("Apple-12", 3500.5, 20, 4.7, "Cellphone", false);
+
         category26.setProducts(Arrays.asList(product1, product2, product3));
         category28.setProducts(Arrays.asList(product4, product5, product6));
-        category11.setProducts(Arrays.asList(product7, product8, product9));
+        category11.setProducts(Arrays.asList(product7, product8, product9, product22));
         category27.setProducts(Arrays.asList(product10, product11, product12));
         category23.setProducts(Arrays.asList(product13, product14, product15));
         category24.setProducts(Arrays.asList(product16, product17, product18));
@@ -772,6 +774,17 @@ public class DataInitializer {
         smartphones.add(characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new));
         smartphones.add(characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new));
         smartphones.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(13L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(14L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(15L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(18L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(19L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(20L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new));
 
         List<Characteristic> laptops = new ArrayList<>();
         laptops.add(characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new));
@@ -780,11 +793,28 @@ public class DataInitializer {
         laptops.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(13L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(15L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(18L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(20L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new));
+
+        List<Characteristic> cleaners = new ArrayList<>();
+        cleaners.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(20L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(23L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(24L).orElseThrow(CharacteristicNotFoundException::new));
 
         Categories categories1 = categoriesService.getCategoryById(11L).orElseThrow(CategoriesNotFoundException::new);
         categories1.setCharacteristics(smartphones);
@@ -813,6 +843,14 @@ public class DataInitializer {
         Categories categories7 = categoriesService.getCategoryById(10L).orElseThrow(CategoriesNotFoundException::new);
         categories7.setCharacteristics(laptops);
         categoriesService.saveCategory(categories7);
+
+        Categories categories8 = categoriesService.getCategoryById(2L).orElseThrow(CategoriesNotFoundException::new);
+        categories8.setCharacteristics(cleaners);
+        categoriesService.saveCategory(categories8);
+
+        Categories categories9 = categoriesService.getCategoryById(23L).orElseThrow(CategoriesNotFoundException::new);
+        categories9.setCharacteristics(cleaners);
+        categoriesService.saveCategory(categories9);
     }
 
     /**
@@ -1523,7 +1561,14 @@ public class DataInitializer {
         characteristicList.add(new Characteristic("Частота оперативной памяти"));
         characteristicList.add(new Characteristic("Сенсорный экран"));
         characteristicList.add(new Characteristic("Операционная система"));
-
+        characteristicList.add(new Characteristic("Производитель"));
+        characteristicList.add(new Characteristic("Wi-Fi"));
+        characteristicList.add(new Characteristic("Версия bluetooth"));
+        characteristicList.add(new Characteristic("Цвет"));
+        characteristicList.add(new Characteristic("Серийный номер"));
+        characteristicList.add(new Characteristic("Размеры"));
+        characteristicList.add(new Characteristic("Потребляемая мощность"));
+        characteristicList.add(new Characteristic("Уровень шума"));
 
         characteristicList.forEach(characteristicService::saveCharacteristic);
 
@@ -1539,11 +1584,98 @@ public class DataInitializer {
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new).getId(), "8");
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new).getId(), "256");
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(7L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4780");
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "208");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new).getId(), "IPS");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(13L).orElseThrow(CharacteristicNotFoundException::new).getId(), "144");
         productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Android");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Xiaomi");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(18L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(19L).orElseThrow(CharacteristicNotFoundException::new).getId(), "5.1");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(20L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Black");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new).getId(), "X54355543455");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new).getId(), "115x56x13");
+
+        long lgId = productService.findProductByName("LG-2145").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new).getId(), "6.0");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new).getId(), "1920x960");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Qualcomm Snapdragon 835");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2019");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new).getId(), "128");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(7L).orElseThrow(CharacteristicNotFoundException::new).getId(), "1");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Нет");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2540");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "198 ");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new).getId(), "IPS");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Android");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new).getId(), "LG");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(18L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(19L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4.0");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(20L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Black");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new).getId(), "L55411165632");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new).getId(), "110x48x19");
+
+        long appleId = productService.findProductByName("Apple-10").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new).getId(), "5.8");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2436x1125");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Apple A11 Bionic");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2017");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new).getId(), "3");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new).getId(), "256");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(7L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2700");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "174 ");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new).getId(), "OLED");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new).getId(), "iOS");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Apple");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(18L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(19L).orElseThrow(CharacteristicNotFoundException::new).getId(), "5.0");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(20L).orElseThrow(CharacteristicNotFoundException::new).getId(), "White");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new).getId(), "A88563902273");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new).getId(), "71x144x8");
+
+        long apple2Id = productService.findProductByName("Apple-12").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new).getId(), "6.1");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2532x1170");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Apple A14 Bionic");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2020");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new).getId(), "128");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(7L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2815");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "164 ");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new).getId(), "OLED");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new).getId(), "iOS");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Apple");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(18L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(19L).orElseThrow(CharacteristicNotFoundException::new).getId(), "5.0");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(20L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Black");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new).getId(), "A1254488633");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new).getId(), "72x147x7");
+
+        long samsungId = productService.findProductByName("Samsung SC4131").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2019");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "3760");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Samsung");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findCharacteristicById(20L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Red");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new).getId(), "08UV8NEM703511M");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new).getId(), "365x230x275");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findCharacteristicById(23L).orElseThrow(CharacteristicNotFoundException::new).getId(), "1600");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findCharacteristicById(24L).orElseThrow(CharacteristicNotFoundException::new).getId(), "74");
+
+
     }
 
     /**
