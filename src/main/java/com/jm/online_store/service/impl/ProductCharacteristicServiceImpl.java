@@ -10,14 +10,12 @@ import com.jm.online_store.repository.ProductCharacteristicRepository;
 import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.ProductCharacteristicService;
-import com.jm.online_store.service.interf.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -82,11 +80,13 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
     }
 
     @Override
+    @Transactional
     public ProductCharacteristic findProductCharacteristicsByValueAndCharacteristicAndProduct(String value, Characteristic characteristic, Product product) {
         return productCharacteristicRepository.findProductCharacteristicsByValueAndCharacteristicAndProduct(value, characteristic, product);
     }
 
     @Override
+    @Transactional
     public List<ProductCharacteristic> findProductCharacteristicsByValueAndCharacteristic(String value, Characteristic characteristic){
         return productCharacteristicRepository.findProductCharacteristicsByValueAndCharacteristic(value, characteristic);
     }

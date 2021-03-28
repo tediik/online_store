@@ -115,26 +115,6 @@ public class ProductRestController {
         return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
     }
 
-//    /**
-//     * Mapping for search in {@link Product} by description contains search string
-//     *
-//     * @param searchString - {@link String} string to find in product name
-//     * @return - {@link ResponseEntity} response entity with List of {@link Product} or
-//     * if there are no such products returns notFound
-//     */
-//    @GetMapping("/searchByDescription/{searchString}")
-//    @ApiOperation(value = "Get product by description",
-//            authorizations = { @Authorization(value = "jwtToken") })
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Products have been found"),
-//            @ApiResponse(code = 404, message = "Products haven't been found")
-//    })
-//    public ResponseEntity<ResponseDto<List<ProductDto>>> findProductsByDescription(@PathVariable String searchString) {
-//        List<ProductDto> returnValue = modelMapper.map(productService.findProductsByDescriptionContains(searchString),
-//                listType);
-//        return ResponseEntity.ok(new ResponseDto<>(true, returnValue));
-//    }
-
     /**
      * Метод для добавления нового email в лист рассылок
      *

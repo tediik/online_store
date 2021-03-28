@@ -67,6 +67,6 @@ public class FilterRestController {
     })
     public ResponseEntity<ResponseDto<List<ProductDto>>> filterProduct(@PathVariable String category,
                                                                        @RequestParam(required = false) Map<String, String> labels) {
-        return new ResponseEntity<>(new ResponseDto<>(true, filterService.getProductsByFilter(Transliteration.latinToCyrillic(category), labels)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(true, filterService.getProductsByFilter(category, labels)), HttpStatus.OK);
     }
 }

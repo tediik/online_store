@@ -93,7 +93,7 @@ public class FilterServiceImpl implements FilterService {
      */
     @Override
     public List<ProductDto> getProductsByFilter(String category, Map<String, String> labels) {
-        Categories categories = categoriesService.getCategoryByCategoryName(category).get();
+        Categories categories = categoriesService.getCategoryByCategoryName(Transliteration.latinToCyrillic(category)).get();
         List<Product> products = new ArrayList<>();
 
         for (Map.Entry<String, String> label : labels.entrySet()) {
