@@ -109,7 +109,7 @@ public class FilterServiceImpl implements FilterService {
                                             .findProductCharacteristicsByValueAndCharacteristicAndProduct(label.getValue(), characteristic, product)))
                             .collect(Collectors.toList());
                 } else {
-                    products.addAll(productCharacteristicService.findProductCharacteristicsByValueAndAndCharacteristic(label.getValue(), characteristic)
+                    products.addAll(productCharacteristicService.findProductCharacteristicsByValueAndCharacteristic(label.getValue(), characteristic)
                             .stream()
                             .map(ProductCharacteristic::getProduct)
                             .collect(Collectors.toList()));
