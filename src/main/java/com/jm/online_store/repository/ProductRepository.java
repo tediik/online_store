@@ -1,6 +1,8 @@
 package com.jm.online_store.repository;
 
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.ProductCharacteristic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -49,4 +51,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = "delete from product_subscribers_mails where email =:email", nativeQuery = true)
     void deleteAllByEmail(String email);
+
+    List<Product> findProductsByCategoriesAndPriceBetween(Categories categories, Double min, Double max);
+
 }

@@ -11,8 +11,6 @@ import com.jm.online_store.model.filter.FilterType;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.filter.Filters;
 import com.jm.online_store.model.filter.RangeFilter;
-import com.jm.online_store.repository.ProductCharacteristicRepository;
-import com.jm.online_store.repository.ProductRepository;
 import com.jm.online_store.service.interf.CategoriesService;
 import com.jm.online_store.service.interf.CharacteristicService;
 import com.jm.online_store.service.interf.FilterService;
@@ -24,13 +22,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
@@ -45,7 +44,6 @@ public class FilterServiceImpl implements FilterService {
     private final CharacteristicService characteristicService;
     private final CategoriesService categoriesService;
     private final ProductCharacteristicService productCharacteristicService;
-    private final ProductCharacteristicRepository productCharacteristicRepository;
 
     /**
      * Comparator для сравнения товаров по ценам
@@ -53,8 +51,9 @@ public class FilterServiceImpl implements FilterService {
     private final Comparator<Product> priceComparator = Comparator.comparing(Product::getPrice);
 
     /**
-     * Возвращает сущность Filters{@link Filters} для отображения возможным фильтров на странице,
-     * проверяет, какие данные есть у товаров данной категории, чтобы их отправить на фронт
+     * Возвращает сущность Filters{@link Filters} для отображения возможных фильтров на странице,
+     * проверяет, какие характеристики {@link Characteristic} есть у товаров данной категории, чтобы их отправить на фронт
+     *
      * @param category - String - категория товара
      * @return {@link Filters} набор фильтров с данными для отображения
      */
@@ -71,13 +70,13 @@ public class FilterServiceImpl implements FilterService {
         filterList.add(priceRangeFilter);
 
         for (Characteristic characteristic : characteristics) {
-            String characteristicName = characteristic.getCharacteristicName(); //на русском label Filter
+            String characteristicName = characteristic.getCharacteristicName();
             Set<CheckboxFilter.Label> label = characteristic.getProductCharacteristics()
                     .stream()
                     .filter(x -> categories.getProducts().contains(x.getProduct()))
                     .map(p -> new CheckboxFilter.Label(p.getValue()))
-                    .collect(collectingAndThen(toCollection(()-> new TreeSet<>(Comparator.comparing
-                                    (CheckboxFilter.Label::getLabel))), TreeSet::new));
+                    .collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing
+                            (CheckboxFilter.Label::getLabel))), TreeSet::new));
 
             Filter filter = new Filter(FilterType.Checkbox, characteristicName, Transliteration.сyrillicToLatin(characteristicName), new CheckboxFilter(label));
             filterList.add(filter);
@@ -87,78 +86,36 @@ public class FilterServiceImpl implements FilterService {
     }
 
     /**
-     * Список продуктов, соответствующих заданным фильтрам
-     * @param category         - String - категория товара
-     * @param price            List<Long> набор цен от ... до ...
-     * @param brands           List<String> производители
-     * @param color            List<String> цвета
-     * @param RAM              List<String> оперативная память
-     * @param storage          List<String> встроенная память
-     * @param screenResolution List<String> разрешение экрана
-     * @param OS               List<String> операционная система
-     * @param bluetooth        List<String> версия bluetooth
-     * @return List<ProductDto> {@link ProductDto} - список отфильтрованных товаров
+     *
+     * @param category String - название категории
+     * @param labels - Map<String, String> ключ - название характеристики, значение - заданное значение для фильтрации
+     * @return List<ProductDto> - список продуктов по заданным характеристикам.
      */
     @Override
-    public List<ProductDto> filterProducts(String category,
-                                           List<Long> price,
-                                           List<String> brands,
-                                           List<String> color,
-                                           List<String> RAM,
-                                           List<String> storage,
-                                           List<String> screenResolution,
-                                           List<String> OS,
-                                           List<String> bluetooth) {
-        List<Product> products = productService.findProductsByCategoryName(category);
-//        if (price != null && !price.isEmpty()) {
-//            products = products.stream()
-//                    .filter(product -> product.getPrice() >= price.get(0))
-//                    .filter(product -> product.getPrice() <= price.get(1))
-//                    .collect(Collectors.toList());
-//        }
-//        if (brands != null && !brands.isEmpty()) {
-//            products = products.stream()
-//                    .filter(product -> brands.contains(product.getDescriptions().getProducer()))
-//                    .collect(Collectors.toList());
-//        }
-//        if (color != null && !color.isEmpty()) {
-//            products = products.stream()
-//                    .filter(product -> color.contains(product.getDescriptions().getColor()))
-//                    .collect(Collectors.toList());
-//        }
-//        if (RAM != null && !RAM.isEmpty()) {
-//            List<Integer> intRam = new ArrayList<>();
-//            for (String r : RAM) {
-//                intRam.add(Integer.parseInt(r.substring(0, r.length() - 3)));
-//            }
-//            products = products.stream()
-//                    .filter(product -> intRam.contains(product.getDescriptions().getRam()))
-//                    .collect(Collectors.toList());
-//        }
-//        if (storage != null && !storage.isEmpty()) {
-//            List<Integer> intStorage = new ArrayList<>();
-//            for (String s : storage) {
-//                intStorage.add(Integer.parseInt(s.substring(0, s.length() - 3)));
-//            }
-//            products = products.stream()
-//                    .filter(product -> intStorage.contains(product.getDescriptions().getStorage()))
-//                    .collect(Collectors.toList());
-//        }
-//        if (screenResolution != null && !screenResolution.isEmpty()) {
-//            products = products.stream()
-//                    .filter(product -> screenResolution.contains(product.getDescriptions().getScreenResolution()))
-//                    .collect(Collectors.toList());
-//        }
-//        if (OS != null && !OS.isEmpty()) {
-//            products = products.stream()
-//                    .filter(product -> OS.contains(product.getDescriptions().getOS()))
-//                    .collect(Collectors.toList());
-//        }
-//        if (bluetooth != null && !bluetooth.isEmpty()) {
-//            products = products.stream()
-//                    .filter(product -> bluetooth.contains(product.getDescriptions().getBluetoothVersion()))
-//                    .collect(Collectors.toList());
-//        }
+    public List<ProductDto> getProductsByFilter(String category, Map<String, String> labels) {
+        Categories categories = categoriesService.getCategoryByCategoryName(category).get();
+        List<Product> products = new ArrayList<>();
+
+        for (Map.Entry<String, String> label : labels.entrySet()) {
+            if (label.getKey().equals("price")) {
+                String[] prices = label.getValue().replaceAll("\\s+", "").split(",");
+                products = productService.findProductsByCategoriesAndPriceBetween(categories, Double.parseDouble(prices[0]), Double.parseDouble(prices[1]));
+            } else {
+                Characteristic characteristic = characteristicService.findByCharacteristicName(Transliteration.latinToCyrillic(label.getKey())).get();
+                if (!products.isEmpty()) {
+                    products = products.stream()
+                            .filter(product -> product.getProductCharacteristics()
+                                    .contains(productCharacteristicService
+                                            .findProductCharacteristicsByValueAndCharacteristicAndProduct(label.getValue(), characteristic, product)))
+                            .collect(Collectors.toList());
+                } else {
+                    products.addAll(productCharacteristicService.findProductCharacteristicsByValueAndAndCharacteristic(label.getValue(), characteristic)
+                            .stream()
+                            .map(ProductCharacteristic::getProduct)
+                            .collect(Collectors.toList()));
+                }
+            }
+        }
 
         return products.stream().map(ProductDto::new).collect(Collectors.toList());
     }

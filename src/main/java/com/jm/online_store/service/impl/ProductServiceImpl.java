@@ -12,6 +12,7 @@ import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.ConfirmationToken;
 import com.jm.online_store.model.Evaluation;
 import com.jm.online_store.model.Product;
+import com.jm.online_store.model.ProductCharacteristic;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import com.jm.online_store.repository.ConfirmationTokenRepository;
@@ -767,6 +768,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Long getProductIdByPictureName(String name) {
         return null;
+    }
+
+    @Override
+    public List<Product> findProductsByCategoriesAndPriceBetween(Categories category, Double min, Double max) {
+        return productRepository.findProductsByCategoriesAndPriceBetween(category, min, max);
     }
 
 }

@@ -21,6 +21,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -57,12 +58,19 @@ public class Product {
     private Integer amount;
     @NonNull
     private Double rating;
+
+    /**
+     * Строковое описание товара
+     */
     @Column(name = "description")
     private String description;
     @NonNull
     private String productType; //Что это за поле?
     @NonNull
     private boolean deleted;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Categories categories;
 
     /**
      * поле для хранения адресов картинок для товара
@@ -150,6 +158,15 @@ public class Product {
         this.product = product;
         this.price = price;
         this.amount = amount;
+    }
+
+    public Product(String product, double price, int amount, double rating, String productType, String description) {
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+        this.rating = rating;
+        this.productType = productType;
+        this.description = description;
     }
 
     public @NonNull boolean getDeleteStatus() {

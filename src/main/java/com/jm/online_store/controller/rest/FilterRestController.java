@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Rest controller for filters
@@ -53,14 +54,8 @@ public class FilterRestController {
     /**
      * Осуществляет фильтрацию товаров в соответствии с выбранными фильтрами
      * @param category         - String - категория товара
-     * @param price            - List<Long> - интервал цен от (min) до (max)
-     * @param brand            - List<String> - производители
-     * @param color            - List<String> - цвета
-     * @param RAM              - List<String> - оперативная память
-     * @param storage          - List<String> - встроенная память
-     * @param screenResolution - List<String> - разрешение экрана
-     * @param OS               - List<String> - операционные системы
-     * @param bluetooth        - List<String> - версия bluetooth
+     * @param labels           - Map<String, String> - набор характеристик для фильтрации. Ключ - название характеристики,
+     *                         значение - значения для фильтрации
      * @return ResponseEntity<ResponseDto<List<ProductDto>>> {@link ProductDto} список продуктов, удовлетворяющих фильтрам
      */
     @GetMapping("/filtered/{category}")
@@ -71,16 +66,7 @@ public class FilterRestController {
             @ApiResponse(code = 400, message = "products by filters cannot be found")
     })
     public ResponseEntity<ResponseDto<List<ProductDto>>> filterProduct(@PathVariable String category,
-                                                                       @RequestParam(required = false) List<Long> price,
-                                                                       @RequestParam(required = false) List<String> brand,
-                                                                       @RequestParam(required = false) List<String> color,
-                                                                       @RequestParam(required = false) List<String> RAM,
-                                                                       @RequestParam(required = false) List<String> storage,
-                                                                       @RequestParam(required = false) List<String> screenResolution,
-                                                                       @RequestParam(required = false) List<String> OS,
-                                                                       @RequestParam(required = false) List<String> bluetooth) {
-
-        return new ResponseEntity<>(new ResponseDto<>(true, filterService.filterProducts(Transliteration.latinToCyrillic(category),
-                price, brand, color, RAM, storage, screenResolution, OS, bluetooth)), HttpStatus.OK);
+                                                                       @RequestParam(required = false) Map<String, String> labels) {
+        return new ResponseEntity<>(new ResponseDto<>(true, filterService.getProductsByFilter(Transliteration.latinToCyrillic(category), labels)), HttpStatus.OK);
     }
 }

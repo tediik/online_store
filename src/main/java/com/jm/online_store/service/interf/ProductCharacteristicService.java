@@ -1,5 +1,7 @@
 package com.jm.online_store.service.interf;
 
+import com.jm.online_store.model.Characteristic;
+import com.jm.online_store.model.Product;
 import com.jm.online_store.model.ProductCharacteristic;
 import com.jm.online_store.model.dto.ProductCharacteristicDto;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -15,4 +17,9 @@ public interface ProductCharacteristicService {
     ProductCharacteristic addProductCharacteristic(long productId, String characteristicName, String value) throws IncorrectResultSizeDataAccessException;
 
     List<ProductCharacteristic> addProductCharacteristic(List<ProductCharacteristicDto> list , String addedProductName);
+
+    ProductCharacteristic findProductCharacteristicsByValueAndCharacteristicAndProduct(String value, Characteristic characteristic, Product product);
+
+    List<ProductCharacteristic> findProductCharacteristicsByValueAndCharacteristic(String value, Characteristic characteristic);
+
 }

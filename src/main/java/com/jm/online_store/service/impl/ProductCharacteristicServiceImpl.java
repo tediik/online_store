@@ -80,4 +80,15 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
         }
         return returnValue;
     }
+
+    @Override
+    public ProductCharacteristic findProductCharacteristicsByValueAndCharacteristicAndProduct(String value, Characteristic characteristic, Product product) {
+        return productCharacteristicRepository.findProductCharacteristicsByValueAndCharacteristicAndProduct(value, characteristic, product);
+    }
+
+    @Override
+    public List<ProductCharacteristic> findProductCharacteristicsByValueAndCharacteristic(String value, Characteristic characteristic){
+        return productCharacteristicRepository.findProductCharacteristicsByValueAndCharacteristic(value, characteristic);
+    }
+
 }
