@@ -3,7 +3,7 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.exception.CommentNotSavedException;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Product;
-import com.jm.online_store.model.ReviewNotifications;
+import com.jm.online_store.model.AnswerNotifications;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.CommentRepository;
 import com.jm.online_store.repository.ReviewRepository;
@@ -11,7 +11,7 @@ import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.ProductService;
-import com.jm.online_store.service.interf.ReviewNotificationsService;
+import com.jm.online_store.service.interf.AnswerNotificationsService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommonSettingsService commonSettingsService;
     private final MailSenderService mailSenderService;
     private final ProductService productService;
-    private final ReviewNotificationsService reviewNotificationsService;
+    private final AnswerNotificationsService answerNotificationsService;
 
     @Override
     public void deleteComment(Long id) {
@@ -75,6 +75,7 @@ public class CommentServiceImpl implements CommentService {
      * Method checks if Comment is a new post or reply  to previous comment or comment for review
      * then sets a current user as author of a comment, saves to dataBase
      * and send comment to method for sending email to customer
+     * and send comment to method for making notification
      *
      * @param comment
      * @return Comment
@@ -86,13 +87,14 @@ public class CommentServiceImpl implements CommentService {
         if (loggedInUser.isAccountNonReadOnlyStatus()) {
             if (comment.getParentId() != null) {
                 comment.setParentComment(commentRepository.findById(comment.getParentId()).get());
+                answerNotificationsService.addNotification(comment);
             }
             if (comment.getReview() != null) {
                 comment.setReview(reviewRepository.findById(comment.getReview().getId()).get());
+                answerNotificationsService.addNotification(comment);
             }
             comment.setCustomer(userService.findById(loggedInUser.getId()).get());
             sendCommentAnswer(comment);
-            reviewNotificationsService.addReview(comment);
             return commentRepository.save(comment);
         } else {
             throw new CommentNotSavedException();

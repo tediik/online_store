@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "review_notifications")
 @ApiModel(description = "Сущность уведомление пользователя об ответах на комментарии")
-public class ReviewNotifications {
+public class AnswerNotifications {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,7 +44,7 @@ public class ReviewNotifications {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    public ReviewNotifications (@NonNull Long idUserComment,
+    public AnswerNotifications (@NonNull Long idUserComment,
                                     @NonNull String content,
                                     @NonNull Long productId,
                                     @NotNull LocalDateTime reviewDate) {
