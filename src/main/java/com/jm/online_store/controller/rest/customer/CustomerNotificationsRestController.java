@@ -5,12 +5,14 @@ import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.model.AnswerNotifications;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.PriceChangeNotifications;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.service.interf.AnswerNotificationsService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.PriceChangeNotificationsService;
@@ -49,6 +51,7 @@ public class CustomerNotificationsRestController {
     private final UserService userService;
     private final ModelMapper modelMapper;
     private final PriceChangeNotificationsService priceChangeNotificationsService;
+    private final AnswerNotificationsService answerNotificationsService;
     private final CommentService commentService;
     private final ReviewService reviewService;
 
@@ -202,4 +205,23 @@ public class CustomerNotificationsRestController {
                 .forEach(review -> answers.addAll(review.getComments()));
         return new ResponseEntity<>(new ResponseDto<>(true, answers), HttpStatus.OK);
     }
+
+    /**
+     * Поиск всех уведомлений на комментиарии и отзывы конкретного покупателя
+     * @param id покупателя {@link Long}
+     * @return List<AnswerNotifications> список уведомлений
+     */
+    @GetMapping("/commentAnswers/{id}")
+    @ApiOperation(value = "Запрашивает данные об ответах на комментарии или отзывы по id пользователя",
+            authorizations = {@Authorization(value = "jwtToken")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Answers found"),
+            @ApiResponse(code = 400, message = "Could not get answer notifications")
+    })
+    public ResponseEntity<ResponseDto<List<AnswerNotifications>>> getAnswerNotifications(@PathVariable Long id) {
+        List<AnswerNotifications> list = answerNotificationsService.getCustomerAnswerNotifications(id);
+        return new ResponseEntity<>(new ResponseDto<>(true, list), HttpStatus.OK);
+    }
+
+
 }
