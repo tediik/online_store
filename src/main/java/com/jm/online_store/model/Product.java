@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -21,9 +18,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
@@ -57,12 +54,19 @@ public class Product {
     private Integer amount;
     @NonNull
     private Double rating;
-    @OneToOne(cascade = CascadeType.ALL)
-    private Description descriptions;
+
+    /**
+     * Строковое описание товара
+     */
+    @Column(name = "description")
+    private String description;
     @NonNull
     private String productType; //Что это за поле?
     @NonNull
     private boolean deleted;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Categories categories;
 
     /**
      * поле для хранения адресов картинок для товара
@@ -150,6 +154,15 @@ public class Product {
         this.product = product;
         this.price = price;
         this.amount = amount;
+    }
+
+    public Product(String product, double price, int amount, double rating, String productType, String description) {
+        this.product = product;
+        this.price = price;
+        this.amount = amount;
+        this.rating = rating;
+        this.productType = productType;
+        this.description = description;
     }
 
     public @NonNull boolean getDeleteStatus() {

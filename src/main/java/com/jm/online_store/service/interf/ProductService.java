@@ -1,11 +1,11 @@
 package com.jm.online_store.service.interf;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.ProductDto;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -40,7 +40,6 @@ public interface ProductService {
 
     void importFromXMLFile(String fileName);
 
-
     void importFromXMLFile(String fileName, Long categoryId);
 
     void importFromCSVFile(String fileName , Long id) throws FileNotFoundException;
@@ -58,8 +57,6 @@ public interface ProductService {
     Optional<ProductDto> getProductDto(Long productI, User user);
 
     List<Product> findProductsByNameContains(String searchString);
-
-    List<Product> findProductsByDescriptionContains(String searchString);
 
     boolean addNewSubscriber(ObjectNode body);
 
@@ -82,4 +79,6 @@ public interface ProductService {
     Long getProductIdByPictureName(String name);
 
     void deleteAllByEmail(String email);
+
+    List<Product> findProductsByCategoriesAndPriceBetween(Categories category, Double min, Double max);
 }

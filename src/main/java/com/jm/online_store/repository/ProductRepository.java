@@ -1,5 +1,6 @@
 package com.jm.online_store.repository;
 
+import com.jm.online_store.model.Categories;
 import com.jm.online_store.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,9 +22,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	List<Product> findNumProducts(@Param("num") Integer num);
 
 	List<Product> findProductByProductContains(String searchString);
-
-	@Query("FROM Product p WHERE p.descriptions.information LIKE %:searchString%")
-	List<Product> findProductByDescriptionsContains(@Param("searchString") String searchString);
 
     boolean existsProductByProduct(String productName);
 
@@ -52,4 +50,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = "delete from product_subscribers_mails where email =:email", nativeQuery = true)
     void deleteAllByEmail(String email);
+
+    List<Product> findProductsByCategoriesAndPriceBetween(Categories categories, Double min, Double max);
+
 }

@@ -11,7 +11,6 @@ import com.jm.online_store.model.Characteristic;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.CommonSettings;
 import com.jm.online_store.model.Customer;
-import com.jm.online_store.model.Description;
 import com.jm.online_store.model.Employee;
 import com.jm.online_store.model.FavouritesGroup;
 import com.jm.online_store.model.News;
@@ -727,69 +726,27 @@ public class DataInitializer {
         Product product8 = new Product("LG-2145", 439.5, 78, 3.9, "Cellphone", false);
         Product product9 = new Product("Apple-10", 1023.9, 74, 4.8, "Cellphone", false);
 
-        Product product10 = new Product("Notebook 1", 99.9, 2, 0.0, "Computer");
-        Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer");
-        Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, "Computer");
+        Product product10 = new Product("Notebook 1", 99.9, 2, 0.0, "Computer", "some additional info here");
+        Product product11 = new Product("Notebook 2", 99.9, 2, 0.0, "Computer", "some additional info here");
+        Product product12 = new Product("Notebook 3", 99.9, 2, 0.0, "Computer", "some additional info here");
 
-        Product product13 = new Product("Roomba 698", 299.9, 6, 4.3, "Cleaning");
-        Product product14 = new Product("Bosch BWD41720", 329.9, 8, 4.1, "Cleaning");
-        Product product15 = new Product("Samsung SC4131", 69.9, 28, 4.6, "Cleaning");
+        Product product13 = new Product("Roomba 698", 299.9, 6, 4.3, "Cleaning", "Standard suction for an every day clean. Provides personalized cleaning suggestions.");
+        Product product14 = new Product("Bosch BWD41720", 329.9, 8, 4.1, "Cleaning", "Моющий пылесос Bosch BWD41720 — надежное устройство, позволяющее поддерживать чистоту напольных покрытий любого типа.");
+        Product product15 = new Product("Samsung SC4131", 69.9, 28, 4.6, "Cleaning", "Пылесос Samsung SC4131 используется для сухой уборки многокомнатных квартир и жилых домов.");
 
-        Product product16 = new Product("Samsung WW60K40G00W", 549.9, 3, 4.8, "Washing");
-        Product product17 = new Product("Hotpoint-Ariston BI WDHG 75148 EU", 999.9, 2, 4.3, "Washing");
-        Product product18 = new Product("Whirlpool TDLR 60111", 499.9, 6, 3.9, "Washing");
+        Product product16 = new Product("Samsung WW60K40G00W", 549.9, 3, 4.8, "Washing", "Встраиваемая стиральная машина способна за один цикл постирать и высушить до 7 кг вещей.");
+        Product product17 = new Product("Hotpoint-Ariston BI WDHG 75148 EU", 999.9, 2, 4.3, "Washing", "Автоматически определяется тип белья, расход воды и моющих средств. Устройство бережно относится к ткани и обеспечивает превосходный результат стирки.");
+        Product product18 = new Product("Whirlpool TDLR 60111", 499.9, 6, 3.9, "Washing", "Позволяет бережно очищать от загрязнений одежду и текстильные изделия из хлопка, льна, синтетических волокон и деликатных тканей");
 
-        Product product19 = new Product("Hotpoint-Ariston SPOWHA 409-K", 399.9, 2, 3.8, "Air_conditioner");
-        Product product20 = new Product("LG P09EP2", 529.9, 2, 4.1, "Air_conditioner");
-        Product product21 = new Product("LG Mega Plus P12EP1", 584.9, 2, 4.7, "Air_conditioner");
+        Product product19 = new Product("Hotpoint-Ariston SPOWHA 409-K", 399.9, 2, 3.8, "Air_conditioner", "some additional info here");
+        Product product20 = new Product("LG P09EP2", 529.9, 2, 4.1, "Air_conditioner", "some additional info here");
+        Product product21 = new Product("LG Mega Plus P12EP1", 584.9, 2, 4.7, "Air_conditioner", "some additional info here");
 
-        Description description1 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
-        Description description2 = new Description("23464223", "ACER", 1, "654x38x245", "yellow", 2.1, "some additional info here");
-        Description description3 = new Description("99966732", "Samsung", 3, "550x27x368", "white", 1.1, "some additional info here");
-        Description description4 = new Description("33311432NXU", "ATop corp.", 3, "698x785x368", "black", 3.1, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim");
-        Description description5 = new Description("33211678NXU", "ATop corp.", 3, "690x765x322", "black", 3.5, "some additional info here");
-        Description description6 = new Description("333367653Rh", "Rhino corp.", 3, "612x678x315", "orange", 2.8, "some additional info here");
-        Description description7 = new Description("X54355543455", "Xiaomi", 1, "115x56x13", "grey", 0.115, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id condimentum tortor. Aliquam tristique tempus ipsum id laoreet. Pellentesque ligula lectus, finibus eget auctor pellentesque, molestie ac elit. Fusce in maximus leo. Morbi maximus vel enim", 512, 512, "1920x960", true, "5.0");
-        Description description8 = new Description("L55411165632", "LG", 2, "110x48x19", "black", 0.198, "some additional info here", 1024, 256, "1920x960", false, "4.0");
-        Description description9 = new Description("A88563902273", "Apple corp.", 1, "112x55x8", "black", 0.176, "some additional info here", 2048, 128, "1024x480", true, "5.0");
-        Description description10 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
-        Description description11 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
-        Description description12 = new Description("12344232", "ASUS", 2, "500x36x250", "black", 1.3, "Оснащенный 15.6-дюймовым экраном ноутбук ASUS TUF Gaming FX505DT-AL087 – игровой портативный компьютер, который ничто не помешает вам использовать и в роли универсального домашнего компьютера.");
-        Description description13 = new Description("XYZ270011101230600001", "iRobot", 2, "300x75x300", "silver", 3.0, "Standard suction for an every day clean. Provides personalized cleaning suggestions.");
-        Description description14 = new Description("CFE867594316856743201", "Bosch", 1, "360x350x490", "violet", 10.9, "Моющий пылесос Bosch BWD41720 — надежное устройство, позволяющее поддерживать чистоту напольных покрытий любого типа.");
-        Description description15 = new Description("08UV8NEM703511M", "Samsung", 1, "365x230x275", "blue", 3.8, "Пылесос Samsung SC4131 используется для сухой уборки многокомнатных квартир и жилых домов.");
-        Description description16 = new Description("X54355543455", "Samsung", 2, "850x600x450", "white", 54.0, "Позволяет бережно очищать от загрязнений одежду и текстильные изделия из хлопка, льна, синтетических волокон и деликатных тканей");
-        Description description17 = new Description("A886UW16575632", "Whirlpool Corp.", 1, "815x595x540", "white", 65.0, "Встраиваемая стиральная машина способна за один цикл постирать и высушить до 7 кг вещей", 1024, 256, "1920x960", false, "4.0");
-        Description description18 = new Description("A88563902273", "Whirlpool Corp.", 1, "900x420x600", "white", 49.0, "Автоматически определяется тип белья, расход воды и моющих средств. Устройство бережно относится к ткани и обеспечивает превосходный результат стирки.");
-        Description description19 = new Description("AHP4388843455", "Whirlpool Corp.", 1, "270x835x210", "white", 6.5, "Кондиционер Hotpoint-Ariston SPOWHA 409-K используется для создания благоприятного микроклимата в помещениях площадью 27 м²");
-        Description description20 = new Description("L856XZ11564632", "LG", 1, "265x756x184", "white", 7.4, "Кондиционер LG P09EP2 используется для установки оптимальной температуры в помещении дома или офиса площадью 20 м²");
-        Description description21 = new Description("L014ZZ10018974", "LG", 1, "302x837x189; 483x717x230", "white", 8.7, "Модель LG Mega Plus P12EP1 будет оптимальна для установки в помещении площадью 35 м²");
-
-        product1.setDescriptions(description1);
-        product2.setDescriptions(description2);
-        product3.setDescriptions(description3);
-        product4.setDescriptions(description4);
-        product5.setDescriptions(description5);
-        product6.setDescriptions(description6);
-        product7.setDescriptions(description7);
-        product8.setDescriptions(description8);
-        product9.setDescriptions(description9);
-        product10.setDescriptions(description10);
-        product11.setDescriptions(description11);
-        product12.setDescriptions(description12);
-        product13.setDescriptions(description13);
-        product14.setDescriptions(description14);
-        product15.setDescriptions(description15);
-        product16.setDescriptions(description16);
-        product17.setDescriptions(description17);
-        product18.setDescriptions(description18);
-        product18.setDescriptions(description19);
-        product18.setDescriptions(description20);
-        product18.setDescriptions(description21);
+        Product product22 = new Product("Apple-12", 3500.5, 20, 4.7, "Cellphone", false);
 
         category26.setProducts(Arrays.asList(product1, product2, product3));
         category28.setProducts(Arrays.asList(product4, product5, product6));
-        category11.setProducts(Arrays.asList(product7, product8, product9));
+        category11.setProducts(Arrays.asList(product7, product8, product9, product22));
         category27.setProducts(Arrays.asList(product10, product11, product12));
         category23.setProducts(Arrays.asList(product13, product14, product15));
         category24.setProducts(Arrays.asList(product16, product17, product18));
@@ -817,6 +774,14 @@ public class DataInitializer {
         smartphones.add(characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new));
         smartphones.add(characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new));
         smartphones.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(13L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(14L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(15L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(18L).orElseThrow(CharacteristicNotFoundException::new));
+        smartphones.add(characteristicService.findCharacteristicById(19L).orElseThrow(CharacteristicNotFoundException::new));
 
         List<Characteristic> laptops = new ArrayList<>();
         laptops.add(characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new));
@@ -824,12 +789,41 @@ public class DataInitializer {
         laptops.add(characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new));
-        laptops.add(characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
-        laptops.add(characteristicService.findCharacteristicById(12L).orElseThrow(CharacteristicNotFoundException::new));
-        laptops.add(characteristicService.findCharacteristicById(13L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(14L).orElseThrow(CharacteristicNotFoundException::new));
         laptops.add(characteristicService.findCharacteristicById(15L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(17L).orElseThrow(CharacteristicNotFoundException::new));
+        laptops.add(characteristicService.findCharacteristicById(18L).orElseThrow(CharacteristicNotFoundException::new));
+
+        List<Characteristic> cleaners = new ArrayList<>();
+        cleaners.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(19L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new));
+        cleaners.add(characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new));
+
+        List<Characteristic> airConditions = new ArrayList<>();
+        airConditions.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
+        airConditions.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+        airConditions.add(characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new));
+        airConditions.add(characteristicService.findCharacteristicById(19L).orElseThrow(CharacteristicNotFoundException::new));
+        airConditions.add(characteristicService.findCharacteristicById(21L).orElseThrow(CharacteristicNotFoundException::new));
+        airConditions.add(characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new));
+        airConditions.add(characteristicService.findCharacteristicById(23L).orElseThrow(CharacteristicNotFoundException::new));
+
+        List<Characteristic> washing = new ArrayList<>();
+        washing.add(characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new));
+        washing.add(characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new));
+        washing.add(characteristicService.findCharacteristicById(16L).orElseThrow(CharacteristicNotFoundException::new));
+        washing.add(characteristicService.findCharacteristicById(19L).orElseThrow(CharacteristicNotFoundException::new));
+        washing.add(characteristicService.findCharacteristicById(22L).orElseThrow(CharacteristicNotFoundException::new));
+        washing.add(characteristicService.findCharacteristicById(24L).orElseThrow(CharacteristicNotFoundException::new));
+        washing.add(characteristicService.findCharacteristicById(25L).orElseThrow(CharacteristicNotFoundException::new));
+
 
         Categories categories1 = categoriesService.getCategoryById(11L).orElseThrow(CategoriesNotFoundException::new);
         categories1.setCharacteristics(smartphones);
@@ -858,6 +852,38 @@ public class DataInitializer {
         Categories categories7 = categoriesService.getCategoryById(10L).orElseThrow(CategoriesNotFoundException::new);
         categories7.setCharacteristics(laptops);
         categoriesService.saveCategory(categories7);
+
+        Categories categories8 = categoriesService.getCategoryById(2L).orElseThrow(CategoriesNotFoundException::new);
+        categories8.setCharacteristics(cleaners);
+        categoriesService.saveCategory(categories8);
+
+        Categories categories9 = categoriesService.getCategoryById(23L).orElseThrow(CategoriesNotFoundException::new);
+        categories9.setCharacteristics(cleaners);
+        categoriesService.saveCategory(categories9);
+
+        Categories categories10 = categoriesService.getCategoryById(3L).orElseThrow(CategoriesNotFoundException::new);
+        categories10.setCharacteristics(smartphones);
+        categoriesService.saveCategory(categories10);
+
+        Categories categories11 = categoriesService.getCategoryById(9L).orElseThrow(CategoriesNotFoundException::new);
+        categories11.setCharacteristics(laptops);
+        categoriesService.saveCategory(categories11);
+
+        Categories categories12 = categoriesService.getCategoryById(2L).orElseThrow(CategoriesNotFoundException::new);
+        categories12.setCharacteristics(airConditions);
+        categoriesService.saveCategory(categories12);
+
+        Categories categories13 = categoriesService.getCategoryById(25L).orElseThrow(CategoriesNotFoundException::new);
+        categories13.setCharacteristics(airConditions);
+        categoriesService.saveCategory(categories13);
+
+        Categories categories14 = categoriesService.getCategoryById(24L).orElseThrow(CategoriesNotFoundException::new);
+        categories14.setCharacteristics(washing);
+        categoriesService.saveCategory(categories14);
+
+        Categories categories15 = categoriesService.getCategoryById(2L).orElseThrow(CategoriesNotFoundException::new);
+        categories15.setCharacteristics(washing);
+        categoriesService.saveCategory(categories15);
     }
 
     /**
@@ -1565,9 +1591,18 @@ public class DataInitializer {
         characteristicList.add(new Characteristic("Вес"));
         characteristicList.add(new Characteristic("Тип экрана"));
         characteristicList.add(new Characteristic("Частота обновления дисплея"));
-        characteristicList.add(new Characteristic("Частота оперативной памяти"));
         characteristicList.add(new Characteristic("Сенсорный экран"));
-
+        characteristicList.add(new Characteristic("Операционная система"));
+        characteristicList.add(new Characteristic("Производитель"));
+        characteristicList.add(new Characteristic("Wi-Fi"));
+        characteristicList.add(new Characteristic("Версия bluetooth"));
+        characteristicList.add(new Characteristic("Цвет"));
+        characteristicList.add(new Characteristic("Размеры"));
+        characteristicList.add(new Characteristic("Потребляемая мощность"));
+        characteristicList.add(new Characteristic("Уровень шума"));
+        characteristicList.add(new Characteristic("Мощность"));
+        characteristicList.add(new Characteristic("Максимальный вес загрузки"));
+        characteristicList.add(new Characteristic("Количество программ"));
 
         characteristicList.forEach(characteristicService::saveCharacteristic);
 
@@ -1576,17 +1611,139 @@ public class DataInitializer {
     private void productCharacteristicsInit() {
         long productId = productService.findProductByName("XIAOMI-Mi10").orElseThrow(ProductNotFoundException::new).getId();
 
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(1L).orElseThrow(CharacteristicNotFoundException::new).getId(), "6.67");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(2L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2340x1080");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(3L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Qualcomm Snapdragon 865");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(4L).orElseThrow(CharacteristicNotFoundException::new).getId(), "2020");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(5L).orElseThrow(CharacteristicNotFoundException::new).getId(), "8");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(6L).orElseThrow(CharacteristicNotFoundException::new).getId(), "256");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(7L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(8L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(9L).orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(10L).orElseThrow(CharacteristicNotFoundException::new).getId(), "4780");
-        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findCharacteristicById(11L).orElseThrow(CharacteristicNotFoundException::new).getId(), "208");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Диагональ экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "6.67");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Разрешение экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "2340x1080");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Модель процессора").orElseThrow(CharacteristicNotFoundException::new).getId(), "Qualcomm Snapdragon 865");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Год выпуска").orElseThrow(CharacteristicNotFoundException::new).getId(), "2020");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Объем оперативной памяти").orElseThrow(CharacteristicNotFoundException::new).getId(), "8");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Объем встроенной памяти").orElseThrow(CharacteristicNotFoundException::new).getId(), "256");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Количество камер").orElseThrow(CharacteristicNotFoundException::new).getId(), "4");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("NFC").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("GPS").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Емкость аккумулятора").orElseThrow(CharacteristicNotFoundException::new).getId(), "4780");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Вес").orElseThrow(CharacteristicNotFoundException::new).getId(), "0.208");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Тип экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "IPS");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Частота обновления дисплея").orElseThrow(CharacteristicNotFoundException::new).getId(), "144");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Сенсорный экран").orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Операционная система").orElseThrow(CharacteristicNotFoundException::new).getId(), "Android");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Производитель").orElseThrow(CharacteristicNotFoundException::new).getId(), "Xiaomi");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Wi-Fi").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Версия bluetooth").orElseThrow(CharacteristicNotFoundException::new).getId(), "5.1");
+        productCharacteristicService.addProductCharacteristic(productId, characteristicService.findByCharacteristicName("Цвет").orElseThrow(CharacteristicNotFoundException::new).getId(), "Black");
+
+        long lgId = productService.findProductByName("LG-2145").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Диагональ экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "6.0");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Разрешение экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "1920x960");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Модель процессора").orElseThrow(CharacteristicNotFoundException::new).getId(), "Qualcomm Snapdragon 835");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Год выпуска").orElseThrow(CharacteristicNotFoundException::new).getId(), "2019");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Объем оперативной памяти").orElseThrow(CharacteristicNotFoundException::new).getId(), "4");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Объем встроенной памяти").orElseThrow(CharacteristicNotFoundException::new).getId(), "128");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Количество камер").orElseThrow(CharacteristicNotFoundException::new).getId(), "1");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("NFC").orElseThrow(CharacteristicNotFoundException::new).getId(), "Нет");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("GPS").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Емкость аккумулятора").orElseThrow(CharacteristicNotFoundException::new).getId(), "2540");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Вес").orElseThrow(CharacteristicNotFoundException::new).getId(), "0.198");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Тип экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "IPS");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Частота обновления дисплея").orElseThrow(CharacteristicNotFoundException::new).getId(), "150");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Сенсорный экран").orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Операционная система").orElseThrow(CharacteristicNotFoundException::new).getId(), "Android");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Производитель").orElseThrow(CharacteristicNotFoundException::new).getId(), "LG");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Wi-Fi").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Версия bluetooth").orElseThrow(CharacteristicNotFoundException::new).getId(), "4.0");
+        productCharacteristicService.addProductCharacteristic(lgId, characteristicService.findByCharacteristicName("Цвет").orElseThrow(CharacteristicNotFoundException::new).getId(), "Black");
+
+        long appleId = productService.findProductByName("Apple-10").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Диагональ экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "5.8");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Разрешение экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "2436x1125");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Модель процессора").orElseThrow(CharacteristicNotFoundException::new).getId(), "Apple A11 Bionic");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Год выпуска").orElseThrow(CharacteristicNotFoundException::new).getId(), "2017");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Объем оперативной памяти").orElseThrow(CharacteristicNotFoundException::new).getId(), "3");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Объем встроенной памяти").orElseThrow(CharacteristicNotFoundException::new).getId(), "256");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Количество камер").orElseThrow(CharacteristicNotFoundException::new).getId(), "2");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("NFC").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("GPS").orElseThrow(CharacteristicNotFoundException::new).getId(), "Нет");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Емкость аккумулятора").orElseThrow(CharacteristicNotFoundException::new).getId(), "2700");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Вес").orElseThrow(CharacteristicNotFoundException::new).getId(), "0.174");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Тип экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "OLED");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Частота обновления дисплея").orElseThrow(CharacteristicNotFoundException::new).getId(), "137");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Сенсорный экран").orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Операционная система").orElseThrow(CharacteristicNotFoundException::new).getId(), "iOS");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Производитель").orElseThrow(CharacteristicNotFoundException::new).getId(), "Apple");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Wi-Fi").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Версия bluetooth").orElseThrow(CharacteristicNotFoundException::new).getId(), "5.0");
+        productCharacteristicService.addProductCharacteristic(appleId, characteristicService.findByCharacteristicName("Цвет").orElseThrow(CharacteristicNotFoundException::new).getId(), "White");
+
+        long apple2Id = productService.findProductByName("Apple-12").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Диагональ экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "6.1");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Разрешение экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "2532x1170");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Модель процессора").orElseThrow(CharacteristicNotFoundException::new).getId(), "Apple A14 Bionic");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Год выпуска").orElseThrow(CharacteristicNotFoundException::new).getId(), "2020");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Объем оперативной памяти").orElseThrow(CharacteristicNotFoundException::new).getId(), "4");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Объем встроенной памяти").orElseThrow(CharacteristicNotFoundException::new).getId(), "128");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Количество камер").orElseThrow(CharacteristicNotFoundException::new).getId(), "2");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("NFC").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("GPS").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Емкость аккумулятора").orElseThrow(CharacteristicNotFoundException::new).getId(), "2815");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Вес").orElseThrow(CharacteristicNotFoundException::new).getId(), "0.164");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Тип экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "OLED");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Частота обновления дисплея").orElseThrow(CharacteristicNotFoundException::new).getId(), "143");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Сенсорный экран").orElseThrow(CharacteristicNotFoundException::new).getId(), "Да");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Операционная система").orElseThrow(CharacteristicNotFoundException::new).getId(), "iOS");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Производитель").orElseThrow(CharacteristicNotFoundException::new).getId(), "Apple");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Wi-Fi").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Версия bluetooth").orElseThrow(CharacteristicNotFoundException::new).getId(), "5.0");
+        productCharacteristicService.addProductCharacteristic(apple2Id, characteristicService.findByCharacteristicName("Цвет").orElseThrow(CharacteristicNotFoundException::new).getId(), "Red");
+
+        long samsungId = productService.findProductByName("Samsung SC4131").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findByCharacteristicName("Год выпуска").orElseThrow(CharacteristicNotFoundException::new).getId(), "2019");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findByCharacteristicName("Вес").orElseThrow(CharacteristicNotFoundException::new).getId(), "3.760");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findByCharacteristicName("Производитель").orElseThrow(CharacteristicNotFoundException::new).getId(), "Samsung");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findByCharacteristicName("Цвет").orElseThrow(CharacteristicNotFoundException::new).getId(), "Blue");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findByCharacteristicName("Потребляемая мощность").orElseThrow(CharacteristicNotFoundException::new).getId(), "1600");
+        productCharacteristicService.addProductCharacteristic(samsungId, characteristicService.findByCharacteristicName("Уровень шума").orElseThrow(CharacteristicNotFoundException::new).getId(), "74");
+
+        long airCondId = productService.findProductByName("LG P09EP2").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(airCondId, characteristicService.findByCharacteristicName("Год выпуска").orElseThrow(CharacteristicNotFoundException::new).getId(), "2017");
+        productCharacteristicService.addProductCharacteristic(airCondId, characteristicService.findByCharacteristicName("Вес").orElseThrow(CharacteristicNotFoundException::new).getId(), "26.0");
+        productCharacteristicService.addProductCharacteristic(airCondId, characteristicService.findByCharacteristicName("Производитель").orElseThrow(CharacteristicNotFoundException::new).getId(), "LG");
+        productCharacteristicService.addProductCharacteristic(airCondId, characteristicService.findByCharacteristicName("Цвет").orElseThrow(CharacteristicNotFoundException::new).getId(), "White");
+        productCharacteristicService.addProductCharacteristic(airCondId, characteristicService.findByCharacteristicName("Потребляемая мощность").orElseThrow(CharacteristicNotFoundException::new).getId(), "800");
+        productCharacteristicService.addProductCharacteristic(airCondId, characteristicService.findByCharacteristicName("Уровень шума").orElseThrow(CharacteristicNotFoundException::new).getId(), "30");
+        productCharacteristicService.addProductCharacteristic(airCondId, characteristicService.findByCharacteristicName("Мощность").orElseThrow(CharacteristicNotFoundException::new).getId(), "74");
+
+        long laptopId = productService.findProductByName("ACER-543").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Диагональ экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "15.6");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Разрешение экрана").orElseThrow(CharacteristicNotFoundException::new).getId(), "1366x768");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Модель процессора").orElseThrow(CharacteristicNotFoundException::new).getId(), "Turion II");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Год выпуска").orElseThrow(CharacteristicNotFoundException::new).getId(), "2016");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Объем оперативной памяти").orElseThrow(CharacteristicNotFoundException::new).getId(), "3");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("GPS").orElseThrow(CharacteristicNotFoundException::new).getId(), "Нет");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Емкость аккумулятора").orElseThrow(CharacteristicNotFoundException::new).getId(), "4400");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Вес").orElseThrow(CharacteristicNotFoundException::new).getId(), "2.6");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Сенсорный экран").orElseThrow(CharacteristicNotFoundException::new).getId(), "Нет");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Операционная система").orElseThrow(CharacteristicNotFoundException::new).getId(), "Windows");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Производитель").orElseThrow(CharacteristicNotFoundException::new).getId(), "Acer");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Wi-Fi").orElseThrow(CharacteristicNotFoundException::new).getId(), "Есть");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Версия bluetooth").orElseThrow(CharacteristicNotFoundException::new).getId(), "3.0");
+        productCharacteristicService.addProductCharacteristic(laptopId, characteristicService.findByCharacteristicName("Цвет").orElseThrow(CharacteristicNotFoundException::new).getId(), "Black");
+
+        long washingId = productService.findProductByName("Whirlpool TDLR 60111").orElseThrow(ProductNotFoundException::new).getId();
+
+        productCharacteristicService.addProductCharacteristic(washingId, characteristicService.findByCharacteristicName("Год выпуска").orElseThrow(CharacteristicNotFoundException::new).getId(), "2016");
+        productCharacteristicService.addProductCharacteristic(washingId, characteristicService.findByCharacteristicName("Вес").orElseThrow(CharacteristicNotFoundException::new).getId(), "62.0");
+        productCharacteristicService.addProductCharacteristic(washingId, characteristicService.findByCharacteristicName("Производитель").orElseThrow(CharacteristicNotFoundException::new).getId(), "Whirlpool");
+        productCharacteristicService.addProductCharacteristic(washingId, characteristicService.findByCharacteristicName("Цвет").orElseThrow(CharacteristicNotFoundException::new).getId(), "White");
+        productCharacteristicService.addProductCharacteristic(washingId, characteristicService.findByCharacteristicName("Уровень шума").orElseThrow(CharacteristicNotFoundException::new).getId(), "70");
+        productCharacteristicService.addProductCharacteristic(washingId, characteristicService.findByCharacteristicName("Максимальный вес загрузки").orElseThrow(CharacteristicNotFoundException::new).getId(), "74");
+        productCharacteristicService.addProductCharacteristic(washingId, characteristicService.findByCharacteristicName("Количество программ").orElseThrow(CharacteristicNotFoundException::new).getId(), "9");
+
+
     }
 
     /**
