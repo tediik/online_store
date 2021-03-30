@@ -1,5 +1,7 @@
 package com.jm.online_store.service.impl;
 
+import com.jm.online_store.exception.BadWordsNotFoundException;
+import com.jm.online_store.model.BadWords;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.PriceChangeNotifications;
 import com.jm.online_store.model.Review;
@@ -44,8 +46,20 @@ public class AnswerNotificationsServiceImpl implements AnswerNotificationsServic
      * @return List<AnswerNotifications> - список уведомлений для покупателя
      */
     @Override
+    @Transactional
     public List<AnswerNotifications> getCustomerAnswerNotifications(Long id) {
         return answerNotificationsRepository.findByIdUserComment(id);
+    }
+
+    /**
+     * Удаление уведомлений по id
+     * @param id {@link Long} - id уведомления
+     *
+     */
+    @Override
+    @Transactional
+    public void deleteNotification (Long id) {
+        answerNotificationsRepository.deleteById(id);
     }
 
 }

@@ -11,4 +11,5 @@ import java.util.List;
 public interface AnswerNotificationsService {
     void addNotification(Comment comment);
     List<AnswerNotifications> getCustomerAnswerNotifications(Long id);
+    void deleteNotification(Long id);
 }

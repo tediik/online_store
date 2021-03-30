@@ -5,6 +5,10 @@ $(document).ready(function () {
     getCustomerPriceChangeNotifications()
     //получение уведомлений о новых комментариях
     getCommentAnswers()
+
+    let idInf = $("#notid").attr('data-id');
+    $("#notid").on('click', (event) => {deleteNotification(idInf)})
+
 })
 
 /**
@@ -98,14 +102,36 @@ function renderNewCommentsTable(notifications) {
                     <td><a href="/products/${product.id}">${product.product}</a></td>
                     <td>${notification.content}</td>
                     <td>
-                       <button type="button" class="btn btn-danger btn-primary">
-                        Удалить уведомление
-                        </button>
+                       <input id="notid" data-id="${notification.id}" 
+                       type="button" class="btn btn-danger btn-primary" value="Удалить уведомление" 
+                       onclick="deleteNotification(${notification.id})"/>  
                     </td>
                     </td>`
             table.append(row)
         })
     }
+
+}
+
+/**
+ * Удаление уведомления
+ * @param id уведомления
+ */
+function deleteNotification(id) {
+    fetch(customerNotificationsUrl + 'commentAnswers/delete/' + id, {
+        method: 'DELETE'
+    }).then(response => response.text())
+        .then(deleteNotification => console.log('Notification with id: ' + id + ' was successfully deleted'))
+        .then(showTable => {
+            showAndRefreshNotificationTab(showTable)
+        })
+}
+
+/**
+ * Обновляет страницу с уведомлениями
+ */
+function showAndRefreshNotificationTab() {
+    getCommentAnswers()
 }
 
 /**
