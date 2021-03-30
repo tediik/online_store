@@ -190,6 +190,18 @@ public class CustomerNotificationsRestController {
     }
 
     /**
+     * Удаление уведомления об изменении цены из БД
+     * @param id - id уведомления {@link Long}
+     * @return ResponseEntity<?>
+     */
+    @DeleteMapping(value = "/priceChanges/delete/{id}")
+    @ApiOperation(value = "удаляет уведомление об изменении цены", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<ResponseDto<String>> deletePriceChanges(@PathVariable Long id) {
+        priceChangeNotificationsService.deletePriceChangesNotification(id);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Notification for price change successful deleted", Response.NO_ERROR.getText()), HttpStatus.OK);
+    }
+
+    /**
      * Поиск ответов на комментарии и отзывы
      * @return <List<Comment>> список комментариев-ответов {@link Comment}
      */
