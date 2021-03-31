@@ -1,5 +1,4 @@
 let productSearchByNameUrl = '/api/products/searchByName/'
-let productSearchByDescription = '/api/products/searchByDescription/'
 let searchProductBySearchStringRest = '/api/search/{searchString}/'
 $(document).ready(function ($) {
     searchProduct(window.location.pathname.split('/')[2])
@@ -36,16 +35,6 @@ function searchProduct(searchProductBySearchStringRest) {
         .then(function (response) {
             if (response.ok) {
                 response.json().then(searchResult => fillSearchNameDiv(searchResult, 'searchInNameDiv'))
-            } else {
-                console.log('error no: ' + response.status)
-            }
-        })
-        .catch(error => console.log(error))
-
-    fetch(productSearchByDescription + searchProductBySearchStringRest)
-        .then(function (response) {
-            if (response.ok) {
-                response.json().then(searchResult => fillSearchNameDiv(searchResult, 'searchInDescriptionDiv'))
             } else {
                 console.log('error no: ' + response.status)
             }
