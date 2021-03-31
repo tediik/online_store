@@ -56,17 +56,36 @@ function renderPriceChangeNotificationTable(notifications) {
                     <td><a href="/products/${product.id}">${product.product}</a></td>
                     <td>${notification.oldPrice}</td>
                     <td>${notification.newPrice}</td>
-                    <td class="text-center">
-                       <div class="btn-group" role="group" aria-label="Action Buttons">
-                          <button type="button" class="btn btn-danger btn-primary" data-toggle="modal" id="deleteButton"
-                            data-id="${user.id}" data-action="deleteUser" data-toggle="modal" data-target="#deleteModal">
-                          Удалить уведомление
-                          </button>
-                       </div>
+                    <td>
+                       <input id="changeId" data-id="${notification.id}" 
+                       type="button" class="btn btn-danger btn-primary" value="Удалить уведомление" 
+                       onclick="deletePriceChangeNot(${notification.id})"/>  
+                    </td>
                     </td>`
             table.append(row)
         })
     }
+}
+
+/**
+ * Удаление уведомления на изменение цены
+ * @param id уведомления
+ */
+function deletePriceChangeNot(id) {
+    fetch(customerNotificationsUrl + 'priceChanges/delete/' + id, {
+        method: 'DELETE'
+    }).then(response => response.text())
+        .then(deletePriceChangeNot => console.log('Notification with id: ' + id + ' was successfully deleted'))
+        .then(showTable => {
+            showAndRefreshPriceChangeNotTab(showTable)
+        })
+}
+
+/**
+ * Обновляет страницу с уведомлениями на изменение цены
+ */
+function showAndRefreshPriceChangeNotTab() {
+    getCustomerPriceChangeNotifications()
 }
 
 /**
@@ -114,7 +133,7 @@ function renderNewCommentsTable(notifications) {
 }
 
 /**
- * Удаление уведомления
+ * Удаление уведомления на ответы пользователю
  * @param id уведомления
  */
 function deleteNotification(id) {
@@ -128,7 +147,7 @@ function deleteNotification(id) {
 }
 
 /**
- * Обновляет страницу с уведомлениями
+ * Обновляет страницу с уведомлениями на ответы пользователю
  */
 function showAndRefreshNotificationTab() {
     getCommentAnswers()
