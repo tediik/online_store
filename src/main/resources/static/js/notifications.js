@@ -5,10 +5,6 @@ $(document).ready(function () {
     getCustomerPriceChangeNotifications()
     //получение уведомлений о новых комментариях
     getCommentAnswers()
-
-    let idInf = $("#notid").attr('data-id');
-    $("#notid").on('click', (event) => {deleteNotification(idInf)})
-
 })
 
 /**
