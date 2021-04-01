@@ -1,12 +1,8 @@
 package com.jm.online_store.service.impl;
 
-import com.jm.online_store.exception.BadWordsNotFoundException;
-import com.jm.online_store.model.BadWords;
 import com.jm.online_store.model.Comment;
-import com.jm.online_store.model.PriceChangeNotifications;
-import com.jm.online_store.model.Review;
+import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.AnswerNotifications;
-import com.jm.online_store.repository.AnswerNotificationsRepository;
 import com.jm.online_store.repository.AnswerNotificationsRepository;
 import com.jm.online_store.service.interf.AnswerNotificationsService;
 import lombok.AllArgsConstructor;
@@ -42,7 +38,7 @@ public class AnswerNotificationsServiceImpl implements AnswerNotificationsServic
 
     /**
      * Поиск уведомлений по id покупателя
-     * @param id {@link Long} - id покупателя
+     * @param id {@link Customer} - id покупателя
      * @return List<AnswerNotifications> - список уведомлений для покупателя
      */
     @Override
@@ -53,7 +49,7 @@ public class AnswerNotificationsServiceImpl implements AnswerNotificationsServic
 
     /**
      * Удаление уведомлений по id
-     * @param id {@link Long} - id уведомления
+     * @param id {@link AnswerNotifications} - id уведомления
      *
      */
     @Override
