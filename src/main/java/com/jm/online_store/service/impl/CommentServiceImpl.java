@@ -76,7 +76,6 @@ public class CommentServiceImpl implements CommentService {
      * then sets a current user as author of a comment, saves to dataBase
      * and send comment to method for sending email to customer
      * and send comment to method for making notification
-     *
      * @param comment
      * @return Comment
      */

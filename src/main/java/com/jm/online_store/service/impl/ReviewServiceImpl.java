@@ -3,7 +3,6 @@ package com.jm.online_store.service.impl;
 import com.jm.online_store.model.Review;
 import com.jm.online_store.model.User;
 import com.jm.online_store.repository.ReviewRepository;
-import com.jm.online_store.service.interf.AnswerNotificationsService;
 import com.jm.online_store.service.interf.ReviewService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;

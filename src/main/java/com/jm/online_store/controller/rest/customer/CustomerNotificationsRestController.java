@@ -191,7 +191,7 @@ public class CustomerNotificationsRestController {
 
     /**
      * Удаление уведомления об изменении цены из БД
-     * @param id - id уведомления {@link Long}
+     * @param id - id уведомления {@link AnswerNotifications}
      * @return ResponseEntity<?>
      */
     @DeleteMapping(value = "/priceChanges/delete/{id}")
@@ -225,7 +225,7 @@ public class CustomerNotificationsRestController {
 
     /**
      * Поиск всех уведомлений на комментиарии и отзывы конкретного покупателя
-     * @param id покупателя {@link Long}
+     * @param id покупателя {@link Customer}
      * @return List<AnswerNotifications> список уведомлений
      */
     @GetMapping("/commentAnswers/{id}")
