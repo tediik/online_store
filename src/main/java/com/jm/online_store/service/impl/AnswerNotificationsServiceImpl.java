@@ -25,14 +25,16 @@ public class AnswerNotificationsServiceImpl implements AnswerNotificationsServic
     @Transactional
     public void addNotification(Comment comment) {
         AnswerNotifications answerNotifications = new AnswerNotifications();
+        if (comment.getParentComment() != null){
+            answerNotifications.setIdUserComment(comment.getParentComment().getCustomer().getId());
+        } else if(comment.getReview() != null) {
+            answerNotifications.setIdUserComment(comment.getReview().getCustomer().getId());
+        } else {
+            return;
+        }
         answerNotifications.setReviewDate(comment.getCommentDate());
         answerNotifications.setContent(comment.getContent());
         answerNotifications.setProductId(comment.getProductId());
-        if (comment.getParentComment() != null){
-            answerNotifications.setIdUserComment(comment.getParentComment().getCustomer().getId());
-        } else {
-            answerNotifications.setIdUserComment(comment.getReview().getCustomer().getId());
-        }
         answerNotificationsRepository.save(answerNotifications);
     }
 
