@@ -10,6 +10,7 @@ import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CommonSettingsService;
 import com.jm.online_store.service.interf.MailSenderService;
 import com.jm.online_store.service.interf.ProductService;
+import com.jm.online_store.service.interf.AnswerNotificationsService;
 import com.jm.online_store.service.interf.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommonSettingsService commonSettingsService;
     private final MailSenderService mailSenderService;
     private final ProductService productService;
+    private final AnswerNotificationsService answerNotificationsService;
 
     @Override
     public void deleteComment(Long id) {
@@ -72,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
      * Method checks if Comment is a new post or reply  to previous comment or comment for review
      * then sets a current user as author of a comment, saves to dataBase
      * and send comment to method for sending email to customer
-     *
+     * and send comment to method for making notification
      * @param comment
      * @return Comment
      */
@@ -89,6 +91,7 @@ public class CommentServiceImpl implements CommentService {
             }
             comment.setCustomer(userService.findById(loggedInUser.getId()).get());
             sendCommentAnswer(comment);
+            answerNotificationsService.addNotification(comment);
             return commentRepository.save(comment);
         } else {
             throw new CommentNotSavedException();

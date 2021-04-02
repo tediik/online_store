@@ -3,14 +3,19 @@ package com.jm.online_store.controller.rest.customer;
 import com.jm.online_store.enums.ConfirmReceiveEmail;
 import com.jm.online_store.enums.DayOfWeekForStockSend;
 import com.jm.online_store.enums.ExceptionEnums;
+import com.jm.online_store.enums.Response;
 import com.jm.online_store.exception.UserServiceException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
+import com.jm.online_store.model.AnswerNotifications;
 import com.jm.online_store.model.Comment;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.model.PriceChangeNotifications;
 import com.jm.online_store.model.Review;
+import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.CustomerDto;
 import com.jm.online_store.model.dto.ResponseDto;
+import com.jm.online_store.model.dto.UserDto;
+import com.jm.online_store.service.interf.AnswerNotificationsService;
 import com.jm.online_store.service.interf.CommentService;
 import com.jm.online_store.service.interf.CustomerService;
 import com.jm.online_store.service.interf.PriceChangeNotificationsService;
@@ -24,9 +29,11 @@ import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,6 +56,7 @@ public class CustomerNotificationsRestController {
     private final UserService userService;
     private final ModelMapper modelMapper;
     private final PriceChangeNotificationsService priceChangeNotificationsService;
+    private final AnswerNotificationsService answerNotificationsService;
     private final CommentService commentService;
     private final ReviewService reviewService;
 
@@ -182,6 +190,18 @@ public class CustomerNotificationsRestController {
     }
 
     /**
+     * Удаление уведомления об изменении цены из БД
+     * @param id - id уведомления {@link PriceChangeNotifications}
+     * @return ResponseEntity<?>
+     */
+    @DeleteMapping(value = "/priceChanges/delete/{id}")
+    @ApiOperation(value = "удаляет уведомление об изменении цены", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<ResponseDto<String>> deletePriceChanges(@PathVariable Long id) {
+        priceChangeNotificationsService.deletePriceChangesNotification(id);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Notification for price change successful deleted", Response.NO_ERROR.getText()), HttpStatus.OK);
+    }
+
+    /**
      * Поиск ответов на комментарии и отзывы
      * @return <List<Comment>> список комментариев-ответов {@link Comment}
      */
@@ -201,5 +221,34 @@ public class CustomerNotificationsRestController {
         customerReviews.stream()
                 .forEach(review -> answers.addAll(review.getComments()));
         return new ResponseEntity<>(new ResponseDto<>(true, answers), HttpStatus.OK);
+    }
+
+    /**
+     * Поиск всех уведомлений на комментиарии и отзывы конкретного покупателя
+     * @param id покупателя {@link Customer}
+     * @return List<AnswerNotifications> список уведомлений
+     */
+    @GetMapping("/commentAnswers/{id}")
+    @ApiOperation(value = "Запрашивает данные об ответах на комментарии или отзывы по id пользователя",
+            authorizations = {@Authorization(value = "jwtToken")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Answers found"),
+            @ApiResponse(code = 400, message = "Could not get answer notifications")
+    })
+    public ResponseEntity<ResponseDto<List<AnswerNotifications>>> getAnswerNotifications(@PathVariable Long id) {
+        List<AnswerNotifications> list = answerNotificationsService.getCustomerAnswerNotifications(id);
+        return new ResponseEntity<>(new ResponseDto<>(true, list), HttpStatus.OK);
+    }
+
+    /**
+     * Удаление уведомления из БД
+     * @param id - id уведомления {@link AnswerNotifications}
+     * @return ResponseEntity<?>
+     */
+    @DeleteMapping(value = "/commentAnswers/delete/{id}")
+    @ApiOperation(value = "удаляет уведомление", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<ResponseDto<String>> deleteNotification(@PathVariable Long id) {
+        answerNotificationsService.deleteNotification(id);
+        return new ResponseEntity<>(new ResponseDto<>(true, "Notification successful deleted", Response.NO_ERROR.getText()), HttpStatus.OK);
     }
 }
