@@ -52,7 +52,6 @@ public class AnswerNotificationsServiceImpl implements AnswerNotificationsServic
     /**
      * Удаление уведомлений по id
      * @param id {@link AnswerNotifications} - id уведомления
-     *
      */
     @Override
     @Transactional
