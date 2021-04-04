@@ -33,6 +33,9 @@ import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -826,4 +829,18 @@ public class UserServiceImpl implements UserService {
             log.debug("Шаблон рассылки при подтверждении рассылки в базе пустой ");
         }
     }
+
+    @Override
+    public List<User> findAllPage() {
+        Pageable pageable = PageRequest.of(0, 3);
+        Page<User> page = userRepository.findAll(pageable);
+        List<User> userList = page.getContent();
+        return userList;
+    }
+
+   /* @Override
+    public Page<User> findPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return this.userRepository.findAll(pageable);
+    }*/
 }

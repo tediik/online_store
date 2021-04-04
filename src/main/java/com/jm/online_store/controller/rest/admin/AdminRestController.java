@@ -80,6 +80,25 @@ public class AdminRestController {
         }
         return new ResponseEntity<>(new ResponseDto<>(true, allUsersDto), HttpStatus.OK);
     }
+// Пытаемся получить узеров по страницам
+    @GetMapping(value = "/allUsers/page")
+    @ApiOperation(value = "return list of users with page", authorizations = { @Authorization(value="jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "NO ONE USER WAS FOUND"),
+            @ApiResponse(code = 200, message = "")
+    })
+    public ResponseEntity<ResponseDto<List<UserDto>>> getAllUsersListPage() {
+        List<UserDto> allUsersDto = new ArrayList<>();
+        List<User> userList = userService.findAllPage();
+        userList.forEach(u -> allUsersDto.add(UserDto.fromUser(u)));
+
+        if (allUsersDto.size() == 0) {
+            log.debug("There are no users in db");
+            return new ResponseEntity<>(new ResponseDto<>(true, allUsersDto), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponseDto<>(true, allUsersDto), HttpStatus.OK);
+    }
+// Пытаемся получить узеров по страницам
 
     /**
      * rest mapping to receive user by id from db. from admin page
