@@ -14,6 +14,12 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.AllArgsConstructor;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -129,4 +135,87 @@ public class OrderServiceImpl implements OrderService {
         }
         return writer;
     }
+
+    @Override
+    public XSSFWorkbook exportOrdersToExcel(LocalDate startDate, LocalDate endDate, HttpServletResponse response) {
+        List<SalesReportDto> ordersList = findAllSalesBetween(startDate, endDate);
+        if (ordersList.isEmpty()) {
+            throw new OrdersNotFoundException(ExceptionEnums.ORDER.getText() + ExceptionConstants.NOT_FOUND);
+        }
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Orders");
+        int rowCount = 0;
+
+        XSSFRow row = sheet.createRow(rowCount++);
+
+        CellStyle style = workbook.createCellStyle();
+        XSSFFont font = workbook.createFont();
+        font.setBold(true);
+        font.setFontHeight(16);
+        style.setFont(font);
+        style.getAlignment();
+
+        XSSFCell cell = row.createCell(0);
+        cell.setCellValue("ID");
+        cell.setCellStyle(style);
+        sheet.autoSizeColumn(0);
+
+        cell = row.createCell(1);
+        cell.setCellValue("Логин(email)");
+        cell.setCellStyle(style);
+        sheet.autoSizeColumn(1);
+
+        cell = row.createCell(2);
+        cell.setCellValue("Имя");
+        cell.setCellStyle(style);
+        sheet.autoSizeColumn(2);
+
+        cell = row.createCell(3);
+        cell.setCellValue("Дата заказа");
+        cell.setCellStyle(style);
+        sheet.autoSizeColumn(3);
+
+        cell = row.createCell(4);
+        cell.setCellValue("Общее количество");
+        cell.setCellStyle(style);
+        sheet.autoSizeColumn(4);
+
+        cell = row.createCell(5);
+        cell.setCellValue("Список товаров в заказе(кол-во)");
+        cell.setCellStyle(style);
+        sheet.autoSizeColumn(5);
+
+        cell = row.createCell(6);
+        cell.setCellValue("Сумма заказа");
+        cell.setCellStyle(style);
+        sheet.autoSizeColumn(6);
+
+        for (SalesReportDto salesReportDto : ordersList) {
+            row = sheet.createRow(rowCount++);
+
+            cell = row.createCell(0);
+            cell.setCellValue(salesReportDto.getOrderNumber());
+
+            cell = row.createCell(1);
+            cell.setCellValue(salesReportDto.getUserEmail());
+
+            cell = row.createCell(2);
+            cell.setCellValue(salesReportDto.getCustomerInitials());
+
+            cell = row.createCell(3);
+            cell.setCellValue(salesReportDto.getPurchaseDate());
+
+            cell = row.createCell(4);
+            cell.setCellValue(salesReportDto.getQuantity());
+
+            cell = row.createCell(5);
+            cell.setCellValue(salesReportDto.getListOfProducts());
+
+            cell = row.createCell(6);
+            cell.setCellValue(salesReportDto.getOrderSummaryPrice());
+        }
+
+        return workbook;
+    }
+
 }

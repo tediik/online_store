@@ -4,6 +4,7 @@ import com.jm.online_store.model.Order;
 import com.jm.online_store.model.dto.OrderDTO;
 import com.jm.online_store.model.dto.SalesReportDto;
 import com.opencsv.bean.StatefulBeanToCsv;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
@@ -30,4 +31,5 @@ public interface OrderService {
 
     StatefulBeanToCsv<SalesReportDto> exportOrdersByCSV(LocalDate startDate, LocalDate endDate, HttpServletResponse response);
 
+    XSSFWorkbook exportOrdersToExcel(LocalDate startDate, LocalDate endDate, HttpServletResponse response);
 }
