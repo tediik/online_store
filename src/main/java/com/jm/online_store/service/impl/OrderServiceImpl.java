@@ -1,5 +1,12 @@
 package com.jm.online_store.service.impl;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.jm.online_store.enums.ExceptionEnums;
 import com.jm.online_store.exception.OrdersNotFoundException;
 import com.jm.online_store.exception.constants.ExceptionConstants;
@@ -29,6 +36,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -58,7 +66,6 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * метод построения OrderDTO из Order, полученного из БД.
-     *
      * @param id идентификатор.
      * @return объект OrderDTO
      */
@@ -69,7 +76,6 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * метод конвертации Order в OrderDTO для отсекания лишних данных.
-     *
      * @param order объект order.
      * @return объект OrderDTO.
      */
@@ -82,7 +88,6 @@ public class OrderServiceImpl implements OrderService {
      * Метод добавления заказа.
      * Первоначально кол-во продуктов и общая стоимость равны 0,
      * эти поля изменяются методом {@link ProductInOrderServiceImpl#addToOrder(long, long, int)}
-     *
      * @param order заказ, сохраняемый в базу
      * @return id сохранённого объекта
      */
@@ -101,7 +106,6 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * Method finds all orders with status Status.COMPLETED between start and end date
-     *
      * @param startDate - {@link LocalDate} beginning of period
      * @param endDate   - {@link LocalDate} end of period
      * @return - returns {@link List<SalesReportDto>}
@@ -136,6 +140,12 @@ public class OrderServiceImpl implements OrderService {
         return writer;
     }
 
+    /**
+     * Метод создает Excel файл с отчетом о продажах в промежутке дат
+     * @param startDate - {@link LocalDate} beginning of period
+     * @param endDate   - {@link LocalDate} end of period
+     * @return - returns {@link List<SalesReportDto>}
+     */
     @Override
     public XSSFWorkbook exportOrdersToExcel(LocalDate startDate, LocalDate endDate, HttpServletResponse response) {
         List<SalesReportDto> ordersList = findAllSalesBetween(startDate, endDate);
@@ -218,4 +228,39 @@ public class OrderServiceImpl implements OrderService {
         return workbook;
     }
 
+    /**
+     * Метод создает PDF файл с отчетом о продажах в промежутке дат
+     * @param startDate - {@link LocalDate} beginning of period
+     * @param endDate   - {@link LocalDate} end of period
+     * @return - returns {@link List<SalesReportDto>}
+     */
+    @Override
+    public void exportOrdersToPDF(LocalDate startDate, LocalDate endDate, HttpServletResponse response) throws IOException, DocumentException {
+        List<SalesReportDto> ordersList = findAllSalesBetween(startDate, endDate);
+        Document document = new Document();
+            PdfWriter.getInstance(document, response.getOutputStream());
+            document.open();
+
+            PdfPTable table = new PdfPTable(7);
+            Stream.of("ID", "Логин(email)", "Имя", "Дата заказа", "Общее количество", "Список товаров в заказе(кол-во)", "Сумма заказа")
+                    .forEach(columnTitle -> {
+                        PdfPCell header = new PdfPCell();
+                        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        header.setBorderWidth(2);
+                        header.setPhrase(new Phrase(columnTitle));
+                        table.addCell(header);
+                    });
+            for (SalesReportDto salesReportDto : ordersList) {
+                table.addCell(String.valueOf(salesReportDto.getOrderNumber()));
+                table.addCell(String.valueOf(salesReportDto.getUserEmail()));
+                table.addCell(String.valueOf(salesReportDto.getCustomerInitials()));
+                table.addCell(String.valueOf(salesReportDto.getPurchaseDate()));
+                table.addCell(String.valueOf(salesReportDto.getQuantity()));
+                table.addCell(String.valueOf(salesReportDto.getListOfProducts()));
+                table.addCell(String.valueOf(salesReportDto.getOrderSummaryPrice()));
+            }
+            document.add(table);
+            document.close();
+
+    }
 }

@@ -171,7 +171,7 @@ public class ManagerReportsRestController {
      * Метод для выгрузки отчета в Excel.
      * @param stringStartDate - beginning of the period that receives from frontend in as String
      * @param stringEndDate   - end of the period that receives from frontend in as String
-     * @param response        - response to write back stream with csv
+     * @param response        - response to write back stream with Excel
      * @return - ResponseEntity
      */
     @GetMapping("/sales/exportExcel")
@@ -180,7 +180,7 @@ public class ManagerReportsRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "orders have been sent"),
             @ApiResponse(code = 404, message = "orders haven't been found"),
-            @ApiResponse(code = 500, message = "problem with writing CSV")
+            @ApiResponse(code = 500, message = "problem with writing Excel")
     })
     public ResponseEntity<ResponseDto<FileSystemResource>> getSalesForCustomRangeAndExportToXlsx(@RequestParam String stringStartDate,
                                                                                                  @RequestParam String stringEndDate,
@@ -192,6 +192,36 @@ public class ManagerReportsRestController {
             LocalDate endDate = LocalDate.parse(stringEndDate);
             orderService.exportOrdersToExcel(startDate, endDate, response).write(response.getOutputStream());
             return ResponseEntity.ok(new ResponseDto(true, Response.SUCCESS, Response.NO_ERROR.getText()));
+
+        } catch (Exception e){
+            return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.ORDERS.getText() + ExceptionConstants.NOT_FOUND), HttpStatus.NOT_FOUND);
+        }
+    }
+    /**
+     * Метод для выгрузки отчета в PDF.
+     * @param stringStartDate - beginning of the period that receives from frontend in as String
+     * @param stringEndDate   - end of the period that receives from frontend in as String
+     * @param response        - response to write back stream with PDF
+     * @return - ResponseEntity
+     */
+    @GetMapping("/sales/exportPDF")
+    @ApiOperation(value = "метод экспорта в Excel",
+            authorizations = {@Authorization(value = "jwtToken")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "orders have been sent"),
+            @ApiResponse(code = 404, message = "orders haven't been found"),
+            @ApiResponse(code = 500, message = "problem with writing PDF")
+    })
+    public ResponseEntity<ResponseDto<String>> getSalesForCustomRangeAndExportToPDF(@RequestParam String stringStartDate,
+                                                                                    @RequestParam String stringEndDate,
+                                                                                    HttpServletResponse response) {
+        try {
+            response.setContentType("text/html; charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            LocalDate startDate = LocalDate.parse(stringStartDate);
+            LocalDate endDate = LocalDate.parse(stringEndDate);
+            orderService.exportOrdersToPDF(startDate, endDate, response);
+            return new ResponseEntity<>(new ResponseDto(true, "Repair order was generated", Response.NO_ERROR.getText()), HttpStatus.OK);
 
         } catch (Exception e){
             return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.ORDERS.getText() + ExceptionConstants.NOT_FOUND), HttpStatus.NOT_FOUND);
