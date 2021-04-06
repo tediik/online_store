@@ -78,9 +78,7 @@ public interface UserService {
 
     public void sendConfirmationSubscribeLetter(String email);
 
-    List<User> findAllPage();
-
-    //Page<User> findPaginated(int pageNo, int pageSize);
+    List<User> findAllPage(int pageNum, Integer amount);
 
 
 }

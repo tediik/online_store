@@ -830,17 +830,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Метод, который возвращает список юзеров с определенной страницы,
+     * @param pageNum - номер страницы, с которой мы хотим получить данные
+     * @param amount - задает кол-во возвращаемых элементов на странице
+     */
     @Override
-    public List<User> findAllPage() {
-        Pageable pageable = PageRequest.of(0, 3);
+    public List<User> findAllPage(int pageNum, Integer amount) {
+        if (amount == null || amount > 100){
+           amount = 20;
+        }
+        Pageable pageable = PageRequest.of(pageNum - 1, amount);
         Page<User> page = userRepository.findAll(pageable);
         List<User> userList = page.getContent();
         return userList;
     }
-
-   /* @Override
-    public Page<User> findPaginated(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.userRepository.findAll(pageable);
-    }*/
 }

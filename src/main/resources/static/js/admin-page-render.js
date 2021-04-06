@@ -424,7 +424,7 @@ function renderUsersTable(users) {
  * и передает функции рендера таблицы renderUsersTable
  */
 function fetchUsersAndRenderTable() {
-    fetch(adminRestUrl + "/allUsers/page", {
+    fetch(adminRestUrl + "/allUsers", {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
