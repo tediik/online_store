@@ -128,7 +128,7 @@ public class DataInitializer {
      * Вызов методов добавлять в этод метод.
      * Следить за последовательностью вызова.
      */
-    @PostConstruct
+    //@PostConstruct
     //раскомментировать аннотацию при первом запуске проекта для создания таблиц БД, потом закомментировать
     public void initDataBaseFilling() {
         roleInit();
@@ -891,9 +891,6 @@ public class DataInitializer {
      */
     private void ordersInit() {
         Customer customer = customerService.findCustomerByEmail("customer@mail.ru");
-        Customer customer1 = customerService.findCustomerByEmail("customer1@mail.ru");
-        Customer customer2 = customerService.findCustomerByEmail("customer2@mail.ru");
-        Customer customer3 = customerService.findCustomerByEmail("customer3@mail.ru");
         List<Long> productsIds = new ArrayList<>();
         List<Order> orders = new ArrayList<>();
         List<Long> ordersIds = new ArrayList<>();
@@ -902,7 +899,7 @@ public class DataInitializer {
             long id = 4 + (long) (Math.random() * 21);
             productsIds.add(id);
         }
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 15; i++) {
             orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.COMPLETED));
             orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.INCARTS));
             orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.CANCELED));
@@ -911,67 +908,12 @@ public class DataInitializer {
         for (Order order : orders) {
             ordersIds.add(orderService.addOrder(order));
         }
-        for (Long productsId : productsIds) {
-            productInOrderService.addToOrder(productsId, ordersIds.get((int) (Math.random() * ordersIds.size())), 1 + (int) (Math.random() * 4));
+        for (Long ordersId : ordersIds) {
+            productInOrderService.addToOrder(productsIds.get((int) (Math.random() * productsIds.size())), ordersId, 1 + (int) (Math.random() * 4));
         }
         customer.setOrders(Set.copyOf(orderService.findAll()));
         userService.updateUser(customer);
 
-        for (int i = 0; i <50; i++) {
-            long id = 4 + (long) (Math.random() * 21);
-            productsIds.add(id);
-        }
-        for (int i = 0; i < 5; i++) {
-            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.COMPLETED));
-            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.INCARTS));
-            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.CANCELED));
-            orders.add(new Order(LocalDateTime.now(), Order.Status.COMPLETED));
-        }
-        for (Order order : orders) {
-            ordersIds.add(orderService.addOrder(order));
-        }
-        for (Long ordersId : ordersIds) {
-            productInOrderService.addToOrder(productsIds.get((int) (Math.random() * ordersIds.size())), ordersId, 1 + (int) (Math.random() * 4));
-        }
-        customer1.setOrders(Set.copyOf(orderService.findAll()));
-        userService.updateUser(customer1);
-        for (int i = 0; i <50; i++) {
-            long id = 4 + (long) (Math.random() * 21);
-            productsIds.add(id);
-        }
-        for (int i = 0; i < 5; i++) {
-            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.COMPLETED));
-            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.INCARTS));
-            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.CANCELED));
-            orders.add(new Order(LocalDateTime.now(), Order.Status.COMPLETED));
-        }
-        for (Order order : orders) {
-            ordersIds.add(orderService.addOrder(order));
-        }
-        for (Long ordersId : ordersIds) {
-            productInOrderService.addToOrder(productsIds.get((int) (Math.random() * ordersIds.size())), ordersId, 1 + (int) (Math.random() * 4));
-        }
-        customer2.setOrders(Set.copyOf(orderService.findAll()));
-        userService.updateUser(customer2);
-
-        for (int i = 0; i <50; i++) {
-            long id = 4 + (long) (Math.random() * 21);
-            productsIds.add(id);
-        }
-        for (int i = 0; i < 5; i++) {
-            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.COMPLETED));
-            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.INCARTS));
-            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.CANCELED));
-            orders.add(new Order(LocalDateTime.now(), Order.Status.COMPLETED));
-        }
-        for (Order order : orders) {
-            ordersIds.add(orderService.addOrder(order));
-        }
-        for (Long ordersId : ordersIds) {
-            productInOrderService.addToOrder(productsIds.get((int) (Math.random() * ordersIds.size())), ordersId, 1 + (int) (Math.random() * 4));
-        }
-        customer3.setOrders(Set.copyOf(orderService.findAll()));
-        userService.updateUser(customer3);
     }
 
     /**

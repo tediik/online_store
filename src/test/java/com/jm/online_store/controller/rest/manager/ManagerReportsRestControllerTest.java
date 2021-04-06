@@ -6,6 +6,7 @@ import com.jm.online_store.exception.CustomerNotFoundException;
 import com.jm.online_store.exception.ExceptionConstants;
 import com.jm.online_store.model.Customer;
 import com.jm.online_store.service.interf.CustomerService;
+import com.jm.online_store.service.interf.OrderService;
 import com.jm.online_store.service.interf.SentStockService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,6 +43,7 @@ class ManagerReportsRestControllerTest {
     private MockMvc mockMvc;
     private CustomerService customerService;
     private SentStockService sentStockService;
+    private OrderService orderService;
     private ModelMapper modelMapper;
     private final static String END_POINT = "/api/manager";
     private List<Customer> customerList;
@@ -52,6 +54,7 @@ class ManagerReportsRestControllerTest {
     void setUp() {
         customerService = mock(CustomerService.class);
         sentStockService = mock(SentStockService.class);
+        orderService = mock(OrderService.class);
         modelMapper = new ModelMapper();
         testMap = new HashMap<>();
         dayOfWeek = "MONDAY";
@@ -61,7 +64,7 @@ class ManagerReportsRestControllerTest {
                 new Customer(3L, "customer3@mail.com", DayOfWeekForStockSend.MONDAY));
         testMap.put(LocalDate.now(), 1L);
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new ManagerReportsRestController(customerService, sentStockService, modelMapper))
+                .standaloneSetup(new ManagerReportsRestController(customerService, sentStockService, orderService, modelMapper))
                 .setControllerAdvice(new ExceptionsHandler())
                 .build();
     }
