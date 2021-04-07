@@ -34,6 +34,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
 
 @PreAuthorize("hasAuthority('ROLE_MANAGER')")
 @AllArgsConstructor
@@ -44,7 +45,8 @@ public class ManagerReportsRestController {
     private final CustomerService customerService;
     private final SentStockService sentStockService;
     private final OrderService orderService;
-    private final Type listType = new TypeToken<List<CustomerDto>>() {}.getType();
+    private final Type listType = new TypeToken<List<CustomerDto>>() {
+    }.getType();
     private final ModelMapper modelMapper;
 
     /**
@@ -193,10 +195,11 @@ public class ManagerReportsRestController {
             orderService.exportOrdersToExcel(startDate, endDate, response).write(response.getOutputStream());
             return ResponseEntity.ok(new ResponseDto(true, Response.SUCCESS, Response.NO_ERROR.getText()));
 
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.ORDERS.getText() + ExceptionConstants.NOT_FOUND), HttpStatus.NOT_FOUND);
         }
     }
+
     /**
      * Метод для выгрузки отчета в PDF.
      * @param stringStartDate - beginning of the period that receives from frontend in as String
@@ -223,8 +226,24 @@ public class ManagerReportsRestController {
             orderService.exportOrdersToPDF(startDate, endDate, response);
             return new ResponseEntity<>(new ResponseDto(true, "Repair order was generated", Response.NO_ERROR.getText()), HttpStatus.OK);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(new ResponseDto<>(false, ExceptionEnums.ORDERS.getText() + ExceptionConstants.NOT_FOUND), HttpStatus.NOT_FOUND);
         }
+    }
+
+    /**
+     * Метод для расчета среднего чека в списке
+     * @param orderList - список {@link SalesReportDto}
+     * @return {@link ResponseEntity} со значением среднего чека OptionalDouble.
+     */
+    @GetMapping("/sales/averageOrder")
+    @ApiOperation(value = "Метод рассчитывает средний чек в списке продаж",
+            authorizations = {@Authorization(value = "jwtToken")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "AverageOrder have been received"),
+            @ApiResponse(code = 200, message = "AverageOrder haven't been received")
+    })
+    public ResponseEntity<ResponseDto<OptionalDouble>> getAverageOrder(@RequestParam List<SalesReportDto> orderList) {
+        return ResponseEntity.ok(new ResponseDto<>(true, orderService.averageOrder(orderList)));
     }
 }

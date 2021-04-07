@@ -3,7 +3,11 @@ package com.jm.online_store.service.impl;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -36,6 +40,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
 @Service
@@ -156,8 +161,6 @@ public class OrderServiceImpl implements OrderService {
         XSSFSheet sheet = workbook.createSheet("Orders");
         int rowCount = 0;
 
-        XSSFRow row = sheet.createRow(rowCount++);
-
         CellStyle style = workbook.createCellStyle();
         XSSFFont font = workbook.createFont();
         font.setBold(true);
@@ -165,7 +168,19 @@ public class OrderServiceImpl implements OrderService {
         style.setFont(font);
         style.getAlignment();
 
-        XSSFCell cell = row.createCell(0);
+        /*Средний чек*/
+        XSSFRow row = sheet.createRow(rowCount++);
+        XSSFCell cell = row.createCell(5);
+        cell.setCellValue("средний чек за период:");
+        cell.setCellStyle(style);
+        cell = row.createCell(6);
+        if (averageOrder(ordersList).isPresent()){
+            cell.setCellValue(averageOrder(ordersList).getAsDouble());
+        }
+        /*таблица с отчетом*/
+        row = sheet.createRow(rowCount++);
+
+        cell = row.createCell(0);
         cell.setCellValue("ID");
         cell.setCellStyle(style);
         sheet.autoSizeColumn(0);
@@ -238,29 +253,50 @@ public class OrderServiceImpl implements OrderService {
     public void exportOrdersToPDF(LocalDate startDate, LocalDate endDate, HttpServletResponse response) throws IOException, DocumentException {
         List<SalesReportDto> ordersList = findAllSalesBetween(startDate, endDate);
         Document document = new Document();
-            PdfWriter.getInstance(document, response.getOutputStream());
-            document.open();
+        PdfWriter.getInstance(document, response.getOutputStream());
+        Font infoFont = FontFactory.getFont("fonts/HelveticaRegular.ttf", BaseFont.IDENTITY_H, true, 10);
+        Font titleFont = FontFactory.getFont("fonts/HelveticaRegular.ttf", BaseFont.IDENTITY_H, true, 16, Font.BOLD);
+        document.open();
 
-            PdfPTable table = new PdfPTable(7);
-            Stream.of("ID", "Логин(email)", "Имя", "Дата заказа", "Общее количество", "Список товаров в заказе(кол-во)", "Сумма заказа")
-                    .forEach(columnTitle -> {
-                        PdfPCell header = new PdfPCell();
-                        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                        header.setBorderWidth(2);
-                        header.setPhrase(new Phrase(columnTitle));
-                        table.addCell(header);
-                    });
-            for (SalesReportDto salesReportDto : ordersList) {
-                table.addCell(String.valueOf(salesReportDto.getOrderNumber()));
-                table.addCell(String.valueOf(salesReportDto.getUserEmail()));
-                table.addCell(String.valueOf(salesReportDto.getCustomerInitials()));
-                table.addCell(String.valueOf(salesReportDto.getPurchaseDate()));
-                table.addCell(String.valueOf(salesReportDto.getQuantity()));
-                table.addCell(String.valueOf(salesReportDto.getListOfProducts()));
-                table.addCell(String.valueOf(salesReportDto.getOrderSummaryPrice()));
-            }
-            document.add(table);
-            document.close();
+        document.add(new Paragraph("Отчет о продажах", titleFont));
+        if (averageOrder(ordersList).isPresent()) {
+            Paragraph orderAverage = new Paragraph("Средний чек : " + averageOrder(ordersList).getAsDouble(), infoFont);
+            document.add(orderAverage);
+        }
 
+        PdfPTable table = new PdfPTable(7);
+        Stream.of("ID", "Логин(email)", "Имя", "Дата заказа", "Общее количество", "Список товаров в заказе(кол-во)", "Сумма заказа")
+                .forEach(columnTitle -> {
+                    PdfPCell header = new PdfPCell();
+                    header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                    header.setBorderWidth(2);
+                    header.setPhrase(new Phrase(columnTitle, infoFont));
+                    table.addCell(header);
+                });
+        for (SalesReportDto salesReportDto : ordersList) {
+            table.addCell(String.valueOf(salesReportDto.getOrderNumber()));
+            table.addCell(String.valueOf(salesReportDto.getUserEmail()));
+            table.addCell(String.valueOf(salesReportDto.getCustomerInitials()));
+            table.addCell(String.valueOf(salesReportDto.getPurchaseDate()));
+            table.addCell(String.valueOf(salesReportDto.getQuantity()));
+            table.addCell(String.valueOf(salesReportDto.getListOfProducts()));
+            table.addCell(String.valueOf(salesReportDto.getOrderSummaryPrice()));
+        }
+        document.add(table);
+        document.close();
+    }
+
+
+    /**
+     * Метод вычисляет средний чек за период
+     * @param orderList - список всех {@link Order}
+     * @return - возвращает OptionalDouble
+     */
+    @Override
+    public OptionalDouble averageOrder(List<SalesReportDto> orderList){
+       return orderList.stream()
+               .map(SalesReportDto::getOrderSummaryPrice)
+               .mapToDouble(order -> order)
+               .average();
     }
 }

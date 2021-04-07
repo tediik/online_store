@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
 
 public interface OrderService {
 
@@ -36,4 +37,6 @@ public interface OrderService {
     XSSFWorkbook exportOrdersToExcel(LocalDate startDate, LocalDate endDate, HttpServletResponse response);
 
     void exportOrdersToPDF(LocalDate startDate, LocalDate endDate, HttpServletResponse response) throws IOException, DocumentException;
+
+    OptionalDouble averageOrder(List<SalesReportDto> orderList);
 }
