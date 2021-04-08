@@ -79,6 +79,4 @@ public interface UserService {
     public void sendConfirmationSubscribeLetter(String email);
 
     List<User> findAllPage(int pageNum, Integer amount);
-
-
 }
