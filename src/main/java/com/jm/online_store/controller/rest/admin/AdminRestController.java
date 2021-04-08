@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -73,29 +72,6 @@ public class AdminRestController {
     public ResponseEntity<ResponseDto<List<UserDto>>> getAllUsersList() {
         List<UserDto> allUsersDto = new ArrayList<>();
         List<User> userList = userService.findAll();
-        userList.forEach(u -> allUsersDto.add(UserDto.fromUser(u)));
-
-        if (allUsersDto.size() == 0) {
-            log.debug("There are no users in db");
-            return new ResponseEntity<>(new ResponseDto<>(true, allUsersDto), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new ResponseDto<>(true, allUsersDto), HttpStatus.OK);
-    }
-    /**
-     * Rest контроллер который возвращает список юзеров из базы данных согласно номеру страницы
-     * параметром запроса служит количество элементов на странице,
-     * если параметр не указан выдаст 20 элементов
-     * @return ResponseEntity<ResponseDto<List<UserDto>>>(ResponseDto, HttpStatus) {@link ResponseEntity}
-     */
-    @GetMapping(value = "/allUsers/{pageNum}")
-    @ApiOperation(value = "return list of users with page", authorizations = { @Authorization(value="jwtToken") })
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "NO ONE USER WAS FOUND"),
-            @ApiResponse(code = 200, message = "")
-    })
-    public ResponseEntity<ResponseDto<List<UserDto>>> getAllUsersListPage(@PathVariable int pageNum, @RequestParam(value = "amount", required = false) Integer amount) {
-        List<UserDto> allUsersDto = new ArrayList<>();
-        List<User> userList = userService.findAllPage(pageNum, amount);
         userList.forEach(u -> allUsersDto.add(UserDto.fromUser(u)));
 
         if (allUsersDto.size() == 0) {
