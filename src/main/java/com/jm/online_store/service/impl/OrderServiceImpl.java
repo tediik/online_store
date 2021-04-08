@@ -286,7 +286,6 @@ public class OrderServiceImpl implements OrderService {
         document.close();
     }
 
-
     /**
      * Метод вычисляет средний чек за период
      * @param orderList - список всех {@link Order}

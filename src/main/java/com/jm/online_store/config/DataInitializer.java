@@ -913,7 +913,6 @@ public class DataInitializer {
         }
         customer.setOrders(Set.copyOf(orderService.findAll()));
         userService.updateUser(customer);
-
     }
 
     /**
