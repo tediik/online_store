@@ -252,6 +252,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void exportOrdersToPDF(LocalDate startDate, LocalDate endDate, HttpServletResponse response) throws IOException, DocumentException {
         List<SalesReportDto> ordersList = findAllSalesBetween(startDate, endDate);
+        if (ordersList.isEmpty()) {
+            throw new OrdersNotFoundException(ExceptionEnums.ORDER.getText() + ExceptionConstants.NOT_FOUND);
+        }
         Document document = new Document();
         PdfWriter.getInstance(document, response.getOutputStream());
         Font infoFont = FontFactory.getFont("fonts/HelveticaRegular.ttf", BaseFont.IDENTITY_H, true, 10);
