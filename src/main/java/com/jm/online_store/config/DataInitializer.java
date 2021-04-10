@@ -892,55 +892,26 @@ public class DataInitializer {
     private void ordersInit() {
         Customer customer = customerService.findCustomerByEmail("customer@mail.ru");
         List<Long> productsIds = new ArrayList<>();
-        productsIds.add(productService.findProductByName("NX-7893-PC-09878").get().getId());
-        productsIds.add(productService.findProductByName("Asus-NX4567").get().getId());
-        productsIds.add(productService.findProductByName("ACER-543").get().getId());
-        productsIds.add(productService.findProductByName("XIAOMI-Mi10").get().getId());
-        productsIds.add(productService.findProductByName("LG-2145").get().getId());
-        productsIds.add(productService.findProductByName("Apple-10").get().getId());
-        productsIds.add(productService.findProductByName("Roomba 698").get().getId());
-        productsIds.add(productService.findProductByName("Bosch BWD41720").get().getId());
-        productsIds.add(productService.findProductByName("Hotpoint-Ariston BI WDHG 75148 EU").get().getId());
-        productsIds.add(productService.findProductByName("LG Mega Plus P12EP1").get().getId());
-        productsIds.add(productService.findProductByName("Hotpoint-Ariston SPOWHA 409-K").get().getId());
-
         List<Order> orders = new ArrayList<>();
-        orders.add(new Order(LocalDateTime.of(2019, 12, 31, 22, 10), Order.Status.COMPLETED));
-        orders.add(new Order(LocalDateTime.of(2020, 1, 23, 13, 37), Order.Status.COMPLETED));
-        orders.add(new Order(LocalDateTime.of(2020, 3, 10, 16, 51), Order.Status.INCARTS));
-        orders.add(new Order(LocalDateTime.of(2020, 6, 13, 15, 3), Order.Status.CANCELED));
-        orders.add(new Order(LocalDateTime.of(2020, 7, 18, 16, 18), Order.Status.COMPLETED));
-        orders.add(new Order(LocalDateTime.of(2020, 7, 24, 11, 9), Order.Status.CANCELED));
-        orders.add(new Order(LocalDateTime.of(2020, 8, 3, 15, 43), Order.Status.COMPLETED));
-        orders.add(new Order(LocalDateTime.of(2020, 8, 18, 17, 33), Order.Status.CANCELED));
-        orders.add(new Order(LocalDateTime.of(2020, 9, 16, 10, 21), Order.Status.INCARTS));
-        orders.add(new Order(LocalDateTime.now(), Order.Status.INCARTS));
-
         List<Long> ordersIds = new ArrayList<>();
+
+        for (int i = 0; i <50; i++) {
+            long id = 4 + (long) (Math.random() * 21);
+            productsIds.add(id);
+        }
+        for (int i = 0; i < 15; i++) {
+            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.COMPLETED));
+            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.INCARTS));
+            orders.add(new Order(LocalDateTime.now().minusHours((long) (Math.random() * 24 * 30)), Order.Status.CANCELED));
+            orders.add(new Order(LocalDateTime.now(), Order.Status.COMPLETED));
+        }
         for (Order order : orders) {
             ordersIds.add(orderService.addOrder(order));
         }
-
-        productInOrderService.addToOrder(productsIds.get(0), ordersIds.get(0), 1);
-        productInOrderService.addToOrder(productsIds.get(1), ordersIds.get(0), 2);
-
-        productInOrderService.addToOrder(productsIds.get(2), ordersIds.get(1), 1);
-
-        productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(2), 2);
-
-        productInOrderService.addToOrder(productsIds.get(3), ordersIds.get(3), 1);
-        productInOrderService.addToOrder(productsIds.get(4), ordersIds.get(3), 2);
-        productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(3), 3);
-
-        productInOrderService.addToOrder(productsIds.get(5), ordersIds.get(4), 3);
-        productInOrderService.addToOrder(productsIds.get(6), ordersIds.get(5), 1);
-        productInOrderService.addToOrder(productsIds.get(6), ordersIds.get(6), 4);
-        productInOrderService.addToOrder(productsIds.get(7), ordersIds.get(7), 1);
-        productInOrderService.addToOrder(productsIds.get(8), ordersIds.get(8), 1);
-        productInOrderService.addToOrder(productsIds.get(9), ordersIds.get(9), 2);
-        productInOrderService.addToOrder(productsIds.get(10), ordersIds.get(9), 1);
+        for (Long ordersId : ordersIds) {
+            productInOrderService.addToOrder(productsIds.get((int) (Math.random() * productsIds.size())), ordersId, 1 + (int) (Math.random() * 4));
+        }
         customer.setOrders(Set.copyOf(orderService.findAll()));
-
         userService.updateUser(customer);
     }
 

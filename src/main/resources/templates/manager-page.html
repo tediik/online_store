@@ -1249,7 +1249,7 @@
                 <!--ВКЛАДКА АДРЕСА МАГАЗИНОВ  -->
                 <!--ВКЛАДКА ОТЧЕТЫ  -->
                 <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="reports-tab">
-                    <div class="col-sm-8 text-left">
+                    <div class="col-md-12 bg-light">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#nav-sales-report">Отчет по продажам</a>
@@ -1260,14 +1260,22 @@
                                 <br>
                                 <h5>Выбирите промежуток времени для формирования отчета:</h5>
                                 <div id="managerSalesReportRange"
-                                     style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 40%">
+                                     style="background: #ffffff; cursor: pointer; padding: 5px 10px; border: 1px solid #cccccc; width: 40%">
                                     <i class="fa fa-calendar"></i>&nbsp;
                                     <span><i class="fa fa-caret-down"></i></span>
                                 </div>
                                 <hr>
                                 <div id="infoMessageDiv">
-
                                 </div>
+                                <button type="button" id="exportCsvButton" class="btn btn-info" style="visibility: hidden">
+                                    Выгрузить в csv
+                                </button>
+                                <button type="button" id="exportExcelButton" class="btn btn-success" style="visibility: hidden">
+                                    Выгрузить в Excel
+                                </button>
+                                <button type="button" id="exportPDFButton" class="btn btn-danger" style="visibility: hidden">
+                                    Выгрузить в PDF
+                                </button>
                                 <table class="table table_sort" style="visibility: hidden" id="salesReportTable">
                                     <thead>
                                     <tr>
@@ -1281,12 +1289,8 @@
                                     </tr>
                                     </thead>
                                     <tbody id="salesTableBody">
-
                                     </tbody>
                                 </table>
-                                <button type="button" id="exportCsvButton" class="btn btn-primary" style="visibility: hidden">
-                                    Выгрузить в csv
-                                </button>
                             </div>
                         </div>
                     </div>

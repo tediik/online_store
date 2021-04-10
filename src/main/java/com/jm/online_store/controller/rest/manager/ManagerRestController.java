@@ -5,7 +5,6 @@ import com.jm.online_store.model.News;
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.NewsDto;
 import com.jm.online_store.model.dto.ResponseDto;
-import com.jm.online_store.model.dto.SalesReportDto;
 import com.jm.online_store.model.dto.UserDto;
 import com.jm.online_store.service.interf.NewsService;
 import com.jm.online_store.service.interf.OrderService;
@@ -19,7 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,9 +27,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletResponse;
+
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
@@ -144,48 +141,4 @@ public class ManagerRestController {
                 Response.NO_ERROR.getText()));
     }
 
-    /**
-     * Get mapping for get request to response with sales during the custom date range
-     * or empty list
-     * @param stringStartDate - start of custom date range
-     * @param stringEndDate   - end of custom date range
-     * @return - {@link ResponseEntity} with list of Orders with status complete
-     */
-    @GetMapping("/sales")
-    @ApiOperation(value = "Get mapping for get request to response with sales during the custom date range",
-            authorizations = {@Authorization(value = "jwtToken")})
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "sales have been found"),
-            @ApiResponse(code = 200, message = "sales haven't been found. Returns empty list")
-    })
-    public ResponseEntity<ResponseDto<List<SalesReportDto>>> getSalesForCustomRange(@RequestParam String stringStartDate,
-                                                                                    @RequestParam String stringEndDate) {
-        LocalDate startDate = LocalDate.parse(stringStartDate);
-        LocalDate endDate = LocalDate.parse(stringEndDate);
-        return ResponseEntity.ok(new ResponseDto<>(true, orderService.findAllSalesBetween(startDate, endDate)));
-    }
-
-    /**
-     * Mapping for csv export.
-     * @param stringStartDate - beginning of the period that receives from frontend in as String
-     * @param stringEndDate   - end of the period that receives from frontend in as String
-     * @param response        - response to write back stream with csv
-     * @return - ResponseEntity
-     */
-    @GetMapping("/sales/exportCSV")
-    @ApiOperation(value = "Mapping for csv export",
-            authorizations = { @Authorization(value = "jwtToken") })
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "orders have been sent"),
-            @ApiResponse(code = 404, message = "orders haven't been found"),
-            @ApiResponse(code = 500, message = "problem with writing CSV")
-    })
-    public ResponseEntity<ResponseDto<FileSystemResource>> getSalesForCustomRangeAndExportToCSV(@RequestParam String stringStartDate,
-                                                                                                @RequestParam String stringEndDate,
-                                                                                                HttpServletResponse response) {
-        LocalDate startDate = LocalDate.parse(stringStartDate);
-        LocalDate endDate = LocalDate.parse(stringEndDate);
-        orderService.exportOrdersByCSV(startDate, endDate, response);
-        return ResponseEntity.ok().build();
-    }
 }

@@ -53,6 +53,8 @@ $('#managerSalesReportRange').on('apply.daterangepicker', function (ev, picker) 
             }
         })
     $('#exportCsvButton').attr('startDate', startDate).attr('endDate', endDate)
+    $('#exportExcelButton').attr('startDate', startDate).attr('endDate', endDate)
+    $('#exportPDFButton').attr('startDate', startDate).attr('endDate', endDate)
 });
 
 /**
@@ -70,6 +72,50 @@ $('#exportCsvButton').on('click', function () {
                     let file = document.createElement('a');
                     file.href = url;
                     file.download = `sales_report_${StartDate}-${EndDate}.csv`;
+                    file.click();
+                })
+            } else {
+                popupWindow('#infoMessageDiv', 'За указанный период, продаж не найдено', 'error')
+            }
+        })
+});
+/**
+ * fetch request to export to Excel
+ */
+$('#exportExcelButton').on('click', function () {
+    let StartDate = $('#exportExcelButton').attr('startDate')
+    let EndDate = $('#exportExcelButton').attr('endDate')
+    fetch(managerSalesApiUrl + `/exportExcel?stringStartDate=${StartDate}&stringEndDate=${EndDate}`)
+        .then(function (response) {
+            if (response.status === 200) {
+                popupWindow('#infoMessageDiv', 'Данные успешно выгружены', 'success')
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let file = document.createElement('a');
+                    file.href = url;
+                    file.download = `sales_report_${StartDate}-${EndDate}.xlsx`;
+                    file.click();
+                })
+            } else {
+                popupWindow('#infoMessageDiv', 'За указанный период, продаж не найдено', 'error')
+            }
+        })
+});
+/**
+ * fetch request to export to PDF
+ */
+$('#exportPDFButton').on('click', function () {
+    let StartDate = $('#exportPDFButton').attr('startDate')
+    let EndDate = $('#exportPDFButton').attr('endDate')
+    fetch(managerSalesApiUrl + `/exportPDF?stringStartDate=${StartDate}&stringEndDate=${EndDate}`)
+        .then(function (response) {
+            if (response.status === 200) {
+                popupWindow('#infoMessageDiv', 'Данные успешно выгружены', 'success')
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let file = document.createElement('a');
+                    file.href = url;
+                    file.download = `sales_report_${StartDate}-${EndDate}.PDF`;
                     file.click();
                 })
             } else {
@@ -136,6 +182,8 @@ function popupWindow(inputField, text, messageStatus) {
 function hideElementsOfSalesReport() {
     document.getElementById("salesReportTable").style.visibility = "hidden";
     document.getElementById("exportCsvButton").style.visibility = "hidden";
+    document.getElementById("exportExcelButton").style.visibility = "hidden";
+    document.getElementById("exportPDFButton").style.visibility = "hidden";
 }
 
 /**
@@ -144,4 +192,6 @@ function hideElementsOfSalesReport() {
 function showElementsOfReport() {
     document.getElementById("salesReportTable").style.visibility = "visible";
     document.getElementById("exportCsvButton").style.visibility = "visible";
+    document.getElementById("exportExcelButton").style.visibility = "visible";
+    document.getElementById("exportPDFButton").style.visibility = "visible";
 }
