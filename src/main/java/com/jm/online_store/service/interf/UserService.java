@@ -2,6 +2,7 @@ package com.jm.online_store.service.interf;
 
 import com.jm.online_store.model.User;
 import com.jm.online_store.model.dto.UserDto;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,4 +77,6 @@ public interface UserService {
     User getUserByToken(String token);
 
     public void sendConfirmationSubscribeLetter(String email);
+
+    List<User> findAllPage(int pageNum, Integer amount);
 }
