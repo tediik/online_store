@@ -86,7 +86,6 @@ public class ManagerNewsRestController {
      * @param filterDto
      * @return Page<NewsDto> возвращает страницу новостей
      */
-    @PreAuthorize("permitAll()")
     @GetMapping("/page")
     @ApiOperation(value = "Method returns news page",
             authorizations = { @Authorization(value = "jwtToken") })
